@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.46 1998/04/12 05:05:19 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.47 1998/04/13 08:35:37 kato Exp $  */
 end_comment
 
 begin_comment
@@ -134,11 +134,43 @@ directive|ifdef
 name|DEVFS
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SLICE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/slice/slice.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/devfsext.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*SLICE*/
+end_comment
 
 begin_endif
 endif|#
@@ -641,6 +673,27 @@ comment|/* altstatus port base */
 ifdef|#
 directive|ifdef
 name|DEVFS
+ifdef|#
+directive|ifdef
+name|SLICE
+name|struct
+name|slice
+modifier|*
+name|slice
+decl_stmt|;
+name|int
+name|minor
+decl_stmt|;
+name|struct
+name|slicelimits
+name|limit
+decl_stmt|;
+name|struct
+name|intr_config_hook
+name|ich
+decl_stmt|;
+else|#
+directive|else
 name|void
 modifier|*
 name|dk_bdev
@@ -653,6 +706,10 @@ decl_stmt|;
 comment|/* devfs token for raw whole disk */
 endif|#
 directive|endif
+comment|/* SLICE */
+endif|#
+directive|endif
+comment|/* DEVFS */
 name|u_long
 name|cfg_flags
 decl_stmt|;
@@ -1165,6 +1222,123 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SLICE
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|sl_h_IO_req_t
+name|wdsIOreq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IO req downward (to device) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|sl_h_ioctl_t
+name|wdsioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ioctl req downward (to device) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|sl_h_open_t
+name|wdsopen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* downwards travelling open */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|sl_h_close_t
+name|wdsclose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* downwards travelling close */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|wds_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|slice_handler
+name|slicetype
+init|=
+block|{
+literal|"IDE"
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+comment|/* constructor */
+operator|&
+name|wdsIOreq
+block|,
+operator|&
+name|wdsioctl
+block|,
+operator|&
+name|wdsopen
+block|,
+operator|&
+name|wdsclose
+block|,
+name|NULL
+block|,
+comment|/* revoke */
+name|NULL
+block|,
+comment|/* claim */
+name|NULL
+block|,
+comment|/* verify */
+name|NULL
+comment|/* upconfig */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLICE
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -1261,6 +1435,15 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SLICE */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2123,9 +2306,18 @@ modifier|*
 name|dvp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DEVFS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SLICE
+argument_list|)
 name|int
 name|mynor
 decl_stmt|;
@@ -2579,6 +2771,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SLICE
+comment|/*  * Here we somehow schedule the geometry HACK fro later and print   * something meaningful.  */
+endif|#
+directive|endif
 if|if
 condition|(
 name|du
@@ -2610,7 +2808,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"wd%d: %luMB (%lu sectors), %lu cyls, %lu heads, %lu S/T, %lu B/S\n"
+literal|"wd%d: %luMB (%lu sectors), "
+literal|"%lu cyls, %lu heads, %lu S/T, %lu B/S\n"
 argument_list|,
 name|lunit
 argument_list|,
@@ -2679,7 +2878,9 @@ name|dk_params
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"wd%d: ATA INQUIRE valid = %04x, dmamword = %04x, apio = %04x, udma = %04x\n"
+literal|"wd%d: ATA INQUIRE valid = %04x, "
+literal|"dmamword = %04x, apio = %04x, "
+literal|"udma = %04x\n"
 argument_list|,
 name|du
 operator|->
@@ -2712,6 +2913,142 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
+ifdef|#
+directive|ifdef
+name|SLICE
+block|{
+name|char
+name|namebuf
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|namebuf
+argument_list|,
+literal|"wd%d"
+argument_list|,
+name|lunit
+argument_list|)
+expr_stmt|;
+name|du
+operator|->
+name|minor
+operator|=
+name|dkmakeminor
+argument_list|(
+name|lunit
+argument_list|,
+name|WHOLE_DISK_SLICE
+argument_list|,
+name|RAW_PART
+argument_list|)
+expr_stmt|;
+name|du
+operator|->
+name|limit
+operator|.
+name|blksize
+operator|=
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secsize
+expr_stmt|;
+name|du
+operator|->
+name|limit
+operator|.
+name|slicesize
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secsize
+operator|*
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secperunit
+expr_stmt|;
+comment|/* 				 * Fill in the 3 geometry entries 				 * to tell the mbr code 				 * we already know it, so that it 				 * doesn't try deduce it. 				 */
+name|sl_make_slice
+argument_list|(
+operator|&
+name|slicetype
+argument_list|,
+name|du
+argument_list|,
+operator|&
+name|du
+operator|->
+name|limit
+argument_list|,
+operator|&
+name|du
+operator|->
+name|slice
+argument_list|,
+name|NULL
+argument_list|,
+name|namebuf
+argument_list|)
+expr_stmt|;
+comment|/* Allow full probing */
+name|du
+operator|->
+name|slice
+operator|->
+name|probeinfo
+operator|.
+name|typespecific
+operator|=
+name|NULL
+expr_stmt|;
+name|du
+operator|->
+name|slice
+operator|->
+name|probeinfo
+operator|.
+name|type
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|du
+operator|->
+name|ich
+operator|.
+name|ich_func
+operator|=
+name|wds_init
+expr_stmt|;
+name|du
+operator|->
+name|ich
+operator|.
+name|ich_arg
+operator|=
+name|du
+expr_stmt|;
+name|config_intrhook_establish
+argument_list|(
+operator|&
+name|du
+operator|->
+name|ich
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|mynor
 operator|=
 name|dkmakeminor
@@ -2771,6 +3108,8 @@ argument_list|,
 name|lunit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if
@@ -3056,6 +3395,133 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SLICE
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|curproc
+decl_stmt|;
+specifier|static
+name|void
+name|wds_init
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|disk
+modifier|*
+name|du
+init|=
+name|arg
+decl_stmt|;
+name|sh_p
+name|tp
+decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|ide_geom
+name|geom
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|err
+operator|=
+name|wdsopen
+argument_list|(
+name|du
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|curproc
+argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"wd open failed with %d"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*  	 * If we still don't have geometry, 	 * Then call the IDE geometry HACK functions. 	 */
+if|#
+directive|if
+literal|0
+block|if ( ?? ) {
+comment|/* how do we know? */
+block|bzero (&geom, sizeof(geom)); 		if (mbr_geom_hack(du->slice))&& (dkl_geom_hack(du->slice)) { 			printf("We really have no geometry\n"); 		} else { 	       		du->dk_dd.d_secperunit = (geom.cyls * 				geom.trackpercyl * geom.secpertrack); 	       		du->dk_dd.d_ncylinders = geom.cyls; 	       		du->dk_dd.d_ntracks = geom.trackpercyl; 	       		du->dk_dd.d_nsectors = geom.secpertrack; 		} 	}
+endif|#
+directive|endif
+if|if
+condition|(
+operator|(
+name|tp
+operator|=
+name|slice_probeall
+argument_list|(
+name|du
+operator|->
+name|slice
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+call|(
+modifier|*
+name|tp
+operator|->
+name|constructor
+call|)
+argument_list|(
+name|du
+operator|->
+name|slice
+argument_list|)
+expr_stmt|;
+block|}
+name|config_intrhook_disestablish
+argument_list|(
+operator|&
+name|du
+operator|->
+name|ich
+argument_list|)
+expr_stmt|;
+name|wdsclose
+argument_list|(
+name|du
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|curproc
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|SLICE
 comment|/* Read/write routine for a buffer.  Finds the proper unit, range checks  * arguments, and schedules the transfer.  Does not wait for the transfer  * to complete.  Multi-page transfers are supported.  All I/O requests must  * be a multiple of a sector in length.  */
 name|void
 name|wdstrategy
@@ -3471,6 +3937,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !SLICE */
 comment|/*  * Routine to queue a command to the controller.  The unit's  * request is linked into the active list for the controller.  * If the controller is idle, the transfer is started.  */
 specifier|static
 name|void
@@ -3564,6 +4033,13 @@ block|{
 comment|/* yes, an assign */
 return|return;
 block|}
+comment|/* 	 * store away which device we came from. 	 */
+name|bp
+operator|->
+name|b_driver1
+operator|=
+name|du
+expr_stmt|;
 name|bufq_remove
 argument_list|(
 operator|&
@@ -3783,6 +4259,24 @@ directive|endif
 return|return;
 block|}
 comment|/* obtain controller and drive information */
+ifdef|#
+directive|ifdef
+name|SLICE
+name|du
+operator|=
+name|bp
+operator|->
+name|b_driver1
+expr_stmt|;
+name|lunit
+operator|=
+name|du
+operator|->
+name|dk_lunit
+expr_stmt|;
+else|#
+directive|else
+comment|/* !SLICE */
 name|lunit
 operator|=
 name|dkunit
@@ -3799,6 +4293,9 @@ index|[
 name|lunit
 index|]
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !SLICE */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -3957,9 +4454,16 @@ argument|lp =&du->dk_dd; 	secpertrk = lp->d_nsectors; 	secpercyl = lp->d_secperc
 literal|0
 argument|) { 		du->dk_bc = bp->b_bcount;  		if (bp->b_flags& B_BAD
 comment|/* 		     * XXX handle large transfers inefficiently instead 		     * of crashing on them. 		     */
-argument||| howmany(du->dk_bc, DEV_BSIZE)> MAXTRANSFER) 			du->dk_flags |= DKFL_SINGLE; 	}  	if (du->dk_flags& DKFL_SINGLE&& dsgetbad(bp->b_dev, du->dk_slices) != NULL) {
+argument||| howmany(du->dk_bc, DEV_BSIZE)> MAXTRANSFER) 			du->dk_flags |= DKFL_SINGLE; 	}
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|if (du->dk_flags& DKFL_SINGLE&& dsgetbad(bp->b_dev, du->dk_slices) != NULL) {
 comment|/* XXX */
-argument|u_long ds_offset = 		    du->dk_slices->dss_slices[dkslice(bp->b_dev)].ds_offset;  		blknum = transbad144(dsgetbad(bp->b_dev, du->dk_slices), 				     blknum - ds_offset) + ds_offset; 	}  	wdtab[ctrlr].b_active =
+argument|u_long ds_offset = 		    du->dk_slices->dss_slices[dkslice(bp->b_dev)].ds_offset;  		blknum = transbad144(dsgetbad(bp->b_dev, du->dk_slices), 				     blknum - ds_offset) + ds_offset; 	}
+endif|#
+directive|endif
+argument|wdtab[ctrlr].b_active =
 literal|1
 argument|;
 comment|/* mark controller active */
@@ -4117,7 +4621,18 @@ literal|0
 argument|; 		wdstart (unit); 		return; 	}
 endif|#
 directive|endif
-argument|bp = bufq_first(&wdtab[unit].controller_queue); 	du = wddrives[dkunit(bp->b_dev)];
+argument|bp = bufq_first(&wdtab[unit].controller_queue);
+ifdef|#
+directive|ifdef
+name|SLICE
+argument|du = bp->b_driver1;
+else|#
+directive|else
+comment|/* !SLICE */
+argument|du = wddrives[dkunit(bp->b_dev)];
+endif|#
+directive|endif
+comment|/* !SLICE */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4283,6 +4798,9 @@ argument|if (bufq_first(&wdtab[unit].controller_queue) != NULL)
 endif|#
 directive|endif
 argument|wdstart(unit); }
+ifndef|#
+directive|ifndef
+name|SLICE
 comment|/*  * Initialize a drive.  */
 argument|int wdopen(dev_t dev, int flags, int fmt, struct proc *p) { 	register unsigned int lunit; 	register struct disk *du; 	int	error;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
 literal|0
@@ -4389,8 +4907,22 @@ argument|);
 endif|#
 directive|endif
 argument|}
+endif|#
+directive|endif
+comment|/* !SLICE */
 comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens and formats.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed, 2 if error.  */
-argument|static int wdcontrol(register struct buf *bp) { 	register struct disk *du; 	int	ctrlr;  	du = wddrives[dkunit(bp->b_dev)];
+argument|static int wdcontrol(register struct buf *bp) { 	register struct disk *du; 	int	ctrlr;
+ifdef|#
+directive|ifdef
+name|SLICE
+argument|du = bp->b_driver1;
+else|#
+directive|else
+comment|/* !SLICE */
+argument|du = wddrives[dkunit(bp->b_dev)];
+endif|#
+directive|endif
+comment|/* !SLICE */
 ifdef|#
 directive|ifdef
 name|CMD640
@@ -4939,7 +5471,11 @@ endif|#
 directive|endif
 argument|return (
 literal|0
-argument|); }  int wdclose(dev_t dev, int flags, int fmt, struct proc *p) { 	dsclose(dev, fmt, wddrives[dkunit(dev)]->dk_slices); 	return (
+argument|); }
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|int wdclose(dev_t dev, int flags, int fmt, struct proc *p) { 	dsclose(dev, fmt, wddrives[dkunit(dev)]->dk_slices); 	return (
 literal|0
 argument|); }  int wdioctl(dev_t dev, int cmd, caddr_t addr, int flags, struct proc *p) { 	int	lunit = dkunit(dev); 	register struct disk *du; 	int	error;
 ifdef|#
@@ -4950,9 +5486,16 @@ endif|#
 directive|endif
 argument|du = wddrives[lunit]; 	wdsleep(du->dk_ctrlr,
 literal|"wdioct"
-argument|); 	error = dsioctl(
+argument|);
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|error = dsioctl(
 literal|"wd"
 argument|, dev, cmd, addr, flags,&du->dk_slices, 			wdstrategy1, (ds_setgeom_t *)NULL); 	if (error != ENOIOCTL) 		return (error);
+endif|#
+directive|endif
+comment|/* SLICE */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -5205,11 +5748,29 @@ literal|0
 argument|);
 endif|#
 directive|endif
-argument|}  static void wderror(struct buf *bp, struct disk *du, char *mesg) { 	if (bp == NULL) 		printf(
+argument|}
+endif|#
+directive|endif
+comment|/* !SLICE */
+argument|static void wderror(struct buf *bp, struct disk *du, char *mesg) {
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|printf(
+literal|"wd%d: %s:\n"
+argument|, du->dk_lunit, mesg);
+else|#
+directive|else
+comment|/* !SLICE */
+argument|if (bp == NULL) 		printf(
 literal|"wd%d: %s:\n"
 argument|, du->dk_lunit, mesg); 	else 		diskerr(bp,
 literal|"wd"
-argument|, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->b_dev, du->dk_slices)); 	printf(
+argument|, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->b_dev, du->dk_slices));
+endif|#
+directive|endif
+comment|/* !SLICE */
+argument|printf(
 literal|"wd%d: status %b error %b\n"
 argument|, du->dk_lunit, 	       du->dk_status, WDCS_BITS, du->dk_error, WDERR_BITS); }
 comment|/*  * Discard any interrupts that were latched by the interrupt system while  * we were doing polled i/o.  */
@@ -5443,7 +6004,11 @@ argument|); 	} while (--timeout !=
 literal|0
 argument|); 	return (-
 literal|1
-argument|); }  static wd_devsw_installed =
+argument|); }
+ifndef|#
+directive|ifndef
+name|SLICE
+argument|static wd_devsw_installed =
 literal|0
 argument|;  static void 	wd_drvinit(void *unused) {  	if( ! wd_devsw_installed ) { 		if (wd_bdevsw.d_maxio ==
 literal|0
@@ -5454,7 +6019,95 @@ literal|512
 argument|; 		bdevsw_add_generic(BDEV_MAJOR,CDEV_MAJOR,&wd_bdevsw); 		wd_devsw_installed =
 literal|1
 argument|;     	} }  SYSINIT(wddev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,wd_drvinit,NULL)
+endif|#
+directive|endif
+comment|/* !SLICE */
+ifdef|#
+directive|ifdef
+name|SLICE
+comment|/*  * Read/write routine for a buffer.  Finds the proper unit, range checks  * arguments, and schedules the transfer.  Does not wait for the transfer  * to complete.  Multi-page transfers are supported.  All I/O requests must  * be a multiple of a sector in length.  */
+argument|static void  wdsIOreq(void *private ,struct buf *bp) { 	struct disk *du = private; 	int	s; 	int	lunit = du->dk_lunit;
+comment|/* queue transfer on drive, activate drive and controller if idle */
+argument|s = splbio();  	bufqdisksort(&drive_queue[lunit], bp);
+comment|/* 	 * Move the head of the drive queue to the controller queue. 	 */
+argument|if (wdutab[lunit].b_active ==
+literal|0
+argument|) 		wdustart(du);
+comment|/* 	 * Kick off the controller if there is anything for IT to do. 	 */
+ifdef|#
+directive|ifdef
+name|CMD640
+argument|if (wdtab[du->dk_ctrlr_cmd640].b_active ==
+literal|0
+argument|)
+else|#
+directive|else
+argument|if (wdtab[du->dk_ctrlr].b_active ==
+literal|0
+argument|)
+endif|#
+directive|endif
+argument|wdstart(du->dk_ctrlr);
+comment|/* start controller */
+argument|splx(s); 	return;  }
+comment|/*  * Initialize a drive.  */
+argument|static int wdsopen(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du; 	register unsigned int lunit; 	int	error =
+literal|0
+argument|;  	du = private;
+comment|/* Finish flushing IRQs left over from wdattach(). */
+ifdef|#
+directive|ifdef
+name|CMD640
+argument|if (wdtab[du->dk_ctrlr_cmd640].b_active ==
+literal|2
+argument|) 		wdtab[du->dk_ctrlr_cmd640].b_active =
+literal|0
+argument|;
+else|#
+directive|else
+argument|if (wdtab[du->dk_ctrlr].b_active ==
+literal|2
+argument|) 		wdtab[du->dk_ctrlr].b_active =
+literal|0
+argument|;
+endif|#
+directive|endif
+argument|du->dk_state = OPEN; 	du->dk_flags&= ~DKFL_BADSCAN;  	return (error); }  static void wdsclose(void *private, int flags, int mode, struct proc *p) { 	register struct disk *du;  	du = private; 	du->dk_state = CLOSED; 	return; }  static int wdsioctl( void *private, int cmd, caddr_t addr, int flag, struct proc *p) { 	register struct disk *du; 	int	error;  	du = private;  	wdsleep(du->dk_ctrlr,
+literal|"wdioct"
+argument|); 	switch (cmd) { 	case DIOCSBADSCAN: 		if (*(int *)addr) 			du->dk_flags |= DKFL_BADSCAN; 		else 			du->dk_flags&= ~DKFL_BADSCAN; 		return (
+literal|0
+argument|);
+ifdef|#
+directive|ifdef
+name|notyet
+argument|case DIOCWFORMAT: 		if (!(flag& FWRITE)) 			return (EBADF); 		fop = (struct format_op *)addr; 		aiov.iov_base = fop->df_buf; 		aiov.iov_len = fop->df_count; 		auio.uio_iov =&aiov; 		auio.uio_iovcnt =
+literal|1
+argument|; 		auio.uio_resid = fop->df_count; 		auio.uio_segflg =
+literal|0
+argument|; 		auio.uio_offset = fop->df_startblk * du->dk_dd.d_secsize;
+error|#
+directive|error
+comment|/* XXX the 386BSD interface is different */
+argument|error = physio(wdformat,&rwdbuf[lunit],
+literal|0
+argument|, dev, B_WRITE, 			       minphys,&auio); 		fop->df_count -= auio.uio_resid; 		fop->df_reg[
+literal|0
+argument|] = du->dk_status; 		fop->df_reg[
+literal|1
+argument|] = du->dk_error; 		return (error);
+endif|#
+directive|endif
+argument|default: 		return (ENOTTY); 	} }
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NWDC> 0 */
+end_comment
 
 begin_endif
 endif|#
