@@ -218,7 +218,7 @@ operator|,
 name|XS_T
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8716,7 +8716,7 @@ name|XS_T
 modifier|*
 name|xs
 parameter_list|,
-name|u_int32_t
+name|u_int16_t
 name|handle
 parameter_list|)
 block|{
