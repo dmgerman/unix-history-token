@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.17 (Berkeley) %G%"
+literal|"@(#)main.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,10 @@ name|prevint
 argument_list|)
 argument_list|()
 decl_stmt|;
+name|int
+name|sigchild
+parameter_list|()
+function_decl|;
 specifier|extern
 name|int
 name|getopt
@@ -142,7 +146,17 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-comment|/* 	 * Set up a reasonable environment. 	 * Figure out whether we are being run interactively, set up 	 * all the temporary files, buffer standard output, and so forth. 	 */
+comment|/* 	 * Set up a reasonable environment. 	 * Figure out whether we are being run interactively, 	 * start the SIGCHLD catcher, and so forth. 	 */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|sigchild
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|isatty

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1373,27 +1373,26 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|int
 name|pid
 decl_stmt|;
+specifier|extern
 name|union
 name|wait
-name|status
+name|wait_status
 decl_stmt|;
-if|if
+switch|switch
 condition|(
-operator|(
 name|pid
 operator|=
 name|vfork
 argument_list|()
-operator|)
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
+case|case
+operator|-
+literal|1
+case|:
 name|perror
 argument_list|(
 literal|"fork"
@@ -1404,14 +1403,9 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|pid
-operator|==
+case|case
 literal|0
-condition|)
-block|{
+case|:
 name|abort
 argument_list|()
 expr_stmt|;
@@ -1431,32 +1425,26 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|wait
+name|wait_child
 argument_list|(
-operator|&
-name|status
-argument_list|)
-operator|!=
 name|pid
-condition|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|status
+name|wait_status
 operator|.
 name|w_coredump
 condition|)
 name|printf
 argument_list|(
-literal|" -- Core dumped\n"
+literal|" -- Core dumped.\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\n"
+literal|" -- Can't dump core.\n"
 argument_list|)
 expr_stmt|;
 return|return

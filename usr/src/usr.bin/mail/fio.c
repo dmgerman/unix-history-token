@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.13 (Berkeley) %G%"
+literal|"@(#)fio.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1980,9 +1980,10 @@ name|struct
 name|stat
 name|sbuf
 decl_stmt|;
+specifier|extern
 name|union
 name|wait
-name|s
+name|wait_status
 decl_stmt|;
 switch|switch
 condition|(
@@ -2272,27 +2273,16 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|wait
-argument_list|(
-operator|&
-name|s
-argument_list|)
-operator|!=
-name|pid
-condition|)
-empty_stmt|;
-empty_stmt|;
 if|if
 condition|(
-name|s
-operator|.
-name|w_status
-operator|!=
+name|wait_child
+argument_list|(
+name|pid
+argument_list|)
+operator|<
 literal|0
 operator|&&
-name|s
+name|wait_status
 operator|.
 name|w_termsig
 operator|!=
