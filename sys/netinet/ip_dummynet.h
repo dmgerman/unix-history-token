@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.h,v 1.1 1998/05/10 01:30:23 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.h,v 1.3 1999/01/23 23:59:50 archie Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,25 +14,6 @@ define|#
 directive|define
 name|_IP_DUMMYNET_H
 end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_dn_ctl_t
-name|__P
-typedef|((struct
-name|sockopt
-modifier|*
-typedef|)) ;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_dn_ctl_t
-modifier|*
-name|ip_dn_ctl_ptr
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Definition of dummynet data structures.  * Dummynet handles a list of pipes, each one identified by a unique  * number (hopefully the list is short so we use a linked list).  *  * Each list contains a set of parameters identifying the pipe, and  * a set of packets queued on the pipe itself.  *  * I could have used queue macros, but the management i have  * is pretty simple and this makes the code more portable.  */
@@ -258,6 +239,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|int
+name|ip_dn_ctl_t
+name|__P
+typedef|((struct
+name|sockopt
+modifier|*
+typedef|)) ;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|ip_dn_ctl_t
+modifier|*
+name|ip_dn_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ip_dn_init
@@ -326,6 +326,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#
