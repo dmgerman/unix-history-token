@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmmeter.h	4.5	%G%	*/
+comment|/*	vmmeter.h	4.6	%G%	*/
 end_comment
 
 begin_comment
@@ -115,6 +115,10 @@ name|unsigned
 name|v_rev
 decl_stmt|;
 comment|/* revolutions of the hand */
+name|unsigned
+name|v_seqfree
+decl_stmt|;
+comment|/* pages taken from sequential programs */
 name|unsigned
 name|v_dfree
 decl_stmt|;
