@@ -3571,7 +3571,7 @@ name|_havemaster
 parameter_list|(
 name|char
 modifier|*
-name|_pw_yp_domain
+name|_yp_domain
 parameter_list|)
 block|{
 name|int
@@ -3588,7 +3588,7 @@ name|rval
 operator|=
 name|yp_order
 argument_list|(
-name|_pw_yp_domain
+name|_yp_domain
 argument_list|,
 literal|"master.passwd.byname"
 argument_list|,
@@ -3626,7 +3626,7 @@ name|rval
 operator|=
 name|yp_order
 argument_list|(
-name|_pw_yp_domain
+name|_yp_domain
 argument_list|,
 literal|"passwd.adjunct.byname"
 argument_list|,
