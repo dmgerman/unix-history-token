@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * CIS Handling for the Cardbus Bus  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CARDBUS_DEBUG
-end_define
-
 begin_include
 include|#
 directive|include
@@ -103,61 +97,6 @@ directive|include
 file|"card_if.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-name|CARDBUS_DEBUG
-end_if
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|a
-parameter_list|)
-value|printf a
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVPRINTF
-parameter_list|(
-name|x
-parameter_list|)
-value|device_printf x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVPRINTF
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -165,6 +104,33 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cardbus_cis_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|a
+parameter_list|)
+value|if (cardbus_cis_debug) printf a
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (cardbus_cis_debug) device_printf x
+end_define
 
 begin_define
 define|#
