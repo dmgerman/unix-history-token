@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.3	%G%	*/
+comment|/*	kern_clock.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -419,6 +419,14 @@ else|else
 name|rcnt
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CHAOS
+name|ch_clock
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
