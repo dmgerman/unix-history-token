@@ -22,6 +22,12 @@ name|semid_t
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
