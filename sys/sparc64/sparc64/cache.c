@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tlb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ver.h>
 end_include
 
@@ -387,6 +393,10 @@ name|icache_page_inval
 operator|=
 name|cheetah_icache_page_inval
 expr_stmt|;
+name|tlb_flush_user
+operator|=
+name|cheetah_tlb_flush_user
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -397,6 +407,10 @@ expr_stmt|;
 name|icache_page_inval
 operator|=
 name|spitfire_icache_page_inval
+expr_stmt|;
+name|tlb_flush_user
+operator|=
+name|spitfire_tlb_flush_user
 expr_stmt|;
 block|}
 block|}

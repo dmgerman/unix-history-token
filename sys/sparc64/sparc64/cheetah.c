@@ -87,6 +87,12 @@ directive|include
 file|<machine/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/tlb.h>
+end_include
+
 begin_comment
 comment|/*  * Flush a physical page from the data cache.  */
 end_comment
@@ -177,6 +183,21 @@ name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+name|void
+name|cheetah_tlb_flush_user
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"cheetah_tlb_flush_user"
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 end_unit

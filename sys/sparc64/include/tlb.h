@@ -361,6 +361,22 @@ name|MMU_SFSR_FV
 value|(1UL<< MMU_SFSR_FV_SHIFT)
 end_define
 
+begin_typedef
+typedef|typedef
+name|void
+name|tlb_flush_user_t
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
 begin_struct_decl
 struct_decl|struct
 name|tlb_entry
@@ -380,20 +396,6 @@ name|struct
 name|tlb_entry
 modifier|*
 name|kernel_tlbs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tlb_dtlb_entries
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tlb_itlb_entries
 decl_stmt|;
 end_decl_stmt
 
@@ -442,14 +444,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|tlb_dump
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|tlb_flush_user_t
+name|cheetah_tlb_flush_user
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tlb_flush_user_t
+name|spitfire_tlb_flush_user
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tlb_flush_user_t
+modifier|*
+name|tlb_flush_user
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
