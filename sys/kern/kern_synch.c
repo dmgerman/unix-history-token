@@ -2015,7 +2015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * asleep() - async sleep call.  Place process on wait queue and return   * immediately without blocking.  The process stays runnable until await()   * is called.  If ident is NULL, remove process from wait queue if it is still  * on one.  *  * Only the most recent sleep condition is effective when making successive  * calls to asleep() or when calling msleep().  *  * The timeout, if any, is not initiated until await() is called.  The sleep  * priority, signal, and timeout is specified in the asleep() call but may be  * overriden in the await() call.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
+comment|/*  * asleep() - async sleep call.  Place process on wait queue and return   * immediately without blocking.  The process stays runnable until mawait()   * is called.  If ident is NULL, remove process from wait queue if it is still  * on one.  *  * Only the most recent sleep condition is effective when making successive  * calls to asleep() or when calling msleep().  *  * The timeout, if any, is not initiated until mawait() is called.  The sleep  * priority, signal, and timeout is specified in the asleep() call but may be  * overriden in the mawait() call.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
 end_comment
 
 begin_function
@@ -2153,13 +2153,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * await() - wait for async condition to occur.   The process blocks until  * wakeup() is called on the most recent asleep() address.  If wakeup is called  * prior to await(), await() winds up being a NOP.  *  * If await() is called more then once (without an intervening asleep() call),  * await() is still effectively a NOP but it calls mi_switch() to give other  * processes some cpu before returning.  The process is left runnable.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
+comment|/*  * mawait() - wait for async condition to occur.   The process blocks until  * wakeup() is called on the most recent asleep() address.  If wakeup is called  * prior to mawait(), mawait() winds up being a NOP.  *  * If mawait() is called more then once (without an intervening asleep() call),  * mawait() is still effectively a NOP but it calls mi_switch() to give other  * processes some cpu before returning.  The process is left runnable.  *  *<<<<<<<< EXPERIMENTAL, UNTESTED>>>>>>>>>>  */
 end_comment
 
 begin_function
 name|int
-name|await
+name|mawait
 parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|mtx
+parameter_list|,
 name|int
 name|priority
 parameter_list|,
@@ -2182,6 +2187,18 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|WITNESS_SAVE_DECL
+argument_list|(
+name|mtx
+argument_list|)
+expr_stmt|;
+name|WITNESS_SLEEP
+argument_list|(
+literal|0
+argument_list|,
+name|mtx
+argument_list|)
+expr_stmt|;
 name|mtx_enter
 argument_list|(
 operator|&
@@ -2190,6 +2207,49 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mtx
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mtx_assert
+argument_list|(
+name|mtx
+argument_list|,
+name|MA_OWNED
+operator||
+name|MA_NOTRECURSED
+argument_list|)
+expr_stmt|;
+name|WITNESS_SAVE
+argument_list|(
+name|mtx
+argument_list|,
+name|mtx
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+name|mtx
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_NOSWITCH
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|priority
+operator|&
+name|PDROP
+condition|)
+name|mtx
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|splhigh
@@ -2214,7 +2274,7 @@ decl_stmt|;
 name|int
 name|catch
 decl_stmt|;
-comment|/* 		 * The call to await() can override defaults specified in 		 * the original asleep(). 		 */
+comment|/* 		 * The call to mawait() can override defaults specified in 		 * the original asleep(). 		 */
 if|if
 condition|(
 name|priority
@@ -2547,7 +2607,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 		 * If as_priority is 0, await() has been called without an  		 * intervening asleep().  We are still effectively a NOP,  		 * but we call mi_switch() for safety. 		 */
+comment|/* 		 * If as_priority is 0, mawait() has been called without an  		 * intervening asleep().  We are still effectively a NOP,  		 * but we call mi_switch() for safety. 		 */
 if|if
 condition|(
 name|p
@@ -2578,7 +2638,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * clear p_asleep.as_priority as an indication that await() has been 	 * called.  If await() is called again without an intervening asleep(), 	 * await() is still effectively a NOP but the above mi_switch() code 	 * is triggered as a safety. 	 */
+comment|/* 	 * clear p_asleep.as_priority as an indication that mawait() has been 	 * called.  If mawait() is called again without an intervening asleep(), 	 * mawait() is still effectively a NOP but the above mi_switch() code 	 * is triggered as a safety. 	 */
 name|p
 operator|->
 name|p_asleep
@@ -2597,6 +2657,28 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mtx
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mtx_enter
+argument_list|(
+name|mtx
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|WITNESS_RESTORE
+argument_list|(
+name|mtx
+argument_list|,
+name|mtx
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|rval
@@ -2606,7 +2688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement timeout for msleep or asleep()/await()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  */
+comment|/*  * Implement timeout for msleep or asleep()/mawait()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  */
 end_comment
 
 begin_function
