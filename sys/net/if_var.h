@@ -469,6 +469,11 @@ name|ifprefixhead
 name|if_prefixhead
 decl_stmt|;
 comment|/* list of prefixes per if */
+name|u_int8_t
+modifier|*
+name|if_broadcastaddr
+decl_stmt|;
+comment|/* linklevel broadcast bytestring */
 block|}
 struct|;
 end_struct
@@ -1913,6 +1918,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IF_LLADDR
+parameter_list|(
+name|ifp
+parameter_list|)
+define|\
+value|LLADDR((struct sockaddr_dl *) ifnet_addrs[ifp->if_index - 1]->ifa_addr)
+end_define
 
 begin_ifdef
 ifdef|#

@@ -251,7 +251,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|arpcom
+name|ifnet
 operator|*
 operator|,
 expr|struct
@@ -284,7 +284,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|arpcom
+name|ifnet
 operator|*
 operator|,
 expr|struct
