@@ -884,9 +884,6 @@ decl_stmt|;
 name|vm_offset_t
 name|end
 decl_stmt|;
-name|vm_offset_t
-name|va
-decl_stmt|;
 name|caddr_t
 name|kmdp
 decl_stmt|;
@@ -1428,28 +1425,7 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map and initialize the message buffer (after setting trap table). 	 */
-name|va
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|msgbufp
-expr_stmt|;
-name|pmap_map
-argument_list|(
-operator|&
-name|va
-argument_list|,
-name|msgbuf_phys
-argument_list|,
-name|msgbuf_phys
-operator|+
-name|MSGBUF_SIZE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Initialize the message buffer (after setting trap table). 	 */
 name|msgbufinit
 argument_list|(
 name|msgbufp
