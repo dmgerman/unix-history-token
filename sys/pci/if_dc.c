@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -9423,6 +9435,19 @@ operator|->
 name|dc_stat_ch
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SRM_MEDIA
@@ -10911,12 +10936,42 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 	 	 * comes up in the ring. 		 */
+comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 		 * comes up in the ring.  However, don't report long 		 * frames as errors since they could be vlans 		 */
 if|if
 condition|(
+operator|(
 name|rxstat
 operator|&
 name|DC_RXSTAT_RXERR
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|rxstat
+operator|&
+name|DC_RXSTAT_GIANT
+operator|)
+operator|||
+operator|(
+name|rxstat
+operator|&
+operator|(
+name|DC_RXSTAT_CRCERR
+operator||
+name|DC_RXSTAT_DRIBBLE
+operator||
+name|DC_RXSTAT_MIIERE
+operator||
+name|DC_RXSTAT_COLLSEEN
+operator||
+name|DC_RXSTAT_RUNT
+operator||
+name|DC_RXSTAT_DE
+operator|)
+operator|)
 condition|)
 block|{
 name|ifp
@@ -10968,6 +11023,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 comment|/* No errors; receive the packet. */
