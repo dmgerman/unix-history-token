@@ -1053,10 +1053,19 @@ operator|-
 literal|2
 condition|)
 block|{
-comment|/* 				 * f00f hack workaround has triggered, treat 				 * as illegal instruction not page fault. 				 */
-name|ucode
+comment|/* 				 * The f00f hack workaround has triggered, so 				 * treat the fault as an illegal instruction  				 * (T_PRIVINFLT) instead of a page fault. 				 */
+name|type
+operator|=
+name|frame
+operator|.
+name|tf_trapno
 operator|=
 name|T_PRIVINFLT
+expr_stmt|;
+comment|/* Proceed as in that case. */
+name|ucode
+operator|=
+name|type
 expr_stmt|;
 name|i
 operator|=
