@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_ASM_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|__ASM__
+end_define
+
 begin_include
 include|#
 directive|include
