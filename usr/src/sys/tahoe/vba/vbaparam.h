@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbaparam.h	1.1	86/01/21	*/
+comment|/*	vbaparam.h	1.2	86/12/08	*/
 end_comment
 
 begin_comment
@@ -51,7 +51,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * The following constants define the fixed size map of the  * VERSAbus i/o space.  The values should reflect the range  * of i/o addresses used by all the controllers handled in  * the system as specified in the ubminit structure in ioconf.c.  */
+comment|/*  * The following macros relate to the segmentation of the VERSAbus  * i/o space.  *  * The VERSAbus adapter segments the i/o space (as seen by the cpu)  * into three regions.  Cpu accesses to the upper 64Kb of the i/o space  * generate VERSAbus cycles with a 16-bit address and a non-privileged  * short i/o space address modifier.  Accesses to the next 1Mb - 64Kb  * generate 24-bit addresses and a non-privileged standard address  * modifier.  Accesses to the remainder of the 1Gb i/o space generate  * 32-bit addresses with a non-privileged extended address modifier.  * Beware that 32-bit addresses generated from this region always have  * zero in the upper 2 bits; e.g. a reference to physical address fe000000  * results in a VERSAbus address of 3e000000.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VBIO16BIT
+parameter_list|(
+name|a
+parameter_list|)
+value|(0xfffe0000<= ((unsigned)(a)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VBIO24BIT
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|(0xff000000<= ((unsigned)(a))&& ((unsigned)(a))< 0xfffe0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VBIO32BIT
+parameter_list|(
+name|a
+parameter_list|)
+value|(((unsigned)(a))< 0xff000000)
+end_define
+
+begin_comment
+comment|/*   * The following constants define the fixed size map of the  * VERSAbus i/o space.  The values should reflect the range  * of i/o addresses used by all the controllers unprepared  * to allocate and initialize their own page maps.  */
 end_comment
 
 begin_define
@@ -77,7 +112,7 @@ comment|/* last address in mapped space */
 end_comment
 
 begin_comment
-comment|/* number of entries in the system page pable for i/o space */
+comment|/* number of entries in the system page table for i/o space */
 end_comment
 
 begin_define
@@ -85,6 +120,31 @@ define|#
 directive|define
 name|VBIOSIZE
 value|btoc(VBIOEND-VBIOBASE)
+end_define
+
+begin_comment
+comment|/* is device in mapped region */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VBIOMAPPED
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|(VBIOBASE<= ((unsigned)(a))&& ((unsigned)(a))<= VBIOEND)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vboff
+parameter_list|(
+name|addr
+parameter_list|)
+value|((int)(((caddr_t)(addr)) - VBIOBASE))
 end_define
 
 begin_comment
