@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.14	81/02/15	*/
+comment|/*	up.c	4.15	81/02/16	*/
 end_comment
 
 begin_include
@@ -348,24 +348,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|uba_minfo
-name|up_minfo
-index|[
-name|NSC21
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* there is no reason for this to be a global structure, it 	   is only known/used locally, it would be better combined 	   with up_softc - but that would mean I would have to alter 	   more than I want to just now. Similarly, there is no longer 	   any real need for upminfo, but the code still uses it so ... 	*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|u_short
 name|upstd
 index|[]
+init|=
+block|{
+literal|0776700
+block|,
+literal|0774400
+block|,
+literal|0776300
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -381,8 +374,6 @@ name|upslave
 block|,
 name|updgo
 block|,
-literal|4
-block|,
 literal|0
 block|,
 name|upstd
@@ -390,6 +381,8 @@ block|,
 literal|"up"
 block|,
 name|updinfo
+block|,
+name|upminfo
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -594,6 +587,12 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|br
+decl_stmt|,
+name|cvec
+decl_stmt|;
 operator|(
 operator|(
 expr|struct
@@ -616,7 +615,6 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* just assume it is us (for now) */
 block|}
 end_block
 
@@ -628,8 +626,6 @@ argument_list|,
 argument|reg
 argument_list|,
 argument|slaveno
-argument_list|,
-argument|uban
 argument_list|)
 end_macro
 
@@ -661,16 +657,6 @@ name|device
 operator|*
 operator|)
 name|reg
-decl_stmt|;
-specifier|register
-name|struct
-name|uba_minfo
-modifier|*
-name|um
-decl_stmt|;
-specifier|register
-name|int
-name|sc21
 decl_stmt|;
 name|upaddr
 operator|->
@@ -708,114 +694,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*** we should check device type (return 0 if we don't like it) ***/
-comment|/*** and set type index in ui->ui_type, but we KNOW all we are  ***/
-comment|/*** going to see at the minute is a 9300, and the index for a  ***/
-comment|/*** 9300 is 0, which is the value already in ui->ui_type, so ..***/
-name|um
-operator|=
-operator|&
-name|up_minfo
-index|[
-literal|0
-index|]
-expr_stmt|;
-for|for
-control|(
-name|sc21
-operator|=
-literal|0
-init|;
-name|sc21
-operator|<
-name|NSC21
-condition|;
-name|sc21
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|um
-operator|->
-name|um_alive
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* this is a new ctrlr */
-name|um
-operator|->
-name|um_addr
-operator|=
-name|reg
-expr_stmt|;
-name|um
-operator|->
-name|um_ubanum
-operator|=
-name|uban
-expr_stmt|;
-name|um
-operator|->
-name|um_num
-operator|=
-name|sc21
-expr_stmt|;
-comment|/* not needed after up_softc 						   combined with um ???  */
-name|um
-operator|->
-name|um_alive
-operator|=
-literal|1
-expr_stmt|;
-name|upminfo
-index|[
-name|sc21
-index|]
-operator|=
-name|um
-expr_stmt|;
-comment|/* just till upminfo vanishes */
-goto|goto
-name|found
-goto|;
-block|}
-if|if
-condition|(
-name|um
-operator|->
-name|um_addr
-operator|==
-name|reg
-operator|&&
-name|um
-operator|->
-name|um_ubanum
-operator|==
-name|uban
-condition|)
-goto|goto
-name|found
-goto|;
-name|um
-operator|++
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* too many sc21's */
-name|found
-label|:
-name|ui
-operator|->
-name|ui_mi
-operator|=
-name|um
-expr_stmt|;
 if|if
 condition|(
 name|upwstart
@@ -1232,7 +1110,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_softas
@@ -1765,7 +1643,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -1895,7 +1773,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -2003,7 +1881,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -2029,7 +1907,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -2201,7 +2079,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_wticks
@@ -2704,7 +2582,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_softas
@@ -2729,7 +2607,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -2759,7 +2637,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_softas
@@ -3072,7 +2950,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -3151,7 +3029,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -3572,7 +3450,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -3587,7 +3465,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info
@@ -3609,7 +3487,7 @@ name|up_softc
 index|[
 name|um
 operator|->
-name|um_num
+name|um_ctlr
 index|]
 operator|.
 name|sc_info

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.10	%G%	*/
+comment|/*	tm.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -124,13 +124,6 @@ end_include
 begin_decl_stmt
 name|struct
 name|buf
-name|tmtab
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|buf
 name|ctmbuf
 decl_stmt|;
 end_decl_stmt
@@ -162,7 +155,7 @@ begin_decl_stmt
 name|struct
 name|uba_dinfo
 modifier|*
-name|tminfo
+name|tmdinfo
 index|[
 name|NTM
 index|]
@@ -170,10 +163,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|struct
+name|uba_minfo
+modifier|*
+name|tmminfo
+index|[
+name|NTM
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_short
 name|tmstd
 index|[]
+init|=
+block|{
+literal|0772520
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -189,15 +198,15 @@ name|tmslave
 block|,
 name|tmdgo
 block|,
-literal|4
-block|,
 literal|0
 block|,
 name|tmstd
 block|,
 literal|"tm"
 block|,
-name|tminfo
+name|tmdinfo
+block|,
+name|tmminfo
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -335,13 +344,13 @@ comment|/* someone is waiting for a rewind */
 end_comment
 
 begin_comment
-comment|/*  * Determine if there is a controller for  * a tm at address reg.  Our goal is to make the  * device interrupt.  * THE ARGUMENT UI IS OBSOLETE  */
+comment|/*  * Determine if there is a controller for  * a tm at address reg.  Our goal is to make the  * device interrupt.  */
 end_comment
 
 begin_macro
 name|tmcntrlr
 argument_list|(
-argument|ui
+argument|um
 argument_list|,
 argument|reg
 argument_list|)
@@ -349,9 +358,9 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_minfo
 modifier|*
-name|ui
+name|um
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +372,12 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|br
+decl_stmt|,
+name|cvec
+decl_stmt|;
 operator|(
 operator|(
 expr|struct
@@ -376,7 +391,7 @@ name|tmcs
 operator|=
 name|IENABLE
 expr_stmt|;
-comment|/* 	 * If this is a tm03/tc11, it ought to have interrupted 	 * by now, if it isn't (ie: it is a ts04) then we just 	 * pray that it didn't interrupt, so autoconf will ignore it 	 * - just in case out prayers fail, we will reference one 	 * of the more distant registers, and hope for a machine 	 * check, or similar disaster 	 */
+comment|/* 	 * If this is a tm03/tc11, it ought to have interrupted 	 * by now, if it isn't (ie: it is a ts04) then we just 	 * hope that it didn't interrupt, so autoconf will ignore it. 	 * Just in case, we will reference one 	 * of the more distant registers, and hope for a machine 	 * check, or similar disaster if this is a ts. 	 */
 if|if
 condition|(
 name|badaddr
@@ -437,25 +452,13 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* 	 * Due to a design flaw, we cannot ascertain if the tape 	 * exists or not unless it is on line - ie: unless a tape is 	 * mounted. This is too servere a restriction to bear. 	 * As we can only handle one tape, we might just as well insist 	 * that it be slave #0, and just assume that it exists. 	 * Something better will have to be done if you have two 	 * tapes on one controller, or two controllers 	 */
-name|printf
-argument_list|(
-literal|"tm: sl %d - tmi %x\n"
-argument_list|,
-name|slaveno
-argument_list|,
-name|tminfo
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|slaveno
 operator|!=
 literal|0
 operator|||
-name|tminfo
+name|tmdinfo
 index|[
 literal|0
 index|]
@@ -507,7 +510,12 @@ name|uba_dinfo
 modifier|*
 name|ui
 decl_stmt|;
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_flags
 operator||=
@@ -534,7 +542,7 @@ operator|!
 operator|(
 name|ui
 operator|=
-name|tminfo
+name|tmdinfo
 index|[
 name|minor
 argument_list|(
@@ -734,7 +742,7 @@ expr|struct
 name|device
 operator|*
 operator|)
-name|tminfo
+name|tmdinfo
 index|[
 name|minor
 argument_list|(
@@ -1056,6 +1064,12 @@ name|daddr_t
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|tmi
+decl_stmt|;
 name|tmwaitrws
 argument_list|(
 name|bp
@@ -1189,39 +1203,49 @@ operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
+name|tmi
+operator|=
+operator|&
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
+expr_stmt|;
 if|if
 condition|(
-name|tmtab
-operator|.
+name|tmi
+operator|->
 name|b_actf
 operator|==
 name|NULL
 condition|)
-name|tmtab
-operator|.
+name|tmi
+operator|->
 name|b_actf
 operator|=
 name|bp
 expr_stmt|;
 else|else
-name|tmtab
-operator|.
+name|tmi
+operator|->
 name|b_actl
 operator|->
 name|av_forw
 operator|=
 name|bp
 expr_stmt|;
-name|tmtab
-operator|.
+name|tmi
+operator|->
 name|b_actl
 operator|=
 name|bp
 expr_stmt|;
 if|if
 condition|(
-name|tmtab
-operator|.
+name|tmi
+operator|->
 name|b_active
 operator|==
 literal|0
@@ -1280,7 +1304,12 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_actf
 operator|)
@@ -1290,7 +1319,7 @@ condition|)
 return|return;
 name|ui
 operator|=
-name|tminfo
+name|tmdinfo
 index|[
 name|minor
 argument_list|(
@@ -1418,7 +1447,12 @@ name|bp
 operator|->
 name|b_command
 expr_stmt|;
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_active
 operator|=
@@ -1524,7 +1558,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_errcnt
 condition|)
@@ -1553,7 +1592,12 @@ operator|)
 operator|&
 literal|0x30
 expr_stmt|;
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_active
 operator|=
@@ -1573,7 +1617,12 @@ name|cmd
 expr_stmt|;
 return|return;
 block|}
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_active
 operator|=
@@ -1648,7 +1697,12 @@ operator|&
 name|tm_ubinfo
 argument_list|)
 expr_stmt|;
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_actf
 operator|=
@@ -1702,7 +1756,7 @@ expr|struct
 name|device
 operator|*
 operator|)
-name|tminfo
+name|tmdinfo
 index|[
 name|d
 index|]
@@ -1749,7 +1803,12 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_actf
 operator|)
@@ -1793,11 +1852,21 @@ name|LASTIOW
 expr_stmt|;
 name|state
 operator|=
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_active
 expr_stmt|;
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_active
 operator|=
@@ -1901,7 +1970,12 @@ block|{
 if|if
 condition|(
 operator|++
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_errcnt
 operator|<
@@ -1930,7 +2004,7 @@ operator|++
 expr_stmt|;
 name|ubarelse
 argument_list|(
-name|tminfo
+name|tmdinfo
 index|[
 name|d
 index|]
@@ -2057,13 +2131,23 @@ block|}
 block|}
 name|errout
 label|:
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_errcnt
 operator|=
 literal|0
 expr_stmt|;
-name|tmtab
+name|tmminfo
+index|[
+literal|0
+index|]
+operator|->
+name|um_tab
 operator|.
 name|b_actf
 operator|=
@@ -2082,7 +2166,7 @@ name|tmbc
 expr_stmt|;
 name|ubarelse
 argument_list|(
-name|tminfo
+name|tmdinfo
 index|[
 name|d
 index|]
@@ -2147,7 +2231,7 @@ expr|struct
 name|device
 operator|*
 operator|)
-name|tminfo
+name|tmdinfo
 index|[
 name|minor
 argument_list|(
@@ -2722,7 +2806,7 @@ parameter_list|)
 value|((b)((int)(a)&0x7fffffff))
 if|if
 condition|(
-name|tminfo
+name|tmdinfo
 index|[
 literal|0
 index|]
@@ -2746,7 +2830,7 @@ name|ui
 operator|=
 name|phys
 argument_list|(
-name|tminfo
+name|tmdinfo
 index|[
 literal|0
 index|]
