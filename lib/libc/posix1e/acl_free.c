@@ -43,6 +43,10 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_comment
+comment|/*  * acl_free() (23.4.12): free any releasable memory allocated to the  * ACL data object identified by obj_p.  */
+end_comment
+
 begin_function
 name|int
 name|acl_free
@@ -52,11 +56,21 @@ modifier|*
 name|obj_p
 parameter_list|)
 block|{
+if|if
+condition|(
+name|obj_p
+condition|)
+block|{
 name|free
 argument_list|(
 name|obj_p
 argument_list|)
 expr_stmt|;
+name|obj_p
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

@@ -40,7 +40,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * acl_copy_entry() - copy the contents of ACL entry src_d to  * ACL entry dest_d  */
+comment|/*  * acl_copy_entry() (23.4.4): copy the contents of ACL entry src_d to  * ACL entry dest_d  */
 end_comment
 
 begin_function

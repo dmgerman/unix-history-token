@@ -424,9 +424,6 @@ decl_stmt|;
 name|acl_t
 name|acl
 decl_stmt|;
-name|uid_t
-name|id
-decl_stmt|;
 name|char
 modifier|*
 name|mybuf_p
@@ -458,6 +455,9 @@ name|permission
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|uid_t
+name|id
 decl_stmt|;
 comment|/* Local copy we can mess up. */
 name|mybuf_p

@@ -112,6 +112,12 @@ operator|)
 return|;
 block|}
 block|}
+name|acl
+operator|->
+name|ats_cur_entry
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|__acl_set_file
@@ -120,7 +126,10 @@ name|path_p
 argument_list|,
 name|type
 argument_list|,
+operator|&
 name|acl
+operator|->
+name|ats_acl
 argument_list|)
 operator|)
 return|;
@@ -164,6 +173,12 @@ literal|1
 operator|)
 return|;
 block|}
+name|acl
+operator|->
+name|ats_cur_entry
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|___acl_set_fd
@@ -172,7 +187,10 @@ name|fd
 argument_list|,
 name|ACL_TYPE_ACCESS
 argument_list|,
+operator|&
 name|acl
+operator|->
+name|ats_acl
 argument_list|)
 operator|)
 return|;
@@ -230,6 +248,12 @@ operator|)
 return|;
 block|}
 block|}
+name|acl
+operator|->
+name|ats_cur_entry
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|___acl_set_fd
@@ -238,7 +262,10 @@ name|fd
 argument_list|,
 name|type
 argument_list|,
+operator|&
 name|acl
+operator|->
+name|ats_acl
 argument_list|)
 operator|)
 return|;
@@ -246,7 +273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * acl_set_permset() sets the permissions of ACL entry entry_d  * with the permissions in permset_d  */
+comment|/*  * acl_set_permset() (23.4.23): sets the permissions of ACL entry entry_d  * with the permissions in permset_d  */
 end_comment
 
 begin_function

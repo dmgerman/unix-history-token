@@ -164,7 +164,7 @@ name|filename
 operator|=
 name|filename
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|filelist
@@ -401,13 +401,13 @@ name|need_mask
 operator|=
 literal|0
 expr_stmt|;
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|entrylist
 argument_list|)
 expr_stmt|;
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|filelist
@@ -479,7 +479,7 @@ name|op
 operator|=
 name|OP_MERGE_ACL
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|entrylist
@@ -519,7 +519,7 @@ name|op
 operator|=
 name|OP_REMOVE_ACL
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|entrylist
@@ -550,7 +550,7 @@ name|op
 operator|=
 name|OP_REMOVE_EXT
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|entrylist
@@ -589,7 +589,7 @@ name|op
 operator|=
 name|OP_REMOVE_DEF
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|entrylist
@@ -643,7 +643,7 @@ name|op
 operator|=
 name|OP_MERGE_ACL
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|entrylist
@@ -704,7 +704,7 @@ name|op
 operator|=
 name|OP_REMOVE_ACL
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|entrylist
@@ -731,7 +731,10 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-name|STAILQ_EMPTY
+operator|!
+name|n_flag
+operator|&&
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|entrylist
@@ -843,7 +846,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* cycle through each file */
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|file
 argument_list|,
@@ -899,7 +902,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* cycle through each option */
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|entry
 argument_list|,
@@ -1050,6 +1053,7 @@ operator|&&
 operator|(
 name|set_acl_mask
 argument_list|(
+operator|&
 name|final_acl
 argument_list|)
 operator|==

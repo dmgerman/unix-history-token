@@ -158,7 +158,10 @@ name|pathp
 argument_list|,
 name|type
 argument_list|,
+operator|&
 name|acl
+operator|->
+name|ats_acl
 argument_list|)
 operator|)
 return|;
@@ -216,6 +219,12 @@ operator|)
 return|;
 block|}
 block|}
+name|acl
+operator|->
+name|ats_cur_entry
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|___acl_aclcheck_fd
@@ -224,7 +233,10 @@ name|fd
 argument_list|,
 name|type
 argument_list|,
+operator|&
 name|acl
+operator|->
+name|ats_acl
 argument_list|)
 operator|)
 return|;

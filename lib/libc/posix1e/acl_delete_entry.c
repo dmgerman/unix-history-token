@@ -3,10 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 2001 Chris D. Faulhaber  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/* acl_delete_entry() - delete an ACL entry from an ACL */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -43,6 +39,10 @@ directive|include
 file|<string.h>
 end_include
 
+begin_comment
+comment|/*  * acl_delete_entry() (23.4.9): remove the ACL entry indicated by entry_d  * from acl.  */
+end_comment
+
 begin_function
 name|int
 name|acl_delete_entry
@@ -54,6 +54,11 @@ name|acl_entry_t
 name|entry_d
 parameter_list|)
 block|{
+name|struct
+name|acl
+modifier|*
+name|acl_int
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -64,10 +69,31 @@ name|acl
 operator|||
 operator|!
 name|entry_d
-operator|||
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|acl_int
+operator|=
+operator|&
+name|acl
+operator|->
+name|ats_acl
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_cnt
 operator|<
 literal|1
@@ -76,6 +102,8 @@ operator|||
 operator|(
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_cnt
 operator|>
 name|ACL_MAX_ENTRIES
@@ -101,6 +129,8 @@ name|i
 operator|<
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_cnt
 condition|;
 name|i
@@ -113,6 +143,8 @@ condition|(
 operator|(
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_entry
 index|[
 name|i
@@ -128,6 +160,8 @@ operator|&&
 operator|(
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_entry
 index|[
 name|i
@@ -148,12 +182,16 @@ name|i
 operator|<
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_cnt
 operator|-
 literal|1
 condition|)
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_entry
 index|[
 name|i
@@ -161,6 +199,8 @@ index|]
 operator|=
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_entry
 index|[
 operator|++
@@ -170,6 +210,8 @@ expr_stmt|;
 comment|/* ...drop the count and zero the unused entry... */
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_cnt
 operator|--
 expr_stmt|;
@@ -178,6 +220,8 @@ argument_list|(
 operator|&
 name|acl
 operator|->
+name|ats_acl
+operator|.
 name|acl_entry
 index|[
 name|i
@@ -189,6 +233,12 @@ expr|struct
 name|acl_entry
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|acl
+operator|->
+name|ats_cur_entry
+operator|=
+literal|0
 expr_stmt|;
 return|return
 literal|0

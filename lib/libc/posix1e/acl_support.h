@@ -34,9 +34,7 @@ begin_function_decl
 name|int
 name|_posix1e_acl_check
 parameter_list|(
-name|struct
-name|acl
-modifier|*
+name|acl_t
 name|acl
 parameter_list|)
 function_decl|;

@@ -84,6 +84,11 @@ modifier|*
 name|len_p
 parameter_list|)
 block|{
+name|struct
+name|acl
+modifier|*
+name|acl_int
+decl_stmt|;
 name|char
 modifier|*
 name|buf
@@ -151,6 +156,13 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|acl_int
+operator|=
+operator|&
+name|acl
+operator|->
+name|ats_acl
+expr_stmt|;
 name|mask_perm
 operator|=
 name|ACL_PERM_BITS
@@ -164,7 +176,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|acl
+name|acl_int
 operator|->
 name|acl_cnt
 condition|;
@@ -173,7 +185,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|acl
+name|acl_int
 operator|->
 name|acl_entry
 index|[
@@ -186,7 +198,7 @@ name|ACL_MASK
 condition|)
 name|mask_perm
 operator|=
-name|acl
+name|acl_int
 operator|->
 name|acl_entry
 index|[
@@ -203,7 +215,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|acl
+name|acl_int
 operator|->
 name|acl_cnt
 condition|;
@@ -213,7 +225,7 @@ control|)
 block|{
 name|ae_tag
 operator|=
-name|acl
+name|acl_int
 operator|->
 name|acl_entry
 index|[
@@ -224,7 +236,7 @@ name|ae_tag
 expr_stmt|;
 name|ae_id
 operator|=
-name|acl
+name|acl_int
 operator|->
 name|acl_entry
 index|[
@@ -235,7 +247,7 @@ name|ae_id
 expr_stmt|;
 name|ae_perm
 operator|=
-name|acl
+name|acl_int
 operator|->
 name|acl_entry
 index|[

@@ -62,9 +62,7 @@ name|acl_type_t
 name|type
 parameter_list|)
 block|{
-name|struct
-name|acl
-modifier|*
+name|acl_t
 name|aclp
 decl_stmt|;
 name|int
@@ -97,7 +95,10 @@ name|path_p
 argument_list|,
 name|type
 argument_list|,
+operator|&
 name|aclp
+operator|->
+name|ats_acl
 argument_list|)
 expr_stmt|;
 if|if
@@ -132,9 +133,7 @@ name|int
 name|fd
 parameter_list|)
 block|{
-name|struct
-name|acl
-modifier|*
+name|acl_t
 name|aclp
 decl_stmt|;
 name|int
@@ -167,7 +166,10 @@ name|fd
 argument_list|,
 name|ACL_TYPE_ACCESS
 argument_list|,
+operator|&
 name|aclp
+operator|->
+name|ats_acl
 argument_list|)
 expr_stmt|;
 if|if
@@ -205,9 +207,7 @@ name|acl_type_t
 name|type
 parameter_list|)
 block|{
-name|struct
-name|acl
-modifier|*
+name|acl_t
 name|aclp
 decl_stmt|;
 name|int
@@ -240,7 +240,10 @@ name|fd
 argument_list|,
 name|type
 argument_list|,
+operator|&
 name|aclp
+operator|->
+name|ats_acl
 argument_list|)
 expr_stmt|;
 if|if
@@ -278,6 +281,21 @@ name|acl_perm_t
 name|perm
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|permset_d
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 switch|switch
 condition|(
 name|perm
@@ -318,6 +336,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * acl_get_permset() (23.4.17): return via permset_p a descriptor to  * the permission set in the ACL entry entry_d.  */
+end_comment
 
 begin_function
 name|int
@@ -362,6 +384,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * acl_get_qualifier() (23.4.18): retrieve the qualifier of the tag  * for the ACL entry entry_d.  */
+end_comment
 
 begin_function
 name|void
@@ -415,9 +441,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|retval
 condition|)
-block|{
+return|return
+name|NULL
+return|;
 operator|*
 name|retval
 operator|=
@@ -429,7 +458,6 @@ return|return
 name|retval
 return|;
 block|}
-block|}
 name|errno
 operator|=
 name|EINVAL
@@ -439,6 +467,10 @@ name|NULL
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * acl_get_tag_type() (23.4.19): return the tag type for the ACL  * entry entry_p.  */
+end_comment
 
 begin_function
 name|int

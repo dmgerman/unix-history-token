@@ -124,6 +124,10 @@ name|acl_entry_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* internal ACL structure */
+end_comment
+
 begin_struct
 struct|struct
 name|acl
@@ -142,10 +146,29 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* external ACL structure */
+end_comment
+
+begin_struct
+struct|struct
+name|acl_t_struct
+block|{
+name|struct
+name|acl
+name|ats_acl
+decl_stmt|;
+name|int
+name|ats_cur_entry
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|struct
-name|acl
+name|acl_t_struct
 modifier|*
 name|acl_t
 typedef|;
@@ -615,7 +638,7 @@ name|acl_calc_mask
 parameter_list|(
 name|acl_t
 modifier|*
-name|acl_p
+name|_acl_p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -705,10 +728,10 @@ name|int
 name|acl_delete_entry
 parameter_list|(
 name|acl_t
-name|acl
+name|_acl
 parameter_list|,
 name|acl_entry_t
-name|entry_d
+name|_entry_d
 parameter_list|)
 function_decl|;
 end_function_decl

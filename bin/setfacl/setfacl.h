@@ -82,7 +82,7 @@ comment|/* remove acl's (-xX) */
 end_comment
 
 begin_comment
-comment|/* STAILQ entry for acl operations */
+comment|/* TAILQ entry for acl operations */
 end_comment
 
 begin_struct
@@ -95,7 +95,7 @@ decl_stmt|;
 name|acl_t
 name|acl
 decl_stmt|;
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|sf_entry
 argument_list|)
@@ -106,7 +106,7 @@ struct|;
 end_struct
 
 begin_macro
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|sf_entry
@@ -119,7 +119,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* STAILQ entry for files */
+comment|/* TAILQ entry for files */
 end_comment
 
 begin_struct
@@ -131,7 +131,7 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|sf_file
 argument_list|)
@@ -142,7 +142,7 @@ struct|;
 end_struct
 
 begin_macro
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|sf_file
@@ -237,6 +237,7 @@ name|int
 name|set_acl_mask
 parameter_list|(
 name|acl_t
+modifier|*
 name|prev_acl
 parameter_list|)
 function_decl|;

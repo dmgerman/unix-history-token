@@ -40,7 +40,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * acl_add_perm() adds the permission contained in perm to the  * permission set permset_d  */
+comment|/*  * acl_add_perm() (23.4.1): add the permission contained in perm to the  * permission set permset_d  */
 end_comment
 
 begin_function
@@ -56,28 +56,23 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|permset_d
-operator|||
-operator|(
-name|perm
-operator|&
-operator|!
-operator|(
-name|ACL_PERM_BITS
-operator|)
-operator|)
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
+switch|switch
+condition|(
+name|perm
+condition|)
+block|{
+case|case
+name|ACL_READ
+case|:
+case|case
+name|ACL_WRITE
+case|:
+case|case
+name|ACL_EXECUTE
+case|:
 operator|*
 name|permset_d
 operator||=
@@ -87,10 +82,20 @@ return|return
 literal|0
 return|;
 block|}
+block|}
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 end_function
 
 begin_comment
-comment|/*  * acl_clear_perms() clears all permisions from the permission  * set permset_d  */
+comment|/*  * acl_clear_perms() (23.4.3): clear all permisions from the permission  * set permset_d  */
 end_comment
 
 begin_function
@@ -119,7 +124,7 @@ block|}
 operator|*
 name|permset_d
 operator|=
-literal|0
+name|ACL_PERM_NONE
 expr_stmt|;
 return|return
 literal|0
@@ -128,7 +133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * acl_delete_perm() removes the permission in perm from the  * permission set permset_d  */
+comment|/*  * acl_delete_perm() (23.4.10): remove the permission in perm from the  * permission set permset_d  */
 end_comment
 
 begin_function
@@ -144,19 +149,23 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|permset_d
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
+switch|switch
+condition|(
+name|perm
+condition|)
+block|{
+case|case
+name|ACL_READ
+case|:
+case|case
+name|ACL_WRITE
+case|:
+case|case
+name|ACL_EXECUTE
+case|:
 operator|*
 name|permset_d
 operator|&=
@@ -169,6 +178,16 @@ operator|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+block|}
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
