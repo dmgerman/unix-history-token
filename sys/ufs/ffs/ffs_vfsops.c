@@ -6147,6 +6147,28 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * We must promote to an exclusive lock for vnode creation.  This 	 * can happen if lookup is passed LOCKSHARED.  	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|LK_TYPE_MASK
+operator|)
+operator|==
+name|LK_SHARED
+condition|)
+block|{
+name|flags
+operator|&=
+operator|~
+name|LK_TYPE_MASK
+expr_stmt|;
+name|flags
+operator||=
+name|LK_EXCLUSIVE
+expr_stmt|;
+block|}
 comment|/* 	 * We do not lock vnode creation as it is believed to be too 	 * expensive for such rare case as simultaneous creation of vnode 	 * for same ino by different processes. We just allow them to race 	 * and check later to decide who wins. Let the race begin! 	 */
 name|ump
 operator|=
