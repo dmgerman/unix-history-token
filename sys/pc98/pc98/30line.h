@@ -461,6 +461,15 @@ name|_25L
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|gdc_FH
+init|=
+name|_24KHZ
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
