@@ -349,7 +349,7 @@ begin_define
 define|#
 directive|define
 name|KMEM_ZMAX
-value|65536
+value|PAGE_SIZE
 end_define
 
 begin_define
@@ -465,6 +465,11 @@ block|,
 name|NULL
 block|}
 block|,
+if|#
+directive|if
+name|PAGE_SIZE
+operator|>
+literal|4096
 block|{
 literal|8192
 block|,
@@ -473,6 +478,11 @@ block|,
 name|NULL
 block|}
 block|,
+if|#
+directive|if
+name|PAGE_SIZE
+operator|>
+literal|8192
 block|{
 literal|16384
 block|,
@@ -481,6 +491,11 @@ block|,
 name|NULL
 block|}
 block|,
+if|#
+directive|if
+name|PAGE_SIZE
+operator|>
+literal|16384
 block|{
 literal|32768
 block|,
@@ -489,6 +504,11 @@ block|,
 name|NULL
 block|}
 block|,
+if|#
+directive|if
+name|PAGE_SIZE
+operator|>
+literal|32768
 block|{
 literal|65536
 block|,
@@ -497,6 +517,29 @@ block|,
 name|NULL
 block|}
 block|,
+if|#
+directive|if
+name|PAGE_SIZE
+operator|>
+literal|65536
+error|#
+directive|error
+literal|"Unsupported PAGE_SIZE"
+endif|#
+directive|endif
+comment|/* 65536 */
+endif|#
+directive|endif
+comment|/* 32768 */
+endif|#
+directive|endif
+comment|/* 16384 */
+endif|#
+directive|endif
+comment|/* 8192 */
+endif|#
+directive|endif
+comment|/* 4096 */
 block|{
 literal|0
 block|,
