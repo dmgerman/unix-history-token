@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*   * Based on ieeefp.h written by J.T. Conklin, Apr 28, 1995  * Public domain.  */
+comment|/*-  * Based on ieeefp.h written by J.T. Conklin, Apr 28, 1995  * Public domain.  */
 end_comment
 
 begin_ifndef

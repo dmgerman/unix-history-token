@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * This file is in the Public Domain.  * Ben Harris, 2002.  */
+comment|/*-  * This file is in the Public Domain.  * Ben Harris, 2002.  */
 end_comment
 
 begin_ifndef
