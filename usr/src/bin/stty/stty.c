@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.10 (Berkeley) %G%"
+literal|"@(#)stty.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2557,7 +2557,7 @@ name|all
 operator|!=
 literal|2
 condition|?
-literal|"crt"
+literal|"crt "
 else|:
 literal|"crt: (crtbs crterase crtkill ctlecho) "
 argument_list|)
