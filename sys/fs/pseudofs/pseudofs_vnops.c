@@ -2504,12 +2504,12 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|mtx_assert
+name|sx_assert
 argument_list|(
 operator|&
 name|allproc
 argument_list|,
-name|MA_OWNED
+name|SX_LOCKED
 argument_list|)
 expr_stmt|;
 name|again
