@@ -296,7 +296,6 @@ parameter_list|(
 name|int
 name|argc
 parameter_list|,
-name|unsigned
 name|char
 modifier|*
 name|argv

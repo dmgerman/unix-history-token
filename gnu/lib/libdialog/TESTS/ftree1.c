@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ftree1.c  *  * small test-driver for new dialog functionality  *  * Copyright (c) 1998, Anatoly A. Orehovsky  *  * file ./ftree1.test with xterm widget tree from   * direct editres(1) dump needed !!!  *  */
+comment|/*  * ftree1.c  *  * small test-driver for new dialog functionality  *  * Copyright (c) 1998, Anatoly A. Orehovsky  *  * file ./ftree1.test with xterm widget tree from   * direct editres(1) dump needed !!!  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -28,7 +28,6 @@ parameter_list|(
 name|int
 name|argc
 parameter_list|,
-name|unsigned
 name|char
 modifier|*
 name|argv
