@@ -996,8 +996,10 @@ operator|==
 name|RPC_PROGUNAVAIL
 condition|)
 block|{
-name|warnx
+name|syslog
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"%lu %s"
 argument_list|,
 name|SM_PROG
@@ -1029,9 +1031,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|errx
+name|syslog
 argument_list|(
-literal|1
+name|LOG_ERR
 argument_list|,
 literal|"%lu %s"
 argument_list|,
@@ -1041,6 +1043,11 @@ name|clnt_sperrno
 argument_list|(
 name|ret
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
