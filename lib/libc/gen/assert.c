@@ -122,7 +122,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"assertion (%s) failed: file %s:%d\n"
+literal|"Assertion failed: (%s), file %s, line %d.\n"
 argument_list|,
 name|failedexpr
 argument_list|,
@@ -139,7 +139,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"assertion (%s) failed: function %s(), file %s:%d\n"
+literal|"Assertion failed: (%s), function %s, file %s, line %d.\n"
 argument_list|,
 name|failedexpr
 argument_list|,
