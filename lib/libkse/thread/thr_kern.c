@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -558,7 +564,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|kseg_free
+name|kseg_free_unlocked
 parameter_list|(
 name|struct
 name|kse_group
@@ -1747,6 +1753,8 @@ operator|.
 name|km_flags
 operator||=
 name|KMF_NOUPCALL
+operator||
+name|KMF_NOCOMPLETED
 expr_stmt|;
 name|kse_release
 argument_list|(
@@ -2764,6 +2772,19 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|THR_ASSERT
+argument_list|(
+name|curkse
+operator|->
+name|k_mbx
+operator|.
+name|km_curthread
+operator|==
+name|NULL
+argument_list|,
+literal|"Mailbox not null in kse_sched_multi"
+argument_list|)
+expr_stmt|;
 comment|/* Check for first time initialization: */
 if|if
 condition|(
@@ -2808,11 +2829,18 @@ argument_list|(
 name|curkse
 argument_list|)
 condition|)
+block|{
+name|DBG_MSG
+argument_list|(
+literal|"Entered upcall when KSE is waiting."
+argument_list|)
+expr_stmt|;
 name|KSE_CLEAR_WAIT
 argument_list|(
 name|curkse
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Lock the scheduling lock. */
 name|KSE_SCHED_LOCK
 argument_list|(
@@ -4183,7 +4211,7 @@ operator|->
 name|kse
 argument_list|)
 expr_stmt|;
-name|kseg_free
+name|kseg_free_unlocked
 argument_list|(
 name|td
 operator|->
@@ -4229,7 +4257,7 @@ comment|/*  * Only new threads that are running or suspended may be scheduled.  
 end_comment
 
 begin_function
-name|void
+name|int
 name|_thr_schedule_add
 parameter_list|(
 name|struct
@@ -4253,6 +4281,9 @@ name|crit
 decl_stmt|;
 name|int
 name|need_start
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 comment|/* 	 * If this is the first time creating a thread, make sure 	 * the mailbox is set for the current thread. 	 */
 if|if
@@ -4334,6 +4365,14 @@ argument_list|,
 name|k_kgqe
 argument_list|)
 expr_stmt|;
+name|newthread
+operator|->
+name|kseg
+operator|->
+name|kg_ksecount
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|newthread
@@ -4408,6 +4447,8 @@ name|k_flags
 operator||=
 name|KF_INITIALIZED
 expr_stmt|;
+name|ret
+operator|=
 name|kse_create
 argument_list|(
 operator|&
@@ -4419,6 +4460,16 @@ name|k_mbx
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|ret
+operator|=
+name|errno
 expr_stmt|;
 name|_ksd_setprivate
 argument_list|(
@@ -4584,7 +4635,16 @@ name|kse
 argument_list|)
 expr_stmt|;
 block|}
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 block|}
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -5503,12 +5563,12 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* Limit sleep to no more than 2 minutes. */
+comment|/* Limit sleep to no more than 1 minute. */
 name|ts_sleep
 operator|.
 name|tv_sec
 operator|=
-literal|120
+literal|60
 expr_stmt|;
 name|ts_sleep
 operator|.
@@ -5539,14 +5599,14 @@ name|ts_sleep
 operator|.
 name|tv_sec
 operator|>
-literal|120
+literal|60
 condition|)
 block|{
 name|ts_sleep
 operator|.
 name|tv_sec
 operator|=
-literal|120
+literal|60
 expr_stmt|;
 name|ts_sleep
 operator|.
@@ -5718,6 +5778,13 @@ argument_list|,
 name|k_kgqe
 argument_list|)
 expr_stmt|;
+name|kse
+operator|->
+name|k_kseg
+operator|->
+name|kg_ksecount
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -5760,7 +5827,7 @@ name|free_kseg
 operator|!=
 name|NULL
 condition|)
-name|kseg_free
+name|kseg_free_unlocked
 argument_list|(
 name|free_kseg
 argument_list|)
@@ -5840,7 +5907,6 @@ operator|->
 name|k_kseg
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX - We need a way for the KSE to do a timed 			 *       wait. 			 */
 name|kse_release
 argument_list|(
 operator|&
@@ -5849,6 +5915,7 @@ argument_list|)
 expr_stmt|;
 comment|/* The above never returns. */
 block|}
+else|else
 name|KSE_SCHED_UNLOCK
 argument_list|(
 name|kse
@@ -6691,7 +6758,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|kseg_free
+name|kseg_free_unlocked
 parameter_list|(
 name|struct
 name|kse_group
@@ -6724,6 +6791,63 @@ operator|++
 expr_stmt|;
 name|active_kseg_count
 operator|--
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_kseg_free
+parameter_list|(
+name|struct
+name|kse_group
+modifier|*
+name|kseg
+parameter_list|)
+block|{
+name|struct
+name|kse
+modifier|*
+name|curkse
+decl_stmt|;
+name|kse_critical_t
+name|crit
+decl_stmt|;
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
+name|curkse
+operator|=
+name|_get_curkse
+argument_list|()
+expr_stmt|;
+name|KSE_LOCK_ACQUIRE
+argument_list|(
+name|curkse
+argument_list|,
+operator|&
+name|kse_lock
+argument_list|)
+expr_stmt|;
+name|kseg_free_unlocked
+argument_list|(
+name|kseg
+argument_list|)
+expr_stmt|;
+name|KSE_LOCK_RELEASE
+argument_list|(
+name|curkse
+argument_list|,
+operator|&
+name|kse_lock
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -6866,9 +6990,6 @@ expr_stmt|;
 name|free_kse_count
 operator|--
 expr_stmt|;
-name|active_kse_count
-operator|++
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -6878,6 +6999,9 @@ name|kse
 argument_list|,
 name|k_qe
 argument_list|)
+expr_stmt|;
+name|active_kse_count
+operator|++
 expr_stmt|;
 block|}
 name|KSE_LOCK_RELEASE
@@ -7272,9 +7396,6 @@ name|k_flags
 operator|=
 literal|0
 expr_stmt|;
-name|active_kse_count
-operator|++
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -7284,6 +7405,9 @@ name|kse
 argument_list|,
 name|k_qe
 argument_list|)
+expr_stmt|;
+name|active_kse_count
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -7327,6 +7451,16 @@ modifier|*
 name|kse
 parameter_list|)
 block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|active_kseq
+argument_list|,
+name|kse
+argument_list|,
+name|k_qe
+argument_list|)
+expr_stmt|;
 name|active_kse_count
 operator|--
 expr_stmt|;
@@ -7502,6 +7636,12 @@ expr_stmt|;
 name|kseg
 operator|->
 name|kg_threadcount
+operator|=
+literal|0
+expr_stmt|;
+name|kseg
+operator|->
+name|kg_ksecount
 operator|=
 literal|0
 expr_stmt|;

@@ -595,6 +595,10 @@ name|kg_threadcount
 decl_stmt|;
 comment|/* # of assigned threads */
 name|int
+name|kg_ksecount
+decl_stmt|;
+comment|/* # of assigned KSEs */
+name|int
 name|kg_idle_kses
 decl_stmt|;
 name|int
@@ -2725,6 +2729,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_kseg_free
+parameter_list|(
+name|struct
+name|kse_group
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|_mutex_cv_lock
 parameter_list|(
@@ -3205,7 +3220,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|_thr_schedule_add
 parameter_list|(
 name|struct

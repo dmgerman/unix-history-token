@@ -1186,6 +1186,17 @@ decl_stmt|;
 name|int
 name|seqno
 decl_stmt|;
+name|THR_ASSERT
+argument_list|(
+name|curthread
+operator|->
+name|locklevel
+operator|==
+literal|0
+argument_list|,
+literal|"cv_timedwait: locklevel is not zero!"
+argument_list|)
+expr_stmt|;
 name|_thr_enter_cancellation_point
 argument_list|(
 name|curthread
@@ -1878,6 +1889,17 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+name|THR_ASSERT
+argument_list|(
+name|curthread
+operator|->
+name|locklevel
+operator|==
+literal|0
+argument_list|,
+literal|"cv_timedwait: locklevel is not zero!"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cond
@@ -2084,6 +2106,17 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+name|THR_ASSERT
+argument_list|(
+name|curthread
+operator|->
+name|locklevel
+operator|==
+literal|0
+argument_list|,
+literal|"cv_timedwait: locklevel is not zero!"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cond
