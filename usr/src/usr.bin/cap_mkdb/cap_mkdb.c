@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	5.1 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,8 @@ name|int
 name|docapdbunlink
 decl_stmt|,
 name|printnl
+decl_stmt|,
+name|verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -253,7 +255,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:"
+literal|"f:v"
 argument_list|)
 operator|)
 operator|!=
@@ -271,6 +273,14 @@ case|:
 name|outname
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -401,7 +411,7 @@ name|buf
 argument_list|,
 name|O_RDONLY
 argument_list|,
-literal|0444
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -440,7 +450,7 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"Warning -- %s.db will override %s."
+literal|"%s.db overrides %s."
 argument_list|,
 operator|*
 name|f
@@ -1060,6 +1070,10 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 operator|(
 name|void
 operator|)
