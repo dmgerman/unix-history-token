@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -61,7 +61,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The __CONCAT macro is a bit tricky -- make sure you don't put  * spaces in between its arguments, also you can't use strings in  * code that's intended for historical compilers.  */
+comment|/*  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.  * The __CONCAT macro is a bit tricky -- make sure you don't put spaces  * in between its arguments.  __CONCAT can also concatenate double-quoted  * strings produced by the __STRING macro, but this only works with ANSI C.  */
 end_comment
 
 begin_if
@@ -120,8 +120,46 @@ directive|else
 end_else
 
 begin_comment
-comment|/* traditional style */
+comment|/* !(__STDC__ || __cplusplus) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|protos
+parameter_list|)
+value|()
+end_define
+
+begin_comment
+comment|/* traditional C preprocessor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__CONCAT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|x
+comment|/**/
+value|y
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STRING
+parameter_list|(
+name|x
+parameter_list|)
+value|"x"
+end_define
 
 begin_ifdef
 ifdef|#
@@ -166,6 +204,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -199,48 +241,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|protos
-parameter_list|)
-value|()
-end_define
-
 begin_comment
-comment|/* traditional C preprocessor */
+comment|/* !__GNUC__ */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__CONCAT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|x
-comment|/**/
-value|y
-end_define
-
-begin_define
-define|#
-directive|define
-name|__STRING
-parameter_list|(
-name|x
-parameter_list|)
-value|"x"
-end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !(__STDC__ || __cplusplus) */
+end_comment
 
 begin_endif
 endif|#
