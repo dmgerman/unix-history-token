@@ -102,15 +102,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
+name|inthand2_t
 name|pcicintr
-name|__P
-argument_list|(
-operator|(
-name|int
-name|unit
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -985,8 +978,9 @@ specifier|static
 name|void
 name|nullfunc
 parameter_list|(
-name|int
-name|unit
+name|void
+modifier|*
+name|unused
 parameter_list|)
 block|{
 comment|/* empty */
@@ -4356,7 +4350,7 @@ parameter_list|)
 block|{
 name|pcicintr
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|pcictimeout_ch
@@ -4384,8 +4378,9 @@ specifier|static
 name|void
 name|pcicintr
 parameter_list|(
-name|int
-name|unit
+name|void
+modifier|*
+name|unused
 parameter_list|)
 block|{
 name|int
