@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.25 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7022,6 +7022,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ca
+operator|!=
+name|NULL
+operator|&&
+name|cb
+operator|!=
+name|NULL
+operator|&&
 name|bitset
 argument_list|(
 name|QGOODUID
