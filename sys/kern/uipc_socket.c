@@ -6663,13 +6663,23 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If soreceive() is being done from the socket callback, then  		 * don't need to generate ACK to peer to update window, since  		 * ACK will be generated on return to TCP. 		 */
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|MSG_SOCALLBCK
+operator|)
+operator|&&
+operator|(
 name|pr
 operator|->
 name|pr_flags
 operator|&
 name|PR_WANTRCVD
+operator|)
 operator|&&
 name|so
 operator|->
