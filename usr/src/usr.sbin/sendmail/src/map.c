@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.17 (Berkeley) %G%"
+literal|"@(#)map.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2236,7 +2236,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|myhostname
+name|gethostname
 argument_list|(
 name|buf
 argument_list|,
