@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.13 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,6 +545,14 @@ operator|&
 name|defchars
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|intbuf
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|signal
@@ -559,14 +567,6 @@ operator|=
 name|time
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setjmp
-argument_list|(
-name|intbuf
 argument_list|)
 expr_stmt|;
 for|for
@@ -790,7 +790,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|SIG_DFL
+name|f
 argument_list|)
 expr_stmt|;
 name|close
@@ -1252,6 +1252,13 @@ name|start_t
 decl_stmt|,
 name|stop_t
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|()
+function_decl|;
 name|kill
 argument_list|(
 name|pid
@@ -1260,16 +1267,18 @@ name|SIGIOT
 argument_list|)
 expr_stmt|;
 comment|/* put TIPOUT into a wait state */
+name|stop
+operator|=
+literal|0
+expr_stmt|;
+name|f
+operator|=
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|stopsnd
 argument_list|)
-expr_stmt|;
-name|stop
-operator|=
-literal|0
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -1604,6 +1613,10 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|timedout
+operator|=
+literal|0
+expr_stmt|;
 name|alarm
 argument_list|(
 name|value
@@ -1611,10 +1624,6 @@ argument_list|(
 name|ETIMEOUT
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|timedout
-operator|=
-literal|0
 expr_stmt|;
 do|do
 block|{
@@ -1739,7 +1748,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|SIG_DFL
+name|f
 argument_list|)
 expr_stmt|;
 if|if
@@ -3256,6 +3265,24 @@ name|nums
 index|[
 name|i
 index|]
+operator|||
+name|i
+operator|==
+literal|0
+operator|&&
+name|nums
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+operator|&&
+name|nums
+index|[
+literal|2
+index|]
+operator|==
+literal|0
 condition|)
 name|printf
 argument_list|(
