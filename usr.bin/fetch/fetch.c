@@ -1360,6 +1360,8 @@ literal|"ftp."
 argument_list|,
 literal|4
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|strcpy
 argument_list|(
@@ -1383,6 +1385,8 @@ literal|"www."
 argument_list|,
 literal|4
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|strcpy
 argument_list|(
