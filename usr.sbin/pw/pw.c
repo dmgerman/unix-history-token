@@ -1,12 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw.c,v 1.1.1.2 1996/12/09 23:55:20 joerg Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw.c,v 1.1.1.3 1996/12/10 23:58:58 joerg Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"pw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_decl_stmt
@@ -216,11 +228,11 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NP"
+literal|"C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NPy:Y"
 block|,
-literal|"C:qn:u:r"
+literal|"C:qn:u:rY"
 block|,
-literal|"C:qn:u:c:d:e:p:g:G:mk:s:w:L:h:FNP"
+literal|"C:qn:u:c:d:e:p:g:G:mk:s:w:L:h:FNPY"
 block|,
 literal|"C:qn:u:FPa"
 block|,
@@ -229,11 +241,11 @@ block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"C:qn:g:h:M:pNP"
+literal|"C:qn:g:h:M:pNPY"
 block|,
-literal|"C:qn:g:"
+literal|"C:qn:g:Y"
 block|,
-literal|"C:qn:g:l:h:FM:m:NP"
+literal|"C:qn:g:l:h:FM:m:NPY"
 block|,
 literal|"C:qn:g:FPa"
 block|,
@@ -737,8 +749,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
+begin_expr_stmt
+name|ch
+operator|=
 name|funcs
 index|[
 name|which
@@ -751,6 +764,154 @@ operator|,
 operator|&
 name|arglist
 operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 	 * If everything went ok, and we've been asked to update 	 * the NIS maps, then do it now 	 */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|ch
+operator|==
+name|EXIT_SUCCESS
+operator|&&
+name|getarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'Y'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|fflush
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|_PATH_YP
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"chdir("
+name|_PATH_YP
+literal|")"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|pid
+operator|=
+name|fork
+argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"fork()"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Is make anywhere else? */
+name|execlp
+argument_list|(
+literal|"/usr/bin/make"
+argument_list|,
+literal|"make"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|int
+name|i
+decl_stmt|;
+name|waitpid
+argument_list|(
+name|pid
+argument_list|,
+operator|&
+name|i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|WEXITSTATUS
+argument_list|(
+name|i
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|cmderr
+argument_list|(
+name|ch
+argument_list|,
+literal|"warning: make exited with status %d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+else|else
+name|pw_log
+argument_list|(
+name|cnf
+argument_list|,
+name|mode
+argument_list|,
+name|which
+argument_list|,
+literal|"NIS maps updated"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_if
+
+begin_return
+return|return
+name|ch
 return|;
 end_return
 
@@ -981,6 +1142,7 @@ literal|"\t-s shell       name of login shell\n"
 literal|"\t-o             duplicate uid ok\n"
 literal|"\t-L class       user class\n"
 literal|"\t-h fd          read password on fd\n"
+literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 literal|"  Setting defaults:\n"
 literal|"\t-D             set user defaults\n"
@@ -995,10 +1157,12 @@ literal|"\t-u min,max     set min,max uids\n"
 literal|"\t-i min,max     set min,max gids\n"
 literal|"\t-w method      set default password method\n"
 literal|"\t-s shell       default shell\n"
+literal|"\t-y path        set NIS passwd file path\n"
 block|,
 literal|"usage: %s userdel [uid|name] [switches]\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
+literal|"\t-Y             update NIS maps\n"
 literal|"\t-r             remove home& contents\n"
 block|,
 literal|"usage: %s usermod [uid|name] [switches]\n"
@@ -1019,6 +1183,7 @@ literal|"\t-m [ -k dir ]  create and set up home\n"
 literal|"\t-s shell       name of login shell\n"
 literal|"\t-w method      set new password using method\n"
 literal|"\t-h fd          read password on fd\n"
+literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
 literal|"usage: %s usershow [uid|name] [switches]\n"
@@ -1040,11 +1205,13 @@ literal|"\t-n group       group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-M usr1,usr2   add users as group members\n"
 literal|"\t-o             duplicate gid ok\n"
+literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
 literal|"usage: %s groupdel [group|gid] [switches]\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
+literal|"\t-Y             update NIS maps\n"
 block|,
 literal|"usage: %s groupmod [group|gid] [switches]\n"
 literal|"\t-C config      configuration file\n"
@@ -1055,6 +1222,7 @@ literal|"\t-g gid         group id\n"
 literal|"\t-M usr1,usr2   replaces users as group members\n"
 literal|"\t-m usr1,usr2   add users as group members\n"
 literal|"\t-l name        new group name\n"
+literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
 literal|"usage: %s groupshow [group|gid] [switches]\n"

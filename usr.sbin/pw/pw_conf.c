@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_conf.c,v 1.1.1.2 1996/12/10 23:59:00 joerg Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_conf.c,v 1.2 1996/12/21 15:35:42 davidn Exp $  */
 end_comment
 
 begin_include
@@ -50,6 +50,8 @@ block|,
 name|_UC_REUSEUID
 block|,
 name|_UC_REUSEGID
+block|,
+name|_UC_NISPASSWD
 block|,
 name|_UC_DOTDIR
 block|,
@@ -175,6 +177,9 @@ comment|/* Reuse uids? */
 literal|0
 block|,
 comment|/* Reuse gids? */
+name|NULL
+block|,
+comment|/* NIS version of the passwd file */
 literal|"/usr/share/skel"
 block|,
 comment|/* Where to obtain skeleton files */
@@ -243,6 +248,8 @@ literal|"\n# Reuse gaps in uid sequence? (yes or no)\n"
 block|,
 literal|"\n# Reuse gaps in gid sequence? (yes or no)\n"
 block|,
+literal|"\n# Path to the NIS passwd file (blank or 'no' for none)\n"
+block|,
 literal|"\n# Obtain default dotfiles from this directory\n"
 block|,
 literal|"\n# Mail this file to new user (/etc/newuser.msg or no)\n"
@@ -294,6 +301,8 @@ block|,
 literal|"reuseuids"
 block|,
 literal|"reusegids"
+block|,
+literal|"nispasswd"
 block|,
 literal|"skeleton"
 block|,
@@ -1029,6 +1038,35 @@ argument_list|(
 name|q
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|_UC_NISPASSWD
+case|:
+name|config
+operator|.
+name|nispasswd
+operator|=
+operator|(
+name|q
+operator|==
+name|NULL
+operator|||
+operator|!
+name|boolean_val
+argument_list|(
+name|q
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+condition|?
+name|NULL
+else|:
+name|newstr
+argument_list|(
+name|q
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1819,6 +1857,26 @@ name|config
 operator|.
 name|reuse_gids
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|_UC_NISPASSWD
+case|:
+name|val
+operator|=
+name|config
+operator|.
+name|nispasswd
+condition|?
+name|config
+operator|.
+name|nispasswd
+else|:
+literal|""
+expr_stmt|;
+name|quote
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
