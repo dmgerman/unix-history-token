@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -62,19 +74,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* default database name */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-init|=
-literal|"btreeop"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* command name */
 end_comment
 
 begin_decl_stmt
@@ -159,6 +158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -318,26 +318,20 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|progname
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -346,9 +340,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-A][-C][-D key][-K key][-b][-c cachesize][-l][-p psize][dbname]\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|progname
+literal|"usage: btreeop [-A][-C][-D key][-K key][-b][-c cachesize]"
+argument_list|,
+literal|"               [-l][-p psize][dbname]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -523,12 +519,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
 begin_function
 name|void
 name|main
@@ -643,7 +633,8 @@ literal|"ACD:K:bc:lp:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

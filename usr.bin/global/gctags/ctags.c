@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -43,13 +44,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)ctags.c	8.3 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)ctags.c	8.3 (Berkeley) 4/2/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +75,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -369,16 +389,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-decl|main
+specifier|static
+name|void
+name|usage
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -485,7 +502,8 @@ literal|"BDFadef:rtuwvxy"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 else|#
 directive|else
@@ -504,7 +522,8 @@ literal|"BFadf:tuwvx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 endif|#
 directive|endif
@@ -625,9 +644,9 @@ case|case
 literal|'?'
 case|:
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 name|argv
 operator|+=
@@ -642,44 +661,12 @@ condition|(
 operator|!
 name|argc
 condition|)
-block|{
 name|usage
-label|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GTAGS
-literal|"usage: ctags [-BDFadrtuwvx] [-f tagsfile] file ...\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-literal|"usage: ctags [-BFadtuwvx] [-f tagsfile] file ...\n"
-block|)
-empty_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GTAGS
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|rflag
@@ -687,20 +674,11 @@ condition|)
 name|gtagopen
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|exit_val
@@ -734,11 +712,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"gctags: %s cannot open\n"
+literal|"%s cannot open"
 argument_list|,
 name|argv
 index|[
@@ -777,9 +753,6 @@ name|inf
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|head
@@ -862,11 +835,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"gctags: %s cannot open\n"
+literal|"%s cannot open"
 argument_list|,
 name|outfile
 argument_list|)
@@ -916,15 +887,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|GTAGS
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|rflag
@@ -932,7 +897,41 @@ condition|)
 name|gtagclose
 argument_list|()
 expr_stmt|;
-end_if
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|exit_val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+ifdef|#
+directive|ifdef
+name|GTAGS
+literal|"usage: gctags [-BDFadrtuwvx] [-f tagsfile] file ...\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+literal|"usage: gctags [-BFadtuwvx] [-f tagsfile] file ...\n"
+block|)
+function|;
+end_function
 
 begin_endif
 endif|#
@@ -942,7 +941,7 @@ end_endif
 begin_expr_stmt
 name|exit
 argument_list|(
-name|exit_val
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1599,20 +1598,13 @@ name|db
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"GTAGS file needed.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"GTAGS file needed"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1689,16 +1681,11 @@ comment|/* exist */
 case|case
 name|RET_ERROR
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"db->get failed.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"db->get failed"
 argument_list|)
 expr_stmt|;
 case|case
@@ -1727,20 +1714,13 @@ argument_list|(
 name|db
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"GTAGS cannot close.(dbclose)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"GTAGS cannot close.(dbclose)"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
