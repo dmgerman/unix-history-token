@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -228,9 +228,6 @@ literal|0
 expr_stmt|;
 name|rn_delete
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tc
 operator|->
@@ -238,14 +235,9 @@ name|tc_siso
 operator|.
 name|siso_addr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|tuba_tree
-operator|->
-name|rnh_treetop
 argument_list|)
 expr_stmt|;
 name|free
@@ -486,9 +478,6 @@ argument_list|)
 expr_stmt|;
 name|rn_insert
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tc
 operator|->
@@ -497,8 +486,6 @@ operator|.
 name|siso_addr
 argument_list|,
 name|tuba_tree
-operator|->
-name|rnh_treetop
 argument_list|,
 operator|&
 name|dupentry
@@ -723,9 +710,6 @@ name|old_size
 expr_stmt|;
 name|rn_delete
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tc
 operator|->
@@ -733,14 +717,9 @@ name|tc_siso
 operator|.
 name|siso_addr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|tuba_tree
-operator|->
-name|rnh_treetop
 argument_list|)
 expr_stmt|;
 name|free
