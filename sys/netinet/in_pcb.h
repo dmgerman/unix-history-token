@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)in_pcb.h	7.6 (Berkeley) 6/28/90  *	$Id: in_pcb.h,v 1.2 1993/10/16 18:26:03 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)in_pcb.h	7.6 (Berkeley) 6/28/90  *	$Id: in_pcb.h,v 1.3 1993/11/07 17:47:50 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -87,6 +87,34 @@ modifier|*
 name|inp_options
 decl_stmt|;
 comment|/* IP options */
+ifdef|#
+directive|ifdef
+name|MTUDISC
+name|int
+name|inp_pmtu
+decl_stmt|;
+comment|/* path mtu if INP_MTUDISCOVERED */
+name|int
+name|inp_mtutimer
+decl_stmt|;
+comment|/* decremented once a minute to 					   try to increase mtu */
+name|int
+function_decl|(
+modifier|*
+name|inp_mtunotify
+function_decl|)
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* function to call when MTU may have 				 * changed */
+endif|#
+directive|endif
+comment|/* MTUDISC */
 block|}
 struct|;
 end_struct
@@ -126,6 +154,43 @@ end_define
 
 begin_comment
 comment|/* receive IP dst address */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MTUDISC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INP_DISCOVERMTU
+value|0x08
+end_define
+
+begin_comment
+comment|/* practice Path MTU discovery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_MTUDISCOVERED
+value|0x10
+end_define
+
+begin_comment
+comment|/* we were able to get such a route */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MTUDISC */
 end_comment
 
 begin_define
@@ -242,10 +307,65 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MTUDISC
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|in_pcbmtu
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|in_mtunotify
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|in_bumpmtu
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* MTUDISC */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#

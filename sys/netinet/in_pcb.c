@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)in_pcb.c	7.14 (Berkeley) 4/20/91  *	$Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)in_pcb.c	7.14 (Berkeley) 4/20/91  *	$Id: in_pcb.c,v 1.2 1993/10/16 18:26:01 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1171,6 +1171,18 @@ name|sin
 operator|->
 name|sin_port
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MTUDISC
+comment|/* 	 * If the upper layer asked for PMTU discovery services, see 	 * if we can get an idea of what the MTU should be... 	 */
+name|in_pcbmtu
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MTUDISC */
 return|return
 operator|(
 literal|0
@@ -1210,6 +1222,18 @@ name|inp_fport
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MTUDISC
+name|inp
+operator|->
+name|inp_flags
+operator|&=
+operator|~
+name|INP_MTUDISCOVERED
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|inp
@@ -1525,27 +1549,25 @@ begin_comment
 comment|/*  * Pass some notification to all connections of a protocol  * associated with address dst.  The local address and/or port numbers  * may be specified to limit the search.  The "usual action" will be  * taken, depending on the ctlinput cmd.  The caller must filter any  * cmds that are uninteresting (e.g., no error in the map).  * Call the protocol specific routine (if any) to report  * any errors for each matching socket.  *  * Must be called at splnet.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|in_pcbnotify
 argument_list|(
-argument|head
+name|head
 argument_list|,
-argument|dst
+name|dst
 argument_list|,
-argument|fport
+name|fport
 argument_list|,
-argument|laddr
+name|laddr
 argument_list|,
-argument|lport
+name|lport
 argument_list|,
-argument|cmd
+name|cmd
 argument_list|,
-argument|notify
+name|notify
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|inpcb
 modifier|*
 name|head
@@ -1609,11 +1631,6 @@ name|int
 name|in_rtchange
 parameter_list|()
 function_decl|;
-specifier|extern
-name|u_char
-name|inetctlerrmap
-index|[]
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1652,7 +1669,7 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return;
-comment|/* 	 * Redirects go to all references to the destination, 	 * and use in_rtchange to invalidate the route cache. 	 * Dead host indications: notify all references to the destination. 	 * Otherwise, if we have knowledge of the local port and address, 	 * deliver only to that socket. 	 */
+comment|/* 	 * Redirects go to all references to the destination, 	 * and use in_rtchange to invalidate the route cache. 	 * Dead host indications: notify all references to the destination. 	 * MTU change indications: same thing. 	 * Otherwise, if we have knowledge of the local port and address, 	 * deliver only to that socket. 	 */
 if|if
 condition|(
 name|PRC_IS_REDIRECT
@@ -1663,6 +1680,10 @@ operator|||
 name|cmd
 operator|==
 name|PRC_HOSTDEAD
+operator|||
+name|cmd
+operator|==
+name|PRC_MTUCHANGED
 condition|)
 block|{
 name|fport
@@ -1684,6 +1705,10 @@ condition|(
 name|cmd
 operator|!=
 name|PRC_HOSTDEAD
+operator|&&
+name|cmd
+operator|!=
+name|PRC_MTUCHANGED
 condition|)
 name|notify
 operator|=
@@ -1806,22 +1831,17 @@ begin_comment
 comment|/*  * Check for alternatives when higher level complains  * about service problems.  For now, invalidate cached  * routing information.  If the route was created dynamically  * (by a redirect), time to try a default gateway again.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|in_losing
-argument_list|(
-argument|inp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inp
+parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1936,10 +1956,21 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-comment|/* 		 * A new route can be allocated 		 * the next time output is attempted. 		 */
+ifdef|#
+directive|ifdef
+name|MTUDISC
+comment|/* 		 * When doing MTU discovery, we want to find out as 		 * quickly as possible what the MTU of the new route is. 		 */
+name|in_pcbmtu
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MTUDISC */
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * After a routing change, flush old routing  * and allocate a (hopefully) better one.  */
@@ -1986,7 +2017,18 @@ name|ro_rt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * A new route can be allocated the next time 		 * output is attempted. 		 */
+ifdef|#
+directive|ifdef
+name|MTUDISC
+comment|/* 		 * A new route can be allocated the next time 		 * output is attempted, but make sure to let 		 * MTU discovery know about it. 		 */
+name|in_pcbmtu
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MTUDISC */
 block|}
 block|}
 end_block
