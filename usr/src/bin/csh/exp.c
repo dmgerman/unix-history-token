@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	5.13 (Berkeley) %G%"
+literal|"@(#)exp.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +505,7 @@ end_endif
 
 begin_function
 name|int
-name|exp
+name|expr
 parameter_list|(
 name|vp
 parameter_list|)

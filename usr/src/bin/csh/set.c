@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.14 (Berkeley) %G%"
+literal|"@(#)set.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1667,7 +1667,7 @@ return|return
 operator|(
 name|putn
 argument_list|(
-name|exp
+name|expr
 argument_list|(
 name|vp
 argument_list|)
@@ -1804,7 +1804,7 @@ literal|0
 expr_stmt|;
 name|i
 operator|=
-name|exp
+name|expr
 argument_list|(
 operator|&
 name|vecp
