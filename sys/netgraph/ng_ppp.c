@@ -3489,7 +3489,7 @@ name|m
 argument_list|,
 name|proto
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|)
 operator|==
