@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<machine/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -1070,6 +1070,14 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1079,19 +1087,12 @@ operator|==
 name|SRUN
 condition|)
 block|{
-name|mtx_enter
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_exit
 argument_list|(
 operator|&
@@ -1100,7 +1101,6 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-block|}
 name|p
 operator|->
 name|p_flag
