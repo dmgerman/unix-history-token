@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.11 (Berkeley) %G%"
+literal|"@(#)mount.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2000,6 +2000,17 @@ if|if
 condition|(
 name|flags
 operator|&
+name|MNT_USER
+condition|)
+name|PR
+argument_list|(
+literal|"user mount"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
 name|MNT_UNION
 condition|)
 name|PR
@@ -2960,15 +2971,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n  mount %s %s\n  mount %s\n  mount %s\n"
+literal|"usage: %s %s\n       %s\n       %s\n"
 argument_list|,
-literal|"[ -frwu ] [ -t ufs | external_type ]"
+literal|"mount [-dfruvw] [-t ufs | external_type]"
 argument_list|,
-literal|"[ -o options ] special node"
+literal|"[-o options] special node"
 argument_list|,
-literal|"[ -afrwu ] [ -t ufs | external_type ]"
+literal|"mount [-adfruvw] [-t ufs | external_type]"
 argument_list|,
-literal|"[ -frwu ] special | node"
+literal|"mount [-dfruvw] special | node"
 argument_list|)
 expr_stmt|;
 name|exit
