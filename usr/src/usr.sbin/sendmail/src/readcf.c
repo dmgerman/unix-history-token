@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.106 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.107 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1802,11 +1802,6 @@ operator|*
 name|p
 operator|!=
 literal|'='
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|'\t'
 condition|;
 name|p
 operator|++
