@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2003 Paul Saab  * Copyright (c) 2003 Vinod Kashyap  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -10,55 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cons.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/twe/twe_compat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<geom/geom_disk.h>
 end_include
 
 begin_include
@@ -83,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<dev/twe/twe_tables.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_decl_stmt
@@ -216,13 +174,6 @@ name|d_ioctl_t
 name|twe_ioctl_wrapper
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|TWE_CDEV_MAJOR
-value|146
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -481,7 +432,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|twe_shutdown
 parameter_list|(
 name|device_t
@@ -628,35 +579,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TWE_OVERRIDE
-end_ifdef
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|Xtwe
-argument_list|,
-name|pci
-argument_list|,
-name|twe_pci_driver
-argument_list|,
-name|twe_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -674,11 +596,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/********************************************************************************  * Match a 3ware Escalade ATA RAID controller.  */
@@ -730,31 +647,20 @@ operator|)
 operator|)
 condition|)
 block|{
-name|device_set_desc
+name|device_set_desc_copy
 argument_list|(
 name|dev
 argument_list|,
 name|TWE_DEVICE_NAME
+literal|". Driver version "
+name|TWE_DRIVER_VERSION_STRING
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TWE_OVERRIDE
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|-
-literal|10
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 return|return
 operator|(
@@ -889,7 +795,7 @@ literal|"driver_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|"$Revision$"
+name|TWE_DRIVER_VERSION_STRING
 argument_list|,
 literal|0
 argument_list|,
@@ -1964,11 +1870,16 @@ goto|goto
 name|out
 goto|;
 comment|/*	      * Shut the controller down.      */
+if|if
+condition|(
 name|twe_shutdown
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 name|twe_free
 argument_list|(
 name|sc
@@ -1999,7 +1910,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|twe_shutdown
 parameter_list|(
 name|device_t
@@ -2020,6 +1931,10 @@ name|int
 name|i
 decl_stmt|,
 name|s
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -2046,13 +1961,39 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|twe_drive
+index|[
+name|i
+index|]
+operator|.
+name|td_disk
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|twe_detach_drive
 argument_list|(
 name|sc
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 comment|/*      * Bring the controller down.      */
 name|twe_deinit
@@ -2060,11 +2001,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -2248,11 +2196,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Given a detected drive, attach it to the bio interface.  *  * This is called from twe_init.  */
+comment|/********************************************************************************  * Given a detected drive, attach it to the bio interface.  *  * This is called from twe_add_unit.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|twe_attach_drive
 parameter_list|(
 name|struct
@@ -2304,10 +2252,14 @@ name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"device_add_child failed\n"
+literal|"Cannot add unit\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 name|device_set_ivars
 argument_list|(
@@ -2327,7 +2279,7 @@ literal|"Unit %d, %s, %s"
 argument_list|,
 name|dr
 operator|->
-name|td_unit
+name|td_twe_unit
 argument_list|,
 name|twe_describe_code
 argument_list|(
@@ -2374,15 +2326,27 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|twe_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"bus_generic_attach returned %d\n"
+literal|"Cannot attach unit to controller. error = %d\n"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2391,7 +2355,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|int
 name|twe_detach_drive
 parameter_list|(
 name|struct
@@ -2403,22 +2367,16 @@ name|int
 name|unit
 parameter_list|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|twe_drive
-index|[
-name|unit
-index|]
-operator|.
-name|td_disk
-operator|!=
+name|int
+name|error
+init|=
 literal|0
-condition|)
-block|{
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|device_delete_child
 argument_list|(
 name|sc
@@ -2434,9 +2392,11 @@ index|]
 operator|.
 name|td_disk
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|twe_printf
 argument_list|(
 name|sc
@@ -2446,18 +2406,38 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+name|bzero
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|twe_drive
 index|[
 name|unit
 index|]
-operator|.
-name|td_disk
-operator|=
-literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|twe_drive
+index|[
+name|unit
+index|]
+argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -2671,35 +2651,6 @@ name|twed_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TWE_OVERRIDE
-end_ifdef
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|Xtwed
-argument_list|,
-name|Xtwe
-argument_list|,
-name|twed_driver
-argument_list|,
-name|twed_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -2717,11 +2668,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Disk device control interface.  */
@@ -2859,7 +2805,7 @@ name|sc
 operator|->
 name|twed_drive
 operator|->
-name|td_unit
+name|td_twe_unit
 expr_stmt|;
 name|TWED_BIO_IN
 expr_stmt|;
@@ -2867,6 +2813,14 @@ comment|/* bogus disk? */
 if|if
 condition|(
 name|sc
+operator|==
+name|NULL
+operator|||
+name|sc
+operator|->
+name|twed_drive
+operator|->
+name|td_disk
 operator|==
 name|NULL
 condition|)
@@ -3024,7 +2978,7 @@ name|twed_sc
 operator|->
 name|twed_drive
 operator|->
-name|td_unit
+name|td_twe_unit
 argument_list|,
 name|offset
 operator|/
@@ -3332,12 +3286,24 @@ name|twed_drive
 operator|->
 name|td_heads
 expr_stmt|;
-name|disk_create
-argument_list|(
+name|sc
+operator|->
+name|twed_drive
+operator|->
+name|td_sys_unit
+operator|=
 name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|disk_create
+argument_list|(
+name|sc
+operator|->
+name|twed_drive
+operator|->
+name|td_sys_unit
 argument_list|,
 operator|&
 name|sc
@@ -3416,6 +3382,14 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+name|disk_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|twed_disk
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FREEBSD_4
@@ -3430,16 +3404,6 @@ name|cdevsw_remove
 argument_list|(
 operator|&
 name|tweddisk_cdevsw
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|disk_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|twed_disk
 argument_list|)
 expr_stmt|;
 endif|#
