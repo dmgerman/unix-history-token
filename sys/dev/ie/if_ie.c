@@ -2603,6 +2603,10 @@ operator|!=
 name|IEE16_ID
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ie%d: unknown board_id: %x\n"
