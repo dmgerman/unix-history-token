@@ -506,7 +506,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|p
 argument_list|,
-argument|*netcb
+argument|&netcb
 argument_list|,
 argument|chain
 argument_list|)
@@ -802,6 +802,11 @@ argument_list|(
 name|inpcb
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|next
+operator|=
+operator|&
+name|inpcb
 expr_stmt|;
 if|if
 condition|(
@@ -1423,6 +1428,10 @@ operator|=
 name|TAILQ_PREV
 argument_list|(
 name|p
+argument_list|,
+name|netinfohead
+argument_list|,
+name|chain
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
