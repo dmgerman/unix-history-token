@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Dug Song<dugsong@UMICH.EDU>  *    Kerberos v4 authentication and ticket-passing routines.  */
+comment|/*  *    Dug Song<dugsong@UMICH.EDU>  *    Kerberos v4 authentication and ticket-passing routines.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -462,7 +462,7 @@ condition|(
 operator|!
 name|options
 operator|.
-name|kerberos_or_local_passwd
+name|krb4_or_local_passwd
 condition|)
 return|return
 literal|0
@@ -1156,7 +1156,7 @@ argument_list|)
 expr_stmt|;
 name|packet_start
 argument_list|(
-name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
+name|SSH_SMSG_AUTH_KRB4_RESPONSE
 argument_list|)
 expr_stmt|;
 name|packet_put_string
@@ -1203,7 +1203,7 @@ end_ifdef
 
 begin_function
 name|int
-name|auth_kerberos_tgt
+name|auth_krb4_tgt
 parameter_list|(
 name|struct
 name|passwd

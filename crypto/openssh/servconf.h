@@ -181,26 +181,38 @@ ifdef|#
 directive|ifdef
 name|KRB4
 name|int
-name|kerberos_authentication
+name|krb4_authentication
 decl_stmt|;
-comment|/* If true, permit Kerberos 						 * authentication. */
+comment|/* If true, permit Kerberos v4 						 * authentication. */
 name|int
-name|kerberos_or_local_passwd
+name|krb4_or_local_passwd
 decl_stmt|;
-comment|/* If true, permit kerberos 						 * and any other password 						 * authentication mechanism, 						 * such as SecurID or 						 * /etc/passwd */
+comment|/* If true, permit kerberos v4 						 * and any other password 						 * authentication mechanism, 						 * such as SecurID or 						 * /etc/passwd */
 name|int
-name|kerberos_ticket_cleanup
+name|krb4_ticket_cleanup
 decl_stmt|;
 comment|/* If true, destroy ticket 						 * file on logout. */
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|KRB5
+name|int
+name|krb5_authentication
+decl_stmt|;
+name|int
+name|krb5_tgt_passing
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* KRB5 */
+ifdef|#
+directive|ifdef
 name|AFS
 name|int
-name|kerberos_tgt_passing
+name|krb4_tgt_passing
 decl_stmt|;
-comment|/* If true, permit Kerberos tgt 					 * passing. */
+comment|/* If true, permit Kerberos v4 tgt 					 * passing. */
 name|int
 name|afs_token_passing
 decl_stmt|;

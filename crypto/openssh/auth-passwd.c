@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 05:11:38 1995 ylo  * Password authentication.  This file contains the functions to check whether  * the password is valid for the user.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 05:11:38 1995 ylo  * Password authentication.  This file contains the functions to check whether  * the password is valid for the user.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -152,12 +152,41 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|KRB5
+if|if
+condition|(
+name|options
+operator|.
+name|krb5_authentication
+operator|==
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|auth_krb5_password
+argument_list|(
+name|pw
+argument_list|,
+name|password
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* Fall back to ordinary passwd authentication. */
+block|}
+endif|#
+directive|endif
+comment|/* KRB5 */
+ifdef|#
+directive|ifdef
 name|KRB4
 if|if
 condition|(
 name|options
 operator|.
-name|kerberos_authentication
+name|krb4_authentication
 operator|==
 literal|1
 condition|)

@@ -386,14 +386,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSH_AUTH_KERBEROS
+name|SSH_AUTH_KRB4
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSH_PASS_KERBEROS_TGT
+name|SSH_PASS_KRB4_TGT
 value|7
 end_define
 
@@ -406,6 +406,20 @@ define|#
 directive|define
 name|SSH_PASS_AFS_TOKEN
 value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AUTH_KRB5
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_PASS_KRB5_TGT
+value|30
 end_define
 
 begin_comment
@@ -908,7 +922,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CMSG_AUTH_KERBEROS
+name|SSH_CMSG_AUTH_KRB4
 value|42
 end_define
 
@@ -919,7 +933,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
+name|SSH_SMSG_AUTH_KRB4_RESPONSE
 value|43
 end_define
 
@@ -930,7 +944,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CMSG_HAVE_KERBEROS_TGT
+name|SSH_CMSG_HAVE_KRB4_TGT
 value|44
 end_define
 
@@ -948,6 +962,27 @@ end_define
 begin_comment
 comment|/* token (s) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CMSG_AUTH_KRB5
+value|110
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_SMSG_AUTH_KRB5_RESPONSE
+value|111
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_CMSG_HAVE_KRB5_TGT
+value|112
+end_define
 
 begin_comment
 comment|/*------------ definitions for login.c -------------*/
@@ -2485,6 +2520,80 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|KRB5
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<krb5.h>
+end_include
+
+begin_function_decl
+name|int
+name|auth_krb5
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX Doplnit prototypy */
+end_comment
+
+begin_function_decl
+name|int
+name|auth_krb5_tgt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|krb5_init
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|krb5_cleanup_proc
+parameter_list|(
+name|void
+modifier|*
+name|ignore
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|auth_krb5_password
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|password
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KRB5 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KRB4
 end_ifdef
 
@@ -2574,7 +2683,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|auth_kerberos_tgt
+name|auth_krb4_tgt
 parameter_list|(
 name|struct
 name|passwd

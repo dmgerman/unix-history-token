@@ -1136,7 +1136,13 @@ literal|'k'
 case|:
 name|options
 operator|.
-name|kerberos_tgt_passing
+name|krb4_tgt_passing
+operator|=
+literal|0
+expr_stmt|;
+name|options
+operator|.
+name|krb5_tgt_passing
 operator|=
 literal|0
 expr_stmt|;

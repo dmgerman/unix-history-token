@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * readconf.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Apr 22 00:25:29 1995 ylo  *   * Functions for reading the configuration file.  *   */
+comment|/*  *   * readconf.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Apr 22 00:25:29 1995 ylo  *   * Functions for reading the configuration file.  *   * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -89,18 +89,30 @@ ifdef|#
 directive|ifdef
 name|KRB4
 name|int
-name|kerberos_authentication
+name|krb4_authentication
 decl_stmt|;
-comment|/* Try Kerberos 						 * authentication. */
+comment|/* Try Kerberos v4 						 * authentication. */
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|KRB5
+name|int
+name|krb5_authentication
+decl_stmt|;
+name|int
+name|krb5_tgt_passing
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* KRB5 */
+ifdef|#
+directive|ifdef
 name|AFS
 name|int
-name|kerberos_tgt_passing
+name|krb4_tgt_passing
 decl_stmt|;
-comment|/* Try Kerberos tgt passing. */
+comment|/* Try Kerberos v4 tgt passing. */
 name|int
 name|afs_token_passing
 decl_stmt|;
