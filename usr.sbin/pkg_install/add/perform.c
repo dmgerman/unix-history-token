@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.34 1996/06/03 04:40:43 jkh Exp $"
+literal|"$Id: perform.c,v 1.35 1996/06/20 18:33:33 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -914,6 +914,9 @@ name|isdir
 argument_list|(
 name|LogDir
 argument_list|)
+operator|&&
+operator|!
+name|Force
 condition|)
 block|{
 name|whinge
