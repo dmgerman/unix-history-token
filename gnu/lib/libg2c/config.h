@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -111,6 +115,25 @@ define|#
 directive|define
 name|CHMOD_PATH
 value|"/bin/chmod"
+end_define
+
+begin_comment
+comment|/* Define if your gettimeofday takes only one argument. */
+end_comment
+
+begin_comment
+comment|/* #undef GETTIMEOFDAY_ONE_ARGUMENT */
+end_comment
+
+begin_comment
+comment|/* Define if your gettimeofday takes a time zome argument. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIMEZONE
+value|1
 end_define
 
 begin_comment
@@ -375,6 +398,50 @@ define|#
 directive|define
 name|HAVE_UNISTD_H
 value|1
+end_define
+
+begin_comment
+comment|/* Get Single Unix Specification semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_XOPEN_SOURCE
+value|600L
+end_define
+
+begin_comment
+comment|/* Get Single Unix Specification semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_XOPEN_SOURCE_EXTENDED
+value|1
+end_define
+
+begin_comment
+comment|/* Solaris extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__EXTENSIONS__
+value|1
+end_define
+
+begin_comment
+comment|/* Get 64-bit file size support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_FILE_OFFSET_BITS
+value|64
 end_define
 
 end_unit
