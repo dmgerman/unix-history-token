@@ -521,7 +521,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0400
 argument_list|,
-literal|"geom.stats"
+name|GEOM_STATS_DEVICE
 argument_list|)
 expr_stmt|;
 block|}

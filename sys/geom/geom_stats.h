@@ -15,6 +15,13 @@ directive|define
 name|_GEOM_GEOM_STATS_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|GEOM_STATS_DEVICE
+value|"geom.stats"
+end_define
+
 begin_comment
 comment|/*  * A g_stat contains the statistics we collect on consumers and  * providers.  */
 end_comment
