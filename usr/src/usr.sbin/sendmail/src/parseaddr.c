@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	1.5	%G%"
+literal|"@(#)parseaddr.c	1.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,10 +813,6 @@ name|DEBUG
 if|if
 condition|(
 name|Debug
-operator|&&
-name|copyf
-operator|>=
-literal|0
 condition|)
 name|printf
 argument_list|(
