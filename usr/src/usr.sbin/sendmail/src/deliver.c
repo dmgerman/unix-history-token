@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.41 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7247,24 +7247,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SETPROCTITLE
-name|char
-name|ptbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-specifier|extern
-name|char
-name|ProcTitleBuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* 	**  Check to see if this uses IPC -- if not, it can't have MX records. 	*/
@@ -7369,28 +7351,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SETPROCTITLE
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|ptbuf
-argument_list|,
-name|ProcTitleBuf
-argument_list|)
-expr_stmt|;
-name|setproctitle
-argument_list|(
-literal|"getmxrr(%s)"
-argument_list|,
-name|host
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|nmx
 operator|=
 name|getmxrr
@@ -7405,18 +7365,6 @@ operator|&
 name|rcode
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SETPROCTITLE
-name|setproctitle
-argument_list|(
-name|NULL
-argument_list|,
-name|ptbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|nmx
