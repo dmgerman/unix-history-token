@@ -1031,7 +1031,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|'y'
+literal|'j'
 block|}
 block|,
 block|{
@@ -1041,7 +1041,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|'y'
+literal|'j'
 block|}
 block|,
 block|{
@@ -1051,7 +1051,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|'y'
+literal|'j'
 block|}
 block|,
 block|{
@@ -1668,7 +1668,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-01234567Ab:BcC:df:F:g:GhiIkK:lL:mMnN:oOpPrRsStT:uvV:wWxX:yzZ"
+literal|"-01234567Ab:BcC:df:F:g:GhiIjkK:lL:mMnN:oOpPrRsStT:uvV:wWxX:yzZ"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2205,6 +2205,33 @@ comment|/* Ignore zero records (eofs) */
 comment|/* 			 * This can't be the default, because Unix tar 			 * writes two records of zeros, then pads out the 			 * block with garbage. 			 */
 break|break;
 case|case
+literal|'j'
+case|:
+case|case
+literal|'y'
+case|:
+if|if
+condition|(
+name|f_compressprog
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Only one compression option permitted\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_ARGSBAD
+argument_list|)
+expr_stmt|;
+block|}
+name|f_compressprog
+operator|=
+literal|"bzip2"
+expr_stmt|;
+break|break;
+case|case
 literal|'k'
 case|:
 comment|/* Don't overwrite files */
@@ -2444,6 +2471,9 @@ break|break;
 case|case
 literal|'T'
 case|:
+case|case
+literal|'I'
+case|:
 name|name_file
 operator|=
 name|optarg
@@ -2527,33 +2557,6 @@ name|add_exclude_file
 argument_list|(
 name|optarg
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'I'
-case|:
-case|case
-literal|'y'
-case|:
-if|if
-condition|(
-name|f_compressprog
-condition|)
-block|{
-name|msg
-argument_list|(
-literal|"Only one compression option permitted\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_ARGSBAD
-argument_list|)
-expr_stmt|;
-block|}
-name|f_compressprog
-operator|=
-literal|"bzip2"
 expr_stmt|;
 break|break;
 case|case
@@ -2777,7 +2780,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -R, --record-number	show record number within archive with each message\n\ --remove-files		remove files after adding them to the archive\n\ -s, --same-order,\n\     --preserve-order	list of names to extract is sorted to match archive\n\ --same-owner		create extracted files with the same ownership \n\ --show-omitted-dirs	show omitted directories while processing the archive.\n\ -S, --sparse		handle sparse files efficiently\n\ -T, --files-from F	get names to extract or create from file F\n\ --null			-T reads null-terminated names, disable -C\n\ --totals		print total bytes written with --create\n\ -v, --verbose		verbosely list files processed\n\ -V, --label NAME	create archive with volume name NAME\n\ --version		print tar program version number\n\ -w, --interactive,\n\     --confirmation	ask for confirmation for every action\n\ "
+literal|"\ -R, --record-number	show record number within archive with each message\n\ --remove-files		remove files after adding them to the archive\n\ -s, --same-order,\n\     --preserve-order	list of names to extract is sorted to match archive\n\ --same-owner		create extracted files with the same ownership \n\ --show-omitted-dirs	show omitted directories while processing the archive.\n\ -S, --sparse		handle sparse files efficiently\n\ -T, -I, --files-from F	get names to extract or create from file F\n\ --null			-T reads null-terminated names, disable -C\n\ --totals		print total bytes written with --create\n\ -v, --verbose		verbosely list files processed\n\ -V, --label NAME	create archive with volume name NAME\n\ --version		print tar program version number\n\ -w, --interactive,\n\     --confirmation	ask for confirmation for every action\n\ "
 argument_list|,
 name|stdout
 argument_list|)
@@ -2785,7 +2788,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude PATTERN	exclude files, given as a globbing PATTERN\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -y, --bzip2, --bunzip2  filter the archive through bzip2\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --unlink		unlink files before creating them\n\ --fast-read 		stop after desired names in archive have been found\n\ "
+literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude PATTERN	exclude files, given as a globbing PATTERN\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -j, -y, --bzip, --bzip2, --bunzip2  filter the archive through bzip2\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --unlink		unlink files before creating them\n\ --fast-read 		stop after desired names in archive have been found\n\ "
 argument_list|,
 name|stdout
 argument_list|)
