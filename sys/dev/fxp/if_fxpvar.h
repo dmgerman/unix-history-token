@@ -479,6 +479,10 @@ name|fxp_desc
 decl_stmt|;
 comment|/* descriptors management struct */
 name|int
+name|maxtxseg
+decl_stmt|;
+comment|/* maximum # of TX segments */
+name|int
 name|tx_queued
 decl_stmt|;
 comment|/* # of active TxCB's */
