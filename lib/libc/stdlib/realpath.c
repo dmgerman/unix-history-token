@@ -28,6 +28,16 @@ literal|"@(#)realpath.c	8.1 (Berkeley) 2/16/94"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -448,7 +458,11 @@ argument_list|(
 name|wbuf
 argument_list|)
 operator|+
+operator|(
+literal|1
+operator|-
 name|rootd
+operator|)
 operator|+
 literal|1
 operator|>
