@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.43 (Berkeley) %G%"
+literal|"@(#)mount.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,14 @@ name|makevfslist
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|prmount
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -1633,6 +1641,10 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -1871,24 +1883,25 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|prmount
-argument_list|(
-argument|spec
-argument_list|,
-argument|name
-argument_list|,
-argument|flags
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|spec
-operator|,
-operator|*
+parameter_list|,
 name|name
-expr_stmt|;
-end_expr_stmt
+parameter_list|,
+name|flags
+parameter_list|)
+name|char
+modifier|*
+name|spec
+decl_stmt|,
+decl|*
+name|name
+decl_stmt|;
+end_function
 
 begin_decl_stmt
 specifier|register

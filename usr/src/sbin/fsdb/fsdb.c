@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	5.8 (Berkeley) %G%"
+literal|"@(#)fsdb.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,7 +1136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|err
 parameter_list|()
 function_decl|;
@@ -13002,12 +13002,10 @@ begin_comment
 comment|/*  * err - called on interrupts.  Set the current address  *	back to the last address stored in erraddr. Reset all  *	appropriate flags.  A reset call is made to return  *	to the main loop;  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|err
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|freemem
 argument_list|(
@@ -13073,7 +13071,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * devcheck - check that the given mode represents a   *	special device. The IFCHR bit is on for both  *	character and block devices.  */

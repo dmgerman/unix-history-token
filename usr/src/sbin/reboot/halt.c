@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)halt.c	5.8 (Berkeley) %G%"
+literal|"@(#)halt.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,16 +530,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|dingdong
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* RRRIIINNNGGG RRRIIINNNGGG */
 block|}
-end_block
+end_function
 
 begin_macro
 name|setalarm

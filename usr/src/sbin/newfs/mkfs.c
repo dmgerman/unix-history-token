@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.15 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,10 +673,11 @@ name|int
 name|ppid
 decl_stmt|,
 name|status
-decl_stmt|,
-name|started
-argument_list|()
 decl_stmt|;
+name|void
+name|started
+parameter_list|()
+function_decl|;
 ifndef|#
 directive|ifndef
 name|STANDALONE

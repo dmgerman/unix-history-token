@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.13 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,6 +268,12 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|mntsrv
+argument_list|()
+decl_stmt|,
+name|umntall_each
+argument_list|()
+decl_stmt|,
 name|xdr_fhs
 argument_list|()
 decl_stmt|,
@@ -283,33 +289,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|mntsrv
-argument_list|()
-decl_stmt|,
-name|get_exportlist
-argument_list|()
-decl_stmt|,
-name|send_umntall
-argument_list|()
-decl_stmt|,
-name|umntall_each
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
-name|get_mountlist
-argument_list|()
-decl_stmt|,
 name|add_mlist
 argument_list|()
 decl_stmt|,
 name|del_mlist
 argument_list|()
+decl_stmt|,
+name|get_exportlist
+argument_list|()
+decl_stmt|,
+name|get_mountlist
+argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|send_umntall
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -2070,12 +2070,10 @@ begin_comment
 comment|/*  * Get the export list  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|get_exportlist
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -3199,7 +3197,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Parse out the next white space separated field  */
@@ -4285,12 +4283,10 @@ begin_comment
 comment|/*  * This function is called via. SIGTERM when the system is going down.  * It sends a broadcast RPCMNT_UMNTALL.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|send_umntall
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -4324,7 +4320,7 @@ name|exit
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|umntall_each
