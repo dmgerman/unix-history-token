@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *  Sendmail  *  Copyright (c) 1983  Eric P. Allman  *  Berkeley, California  */
 end_comment
 
 begin_include
@@ -24,35 +24,59 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DAEMON
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|lint
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DAEMON
+end_ifdef
 
 begin_decl_stmt
 specifier|static
 name|char
-name|SccsId
+name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.23 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.24 (Berkeley) %G% (with daemon mode)"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)daemon.c	5.24 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DAEMON
+end_ifdef
 
 begin_include
 include|#
@@ -83,39 +107,6 @@ include|#
 directive|include
 file|<sys/resource.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)daemon.c	5.23 (Berkeley) %G% (with daemon mode)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DAEMON
-end_ifdef
 
 begin_comment
 comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	maphostname(hbuf, hbufsize) **		Convert the entry in hbuf into a canonical form.  It **		may not be larger than hbufsize. */
