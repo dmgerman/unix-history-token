@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.87 2001/08/15 00:04:59 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.88 2001/11/10 16:53:32 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6960,17 +6960,6 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
 name|config_detach
 argument_list|(
 name|dev
@@ -6983,34 +6972,6 @@ argument_list|,
 name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|device_delete_child
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-operator|->
-name|subdevs
-index|[
-name|i
-index|]
-argument_list|)
-argument_list|,
-name|dev
-operator|->
-name|subdevs
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 comment|/*usbd_add_dev_event(USB_EVENT_DEVICE_DETACH, dev);*/

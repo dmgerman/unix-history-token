@@ -1249,6 +1249,18 @@ name|PWR_SUSPEND
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|config_detach
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|)
+value|device_delete_child(device_get_parent(dev), dev)
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct
