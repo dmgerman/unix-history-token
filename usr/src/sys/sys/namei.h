@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.17 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/* NEEDSWORK: function defns need update */
+comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -19,80 +15,6 @@ directive|define
 name|_NAMEI_H_
 end_define
 
-begin_struct
-struct|struct
-name|componentname
-block|{
-name|u_long
-name|cn_nameiop
-decl_stmt|;
-comment|/* in */
-name|u_long
-name|cn_flags
-decl_stmt|;
-comment|/* in */
-name|long
-name|cn_namelen
-decl_stmt|;
-comment|/* in */
-name|char
-modifier|*
-name|cn_nameptr
-decl_stmt|;
-comment|/* in */
-name|u_long
-name|cn_hash
-decl_stmt|;
-comment|/* in */
-name|char
-modifier|*
-name|cn_pnbuf
-decl_stmt|;
-comment|/* in */
-name|struct
-name|ucred
-modifier|*
-name|cn_cred
-decl_stmt|;
-comment|/* in */
-name|struct
-name|proc
-modifier|*
-name|cn_proc
-decl_stmt|;
-comment|/* in */
-comment|/* 	 * Side effects. 	 */
-struct|struct
-name|ufs_specific
-block|{
-comment|/* saved info for new dir entry */
-name|off_t
-name|ufs_endoff
-decl_stmt|;
-comment|/* end of useful directory contents */
-name|long
-name|ufs_offset
-decl_stmt|;
-comment|/* offset of free space in directory */
-name|long
-name|ufs_count
-decl_stmt|;
-comment|/* size of free slot in directory */
-name|ino_t
-name|ufs_ino
-decl_stmt|;
-comment|/* inode number of found directory */
-name|u_long
-name|ufs_reclen
-decl_stmt|;
-comment|/* size of found directory entry */
-block|}
-name|cn_ufs
-struct|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Encapsulation of namei parameters.  */
 end_comment
@@ -101,7 +23,7 @@ begin_struct
 struct|struct
 name|nameidata
 block|{
-comment|/* 	 * Arguments to namei. 	 */
+comment|/* 	 * Arguments to namei/lookup. 	 */
 name|caddr_t
 name|ni_dirp
 decl_stmt|;
@@ -111,10 +33,9 @@ name|uio_seg
 name|ni_segflg
 decl_stmt|;
 comment|/* location of pathname */
-name|u_long
-name|ni_nameiop
-decl_stmt|;
-comment|/* see below.  NEEDSWORK: here for compatibility */
+comment|/* u_long	ni_nameiop;		/* namei operation */
+comment|/* u_long	ni_flags;		/* flags to namei */
+comment|/* struct	proc *ni_proc;		/* process requesting lookup */
 comment|/* 	 * Arguments to lookup. 	 */
 comment|/* struct	ucred *ni_cred;		/* credentials */
 name|struct
@@ -142,92 +63,70 @@ modifier|*
 name|ni_dvp
 decl_stmt|;
 comment|/* vnode of intermediate directory */
-comment|/* 	 * Shared between namei, lookup routines, and commit routines. 	 */
-comment|/* char	*ni_pnbuf;		/* pathname buffer */
+comment|/* 	 * Shared between namei and lookup/commit routines. 	 */
 name|long
 name|ni_pathlen
 decl_stmt|;
 comment|/* remaining chars in path */
-comment|/* char	*ni_ptr;		/* current location in pathname */
-comment|/* long	ni_namelen;		/* length of current component */
 name|char
 modifier|*
 name|ni_next
 decl_stmt|;
 comment|/* next location in pathname */
-comment|/* u_long	ni_hash;		/* hash value of current component */
-name|u_char
+name|u_long
 name|ni_loopcnt
 decl_stmt|;
 comment|/* count of symlinks encountered */
-comment|/* u_char	ni_makeentry;		/* 1 => add entry to name cache */
-comment|/* u_char	ni_isdotdot;		/* 1 => current component name is .. */
-comment|/* u_char	ni_more;		/* 1 => symlink needs interpretation */
-comment|/* 	 * Lookup params. 	 */
-name|struct
+comment|/* 	 * Lookup parameters: this structure describes the subset of 	 * information from the nameidata structure that is passed 	 * through the VOP interface. 	 */
+struct|struct
 name|componentname
-name|ni_cnd
+block|{
+comment|/* 		 * Arguments to lookup. 		 */
+name|u_long
+name|cn_nameiop
 decl_stmt|;
+comment|/* namei operation */
+name|u_long
+name|cn_flags
+decl_stmt|;
+comment|/* flags to namei */
+name|struct
+name|proc
+modifier|*
+name|cn_proc
+decl_stmt|;
+comment|/* process requesting lookup */
+name|struct
+name|ucred
+modifier|*
+name|cn_cred
+decl_stmt|;
+comment|/* credentials */
+comment|/* 		 * Shared between lookup and commit routines. 		 */
+name|char
+modifier|*
+name|cn_pnbuf
+decl_stmt|;
+comment|/* pathname buffer */
+name|char
+modifier|*
+name|cn_nameptr
+decl_stmt|;
+comment|/* pointer to looked up name */
+name|long
+name|cn_namelen
+decl_stmt|;
+comment|/* length of looked up component */
+name|u_long
+name|cn_hash
+decl_stmt|;
+comment|/* hash value of looked up name */
+block|}
+name|ni_cnd
+struct|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Backwards compatibility.  */
-end_comment
-
-begin_comment
-comment|/* #define ni_nameiop	ni_cnd.cn_nameiop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ni_cred
-value|ni_cnd.cn_cred
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_pnbuf
-value|ni_cnd.cn_pnbuf
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_namelen
-value|ni_cnd.cn_namelen
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_ptr
-value|ni_cnd.cn_nameptr
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_hash
-value|ni_cnd.cn_hash
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_flags
-value|ni_cnd.cn_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_ufs
-value|ni_cnd.cn_ufs
-end_define
 
 begin_ifdef
 ifdef|#
@@ -434,10 +333,6 @@ begin_comment
 comment|/* save starting directory */
 end_comment
 
-begin_comment
-comment|/* new: */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -492,6 +387,30 @@ end_define
 begin_comment
 comment|/* mask of parameter descriptors */
 end_comment
+
+begin_comment
+comment|/*  * Initialization of an nameidata structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDINIT
+parameter_list|(
+name|ndp
+parameter_list|,
+name|op
+parameter_list|,
+name|flags
+parameter_list|,
+name|segflg
+parameter_list|,
+name|namep
+parameter_list|,
+name|p
+parameter_list|)
+value|{ \ 	(ndp)->ni_cnd.cn_nameiop = op; \ 	(ndp)->ni_cnd.cn_flags = flags; \ 	(ndp)->ni_segflg = segflg; \ 	(ndp)->ni_dirp = namep; \ 	(ndp)->ni_cnd.cn_proc = p; \ }
+end_define
 
 begin_endif
 endif|#
@@ -599,11 +518,6 @@ expr|struct
 name|nameidata
 operator|*
 name|ndp
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -619,11 +533,6 @@ expr|struct
 name|nameidata
 operator|*
 name|ndp
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
