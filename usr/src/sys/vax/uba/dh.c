@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.22	81/02/23	*/
+comment|/*	dh.c	4.23	81/02/23	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NDH11
+name|NDH
 operator|>
 literal|0
 end_if
@@ -141,7 +141,7 @@ name|uba_dinfo
 modifier|*
 name|dhinfo
 index|[
-name|NDH11
+name|NDH
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -199,7 +199,7 @@ name|uba_dinfo
 modifier|*
 name|dminfo
 index|[
-name|NDH11
+name|NDH
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -774,7 +774,7 @@ begin_decl_stmt
 name|short
 name|dhsar
 index|[
-name|NDH11
+name|NDH
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -787,7 +787,7 @@ begin_decl_stmt
 name|short
 name|dhsoftCAR
 index|[
-name|NDH11
+name|NDH
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -797,7 +797,7 @@ name|struct
 name|tty
 name|dh11
 index|[
-name|NDH11
+name|NDH
 operator|*
 literal|16
 index|]
@@ -808,7 +808,7 @@ begin_decl_stmt
 name|int
 name|ndh11
 init|=
-name|NDH11
+name|NDH
 operator|*
 literal|16
 decl_stmt|;
@@ -1267,7 +1267,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NDH11
+name|NDH
 operator|*
 literal|16
 operator|||
@@ -3359,7 +3359,7 @@ literal|0
 init|;
 name|dh
 operator|<
-name|NDH11
+name|NDH
 condition|;
 name|dh
 operator|++
@@ -3530,7 +3530,7 @@ literal|0
 init|;
 name|dh
 operator|<
-name|NDH11
+name|NDH
 condition|;
 name|dh
 operator|++
@@ -3617,7 +3617,7 @@ if|if
 condition|(
 name|dm
 operator|>=
-name|NDH11
+name|NDH
 operator|||
 operator|(
 name|ui
