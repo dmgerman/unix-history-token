@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: extract.c,v 1.5 1993/09/18 03:38:47 jkh Exp $"
+literal|"$Id: extract.c,v 1.6 1994/12/06 00:51:32 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (strlen(where_args)> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 			barf("can't invoke tar pipeline"); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (strlen(where_args)> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 			barf("can't invoke tar pipeline"); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    if (!isdir(todir)) apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
