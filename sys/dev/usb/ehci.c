@@ -492,17 +492,6 @@ end_if
 begin_function_decl
 name|Static
 name|void
-name|ehci_shutdown
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|Static
-name|void
 name|ehci_power
 parameter_list|(
 name|int
@@ -4911,20 +4900,6 @@ begin_comment
 comment|/*  * Shut down the controller when the system is going down.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
 begin_function
 name|void
 name|ehci_shutdown
@@ -4968,11 +4943,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|usbd_status

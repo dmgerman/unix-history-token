@@ -118,20 +118,73 @@ comment|/* RW Port wake caps (opt)  */
 end_comment
 
 begin_comment
-comment|/* Regs ar EECP + offset */
+comment|/* EHCI Extended Capabilities */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCI_EHCI_USBLEGSUP
-value|0x00
+name|EHCI_EC_LEGSUP
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCI_EHCI_USBLEGCTLSTS
+name|EHCI_EECP_NEXT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_EECP_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xff)
+end_define
+
+begin_comment
+comment|/* Legacy support extended capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_LEGSUP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_OSOWNED
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* OS owned semaphore */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_BIOSOWNED
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* BIOS owned semaphore */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_USBLEGCTLSTS
 value|0x04
 end_define
 
