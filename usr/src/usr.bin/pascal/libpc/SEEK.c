@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SEEK.c 1.2 %G%"
+literal|"@(#)SEEK.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|long
+name|struct
+name|seekptr
+modifier|*
 name|loc
 decl_stmt|;
 end_decl_stmt
@@ -61,6 +63,8 @@ operator|->
 name|fbuf
 argument_list|,
 name|loc
+operator|->
+name|cnt
 argument_list|,
 literal|0
 argument_list|)
@@ -71,7 +75,7 @@ condition|)
 block|{
 name|PERROR
 argument_list|(
-literal|"Could not reset "
+literal|"Could not seek "
 argument_list|,
 name|curfile
 operator|->
