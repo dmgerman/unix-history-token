@@ -1326,9 +1326,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -1375,9 +1372,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -1424,9 +1418,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -3154,8 +3145,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3777,8 +3766,6 @@ argument_list|,
 name|mac
 operator|->
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3952,8 +3939,6 @@ argument_list|,
 name|mac
 operator|->
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

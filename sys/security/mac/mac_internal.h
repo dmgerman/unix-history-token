@@ -357,9 +357,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -457,9 +454,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -511,9 +505,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

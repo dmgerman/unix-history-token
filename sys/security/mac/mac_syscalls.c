@@ -1907,8 +1907,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2119,8 +2117,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2829,8 +2825,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mac_destroy_vnode_label
@@ -2857,8 +2851,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|mac_destroy_pipe_label
@@ -3152,8 +3144,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|NDFREE
@@ -3447,8 +3437,6 @@ argument_list|,
 name|mac
 operator|.
 name|m_buflen
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|NDFREE

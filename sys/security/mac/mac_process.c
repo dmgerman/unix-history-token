@@ -580,9 +580,6 @@ name|outbuf
 parameter_list|,
 name|size_t
 name|outbuflen
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
