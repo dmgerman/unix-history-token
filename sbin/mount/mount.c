@@ -2032,14 +2032,12 @@ name|optbuf
 decl_stmt|,
 name|execname
 index|[
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 index|]
 decl_stmt|,
 name|mntpath
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|#
