@@ -3752,6 +3752,9 @@ argument_list|)
 expr_stmt|;
 name|INTOFF
 expr_stmt|;
+name|flushall
+argument_list|()
+expr_stmt|;
 name|pid
 operator|=
 name|fork
