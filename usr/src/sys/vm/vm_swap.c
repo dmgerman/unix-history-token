@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.13	82/10/31	*/
+comment|/*	vm_swap.c	4.14	82/11/02	*/
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/file.h"
 end_include
 
 begin_decl_stmt
@@ -121,7 +127,7 @@ name|howmany
 argument_list|(
 name|bp
 operator|->
-name|b_bocunt
+name|b_bcount
 argument_list|,
 name|DEV_BSIZE
 argument_list|)

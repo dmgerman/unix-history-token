@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.35	82/10/31	*/
+comment|/*	kern_physio.c	4.36	82/11/02	*/
 end_comment
 
 begin_include
@@ -510,12 +510,13 @@ name|major
 argument_list|(
 name|dev
 argument_list|)
+index|]
 operator|.
 name|d_strategy
-operator|,
+argument_list|,
 name|PSWP
 argument_list|)
-expr|;
+expr_stmt|;
 if|if
 condition|(
 name|flag
