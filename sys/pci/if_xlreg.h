@@ -353,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|XL_PACKET_SIZE
-value|1536
+value|1540
 end_define
 
 begin_comment
@@ -1315,6 +1315,17 @@ directive|define
 name|XL_W3_INTERNAL_CFG
 value|0x00
 end_define
+
+begin_define
+define|#
+directive|define
+name|XL_W3_MAXPKTSIZE
+value|0x04
+end_define
+
+begin_comment
+comment|/* 3c905B only */
+end_comment
 
 begin_define
 define|#

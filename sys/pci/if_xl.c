@@ -11061,6 +11061,24 @@ argument_list|,
 name|XL_CMD_COAX_STOP
 argument_list|)
 expr_stmt|;
+comment|/* increase packet size to allow reception of 802.1q or ISL packets */
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_type
+operator|==
+name|XL_TYPE_905B
+condition|)
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|XL_W3_MAXPKTSIZE
+argument_list|,
+name|XL_PACKET_SIZE
+argument_list|)
+expr_stmt|;
 comment|/* Clear out the stats counters. */
 name|CSR_WRITE_2
 argument_list|(
