@@ -267,6 +267,8 @@ name|u_int
 name|ulen
 decl_stmt|;
 name|int
+name|prev
+decl_stmt|,
 name|type
 init|=
 literal|0
@@ -387,10 +389,30 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Get a packet from the client. */
+name|prev
+operator|=
+name|type
+expr_stmt|;
 name|type
 operator|=
 name|packet_read
 argument_list|()
+expr_stmt|;
+comment|/* 		 * If we started challenge-response authentication but the 		 * next packet is not a response to our challenge, release 		 * the resources allocated by get_challenge() (which would 		 * normally have been released by verify_response() had we 		 * received such a response) 		 */
+if|if
+condition|(
+name|prev
+operator|==
+name|SSH_CMSG_AUTH_TIS
+operator|&&
+name|type
+operator|!=
+name|SSH_CMSG_AUTH_TIS_RESPONSE
+condition|)
+name|abandon_challenge_response
+argument_list|(
+name|authctxt
+argument_list|)
 expr_stmt|;
 comment|/* Process the packet. */
 switch|switch
