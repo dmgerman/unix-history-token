@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999, 2000 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999, 2000 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -306,7 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Per-FS attribute lock protecting attribute operations  * XXX Right now there is a lot of lock contention due to having a single  * lock per-FS; really, this should be far more fine-grained.  */
+comment|/*  * Per-FS attribute lock protecting attribute operations.  * XXX Right now there is a lot of lock contention due to having a single  * lock per-FS; really, this should be far more fine-grained.  */
 end_comment
 
 begin_function
@@ -325,7 +325,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|/* ideally, LK_CANRECURSE would not be used, here */
+comment|/* Ideally, LK_CANRECURSE would not be used, here. */
 name|lockmgr
 argument_list|(
 operator|&
@@ -385,7 +385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether the name passed is a valid name for an actual  * attribute.  *  * Invalid currently consists of:  *         NULL pointer for attrname  *         zero-length attrname (used to retrieve application attr list)  *         attrname consisting of "$" (used to treive system attr list)  */
+comment|/*  * Determine whether the name passed is a valid name for an actual  * attribute.  *  * Invalid currently consists of:  *	 NULL pointer for attrname  *	 zero-length attrname (used to retrieve application attribute list)  *	 attrname consisting of "$" (used to treive system attribute list)  */
 end_comment
 
 begin_function
@@ -654,7 +654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start extended attribute support on an FS  */
+comment|/*  * Start extended attribute support on an FS.  */
 end_comment
 
 begin_function
@@ -780,7 +780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stop extended attribute support on an FS  */
+comment|/*  * Stop extended attribute support on an FS.  */
 end_comment
 
 begin_function
@@ -1355,7 +1355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Disable extended attribute support on an FS  */
+comment|/*  * Disable extended attribute support on an FS.  */
 end_comment
 
 begin_function
@@ -1472,7 +1472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * VFS call to manage extended attributes in UFS  * attrname, arg are userspace pointers from the syscall  */
+comment|/*  * VFS call to manage extended attributes in UFS.  * attrname, arg are userspace pointers from the syscall.  */
 end_comment
 
 begin_function
@@ -1526,7 +1526,7 @@ index|[
 name|UFS_EXTATTR_MAXEXTATTRNAME
 index|]
 decl_stmt|;
-comment|/* inc null */
+comment|/* Incl. null. */
 name|char
 modifier|*
 name|filename
@@ -1839,7 +1839,7 @@ operator|==
 literal|'$'
 operator|)
 expr_stmt|;
-comment|/* 	 * Kernel-invoked always succeeds 	 */
+comment|/* 	 * Kernel-invoked always succeeds. 	 */
 if|if
 condition|(
 name|cred
@@ -1887,7 +1887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Vnode operating to retrieve a named extended attribute  */
+comment|/*  * Vnode operating to retrieve a named extended attribute.  */
 end_comment
 
 begin_function
@@ -1899,7 +1899,7 @@ name|vop_getextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_getextattr {         IN struct vnode *a_vp;         IN const char *a_name;         INOUT struct uio *a_uio;         IN struct ucred *a_cred;         IN struct proc *a_p; }; */
+comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct proc *a_p; }; */
 block|{
 name|struct
 name|mount
@@ -2114,7 +2114,7 @@ literal|'$'
 operator|)
 condition|)
 block|{
-comment|/* XXX retrieve attribute lists */
+comment|/* XXX retrieve attribute lists. */
 return|return
 operator|(
 name|EINVAL
@@ -2164,7 +2164,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Allow only offsets of zero to encourage the read/replace 	 * extended attribute semantic.  Otherwise we can't guarantee 	 * atomicity, as we don't provide locks for extended 	 * attributes. 	 */
+comment|/* 	 * Allow only offsets of zero to encourage the read/replace 	 * extended attribute semantic.  Otherwise we can't guarantee 	 * atomicity, as we don't provide locks for extended attributes. 	 */
 if|if
 condition|(
 name|uio
@@ -2178,7 +2178,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Find base offset of header in file based on file header size, and 	 * data header size + maximum data size, indexed by inode number 	 */
+comment|/* 	 * Find base offset of header in file based on file header size, and 	 * data header size + maximum data size, indexed by inode number. 	 */
 name|base_offset
 operator|=
 sizeof|sizeof
@@ -2350,7 +2350,7 @@ condition|)
 goto|goto
 name|vopunlock_exit
 goto|;
-comment|/* defined? */
+comment|/* Defined? */
 if|if
 condition|(
 operator|(
@@ -2372,7 +2372,7 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
-comment|/* valid for the current inode generation? */
+comment|/* Valid for the current inode generation? */
 if|if
 condition|(
 name|ueh
@@ -2387,14 +2387,7 @@ block|{
 comment|/* 		 * The inode itself has a different generation number 		 * than the attribute data.  For now, the best solution 		 * is to coerce this to undefined, and let it get cleaned 		 * up by the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr_get: inode %lu inconsistency (%d, %d)\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|ip
-operator|->
-name|i_number
+literal|"ufs_extattr_get: inode number inconsistency (%d, %d)\n"
 argument_list|,
 name|ueh
 operator|.
@@ -2413,7 +2406,7 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
-comment|/* local size consistency check */
+comment|/* Local size consistency check. */
 if|if
 condition|(
 name|ueh
@@ -2435,7 +2428,7 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
-comment|/* allow for offset into the attr data */
+comment|/* Allow for offset into the attribute data. */
 name|uio
 operator|->
 name|uio_offset
@@ -2550,7 +2543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Vnode operation to set a named attribute  */
+comment|/*  * Vnode operation to set a named attribute.  */
 end_comment
 
 begin_function
@@ -2562,7 +2555,7 @@ name|vop_setextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_setextattr {         IN struct vnode *a_vp;         IN const char *a_name;         INOUT struct uio *a_uio;         IN struct ucred *a_cred;         IN struct proc *a_p; }; */
+comment|/* vop_setextattr { 	IN struct vnode *a_vp; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	IN struct ucred *a_cred; 	IN struct proc *a_p; }; */
 block|{
 name|struct
 name|mount
@@ -2847,7 +2840,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Early rejection of invalid offsets/lengths	 	 * Reject: any offset but 0 (replace) 	 *         Any size greater than attribute size limit  	 */
+comment|/* 	 * Early rejection of invalid offsets/length. 	 * Reject: any offset but 0 (replace) 	 *	 Any size greater than attribute size limit  	 */
 if|if
 condition|(
 name|uio
@@ -2871,7 +2864,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Find base offset of header in file based on file header size, and 	 * data header size + maximum data size, indexed by inode number 	 */
+comment|/* 	 * Find base offset of header in file based on file header size, and 	 * data header size + maximum data size, indexed by inode number. 	 */
 name|base_offset
 operator|=
 sizeof|sizeof
@@ -2898,7 +2891,7 @@ operator|.
 name|uef_size
 operator|)
 expr_stmt|;
-comment|/* 	 * Write out a data header for the data 	 */
+comment|/* 	 * Write out a data header for the data. 	 */
 name|ueh
 operator|.
 name|ueh_len
@@ -3072,7 +3065,7 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
-comment|/* 	 * Write out user data 	 */
+comment|/* 	 * Write out user data. 	 */
 name|uio
 operator|->
 name|uio_offset
@@ -3314,7 +3307,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Find base offset of header in file based on file header size, and 	 * data header size + maximum data size, indexed by inode number 	 */
+comment|/* 	 * Find base offset of header in file based on file header size, and 	 * data header size + maximum data size, indexed by inode number. 	 */
 name|base_offset
 operator|=
 sizeof|sizeof
@@ -3485,7 +3478,7 @@ condition|)
 goto|goto
 name|vopunlock_exit
 goto|;
-comment|/* defined? */
+comment|/* Defined? */
 if|if
 condition|(
 operator|(
@@ -3519,17 +3512,10 @@ operator|->
 name|i_gen
 condition|)
 block|{
-comment|/* 		 * The inode itself has a different generation number than 		 * the attribute data.  For now, the best solution is to  		 * coerce this to undefined, and let it get cleaned up by 		 * the next write or extattrctl clean. 		 */
+comment|/* 		 * The inode itself has a different generation number than 		 * the attribute data.  For now, the best solution is to 		 * coerce this to undefined, and let it get cleaned up by 		 * the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr_rm: inode %lu inconsistency (%d, %d)\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|ip
-operator|->
-name|i_number
+literal|"ufs_extattr_rm: inode number inconsistency (%d, %d)\n"
 argument_list|,
 name|ueh
 operator|.
@@ -3548,7 +3534,7 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
-comment|/* flag it as not in use */
+comment|/* Flag it as not in use. */
 name|ueh
 operator|.
 name|ueh_flags
