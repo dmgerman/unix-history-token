@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.51 2003/06/03 01:29:01 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.52 2003/06/11 16:53:26 imp Exp   */
 end_comment
 
 begin_comment
@@ -527,6 +527,17 @@ end_define
 
 begin_comment
 comment|/* Home Wireless Networks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ARTEM
+value|0x0268
+end_define
+
+begin_comment
+comment|/* ARtem */
 end_comment
 
 begin_define
@@ -1273,6 +1284,31 @@ define|#
 directive|define
 name|PCMCIA_STR_ARCHOS_ARC_ATAPI
 value|"MiniCD"
+end_define
+
+begin_comment
+comment|/* ARtem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ARTEM_ONAIR
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ARTEM_ONAIR
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ARTEM_ONAIR
+value|"ARtem OnAir"
 end_define
 
 begin_comment
