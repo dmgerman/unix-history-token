@@ -129,5 +129,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|intrmask_t
+name|isa_irq_mask
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
