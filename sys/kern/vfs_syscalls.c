@@ -5973,7 +5973,6 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 name|vput
 argument_list|(
 name|nd
@@ -5981,7 +5980,6 @@ operator|.
 name|ni_vp
 argument_list|)
 expr_stmt|;
-block|}
 name|vput
 argument_list|(
 name|nd
@@ -6306,7 +6304,6 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 name|vput
 argument_list|(
 name|nd
@@ -6314,7 +6311,6 @@ operator|.
 name|ni_vp
 argument_list|)
 expr_stmt|;
-block|}
 name|vput
 argument_list|(
 name|nd
