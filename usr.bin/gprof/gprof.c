@@ -422,6 +422,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'K'
+case|:
+name|Kflag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 name|lflag
@@ -551,6 +559,22 @@ block|}
 comment|/* 	 *	get information from the executable file. 	 */
 if|if
 condition|(
+operator|(
+name|Kflag
+operator|&&
+name|kernel_getnfile
+argument_list|(
+name|a_outname
+argument_list|,
+operator|&
+name|defaultEs
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
+operator|||
+operator|(
 name|elf_getnfile
 argument_list|(
 name|a_outname
@@ -572,6 +596,7 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 name|errx
 argument_list|(

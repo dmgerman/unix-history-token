@@ -948,6 +948,16 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|Kflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use the running kernel for symbols */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|sflag
 decl_stmt|;
 end_decl_stmt
@@ -1144,7 +1154,27 @@ comment|/* 		findcalls(); 		flatprofheader(); 		flatprofline(); */
 end_comment
 
 begin_comment
-comment|/* 		getpfile(); 		gprofheader(); 		gprofline(); 		main(); */
+comment|/* 		getpfile(); 		gprofheader(); 		gprofline(); */
+end_comment
+
+begin_function_decl
+name|int
+name|kernel_getnfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* 		main(); */
 end_comment
 
 begin_function_decl
