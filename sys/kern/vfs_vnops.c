@@ -1989,7 +1989,7 @@ decl_stmt|;
 name|caddr_t
 name|base
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|off_t
@@ -2012,7 +2012,7 @@ name|ucred
 modifier|*
 name|file_cred
 decl_stmt|;
-name|int
+name|size_t
 modifier|*
 name|aresid
 decl_stmt|;
@@ -2026,6 +2026,9 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|iaresid
 decl_stmt|;
 do|do
 block|{
@@ -2069,6 +2072,10 @@ condition|)
 name|bwillwrite
 argument_list|()
 expr_stmt|;
+name|iaresid
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|vn_rdwr
@@ -2091,7 +2098,8 @@ name|active_cred
 argument_list|,
 name|file_cred
 argument_list|,
-name|aresid
+operator|&
+name|iaresid
 argument_list|,
 name|td
 argument_list|)
@@ -2129,8 +2137,10 @@ name|aresid
 condition|)
 operator|*
 name|aresid
-operator|+=
+operator|=
 name|len
+operator|+
+name|iaresid
 expr_stmt|;
 return|return
 operator|(

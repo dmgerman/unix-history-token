@@ -1338,10 +1338,6 @@ name|cred
 argument_list|,
 name|NOCRED
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|td

@@ -3572,7 +3572,7 @@ parameter_list|,
 name|caddr_t
 name|base
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|,
 name|off_t
@@ -3595,7 +3595,7 @@ name|ucred
 modifier|*
 name|file_cred
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|aresid
 parameter_list|,
