@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3865,6 +3865,21 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|static
+name|int
+name|stopped
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|stopped
+condition|)
+block|{
+name|stopped
+operator|++
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3894,6 +3909,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%s\n"
