@@ -651,6 +651,16 @@ literal|'f'
 block|}
 block|,
 block|{
+literal|"files-from"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'T'
+block|}
+block|,
+block|{
 literal|"format"
 block|,
 name|required_argument
@@ -1402,6 +1412,17 @@ name|exit
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+comment|/* GNU tar */
+name|bsdtar
+operator|->
+name|names_from_file
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
