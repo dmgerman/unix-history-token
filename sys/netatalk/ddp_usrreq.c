@@ -2389,7 +2389,7 @@ operator|.
 name|ro_rt
 condition|)
 block|{
-name|rtfree
+name|RTFREE
 argument_list|(
 name|ddp
 operator|->
