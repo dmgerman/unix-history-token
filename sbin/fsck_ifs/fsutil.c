@@ -2899,6 +2899,8 @@ expr_stmt|;
 else|else
 name|pwarn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;

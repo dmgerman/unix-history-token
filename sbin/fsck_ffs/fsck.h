@@ -1942,6 +1942,12 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2059,6 +2065,12 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2100,6 +2112,12 @@ name|fmt
 operator|,
 operator|...
 operator|)
+argument_list|)
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt

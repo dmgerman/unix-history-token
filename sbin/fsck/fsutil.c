@@ -183,6 +183,12 @@ operator|,
 name|va_list
 operator|)
 argument_list|)
+name|__printflike
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

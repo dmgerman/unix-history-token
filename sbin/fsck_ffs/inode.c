@@ -994,6 +994,8 @@ condition|)
 block|{
 name|pfatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
