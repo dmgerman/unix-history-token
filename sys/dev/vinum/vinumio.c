@@ -3500,9 +3500,14 @@ name|char
 name|part
 decl_stmt|;
 comment|/* UNIX partition */
+ifdef|#
+directive|ifdef
+name|__i386__
 name|int
 name|slice
 decl_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|*
