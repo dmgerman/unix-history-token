@@ -58,6 +58,9 @@ name|u_long
 name|ts_inv_sufx
 decl_stmt|;
 name|u_long
+name|ts_inv_aclass
+decl_stmt|;
+name|u_long
 name|ts_xtd_fmt
 decl_stmt|;
 name|u_long
