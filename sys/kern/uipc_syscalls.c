@@ -458,6 +458,10 @@ name|socketops
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|socket
@@ -483,10 +487,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|p
-operator|->
-name|p_fd
 decl_stmt|;
 name|struct
 name|socket
@@ -503,6 +503,18 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 name|error
 operator|=
 name|falloc
@@ -520,11 +532,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|fhold
 argument_list|(
 name|fp
@@ -636,6 +646,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -643,6 +661,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -682,6 +704,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -702,11 +730,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|error
 operator|=
 name|getsockaddr
@@ -735,11 +761,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|error
 operator|=
@@ -773,6 +797,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -780,6 +812,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -814,6 +850,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -833,12 +875,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|solisten
@@ -866,6 +906,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -873,6 +920,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * accept1()  * MPSAFE  */
+end_comment
 
 begin_function
 specifier|static
@@ -905,10 +956,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|p
-operator|->
-name|p_fd
 decl_stmt|;
 name|struct
 name|file
@@ -951,6 +998,18 @@ name|short
 name|fflag
 decl_stmt|;
 comment|/* type must match fp->f_flag */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -985,11 +1044,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|error
 operator|=
@@ -1009,11 +1066,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|s
 operator|=
 name|splnet
@@ -1640,6 +1695,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1647,6 +1710,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE (accept1() is MPSAFE)  */
+end_comment
 
 begin_function
 name|int
@@ -1687,6 +1754,10 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
+
+begin_comment
+comment|/*  * MPSAFE (accept1() is MPSAFE)  */
+end_comment
 
 begin_function
 name|int
@@ -1729,6 +1800,10 @@ end_endif
 
 begin_comment
 comment|/* COMPAT_OLDSOCK */
+end_comment
+
+begin_comment
+comment|/*  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -1777,6 +1852,12 @@ name|error
 decl_stmt|,
 name|s
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -1797,11 +1878,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|so
 operator|=
 operator|(
@@ -2024,6 +2103,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2031,6 +2118,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -2089,6 +2180,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|socreate
@@ -2115,11 +2212,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|error
 operator|=
 name|socreate
@@ -2345,11 +2440,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|free4
 label|:
 if|if
@@ -2456,6 +2549,14 @@ operator|)
 name|soclose
 argument_list|(
 name|so1
+argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -3154,6 +3255,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|sendto
@@ -3182,6 +3287,9 @@ decl_stmt|;
 name|struct
 name|iovec
 name|aiov
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|msg
 operator|.
@@ -3245,8 +3353,14 @@ name|uap
 operator|->
 name|len
 expr_stmt|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|sendit
 argument_list|(
 name|p
@@ -3262,6 +3376,16 @@ name|uap
 operator|->
 name|flags
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -3272,6 +3396,10 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3301,6 +3429,9 @@ decl_stmt|;
 name|struct
 name|iovec
 name|aiov
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|msg
 operator|.
@@ -3355,8 +3486,14 @@ name|msg_flags
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|sendit
 argument_list|(
 name|p
@@ -3372,10 +3509,24 @@ name|uap
 operator|->
 name|flags
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3415,6 +3566,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyin
@@ -3440,11 +3597,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 operator|(
@@ -3468,11 +3623,15 @@ name|msg_iovlen
 operator|>=
 name|UIO_MAXIOV
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EMSGSIZE
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|iov
@@ -3501,10 +3660,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|iov
 operator|=
 name|aiov
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|copyin
@@ -3589,6 +3750,14 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3601,6 +3770,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3640,6 +3813,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyin
@@ -3664,11 +3843,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 operator|(
@@ -3692,11 +3869,15 @@ name|msg_iovlen
 operator|>=
 name|UIO_MAXIOV
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EMSGSIZE
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|iov
@@ -3725,10 +3906,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|iov
 operator|=
 name|aiov
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|msg
@@ -3820,6 +4003,14 @@ argument_list|(
 name|iov
 argument_list|,
 name|M_IOV
+argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -4700,6 +4891,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|recvfrom
@@ -4732,6 +4927,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -4770,19 +4971,19 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 else|else
+block|{
 name|msg
 operator|.
 name|msg_namelen
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|msg
 operator|.
 name|msg_name
@@ -4834,8 +5035,8 @@ name|uap
 operator|->
 name|flags
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|recvit
 argument_list|(
 name|p
@@ -4854,6 +5055,18 @@ name|uap
 operator|->
 name|fromlenaddr
 argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -4864,6 +5077,10 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -4914,6 +5131,10 @@ directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|orecv
@@ -4943,6 +5164,15 @@ name|struct
 name|iovec
 name|aiov
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|msg
 operator|.
 name|msg_name
@@ -4998,8 +5228,8 @@ name|uap
 operator|->
 name|flags
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|recvit
 argument_list|(
 name|p
@@ -5016,13 +5246,23 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Old recvmsg.  This code takes advantage of the fact that the old msghdr  * overlays the new one, missing only the flags, and with the (old) access  * rights where the control fields are now.  */
+comment|/*  * Old recvmsg.  This code takes advantage of the fact that the old msghdr  * overlays the new one, missing only the flags, and with the (old) access  * rights where the control fields are now.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -5096,6 +5336,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5119,11 +5365,15 @@ name|msg_iovlen
 operator|>=
 name|UIO_MAXIOV
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EMSGSIZE
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|iov
@@ -5152,10 +5402,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|iov
 operator|=
 name|aiov
 expr_stmt|;
+block|}
 name|msg
 operator|.
 name|msg_flags
@@ -5288,6 +5540,14 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5300,6 +5560,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -5343,6 +5607,12 @@ specifier|register
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyin
@@ -5370,11 +5640,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 operator|(
@@ -5398,11 +5666,15 @@ name|msg_iovlen
 operator|>=
 name|UIO_MAXIOV
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EMSGSIZE
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|iov
@@ -5431,10 +5703,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|iov
 operator|=
 name|aiov
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
@@ -5580,6 +5854,14 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5587,6 +5869,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -5621,6 +5907,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -5640,12 +5932,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|soshutdown
@@ -5671,6 +5961,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5678,6 +5975,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -5748,6 +6049,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -5767,12 +6074,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|sopt
 operator|.
 name|sopt_dir
@@ -5841,6 +6146,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5848,6 +6160,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -5888,6 +6204,12 @@ name|struct
 name|sockopt
 name|sopt
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -5908,11 +6230,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 name|uap
@@ -5955,11 +6275,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -5975,11 +6293,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 block|}
 else|else
@@ -6096,6 +6416,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6105,7 +6433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get socket name.  */
+comment|/*  * getsockname1() - Get socket name.   *  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -6160,6 +6488,12 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -6180,11 +6514,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|error
 operator|=
 name|copyin
@@ -6220,11 +6552,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|so
 operator|=
@@ -6387,6 +6717,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6394,6 +6732,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -6434,6 +6776,10 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -6479,7 +6825,7 @@ comment|/* COMPAT_OLDSOCK */
 end_comment
 
 begin_comment
-comment|/*  * Get name of peer for connected socket.  */
+comment|/*  * getpeername1() - Get name of peer for connected socket.  *  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -6534,6 +6880,12 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|holdsock
@@ -6554,11 +6906,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|so
 operator|=
 operator|(
@@ -6594,11 +6944,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ENOTCONN
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|error
 operator|=
@@ -6635,11 +6987,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|sa
 operator|=
@@ -6792,6 +7142,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6799,6 +7157,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -6839,6 +7201,10 @@ ifdef|#
 directive|ifdef
 name|COMPAT_OLDSOCK
 end_ifdef
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -7732,7 +8098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sendfile(2)  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if  * nbytes == 0. Optionally add a header and/or trailer to the socket  * output. If specified, write the total number of bytes sent into *sbytes.  */
+comment|/*  * sendfile(2)  *  * MPSAFE  *  * int sendfile(int fd, int s, off_t offset, size_t nbytes,  *	 struct sf_hdtr *hdtr, off_t *sbytes, int flags)  *  * Send a file specified by 'fd' and starting at 'offset' to a socket  * specified by 's'. Send only 'nbytes' of the file or until EOF if  * nbytes == 0. Optionally add a header and/or trailer to the socket  * output. If specified, write the total number of bytes sent into *sbytes.  *  */
 end_comment
 
 begin_function
@@ -7818,7 +8184,11 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|vp
 operator|=
@@ -9114,6 +9484,12 @@ argument_list|(
 name|fp
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
