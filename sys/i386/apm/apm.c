@@ -4735,14 +4735,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* APM_DEBUG */
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX this may not be needed anymore 	 */
-block|if ((flags& 0x10)) { 		if ((flags& 0xf)>= 0x2) { 			apm_driver_version(0x102); 		}  		if (!apm_version&& (flags& 0xf)>= 0x1) { 			apm_driver_version(0x101); 		} 	} else { 		apm_driver_version(0x102); 		if (!apm_version) 			apm_driver_version(0x101); 	}
-endif|#
-directive|endif
-comment|/*         * In one test, apm bios version was 1.02; an attempt to register         * a 1.04 driver resulted in a 1.00 connection!  Registering a         * 1.02 driver resulted in a 1.02 connection.         */
+comment|/*          * In one test, apm bios version was 1.02; an attempt to register          * a 1.04 driver resulted in a 1.00 connection!  Registering a          * 1.02 driver resulted in a 1.02 connection.          */
 name|drv_version
 operator|=
 name|apm_version
