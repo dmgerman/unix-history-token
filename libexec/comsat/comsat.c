@@ -817,7 +817,7 @@ name|off_t
 operator|)
 literal|0
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|nutmp
@@ -829,7 +829,7 @@ argument_list|,
 name|utmp
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|statbf
 operator|.
@@ -948,11 +948,15 @@ literal|'\0'
 expr_stmt|;
 name|offset
 operator|=
-name|atoi
+name|strtoll
 argument_list|(
 name|cp
 operator|+
 literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -1588,13 +1592,13 @@ return|return;
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|fi
 argument_list|,
 name|offset
 argument_list|,
-name|L_SET
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print the first 7 lines or 560 characters of the new mail 	 * (whichever comes first).  Skip header crap other than 	 * From, Subject, To, and Date. 	 */
