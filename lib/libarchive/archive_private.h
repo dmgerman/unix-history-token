@@ -47,16 +47,6 @@ name|ARCHIVE_READ_MAGIC
 value|(0xdeb0c5U)
 end_define
 
-begin_comment
-comment|/*  * This is used by archive_extract to keep track of non-writable  * directories so that they can be initially restored writable, then  * fixed up at end.  This also handles mtime/atime fixups.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|archive_extract_dir_entry
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|archive
@@ -423,9 +413,9 @@ name|archive_string
 name|extract_mkdirpath
 decl_stmt|;
 name|struct
-name|archive_extract_dir_entry
+name|archive_extract_fixup
 modifier|*
-name|archive_extract_dir_list
+name|archive_extract_fixup
 decl_stmt|;
 name|void
 function_decl|(
