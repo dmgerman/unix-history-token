@@ -46,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.9 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.10 %G%";  */
 end_comment
 
 begin_comment
@@ -1429,14 +1429,6 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|savestr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|skin
 parameter_list|()
 function_decl|;
@@ -1446,6 +1438,22 @@ begin_function_decl
 name|char
 modifier|*
 name|snarf
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|strcat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|strcpy
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1491,13 +1499,6 @@ argument_list|)
 argument_list|()
 expr_stmt|;
 end_expr_stmt
-
-begin_function_decl
-name|int
-name|icequal
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct
@@ -1619,6 +1620,20 @@ end_function_decl
 begin_function_decl
 name|long
 name|transmit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|icequal
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cmpdomain
 parameter_list|()
 function_decl|;
 end_function_decl
