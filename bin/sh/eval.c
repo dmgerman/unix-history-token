@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eval.c,v 1.16 1999/04/01 13:27:35 cracauer Exp $"
+literal|"$Id: eval.c,v 1.17 1999/04/03 12:55:51 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1792,6 +1792,12 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|INTON
@@ -2264,6 +2270,12 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|TRACE
@@ -2660,6 +2672,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|lastarg
+decl_stmt|;
+name|int
+name|realstatus
 decl_stmt|;
 if|#
 directive|if
@@ -4182,6 +4197,9 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|&
+name|realstatus
 argument_list|)
 expr_stmt|;
 name|INTON
@@ -4196,7 +4214,7 @@ literal|0
 operator|&&
 name|WIFSIGNALED
 argument_list|(
-name|exitstatus
+name|realstatus
 argument_list|)
 condition|)
 block|{

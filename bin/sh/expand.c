@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: expand.c,v 1.25 1999/04/09 15:23:48 tegge Exp $"
+literal|"$Id: expand.c,v 1.26 1999/04/13 04:13:09 tegge Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2339,6 +2339,12 @@ argument_list|(
 name|in
 operator|.
 name|jp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

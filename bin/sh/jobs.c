@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: jobs.c,v 1.22 1998/08/25 09:33:34 cracauer Exp $"
+literal|"$Id: jobs.c,v 1.23 1998/09/08 13:16:52 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -927,6 +927,12 @@ operator|=
 name|waitforjob
 argument_list|(
 name|jp
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|INTON
@@ -3149,11 +3155,17 @@ name|int
 name|waitforjob
 parameter_list|(
 name|jp
+parameter_list|,
+name|origstatus
 parameter_list|)
 name|struct
 name|job
 modifier|*
 name|jp
+decl_stmt|;
+name|int
+modifier|*
+name|origstatus
 decl_stmt|;
 block|{
 if|#
@@ -3303,6 +3315,17 @@ operator|-
 literal|1
 index|]
 operator|.
+name|status
+expr_stmt|;
+if|if
+condition|(
+name|origstatus
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|origstatus
+operator|=
 name|status
 expr_stmt|;
 comment|/* convert to 8 bits */
