@@ -843,7 +843,7 @@ literal|17
 operator|)
 operator|||
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|addr
 operator|&
