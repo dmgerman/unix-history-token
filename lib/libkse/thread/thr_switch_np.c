@@ -9,12 +9,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,9 +27,27 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_switch_add_np
+name|=
+name|_pthread_switch_add_np
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_switch_delete_np
+name|=
+name|_pthread_switch_delete_np
+end_pragma
+
 begin_function
 name|int
-name|pthread_switch_add_np
+name|_pthread_switch_add_np
 parameter_list|(
 name|pthread_switch_routine_t
 name|routine
@@ -73,7 +85,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_switch_delete_np
+name|_pthread_switch_delete_np
 parameter_list|(
 name|pthread_switch_routine_t
 name|routine
@@ -108,11 +120,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

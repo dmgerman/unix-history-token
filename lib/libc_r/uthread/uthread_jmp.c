@@ -27,12 +27,6 @@ directive|include
 file|<sys/user.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -71,9 +65,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|siglongjmp
+name|=
+name|_thread_siglongjmp
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|longjmp
+name|=
+name|_thread_longjmp
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_longjmp
+name|=
+name|__thread_longjmp
+end_pragma
+
 begin_function
 name|void
-name|siglongjmp
+name|_thread_siglongjmp
 parameter_list|(
 name|sigjmp_buf
 name|env
@@ -82,11 +103,19 @@ name|int
 name|savemask
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|check_stack
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 operator|(
 name|void
@@ -117,7 +146,7 @@ end_function
 
 begin_function
 name|void
-name|longjmp
+name|_thread_longjmp
 parameter_list|(
 name|jmp_buf
 name|env
@@ -126,11 +155,19 @@ name|int
 name|val
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|check_stack
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 operator|(
 name|void
@@ -161,7 +198,7 @@ end_function
 
 begin_function
 name|void
-name|_longjmp
+name|__thread_longjmp
 parameter_list|(
 name|jmp_buf
 name|env
@@ -170,11 +207,19 @@ name|int
 name|val
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|check_stack
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 operator|(
 name|void
@@ -300,11 +345,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

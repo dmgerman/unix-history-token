@@ -9,12 +9,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -29,7 +23,7 @@ end_include
 
 begin_function
 name|int
-name|_thread_sys_sigblock
+name|__sys_sigblock
 parameter_list|(
 name|int
 name|mask
@@ -42,7 +36,7 @@ name|n
 decl_stmt|;
 name|n
 operator|=
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -77,11 +71,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

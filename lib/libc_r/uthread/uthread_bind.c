@@ -15,12 +15,6 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -32,6 +26,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|bind
+name|=
+name|_bind
+end_pragma
 
 begin_function
 name|int
@@ -73,7 +76,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_bind
+name|__sys_bind
 argument_list|(
 name|fd
 argument_list|,
@@ -97,21 +100,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_bind
-argument_list|,
-name|bind
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

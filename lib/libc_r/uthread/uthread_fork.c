@@ -33,12 +33,6 @@ directive|include
 file|<fcntl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -51,6 +45,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|fork
+name|=
+name|_fork
+end_pragma
+
 begin_function
 name|pid_t
 name|_fork
@@ -58,6 +61,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -82,7 +93,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_fork
+name|__sys_fork
 argument_list|()
 operator|)
 operator|!=
@@ -94,7 +105,7 @@ block|}
 else|else
 block|{
 comment|/* Close the pthread kernel pipe: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -102,7 +113,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -114,15 +125,15 @@ comment|/* Reset signals pending for the running thread: */
 name|sigemptyset
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * _thread_sys_select:  		 */
+comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * __sys_select:  		 */
 if|if
 condition|(
-name|_thread_sys_pipe
+name|__sys_pipe
 argument_list|(
 name|_thread_kern_pipe
 argument_list|)
@@ -144,7 +155,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -170,7 +181,7 @@ comment|/* Make the read pipe non-blocking: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -200,7 +211,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -226,7 +237,7 @@ comment|/* Make the write pipe non-blocking: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -347,7 +358,7 @@ if|if
 condition|(
 name|pthread_save
 operator|!=
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Remove this thread from the list: */
@@ -476,7 +487,7 @@ block|}
 comment|/* Treat the current thread as the initial thread: */
 name|_thread_initial
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Re-init the dead thread list: */
 name|TAILQ_INIT
@@ -502,7 +513,7 @@ comment|/* Re-init the threads mutex queue: */
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|)
@@ -686,21 +697,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_fork
-argument_list|,
-name|fork
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

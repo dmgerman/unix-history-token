@@ -15,12 +15,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -32,6 +26,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sigaction
+name|=
+name|_sigaction
+end_pragma
 
 begin_function
 name|int
@@ -86,6 +89,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
 comment|/* 		 * Check if the existing signal action structure contents are 		 * to be returned:  		 */
 if|if
 condition|(
@@ -263,7 +275,7 @@ expr_stmt|;
 comment|/* Change the signal action in the kernel: */
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|sig
 argument_list|,
@@ -290,21 +302,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_sigaction
-argument_list|,
-name|sigaction
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

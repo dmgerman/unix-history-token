@@ -33,12 +33,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -94,6 +88,15 @@ name|long_version
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_set_name_np
+name|=
+name|_pthread_set_name_np
+end_pragma
 
 begin_struct
 struct|struct
@@ -322,7 +325,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_thread_sys_open
+name|__sys_open
 argument_list|(
 name|tmpfile
 argument_list|,
@@ -375,7 +378,7 @@ argument_list|,
 literal|"\n\n=============\nACTIVE THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -416,7 +419,7 @@ argument_list|,
 literal|"\n\n=============\nREADY THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -467,7 +470,7 @@ argument_list|,
 literal|"\n\n=============\nWAITING THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -508,7 +511,7 @@ argument_list|,
 literal|"\n\n=============\nTHREADS IN WORKQ\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -561,7 +564,7 @@ argument_list|,
 literal|"\n\nTHERE ARE NO DEAD THREADS\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -584,7 +587,7 @@ argument_list|,
 literal|"\n\nDEAD THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -634,7 +637,7 @@ argument_list|,
 name|_thread_dtablesize
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -744,7 +747,7 @@ operator|->
 name|w_lineno
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -759,7 +762,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Close the dump file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)
@@ -783,6 +786,14 @@ name|int
 name|long_version
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|char
 name|s
 index|[
@@ -873,7 +884,7 @@ operator|->
 name|lineno
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -897,7 +908,7 @@ if|if
 condition|(
 name|pthread
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Output a record for the running thread: */
@@ -908,7 +919,7 @@ argument_list|,
 literal|"This is the running thread\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -937,7 +948,7 @@ argument_list|,
 literal|"This is the initial thread\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1008,7 +1019,7 @@ operator|.
 name|branch
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1058,7 +1069,7 @@ operator|->
 name|w_owner
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1086,7 +1097,7 @@ argument_list|,
 literal|"sigmask (hi)"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1135,7 +1146,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1160,7 +1171,7 @@ argument_list|,
 literal|"(lo)\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1188,7 +1199,7 @@ end_comment
 
 begin_function
 name|void
-name|pthread_set_name_np
+name|_pthread_set_name_np
 parameter_list|(
 name|pthread_t
 name|thread
@@ -1242,11 +1253,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

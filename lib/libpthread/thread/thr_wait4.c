@@ -21,12 +21,6 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -38,6 +32,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|wait4
+name|=
+name|_wait4
+end_pragma
 
 begin_function
 name|pid_t
@@ -59,6 +62,14 @@ modifier|*
 name|rusage
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|pid_t
 name|ret
 decl_stmt|;
@@ -71,7 +82,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_wait4
+name|__sys_wait4
 argument_list|(
 name|pid
 argument_list|,
@@ -97,7 +108,7 @@ literal|0
 condition|)
 block|{
 comment|/* Reset the interrupted operation flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -116,7 +127,7 @@ expr_stmt|;
 comment|/* Check if this call was interrupted by a signal: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)
@@ -143,21 +154,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_wait4
-argument_list|,
-name|wait4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

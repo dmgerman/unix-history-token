@@ -33,12 +33,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -50,6 +44,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|readv
+name|=
+name|_readv
+end_pragma
 
 begin_function
 name|ssize_t
@@ -68,6 +71,14 @@ name|int
 name|iovcnt
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -142,7 +153,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_readv
+name|__sys_readv
 argument_list|(
 name|fd
 argument_list|,
@@ -181,7 +192,7 @@ name|EAGAIN
 operator|)
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -197,7 +208,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Reset the interrupted operation flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -215,7 +226,7 @@ expr_stmt|;
 comment|/* 				 * Check if the operation was 				 * interrupted by a signal 				 */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)
@@ -252,21 +263,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_readv
-argument_list|,
-name|readv
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

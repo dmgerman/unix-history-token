@@ -27,12 +27,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -44,6 +38,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|socket
+name|=
+name|_socket
+end_pragma
 
 begin_function
 name|int
@@ -68,7 +71,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_thread_sys_socket
+name|__sys_socket
 argument_list|(
 name|af
 argument_list|,
@@ -95,7 +98,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)
@@ -113,21 +116,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_socket
-argument_list|,
-name|socket
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

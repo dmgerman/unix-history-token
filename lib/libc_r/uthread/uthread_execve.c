@@ -21,12 +21,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -38,6 +32,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|execve
+name|=
+name|_execve
+end_pragma
 
 begin_function
 name|int
@@ -61,6 +64,14 @@ modifier|*
 name|envp
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -126,7 +137,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Close the pthread kernel pipe: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -134,7 +145,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -183,7 +194,7 @@ block|{
 comment|/* Get the current flags: */
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -193,7 +204,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Clear the nonblocking file descriptor flag: */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -299,7 +310,7 @@ operator|.
 name|sa_flags
 expr_stmt|;
 comment|/* Change the signal action for the process: */
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,
@@ -313,12 +324,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Set the signal mask: */
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 argument_list|,
@@ -328,7 +339,7 @@ expr_stmt|;
 comment|/* Execute the process: */
 name|ret
 operator|=
-name|_thread_sys_execve
+name|__sys_execve
 argument_list|(
 name|name
 argument_list|,
@@ -345,21 +356,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_execve
-argument_list|,
-name|execve
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

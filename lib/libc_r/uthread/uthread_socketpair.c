@@ -27,12 +27,6 @@ directive|include
 file|<fcntl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -44,6 +38,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|socketpair
+name|=
+name|_socketpair
+end_pragma
 
 begin_function
 name|int
@@ -75,7 +78,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_socketpair
+name|__sys_socketpair
 argument_list|(
 name|af
 argument_list|,
@@ -113,7 +116,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|pair
 index|[
@@ -121,7 +124,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|pair
 index|[
@@ -142,21 +145,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_socketpair
-argument_list|,
-name|socketpair
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

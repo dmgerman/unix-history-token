@@ -39,12 +39,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -56,6 +50,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|fstatfs
+name|=
+name|_fstatfs
+end_pragma
 
 begin_function
 name|int
@@ -95,7 +98,7 @@ block|{
 comment|/* Get the file system status: */
 name|ret
 operator|=
-name|_thread_sys_fstatfs
+name|__sys_fstatfs
 argument_list|(
 name|fd
 argument_list|,
@@ -118,21 +121,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_fstatfs
-argument_list|,
-name|fstatfs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

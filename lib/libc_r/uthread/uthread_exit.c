@@ -39,12 +39,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -64,6 +58,24 @@ name|FLAGS_IN_SCHEDQ
 define|\
 value|(PTHREAD_FLAGS_IN_PRIOQ|PTHREAD_FLAGS_IN_WAITQ|PTHREAD_FLAGS_IN_WORKQ)
 end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_exit
+name|=
+name|__exit
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_exit
+name|=
+name|_pthread_exit
+end_pragma
 
 begin_function
 name|void
@@ -127,7 +139,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Close the pthread kernel pipe: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -135,7 +147,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -184,7 +196,7 @@ block|{
 comment|/* Get the current flags: */
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -194,7 +206,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Clear the nonblocking file descriptor flag: */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -209,23 +221,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Call the _exit syscall: */
-name|_thread_sys__exit
+name|__sys__exit
 argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|__exit
-argument_list|,
-name|_exit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|void
@@ -300,7 +302,7 @@ literal|")\n"
 argument_list|)
 expr_stmt|;
 comment|/* Write the string to the standard error file descriptor: */
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 literal|2
 argument_list|,
@@ -346,23 +348,31 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * POSIX states that cancellation/termination of a thread should 	 * not release any visible resources (such as mutexes) and that 	 * it is the applications responsibility.  Resources that are 	 * internal to the threads library, including file and fd locks, 	 * are not visible to the application and need to be released. 	 */
 comment|/* Unlock all owned fd locks: */
 name|_thread_fd_unlock_owned
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock all owned file locks: */
 name|_funlock_owned
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock all private mutexes: */
 name|_mutex_unlock_private
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This still isn't quite correct because we don't account 	 * for held spinlocks (see libc/stdlib/malloc.c). 	 */
@@ -371,13 +381,21 @@ end_function
 
 begin_function
 name|void
-name|pthread_exit
+name|_pthread_exit
 parameter_list|(
 name|void
 modifier|*
 name|status
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
@@ -385,7 +403,7 @@ comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&
@@ -412,7 +430,7 @@ argument_list|)
 argument_list|,
 literal|"Thread %p has called pthread_exit() from a destructor. POSIX 1003.1 1996 s16.2.5.2 does not allow this!"
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 name|PANIC
@@ -422,14 +440,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Flag this thread as exiting: */
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator||=
 name|PTHREAD_EXITING
 expr_stmt|;
 comment|/* Save the return value: */
-name|_thread_run
+name|curthread
 operator|->
 name|ret
 operator|=
@@ -437,7 +455,7 @@ name|status
 expr_stmt|;
 while|while
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|cleanup
 operator|!=
@@ -452,7 +470,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -461,13 +479,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
 name|cleanup_attr
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -478,7 +496,7 @@ block|}
 comment|/* Check if there is thread specific data: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 operator|!=
@@ -493,7 +511,7 @@ block|}
 comment|/* Free thread-specific poll_data structure, if allocated: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -504,14 +522,14 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
 name|fds
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -542,7 +560,7 @@ argument_list|(
 operator|&
 name|_dead_list
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|dle
 argument_list|)
@@ -593,7 +611,7 @@ name|TAILQ_FIRST
 argument_list|(
 operator|&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|join_queue
 operator|)
@@ -607,7 +625,7 @@ comment|/* Remove the thread from the queue: */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|join_queue
 argument_list|,
@@ -635,7 +653,7 @@ comment|/* 		 * Set the return value for the woken thread: 		 */
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -658,7 +676,7 @@ name|pthread
 operator|->
 name|ret
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|ret
 expr_stmt|;
@@ -676,7 +694,7 @@ argument_list|(
 operator|&
 name|_thread_list
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|tle
 argument_list|)
@@ -699,11 +717,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

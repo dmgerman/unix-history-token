@@ -21,12 +21,6 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -39,9 +33,27 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cleanup_push
+name|=
+name|_pthread_cleanup_push
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cleanup_pop
+name|=
+name|_pthread_cleanup_pop
+end_pragma
+
 begin_function
 name|void
-name|pthread_cleanup_push
+name|_pthread_cleanup_push
 parameter_list|(
 name|void
 function_decl|(
@@ -58,6 +70,14 @@ modifier|*
 name|routine_arg
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|struct
 name|pthread_cleanup
 modifier|*
@@ -102,11 +122,11 @@ name|new
 operator|->
 name|next
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|cleanup
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|cleanup
 operator|=
@@ -118,12 +138,20 @@ end_function
 
 begin_function
 name|void
-name|pthread_cleanup_pop
+name|_pthread_cleanup_pop
 parameter_list|(
 name|int
 name|execute
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|struct
 name|pthread_cleanup
 modifier|*
@@ -134,7 +162,7 @@ condition|(
 operator|(
 name|old
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|cleanup
 operator|)
@@ -142,7 +170,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|cleanup
 operator|=
@@ -173,11 +201,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

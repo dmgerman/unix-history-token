@@ -15,12 +15,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,6 +27,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sigsuspend
+name|=
+name|__sigsuspend
+end_pragma
+
 begin_function
 name|int
 name|_sigsuspend
@@ -43,6 +46,14 @@ modifier|*
 name|set
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -63,12 +74,12 @@ block|{
 comment|/* Save the current signal mask: */
 name|oset
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 expr_stmt|;
 comment|/* Change the caller's mask: */
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 operator|=
@@ -91,7 +102,7 @@ operator|=
 name|EINTR
 expr_stmt|;
 comment|/* Restore the signal mask: */
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 operator|=
@@ -117,7 +128,7 @@ end_function
 
 begin_function
 name|int
-name|sigsuspend
+name|__sigsuspend
 parameter_list|(
 specifier|const
 name|sigset_t
@@ -146,11 +157,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

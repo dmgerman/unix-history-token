@@ -15,12 +15,6 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,9 +27,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|waitpid
+name|=
+name|_waitpid
+end_pragma
+
 begin_function
 name|pid_t
-name|waitpid
+name|_waitpid
 parameter_list|(
 name|pid_t
 name|wpid
@@ -73,11 +76,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

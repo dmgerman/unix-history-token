@@ -9,12 +9,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -27,9 +21,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pause
+name|=
+name|_pause
+end_pragma
+
 begin_function
 name|int
-name|pause
+name|_pause
 parameter_list|(
 name|void
 parameter_list|)
@@ -53,11 +56,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -33,12 +33,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -51,9 +45,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sendfile
+name|=
+name|_sendfile
+end_pragma
+
 begin_function
 name|int
-name|sendfile
+name|_sendfile
 parameter_list|(
 name|int
 name|fd
@@ -80,6 +83,14 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|,
@@ -321,7 +332,7 @@ block|{
 comment|/* Perform a non-blocking sendfile syscall. */
 name|ret
 operator|=
-name|_thread_sys_sendfile
+name|__sys_sendfile
 argument_list|(
 name|fd
 argument_list|,
@@ -384,7 +395,7 @@ name|num
 operator|+=
 name|n
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -400,7 +411,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Reset the interrupted operation flag. */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -417,7 +428,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)
@@ -532,11 +543,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

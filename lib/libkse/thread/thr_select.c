@@ -57,12 +57,6 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -74,6 +68,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|select
+name|=
+name|_select
+end_pragma
 
 begin_function
 name|int
@@ -100,6 +103,14 @@ modifier|*
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|struct
 name|timespec
 name|ts
@@ -294,7 +305,7 @@ comment|/* 	 * Allocate memory for poll data if it hasn't already been 	 * alloc
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -304,7 +315,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -325,7 +336,7 @@ operator|*
 operator|)
 name|realloc
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -367,7 +378,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * Note that the threads poll data always 			 * indicates what is allocated, not what is 			 * currently being polled. 			 */
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -377,7 +388,7 @@ name|data
 operator|.
 name|fds
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -404,7 +415,7 @@ name|data
 operator|.
 name|fds
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -578,7 +589,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_poll
+name|__sys_poll
 argument_list|(
 name|data
 operator|.
@@ -602,7 +613,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -611,7 +622,7 @@ operator|=
 operator|&
 name|data
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -628,7 +639,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)
@@ -902,21 +913,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_select
-argument_list|,
-name|select
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

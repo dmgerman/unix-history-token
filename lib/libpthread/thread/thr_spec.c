@@ -27,12 +27,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -60,9 +54,45 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_key_create
+name|=
+name|_pthread_key_create
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_key_delete
+name|=
+name|_pthread_key_delete
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_getspecific
+name|=
+name|_pthread_getspecific
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_setspecific
+name|=
+name|_pthread_setspecific
+end_pragma
+
 begin_function
 name|int
-name|pthread_key_create
+name|_pthread_key_create
 parameter_list|(
 name|pthread_key_t
 modifier|*
@@ -197,7 +227,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_key_delete
+name|_pthread_key_delete
 parameter_list|(
 name|pthread_key_t
 name|key
@@ -283,6 +313,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|void
 modifier|*
 name|data
@@ -335,7 +373,7 @@ control|)
 block|{
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data_count
 condition|)
@@ -368,7 +406,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 index|[
@@ -382,14 +420,14 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 index|[
 name|key
 index|]
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 index|[
@@ -398,7 +436,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data_count
 operator|--
@@ -441,12 +479,12 @@ else|else
 block|{
 name|free
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 operator|=
@@ -458,12 +496,12 @@ block|}
 block|}
 name|free
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 operator|=
@@ -546,7 +584,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_setspecific
+name|_pthread_setspecific
 parameter_list|(
 name|pthread_key_t
 name|key
@@ -557,7 +595,9 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 decl_stmt|;
 name|int
@@ -568,7 +608,8 @@ decl_stmt|;
 comment|/* Point to the running thread: */
 name|pthread
 operator|=
-name|_thread_run
+name|_get_curthread
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -685,13 +726,15 @@ end_function
 begin_function
 name|void
 modifier|*
-name|pthread_getspecific
+name|_pthread_getspecific
 parameter_list|(
 name|pthread_key_t
 name|key
 parameter_list|)
 block|{
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 decl_stmt|;
 name|void
@@ -701,7 +744,8 @@ decl_stmt|;
 comment|/* Point to the running thread: */
 name|pthread
 operator|=
-name|_thread_run
+name|_get_curthread
+argument_list|()
 expr_stmt|;
 comment|/* Check if there is specific data: */
 if|if
@@ -765,11 +809,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

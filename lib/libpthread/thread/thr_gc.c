@@ -65,6 +65,14 @@ name|pthread_addr_t
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|f_debug
 decl_stmt|;
@@ -111,7 +119,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Mark this thread as a library thread (not a user thread). */
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator||=
@@ -132,7 +140,7 @@ expr_stmt|;
 comment|/* Set the name of this thread. */
 name|pthread_set_name_np
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 literal|"GC"
 argument_list|)
@@ -165,11 +173,11 @@ operator|&
 name|_thread_list
 argument_list|)
 operator|==
-name|_thread_run
+name|curthread
 operator|&&
 name|TAILQ_NEXT
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 name|tle
 argument_list|)

@@ -15,12 +15,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -50,9 +44,90 @@ define|\
 value|if ((*(sem))->magic != SEM_MAGIC) {	\ 		errno = EINVAL;			\ 		retval = -1;			\ 		goto RETURN;			\ 	}
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_init
+name|=
+name|_sem_init
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_destroy
+name|=
+name|_sem_destroy
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_open
+name|=
+name|_sem_open
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_close
+name|=
+name|_sem_close
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_unlink
+name|=
+name|_sem_unlink
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_wait
+name|=
+name|_sem_wait
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_trywait
+name|=
+name|_sem_trywait
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_post
+name|=
+name|_sem_post
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sem_getvalue
+name|=
+name|_sem_getvalue
+end_pragma
+
 begin_function
 name|int
-name|sem_init
+name|_sem_init
 parameter_list|(
 name|sem_t
 modifier|*
@@ -277,7 +352,7 @@ end_function
 
 begin_function
 name|int
-name|sem_destroy
+name|_sem_destroy
 parameter_list|(
 name|sem_t
 modifier|*
@@ -403,7 +478,7 @@ end_function
 begin_function
 name|sem_t
 modifier|*
-name|sem_open
+name|_sem_open
 parameter_list|(
 specifier|const
 name|char
@@ -428,7 +503,7 @@ end_function
 
 begin_function
 name|int
-name|sem_close
+name|_sem_close
 parameter_list|(
 name|sem_t
 modifier|*
@@ -448,7 +523,7 @@ end_function
 
 begin_function
 name|int
-name|sem_unlink
+name|_sem_unlink
 parameter_list|(
 specifier|const
 name|char
@@ -469,7 +544,7 @@ end_function
 
 begin_function
 name|int
-name|sem_wait
+name|_sem_wait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -582,7 +657,7 @@ end_function
 
 begin_function
 name|int
-name|sem_trywait
+name|_sem_trywait
 parameter_list|(
 name|sem_t
 modifier|*
@@ -666,7 +741,7 @@ end_function
 
 begin_function
 name|int
-name|sem_post
+name|_sem_post
 parameter_list|(
 name|sem_t
 modifier|*
@@ -757,7 +832,7 @@ end_function
 
 begin_function
 name|int
-name|sem_getvalue
+name|_sem_getvalue
 parameter_list|(
 name|sem_t
 modifier|*
@@ -822,11 +897,6 @@ name|retval
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

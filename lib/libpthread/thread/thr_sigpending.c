@@ -15,12 +15,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,6 +27,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|sigpending
+name|=
+name|_sigpending
+end_pragma
+
 begin_function
 name|int
 name|_sigpending
@@ -42,6 +45,14 @@ modifier|*
 name|set
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -66,7 +77,7 @@ block|{
 operator|*
 name|set
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 expr_stmt|;
@@ -79,21 +90,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_sigpending
-argument_list|,
-name|sigpending
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

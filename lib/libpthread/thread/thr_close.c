@@ -33,12 +33,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -50,6 +44,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|close
+name|=
+name|__close
+end_pragma
 
 begin_function
 name|int
@@ -131,7 +134,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_fstat
+name|__sys_fstat
 argument_list|(
 name|fd
 argument_list|,
@@ -180,7 +183,7 @@ block|{
 comment|/* Get the current flags: */
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -190,7 +193,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Clear the nonblocking file descriptor flag: */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -227,7 +230,7 @@ expr_stmt|;
 comment|/* Close the file descriptor: */
 name|ret
 operator|=
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)
@@ -243,7 +246,7 @@ end_function
 
 begin_function
 name|int
-name|close
+name|__close
 parameter_list|(
 name|int
 name|fd
@@ -270,11 +273,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

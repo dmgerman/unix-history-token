@@ -9,12 +9,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -27,9 +21,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_join
+name|=
+name|_pthread_join
+end_pragma
+
 begin_function
 name|int
-name|pthread_join
+name|_pthread_join
 parameter_list|(
 name|pthread_t
 name|pthread
@@ -40,6 +43,14 @@ modifier|*
 name|thread_return
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -77,7 +88,7 @@ if|if
 condition|(
 name|pthread
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Avoid a deadlock condition: */
@@ -150,7 +161,7 @@ condition|)
 block|{
 name|PTHREAD_ASSERT_NOT_IN_SYNCQ
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Enter a loop in case this thread is woken prematurely 		 * in order to invoke a signal handler: 		 */
@@ -161,7 +172,7 @@ condition|;
 control|)
 block|{
 comment|/* Clear the interrupted flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -181,18 +192,18 @@ operator|->
 name|join_queue
 operator|)
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|sqe
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator||=
 name|PTHREAD_FLAGS_IN_JOINQ
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -213,7 +224,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&
@@ -232,12 +243,12 @@ operator|->
 name|join_queue
 operator|)
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|sqe
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&=
@@ -245,7 +256,7 @@ operator|~
 name|PTHREAD_FLAGS_IN_JOINQ
 expr_stmt|;
 block|}
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -258,7 +269,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -267,17 +278,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 				 * This thread was interrupted, probably to 				 * invoke a signal handler.  Make sure the 				 * target thread is still joinable. 				 */
@@ -345,7 +356,7 @@ block|{
 comment|/* 				 * The thread return value and error are set 				 * by the thread we're joining to when it 				 * exits or detaches: 				 */
 name|ret
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|error
 expr_stmt|;
@@ -366,7 +377,7 @@ condition|)
 operator|*
 name|thread_return
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|ret
 expr_stmt|;
@@ -411,6 +422,14 @@ name|pthread_t
 name|pthread
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
@@ -443,7 +462,7 @@ argument_list|,
 name|sqe
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&=
@@ -456,11 +475,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

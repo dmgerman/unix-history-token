@@ -21,12 +21,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -163,7 +157,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|PTHREAD_ASSERT((_thread_kern_in_sched != 0) ||	\ 	    (_thread_run->sig_defer_count> 0) ||	\ 	    (_sig_in_handler != 0), msg);
+value|PTHREAD_ASSERT((_thread_kern_in_sched != 0) ||	\ 	    ((_get_curthread())->sig_defer_count> 0) ||\ 	    (_sig_in_handler != 0), msg);
 end_define
 
 begin_else
@@ -1193,11 +1187,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

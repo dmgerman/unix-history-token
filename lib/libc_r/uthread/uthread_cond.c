@@ -21,12 +21,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -79,6 +73,60 @@ name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cond_init
+name|=
+name|_pthread_cond_init
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cond_destroy
+name|=
+name|_pthread_cond_destroy
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cond_wait
+name|=
+name|_pthread_cond_wait
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cond_timedwait
+name|=
+name|_pthread_cond_timedwait
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cond_signal
+name|=
+name|_pthread_cond_signal
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_cond_broadcast
+name|=
+name|_pthread_cond_broadcast
+end_pragma
 
 begin_comment
 comment|/* Reinitialize a condition variable to defaults. */
@@ -209,7 +257,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_init
+name|_pthread_cond_init
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -403,7 +451,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -469,7 +517,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_wait
+name|_pthread_cond_wait
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -480,6 +528,14 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|rval
 init|=
@@ -666,13 +722,13 @@ block|}
 else|else
 block|{
 comment|/* Reset the timeout and interrupted flags: */
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -684,7 +740,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Remember the mutex and sequence number: */
@@ -708,7 +764,7 @@ operator|->
 name|c_seqno
 expr_stmt|;
 comment|/* Wait forever: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -746,7 +802,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -828,7 +884,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&
@@ -855,7 +911,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -898,7 +954,7 @@ block|}
 comment|/* 					 * Save the interrupted flag; locking 					 * the mutex will destroy it. 					 */
 name|interrupted
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 expr_stmt|;
@@ -943,14 +999,14 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 operator|)
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -958,7 +1014,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -991,7 +1047,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_timedwait
+name|_pthread_cond_timedwait
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -1008,6 +1064,14 @@ modifier|*
 name|abstime
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|rval
 init|=
@@ -1212,7 +1276,7 @@ block|}
 else|else
 block|{
 comment|/* Set the wakeup time: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -1222,7 +1286,7 @@ name|abstime
 operator|->
 name|tv_sec
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -1233,13 +1297,13 @@ operator|->
 name|tv_nsec
 expr_stmt|;
 comment|/* Reset the timeout and interrupted flags: */
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -1251,7 +1315,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Remember the mutex and sequence number: */
@@ -1303,7 +1367,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -1386,7 +1450,7 @@ comment|/* 					 * Check if the wait timedout, was 					 * interrupted (canceled
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|==
@@ -1394,7 +1458,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -1437,7 +1501,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -1480,7 +1544,7 @@ expr_stmt|;
 comment|/* Return a timeout error: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|!=
@@ -1493,7 +1557,7 @@ expr_stmt|;
 comment|/* 						 * Save the interrupted flag; 						 * locking the mutex will 						 * destroy it. 						 */
 name|interrupted
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 expr_stmt|;
@@ -1540,14 +1604,14 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 operator|)
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -1555,7 +1619,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1588,7 +1652,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_signal
+name|_pthread_cond_signal
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -1778,7 +1842,7 @@ end_function
 
 begin_function
 name|int
-name|pthread_cond_broadcast
+name|_pthread_cond_broadcast
 parameter_list|(
 name|pthread_cond_t
 modifier|*
@@ -2305,11 +2369,6 @@ name|cond
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -9,12 +9,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -26,6 +20,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|dup
+name|=
+name|_dup
+end_pragma
 
 begin_function
 name|int
@@ -63,7 +66,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_dup
+name|__sys_dup
 argument_list|(
 name|fd
 argument_list|)
@@ -85,7 +88,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|ret
 argument_list|)
@@ -132,21 +135,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_dup
-argument_list|,
-name|dup
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

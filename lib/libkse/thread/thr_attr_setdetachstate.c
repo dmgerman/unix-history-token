@@ -9,12 +9,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -27,9 +21,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_attr_setdetachstate
+name|=
+name|_pthread_attr_setdetachstate
+end_pragma
+
 begin_function
 name|int
-name|pthread_attr_setdetachstate
+name|_pthread_attr_setdetachstate
 parameter_list|(
 name|pthread_attr_t
 modifier|*
@@ -111,11 +114,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

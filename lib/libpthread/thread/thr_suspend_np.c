@@ -9,12 +9,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -39,13 +33,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_suspend_np
+name|=
+name|_pthread_suspend_np
+end_pragma
+
 begin_comment
 comment|/* Suspend a thread: */
 end_comment
 
 begin_function
 name|int
-name|pthread_suspend_np
+name|_pthread_suspend_np
 parameter_list|(
 name|pthread_t
 name|thread
@@ -294,9 +297,17 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|suspended
 operator|!=
@@ -313,11 +324,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

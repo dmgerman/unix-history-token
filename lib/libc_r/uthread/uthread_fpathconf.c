@@ -9,12 +9,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -26,6 +20,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|fpathconf
+name|=
+name|_fpathconf
+end_pragma
 
 begin_function
 name|long
@@ -61,7 +64,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_fpathconf
+name|__sys_fpathconf
 argument_list|(
 name|fd
 argument_list|,
@@ -81,21 +84,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|__strong_reference
-argument_list|(
-name|_fpathconf
-argument_list|,
-name|fpathconf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -57,12 +57,6 @@ directive|include
 file|<sys/mman.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -228,9 +222,18 @@ name|CTX_UC
 decl_stmt|;
 end_decl_stmt
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_create
+name|=
+name|_pthread_create
+end_pragma
+
 begin_function
 name|int
-name|pthread_create
+name|_pthread_create
 parameter_list|(
 name|pthread_t
 modifier|*
@@ -257,6 +260,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|struct
 name|itimerval
 name|itimer
@@ -623,7 +634,7 @@ name|new_thread
 operator|->
 name|sigmask
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 expr_stmt|;
@@ -729,7 +740,7 @@ name|new_thread
 operator|->
 name|base_priority
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|base_priority
 operator|&
@@ -742,7 +753,7 @@ name|attr
 operator|.
 name|prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|base_priority
 operator|&
@@ -755,7 +766,7 @@ name|attr
 operator|.
 name|sched_policy
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -1027,6 +1038,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* We just left the scheduler via longjmp: */
 name|_thread_kern_in_sched
 operator|=
@@ -1035,11 +1054,11 @@ expr_stmt|;
 comment|/* Run the current thread's start routine with argument: */
 name|pthread_exit
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|start_routine
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|arg
 argument_list|)
@@ -1053,11 +1072,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -9,12 +9,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -29,7 +23,7 @@ end_include
 
 begin_function
 name|sig_t
-name|_thread_sys_signal
+name|__sys_signal
 parameter_list|(
 name|int
 name|s
@@ -70,7 +64,7 @@ expr_stmt|;
 comment|/* Perform the sigaction syscall: */
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|s
 argument_list|,
@@ -101,11 +95,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -9,12 +9,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -27,15 +21,32 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_single_np
+name|=
+name|_pthread_single_np
+end_pragma
+
 begin_function
 name|int
-name|pthread_single_np
+name|_pthread_single_np
 parameter_list|()
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* Enter single-threaded (non-POSIX) scheduling mode: */
 name|_thread_single
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 return|return
 operator|(
@@ -44,11 +55,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

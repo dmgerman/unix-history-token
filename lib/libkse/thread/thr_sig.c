@@ -51,12 +51,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -276,6 +270,14 @@ modifier|*
 name|ucp
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|,
@@ -310,7 +312,7 @@ literal|"Got signal %d, current thread %p\n"
 argument_list|,
 name|sig
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -395,13 +397,13 @@ comment|/* 		 * Check if the scheduler interrupt has come when 		 * the currentl
 elseif|else
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|>
 literal|0
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|yield_on_sig_undefer
 operator|=
@@ -412,7 +414,7 @@ block|{
 comment|/* 			 * Save the context of the currently running thread: 			 */
 name|thread_sig_savecontext
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 name|ucp
 argument_list|)
@@ -442,7 +444,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|>
@@ -463,7 +465,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -780,7 +782,7 @@ expr_stmt|;
 comment|/* 			 * A thread was found that can handle the signal. 			 * Save the context of the currently running thread 			 * so that we can switch to another thread without 			 * losing track of where the current thread left off. 			 * This also applies if the current thread is the 			 * thread to be signaled. 			 */
 name|thread_sig_savecontext
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 name|ucp
 argument_list|)
@@ -827,7 +829,7 @@ condition|(
 operator|(
 name|pthread
 operator|==
-name|_thread_run
+name|curthread
 operator|)
 operator|||
 operator|(
@@ -842,7 +844,7 @@ name|pthread_h
 operator|->
 name|active_priority
 operator|>
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|)
@@ -938,6 +940,14 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|handler_installed
 decl_stmt|;
@@ -1004,7 +1014,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|!=
 operator|&
 name|_thread_kern_thread
@@ -1014,7 +1024,7 @@ operator|!
 name|sigismember
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 argument_list|,
@@ -1023,7 +1033,7 @@ argument_list|)
 condition|)
 name|signaled_thread
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 else|else
 name|signaled_thread
@@ -1647,7 +1657,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 				 * Set the file descriptor to non-blocking: 				 */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -1780,6 +1790,14 @@ name|int
 name|has_args
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|restart
 decl_stmt|;
@@ -2200,7 +2218,7 @@ if|if
 condition|(
 name|pthread
 operator|!=
-name|_thread_run
+name|curthread
 condition|)
 name|PTHREAD_PRIOQ_INSERT_TAIL
 argument_list|(
@@ -2422,6 +2440,14 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* Check for signals whose actions are SIG_DFL: */
 if|if
 condition|(
@@ -2522,7 +2548,7 @@ if|if
 condition|(
 name|pthread
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Add the signal to the pending set: */
@@ -2640,13 +2666,14 @@ name|pthread_signal_frame
 modifier|*
 name|psf
 decl_stmt|;
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|thread
+init|=
+name|_get_curthread
+argument_list|()
 decl_stmt|;
-name|thread
-operator|=
-name|_thread_run
-expr_stmt|;
 comment|/* Get the current frame and state: */
 name|psf
 operator|=
@@ -3595,11 +3622,6 @@ name|sig_defer_count
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

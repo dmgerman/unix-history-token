@@ -33,12 +33,6 @@ directive|include
 file|<sys/event.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -51,9 +45,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|keven
+name|=
+name|_kevent
+end_pragma
+
 begin_function
 name|int
-name|kevent
+name|_kevent
 parameter_list|(
 name|int
 name|kq
@@ -83,6 +86,14 @@ name|timeout
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|timespec
 name|nullts
 init|=
@@ -103,7 +114,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-name|_thread_sys_kevent
+name|__sys_kevent
 argument_list|(
 name|kq
 argument_list|,
@@ -145,7 +156,7 @@ operator|)
 condition|)
 block|{
 comment|/* Save the socket file descriptor: */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -155,7 +166,7 @@ name|fd
 operator|=
 name|kq
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -165,7 +176,7 @@ name|fname
 operator|=
 name|__FILE__
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -178,13 +189,13 @@ expr_stmt|;
 do|do
 block|{
 comment|/* Reset the interrupted and timeout flags: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
@@ -201,7 +212,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)
@@ -219,7 +230,7 @@ break|break;
 block|}
 name|rc
 operator|=
-name|_thread_sys_kevent
+name|__sys_kevent
 argument_list|(
 name|kq
 argument_list|,
@@ -242,7 +253,7 @@ name|rc
 operator|==
 literal|0
 operator|&&
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|==
@@ -257,11 +268,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

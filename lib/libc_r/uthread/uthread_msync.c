@@ -15,12 +15,6 @@ directive|include
 file|<sys/mman.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -32,6 +26,15 @@ include|#
 directive|include
 file|"pthread_private.h"
 end_include
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|msync
+name|=
+name|__msync
+end_pragma
 
 begin_function
 name|int
@@ -53,7 +56,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|_thread_sys_msync
+name|__sys_msync
 argument_list|(
 name|addr
 argument_list|,
@@ -72,7 +75,7 @@ end_function
 
 begin_function
 name|int
-name|msync
+name|__msync
 parameter_list|(
 name|void
 modifier|*
@@ -111,11 +114,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

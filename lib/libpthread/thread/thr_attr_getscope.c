@@ -9,12 +9,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -27,9 +21,18 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|pthread_attr_getscope
+name|=
+name|_pthread_attr_getscope
+end_pragma
+
 begin_function
 name|int
-name|pthread_attr_getscope
+name|_pthread_attr_getscope
 parameter_list|(
 specifier|const
 name|pthread_attr_t
@@ -96,11 +99,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
