@@ -6239,7 +6239,7 @@ operator|=
 literal|0
 init|;
 name|unit
-operator|<
+operator|<=
 name|devclass_get_maxunit
 argument_list|(
 name|dc
