@@ -704,6 +704,10 @@ literal|"map %p size == %lu on free."
 operator|,
 name|map
 operator|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|map
 operator|->
 name|size
