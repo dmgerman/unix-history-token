@@ -542,6 +542,17 @@ name|_SS3
 value|0x008f
 end_define
 
+begin_define
+define|#
+directive|define
+name|GR_BITS
+value|0x80808080
+end_define
+
+begin_comment
+comment|/* XXX: to be fixed */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -988,6 +999,11 @@ expr_stmt|;
 operator|--
 name|i
 expr_stmt|;
+comment|/* SS2 designates G2 into GR */
+name|nm
+operator||=
+name|GR_BITS
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1043,6 +1059,11 @@ name|_SS3
 expr_stmt|;
 operator|--
 name|i
+expr_stmt|;
+comment|/* SS3 designates G3 into GR */
+name|nm
+operator||=
+name|GR_BITS
 expr_stmt|;
 block|}
 else|else
