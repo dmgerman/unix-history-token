@@ -9731,6 +9731,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|tmpline
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|file_size
