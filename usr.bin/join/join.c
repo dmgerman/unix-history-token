@@ -1484,7 +1484,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
+while|while
 condition|(
 name|lp
 operator|->
@@ -1538,12 +1538,16 @@ operator|->
 name|line
 argument_list|,
 name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Split the line into fields, allocate space as necessary. */
 name|token
 operator|=
-name|bp
+name|lp
+operator|->
+name|line
 expr_stmt|;
 name|lp
 operator|->
