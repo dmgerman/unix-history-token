@@ -81,6 +81,11 @@ name|section
 argument_list|(
 name|ABI_SECTION
 argument_list|)
+operator|,
+name|aligned
+argument_list|(
+literal|4
+argument_list|)
 operator|)
 argument_list|)
 name|__unused
