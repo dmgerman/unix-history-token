@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.2 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.3 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.2 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.3 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,24 +295,6 @@ goto|goto
 name|severe
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|_SCO_unix_
-name|DaemonAddr
-operator|.
-name|sin
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|DaemonAddr
 operator|.
 name|sin
@@ -323,8 +305,6 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	**  Try to actually open the connection. 	*/
 if|if
@@ -1070,28 +1050,12 @@ name|EX_OSERR
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|_SCO_unix_
-name|port
-operator|=
-name|htons
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|port
 operator|=
 name|sp
 operator|->
 name|s_port
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 switch|switch
 condition|(
@@ -2073,25 +2037,6 @@ name|sp
 operator|!=
 name|NULL
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|_SCO_unix_
-name|fa
-operator|.
-name|sin
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|fa
 operator|.
 name|sin
@@ -2102,9 +2047,6 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 else|else
 name|fa
 operator|.
@@ -2790,6 +2732,8 @@ sizeof|sizeof
 name|hbuf
 operator|-
 literal|1
+argument_list|,
+name|TRUE
 argument_list|)
 condition|)
 block|{
