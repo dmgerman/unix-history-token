@@ -2253,6 +2253,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_TABLE_ADD
+value|40
+end_define
+
+begin_comment
+comment|/* add entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_DEL
+value|41
+end_define
+
+begin_comment
+comment|/* delete entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_FLUSH
+value|42
+end_define
+
+begin_comment
+comment|/* flush table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_GETSIZE
+value|43
+end_define
+
+begin_comment
+comment|/* get table size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_LIST
+value|44
+end_define
+
+begin_comment
+comment|/* list table contents */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_ADD
 value|50
 end_define
