@@ -2036,6 +2036,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_SENDSRCADDR
+value|IP_RECVDSTADDR
+end_define
+
+begin_comment
+comment|/* cmsg_type to set src addr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_RETOPTS
 value|8
 end_define
