@@ -8,7 +8,7 @@ comment|/* $FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000 Masaru OKI  */
+comment|/*-  * Copyright (c) 2000 Masaru OKI  */
 end_comment
 
 begin_ifndef
