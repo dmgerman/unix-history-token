@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)spp_usrreq.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)spp_usrreq.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1106,6 +1106,9 @@ name|si
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_freem
 argument_list|(
 name|m
@@ -1456,9 +1459,13 @@ name|cb
 operator|->
 name|s_rack
 operator|!=
+operator|(
 name|cb
 operator|->
 name|s_smax
+operator|+
+literal|1
+operator|)
 condition|)
 block|{
 name|sppstat
@@ -1545,6 +1552,11 @@ name|spp_output
 argument_list|(
 name|cb
 argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1936,8 +1948,9 @@ name|s_cwmx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Trim Acked data from output queue. 	 */
-for|for
-control|(
+while|while
+condition|(
+operator|(
 name|m
 operator|=
 name|so
@@ -1945,15 +1958,10 @@ operator|->
 name|so_snd
 operator|.
 name|sb_mb
-init|;
-name|m
-condition|;
-name|m
-operator|=
-name|m
-operator|->
-name|m_act
-control|)
+operator|)
+operator|!=
+name|NULL
+condition|)
 block|{
 if|if
 condition|(
@@ -3359,8 +3367,6 @@ name|off
 decl_stmt|;
 name|u_short
 name|alo
-decl_stmt|,
-name|oalo
 decl_stmt|;
 name|int
 name|error
@@ -3370,11 +3376,6 @@ decl_stmt|,
 name|idle
 decl_stmt|,
 name|sendalot
-decl_stmt|;
-name|u_short
-name|lookfor
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|mbuf
@@ -3477,11 +3478,6 @@ block|}
 else|else
 block|{
 name|int
-name|off
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|oldEM
 init|=
 name|cb
@@ -3510,7 +3506,7 @@ name|m_copy
 argument_list|(
 name|m0
 argument_list|,
-name|off
+literal|0
 argument_list|,
 name|mtu
 argument_list|)
@@ -4443,8 +4439,6 @@ name|rcv_win
 operator|=
 literal|0
 expr_stmt|;
-name|oalo
-operator|=
 name|alo
 operator|=
 name|cb
@@ -7529,7 +7523,7 @@ block|}
 end_block
 
 begin_decl_stmt
-name|long
+name|int
 name|spp_backoff
 index|[
 name|TCP_MAXRXTSHIFT
@@ -8134,6 +8128,8 @@ operator|->
 name|s_ssthresh
 operator|=
 name|win
+operator|*
+name|CUNIT
 expr_stmt|;
 operator|(
 name|void
@@ -8289,6 +8285,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|SppcbSize
@@ -8312,6 +8314,12 @@ name|nspcb
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 end_unit
 
