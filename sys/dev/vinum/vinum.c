@@ -7,6 +7,7 @@ begin_define
 define|#
 directive|define
 name|STATIC
+value|static
 end_define
 
 begin_comment
@@ -137,34 +138,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|STATIC
-name|void
-name|vinumgetdisklabel
-parameter_list|(
-name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vinum_inactive
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_vinum
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -240,15 +213,6 @@ begin_comment
 comment|/* configuration information */
 end_comment
 
-begin_decl_stmt
-name|STATIC
-name|int
-name|vinum_devsw_installed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
 end_comment
@@ -299,8 +263,10 @@ argument_list|(
 literal|"vinum: already loaded"
 argument_list|)
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: loaded\n"
 argument_list|)
 expr_stmt|;
@@ -448,6 +414,19 @@ argument_list|,
 literal|"vinum: no memory\n"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|DRIVE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drive
+argument_list|)
+operator|*
+name|INITIAL_DRIVES
+argument_list|)
+expr_stmt|;
 name|vinum_conf
 operator|.
 name|drives_allocated
@@ -486,6 +465,19 @@ argument_list|(
 name|VOL
 argument_list|,
 literal|"vinum: no memory\n"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|VOL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|volume
+argument_list|)
+operator|*
+name|INITIAL_VOLUMES
 argument_list|)
 expr_stmt|;
 name|vinum_conf
@@ -528,6 +520,19 @@ argument_list|,
 literal|"vinum: no memory\n"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|PLEX
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|plex
+argument_list|)
+operator|*
+name|INITIAL_PLEXES
+argument_list|)
+expr_stmt|;
 name|vinum_conf
 operator|.
 name|plexes_allocated
@@ -566,6 +571,19 @@ argument_list|(
 name|SD
 argument_list|,
 literal|"vinum: no memory\n"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|SD
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sd
+argument_list|)
+operator|*
+name|INITIAL_SUBDISKS
 argument_list|)
 expr_stmt|;
 name|vinum_conf
@@ -610,6 +628,19 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* assume we can do it */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_OPEN
+condition|)
+comment|/* open by vinum(8)? */
+return|return
+literal|0
+return|;
+comment|/* can't do it while we're open */
 name|lock_config
 argument_list|()
 expr_stmt|;
@@ -631,14 +662,16 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|VOL
 index|[
 name|i
 index|]
 operator|.
-name|opencount
-operator|!=
-literal|0
+name|flags
+operator|&
+name|VF_OPEN
+operator|)
 condition|)
 block|{
 comment|/* volume is open */
@@ -703,9 +736,6 @@ block|}
 else|else
 block|{
 comment|/* keep the config */
-name|save_config
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|DRIVE
@@ -745,6 +775,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+while|while
+condition|(
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+operator|(
+name|VF_STOPPING
+operator||
+name|VF_DAEMONOPEN
+operator|)
+operator|)
+operator|==
+operator|(
+name|VF_STOPPING
+operator||
+name|VF_DAEMONOPEN
+operator|)
+condition|)
+block|{
+comment|/* at least one daemon open, we're stopping */
 name|queue_daemon_request
 argument_list|(
 name|daemonrq_return
@@ -752,7 +804,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* tell daemon to stop */
+comment|/* stop the daemon */
+name|tsleep
+argument_list|(
+operator|&
+name|vinumclose
+argument_list|,
+name|PUSER
+argument_list|,
+literal|"vstop"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* and wait for it */
+block|}
 if|if
 condition|(
 name|SD
@@ -853,223 +919,8 @@ name|vinum_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|daemon_options
-operator|&
-name|daemon_stopped
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* daemon hasn't stopped yet, */
-name|tsleep
-argument_list|(
-operator|&
-name|vinum_daemon
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"vdaemn"
-argument_list|,
-literal|10
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/* wait for it to stop */
-name|tsleep
-argument_list|(
-operator|&
-name|vinum_daemon
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"diedie"
-argument_list|,
-literal|3
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/* and wait another 3 secs XXX */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACTUALLY_LKM_NOT_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* stuff for LKMs */
-end_comment
-
-begin_expr_stmt
-name|MOD_MISC
-argument_list|(
-name|vinum
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Function called when loading the driver.  */
-end_comment
-
-begin_function
-name|STATIC
-name|int
-name|vinum_load
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|)
-block|{
-name|vinumattach
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* OK */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Function called when unloading the driver.  */
-end_comment
-
-begin_function
-name|STATIC
-name|int
-name|vinum_unload
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|)
-block|{
-if|if
-condition|(
-name|vinum_inactive
-argument_list|()
-condition|)
-block|{
-comment|/* is anything open? */
-name|struct
-name|sync_args
-name|dummyarg
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"vinum: unloaded\n"
-argument_list|)
-expr_stmt|;
-name|sync
-argument_list|(
-name|curproc
-argument_list|,
-operator|&
-name|dummyarg
-argument_list|)
-expr_stmt|;
-comment|/* write out buffers */
-name|free_vinum
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* no: clean up */
-name|cdevsw
-index|[
-name|CDEV_MAJOR
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* and cdevsw */
-return|return
-literal|0
-return|;
-block|}
-else|else
-return|return
-name|EBUSY
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Dispatcher function for the module (load/unload/stat).  */
-end_comment
-
-begin_function
-name|int
-name|vinum_mod
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|,
-name|int
-name|ver
-parameter_list|)
-block|{
-name|MOD_DISPATCH
-argument_list|(
-name|vinum
-argument_list|,
-comment|/* module name */
-name|lkmtp
-argument_list|,
-comment|/* LKM table */
-name|cmd
-argument_list|,
-comment|/* command */
-name|ver
-argument_list|,
-name|vinum_load
-argument_list|,
-comment|/* load with this function */
-name|vinum_unload
-argument_list|,
-comment|/* and unload with this */
-name|lkm_nullcmd
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not LKM */
-end_comment
 
 begin_function
 name|STATIC
@@ -1125,6 +976,14 @@ comment|/* is anything open? */
 return|return
 name|EBUSY
 return|;
+comment|/* yes, we can't do it */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_STOPPING
+expr_stmt|;
+comment|/* note that we want to stop */
 name|sync
 argument_list|(
 name|curproc
@@ -1139,7 +998,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* no: clean up */
+comment|/* clean up */
 name|cdevsw
 index|[
 name|CDEV_MAJOR
@@ -1147,7 +1006,15 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* and cdevsw */
+comment|/* no cdevsw any more */
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"vinum: unloaded\n"
+argument_list|)
+expr_stmt|;
+comment|/* tell the world */
 return|return
 literal|0
 return|;
@@ -1188,15 +1055,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LKM */
-end_comment
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1224,10 +1082,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-comment|/* spl */
 name|int
 name|error
 decl_stmt|;
@@ -1328,19 +1182,11 @@ name|volume_up
 case|:
 name|vol
 operator|->
-name|opencount
-operator|=
-literal|1
+name|flags
+operator||=
+name|VF_OPEN
 expr_stmt|;
-name|vol
-operator|->
-name|pid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-comment|/* and say who we are (do we need this? XXX) */
+comment|/* note we're open */
 return|return
 literal|0
 return|;
@@ -1414,54 +1260,13 @@ return|return
 name|EINVAL
 return|;
 default|default:
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|plex
 operator|->
-name|pid
-comment|/* it's open already */
-operator|&&
-operator|(
-name|plex
-operator|->
-name|pid
-operator|!=
-name|p
-operator|->
-name|p_pid
-operator|)
-condition|)
-block|{
-comment|/* and not by us, */
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|flags
+operator||=
+name|VF_OPEN
 expr_stmt|;
-return|return
-name|EBUSY
-return|;
-comment|/* one at a time, please */
-block|}
-name|plex
-operator|->
-name|pid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-comment|/* and say who we are (do we need this? XXX) */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* note we're open */
 return|return
 literal|0
 return|;
@@ -1545,58 +1350,18 @@ return|return
 name|EINVAL
 return|;
 default|default:
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|sd
 operator|->
-name|pid
-comment|/* it's open already */
-operator|&&
-operator|(
-name|sd
-operator|->
-name|pid
-operator|!=
-name|p
-operator|->
-name|p_pid
-operator|)
-condition|)
-block|{
-comment|/* and not by us, */
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|flags
+operator||=
+name|VF_OPEN
 expr_stmt|;
-return|return
-name|EBUSY
-return|;
-comment|/* one at a time, please */
-block|}
-name|sd
-operator|->
-name|pid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-comment|/* and say who we are (do we need this? XXX) */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* note we're open */
 return|return
 literal|0
 return|;
 block|}
+comment|/* Vinum drives are disks.  We already have a disk 	 * driver, so don't handle them here */
 case|case
 name|VINUM_DRIVE_TYPE
 case|:
@@ -1629,14 +1394,34 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* yes, can do */
+if|if
+condition|(
+name|Volno
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|1
+condition|)
+comment|/* daemon device */
 name|vinum_conf
 operator|.
-name|opencount
-operator|=
-literal|1
+name|flags
+operator||=
+name|VF_DAEMONOPEN
 expr_stmt|;
 comment|/* we're open */
+else|else
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_OPEN
+expr_stmt|;
+comment|/* we're open */
+block|}
 return|return
 name|error
 return|;
@@ -1675,16 +1460,6 @@ name|struct
 name|volume
 modifier|*
 name|vol
-decl_stmt|;
-name|struct
-name|plex
-modifier|*
-name|plex
-decl_stmt|;
-name|struct
-name|sd
-modifier|*
-name|sd
 decl_stmt|;
 name|struct
 name|devcode
@@ -1758,18 +1533,12 @@ name|volume_up
 case|:
 name|vol
 operator|->
-name|opencount
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
 comment|/* reset our flags */
-name|vol
-operator|->
-name|pid
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* and forget who owned us */
 return|return
 literal|0
 return|;
@@ -1821,20 +1590,17 @@ return|return
 name|ENXIO
 return|;
 comment|/* no such device */
-name|plex
-operator|=
-operator|&
 name|PLEX
 index|[
 name|index
 index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
-name|plex
-operator|->
-name|pid
-operator|=
-literal|0
-expr_stmt|;
+comment|/* reset our flags */
 return|return
 literal|0
 return|;
@@ -1891,20 +1657,17 @@ return|return
 name|ENXIO
 return|;
 comment|/* no such device */
-name|sd
-operator|=
-operator|&
 name|SD
 index|[
 name|index
 index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
-name|sd
-operator|->
-name|pid
-operator|=
-literal|0
-expr_stmt|;
+comment|/* reset our flags */
 return|return
 literal|0
 return|;
@@ -1912,17 +1675,54 @@ case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
 comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
+if|if
+condition|(
+name|Volno
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* normal superdev */
 name|vinum_conf
 operator|.
-name|opencount
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
 comment|/* no longer open */
+else|else
+block|{
+name|vinum_conf
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_DAEMONOPEN
+expr_stmt|;
+comment|/* no longer open */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_STOPPING
+condition|)
+comment|/* we're stopping, */
+name|wakeup
+argument_list|(
+operator|&
+name|vinumclose
+argument_list|)
+expr_stmt|;
+comment|/* we can continue stopping now */
+block|}
 return|return
 literal|0
 return|;
-comment|/* no worries closing super dev */
 case|case
 name|VINUM_DRIVE_TYPE
 case|:
