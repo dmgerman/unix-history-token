@@ -323,6 +323,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ELFOSABI_NONE
+value|ELFOSABI_SYSV
+end_define
+
+begin_comment
+comment|/* symbol used in old spec */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELFOSABI_HPUX
 value|1
 end_define
