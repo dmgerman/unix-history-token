@@ -128,11 +128,11 @@ name|u_int
 name|pc_cpuid
 decl_stmt|;
 comment|/* This cpu number */
-name|u_int
+name|cpumask_t
 name|pc_cpumask
 decl_stmt|;
 comment|/* This cpu mask */
-name|u_int
+name|cpumask_t
 name|pc_other_cpus
 decl_stmt|;
 comment|/* Mask of all other cpus */

@@ -879,15 +879,15 @@ name|int
 name|ksg_cpus
 decl_stmt|;
 comment|/* Count of CPUs in this kseq group. */
-name|int
+name|cpumask_t
 name|ksg_cpumask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
-name|int
+name|cpumask_t
 name|ksg_idlemask
 decl_stmt|;
 comment|/* Idle cpus in this group. */
-name|int
+name|cpumask_t
 name|ksg_mask
 decl_stmt|;
 comment|/* Bit mask for first cpu. */
@@ -928,7 +928,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|int
+name|cpumask_t
 name|kseq_idle
 decl_stmt|;
 end_decl_stmt

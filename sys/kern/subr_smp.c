@@ -101,14 +101,14 @@ end_ifdef
 
 begin_decl_stmt
 specifier|volatile
-name|u_int
+name|cpumask_t
 name|stopped_cpus
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
-name|u_int
+name|cpumask_t
 name|started_cpus
 decl_stmt|;
 end_decl_stmt
@@ -164,7 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|cpumask_t
 name|all_cpus
 decl_stmt|;
 end_decl_stmt
@@ -946,7 +946,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|id
 decl_stmt|,
 name|map
@@ -1061,7 +1061,7 @@ begin_function
 name|int
 name|stop_cpus
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|map
 parameter_list|)
 block|{
@@ -1150,7 +1150,7 @@ begin_function
 name|int
 name|restart_cpus
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|map
 parameter_list|)
 block|{

@@ -41,7 +41,7 @@ begin_struct
 struct|struct
 name|cpu_group
 block|{
-name|u_int
+name|cpumask_t
 name|cg_mask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
@@ -120,7 +120,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|u_int
+name|cpumask_t
 name|started_cpus
 decl_stmt|;
 end_decl_stmt
@@ -128,7 +128,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|u_int
+name|cpumask_t
 name|stopped_cpus
 decl_stmt|;
 end_decl_stmt
@@ -144,7 +144,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int
+name|cpumask_t
 name|all_cpus
 decl_stmt|;
 end_decl_stmt
@@ -261,7 +261,7 @@ begin_function_decl
 name|int
 name|restart_cpus
 parameter_list|(
-name|u_int
+name|cpumask_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -270,7 +270,7 @@ begin_function_decl
 name|int
 name|stop_cpus
 parameter_list|(
-name|u_int
+name|cpumask_t
 parameter_list|)
 function_decl|;
 end_function_decl
