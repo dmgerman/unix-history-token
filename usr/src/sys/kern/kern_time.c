@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	6.1	83/07/29	*/
+comment|/*	kern_time.c	6.2	84/06/06	*/
 end_comment
 
 begin_include
@@ -299,8 +299,13 @@ condition|(
 name|u
 operator|.
 name|u_error
+operator|==
+literal|0
 condition|)
-return|return;
+name|tz
+operator|=
+name|atz
+expr_stmt|;
 block|}
 block|}
 end_block
