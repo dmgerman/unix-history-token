@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: elf_freebsd.c,v 1.2 1998/08/31 21:10:40 msmith Exp $ */
+comment|/* $Id: elf_freebsd.c,v 1.3 1998/09/14 18:27:00 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
