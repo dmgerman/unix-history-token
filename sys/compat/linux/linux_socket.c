@@ -1340,8 +1340,31 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|int
+name|linux_connect
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|linux_connect_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__alpha__*/
+end_comment
+
 begin_function
-specifier|static
 name|int
 name|linux_connect
 parameter_list|(
@@ -1368,6 +1391,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|bcopy
+argument_list|(
+name|args
+argument_list|,
+operator|&
+name|linux_args
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linux_args
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -1392,6 +1433,9 @@ operator|(
 name|error
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* __alpha__ */
 name|bsd_args
 operator|.
 name|s
@@ -1659,6 +1703,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_struct
 struct|struct
