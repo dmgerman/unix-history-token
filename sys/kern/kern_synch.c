@@ -540,7 +540,7 @@ condition|(
 name|cold
 condition|)
 block|{
-comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other procs or panic below, 		 * in case this is the idle process and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
+comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
 if|if
 condition|(
 name|mtx
@@ -698,10 +698,17 @@ name|CTR5
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"msleep: thread %p (pid %d, %s) on %s (%p)"
+literal|"msleep: thread %p (pid %ld, %s) on %s (%p)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -830,7 +837,7 @@ name|sig
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Adjust this threads priority. 	 * 	 * XXX: Do we need to save priority in td_base_pri? 	 */
+comment|/* 	 * Adjust this thread's priority. 	 * 	 * XXX: do we need to save priority in td_base_pri? 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -909,7 +916,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * We're awake from voluntary sleep. 	 */
 if|if
 condition|(
 name|rval
@@ -988,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make all processes sleeping on the specified identifier runnable.  */
+comment|/*  * Make all threads sleeping on the specified identifier runnable.  */
 end_comment
 
 begin_function
@@ -1017,7 +1023,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a process sleeping on the specified identifier runnable.  * May wake more than one process if a target process is currently  * swapped out.  */
+comment|/*  * Make a thread sleeping on the specified identifier runnable.  * May wake more than one thread if a target thread is currently  * swapped out.  */
 end_comment
 
 begin_function
@@ -1046,7 +1052,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The machine independent parts of mi_switch().  */
+comment|/*  * The machine independent parts of context switching.  */
 end_comment
 
 begin_function
@@ -1310,10 +1316,17 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: old thread %p (pid %d, %s)"
+literal|"mi_switch: old thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -1347,10 +1360,17 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: new thread %p (pid %d, %s)"
+literal|"mi_switch: new thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid

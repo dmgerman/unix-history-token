@@ -1072,10 +1072,17 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"sleepq catching signals: thread %p (pid %d, %s)"
+literal|"sleepq catching signals: thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -1365,16 +1372,27 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"sleepq resume: thread %p (pid %d, %s)"
+literal|"sleepq resume: thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|td
 operator|->
 name|td_proc
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 operator|->
 name|td_proc
@@ -1530,7 +1548,6 @@ operator|&=
 operator|~
 name|TDF_SINTR
 expr_stmt|;
-comment|/* If we were interrupted, return td_intrval. */
 if|if
 condition|(
 name|td
@@ -2052,10 +2069,17 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"sleepq_wakeup: thread %p (pid %d, %s)"
+literal|"sleepq_wakeup: thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|td
 operator|->
 name|td_proc
@@ -2498,27 +2522,33 @@ name|wchan
 decl_stmt|;
 name|td
 operator|=
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
 name|arg
 expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"sleepq_timeout: thread %p (pid %d, %s)"
+literal|"sleepq_timeout: thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|td
 operator|->
 name|td_proc
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 operator|->
 name|td_proc
@@ -2811,7 +2841,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Abort a thread as if an interrupt had occured.  Only abort  * interruptable waits (unfortunately it isn't safe to abort others).  *  * XXX: What in the world does the comment below mean?  * Also, whatever the signal code does...  */
+comment|/*  * Abort a thread as if an interrupt had occurred.  Only abort  * interruptible waits (unfortunately it isn't safe to abort others).  *  * XXX: What in the world does the comment below mean?  * Also, whatever the signal code does...  */
 end_comment
 
 begin_function
@@ -2867,16 +2897,27 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"sleepq_abort: thread %p (pid %d, %s)"
+literal|"sleepq_abort: thread %p (pid %ld, %s)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 argument_list|,
+operator|(
+name|long
+operator|)
 name|td
 operator|->
 name|td_proc
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|td
 operator|->
 name|td_proc
