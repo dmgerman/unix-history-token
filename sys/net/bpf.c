@@ -2006,15 +2006,6 @@ operator|->
 name|bd_sel
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-name|d
-operator|->
-name|bd_sel
-operator|.
-name|si_pid
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
