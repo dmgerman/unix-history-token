@@ -370,6 +370,8 @@ name|c
 decl_stmt|;
 name|int
 name|i
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Parse commandline arguments. 	 */
 name|out
