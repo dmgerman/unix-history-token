@@ -3170,7 +3170,7 @@ literal|"usage: arp [-n] hostname"
 argument_list|,
 literal|"       arp [-n] -a"
 argument_list|,
-literal|"       arp -d hostname"
+literal|"       arp -d hostname [proxy]"
 argument_list|,
 literal|"       arp -d -a"
 argument_list|,
