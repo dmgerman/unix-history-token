@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setenv.c	5.2 (Berkeley) %G%"
+literal|"@(#)setenv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
 end_include
 
 begin_comment
@@ -103,17 +103,9 @@ name|offset
 decl_stmt|;
 name|char
 modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|realloc
-argument_list|()
-decl_stmt|,
-modifier|*
 name|_findenv
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|*
@@ -242,7 +234,7 @@ operator|)
 name|environ
 argument_list|,
 call|(
-name|u_int
+name|size_t
 call|)
 argument_list|(
 sizeof|sizeof
@@ -289,7 +281,7 @@ operator|)
 name|malloc
 argument_list|(
 call|(
-name|u_int
+name|size_t
 call|)
 argument_list|(
 sizeof|sizeof
@@ -383,7 +375,7 @@ comment|/* name + `=' + value */
 name|malloc
 argument_list|(
 call|(
-name|u_int
+name|size_t
 call|)
 argument_list|(
 call|(
