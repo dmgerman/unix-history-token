@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.22 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.23 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.22 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.23 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,6 +228,16 @@ name|e_id
 operator|==
 name|NULL
 operator|)
+operator|||
+operator|!
+name|bitset
+argument_list|(
+name|EF_INQUEUE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 expr_stmt|;
 comment|/* if newid, queuename will create a locked qf file in e->lockfp */
 name|strcpy
@@ -261,17 +271,9 @@ expr_stmt|;
 comment|/* if newid, just write the qf file directly (instead of tf file) */
 if|if
 condition|(
+operator|!
 name|newid
 condition|)
-block|{
-name|tfp
-operator|=
-name|e
-operator|->
-name|e_lockfp
-expr_stmt|;
-block|}
-else|else
 block|{
 comment|/* get a locked tf file */
 for|for
@@ -482,13 +484,80 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\n>>>>> queueing %s>>>>>\n"
+literal|"\n>>>>> queueing %s%s>>>>>\n"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|newid
+condition|?
+literal|" (new id)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  tfp="
+argument_list|)
+expr_stmt|;
+name|dumpfd
+argument_list|(
+name|fileno
+argument_list|(
+name|tfp
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  lockfp="
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_lockfp
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"NULL\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|dumpfd
+argument_list|(
+name|fileno
+argument_list|(
+name|e
+operator|->
+name|e_lockfp
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  If there is no data file yet, create one. 	*/
 if|if
 condition|(
@@ -1614,6 +1683,15 @@ begin_expr_stmt
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_INQUEUE
 expr_stmt|;
 end_expr_stmt
 
@@ -5820,6 +5898,36 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|7
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  lockfd="
+argument_list|)
+expr_stmt|;
+name|dumpfd
+argument_list|(
+name|fileno
+argument_list|(
+name|e
+operator|->
+name|e_lockfp
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LOG
