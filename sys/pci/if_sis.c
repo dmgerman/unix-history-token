@@ -5575,6 +5575,8 @@ operator|.
 name|sis_rx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -5798,6 +5800,8 @@ operator|.
 name|sis_tx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -5996,28 +6000,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|sis_ldata
-operator|.
-name|sis_tx_list
-argument_list|,
-name|SIS_TX_LIST_SZ
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|sis_ldata
-operator|.
-name|sis_rx_list
-argument_list|,
-name|SIS_RX_LIST_SZ
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Obtain the physical addresses of the RX and TX 	 * rings which we'll need later in the init routine. 	 */
 name|ifp
 operator|=
@@ -6294,7 +6276,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* These should only be active if attach succeeded */
+comment|/* These should only be active if attach succeeded. */
 if|if
 condition|(
 name|device_is_attached

@@ -4529,6 +4529,8 @@ operator|.
 name|rl_tx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -4547,21 +4549,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_tx_list
-argument_list|,
-name|RL_TX_LIST_SZ
-argument_list|)
-expr_stmt|;
 comment|/* Load the map for the TX ring. */
 name|error
 operator|=
@@ -4739,6 +4726,8 @@ operator|.
 name|rl_rx_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -4757,21 +4746,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_rx_list
-argument_list|,
-name|RL_RX_LIST_SZ
-argument_list|)
-expr_stmt|;
 comment|/* Load the map for the RX ring. */
 name|error
 operator|=
