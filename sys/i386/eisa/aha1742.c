@@ -4,7 +4,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: aha1742.c,v $  * Revision 1.3  1993/07/29  11:55:34  nate  * Syncing our sources back with Julian's, and removing PATCHKIT headers.  *  * Large Bustek changes, most everything else is minimal.  *  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * julian - removed un-necessary splx() calls and debugging code  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  */
+comment|/*  * HISTORY  * $Log: aha1742.c,v $  * Revision 1.4  1993/08/06  11:59:02  rgrimes  * Fixed **probing for scsi devices** message to have a controller and unit  * message on the begining of it:  * aha0: **probing for scsi devices**  *  * Revision 1.3  1993/07/29  11:55:34  nate  * Syncing our sources back with Julian's, and removing PATCHKIT headers.  *  * Large Bustek changes, most everything else is minimal.  *  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * julian - removed un-necessary splx() calls and debugging code  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  */
 end_comment
 
 begin_include
@@ -2909,6 +2909,15 @@ case|case
 name|AHB_ASN
 case|:
 comment|/* for target mode */
+name|printf
+argument_list|(
+literal|"ahb%d: Unexpected ASN interrupt(%x)\n"
+argument_list|,
+name|unit
+argument_list|,
+name|mboxval
+argument_list|)
+expr_stmt|;
 name|ecb
 operator|=
 literal|0
@@ -2917,6 +2926,15 @@ break|break;
 case|case
 name|AHB_HW_ERR
 case|:
+name|printf
+argument_list|(
+literal|"ahb%d: Hardware error interrupt(%x)\n"
+argument_list|,
+name|unit
+argument_list|,
+name|mboxval
+argument_list|)
+expr_stmt|;
 name|ecb
 operator|=
 literal|0
