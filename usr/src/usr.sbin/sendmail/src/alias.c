@@ -83,7 +83,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.44 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.45 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -98,7 +98,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.44 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.45 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.44 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.45 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.44 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.45 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1010,6 +1010,41 @@ argument_list|,
 name|spec
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|spec
+init|;
+name|p
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+name|NULL
+condition|)
+break|break;
+name|spec
+operator|=
+name|p
+expr_stmt|;
 if|if
 condition|(
 name|NAliasDBs
@@ -1034,37 +1069,21 @@ index|[
 name|NAliasDBs
 index|]
 expr_stmt|;
-for|for
-control|(
 name|p
 operator|=
-name|spec
-init|;
-operator|*
+name|strpbrk
+argument_list|(
 name|p
-operator|!=
-literal|'\0'
-condition|;
-name|p
-operator|++
-control|)
-block|{
+argument_list|,
+literal|" ,/:"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|strchr
-argument_list|(
-literal|" /:"
-argument_list|,
-operator|*
 name|p
-argument_list|)
 operator|!=
 name|NULL
-condition|)
-break|break;
-block|}
-if|if
-condition|(
+operator|&&
 operator|*
 name|p
 operator|==
@@ -1095,6 +1114,34 @@ operator|=
 literal|"implicit"
 expr_stmt|;
 block|}
+comment|/* find end of spec */
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* look up class */
 name|s
 operator|=
@@ -1153,6 +1200,7 @@ expr_stmt|;
 name|NAliasDBs
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
