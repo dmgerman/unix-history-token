@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.14 1998/05/31 04:09:09 steve Exp $ */
+comment|/* $Id: sem.h,v 1.15 1998/07/15 02:32:32 bde Exp $ */
 end_comment
 
 begin_comment
@@ -606,7 +606,7 @@ begin_define
 define|#
 directive|define
 name|SEMUSZ
-value|(sizeof(struct sem_undo)+sizeof(struct undo)*SEMUME)
+value|(offsetof(struct sem_undo, un_ent[SEMUME]))
 end_define
 
 begin_decl_stmt
@@ -658,7 +658,7 @@ name|SEMU
 parameter_list|(
 name|ix
 parameter_list|)
-value|((struct sem_undo *)(((intptr_t)semu)+ix * SEMUSZ))
+value|((struct sem_undo *)(((intptr_t)semu)+ix * seminfo.semusz))
 end_define
 
 begin_comment
