@@ -369,6 +369,18 @@ begin_comment
 comment|/* Highest arg to CPUID */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpuid_cpuinfo
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* HyperThreading Info / Brand Index / CLFUSH */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

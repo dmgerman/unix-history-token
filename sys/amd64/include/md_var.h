@@ -130,6 +130,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|cpuid_cpuinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|cpu_id
 decl_stmt|;
 end_decl_stmt
