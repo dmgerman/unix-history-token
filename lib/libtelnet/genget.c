@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static const char sccsid[] = "@(#)genget.c	8.2 (Berkeley) 5/30/95";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)genget.c	8.1 (Berkeley) 6/4/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -52,27 +70,19 @@ begin_function
 name|int
 name|isprefix
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
 name|os1
 decl_stmt|;
-specifier|register
 name|char
 name|c1
 decl_stmt|,
@@ -164,7 +174,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -184,28 +194,19 @@ modifier|*
 modifier|*
 name|genget
 parameter_list|(
-name|name
-parameter_list|,
-name|table
-parameter_list|,
-name|stlen
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name to match */
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|table
-decl_stmt|;
-comment|/* name entry in table */
+parameter_list|,
 name|int
 name|stlen
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -215,7 +216,6 @@ modifier|*
 modifier|*
 name|found
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -321,12 +321,10 @@ begin_function
 name|int
 name|Ambiguous
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(

@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)getent.c	8.2 (Berkeley) 12/15/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)getent.c	8.2 (Berkeley) 12/15/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -28,11 +46,22 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_CGETENT
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -50,20 +79,14 @@ begin_function
 name|int
 name|getent
 parameter_list|(
-name|cp
-parameter_list|,
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|name
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -120,7 +143,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
@@ -137,21 +160,15 @@ name|char
 modifier|*
 name|Getstr
 parameter_list|(
-name|id
-parameter_list|,
-name|cpp
-parameter_list|)
 name|char
 modifier|*
 name|id
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 modifier|*
 name|cpp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -191,7 +208,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
