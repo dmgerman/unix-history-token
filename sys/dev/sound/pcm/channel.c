@@ -5469,6 +5469,12 @@ name|blksz
 operator|=
 name|tmp
 expr_stmt|;
+name|blkcnt
+operator|=
+name|CHN_2NDBUFMAXSIZE
+operator|/
+name|blksz
+expr_stmt|;
 name|RANGE
 argument_list|(
 name|blksz
