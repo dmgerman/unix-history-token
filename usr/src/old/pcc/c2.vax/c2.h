@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*static	char sccsid[] = "@(#)c2.h 4.1 %G%";*/
+comment|/*static	char sccsid[] = "@(#)c2.h 4.2 %G%";*/
 end_comment
 
 begin_comment
-comment|/* @(#)c2.h 1.18 80/03/14 10:27:01 */
+comment|/* @(#)c2.h 1.19 80/08/26 13:39:07 */
 end_comment
 
 begin_comment
@@ -406,14 +406,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|COMM
+name|LCOMM
 value|59
 end_define
 
 begin_define
 define|#
 directive|define
-name|LCOMM
+name|COMM
 value|60
 end_define
 
@@ -697,7 +697,7 @@ name|optab
 modifier|*
 name|pop
 decl_stmt|;
-name|int
+name|long
 name|labno
 decl_stmt|;
 name|short
