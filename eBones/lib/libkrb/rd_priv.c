@@ -37,13 +37,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -98,6 +98,13 @@ directive|include
 file|"lsb_addr_comp.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* static storage */
 end_comment
@@ -147,33 +154,52 @@ begin_function
 name|long
 name|krb_rd_priv
 parameter_list|(
+name|in
+parameter_list|,
+name|in_length
+parameter_list|,
+name|schedule
+parameter_list|,
+name|key
+parameter_list|,
+name|sender
+parameter_list|,
+name|receiver
+parameter_list|,
+name|m_data
+parameter_list|)
 name|u_char
 modifier|*
 name|in
-parameter_list|,
+decl_stmt|;
+comment|/* pointer to the msg received */
 name|u_long
 name|in_length
-parameter_list|,
-name|des_key_schedule
+decl_stmt|;
+comment|/* length of "in" msg */
+name|Key_schedule
 name|schedule
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* precomputed key schedule */
+name|C_Block
 name|key
-parameter_list|,
+decl_stmt|;
+comment|/* encryption key for seed and ivec */
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-parameter_list|,
+decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-parameter_list|,
+decl_stmt|;
 name|MSG_DAT
 modifier|*
 name|m_data
-parameter_list|)
+decl_stmt|;
+comment|/*various input/output data from msg */
 block|{
 specifier|register
 name|u_char
@@ -340,13 +366,13 @@ name|NOENCRYPTION
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|q
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|q
@@ -359,7 +385,7 @@ argument_list|,
 name|schedule
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key

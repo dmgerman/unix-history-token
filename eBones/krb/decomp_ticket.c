@@ -68,57 +68,96 @@ begin_function
 name|int
 name|decomp_ticket
 parameter_list|(
-name|KTEXT
 name|tkt
 parameter_list|,
+name|flags
+parameter_list|,
+name|pname
+parameter_list|,
+name|pinstance
+parameter_list|,
+name|prealm
+parameter_list|,
+name|paddress
+parameter_list|,
+name|session
+parameter_list|,
+name|life
+parameter_list|,
+name|time_sec
+parameter_list|,
+name|sname
+parameter_list|,
+name|sinstance
+parameter_list|,
+name|key
+parameter_list|,
+name|key_s
+parameter_list|)
+name|KTEXT
+name|tkt
+decl_stmt|;
+comment|/* The ticket to be decoded */
 name|unsigned
 name|char
 modifier|*
 name|flags
-parameter_list|,
+decl_stmt|;
+comment|/* Kerberos ticket flags */
 name|char
 modifier|*
 name|pname
-parameter_list|,
+decl_stmt|;
+comment|/* Authentication name */
 name|char
 modifier|*
 name|pinstance
-parameter_list|,
+decl_stmt|;
+comment|/* Principal's instance */
 name|char
 modifier|*
 name|prealm
-parameter_list|,
+decl_stmt|;
+comment|/* Principal's authentication domain */
 name|unsigned
 name|long
 modifier|*
 name|paddress
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* Net address of entity                                  * requesting ticket */
+name|C_Block
 name|session
-parameter_list|,
+decl_stmt|;
+comment|/* Session key inserted in ticket */
 name|int
 modifier|*
 name|life
-parameter_list|,
+decl_stmt|;
+comment|/* Lifetime of the ticket */
 name|unsigned
 name|long
 modifier|*
 name|time_sec
-parameter_list|,
+decl_stmt|;
+comment|/* Issue time and date */
 name|char
 modifier|*
 name|sname
-parameter_list|,
+decl_stmt|;
+comment|/* Service name */
 name|char
 modifier|*
 name|sinstance
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* Service instance */
+name|C_Block
 name|key
-parameter_list|,
-name|des_key_schedule
+decl_stmt|;
+comment|/* Service's secret key                                  * (to decrypt the ticket) */
+name|Key_schedule
 name|key_s
-parameter_list|)
+decl_stmt|;
+comment|/* The precomputed key schedule */
 block|{
 specifier|static
 name|int
@@ -147,7 +186,7 @@ name|NOENCRYPTION
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|tkt
@@ -155,7 +194,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|tkt
@@ -172,7 +211,7 @@ argument_list|,
 name|key_s
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key

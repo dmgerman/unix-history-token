@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"kadm.h"
+file|<kadm.h>
 end_include
 
 begin_define
@@ -63,15 +63,19 @@ begin_function
 name|int
 name|vals_to_stream
 parameter_list|(
+name|dt_in
+parameter_list|,
+name|dt_out
+parameter_list|)
 name|Kadm_vals
 modifier|*
 name|dt_in
-parameter_list|,
+decl_stmt|;
 name|u_char
 modifier|*
 modifier|*
 name|dt_out
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|vsloop
@@ -251,15 +255,21 @@ begin_function
 name|int
 name|build_field_header
 parameter_list|(
+name|cont
+parameter_list|,
+name|st
+parameter_list|)
 name|u_char
 modifier|*
 name|cont
-parameter_list|,
+decl_stmt|;
+comment|/* container for fields data */
 name|u_char
 modifier|*
 modifier|*
 name|st
-parameter_list|)
+decl_stmt|;
+comment|/* stream */
 block|{
 operator|*
 name|st
@@ -302,18 +312,27 @@ begin_function
 name|int
 name|vts_string
 parameter_list|(
+name|dat
+parameter_list|,
+name|st
+parameter_list|,
+name|loc
+parameter_list|)
 name|char
 modifier|*
 name|dat
-parameter_list|,
+decl_stmt|;
+comment|/* a string to put on the stream */
 name|u_char
 modifier|*
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* base pointer to the stream */
 name|int
 name|loc
-parameter_list|)
+decl_stmt|;
+comment|/* offset into the stream for current data */
 block|{
 operator|*
 name|st
@@ -384,17 +403,26 @@ begin_function
 name|int
 name|vts_short
 parameter_list|(
-name|u_short
 name|dat
 parameter_list|,
+name|st
+parameter_list|,
+name|loc
+parameter_list|)
+name|u_short
+name|dat
+decl_stmt|;
+comment|/* the attributes field */
 name|u_char
 modifier|*
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* a base pointer to the stream */
 name|int
 name|loc
-parameter_list|)
+decl_stmt|;
+comment|/* offset into the stream for current data */
 block|{
 name|u_short
 name|temp
@@ -476,17 +504,26 @@ begin_function
 name|int
 name|vts_long
 parameter_list|(
-name|u_long
 name|dat
 parameter_list|,
+name|st
+parameter_list|,
+name|loc
+parameter_list|)
+name|u_long
+name|dat
+decl_stmt|;
+comment|/* the attributes field */
 name|u_char
 modifier|*
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* a base pointer to the stream */
 name|int
 name|loc
-parameter_list|)
+decl_stmt|;
+comment|/* offset into the stream for current data */
 block|{
 name|u_long
 name|temp
@@ -568,17 +605,26 @@ begin_function
 name|int
 name|vts_char
 parameter_list|(
-name|u_char
 name|dat
 parameter_list|,
+name|st
+parameter_list|,
+name|loc
+parameter_list|)
+name|u_char
+name|dat
+decl_stmt|;
+comment|/* the attributes field */
 name|u_char
 modifier|*
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* a base pointer to the stream */
 name|int
 name|loc
-parameter_list|)
+decl_stmt|;
+comment|/* offset into the stream for current data */
 block|{
 operator|*
 name|st
@@ -636,17 +682,24 @@ begin_function
 name|int
 name|stream_to_vals
 parameter_list|(
+name|dt_in
+parameter_list|,
+name|dt_out
+parameter_list|,
+name|maxlen
+parameter_list|)
 name|u_char
 modifier|*
 name|dt_in
-parameter_list|,
+decl_stmt|;
 name|Kadm_vals
 modifier|*
 name|dt_out
-parameter_list|,
+decl_stmt|;
 name|int
 name|maxlen
-parameter_list|)
+decl_stmt|;
+comment|/* max length to use */
 block|{
 specifier|register
 name|int
@@ -1001,17 +1054,25 @@ begin_function
 name|int
 name|check_field_header
 parameter_list|(
+name|st
+parameter_list|,
+name|cont
+parameter_list|,
+name|maxlen
+parameter_list|)
 name|u_char
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* stream */
 name|u_char
 modifier|*
 name|cont
-parameter_list|,
+decl_stmt|;
+comment|/* container for fields data */
 name|int
 name|maxlen
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1053,23 +1114,40 @@ begin_function
 name|int
 name|stv_string
 parameter_list|(
+name|st
+parameter_list|,
+name|dat
+parameter_list|,
+name|loc
+parameter_list|,
+name|stlen
+parameter_list|,
+name|maxlen
+parameter_list|)
+specifier|register
 name|u_char
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* base pointer to the stream */
 name|char
 modifier|*
 name|dat
-parameter_list|,
+decl_stmt|;
+comment|/* a string to read from the stream */
+specifier|register
 name|int
 name|loc
-parameter_list|,
+decl_stmt|;
+comment|/* offset into the stream for current data */
 name|int
 name|stlen
-parameter_list|,
+decl_stmt|;
+comment|/* max length of string to copy in */
 name|int
 name|maxlen
-parameter_list|)
+decl_stmt|;
+comment|/* max length of input stream */
 block|{
 name|int
 name|maxcount
@@ -1135,20 +1213,31 @@ begin_function
 name|int
 name|stv_short
 parameter_list|(
+name|st
+parameter_list|,
+name|dat
+parameter_list|,
+name|loc
+parameter_list|,
+name|maxlen
+parameter_list|)
 name|u_char
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* a base pointer to the stream */
 name|u_short
 modifier|*
 name|dat
-parameter_list|,
+decl_stmt|;
+comment|/* the attributes field */
 name|int
 name|loc
-parameter_list|,
+decl_stmt|;
+comment|/* offset into the stream for current data */
 name|int
 name|maxlen
-parameter_list|)
+decl_stmt|;
 block|{
 name|u_short
 name|temp
@@ -1224,20 +1313,32 @@ begin_function
 name|int
 name|stv_long
 parameter_list|(
+name|st
+parameter_list|,
+name|dat
+parameter_list|,
+name|loc
+parameter_list|,
+name|maxlen
+parameter_list|)
 name|u_char
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* a base pointer to the stream */
 name|u_long
 modifier|*
 name|dat
-parameter_list|,
+decl_stmt|;
+comment|/* the attributes field */
 name|int
 name|loc
-parameter_list|,
+decl_stmt|;
+comment|/* offset into the stream for current data */
 name|int
 name|maxlen
-parameter_list|)
+decl_stmt|;
+comment|/* maximum length of st */
 block|{
 name|u_long
 name|temp
@@ -1313,20 +1414,31 @@ begin_function
 name|int
 name|stv_char
 parameter_list|(
+name|st
+parameter_list|,
+name|dat
+parameter_list|,
+name|loc
+parameter_list|,
+name|maxlen
+parameter_list|)
 name|u_char
 modifier|*
 name|st
-parameter_list|,
+decl_stmt|;
+comment|/* a base pointer to the stream */
 name|u_char
 modifier|*
 name|dat
-parameter_list|,
+decl_stmt|;
+comment|/* the attributes field */
 name|int
 name|loc
-parameter_list|,
+decl_stmt|;
+comment|/* offset into the stream for current data */
 name|int
 name|maxlen
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(

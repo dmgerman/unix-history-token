@@ -3,32 +3,40 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  *  *	from: ext_srvtab.c,v 4.1 89/07/18 16:49:30 jtkohl Exp $  *	$Id: ext_srvtab.c,v 1.3 1995/07/18 16:35:55 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: ext_srvtab.c,v 1.3 1995/07/18 16:35:55 mark Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: ext_srvtab.c,v 1.3 1995/07/18 16:35:55 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -138,7 +146,47 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|FWrite
+parameter_list|(
+name|char
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|int
+name|n
+parameter_list|,
+name|FILE
+modifier|*
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|StampOutSecrets
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -745,12 +793,10 @@ comment|/* 0 errors if successful */
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|Die
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|StampOutSecrets
 argument_list|()
@@ -761,48 +807,34 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|FWrite
-argument_list|(
-argument|p
-argument_list|,
-argument|size
-argument_list|,
-argument|n
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|,
+name|n
+parameter_list|,
+name|f
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -830,14 +862,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|StampOutSecrets
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -864,14 +894,12 @@ name|master_key_schedule
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -888,7 +916,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

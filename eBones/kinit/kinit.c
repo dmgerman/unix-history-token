@@ -3,27 +3,41 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Routine to initialize user to Kerberos.  Prompts optionally for  * user, instance and realm.  Authenticates user and gets a ticket  * for the Kerberos ticket-granting service for future use.  *  * Options are:  *  *   -i[instance]  *   -r[realm]  *   -v[erbose]  *   -l[ifetime]  *  *	from: kinit.c,v 4.12 90/03/20 16:11:15 jon Exp $  *	$Id: kinit.c,v 1.4 1995/08/03 17:16:00 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kinit.c,v 1.4 1995/08/03 17:16:00 mark Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: kinit.c,v 1.4 1995/08/03 17:16:00 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -188,6 +202,15 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|get_input
@@ -256,12 +279,16 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -1031,15 +1058,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -1056,7 +1084,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -89,10 +95,12 @@ begin_function
 name|void
 name|krb_print_principal
 parameter_list|(
+name|a_n
+parameter_list|)
 name|Principal
 modifier|*
 name|a_n
-parameter_list|)
+decl_stmt|;
 block|{
 comment|/* run-time database does not contain string versions */
 name|time_p

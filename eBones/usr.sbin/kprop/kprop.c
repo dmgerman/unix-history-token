@@ -3,27 +3,35 @@ begin_comment
 comment|/*   *  * Copyright 1987 by the Massachusetts Institute of Technology.  *  * For copying and distribution information,  * please see the file<mit-copyright.h>.  *  * $Revision: 1.1.1.1 $  * $Date: 1995/08/03 07:36:18 $  * $State: Exp $  * $Source: /usr/cvs/src/eBones/kprop/kprop.c,v $  * $Author: mark $  * $Locker:  $  *  * $Log: kprop.c,v $  * Revision 1.1.1.1  1995/08/03  07:36:18  mark  * Import an updated revision of the MIT kprop program for distributing  * kerberos databases to slave servers.  *  * NOTE: This method was abandoned by MIT long ago, this code is close to  *       garbage,  but it is slightly more secure than using rdist.  *       There is no documentation available on how to use it, and  *       it should -not- be built by default.  *  * Obtained from:	MIT Project Athena  *  * Revision 1.1.1.1  1995/08/02  22:11:44  pst  * Import an updated revision of the MIT kprop program for distributing  * kerberos databases to slave servers.  *  * NOTE: This method was abandoned by MIT long ago, this code is close to  *       garbage,  but it is slightly more secure than using rdist.  *       There is no documentation available on how to use it, and  *       it should -not- be built by default.  *  * Obtained from:	MIT Project Athena  *  * Revision 4.7  92/11/10  23:01:06  tytso  * Removed incompatible #include  *   * Revision 4.6  91/02/28  22:49:34  probe  * Fixed header file inclusion  *   * Revision 4.5  90/03/20  15:37:57  jon  * Stop kpropd port number from being bashed (static buffers)  * Programmer: jtkohl  * Auditor: jon  *   * Revision 4.4  90/01/02  13:42:40  jtkohl  * add back in accidentally deleted $ in rcsid string  *   * Revision 4.3  89/12/30  21:22:27  qjb  * Added #define MAXHOSTNAMELEN if not already defined for the benifit  * of Unixes that don't have this variable in sys/param.h.  *   * Revision 4.2  89/03/23  10:23:43  jtkohl  * fix misuse of mkstemp to use mktemp  * NOENCRYPTION changes  *   * Revision 4.1  89/01/24  20:35:17  root  * name change  *   * Revision 4.0  89/01/24  18:44:38  wesommer  * Original version; programmer: wesommer  * auditor: jon.  *   * Revision 4.4  88/01/08  18:05:21  jon  * formating changes and rcs header info  *   *  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid_kprop_c
-index|[]
-init|=
-literal|"$Id: kprop.c,v 1.1.1.1 1995/08/03 07:36:18 mark Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid_kprop_c[] = "$Id: kprop.c,v 1.1.1.1 1995/08/03 07:36:18 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -251,7 +259,58 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|Death
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|get_slaves
+parameter_list|(
+name|struct
+name|slave_host
+modifier|*
+modifier|*
+name|psl
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|time_t
+name|ok_mtime
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prop_to_slaves
+parameter_list|(
+name|struct
+name|slave_host
+modifier|*
+name|sl
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|char
+modifier|*
+name|fslv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -300,12 +359,6 @@ name|pc
 decl_stmt|;
 name|int
 name|l_diff
-decl_stmt|,
-name|prop_to_slaves
-argument_list|()
-decl_stmt|,
-name|get_slaves
-argument_list|()
 decl_stmt|;
 specifier|static
 name|struct
@@ -1023,21 +1076,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|Death
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -1057,7 +1105,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* The master -> slave protocol looks like this:      1) 8 byte version string      2) 2 bytes of "transfer mode" (net byte order of course)      3) ticket/authentication send by sendauth      4) 4 bytes of "block" length (u_long)      5) data       4 and 5 repeat til EOF ... */
@@ -1256,6 +1304,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pc
 operator|=
 name|rindex
@@ -1264,6 +1313,7 @@ name|path
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 block|{
 name|pc
@@ -1858,6 +1908,10 @@ if|if
 condition|(
 name|key_sched
 argument_list|(
+operator|(
+name|C_Block
+operator|*
+operator|)
 name|cred
 operator|.
 name|session
@@ -2017,6 +2071,7 @@ comment|/*** NEXT SLAVE ***/
 block|}
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 name|read
@@ -2028,6 +2083,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2099,6 +2155,10 @@ name|obuf
 argument_list|,
 name|n
 argument_list|,
+operator|(
+name|C_Block
+operator|*
+operator|)
 name|cred
 operator|.
 name|session
@@ -2476,6 +2536,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ppath
 operator|=
 name|rindex
@@ -2484,6 +2545,7 @@ name|path
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 block|{
 name|ppath
@@ -2527,6 +2589,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|pc
 operator|=
 name|index
@@ -2535,6 +2598,7 @@ name|namebuf
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*

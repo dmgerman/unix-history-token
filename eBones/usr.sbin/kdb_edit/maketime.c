@@ -3,26 +3,28 @@ begin_comment
 comment|/*  * Copyright 1990 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Convert a struct tm * to a UNIX time.  *  *	from: maketime.c,v 4.2 90/01/09 15:54:51 raeburn Exp $  *	$Id: maketime.c,v 1.3 1995/07/18 16:37:29 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: maketime.c,v 1.1 1994/03/21 16:23:54 piero Exp "
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: maketime.c,v 1.1 1994/03/21 16:23:54 piero Exp ";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include

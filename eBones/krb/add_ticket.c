@@ -64,124 +64,68 @@ begin_comment
 comment|/*ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|add_ticket
-argument_list|(
-argument|cipher
-argument_list|,
-argument|n
-argument_list|,
-argument|session
-argument_list|,
-argument|lifetime
-argument_list|,
-argument|sname
-argument_list|,
-argument|instance
-argument_list|,
-argument|realm
-argument_list|,
-argument|kvno
-argument_list|,
-argument|ticket
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cipher
+parameter_list|,
+name|n
+parameter_list|,
+name|session
+parameter_list|,
+name|lifetime
+parameter_list|,
+name|sname
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|kvno
+parameter_list|,
+name|ticket
+parameter_list|)
 name|KTEXT
 name|cipher
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Ciphertext info for ticket */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|sname
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Service name */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|instance
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Instance */
-end_comment
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Relative position of this ticket */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|session
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Session key for this tkt */
-end_comment
-
-begin_decl_stmt
 name|int
 name|lifetime
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Lifetime of this ticket */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|realm
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Realm in which ticket is valid */
-end_comment
-
-begin_decl_stmt
 name|int
 name|kvno
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Key version number of service key */
-end_comment
-
-begin_decl_stmt
 name|KTEXT
 name|ticket
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The ticket itself */
-end_comment
-
-begin_block
 block|{
 comment|/* Note, the 42 is a temporary hack; it will have to be changed. */
 comment|/* Begin check of ticket length */
@@ -488,7 +432,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

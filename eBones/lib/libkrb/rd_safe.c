@@ -98,6 +98,29 @@ directive|include
 file|"lsb_addr_comp.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|errmsg
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* static storage */
 end_comment
@@ -152,30 +175,49 @@ begin_function
 name|long
 name|krb_rd_safe
 parameter_list|(
+name|in
+parameter_list|,
+name|in_length
+parameter_list|,
+name|key
+parameter_list|,
+name|sender
+parameter_list|,
+name|receiver
+parameter_list|,
+name|m_data
+parameter_list|)
 name|u_char
 modifier|*
 name|in
-parameter_list|,
+decl_stmt|;
+comment|/* pointer to the msg received */
 name|u_long
 name|in_length
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* length of "in" msg */
+name|C_Block
+modifier|*
 name|key
-parameter_list|,
+decl_stmt|;
+comment|/* encryption key for seed and ivec */
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-parameter_list|,
+decl_stmt|;
+comment|/* sender's address */
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-parameter_list|,
+decl_stmt|;
+comment|/* receiver's address -- me */
 name|MSG_DAT
 modifier|*
 name|m_data
-parameter_list|)
+decl_stmt|;
+comment|/* where to put message information */
 block|{
 specifier|register
 name|u_char
@@ -694,7 +736,7 @@ directive|else
 name|quad_cksum
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|q
@@ -707,10 +749,6 @@ name|q
 argument_list|,
 literal|2
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|key
 argument_list|)
 expr_stmt|;

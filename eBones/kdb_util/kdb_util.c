@@ -3,27 +3,47 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Kerberos database manipulation utility. This program allows you to  * dump a kerberos database to an ascii readable file and load this  * file into the database. Read locking of the database is done during a  * dump operation. NO LOCKING is done during a load operation. Loads  * should happen with other processes shutdown.  *  * Written July 9, 1987 by Jeffrey I. Schiller  *  *	from: kdb_util.c,v 4.4 90/01/09 15:57:20 raeburn Exp $  *	$Id: kdb_util.c,v 1.5 1995/08/03 17:15:57 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kdb_util.c,v 1.5 1995/08/03 17:15:57 mark Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: kdb_util.c,v 1.5 1995/08/03 17:15:57 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -46,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<time.h>
 end_include
 
 begin_include
@@ -121,40 +141,107 @@ value|bzero((char *)(foo), sizeof(*(foo)))
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|long
-name|kdb_get_master_key
-argument_list|()
-decl_stmt|,
-name|kdb_verify_master_key
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|progname
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|convert_old_format_db
+parameter_list|(
+name|char
+modifier|*
+name|db_file
+parameter_list|,
+name|FILE
+modifier|*
+name|out
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|convert_new_master_key
+parameter_list|(
+name|char
+modifier|*
+name|db_file
+parameter_list|,
+name|FILE
+modifier|*
+name|out
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|update_ok_file
+parameter_list|(
+name|char
+modifier|*
+name|file_name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_time
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+name|long
+name|timeval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|load_db
+parameter_list|(
+name|char
+modifier|*
+name|db_file
+parameter_list|,
+name|FILE
+modifier|*
+name|input_file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dump_db
+parameter_list|(
+name|char
+modifier|*
+name|db_file
+parameter_list|,
+name|FILE
+modifier|*
+name|output_file
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cv_key
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -647,12 +734,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|clear_secrets
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -711,7 +796,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* cv_key is a procedure which takes a principle and changes its key,    either for a new method of encrypting the keys, or a new master key.    if cv_key is null no transformation of key is done (other than net byte    order). */
@@ -886,7 +971,7 @@ name|a
 operator|->
 name|output_file
 argument_list|,
-literal|"%s %s %d %d %d %d %x %x"
+literal|"%s %s %d %d %d %d %lx %lx"
 argument_list|,
 name|principal
 operator|->
@@ -972,18 +1057,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_decl_stmt
+name|int
 name|dump_db
 argument_list|(
-argument|db_file
+name|db_file
 argument_list|,
-argument|output_file
+name|output_file
 argument_list|,
-argument|cv_key
+name|cv_key
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|db_file
@@ -1046,30 +1129,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|load_db
-argument_list|(
-argument|db_file
-argument_list|,
-argument|input_file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|db_file
+parameter_list|,
+name|input_file
+parameter_list|)
 name|char
 modifier|*
 name|db_file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|input_file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|exp_date_str
@@ -1199,7 +1274,7 @@ name|fscanf
 argument_list|(
 name|input_file
 argument_list|,
-literal|"%s %s %d %d %d %hd %x %x %s %s %s %s\n"
+literal|"%s %s %d %d %d %hd %lx %lx %s %s %s %s\n"
 argument_list|,
 name|aprinc
 operator|.
@@ -1454,32 +1529,24 @@ name|temp_db_file
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|print_time
-argument_list|(
-argument|file
-argument_list|,
-argument|timeval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|timeval
+parameter_list|)
 name|FILE
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|timeval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|tm
@@ -1546,27 +1613,22 @@ name|tm_min
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|update_ok_file
-argument_list|(
-argument|file_name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file_name
+parameter_list|)
 name|char
 modifier|*
 name|file_name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* handle slave locking/failure stuff */
 name|char
@@ -1712,7 +1774,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1972,30 +2034,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|convert_new_master_key
-argument_list|(
-argument|db_file
-argument_list|,
-argument|out
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|db_file
+parameter_list|,
+name|out
+parameter_list|)
 name|char
 modifier|*
 name|db_file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|out
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2020,7 +2074,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Couldn't get master key.\n"
+literal|"get_master_key: Couldn't get master key.\n"
 argument_list|)
 expr_stmt|;
 name|clear_secrets
@@ -2080,7 +2134,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Couldn't get new master key.\n"
+literal|"get_master_key: Couldn't get new master key.\n"
 argument_list|)
 expr_stmt|;
 name|clear_secrets
@@ -2103,7 +2157,7 @@ name|convert_key_new_master
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2317,30 +2371,22 @@ comment|/* a little paranoia ... */
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|convert_old_format_db
-argument_list|(
-argument|db_file
-argument_list|,
-argument|out
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|db_file
+parameter_list|,
+name|out
+parameter_list|)
 name|char
 modifier|*
 name|db_file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|out
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|des_cblock
 name|key_from_db
@@ -2374,7 +2420,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Couldn't get master key.\n"
+literal|"verify_master_key: Couldn't get master key.\n"
 argument_list|)
 expr_stmt|;
 name|clear_secrets
@@ -2422,7 +2468,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"verify_master_key: "
-argument_list|,
 literal|"Kerberos error on master key lookup, %d found.\n"
 argument_list|,
 name|n
@@ -2512,8 +2557,16 @@ directive|ifndef
 name|NOENCRYPTION
 name|des_pcbc_encrypt
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key_from_db
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key_from_db
 argument_list|,
 operator|(
@@ -2583,7 +2636,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n\07\07%verify_master_key: Invalid master key, "
+literal|"\n\07\07verify_master_key: Invalid master key, "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2625,7 +2678,7 @@ name|convert_key_old_db
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|long

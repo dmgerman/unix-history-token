@@ -3,26 +3,28 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * program to initialize the database,  reports error if database file  * already exists.  *  *	from: kdb_init.c,v 4.0 89/01/24 21:50:45 jtkohl Exp $  *	$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: kdb_init.c,v 1.4 1995/07/18 16:37:35 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -97,6 +99,25 @@ block|}
 enum|;
 end_enum
 
+begin_function_decl
+name|int
+name|add_principal
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|instance
+parameter_list|,
+name|enum
+name|ap_op
+name|aap_op
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|debug
@@ -109,10 +130,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|progname
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -129,12 +146,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -326,6 +347,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -334,6 +356,7 @@ name|realm
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp
@@ -515,26 +538,24 @@ begin_comment
 comment|/* values of the routines called by this routine. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|add_principal
-argument_list|(
-argument|name
-argument_list|,
-argument|instance
-argument_list|,
-argument|aap_op
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|instance
+parameter_list|,
+name|aap_op
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|,
-modifier|*
+decl|*
 name|instance
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|enum
@@ -548,26 +569,10 @@ block|{
 name|Principal
 name|principal
 decl_stmt|;
-name|char
-name|datestring
-index|[
-literal|50
-index|]
-decl_stmt|;
-name|char
-name|pw_str
-index|[
-literal|255
-index|]
-decl_stmt|;
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|,
-modifier|*
-name|localtime
-argument_list|()
 decl_stmt|;
 name|C_Block
 name|new_key

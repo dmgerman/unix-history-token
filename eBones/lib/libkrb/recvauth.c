@@ -30,6 +30,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<krb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -75,12 +81,6 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<krb.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -95,6 +95,13 @@ end_comment
 begin_comment
 comment|/*  * If the protocol changes, you will need to change the version string  * and make appropriate changes in krb_sendauth.c  * be sure to support old versions of krb_sendauth!  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * krb_recvauth() reads (and optionally responds to) a message sent  * using krb_sendauth().  The "options" argument is a bit-field of  * selected options (see "sendauth.c" for options description).  * The only option relevant to krb_recvauth() is KOPT_DO_MUTUAL  * (mutual authentication requested).  The "fd" argument supplies  * a file descriptor to read from (and write to, if mutual authenti-  * cation is requested).  *  * Part of the received message will be a Kerberos ticket sent by the  * client; this is read into the "ticket" argument.  The "service" and  * "instance" arguments supply the server's Kerberos name.  If the  * "instance" argument is the string "*", it is treated as a wild card  * and filled in during the krb_rd_req() call (see read_service_key()).  *  * The "faddr" and "laddr" give the sending (client) and receiving  * (local server) network addresses.  ("laddr" may be left NULL unless  * mutual authentication is requested, in which case it must be set.)  *  * The authentication information extracted from the message is returned  * in "kdata".  The "filename" argument indicates the file where the  * server's key can be found.  (It is passed on to krb_rd_req().)  If  * left null, the default "/etc/srvtab" will be used.  *  * If mutual authentication is requested, the session key schedule must  * be computed in order to reply; this schedule is returned in the  * "schedule" argument.  A string containing the application version  * number from the received message is returned in "version", which  * should be large enough to hold a KRB_SENDAUTH_VLEN-character string.  *  * See krb_sendauth() for the format of the received client message.  *  * This routine supports another client format, for backward  * compatibility, consisting of:  *  * Size			Variable		Field  * ----			--------		-----  *  * string		tmp_buf, tkt_len	length of ticket, in  * 						ascii  *  * char			' ' (space char)	separator  *  * tkt_len		ticket->dat		the ticket  *  * This old-style version does not support mutual authentication.  *  * krb_recvauth() first reads the protocol version string from the  * given file descriptor.  If it doesn't match the current protocol  * version (KRB_SENDAUTH_VERS), the old-style format is assumed.  In  * that case, the string of characters up to the first space is read  * and interpreted as the ticket length, then the ticket is read.  *  * If the first string did match KRB_SENDAUTH_VERS, krb_recvauth()  * next reads the application protocol version string.  Then the  * ticket length and ticket itself are read.  *  * The ticket is decrypted and checked by the call to krb_rd_req().  * If no mutual authentication is required, the result of the  * krb_rd_req() call is retured by this routine.  If mutual authenti-  * cation is required, a message in the following format is returned  * on "fd":  *  * Size			Variable		Field  * ----			--------		-----  *  * 4 bytes		tkt_len			length of ticket or -1  *						if error occurred  *  * priv_len		tmp_buf			"private" message created  *						by krb_mk_priv() which  *						contains the incremented  *						checksum sent by the client  *						encrypted in the session  *						key.  (This field is not  *						present in case of error.)  *  * If all goes well, KSUCCESS is returned; otherwise KFAILURE or some  * other error code is returned.  */
@@ -131,48 +138,81 @@ begin_function
 name|int
 name|krb_recvauth
 parameter_list|(
-name|long
 name|options
 parameter_list|,
-name|int
 name|fd
 parameter_list|,
-name|KTEXT
 name|ticket
 parameter_list|,
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|faddr
+parameter_list|,
+name|laddr
+parameter_list|,
+name|kdata
+parameter_list|,
+name|filename
+parameter_list|,
+name|schedule
+parameter_list|,
+name|version
+parameter_list|)
+name|long
+name|options
+decl_stmt|;
+comment|/* bit-pattern of options */
+name|int
+name|fd
+decl_stmt|;
+comment|/* file descr. to read from */
+name|KTEXT
+name|ticket
+decl_stmt|;
+comment|/* storage for client's ticket */
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* service expected */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* inst expected (may be filled in) */
 name|struct
 name|sockaddr_in
 modifier|*
 name|faddr
-parameter_list|,
+decl_stmt|;
+comment|/* address of foreign host on fd */
 name|struct
 name|sockaddr_in
 modifier|*
 name|laddr
-parameter_list|,
+decl_stmt|;
+comment|/* local address */
 name|AUTH_DAT
 modifier|*
 name|kdata
-parameter_list|,
+decl_stmt|;
+comment|/* kerberos data (returned) */
 name|char
 modifier|*
 name|filename
-parameter_list|,
-name|des_key_schedule
+decl_stmt|;
+comment|/* name of file with service keys */
+name|Key_schedule
 name|schedule
-parameter_list|,
+decl_stmt|;
+comment|/* key schedule (return) */
 name|char
 modifier|*
 name|version
-parameter_list|)
+decl_stmt|;
+comment|/* version string (filled in) */
 block|{
 name|int
 name|i
@@ -195,8 +235,6 @@ comment|/* + 1 for the null terminator */
 name|char
 modifier|*
 name|cp
-init|=
-name|NULL
 decl_stmt|;
 name|int
 name|rem
@@ -800,7 +838,7 @@ name|NOENCRYPTION
 name|key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|kdata

@@ -50,22 +50,34 @@ begin_function
 name|int
 name|krb_get_cred
 parameter_list|(
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|c
+parameter_list|)
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Service name */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Instance */
 name|char
 modifier|*
 name|realm
-parameter_list|,
+decl_stmt|;
+comment|/* Auth domain */
 name|CREDENTIALS
 modifier|*
 name|c
-parameter_list|)
+decl_stmt|;
+comment|/* Credentials struct */
 block|{
 name|int
 name|tf_status

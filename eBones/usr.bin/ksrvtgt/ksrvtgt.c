@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -53,6 +59,7 @@ file|<conf.h>
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc

@@ -68,49 +68,85 @@ begin_function
 name|int
 name|krb_create_ticket
 parameter_list|(
-name|KTEXT
 name|tkt
 parameter_list|,
+name|flags
+parameter_list|,
+name|pname
+parameter_list|,
+name|pinstance
+parameter_list|,
+name|prealm
+parameter_list|,
+name|paddress
+parameter_list|,
+name|session
+parameter_list|,
+name|life
+parameter_list|,
+name|time_sec
+parameter_list|,
+name|sname
+parameter_list|,
+name|sinstance
+parameter_list|,
+name|key
+parameter_list|)
+name|KTEXT
+name|tkt
+decl_stmt|;
+comment|/* Gets filled in by the ticket */
 name|unsigned
 name|char
 name|flags
-parameter_list|,
+decl_stmt|;
+comment|/* Various Kerberos flags */
 name|char
 modifier|*
 name|pname
-parameter_list|,
+decl_stmt|;
+comment|/* Principal's name */
 name|char
 modifier|*
 name|pinstance
-parameter_list|,
+decl_stmt|;
+comment|/* Principal's instance */
 name|char
 modifier|*
 name|prealm
-parameter_list|,
+decl_stmt|;
+comment|/* Principal's authentication domain */
 name|long
 name|paddress
-parameter_list|,
+decl_stmt|;
+comment|/* Net address of requesting entity */
 name|char
 modifier|*
 name|session
-parameter_list|,
+decl_stmt|;
+comment|/* Session key inserted in ticket */
 name|short
 name|life
-parameter_list|,
+decl_stmt|;
+comment|/* Lifetime of the ticket */
 name|long
 name|time_sec
-parameter_list|,
+decl_stmt|;
+comment|/* Issue time and date */
 name|char
 modifier|*
 name|sname
-parameter_list|,
+decl_stmt|;
+comment|/* Service Name */
 name|char
 modifier|*
 name|sinstance
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* Instance Name */
+name|C_Block
 name|key
-parameter_list|)
+decl_stmt|;
+comment|/* Service's secret key */
 block|{
 name|Key_schedule
 name|key_s
@@ -414,7 +450,7 @@ name|NOENCRYPTION
 name|key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key
@@ -425,7 +461,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|tkt
@@ -433,7 +469,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|tkt
@@ -450,7 +486,7 @@ argument_list|,
 name|key_s
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key

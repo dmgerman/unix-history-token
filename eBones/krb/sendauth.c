@@ -84,6 +84,22 @@ begin_comment
 comment|/*  * If the protocol changes, you will need to change the version string  * and make appropriate changes in krb_recvauth.c  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|krb_get_phost
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * This file contains two routines: krb_sendauth() and krb_sendsrv().  *  * krb_sendauth() transmits a ticket over a file descriptor for a  * desired service, instance, and realm, doing mutual authentication  * with the server if desired.  *  * krb_sendsvc() sends a service name to a remote knetd server.  */
 end_comment
@@ -100,55 +116,138 @@ begin_function
 name|int
 name|krb_sendauth
 parameter_list|(
-name|long
 name|options
 parameter_list|,
-name|int
 name|fd
 parameter_list|,
-name|KTEXT
 name|ticket
 parameter_list|,
+name|service
+parameter_list|,
+name|inst
+parameter_list|,
+name|realm
+parameter_list|,
+name|checksum
+parameter_list|,
+name|msg_data
+parameter_list|,
+name|cred
+parameter_list|,
+name|schedule
+parameter_list|,
+name|laddr
+parameter_list|,
+name|faddr
+parameter_list|,
+name|version
+parameter_list|)
+name|long
+name|options
+decl_stmt|;
+comment|/* bit-pattern of options */
+name|int
+name|fd
+decl_stmt|;
+comment|/* file descriptor to write onto */
+name|KTEXT
+name|ticket
+decl_stmt|;
+comment|/* where to put ticket (return); or 				  * supplied in case of KOPT_DONT_MK_REQ */
 name|char
 modifier|*
 name|service
-parameter_list|,
-name|char
-modifier|*
+decl_stmt|,
+decl|*
 name|inst
-parameter_list|,
-name|char
+decl_stmt|,
 modifier|*
 name|realm
-parameter_list|,
+decl_stmt|;
+end_function
+
+begin_comment
+comment|/* service name, instance, realm */
+end_comment
+
+begin_decl_stmt
 name|u_long
 name|checksum
-parameter_list|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* checksum to include in request */
+end_comment
+
+begin_decl_stmt
 name|MSG_DAT
 modifier|*
 name|msg_data
-parameter_list|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mutual auth MSG_DAT (return) */
+end_comment
+
+begin_decl_stmt
 name|CREDENTIALS
 modifier|*
 name|cred
-parameter_list|,
-name|des_key_schedule
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* credentials (return) */
+end_comment
+
+begin_decl_stmt
+name|Key_schedule
 name|schedule
-parameter_list|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* key schedule (return) */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|laddr
-parameter_list|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* local address */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|faddr
-parameter_list|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address of foreign host on fd */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|version
-parameter_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* version string */
+end_comment
+
+begin_block
 block|{
 name|int
 name|rem
@@ -643,7 +742,7 @@ name|NOENCRYPTION
 name|key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|cred
@@ -745,7 +844,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -761,13 +860,17 @@ begin_function
 name|int
 name|krb_sendsvc
 parameter_list|(
-name|int
 name|fd
 parameter_list|,
+name|service
+parameter_list|)
+name|int
+name|fd
+decl_stmt|;
 name|char
 modifier|*
 name|service
-parameter_list|)
+decl_stmt|;
 block|{
 comment|/* write the service name length and then the service name to        the fd */
 name|long

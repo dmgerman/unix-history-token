@@ -50,33 +50,57 @@ begin_function
 name|int
 name|save_credentials
 parameter_list|(
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|session
+parameter_list|,
+name|lifetime
+parameter_list|,
+name|kvno
+parameter_list|,
+name|ticket
+parameter_list|,
+name|issue_date
+parameter_list|)
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Service name */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Instance */
 name|char
 modifier|*
 name|realm
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* Auth domain */
+name|C_Block
 name|session
-parameter_list|,
+decl_stmt|;
+comment|/* Session key */
 name|int
 name|lifetime
-parameter_list|,
+decl_stmt|;
+comment|/* Lifetime */
 name|int
 name|kvno
-parameter_list|,
+decl_stmt|;
+comment|/* Key version number */
 name|KTEXT
 name|ticket
-parameter_list|,
+decl_stmt|;
+comment|/* The ticket itself */
 name|long
 name|issue_date
-parameter_list|)
+decl_stmt|;
+comment|/* The issue time */
 block|{
 name|int
 name|tf_status

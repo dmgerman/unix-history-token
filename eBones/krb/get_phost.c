@@ -39,12 +39,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -54,11 +48,13 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<krb.h>
-end_include
+begin_function_decl
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * This routine takes an alias for a host name and returns the first  * field, lower case, of its domain name.  For example, if "menel" is  * an alias for host officially named "menelaus" (in /etc/hosts), for  * the host whose official name is "MENELAUS.MIT.EDU", the name "menelaus"  * is returned.  *  * This is done for historical Athena reasons: the Kerberos name of  * rcmd servers (rlogin, rsh, rcp) is of the form "rcmd.host@realm"  * where "host"is the lowercase for of the host name ("menelaus").  * This should go away: the instance should be the domain name  * (MENELAUS.MIT.EDU).  But for now we need this routine...  *  * A pointer to the name is returned, if found, otherwise a pointer  * to the original "alias" argument is returned.  */
@@ -69,10 +65,12 @@ name|char
 modifier|*
 name|krb_get_phost
 parameter_list|(
+name|alias
+parameter_list|)
 name|char
 modifier|*
 name|alias
-parameter_list|)
+decl_stmt|;
 block|{
 name|struct
 name|hostent

@@ -3,32 +3,58 @@ begin_comment
 comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id: kerberos.c,v 1.4 1995/07/18 16:37:51 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kerberos.c,v 1.4 1995/07/18 16:37:51 mark Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: kerberos.c,v 1.4 1995/07/18 16:37:51 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -47,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -127,12 +159,116 @@ directive|include
 file|<kdc.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|void
+name|cr_err_reply
+parameter_list|(
+name|KTEXT
+name|pkt
+parameter_list|,
+name|char
+modifier|*
+name|pname
+parameter_list|,
+name|char
+modifier|*
+name|pinst
+parameter_list|,
+name|char
+modifier|*
+name|prealm
+parameter_list|,
+name|u_long
+name|time_ws
+parameter_list|,
+name|u_long
+name|e
+parameter_list|,
+name|char
+modifier|*
+name|e_string
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kerb_err_reply
+parameter_list|(
+name|struct
+name|sockaddr_in
+modifier|*
+name|client
+parameter_list|,
+name|KTEXT
+name|pkt
+parameter_list|,
+name|long
+name|err
+parameter_list|,
+name|char
+modifier|*
+name|string
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setup_disc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kerberos
+parameter_list|(
+name|struct
+name|sockaddr_in
+modifier|*
+name|client
+parameter_list|,
+name|KTEXT
+name|pkt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+name|check_princ
+parameter_list|(
+name|char
+modifier|*
+name|p_name
+parameter_list|,
+name|char
+modifier|*
+name|instance
+parameter_list|,
+name|unsigned
+name|lifetime
+parameter_list|,
+name|Principal
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|set_tgtkey
+parameter_list|(
+name|char
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -215,20 +351,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|C_Block
-name|user_key
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|C_Block
-name|service_key
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|u_char
 name|master_key_version
 decl_stmt|;
@@ -240,16 +362,6 @@ name|char
 name|k_instance
 index|[
 name|INST_SZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|log_text
-index|[
-literal|128
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -369,13 +481,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_char
-name|req_no_req
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|u_long
 name|req_time_ws
 decl_stmt|;
@@ -467,20 +572,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|long
-name|n_user
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|n_server
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
 name|max_age
 init|=
 operator|-
@@ -546,6 +637,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -595,17 +687,8 @@ init|=
 operator|&
 name|pkt_st
 decl_stmt|;
-name|Principal
-modifier|*
-name|p
-decl_stmt|;
 name|int
-name|more
-decl_stmt|,
 name|kerror
-decl_stmt|;
-name|C_Block
-name|key
 decl_stmt|;
 name|int
 name|c
@@ -926,7 +1009,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"\tMaximum database age: %d seconds\n"
+literal|"\tMaximum database age: %ld seconds\n"
 argument_list|,
 name|max_age
 argument_list|)
@@ -940,7 +1023,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\tSleep for %d seconds on error\n"
+literal|"\tSleep for %ld seconds on error\n"
 argument_list|,
 name|pause_int
 argument_list|)
@@ -1146,10 +1229,12 @@ block|}
 comment|/* do all the database and cache inits */
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|kerb_init
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -1545,30 +1630,22 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|kerberos
-argument_list|(
-argument|client
-argument_list|,
-argument|pkt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|client
+parameter_list|,
+name|pkt
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|client
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|KTEXT
 name|pkt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|KTEXT_ST
@@ -1636,13 +1713,6 @@ decl_stmt|;
 specifier|static
 name|u_char
 name|k_flags
-decl_stmt|;
-name|char
-modifier|*
-name|p_name
-decl_stmt|,
-modifier|*
-name|instance
 decl_stmt|;
 name|u_long
 name|lifetime
@@ -1777,10 +1847,6 @@ name|AUTH_MSG_KDC_REQUEST
 case|:
 block|{
 name|u_long
-name|time_ws
-decl_stmt|;
-comment|/* Workstation time */
-name|u_long
 name|req_life
 decl_stmt|;
 comment|/* Requested liftime */
@@ -1794,10 +1860,6 @@ modifier|*
 name|instance
 decl_stmt|;
 comment|/* Service instance */
-name|int
-name|kerno
-decl_stmt|;
-comment|/* Kerberos error number */
 name|n_auth_req
 operator|++
 expr_stmt|;
@@ -1938,6 +2000,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|check_princ
@@ -1951,6 +2014,7 @@ argument_list|,
 operator|&
 name|a_name_data
 argument_list|)
+operator|)
 condition|)
 block|{
 name|kerb_err_reply
@@ -2002,6 +2066,7 @@ expr_stmt|;
 comment|/* this does all the checking */
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|check_princ
@@ -2015,6 +2080,7 @@ argument_list|,
 operator|&
 name|s_name_data
 argument_list|)
+operator|)
 condition|)
 block|{
 name|kerb_err_reply
@@ -2878,6 +2944,8 @@ operator|->
 name|prealm
 argument_list|,
 name|client_host
+operator|.
+name|s_addr
 argument_list|,
 name|session_key
 argument_list|,
@@ -3101,18 +3169,16 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * setup_disc  *  * disconnect all descriptors, remove ourself from the process  * group that spawned us.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setup_disc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|s
@@ -3217,55 +3283,40 @@ argument_list|(
 literal|"/tmp"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * kerb_er_reply creates an error reply packet and sends it to the  * client.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kerb_err_reply
-argument_list|(
-argument|client
-argument_list|,
-argument|pkt
-argument_list|,
-argument|err
-argument_list|,
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|client
+parameter_list|,
+name|pkt
+parameter_list|,
+name|err
+parameter_list|,
+name|string
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|client
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|KTEXT
 name|pkt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|err
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|KTEXT_ST
@@ -3340,7 +3391,7 @@ name|S_AD_SZ
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Make sure that database isn't stale.  *  * Exit if it is; we don't want to tell lies.  */
@@ -3424,47 +3475,33 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|check_princ
-argument_list|(
-argument|p_name
-argument_list|,
-argument|instance
-argument_list|,
-argument|lifetime
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p_name
+parameter_list|,
+name|instance
+parameter_list|,
+name|lifetime
+parameter_list|,
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|p_name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|instance
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|lifetime
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Principal
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|int
@@ -3473,9 +3510,6 @@ decl_stmt|;
 specifier|static
 name|int
 name|more
-decl_stmt|;
-name|long
-name|trans
 decl_stmt|;
 name|n
 operator|=
@@ -3719,31 +3753,23 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Set the key for krb_rd_req so we can check tgt */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|set_tgtkey
-argument_list|(
-argument|r
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|r
+parameter_list|)
 name|char
 modifier|*
 name|r
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Realm for desired key */
-end_comment
-
-begin_block
 block|{
 name|int
 name|n
@@ -3883,7 +3909,7 @@ name|KSUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -3927,7 +3953,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Kerberos will wait %d seconds before dying so as not to loop init"
+literal|"Kerberos will wait %ld seconds before dying so as not to loop init"
 argument_list|,
 name|pause_int
 argument_list|)

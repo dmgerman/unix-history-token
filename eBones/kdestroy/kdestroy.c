@@ -3,26 +3,28 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This program causes Kerberos tickets to be destroyed.  * Options are:  *  *   -q[uiet]	- no bell even if tickets not destroyed  *   -f[orce]	- no message printed at all  *  *	from: kdestroy.c,v 4.5 88/03/18 15:16:02 steiner Exp $  *	$Id: kdestroy.c,v 1.3 1995/07/18 16:37:44 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kdestroy.c,v 1.3 1995/07/18 16:37:44 mark Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: kdestroy.c,v 1.3 1995/07/18 16:37:44 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -63,10 +65,11 @@ name|pname
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|usage
-argument_list|()
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -76,26 +79,31 @@ literal|"Usage: %s [-f] [-q]\n"
 argument_list|,
 name|pname
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-expr|main
-operator|(
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|main
+parameter_list|(
 name|argc
-operator|,
+parameter_list|,
 name|argv
-operator|)
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|argv
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|fflag
@@ -293,7 +301,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

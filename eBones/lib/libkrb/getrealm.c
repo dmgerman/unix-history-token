@@ -100,10 +100,12 @@ name|char
 modifier|*
 name|krb_realmofhost
 parameter_list|(
+name|host
+parameter_list|)
 name|char
 modifier|*
 name|host
-parameter_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*

@@ -37,13 +37,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -94,21 +94,32 @@ begin_function
 name|int
 name|krb_rd_err
 parameter_list|(
+name|in
+parameter_list|,
+name|in_length
+parameter_list|,
+name|code
+parameter_list|,
+name|m_data
+parameter_list|)
 name|u_char
 modifier|*
 name|in
-parameter_list|,
+decl_stmt|;
+comment|/* pointer to the msg received */
 name|u_long
 name|in_length
-parameter_list|,
+decl_stmt|;
+comment|/* of in msg */
 name|long
 modifier|*
 name|code
-parameter_list|,
+decl_stmt|;
+comment|/* received error code */
 name|MSG_DAT
 modifier|*
 name|m_data
-parameter_list|)
+decl_stmt|;
 block|{
 specifier|register
 name|u_char

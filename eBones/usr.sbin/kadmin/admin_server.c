@@ -3,39 +3,28 @@ begin_comment
 comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Top-level loop of the kerberos Administration server  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
 
-begin_endif
-unit|static char rcsid_admin_server_c[] = "Id: admin_server.c,v 4.8 90/01/02 13:50:38 jtkohl Exp ";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id"
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
+unit|static char rcsid_admin_server_c[] = "Id: admin_server.c,v 4.8 90/01/02 13:50:38 jtkohl Exp "; static const char rcsid[] = 	"$Id";
 endif|#
 directive|endif
 endif|lint
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_comment
@@ -46,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -103,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<com_err.h>
 end_include
 
 begin_include
@@ -190,11 +197,83 @@ name|server_parm
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|cleanexit
+parameter_list|(
+name|int
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|process_client
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+name|who
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kill_children
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|clear_secrets
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|byebye
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|close_syslog
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kadm_listen
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* ** Main does the logical thing, it sets up the database and RPC interface, **  as well as handling the creation and maintenance of the syslog file... */
 end_comment
 
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -337,12 +416,14 @@ case|:
 comment|/* put code to deal with alt database place */
 if|if
 condition|(
+operator|(
 name|errval
 operator|=
 name|kerb_db_set_name
 argument_list|(
 name|optarg
 argument_list|)
+operator|)
 condition|)
 block|{
 name|fprintf
@@ -574,12 +655,10 @@ begin_comment
 comment|/* close the system log file */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|close_syslog
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|log
 argument_list|(
@@ -587,18 +666,13 @@ literal|"Shutting down admin server"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|byebye
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* say goodnight gracie */
-end_comment
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -606,12 +680,13 @@ literal|"Admin Server (kadm server) has completed operation.\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|clear_secrets
-argument_list|()
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -630,7 +705,7 @@ operator|.
 name|master_key
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -648,16 +723,15 @@ operator|.
 name|master_key_schedule
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|server_parm
 operator|.
 name|master_key_version
 operator|=
 literal|0L
-block|;
-return|return;
+expr_stmt|;
 block|}
-end_expr_stmt
+end_function
 
 begin_expr_stmt
 specifier|static
@@ -719,12 +793,10 @@ begin_comment
 comment|/* kadm_listen listen on the admin servers port for a request */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_listen
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -750,13 +822,6 @@ name|peer
 decl_stmt|;
 name|int
 name|addrlen
-decl_stmt|;
-name|void
-name|process_client
-argument_list|()
-decl_stmt|,
-name|kill_children
-argument_list|()
 decl_stmt|;
 name|int
 name|pid
@@ -1124,10 +1189,12 @@ name|DEBUG
 comment|/* if you want a sep daemon for each server */
 if|if
 condition|(
+operator|(
 name|pid
 operator|=
 name|fork
 argument_list|()
+operator|)
 condition|)
 block|{
 comment|/* parent */
@@ -1269,8 +1336,14 @@ return|;
 block|}
 block|}
 comment|/*NOTREACHED*/
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Shut -Wall up - markm */
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2220,14 +2293,15 @@ directive|ifndef
 name|DEBUG
 end_ifndef
 
-begin_macro
+begin_function
+name|void
 name|cleanexit
-argument_list|(
-argument|val
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|val
+parameter_list|)
+name|int
+name|val
+decl_stmt|;
 block|{
 name|kerb_fini
 argument_list|()
@@ -2241,7 +2315,7 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

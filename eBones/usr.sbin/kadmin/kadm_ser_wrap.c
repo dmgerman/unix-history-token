@@ -3,26 +3,28 @@ begin_comment
 comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Kerberos administration server-side support functions  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid_module_c
-index|[]
-init|=
-literal|"BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/kadm_ser_wrap.c,v 4.4 89/09/26 09:29:36 jtkohl Exp "
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid_module_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/kadm_ser_wrap.c,v 4.4 89/09/26 09:29:36 jtkohl Exp ";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_comment
@@ -32,7 +34,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -87,33 +101,22 @@ begin_comment
 comment|/* kadm_ser_init set up the server_parm structure */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_ser_init
-argument_list|(
-argument|inter
-argument_list|,
-argument|realm
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inter
+parameter_list|,
+name|realm
+parameter_list|)
 name|int
 name|inter
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* interactive or from file */
-end_comment
-
-begin_decl_stmt
 name|char
 name|realm
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|servent
@@ -131,15 +134,9 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|init_kadm_err_tbl
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|init_krb_err_tbl
 argument_list|()
 expr_stmt|;
@@ -158,9 +155,6 @@ condition|)
 return|return
 name|KADM_NO_HOSTNAME
 return|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|server_parm
@@ -170,9 +164,6 @@ argument_list|,
 name|PWSERV_NAME
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|server_parm
@@ -182,9 +173,6 @@ argument_list|,
 name|KRB_MASTER
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|server_parm
@@ -338,7 +326,7 @@ return|return
 name|KADM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -468,31 +456,23 @@ begin_comment
 comment|/* kadm_ser_in unwrap the data stored in dat, process, and return it. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kadm_ser_in
-argument_list|(
-argument|dat
-argument_list|,
-argument|dat_len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dat
+parameter_list|,
+name|dat_len
+parameter_list|)
 name|u_char
 modifier|*
 modifier|*
 name|dat
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|dat_len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|u_char
 modifier|*
@@ -655,6 +635,7 @@ expr_stmt|;
 comment|/* service key should be set before here */
 if|if
 condition|(
+operator|(
 name|retc
 operator|=
 name|krb_rd_req
@@ -687,6 +668,7 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 name|errpkt
@@ -734,10 +716,14 @@ name|ncksum
 operator|=
 name|quad_cksum
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|in_st
 argument_list|,
 operator|(
-name|u_long
+name|des_cblock
 operator|*
 operator|)
 literal|0
@@ -749,6 +735,10 @@ name|r_len
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|ad
 operator|.
 name|session
@@ -799,6 +789,10 @@ else|#
 directive|else
 name|des_key_sched
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|ad
 operator|.
 name|session
@@ -810,6 +804,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|retc
 operator|=
 operator|(
@@ -840,6 +835,7 @@ argument_list|,
 operator|&
 name|msg_st
 argument_list|)
+operator|)
 condition|)
 block|{
 name|clr_cli_secrets
@@ -1233,7 +1229,7 @@ return|return
 name|KADM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

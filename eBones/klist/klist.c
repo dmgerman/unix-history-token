@@ -3,32 +3,46 @@ begin_comment
 comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Lists your current Kerberos tickets.  * Written by Bill Sommerfeld, MIT Project Athena.  *  *	from: klist.c,v 4.15 89/08/30 11:19:16 jtkohl Exp $  *	$Id: klist.c,v 1.3 1995/07/18 16:37:59 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: klist.c,v 1.3 1995/07/18 16:37:59 mark Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: klist.c,v 1.3 1995/07/18 16:37:59 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -55,11 +69,37 @@ directive|include
 file|<prot.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_function_decl
+name|int
+name|ok_getst
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
 name|char
 modifier|*
-name|tkt_string
-parameter_list|()
+name|s
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|display_srvtab
+parameter_list|(
+name|char
+modifier|*
+name|file
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -67,7 +107,37 @@ begin_function_decl
 name|char
 modifier|*
 name|short_date
-parameter_list|()
+parameter_list|(
+name|long
+modifier|*
+name|dp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|display_tktfile
+parameter_list|(
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|tgt_test
+parameter_list|,
+name|int
+name|long_form
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -81,14 +151,6 @@ end_decl_stmt
 begin_comment
 comment|/* What was I invoked as?? */
 end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -104,6 +166,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -322,33 +385,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|display_tktfile
-argument_list|(
-argument|file
-argument_list|,
-argument|tgt_test
-argument_list|,
-argument|long_form
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|,
+name|tgt_test
+parameter_list|,
+name|long_form
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|tgt_test
 decl_stmt|,
 name|long_form
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|pname
@@ -430,6 +485,7 @@ comment|/*      * Since krb_get_tf_realm will return a ticket_file error,      *
 comment|/* Open ticket file */
 if|if
 condition|(
+operator|(
 name|k_errno
 operator|=
 name|tf_init
@@ -438,6 +494,7 @@ name|file
 argument_list|,
 name|R_TKT_FIL
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -517,6 +574,7 @@ block|}
 comment|/* Open ticket file */
 if|if
 condition|(
+operator|(
 name|k_errno
 operator|=
 name|tf_init
@@ -525,6 +583,7 @@ name|file
 argument_list|,
 name|R_TKT_FIL
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -892,7 +951,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -941,12 +1000,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -963,23 +1020,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|display_srvtab
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|stab
@@ -1230,7 +1282,7 @@ name|stab
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* adapted from getst() in librkb */
@@ -1240,32 +1292,27 @@ begin_comment
 comment|/*  * ok_getst() takes a file descriptor, a string and a count.  It reads  * from the file until either it has read "count" characters, or until  * it reads a null byte.  When finished, what has been read exists in  * the given string "s".  If "count" characters were actually read, the  * last is changed to a null, so the returned string is always null-  * terminated.  ok_getst() returns the number of characters read, including  * the null terminator.  *  * If there is a read error, it returns -1 (like the read(2) system call)  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ok_getst
-argument_list|(
-argument|fd
-argument_list|,
-argument|s
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|n
+decl_stmt|;
 block|{
 specifier|register
 name|count
@@ -1335,7 +1382,7 @@ name|count
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

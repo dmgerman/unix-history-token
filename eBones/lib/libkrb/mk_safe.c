@@ -172,30 +172,49 @@ begin_function
 name|long
 name|krb_mk_safe
 parameter_list|(
+name|in
+parameter_list|,
+name|out
+parameter_list|,
+name|length
+parameter_list|,
+name|key
+parameter_list|,
+name|sender
+parameter_list|,
+name|receiver
+parameter_list|)
 name|u_char
 modifier|*
 name|in
-parameter_list|,
+decl_stmt|;
+comment|/* application data */
 name|u_char
 modifier|*
 name|out
-parameter_list|,
+decl_stmt|;
+comment|/* 				 * put msg here, leave room for header! 				 * breaks if in and out (header stuff) 				 * overlap 				 */
 name|u_long
 name|length
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* of in data */
+name|C_Block
+modifier|*
 name|key
-parameter_list|,
+decl_stmt|;
+comment|/* encryption key for seed and ivec */
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-parameter_list|,
+decl_stmt|;
+comment|/* sender address */
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-parameter_list|)
+decl_stmt|;
+comment|/* receiver address */
 block|{
 specifier|register
 name|u_char
@@ -515,7 +534,7 @@ operator|=
 name|quad_cksum
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|q
@@ -528,10 +547,6 @@ name|q
 argument_list|,
 literal|2
 argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
 name|key
 argument_list|)
 expr_stmt|;

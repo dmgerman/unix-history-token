@@ -3,39 +3,28 @@ begin_comment
 comment|/*  * Copyright 1989 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * list and update contents of srvtab files  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
 
-begin_endif
-unit|static char rcsid_ksrvutil_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/ksrvutil.c,v 4.1 89/09/26 09:33:49 jtkohl Exp ";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: ksrvutil.c,v 1.1 1995/07/18 16:40:11 mark Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
+unit|static char rcsid_ksrvutil_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/ksrvutil.c,v 4.1 89/09/26 09:33:49 jtkohl Exp "; static const char rcsid[] = 	"$Id: ksrvutil.c,v 1.1 1995/07/18 16:40:11 mark Exp $";
 endif|#
 directive|endif
 endif|lint
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_comment
@@ -77,6 +66,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -234,25 +235,65 @@ name|PRINC_FORMAT
 value|"%s"
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
-specifier|extern
 name|void
-name|krb_set_tkt_string
-parameter_list|()
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|leave
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|int
+name|x
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|get_key_from_password
+parameter_list|(
+name|des_cblock
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_name
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|inst
+parameter_list|,
+name|char
+modifier|*
+name|realm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_key
+parameter_list|(
+name|des_cblock
+name|key
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -260,7 +301,37 @@ begin_function_decl
 name|unsigned
 name|short
 name|get_mode
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|get_svc_new_key
+parameter_list|(
+name|des_cblock
+name|new_key
+parameter_list|,
+name|char
+modifier|*
+name|sname
+parameter_list|,
+name|char
+modifier|*
+name|sinst
+parameter_list|,
+name|char
+modifier|*
+name|srealm
+parameter_list|,
+name|char
+modifier|*
+name|keyfile
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -310,9 +381,6 @@ comment|/* for copying keyfiles */
 name|int
 name|try_again
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -610,25 +678,16 @@ name|int
 name|size
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|prompt
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 name|buf
@@ -776,9 +835,6 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s (y,n) [y] "
@@ -866,9 +922,6 @@ operator|)
 return|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Please enter 'y' or 'n': "
@@ -1028,9 +1081,6 @@ name|des_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fsync
 argument_list|(
 name|fd
@@ -1059,9 +1109,6 @@ name|unsigned
 name|short
 name|mode
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1109,6 +1156,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1265,25 +1313,6 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* have we printed the first item? */
-name|int
-name|get_svc_new_key
-parameter_list|()
-function_decl|;
-name|void
-name|get_key_from_password
-parameter_list|()
-function_decl|;
-name|void
-name|print_key
-parameter_list|()
-function_decl|;
-name|void
-name|print_name
-parameter_list|()
-function_decl|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1298,9 +1327,6 @@ name|sname
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1315,9 +1341,6 @@ name|sinst
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1332,9 +1355,6 @@ name|srealm
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1349,9 +1369,6 @@ name|change_tkt
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1366,9 +1383,6 @@ name|keyfile
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1383,9 +1397,6 @@ name|work_keyfile
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1400,9 +1411,6 @@ name|backup_keyfile
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -1417,9 +1425,6 @@ name|local_realm
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|change_tkt
@@ -1447,9 +1452,6 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|local_realm
@@ -1632,9 +1634,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|keyfile
@@ -1667,9 +1666,6 @@ index|[
 literal|0
 index|]
 condition|)
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|keyfile
@@ -1677,9 +1673,6 @@ argument_list|,
 name|KEYFILE
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|work_keyfile
@@ -1687,9 +1680,6 @@ argument_list|,
 name|keyfile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|backup_keyfile
@@ -1704,9 +1694,6 @@ operator|||
 name|add
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|strcat
 argument_list|(
 name|work_keyfile
@@ -1714,9 +1701,6 @@ argument_list|,
 literal|".work"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcat
 argument_list|(
 name|backup_keyfile
@@ -1965,17 +1949,11 @@ operator|!
 name|first_printed
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|VNO_HEADER
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|PAD
@@ -1986,26 +1964,17 @@ condition|(
 name|key
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|KEY_HEADER
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|PAD
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|PRINC_HEADER
@@ -2016,9 +1985,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|VNO_FORMAT
@@ -2026,9 +1992,6 @@ argument_list|,
 name|key_vno
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|PAD
@@ -2044,9 +2007,6 @@ argument_list|(
 name|old_key
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 name|PAD
@@ -2062,9 +2022,6 @@ argument_list|,
 name|srealm
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -2077,9 +2034,6 @@ condition|(
 name|change
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\nPrincipal: "
@@ -2094,9 +2048,6 @@ argument_list|,
 name|srealm
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"; version %d\n"
@@ -2133,9 +2084,6 @@ if|if
 condition|(
 name|change_this_key
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Changing to version %d.\n"
@@ -2150,9 +2098,6 @@ if|if
 condition|(
 name|change
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Not changing this key.\n"
@@ -2190,9 +2135,6 @@ operator|++
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|bcopy
 argument_list|(
 name|old_key
@@ -2224,9 +2166,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-operator|(
-name|void
-operator|)
 name|bcopy
 argument_list|(
 name|old_key
@@ -2268,9 +2207,6 @@ operator|&&
 name|change_this_key
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Old key: "
@@ -2281,9 +2217,6 @@ argument_list|(
 name|old_key
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"; new key: "
@@ -2294,9 +2227,6 @@ argument_list|(
 name|new_key
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -2322,17 +2252,11 @@ operator|==
 name|KADM_SUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Key changed.\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dest_tkt
 argument_list|()
 expr_stmt|;
@@ -2351,9 +2275,6 @@ argument_list|,
 literal|" attempting to change password."
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dest_tkt
 argument_list|()
 expr_stmt|;
@@ -2420,17 +2341,11 @@ name|des_cblock
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fsync
 argument_list|(
 name|work_keyfile_fd
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2509,9 +2424,6 @@ name|databuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|sname
@@ -2538,9 +2450,6 @@ name|databuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|sinst
@@ -2567,9 +2476,6 @@ name|databuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|srealm
@@ -2611,9 +2517,6 @@ index|[
 literal|0
 index|]
 condition|)
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|srealm
@@ -2621,9 +2524,6 @@ argument_list|,
 name|local_realm
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"New principal: "
@@ -2638,9 +2538,6 @@ argument_list|,
 name|srealm
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"; version %d\n"
@@ -2668,9 +2565,6 @@ condition|(
 name|key
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Key: "
@@ -2681,9 +2575,6 @@ argument_list|(
 name|new_key
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -2712,9 +2603,6 @@ argument_list|,
 name|new_key
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Key successfully added.\n"
@@ -2805,9 +2693,6 @@ name|keyfile
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|chmod
 argument_list|(
 name|backup_keyfile
@@ -2815,9 +2700,6 @@ argument_list|,
 name|keyfile_mode
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|chmod
 argument_list|(
 name|keyfile
@@ -2825,9 +2707,6 @@ argument_list|,
 name|keyfile_mode
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"Old keyfile in %s.\n"
@@ -2870,9 +2749,6 @@ condition|;
 name|i
 operator|++
 control|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%02x"
@@ -2883,9 +2759,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" "
@@ -2904,9 +2777,6 @@ condition|;
 name|i
 operator|++
 control|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%02x"
@@ -2943,9 +2813,6 @@ modifier|*
 name|realm
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s%s%s%s%s"
@@ -3065,9 +2932,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|NOENCRYPTION
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -3096,9 +2960,6 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NOENCRYPTION */
-operator|(
-name|void
-operator|)
 name|des_random_key
 argument_list|(
 name|new_key
@@ -3166,9 +3027,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NOENCRYPTION
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -3197,22 +3055,20 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NOENCRYPTION */
-operator|(
-name|void
-operator|)
 name|des_string_to_key
 argument_list|(
 name|password
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|key
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* NOENCRYPTION */
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
 operator|(
@@ -3230,16 +3086,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|usage
-argument_list|()
-end_macro
-
-begin_block
-block|{
-operator|(
+begin_function
 name|void
-operator|)
+name|usage
+parameter_list|()
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -3247,9 +3098,6 @@ argument_list|,
 literal|"Usage: ksrvutil [-f keyfile] [-i] [-k] "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3257,9 +3105,6 @@ argument_list|,
 literal|"{list | change | add}\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3267,9 +3112,6 @@ argument_list|,
 literal|"   -i causes the program to ask for "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3277,9 +3119,6 @@ argument_list|,
 literal|"confirmation before changing keys.\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3287,9 +3126,6 @@ argument_list|,
 literal|"   -k causes the key to printed for list or "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3303,7 +3139,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -3325,9 +3161,6 @@ if|if
 condition|(
 name|str
 condition|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3337,9 +3170,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dest_tkt
 argument_list|()
 expr_stmt|;

@@ -56,41 +56,71 @@ begin_function
 name|int
 name|create_ciph
 parameter_list|(
-name|KTEXT
 name|c
 parameter_list|,
-name|des_cblock
 name|session
 parameter_list|,
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|life
+parameter_list|,
+name|kvno
+parameter_list|,
+name|tkt
+parameter_list|,
+name|kdc_time
+parameter_list|,
+name|key
+parameter_list|)
+name|KTEXT
+name|c
+decl_stmt|;
+comment|/* Text block to hold ciphertext */
+name|C_Block
+name|session
+decl_stmt|;
+comment|/* Session key to send to user */
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Service name on ticket */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Instance name on ticket */
 name|char
 modifier|*
 name|realm
-parameter_list|,
+decl_stmt|;
+comment|/* Realm of this KDC */
 name|unsigned
 name|long
 name|life
-parameter_list|,
+decl_stmt|;
+comment|/* Lifetime of the ticket */
 name|int
 name|kvno
-parameter_list|,
+decl_stmt|;
+comment|/* Key version number for service */
 name|KTEXT
 name|tkt
-parameter_list|,
+decl_stmt|;
+comment|/* The ticket for the service */
 name|unsigned
 name|long
 name|kdc_time
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* KDC time */
+name|C_Block
 name|key
-parameter_list|)
+decl_stmt|;
+comment|/* Key to encrypt ciphertext with */
 block|{
 name|char
 modifier|*
@@ -304,7 +334,7 @@ name|NOENCRYPTION
 name|key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key
@@ -315,7 +345,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|c
@@ -323,7 +353,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|c
@@ -340,7 +370,7 @@ argument_list|,
 name|key_s
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key

@@ -39,13 +39,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -95,6 +95,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * in_tkt() is used to initialize the ticket store.  It creates the  * file to contain the tickets and writes the given user's name "pname"  * and instance "pinst" in the file.  in_tkt() returns KSUCCESS on  * success, or KFAILURE if something goes wrong.  */
 end_comment
@@ -103,14 +110,18 @@ begin_function
 name|int
 name|in_tkt
 parameter_list|(
+name|pname
+parameter_list|,
+name|pinst
+parameter_list|)
 name|char
 modifier|*
 name|pname
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 name|pinst
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|tktfile

@@ -45,13 +45,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<strings.h>
 end_include
 
 begin_comment
@@ -66,29 +66,47 @@ begin_function
 name|int
 name|read_service_key
 parameter_list|(
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|kvno
+parameter_list|,
+name|file
+parameter_list|,
+name|key
+parameter_list|)
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Service Name */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Instance name or "*" */
 name|char
 modifier|*
 name|realm
-parameter_list|,
+decl_stmt|;
+comment|/* Realm */
 name|int
 name|kvno
-parameter_list|,
+decl_stmt|;
+comment|/* Key version number */
 name|char
 modifier|*
 name|file
-parameter_list|,
+decl_stmt|;
+comment|/* Filename */
 name|char
 modifier|*
 name|key
-parameter_list|)
+decl_stmt|;
+comment|/* Pointer to key to be filled in */
 block|{
 name|char
 name|serv

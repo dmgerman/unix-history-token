@@ -71,10 +71,12 @@ begin_function
 name|void
 name|ad_print
 parameter_list|(
+name|x
+parameter_list|)
 name|AUTH_DAT
 modifier|*
 name|x
-parameter_list|)
+decl_stmt|;
 block|{
 name|struct
 name|in_addr
@@ -143,7 +145,7 @@ directive|else
 name|des_cblock_print_file
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|x

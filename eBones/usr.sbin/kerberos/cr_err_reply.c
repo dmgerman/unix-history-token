@@ -3,23 +3,20 @@ begin_comment
 comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: cr_err_reply.c,v 4.10 89/01/10 11:34:42 steiner Exp $  *	$Id: cr_err_reply.c,v 1.2 1995/07/18 16:37:49 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: cr_err_reply.c,v 1.2 1995/07/18 16:37:49 mark Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: cr_err_reply.c,v 1.2 1995/07/18 16:37:49 mark Exp $";
 endif|#
 directive|endif
 end_endif
@@ -27,6 +24,11 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

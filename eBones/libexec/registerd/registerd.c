@@ -3,23 +3,20 @@ begin_comment
 comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char copyright[] = "@(#) Copyright (c) 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"; static char sccsid[] = "@(#)registerd.c	8.1 (Berkeley) 6/1/93";
 endif|#
 directive|endif
 end_endif
@@ -28,30 +25,10 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)registerd.c	8.1 (Berkeley) 6/1/93"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -92,7 +69,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -104,31 +93,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<des.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb.h>
+file|<krb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb_db.h>
+file|<krb_db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -176,7 +171,71 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|die
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|send_packet
+parameter_list|(
+name|char
+modifier|*
+name|msg
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|net_get_principal
+parameter_list|(
+name|char
+modifier|*
+name|pname
+parameter_list|,
+name|char
+modifier|*
+name|iname
+parameter_list|,
+name|C_Block
+modifier|*
+name|keyp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|do_append
+parameter_list|(
+name|struct
+name|sockaddr_in
+modifier|*
+name|sinp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -237,10 +296,6 @@ index|[
 name|KBUFSIZ
 index|]
 decl_stmt|;
-name|void
-name|die
-parameter_list|()
-function_decl|;
 name|progname
 operator|=
 name|argv
@@ -258,9 +313,6 @@ argument_list|,
 name|LOG_AUTH
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -268,9 +320,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -278,9 +327,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -288,13 +334,14 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
+operator|(
+name|__sighandler_t
+operator|*
+operator|)
 name|die
 argument_list|)
 expr_stmt|;
@@ -413,9 +460,6 @@ argument_list|,
 name|keyfile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|msgbuf
@@ -457,9 +501,6 @@ argument_list|,
 literal|"wrong read size of Kerberos update keyfile"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|msgbuf
@@ -480,9 +521,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|msgbuf
@@ -508,6 +546,10 @@ name|keybuf
 expr_stmt|;
 name|key_sched
 argument_list|(
+operator|(
+name|C_Block
+operator|*
+operator|)
 name|kfile
 operator|->
 name|kf_key
@@ -517,6 +559,10 @@ argument_list|)
 expr_stmt|;
 name|des_set_key
 argument_list|(
+operator|(
+name|des_cblock
+operator|*
+operator|)
 name|kfile
 operator|->
 name|kf_key
@@ -617,9 +663,6 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|msgbuf
@@ -642,9 +685,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|msgbuf
@@ -851,6 +891,10 @@ name|input_name
 argument_list|,
 name|input_instance
 argument_list|,
+operator|(
+name|C_Block
+operator|*
+operator|)
 name|key
 argument_list|)
 operator|!=
@@ -1133,29 +1177,21 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|send_packet
-argument_list|(
-argument|msg
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|,
+name|flag
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|len
@@ -1267,28 +1303,26 @@ name|flag
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|net_get_principal
-argument_list|(
-argument|pname
-argument_list|,
-argument|iname
-argument_list|,
-argument|keyp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pname
+parameter_list|,
+name|iname
+parameter_list|,
+name|keyp
+parameter_list|)
 name|char
 modifier|*
 name|pname
 decl_stmt|,
-modifier|*
+decl|*
 name|iname
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|C_Block
@@ -1416,6 +1450,10 @@ name|string_to_key
 argument_list|(
 name|password
 argument_list|,
+operator|(
+name|des_cblock
+operator|*
+operator|)
 operator|*
 name|keyp
 argument_list|)
@@ -1435,12 +1473,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -1473,7 +1509,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

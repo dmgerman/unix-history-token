@@ -7,26 +7,28 @@ begin_comment
 comment|/*  * exit returns 	 0 ==> success -1 ==> error  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kdb_edit.c,v 1.5 1995/08/03 17:15:54 mark Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char rcsid[] = "$Id: kdb_edit.c,v 1.5 1995/08/03 17:15:54 mark Exp $";
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_include
@@ -100,34 +102,56 @@ file|<kdc.h>
 end_include
 
 begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|errmsg
-parameter_list|()
+name|void
+name|Usage
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
+name|void
+name|cleanup
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|sig_exit
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|,
+name|int
+name|code
+parameter_list|,
+name|struct
+name|sigcontext
+modifier|*
+name|scp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|no_core_dumps
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|change_principal
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -420,6 +444,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -483,12 +508,12 @@ name|stdout
 argument_list|,
 literal|"%s: size of long is %d.\n"
 argument_list|,
+name|prog
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|long
 argument_list|)
-argument_list|,
-name|prog
 argument_list|)
 expr_stmt|;
 name|exit
@@ -790,7 +815,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Kerberos error on default value lookup, %d found.\n"
+literal|"%s: Kerberos error on default value lookup, %ld found.\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -827,15 +852,19 @@ block|{     }
 name|cleanup
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* make -Wall shut up - MRVM */
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|change_principal
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|static
 name|char
@@ -1407,6 +1436,7 @@ name|string_to_key
 argument_list|(
 name|pw_str
 argument_list|,
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -1538,6 +1568,7 @@ name|string_to_key
 argument_list|(
 name|pw_str
 argument_list|,
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -1606,6 +1637,7 @@ name|string_to_key
 argument_list|(
 name|pw_str
 argument_list|,
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -1955,7 +1987,7 @@ name|sscanf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 operator|&
 name|temp_long
@@ -2063,7 +2095,7 @@ name|sscanf
 argument_list|(
 name|temp
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 operator|&
 name|temp_long
@@ -2239,19 +2271,20 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|no_core_dumps
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2259,6 +2292,9 @@ name|signal
 argument_list|(
 name|SIGILL
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2266,6 +2302,9 @@ name|signal
 argument_list|(
 name|SIGTRAP
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2273,6 +2312,9 @@ name|signal
 argument_list|(
 name|SIGIOT
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2280,6 +2322,9 @@ name|signal
 argument_list|(
 name|SIGEMT
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2287,6 +2332,9 @@ name|signal
 argument_list|(
 name|SIGFPE
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2294,6 +2342,9 @@ name|signal
 argument_list|(
 name|SIGBUS
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2301,6 +2352,9 @@ name|signal
 argument_list|(
 name|SIGSEGV
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
@@ -2308,11 +2362,14 @@ name|signal
 argument_list|(
 name|SIGSYS
 argument_list|,
+operator|(
+name|sig_t
+operator|)
 name|sig_exit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2362,12 +2419,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -2430,14 +2485,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|Usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -2454,7 +2507,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

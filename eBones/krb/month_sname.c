@@ -39,9 +39,11 @@ name|char
 modifier|*
 name|month_sname
 parameter_list|(
-name|int
 name|n
 parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 specifier|static
 name|char

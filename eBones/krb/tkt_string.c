@@ -33,13 +33,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -179,10 +179,12 @@ begin_function
 name|void
 name|krb_set_tkt_string
 parameter_list|(
+name|val
+parameter_list|)
 name|char
 modifier|*
 name|val
-parameter_list|)
+decl_stmt|;
 block|{
 operator|(
 name|void

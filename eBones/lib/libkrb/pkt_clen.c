@@ -33,6 +33,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<krb.h>
 end_include
 
@@ -42,11 +48,12 @@ directive|include
 file|<prot.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -63,9 +70,11 @@ begin_function
 name|int
 name|pkt_clen
 parameter_list|(
-name|KTEXT
 name|pkt
 parameter_list|)
+name|KTEXT
+name|pkt
+decl_stmt|;
 block|{
 specifier|static
 name|unsigned

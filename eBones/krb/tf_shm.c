@@ -86,6 +86,20 @@ begin_comment
 comment|/* room for 1k keys */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * krb_create_shmtkt:  *  * create a shared memory segment for session keys, leaving its id  * in the specified filename.  */
 end_comment
@@ -94,10 +108,12 @@ begin_function
 name|int
 name|krb_shm_create
 parameter_list|(
+name|file_name
+parameter_list|)
 name|char
 modifier|*
 name|file_name
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|retval
@@ -559,10 +575,12 @@ begin_function
 name|int
 name|krb_shm_dest
 parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|shmid

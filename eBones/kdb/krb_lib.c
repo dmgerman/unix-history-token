@@ -224,26 +224,40 @@ begin_function
 name|int
 name|kerb_get_principal
 parameter_list|(
+name|name
+parameter_list|,
+name|inst
+parameter_list|,
+name|principal
+parameter_list|,
+name|max
+parameter_list|,
+name|more
+parameter_list|)
 name|char
 modifier|*
 name|name
-parameter_list|,
+decl_stmt|;
+comment|/* could have wild card */
 name|char
 modifier|*
 name|inst
-parameter_list|,
+decl_stmt|;
+comment|/* could have wild card */
 name|Principal
 modifier|*
 name|principal
-parameter_list|,
+decl_stmt|;
 name|unsigned
 name|int
 name|max
-parameter_list|,
+decl_stmt|;
+comment|/* max number of name structs to return */
 name|int
 modifier|*
 name|more
-parameter_list|)
+decl_stmt|;
+comment|/* more tuples than room for */
 block|{
 name|int
 name|found
@@ -440,14 +454,19 @@ begin_function
 name|int
 name|kerb_put_principal
 parameter_list|(
+name|principal
+parameter_list|,
+name|n
+parameter_list|)
 name|Principal
 modifier|*
 name|principal
-parameter_list|,
+decl_stmt|;
 name|unsigned
 name|int
 name|n
-parameter_list|)
+decl_stmt|;
+comment|/* number of principal structs to write */
 block|{
 name|long
 name|time
@@ -664,26 +683,40 @@ begin_function
 name|int
 name|kerb_get_dba
 parameter_list|(
+name|name
+parameter_list|,
+name|inst
+parameter_list|,
+name|dba
+parameter_list|,
+name|max
+parameter_list|,
+name|more
+parameter_list|)
 name|char
 modifier|*
 name|name
-parameter_list|,
+decl_stmt|;
+comment|/* could have wild card */
 name|char
 modifier|*
 name|inst
-parameter_list|,
+decl_stmt|;
+comment|/* could have wild card */
 name|Dba
 modifier|*
 name|dba
-parameter_list|,
+decl_stmt|;
 name|unsigned
 name|int
 name|max
-parameter_list|,
+decl_stmt|;
+comment|/* max number of name structs to return */
 name|int
 modifier|*
 name|more
-parameter_list|)
+decl_stmt|;
+comment|/* more tuples than room for */
 block|{
 name|int
 name|found

@@ -56,31 +56,52 @@ begin_function
 name|void
 name|extract_ticket
 parameter_list|(
-name|KTEXT
 name|cipher
 parameter_list|,
-name|int
 name|n
 parameter_list|,
+name|session
+parameter_list|,
+name|lifetime
+parameter_list|,
+name|kvno
+parameter_list|,
+name|realm
+parameter_list|,
+name|ticket
+parameter_list|)
+name|KTEXT
+name|cipher
+decl_stmt|;
+comment|/* The ciphertext */
+name|int
+name|n
+decl_stmt|;
+comment|/* Which ticket */
 name|char
 modifier|*
 name|session
-parameter_list|,
+decl_stmt|;
+comment|/* The session key for this tkt */
 name|int
 modifier|*
 name|lifetime
-parameter_list|,
+decl_stmt|;
+comment|/* The life of this ticket */
 name|int
 modifier|*
 name|kvno
-parameter_list|,
+decl_stmt|;
+comment|/* The kvno for the service */
 name|char
 modifier|*
 name|realm
-parameter_list|,
+decl_stmt|;
+comment|/* Realm in which tkt issued */
 name|KTEXT
 name|ticket
-parameter_list|)
+decl_stmt|;
+comment|/* The ticket itself */
 block|{
 name|char
 modifier|*

@@ -3,27 +3,35 @@ begin_comment
 comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kdb_destroy.c,v 4.0 89/01/24 21:49:02 jtkohl Exp $  *	$Id: kdb_destroy.c,v 1.5 1995/08/04 06:35:45 mark Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: kdb_destroy.c,v 1.5 1995/08/04 06:35:45 mark Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char rcsid[] = "$Id: kdb_destroy.c,v 1.5 1995/08/04 06:35:45 mark Exp $";
 endif|#
 directive|endif
 endif|lint
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -40,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"krb.h"
+file|<krb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"krb_db.h"
+file|<krb_db.h>
 end_include
 
 begin_if
@@ -66,7 +74,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|DB
+name|_DBM_
 end_define
 
 begin_endif
@@ -75,6 +83,7 @@ directive|endif
 end_endif
 
 begin_function
+name|void
 name|main
 parameter_list|()
 block|{
@@ -85,6 +94,23 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* user input */
+ifdef|#
+directive|ifdef
+name|_DBM_
+name|char
+name|dbm
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* database path and name */
+name|char
+modifier|*
+name|file
+decl_stmt|;
+comment|/* database file names */
+else|#
+directive|else
 name|char
 name|dbm
 index|[
@@ -99,16 +125,6 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* database path and name */
-ifdef|#
-directive|ifdef
-name|DB
-name|char
-modifier|*
-name|file
-decl_stmt|;
-comment|/* database file names */
-else|#
-directive|else
 name|char
 modifier|*
 name|file1
@@ -128,7 +144,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DB
+name|_DBM_
 name|file
 operator|=
 name|strcat
@@ -213,7 +229,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DB
+name|_DBM_
 if|if
 condition|(
 name|unlink

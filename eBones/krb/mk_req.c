@@ -61,6 +61,13 @@ file|<strings.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|krb_ap_req_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|timeval
@@ -91,24 +98,40 @@ begin_function
 name|int
 name|krb_mk_req
 parameter_list|(
-name|KTEXT
 name|authent
 parameter_list|,
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|checksum
+parameter_list|)
+specifier|register
+name|KTEXT
+name|authent
+decl_stmt|;
+comment|/* Place to build the authenticator */
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Name of the service */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Service instance */
 name|char
 modifier|*
 name|realm
-parameter_list|,
+decl_stmt|;
+comment|/* Authentication domain of service */
 name|long
 name|checksum
-parameter_list|)
+decl_stmt|;
+comment|/* Checksum of data (optional) */
 block|{
 specifier|static
 name|KTEXT_ST
@@ -744,7 +767,7 @@ name|NOENCRYPTION
 name|key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|cr
@@ -757,7 +780,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|req_id
@@ -765,7 +788,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|req_id
@@ -782,7 +805,7 @@ argument_list|,
 name|key_s
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|cr
@@ -927,9 +950,11 @@ begin_function
 name|int
 name|krb_set_lifetime
 parameter_list|(
-name|int
 name|newval
 parameter_list|)
+name|int
+name|newval
+decl_stmt|;
 block|{
 name|int
 name|olife

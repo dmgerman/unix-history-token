@@ -98,6 +98,29 @@ directive|include
 file|"lsb_addr_comp.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|errmsg
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* static storage */
 end_comment
@@ -139,33 +162,54 @@ begin_function
 name|long
 name|krb_mk_priv
 parameter_list|(
+name|in
+parameter_list|,
+name|out
+parameter_list|,
+name|length
+parameter_list|,
+name|schedule
+parameter_list|,
+name|key
+parameter_list|,
+name|sender
+parameter_list|,
+name|receiver
+parameter_list|)
 name|u_char
 modifier|*
 name|in
-parameter_list|,
+decl_stmt|;
+comment|/* application data */
 name|u_char
 modifier|*
 name|out
-parameter_list|,
+decl_stmt|;
+comment|/* put msg here, leave room for                                  * header! breaks if in and out                                  * (header stuff) overlap */
 name|u_long
 name|length
-parameter_list|,
-name|des_key_schedule
+decl_stmt|;
+comment|/* of in data */
+name|Key_schedule
 name|schedule
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* precomputed key schedule */
+name|C_Block
 name|key
-parameter_list|,
+decl_stmt|;
+comment|/* encryption key for seed and ivec */
 name|struct
 name|sockaddr_in
 modifier|*
 name|sender
-parameter_list|,
+decl_stmt|;
+comment|/* sender address */
 name|struct
 name|sockaddr_in
 modifier|*
 name|receiver
-parameter_list|)
+decl_stmt|;
+comment|/* receiver address */
 block|{
 specifier|register
 name|u_char
@@ -613,13 +657,13 @@ name|NOENCRYPTION
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|q
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|q
@@ -636,7 +680,7 @@ argument_list|,
 name|schedule
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|key

@@ -33,12 +33,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<des.h>
 end_include
 
@@ -65,6 +59,13 @@ include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_ap_req_debug
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -171,13 +172,17 @@ begin_function
 name|int
 name|krb_set_key
 parameter_list|(
+name|key
+parameter_list|,
+name|cvt
+parameter_list|)
 name|char
 modifier|*
 name|key
-parameter_list|,
+decl_stmt|;
 name|int
 name|cvt
-parameter_list|)
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -206,7 +211,7 @@ argument_list|(
 name|key
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|ky
@@ -231,7 +236,7 @@ operator|(
 name|des_key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|ky
@@ -253,28 +258,47 @@ begin_function
 name|int
 name|krb_rd_req
 parameter_list|(
-name|KTEXT
 name|authent
 parameter_list|,
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|from_addr
+parameter_list|,
+name|ad
+parameter_list|,
+name|fn
+parameter_list|)
+specifier|register
+name|KTEXT
+name|authent
+decl_stmt|;
+comment|/* The received message */
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Service name */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Service instance */
 name|long
 name|from_addr
-parameter_list|,
+decl_stmt|;
+comment|/* Net address of originating host */
 name|AUTH_DAT
 modifier|*
 name|ad
-parameter_list|,
+decl_stmt|;
+comment|/* Structure to be filled in */
 name|char
 modifier|*
 name|fn
-parameter_list|)
+decl_stmt|;
+comment|/* Filename to get keys from */
 block|{
 specifier|static
 name|KTEXT_ST
@@ -951,7 +975,7 @@ name|NOENCRYPTION
 name|key_sched
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|ad
@@ -964,7 +988,7 @@ expr_stmt|;
 name|pcbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|req_id
@@ -972,7 +996,7 @@ operator|->
 name|dat
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|req_id
@@ -989,7 +1013,7 @@ argument_list|,
 name|seskey_sched
 argument_list|,
 operator|(
-name|des_cblock
+name|C_Block
 operator|*
 operator|)
 name|ad

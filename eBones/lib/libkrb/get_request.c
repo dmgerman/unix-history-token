@@ -50,22 +50,34 @@ begin_function
 name|int
 name|get_request
 parameter_list|(
-name|KTEXT
 name|pkt
 parameter_list|,
-name|int
 name|n
 parameter_list|,
+name|s_name
+parameter_list|,
+name|instance
+parameter_list|)
+name|KTEXT
+name|pkt
+decl_stmt|;
+comment|/* The packet itself */
+name|int
+name|n
+decl_stmt|;
+comment|/* Which request do we want */
 name|char
 modifier|*
 modifier|*
 name|s_name
-parameter_list|,
+decl_stmt|;
+comment|/* Service name to be filled in */
 name|char
 modifier|*
 modifier|*
 name|instance
-parameter_list|)
+decl_stmt|;
+comment|/* Instance name to be filled in */
 block|{
 comment|/* Go to the beginning of the request list */
 name|char

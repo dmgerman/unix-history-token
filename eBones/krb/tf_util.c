@@ -33,7 +33,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -45,7 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -129,6 +129,13 @@ begin_comment
 comment|/* seconds to sleep before 					 * retry if ticket file is 					 * locked */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -182,14 +189,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|shmat
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -203,33 +202,30 @@ begin_comment
 comment|/*  * fd must be initialized to something that won't ever occur as a real  * file descriptor. Since open(2) returns only non-negative numbers as  * valid file descriptors, and tf_init always stuffs the return value  * from open in here even if it is an error flag, we must  * 	a. Initialize fd to a negative number, to indicate that it is  * 	   not initially valid.  *	b. When checking for a valid fd, assume that negative values  *	   are invalid (ie. when deciding whether tf_init has been  *	   called.)  *	c. In tf_close, be sure it gets reinitialized to a negative  *	   number.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|int
 name|fd
-init|=
+operator|=
 operator|-
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|int
 name|curpos
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Position in tfbfr */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|int
 name|lastpos
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* End of tfbfr */
@@ -249,15 +245,35 @@ begin_comment
 comment|/* Buffer for ticket data */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
-name|tf_gets
-argument_list|()
-operator|,
+name|int
 name|tf_read
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|tf_gets
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * This file contains routines for manipulating the ticket cache file.  *  * The ticket file is in the following format:  *  *      principal's name        (null-terminated string)  *      principal's instance    (null-terminated string)  *      CREDENTIAL_1  *      CREDENTIAL_2  *      ...  *      CREDENTIAL_n  *      EOF  *  *      Where "CREDENTIAL_x" consists of the following fixed-length  *      fields from the CREDENTIALS structure (see "krb.h"):  *  *              char            service[ANAME_SZ]  *              char            instance[INST_SZ]  *              char            realm[REALM_SZ]  *              C_Block         session  *              int             lifetime  *              int             kvno  *              KTEXT_ST        ticket_st  *              long            issue_date  *  * Short description of routines:  *  * tf_init() opens the ticket file and locks it.  *  * tf_get_pname() returns the principal's name.  *  * tf_get_pinst() returns the principal's instance (may be null).  *  * tf_get_cred() returns the next CREDENTIALS record.  *  * tf_save_cred() appends a new CREDENTIAL record to the ticket file.  *  * tf_close() closes the ticket file and releases the lock.  *  * tf_gets() returns the next null-terminated string.  It's an internal  * routine used by tf_get_pname(), tf_get_pinst(), and tf_get_cred().  *  * tf_read() reads a given number of bytes.  It's an internal routine  * used by tf_get_cred().  */
@@ -271,13 +287,17 @@ begin_function
 name|int
 name|tf_init
 parameter_list|(
+name|tf_name
+parameter_list|,
+name|rw
+parameter_list|)
 name|char
 modifier|*
 name|tf_name
-parameter_list|,
+decl_stmt|;
 name|int
 name|rw
-parameter_list|)
+decl_stmt|;
 block|{
 name|int
 name|wflag
@@ -820,10 +840,12 @@ begin_function
 name|int
 name|tf_get_pname
 parameter_list|(
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|p
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -876,10 +898,12 @@ begin_function
 name|int
 name|tf_get_pinst
 parameter_list|(
+name|inst
+parameter_list|)
 name|char
 modifier|*
 name|inst
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -924,101 +948,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tf_close() closes the ticket file and sets "fd" to -1. If "fd" is  * not a valid file descriptor, it just returns.  It also clears the  * buffer used to read tickets.  *  * The return value is not defined.  */
-end_comment
-
-begin_function
-name|void
-name|tf_close
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|fd
-operator|<
-literal|0
-operator|)
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|TKT_SHMEM
-if|if
-condition|(
-name|shmdt
-argument_list|(
-name|krb_shm_addr
-argument_list|)
-condition|)
-block|{
-comment|/* what kind of error? */
-if|if
-condition|(
-name|krb_debug
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"shmdt 0x%x: errno %d"
-argument_list|,
-name|krb_shm_addr
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|krb_shm_addr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|TKT_SHMEM
-operator|(
-name|void
-operator|)
-name|flock
-argument_list|(
-name|fd
-argument_list|,
-name|LOCK_UN
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* see declaration of fd above */
-block|}
-name|bzero
-argument_list|(
-name|tfbfr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tfbfr
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * tf_get_cred() reads a CREDENTIALS record from a ticket file and fills  * in the given structure "c".  It should only be called after tf_init(),  * tf_get_pname(), and tf_get_pinst() have been called. If all goes well,  * KSUCCESS is returned.  Possible error codes are:  *  * TKT_FIL_INI  - tf_init wasn't called first  * TKT_FIL_FMT  - bad format  * EOF          - end of file encountered  */
 end_comment
 
@@ -1026,10 +955,12 @@ begin_function
 name|int
 name|tf_get_cred
 parameter_list|(
+name|c
+parameter_list|)
 name|CREDENTIALS
 modifier|*
 name|c
-parameter_list|)
+decl_stmt|;
 block|{
 name|KTEXT
 name|ticket
@@ -1357,6 +1288,101 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * tf_close() closes the ticket file and sets "fd" to -1. If "fd" is  * not a valid file descriptor, it just returns.  It also clears the  * buffer used to read tickets.  *  * The return value is not defined.  */
+end_comment
+
+begin_function
+name|void
+name|tf_close
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|fd
+operator|<
+literal|0
+operator|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|TKT_SHMEM
+if|if
+condition|(
+name|shmdt
+argument_list|(
+name|krb_shm_addr
+argument_list|)
+condition|)
+block|{
+comment|/* what kind of error? */
+if|if
+condition|(
+name|krb_debug
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"shmdt 0x%x: errno %d"
+argument_list|,
+name|krb_shm_addr
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|krb_shm_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|TKT_SHMEM
+operator|(
+name|void
+operator|)
+name|flock
+argument_list|(
+name|fd
+argument_list|,
+name|LOCK_UN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* see declaration of fd above */
+block|}
+name|bzero
+argument_list|(
+name|tfbfr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tfbfr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * tf_gets() is an internal routine.  It takes a string "s" and a count  * "n", and reads from the file until either it has read "n" characters,  * or until it reads a null byte. When finished, what has been read exists  * in "s". If it encounters EOF or an error, it closes the ticket file.  *  * Possible return values are:  *  * n            the number of bytes read (including null terminator)  *              when all goes well  *  * 0            end of file or read error  *  * TOO_BIG      if "count" characters are read and no null is  *		encountered. This is an indication that the ticket  *		file is seriously ill.  */
 end_comment
 
@@ -1365,13 +1391,18 @@ specifier|static
 name|int
 name|tf_gets
 parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+specifier|register
 name|char
 modifier|*
 name|s
-parameter_list|,
+decl_stmt|;
 name|int
 name|n
-parameter_list|)
+decl_stmt|;
 block|{
 specifier|register
 name|count
@@ -1500,17 +1531,23 @@ specifier|static
 name|int
 name|tf_read
 parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+specifier|register
 name|char
 modifier|*
 name|s
-parameter_list|,
+decl_stmt|;
+specifier|register
 name|int
 name|n
-parameter_list|)
-block|{
-name|int
-name|count
 decl_stmt|;
+block|{
+specifier|register
+name|count
+expr_stmt|;
 for|for
 control|(
 name|count
@@ -1585,14 +1622,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|char
-modifier|*
-name|tkt_string
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * tf_save_cred() appends an incoming ticket to the end of the ticket  * file.  You must call tf_init() before calling tf_save_cred().  *  * The "service", "instance", and "realm" arguments specify the  * server's name; "session" contains the session key to be used with  * the ticket; "kvno" is the server key version number in which the  * ticket is encrypted, "ticket" contains the actual ticket, and  * "issue_date" is the time the ticket was requested (local host's time).  *  * Returns KSUCCESS if all goes well, TKT_FIL_INI if tf_init() wasn't  * called previously, and KFAILURE for anything else that went wrong.  */
 end_comment
@@ -1601,33 +1630,57 @@ begin_function
 name|int
 name|tf_save_cred
 parameter_list|(
+name|service
+parameter_list|,
+name|instance
+parameter_list|,
+name|realm
+parameter_list|,
+name|session
+parameter_list|,
+name|lifetime
+parameter_list|,
+name|kvno
+parameter_list|,
+name|ticket
+parameter_list|,
+name|issue_date
+parameter_list|)
 name|char
 modifier|*
 name|service
-parameter_list|,
+decl_stmt|;
+comment|/* Service name */
 name|char
 modifier|*
 name|instance
-parameter_list|,
+decl_stmt|;
+comment|/* Instance */
 name|char
 modifier|*
 name|realm
-parameter_list|,
-name|des_cblock
+decl_stmt|;
+comment|/* Auth domain */
+name|C_Block
 name|session
-parameter_list|,
+decl_stmt|;
+comment|/* Session key */
 name|int
 name|lifetime
-parameter_list|,
+decl_stmt|;
+comment|/* Lifetime */
 name|int
 name|kvno
-parameter_list|,
+decl_stmt|;
+comment|/* Key version number */
 name|KTEXT
 name|ticket
-parameter_list|,
+decl_stmt|;
+comment|/* The ticket itself */
 name|long
 name|issue_date
-parameter_list|)
+decl_stmt|;
+comment|/* The issue time */
 block|{
 name|off_t
 name|lseek
