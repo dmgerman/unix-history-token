@@ -528,6 +528,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|outfile
+init|=
+literal|"a.out"
 decl_stmt|;
 end_decl_stmt
 
@@ -856,17 +858,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|outfile
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
-literal|"a.out"
-argument_list|)
-expr_stmt|;
 name|innames
 operator|=
 operator|(
@@ -1054,17 +1045,10 @@ expr_stmt|;
 block|}
 name|outfile
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
 name|argv
 index|[
 literal|2
 index|]
-argument_list|)
 expr_stmt|;
 name|bumpone
 label|:
