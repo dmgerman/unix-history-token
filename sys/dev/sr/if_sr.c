@@ -467,20 +467,11 @@ name|int
 name|out_dog
 decl_stmt|;
 comment|/* watchdog cycles output count-down */
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|>=
-literal|3
-operator|)
 name|struct
 name|callout_handle
 name|handle
 decl_stmt|;
 comment|/* timeout(9) handle */
-endif|#
-directive|endif
 name|u_long
 name|inbytes
 decl_stmt|,
