@@ -852,7 +852,14 @@ name|len
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|clen
+operator|^
+operator|(
+name|int
+operator|)
+name|addr
+operator|)
 operator|&
 literal|1
 condition|)
