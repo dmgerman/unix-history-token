@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	5.1 (Berkeley) %G%"
+literal|"@(#)curses.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,7 @@ begin_decl_stmt
 name|char
 name|ttytype
 index|[
-literal|10
+literal|17
 index|]
 decl_stmt|,
 comment|/* long name of tty			*/

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.1 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,7 +870,7 @@ name|aoftspace
 operator|=
 name|_tspace
 expr_stmt|;
-name|strcpy
+name|strncpy
 argument_list|(
 name|ttytype
 argument_list|,
@@ -880,7 +880,26 @@ name|genbuf
 argument_list|,
 name|type
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ttytype
 argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|ttytype
+index|[
+sizeof|sizeof
+argument_list|(
+name|ttytype
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
