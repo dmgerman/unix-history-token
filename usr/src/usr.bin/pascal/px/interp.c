@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.7 %G%"
+literal|"@(#)interp.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4469,7 +4469,14 @@ name|tcp1
 operator|=
 name|pushsp
 argument_list|(
+operator|(
 name|tl
+operator|+
+literal|1
+operator|)
+operator|&
+operator|~
+literal|1
 argument_list|)
 expr_stmt|;
 name|blkcpy
