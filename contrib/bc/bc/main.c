@@ -357,6 +357,11 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|0
+case|:
+comment|/* long options */
+break|break;
 default|default:
 name|usage
 argument_list|(
