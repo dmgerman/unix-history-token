@@ -463,7 +463,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ffs_omount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	NULL (flag for root mount!!!)  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  */
+comment|/*  * ffs_omount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	path to mount point  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  */
 end_comment
 
 begin_function
@@ -611,7 +611,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Use NULL path to indicate we are mounting the root filesystem. 	 */
 if|if
 condition|(
 operator|(
