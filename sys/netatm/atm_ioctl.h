@@ -340,6 +340,15 @@ name|u_char
 name|aaru_pvc_flags
 decl_stmt|;
 comment|/* Flags (see below) */
+name|uint8_t
+name|aaru_pvc_traffic_type
+decl_stmt|;
+comment|/* traffic type */
+name|struct
+name|t_atm_traffic
+name|aaru_pvc_traffic
+decl_stmt|;
+comment|/* traffic parameters */
 block|}
 name|aaru_add_pvc
 struct|;
@@ -430,6 +439,20 @@ define|#
 directive|define
 name|aar_pvc_flags
 value|aar_u.aaru_add_pvc.aaru_pvc_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|aar_pvc_traffic_type
+value|aar_u.aaru_add_pvc.aaru_pvc_traffic_type
+end_define
+
+begin_define
+define|#
+directive|define
+name|aar_pvc_traffic
+value|aar_u.aaru_add_pvc.aaru_pvc_traffic
 end_define
 
 begin_define
@@ -1073,7 +1096,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * VCC information  */
+comment|/*  * VCC information  * Todo: add avp_traffic_type and avp_traffic. Update unisig_if.c,  *	spans_if.c and sigpvc_if.c  */
 end_comment
 
 begin_define
