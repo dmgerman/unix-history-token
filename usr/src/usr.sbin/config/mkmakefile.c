@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.23	82/12/18	*/
+comment|/*	mkmakefile.c	1.24	83/01/14	*/
 end_comment
 
 begin_comment
@@ -562,7 +562,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"CRT0.EX=/usr/src/lib/libc/csu/crt0.ex\n"
+literal|"GPROF.EX=/usr/src/lib/libc/csu/gmon.ex\n"
 argument_list|)
 expr_stmt|;
 name|cp
@@ -2011,7 +2011,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\tex - %ss< ${CRT0.EX}\n"
+literal|"\tex - %ss< ${GPROF.EX}\n"
 argument_list|,
 name|tp
 argument_list|)
@@ -2020,7 +2020,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t/lib/cpp %ss | sed -f ../vax/asm.sed | ${AS} -o %so\n"
+literal|"\tsed -f ../vax/asm.sed %ss | ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|,
