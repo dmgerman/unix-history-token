@@ -258,6 +258,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|forksleep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Place for fork1() to sleep on. */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1080,7 +1090,7 @@ name|nprocs
 operator|>=
 name|maxproc
 operator|-
-literal|1
+literal|10
 operator|&&
 name|uid
 operator|!=
@@ -1092,9 +1102,18 @@ operator|>=
 name|maxproc
 condition|)
 block|{
-name|tablefull
+name|tsleep
 argument_list|(
-literal|"proc"
+operator|&
+name|forksleep
+argument_list|,
+name|PUSER
+argument_list|,
+literal|"fork"
+argument_list|,
+name|hz
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 return|return
@@ -1147,6 +1166,20 @@ block|{
 comment|/* 		 * Back out the process count 		 */
 name|nprocs
 operator|--
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|forksleep
+argument_list|,
+name|PUSER
+argument_list|,
+literal|"fork"
+argument_list|,
+name|hz
+operator|/
+literal|2
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
