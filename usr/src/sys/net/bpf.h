@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.h	7.3 (Berkeley) %G%  *  * @(#) $Header: bpf.h,v 1.24 91/10/27 21:22:32 mccanne Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.h	7.4 (Berkeley) %G%  *  * @(#) $Header: bpf.h,v 1.24 91/10/27 21:22:32 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -36,6 +36,13 @@ define|#
 directive|define
 name|BPF_MAXBUFSIZE
 value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MINBUFSIZE
+value|32
 end_define
 
 begin_comment
@@ -77,6 +84,42 @@ comment|/* number of packets dropped */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Struct return by BIOCVERSION.  This represents the version number of   * the filter language described by the instruction encodings below.  * bpf understands a program iff kernel_major == filter_major&&  * kernel_minor>= filter_minor, that is, if the value returned by the  * running kernel has the same major number and a minor number equal  * equal to or less than the filter being downloaded.  Otherwise, the  * results are undefined, meaning an error may be returned or packets  * may be accepted haphazardly.  * It has nothing to do with the source code version.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bpf_version
+block|{
+name|u_short
+name|bv_major
+decl_stmt|;
+name|u_short
+name|bv_minor
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Current version number. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_MAJOR_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MINOR_VERSION
+value|1
+end_define
 
 begin_comment
 comment|/*  * BPF ioctls  *  * The first set is for compatibility with Sun's pcc style  * header files.  If your using gcc, we assume that you  * have run fixincludes so the latter set should work.  */
@@ -188,6 +231,13 @@ name|BIOCIMMEDIATE
 value|_IOW(B,112, u_int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIOCVERSION
+value|_IOR(B,113, struct bpf_version)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -275,6 +325,13 @@ define|#
 directive|define
 name|BIOCIMMEDIATE
 value|_IOW('B',112, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCVERSION
+value|_IOR('B',113, struct bpf_version)
 end_define
 
 begin_endif
@@ -463,7 +520,7 @@ comment|/*  * The instruction encondings.  */
 end_comment
 
 begin_comment
-comment|/* classes<2:0> */
+comment|/* instruction classes */
 end_comment
 
 begin_define
