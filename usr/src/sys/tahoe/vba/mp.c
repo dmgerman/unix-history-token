@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mp.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)mp.c	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,18 +20,6 @@ end_if
 begin_comment
 comment|/*  * Multi Protocol Communications Controller (MPCC).  * Asynchronous Terminal Protocol Support.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../machine/mtpr.h"
-end_include
 
 begin_include
 include|#
@@ -121,6 +109,18 @@ begin_include
 include|#
 directive|include
 file|"clist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/mtpr.h"
 end_include
 
 begin_include
@@ -482,6 +482,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|mpdlintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -671,6 +676,10 @@ end_block
 
 begin_comment
 comment|/*  * Open an mpcc port.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -1173,10 +1182,16 @@ begin_comment
 comment|/*  * Close an mpcc port.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|mpclose
 argument_list|(
 argument|dev
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -2661,13 +2676,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
-operator|(
-name|int
-operator|)
 name|outq
 operator|.
 name|c_cf
@@ -3003,6 +3013,10 @@ begin_comment
 comment|/*  * Stop output on a line, e.g. for ^S/^Q or output flush.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_expr_stmt
 name|mpstop
 argument_list|(
@@ -3028,18 +3042,6 @@ begin_block
 block|{
 name|int
 name|s
-decl_stmt|,
-name|port
-decl_stmt|;
-name|struct
-name|mpevent
-modifier|*
-name|ev
-decl_stmt|;
-name|struct
-name|mblok
-modifier|*
-name|mb
 decl_stmt|;
 name|s
 operator|=
@@ -3236,10 +3238,8 @@ expr|struct
 name|hxmtl
 operator|*
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|ms
 operator|->
@@ -3256,10 +3256,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|ms
 operator|->
@@ -3367,10 +3365,8 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -3381,10 +3377,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -3545,7 +3539,7 @@ operator|(
 name|mp
 operator|->
 name|mp_flags
-operator|&&
+operator|&
 name|MP_PROGRESS
 operator|)
 operator|==
@@ -4233,7 +4227,7 @@ name|mp_flags
 operator|=
 name|MP_REMBSY
 expr_stmt|;
-comment|/* flush I/O queues and send hangup signals */
+comment|/* signal loss of carrier and close */
 name|tp
 operator|=
 operator|&
@@ -4248,13 +4242,6 @@ operator|+
 name|port
 index|]
 expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_CARR_ON
-expr_stmt|;
 name|ttyflush
 argument_list|(
 name|tp
@@ -4264,24 +4251,29 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
-name|gsignal
+call|(
+name|void
+call|)
 argument_list|(
+operator|*
+name|linesw
+index|[
 name|tp
 operator|->
-name|t_pgrp
-argument_list|,
-name|SIGHUP
+name|t_line
+index|]
+operator|.
+name|l_modem
 argument_list|)
-expr_stmt|;
-name|gsignal
 argument_list|(
 name|tp
-operator|->
-name|t_pgrp
 argument_list|,
-name|SIGKILL
+literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mpclose
 argument_list|(
 name|tp
@@ -4334,14 +4326,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|char
+name|u_char
 name|list
 index|[
 literal|2
 index|]
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 name|int
 name|unit
@@ -4626,10 +4615,6 @@ name|his
 modifier|*
 name|his
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|mb
 operator|=
 name|mp_softc
@@ -4768,7 +4753,7 @@ argument_list|,
 name|list
 argument_list|)
 specifier|register
-name|char
+name|u_char
 operator|*
 name|list
 expr_stmt|;
@@ -4933,8 +4918,14 @@ index|]
 expr_stmt|;
 name|mppurge
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ap
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -5156,7 +5147,7 @@ name|cc
 init|=
 literal|0
 decl_stmt|,
-name|i
+name|n
 decl_stmt|;
 name|struct
 name|hxmtl
@@ -5175,17 +5166,17 @@ index|]
 expr_stmt|;
 for|for
 control|(
-name|i
+name|n
 operator|=
 literal|0
 init|;
-name|i
+name|n
 operator|<
 name|ev
 operator|->
 name|ev_count
 condition|;
-name|i
+name|n
 operator|++
 control|)
 name|cc
@@ -5194,7 +5185,7 @@ name|hxp
 operator|->
 name|size
 index|[
-name|i
+name|n
 index|]
 expr_stmt|;
 name|ndflush
@@ -5263,6 +5254,9 @@ name|port
 argument_list|,
 name|A_INVCMD
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ev
 operator|->
 name|ev_cmd
@@ -5342,7 +5336,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|u_char
 modifier|*
 name|list
 decl_stmt|;
@@ -5506,6 +5500,9 @@ name|port
 argument_list|,
 literal|"unexpected command"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ev
 operator|->
 name|ev_cmd
@@ -5569,6 +5566,9 @@ name|port
 argument_list|,
 literal|"unexpect status command"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ev
 operator|->
 name|ev_opts
@@ -5739,10 +5739,8 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -5753,10 +5751,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-literal|0
-argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -5836,6 +5832,9 @@ name|port
 argument_list|,
 name|rcverr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ev
 operator|->
 name|ev_error
@@ -6038,12 +6037,6 @@ name|mb
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|u_short
-name|port
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
 name|mb
@@ -6098,6 +6091,9 @@ name|untimeout
 argument_list|(
 name|mptimeint
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|mb
 argument_list|)
 expr_stmt|;
@@ -6124,6 +6120,9 @@ name|timeout
 argument_list|(
 name|mptimeint
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|mb
 argument_list|,
 literal|4
@@ -6632,15 +6631,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
-argument_list|,
 name|mpdlbuf
 argument_list|)
 expr_stmt|;
@@ -6652,6 +6644,9 @@ name|uiomove
 argument_list|(
 name|mpdlbuf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dl
 operator|->
 name|mpdl_count
@@ -6730,11 +6725,6 @@ index|]
 operator|.
 name|ms_mb
 decl_stmt|;
-name|int
-name|ret
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|mb
@@ -6811,31 +6801,16 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|mpreset
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-comment|/* XXX */
-block|}
-end_block
-
 begin_function_decl
 name|int
 name|mpdltimeout
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_macro
 name|mpdlioctl
@@ -6884,8 +6859,6 @@ decl_stmt|,
 name|s
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|mb
 operator|=
@@ -7081,15 +7054,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|vtoph
+name|kvtophys
 argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
-argument_list|,
 name|mpdlbuf
 argument_list|)
 expr_stmt|;
@@ -7265,6 +7231,9 @@ name|timeout
 argument_list|(
 name|mpdltimeout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|mb
 argument_list|,
 literal|30
@@ -7272,7 +7241,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* approx 15 seconds */
 name|sleep
 argument_list|(
 operator|(
@@ -7306,6 +7274,9 @@ name|untimeout
 argument_list|(
 name|mpdltimeout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|mb
 argument_list|)
 expr_stmt|;
@@ -7359,6 +7330,9 @@ expr_stmt|;
 block|}
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|mb
 operator|->
 name|mb_port
@@ -7776,6 +7750,9 @@ name|MP_DLOPEN
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|mb
 operator|->

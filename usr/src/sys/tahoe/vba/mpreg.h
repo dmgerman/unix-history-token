@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mpreg.h	7.1	88/05/21	*/
+comment|/*  *	@(#)mpreg.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -163,20 +163,20 @@ name|unused
 decl_stmt|;
 struct|struct
 block|{
-name|char
+name|u_char
 name|inbdone
 index|[
 name|MPMAXPORT
 index|]
 decl_stmt|;
 comment|/* Ports w/ inbound completed */
-name|char
+name|u_char
 name|outbdone
 index|[
 name|MPMAXPORT
 index|]
 decl_stmt|;
-comment|/* Ports w/ outbound available */
+comment|/* Ports w/outbound available */
 name|u_int
 name|fill
 index|[
@@ -197,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|MPPORT_EOL
-value|-1
+value|0xff
 end_define
 
 begin_comment

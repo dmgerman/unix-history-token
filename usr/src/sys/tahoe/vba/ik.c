@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ik.c	7.1	88/05/21	*/
+comment|/*  *	@(#)ik.c	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3300,6 +3300,9 @@ name|lp
 operator|->
 name|pl_name
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|sc
 operator|->
 name|is_buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vba.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vba.c	1.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -159,6 +159,9 @@ if|if
 condition|(
 name|vbmapalloc
 argument_list|(
+operator|(
+name|int
+operator|)
 name|btoc
 argument_list|(
 name|xsize
@@ -223,6 +226,9 @@ name|caddr_t
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|,
 name|M_DEVBUF
@@ -270,15 +276,11 @@ name|vb
 operator|->
 name|vb_physbuf
 operator|=
-name|vtoph
-argument_list|(
 operator|(
-expr|struct
-name|proc
-operator|*
+name|u_long
 operator|)
-literal|0
-argument_list|,
+name|kvtophys
+argument_list|(
 name|vb
 operator|->
 name|vb_rawbuf
@@ -1222,8 +1224,6 @@ name|adr
 decl_stmt|;
 specifier|register
 name|int
-name|npf
-decl_stmt|,
 name|i
 decl_stmt|;
 name|int
@@ -1241,17 +1241,6 @@ operator|.
 name|b_addr
 operator|&
 name|PGOFSET
-expr_stmt|;
-name|npf
-operator|=
-name|btoc
-argument_list|(
-name|bp
-operator|->
-name|b_bcount
-operator|+
-name|o
-argument_list|)
 expr_stmt|;
 name|vb
 operator|->
@@ -1460,7 +1449,7 @@ name|adr
 operator|->
 name|nxt_len
 operator|=
-name|min
+name|imin
 argument_list|(
 name|i
 argument_list|,
