@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.24	%G%	(with DBM)"
+literal|"@(#)alias.c	3.25	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.24	%G%	(without DBM)"
+literal|"@(#)alias.c	3.25	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1327,10 +1327,11 @@ index|[
 literal|60
 index|]
 decl_stmt|;
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
+specifier|extern
+name|bool
+name|safefile
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1418,32 +1419,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+operator|!
+name|safefile
 argument_list|(
 name|buf
 argument_list|,
-operator|&
-name|stbuf
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|stbuf
-operator|.
-name|st_uid
-operator|!=
 name|user
 operator|->
 name|q_uid
-operator|||
-operator|!
-name|bitset
-argument_list|(
-name|S_IREAD
 argument_list|,
-name|stbuf
-operator|.
-name|st_mode
+name|S_IREAD
 argument_list|)
 condition|)
 return|return;

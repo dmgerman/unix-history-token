@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.46	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. */
 end_comment
 
 begin_ifdef
@@ -14,6 +14,16 @@ define|#
 directive|define
 name|EXTERN
 end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SmailSccsId
+index|[]
+init|=
+literal|"@(#)sendmail.h	3.47	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -1270,6 +1280,39 @@ end_decl_stmt
 
 begin_comment
 comment|/* don't return letter to sender */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|Daemon
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* running as a daemon */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|RealUid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when Daemon, real uid of caller */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|RealGid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* when Daemon, real gid of caller */
 end_comment
 
 begin_decl_stmt

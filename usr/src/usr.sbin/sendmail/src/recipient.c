@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.24	%G%"
+literal|"@(#)recipient.c	3.25	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -942,14 +942,18 @@ name|p
 operator|=
 literal|'\0'
 operator|,
-name|access
+operator|!
+name|safefile
 argument_list|(
 name|buf
 argument_list|,
-literal|3
+name|getruid
+argument_list|()
+argument_list|,
+name|S_IWRITE
+operator||
+name|S_IEXEC
 argument_list|)
-operator|<
-literal|0
 operator|)
 condition|)
 block|{

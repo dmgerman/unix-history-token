@@ -11,6 +11,18 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -47,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.41	%G%"
+literal|"@(#)main.c	3.42	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +249,18 @@ specifier|extern
 name|char
 modifier|*
 name|ttyname
+parameter_list|()
+function_decl|;
+name|char
+name|cfbuf
+index|[
+literal|60
+index|]
+decl_stmt|;
+comment|/* holds .cf filename */
+specifier|extern
+name|bool
+name|safefile
 parameter_list|()
 function_decl|;
 name|bool
@@ -923,7 +947,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'D'
+literal|'M'
 case|:
 comment|/* redefine internal macro */
 name|define
@@ -1117,12 +1141,25 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'D'
+case|:
+comment|/* run as a daemon */
+name|Daemon
+operator|=
+name|TRUE
+expr_stmt|;
+name|MailBack
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 comment|/* at Eric Schmidt's suggestion, this will not be an error.... 			syserr("Unknown flag %s", p); 			... seems that upward compatibility will be easier. */
 break|break;
 block|}
 block|}
-comment|/* 	**  Read control file. 	*/
+comment|/* 	**  Read system control file. 	*/
 name|readcf
 argument_list|(
 name|ConfFile
@@ -1130,77 +1167,7 @@ argument_list|,
 name|safecf
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|V6
-name|p
-operator|=
-name|getenv
-argument_list|(
-literal|"HOME"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-name|cfbuf
-index|[
-literal|60
-index|]
-decl_stmt|;
-name|define
-argument_list|(
-literal|'z'
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|expand
-argument_list|(
-literal|"$z/.mailcf"
-argument_list|,
-name|cfbuf
-argument_list|,
-operator|&
-name|cfbuf
-index|[
-sizeof|sizeof
-name|cfbuf
-operator|-
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|access
-argument_list|(
-name|cfbuf
-argument_list|,
-literal|2
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|readcf
-argument_list|(
-name|cfbuf
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|V6
+comment|/* 	**  Initialize aliases. 	*/
 name|initaliases
 argument_list|(
 name|AliasFile
@@ -1233,6 +1200,7 @@ operator|>
 literal|15
 condition|)
 block|{
+comment|/* print configuration table (or at least part of it) */
 name|printrules
 argument_list|()
 expr_stmt|;
@@ -1296,7 +1264,64 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* 	locname = getname(); 	if (locname == NULL || locname[0] == '\0') 	{ 		extern struct passwd *getpwuid(); 		int uid;  		uid = getruid(); 		pw = getpwuid(uid); 		if (pw == NULL) 			syserr("Who are you? (uid=%d)", uid); 		else 			p = pw->pw_name; 	} 	else 	{ 		extern struct passwd *getpwnam();  		pw = getpwnam(p); 		if (pw == NULL) 			syserr("Who are you? (name=%s)", p); 	} 	if (p == NULL || p[0] == '\0' || pw == NULL) 		finis();  	realname = p;  	/* extract full name from passwd file */
+comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	*/
+if|if
+condition|(
+name|Daemon
+condition|)
+name|getrequests
+argument_list|()
+expr_stmt|;
+comment|/* 	locname = getname(); 	if (locname == NULL || locname[0] == '\0') 	{ 		errno = 0; 		p = getlogin(); 		errno = 0; 	} 	if (Daemon || p == NULL) 	{ 		extern struct passwd *getpwuid(); 		int uid;  		uid = getruid(); 		pw = getpwuid(uid); 		if (pw == NULL) 			syserr("Who are you? (uid=%d)", uid); 		else 			p = pw->pw_name; 	} 	else 	{ 		extern struct passwd *getpwnam();  		pw = getpwnam(p); 		if (pw == NULL) 			syserr("Who are you? (name=%s)", p); 	} 	if (p == NULL || p[0] == '\0' || pw == NULL) 		finis();  	realname = p;  	/* 	**  Process passwd file entry. 	*/
+comment|/* run user's .mailcf file */
+name|define
+argument_list|(
+literal|'z'
+argument_list|,
+name|pw
+operator|->
+name|pw_dir
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"$z/.mailcf"
+argument_list|,
+name|cfbuf
+argument_list|,
+operator|&
+name|cfbuf
+index|[
+sizeof|sizeof
+name|cfbuf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|safefile
+argument_list|(
+name|cfbuf
+argument_list|,
+name|getruid
+argument_list|()
+argument_list|,
+name|S_IREAD
+argument_list|)
+condition|)
+name|readcf
+argument_list|(
+name|cfbuf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* extract full name from passwd file */
 if|if
 condition|(
 operator|(
@@ -1394,6 +1419,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Daemon
+operator|&&
 name|argc
 operator|<=
 literal|0
@@ -1435,6 +1463,14 @@ name|DontSend
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|Daemon
+condition|)
+name|getrecipients
+argument_list|()
+expr_stmt|;
+else|else
 name|sendtoargv
 argument_list|(
 name|argv

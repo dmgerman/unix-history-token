@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.33	%G%"
+literal|"@(#)conf.c	3.34	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +793,16 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|Daemon
+condition|)
+return|return
+operator|(
+name|RealUid
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|getuid
@@ -813,6 +823,16 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|Daemon
+condition|)
+return|return
+operator|(
+name|RealGid
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|getgid
