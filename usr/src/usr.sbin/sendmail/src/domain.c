@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.39 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.40 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.39 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.40 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +469,11 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+operator|*
+name|rcode
+operator|=
+name|EX_OK
+expr_stmt|;
 comment|/* efficiency hack -- numeric or non-MX lookups */
 if|if
 condition|(
