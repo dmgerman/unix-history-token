@@ -127,6 +127,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|volatile
 name|int
 name|ddp_forward
 init|=
@@ -135,17 +137,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|volatile
 name|int
 name|ddp_firewall
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ddp_cksum
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +154,16 @@ name|ddpstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|route
+name|forwro
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
+specifier|static
 name|void
 name|ddp_input
 parameter_list|(
@@ -539,14 +545,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|route
-name|forwro
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+specifier|static
 name|void
 name|ddp_input
 parameter_list|(
