@@ -134,7 +134,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   devices:\t"
+literal|" devices: "
 argument_list|)
 expr_stmt|;
 for|for
@@ -189,7 +189,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n   rec devices:\t"
+literal|"\n rec devices: "
 argument_list|)
 expr_stmt|;
 for|for
