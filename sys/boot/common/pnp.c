@@ -150,6 +150,10 @@ name|optind
 operator|=
 literal|1
 expr_stmt|;
+name|optreset
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
