@@ -738,6 +738,15 @@ block|,
 name|MOUSE_MODEL_GENERIC
 block|}
 block|,
+comment|/* MouseSystems SmartScroll Mouse (OEM from Genius?) */
+block|{
+literal|"KYE0002"
+block|,
+name|MOUSE_PROTO_MS
+block|,
+name|MOUSE_MODEL_EASYSCROLL
+block|}
+block|,
 comment|/* Genius NetMouse */
 block|{
 literal|"KYE0003"
@@ -763,6 +772,15 @@ block|,
 name|MOUSE_PROTO_MS
 block|,
 name|MOUSE_MODEL_EASYSCROLL
+block|}
+block|,
+comment|/* Logitech Cordless MouseMan Wheel */
+block|{
+literal|"LGI8033"
+block|,
+name|MOUSE_PROTO_INTELLI
+block|,
+name|MOUSE_MODEL_MOUSEMANPLUS
 block|}
 block|,
 comment|/* Logitech MouseMan (new 4 button model) */
