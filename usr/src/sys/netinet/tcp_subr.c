@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	6.2	84/08/29	*/
+comment|/*	tcp_subr.c	6.3	84/11/01	*/
 end_comment
 
 begin_include
@@ -897,14 +897,12 @@ operator|*
 operator|)
 name|tp
 expr_stmt|;
-comment|/* 	 * If the default maximum IP packet size is 576 bytes 	 * and a standard IP header is 20 bytes, with a TCP 	 * header of 20 bytes plus the options necessary to 	 * upgrade it to something higher, then initialize the 	 * maximum segment size to 576 - (20 + 20 + 8 + slop). 	 */
 name|tp
 operator|->
 name|t_maxseg
 operator|=
-literal|512
+name|TCP_MSS
 expr_stmt|;
-comment|/* satisfy the rest of the world */
 name|tp
 operator|->
 name|t_flags
@@ -917,6 +915,12 @@ operator|->
 name|t_inpcb
 operator|=
 name|inp
+expr_stmt|;
+name|tp
+operator|->
+name|t_srtt
+operator|=
+name|TCPTV_SRTTBASE
 expr_stmt|;
 name|inp
 operator|->
