@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.55 1998/03/30 09:51:52 phk Exp $ */
+comment|/* $Id: if_ppp.c,v 1.56 1998/04/06 11:43:10 phk Exp $ */
 end_comment
 
 begin_comment
@@ -6926,6 +6926,22 @@ name|m_len
 operator|-=
 name|PPP_HDRLEN
 expr_stmt|;
+if|if
+condition|(
+name|ipflow_fastforward
+argument_list|(
+name|m
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_last_recv
+operator|=
+name|time_second
+expr_stmt|;
+return|return;
+block|}
 name|schednetisr
 argument_list|(
 name|NETISR_IP

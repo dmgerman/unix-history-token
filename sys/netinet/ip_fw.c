@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.81 1998/04/15 17:46:51 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.82 1998/04/21 18:54:53 julian Exp $  */
 end_comment
 
 begin_comment
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include
