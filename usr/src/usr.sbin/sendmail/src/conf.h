@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.56 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.57 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -194,17 +194,6 @@ end_define
 
 begin_comment
 comment|/* max # of alias databases */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSBUFSIZE
-value|(MAXLINE + MAXATOM)
-end_define
-
-begin_comment
-comment|/* size of prescan buffer */
 end_comment
 
 begin_ifndef
@@ -3820,6 +3809,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* **  Size of prescan buffer. **	Despite comments in the _sendmail_ book, this probably should **	not be changed; there are some hard-to-define dependencies. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSBUFSIZE
+value|(MAXNAME + MAXATOM)
+end_define
+
+begin_comment
+comment|/* size of prescan buffer */
+end_comment
 
 begin_comment
 comment|/* fork routine -- set above using #ifdef _osname_ or in Makefile */

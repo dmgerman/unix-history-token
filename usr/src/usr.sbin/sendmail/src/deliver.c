@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.47 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7046,48 +7046,18 @@ argument_list|,
 literal|", ctladdr="
 argument_list|)
 expr_stmt|;
-name|l
-operator|=
-name|strlen
+name|strcpy
+argument_list|(
+name|bp
+argument_list|,
+name|shortenstring
 argument_list|(
 name|ctladdr
 operator|->
 name|q_paddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|l
-operator|>
+argument_list|,
 literal|83
-condition|)
-name|sprintf
-argument_list|(
-name|bp
-argument_list|,
-literal|"%.40s...%s"
-argument_list|,
-name|ctladdr
-operator|->
-name|q_paddr
-argument_list|,
-name|ctladdr
-operator|->
-name|q_paddr
-operator|+
-name|l
-operator|-
-literal|40
 argument_list|)
-expr_stmt|;
-else|else
-name|strcat
-argument_list|(
-name|bp
-argument_list|,
-name|ctladdr
-operator|->
-name|q_paddr
 argument_list|)
 expr_stmt|;
 name|bp

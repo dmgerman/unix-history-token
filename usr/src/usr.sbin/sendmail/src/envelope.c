@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.19.1.1 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2454,7 +2454,12 @@ name|LOG_NOTICE
 argument_list|,
 literal|"setsender: %s: invalid or unparseable, received from %s"
 argument_list|,
+name|shortenstring
+argument_list|(
 name|from
+argument_list|,
+literal|83
+argument_list|)
 argument_list|,
 name|p
 argument_list|)

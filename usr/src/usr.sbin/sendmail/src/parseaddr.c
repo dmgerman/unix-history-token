@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.19 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,43 +354,6 @@ operator|=
 operator|&
 name|delimptrbuf
 expr_stmt|;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|addr
-argument_list|)
-operator|>=
-name|MAXNAME
-condition|)
-block|{
-name|usrerr
-argument_list|(
-literal|"Name too long, %d characters max"
-argument_list|,
-name|MAXNAME
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|20
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"parseaddr-->NULL\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|pvp
 operator|=
 name|prescan
@@ -1496,6 +1459,8 @@ argument_list|(
 literal|"553 Address too long"
 argument_list|)
 expr_stmt|;
+name|returnnull
+label|:
 if|if
 condition|(
 name|delimptr
@@ -2031,28 +1996,27 @@ argument_list|(
 literal|"553 prescan: too many tokens"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|returnnull
+goto|;
+block|}
 if|if
 condition|(
-name|delimptr
-operator|!=
-name|NULL
+name|q
+operator|-
+name|tok
+operator|>
+name|MAXNAME
 condition|)
-operator|*
-name|delimptr
-operator|=
-name|p
+block|{
+name|syserr
+argument_list|(
+literal|"553 prescan: token too long"
+argument_list|)
 expr_stmt|;
-name|CurEnv
-operator|->
-name|e_to
-operator|=
-name|saveto
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|returnnull
+goto|;
 block|}
 operator|*
 name|avp
