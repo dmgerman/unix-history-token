@@ -12460,6 +12460,69 @@ case|:
 case|case
 name|MODE_SENSE_10
 case|:
+case|case
+name|READ_BUFFER
+case|:
+case|case
+literal|0x42
+case|:
+comment|/* READ_SUBCHANNEL */
+case|case
+literal|0x43
+case|:
+comment|/* READ_TOC */
+case|case
+literal|0x44
+case|:
+comment|/* READ_HEADER */
+case|case
+literal|0x51
+case|:
+comment|/* READ_DISK_INFO */
+case|case
+literal|0x52
+case|:
+comment|/* READ_TRACK_INFO */
+case|case
+literal|0x54
+case|:
+comment|/* SEND_OPC */
+case|case
+literal|0x59
+case|:
+comment|/* READ_MASTER_CUE */
+case|case
+literal|0x5b
+case|:
+comment|/* CLOSE_TR_SESSION */
+case|case
+literal|0x5c
+case|:
+comment|/* READ_BUFFER_CAP */
+case|case
+literal|0x5d
+case|:
+comment|/* SEND_CUE_SHEET */
+case|case
+literal|0xa1
+case|:
+comment|/* BLANK */
+case|case
+literal|0xa6
+case|:
+comment|/* EXCHANGE_MEDIUM */
+case|case
+literal|0xad
+case|:
+comment|/* READ_DVD_STRUCTURE */
+case|case
+literal|0xbb
+case|:
+comment|/* SET_CD_SPEED */
+case|case
+literal|0xe5
+case|:
+comment|/* READ_TRACK_INFO_PHILIPS */
 name|memcpy
 argument_list|(
 operator|*
