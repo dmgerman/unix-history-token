@@ -365,7 +365,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   fprintf (FILE, "%s", TYPE_ASM_OP);					\   assemble_name (FILE, NAME);						\   putc (',', FILE);							\   fprintf (FILE, TYPE_OPERAND_FMT, "object");				\   putc ('\n', FILE);							\   if (!flag_inhibit_size_directive)					\     {									\       fprintf (FILE, "%s", SIZE_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, ",%d\n", (SIZE));					\     }									\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE));					\ } while (0)
+value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   fprintf (FILE, "%s", TYPE_ASM_OP);					\   assemble_name (FILE, NAME);						\   putc (',', FILE);							\   fprintf (FILE, TYPE_OPERAND_FMT, "object");				\   putc ('\n', FILE);							\   if (!flag_inhibit_size_directive)					\     {									\       fprintf (FILE, "%s", SIZE_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, ",%d\n", (SIZE));					\     }									\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE) ? (SIZE) : 1);				\ } while (0)
 end_define
 
 begin_comment
