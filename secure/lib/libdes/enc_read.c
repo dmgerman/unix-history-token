@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lib/des/enc_read.c */
+comment|/* crypto/des/enc_read.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1996 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -29,12 +29,9 @@ begin_comment
 comment|/* This has some uglies in it but it works - even over sockets. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*extern int errno;*/
+end_comment
 
 begin_decl_stmt
 name|int
@@ -89,20 +86,21 @@ name|net_num
 init|=
 literal|0
 decl_stmt|;
+specifier|static
 name|unsigned
 name|char
+modifier|*
 name|net
-index|[
-name|BSIZE
-index|]
+init|=
+name|NULL
 decl_stmt|;
 comment|/* extra unencrypted data  	 * for when a block of 100 comes in but is des_read one byte at 	 * a time. */
 specifier|static
 name|char
+modifier|*
 name|unnet
-index|[
-name|BSIZE
-index|]
+init|=
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -115,6 +113,13 @@ name|int
 name|unnet_left
 init|=
 literal|0
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|tmpbuf
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|i
@@ -131,6 +136,100 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|tmpbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|tmpbuf
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|BSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmpbuf
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+block|{
+name|net
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|BSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|unnet
+operator|==
+name|NULL
+condition|)
+block|{
+name|unnet
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|BSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unnet
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* left over data from last decrypt */
 if|if
 condition|(
@@ -230,10 +329,6 @@ operator|=
 name|MAXWRITE
 expr_stmt|;
 comment|/* first - get the length */
-name|net_num
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|net_num
@@ -301,10 +396,7 @@ name|p
 operator|=
 name|net
 expr_stmt|;
-name|num
-operator|=
-literal|0
-expr_stmt|;
+comment|/* num=0;  */
 name|n2l
 argument_list|(
 name|p
@@ -436,7 +528,7 @@ name|des_rw_mode
 operator|&
 name|DES_PCBC_MODE
 condition|)
-name|pcbc_encrypt
+name|des_pcbc_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -460,7 +552,7 @@ name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
 else|else
-name|cbc_encrypt
+name|des_cbc_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -502,6 +594,9 @@ name|len
 expr_stmt|;
 name|unnet_left
 operator|=
+operator|(
+name|int
+operator|)
 name|num
 operator|-
 name|len
@@ -522,19 +617,13 @@ operator|<
 name|rnum
 condition|)
 block|{
-name|char
-name|tmpbuf
-index|[
-name|BSIZE
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|des_rw_mode
 operator|&
 name|DES_PCBC_MODE
 condition|)
-name|pcbc_encrypt
+name|des_pcbc_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -558,7 +647,7 @@ name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
 else|else
-name|cbc_encrypt
+name|des_cbc_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -604,7 +693,7 @@ name|des_rw_mode
 operator|&
 name|DES_PCBC_MODE
 condition|)
-name|pcbc_encrypt
+name|des_pcbc_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -628,7 +717,7 @@ name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
 else|else
-name|cbc_encrypt
+name|des_cbc_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -655,6 +744,9 @@ block|}
 block|}
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|num
 operator|)
 return|;

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lib/des/ecb_enc.c */
+comment|/* crypto/des/ecb_enc.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1996 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -20,14 +20,84 @@ file|"spr.h"
 end_include
 
 begin_decl_stmt
-specifier|const
+name|char
+modifier|*
+name|libdes_version
+init|=
+literal|"libdes v 3.24 - 20-Apr-1996 - eay"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|DES_version
 init|=
-literal|"libdes v 3.22 - 95/11/29 - eay"
+literal|"DES part of SSLeay 0.6.1 12-Jul-1996"
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|char
+modifier|*
+name|des_options
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|DES_PTR
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|DES_LONG
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"des(ptr,int)"
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|"des(ptr,long)"
+operator|)
+return|;
+else|#
+directive|else
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|DES_LONG
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"des(idx,int)"
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|"des(idx,long)"
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_function_decl
 name|void
@@ -75,11 +145,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|unsigned
-name|long
-name|l0
-decl_stmt|,
-name|l1
+name|DES_LONG
+name|l
 decl_stmt|;
 specifier|register
 name|unsigned
@@ -90,8 +157,7 @@ decl_stmt|,
 modifier|*
 name|out
 decl_stmt|;
-name|unsigned
-name|long
+name|DES_LONG
 name|ll
 index|[
 literal|2
@@ -119,7 +185,7 @@ name|c2l
 argument_list|(
 name|in
 argument_list|,
-name|l0
+name|l
 argument_list|)
 expr_stmt|;
 name|ll
@@ -127,13 +193,13 @@ index|[
 literal|0
 index|]
 operator|=
-name|l0
+name|l
 expr_stmt|;
 name|c2l
 argument_list|(
 name|in
 argument_list|,
-name|l1
+name|l
 argument_list|)
 expr_stmt|;
 name|ll
@@ -141,7 +207,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|l1
+name|l
 expr_stmt|;
 name|des_encrypt
 argument_list|(
@@ -152,7 +218,7 @@ argument_list|,
 name|encrypt
 argument_list|)
 expr_stmt|;
-name|l0
+name|l
 operator|=
 name|ll
 index|[
@@ -161,12 +227,12 @@ index|]
 expr_stmt|;
 name|l2c
 argument_list|(
-name|l0
+name|l
 argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-name|l1
+name|l
 operator|=
 name|ll
 index|[
@@ -175,14 +241,12 @@ index|]
 expr_stmt|;
 name|l2c
 argument_list|(
-name|l1
+name|l
 argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-name|l0
-operator|=
-name|l1
+name|l
 operator|=
 name|ll
 index|[
@@ -209,8 +273,7 @@ name|ks
 parameter_list|,
 name|encrypt
 parameter_list|)
-name|unsigned
-name|long
+name|DES_LONG
 modifier|*
 name|data
 decl_stmt|;
@@ -222,8 +285,7 @@ name|encrypt
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|long
+name|DES_LONG
 name|l
 decl_stmt|,
 name|r
@@ -234,7 +296,7 @@ name|u
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DES_USE_PTR
+name|DES_PTR
 specifier|register
 name|unsigned
 name|char
@@ -252,12 +314,11 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|MSDOS
+name|undef
 union|union
 name|fudge
 block|{
-name|unsigned
-name|long
+name|DES_LONG
 name|l
 decl_stmt|;
 name|unsigned
@@ -286,8 +347,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|DES_LONG
 modifier|*
 name|s
 decl_stmt|;
@@ -353,13 +413,12 @@ expr_stmt|;
 name|s
 operator|=
 operator|(
-name|unsigned
-name|long
+name|DES_LONG
 operator|*
 operator|)
 name|ks
 expr_stmt|;
-comment|/* I don't know if it is worth the effort of loop unrolling the 	 * inner loop */
+comment|/* I don't know if it is worth the effort of loop unrolling the 	 * inner loop 	 */
 if|if
 condition|(
 name|encrypt
@@ -377,7 +436,7 @@ literal|32
 condition|;
 name|i
 operator|+=
-literal|4
+literal|8
 control|)
 block|{
 name|D_ENCRYPT
@@ -404,6 +463,30 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/*  2 */
+name|D_ENCRYPT
+argument_list|(
+name|l
+argument_list|,
+name|r
+argument_list|,
+name|i
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/*  3 */
+name|D_ENCRYPT
+argument_list|(
+name|r
+argument_list|,
+name|l
+argument_list|,
+name|i
+operator|+
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/*  4 */
 block|}
 block|}
 else|else
@@ -420,7 +503,7 @@ literal|0
 condition|;
 name|i
 operator|-=
-literal|4
+literal|8
 control|)
 block|{
 name|D_ENCRYPT
@@ -447,6 +530,30 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 15 */
+name|D_ENCRYPT
+argument_list|(
+name|l
+argument_list|,
+name|r
+argument_list|,
+name|i
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 14 */
+name|D_ENCRYPT
+argument_list|(
+name|r
+argument_list|,
+name|l
+argument_list|,
+name|i
+operator|-
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* 13 */
 block|}
 block|}
 name|l
@@ -530,8 +637,7 @@ name|ks
 parameter_list|,
 name|encrypt
 parameter_list|)
-name|unsigned
-name|long
+name|DES_LONG
 modifier|*
 name|data
 decl_stmt|;
@@ -543,8 +649,7 @@ name|encrypt
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|long
+name|DES_LONG
 name|l
 decl_stmt|,
 name|r
@@ -555,7 +660,7 @@ name|u
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DES_USE_PTR
+name|DES_PTR
 specifier|register
 name|unsigned
 name|char
@@ -573,12 +678,11 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|MSDOS
+name|undef
 union|union
 name|fudge
 block|{
-name|unsigned
-name|long
+name|DES_LONG
 name|l
 decl_stmt|;
 name|unsigned
@@ -607,8 +711,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|DES_LONG
 modifier|*
 name|s
 decl_stmt|;
@@ -667,8 +770,7 @@ expr_stmt|;
 name|s
 operator|=
 operator|(
-name|unsigned
-name|long
+name|DES_LONG
 operator|*
 operator|)
 name|ks
@@ -691,7 +793,7 @@ literal|32
 condition|;
 name|i
 operator|+=
-literal|4
+literal|8
 control|)
 block|{
 name|D_ENCRYPT
@@ -718,6 +820,30 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/*  2 */
+name|D_ENCRYPT
+argument_list|(
+name|l
+argument_list|,
+name|r
+argument_list|,
+name|i
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/*  3 */
+name|D_ENCRYPT
+argument_list|(
+name|r
+argument_list|,
+name|l
+argument_list|,
+name|i
+operator|+
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/*  4 */
 block|}
 block|}
 else|else
@@ -734,7 +860,7 @@ literal|0
 condition|;
 name|i
 operator|-=
-literal|4
+literal|8
 control|)
 block|{
 name|D_ENCRYPT
@@ -761,6 +887,30 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 15 */
+name|D_ENCRYPT
+argument_list|(
+name|l
+argument_list|,
+name|r
+argument_list|,
+name|i
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* 14 */
+name|D_ENCRYPT
+argument_list|(
+name|r
+argument_list|,
+name|l
+argument_list|,
+name|i
+operator|-
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* 13 */
 block|}
 block|}
 name|l

@@ -4,7 +4,11 @@ comment|/* lib/des/des_locl.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1996 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *   * This file is part of an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL  * specification.  This library and applications are  * FREE FOR COMMERCIAL AND NON-COMMERCIAL USE  * as long as the following conditions are aheared to.  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  If this code is used in a product,  * Eric Young should be given attribution as the author of the parts used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Eric Young (eay@mincom.oz.au)  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+end_comment
+
+begin_comment
+comment|/* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING  *  * Always modify des_locl.org since des_locl.h is automatically generated from  * it during SSLeay configuration.  *  * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING  */
 end_comment
 
 begin_ifndef
@@ -18,6 +22,42 @@ define|#
 directive|define
 name|HEADER_DES_LOCL_H
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WIN16
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSDOS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSDOS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -61,13 +101,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DES_USE_PTR
+name|DES_PTR
 end_ifndef
 
 begin_undef
 undef|#
 directive|undef
-name|DES_USE_PTR
+name|DES_PTR
 end_undef
 
 begin_endif
@@ -89,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -214,13 +260,6 @@ parameter_list|()
 value|2
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -344,7 +383,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =((unsigned long)(*((c)++)))    , \ 			 l|=((unsigned long)(*((c)++)))<< 8L, \ 			 l|=((unsigned long)(*((c)++)))<<16L, \ 			 l|=((unsigned long)(*((c)++)))<<24L)
+value|(l =((DES_LONG)(*((c)++)))    , \ 			 l|=((DES_LONG)(*((c)++)))<< 8L, \ 			 l|=((DES_LONG)(*((c)++)))<<16L, \ 			 l|=((DES_LONG)(*((c)++)))<<24L)
 end_define
 
 begin_comment
@@ -364,7 +403,7 @@ name|l2
 parameter_list|,
 name|n
 parameter_list|)
-value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((unsigned long)(*(--(c))))<<24L; \ 			case 7: l2|=((unsigned long)(*(--(c))))<<16L; \ 			case 6: l2|=((unsigned long)(*(--(c))))<< 8L; \ 			case 5: l2|=((unsigned long)(*(--(c))));     \ 			case 4: l1 =((unsigned long)(*(--(c))))<<24L; \ 			case 3: l1|=((unsigned long)(*(--(c))))<<16L; \ 			case 2: l1|=((unsigned long)(*(--(c))))<< 8L; \ 			case 1: l1|=((unsigned long)(*(--(c))));     \ 				} \ 			}
+value|{ \ 			c+=n; \ 			l1=l2=0; \ 			switch (n) { \ 			case 8: l2 =((DES_LONG)(*(--(c))))<<24L; \ 			case 7: l2|=((DES_LONG)(*(--(c))))<<16L; \ 			case 6: l2|=((DES_LONG)(*(--(c))))<< 8L; \ 			case 5: l2|=((DES_LONG)(*(--(c))));     \ 			case 4: l1 =((DES_LONG)(*(--(c))))<<24L; \ 			case 3: l1|=((DES_LONG)(*(--(c))))<<16L; \ 			case 2: l1|=((DES_LONG)(*(--(c))))<< 8L; \ 			case 1: l1|=((DES_LONG)(*(--(c))));     \ 				} \ 			}
 end_define
 
 begin_define
@@ -399,7 +438,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|(l =((unsigned long)(*((c)++)))<<24L, \ 			 l|=((unsigned long)(*((c)++)))<<16L, \ 			 l|=((unsigned long)(*((c)++)))<< 8L, \ 			 l|=((unsigned long)(*((c)++))))
+value|(l =((DES_LONG)(*((c)++)))<<24L, \ 			 l|=((DES_LONG)(*((c)++)))<<16L, \ 			 l|=((DES_LONG)(*((c)++)))<< 8L, \ 			 l|=((DES_LONG)(*((c)++))))
 end_define
 
 begin_define
@@ -434,14 +473,57 @@ parameter_list|)
 value|{ \ 			c+=n; \ 			switch (n) { \ 			case 8: *(--(c))=(unsigned char)(((l2)>>24L)&0xff); \ 			case 7: *(--(c))=(unsigned char)(((l2)>>16L)&0xff); \ 			case 6: *(--(c))=(unsigned char)(((l2)>> 8L)&0xff); \ 			case 5: *(--(c))=(unsigned char)(((l2)     )&0xff); \ 			case 4: *(--(c))=(unsigned char)(((l1)>>24L)&0xff); \ 			case 3: *(--(c))=(unsigned char)(((l1)>>16L)&0xff); \ 			case 2: *(--(c))=(unsigned char)(((l1)>> 8L)&0xff); \ 			case 1: *(--(c))=(unsigned char)(((l1)     )&0xff); \ 				} \ 			}
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|(_lrotr(a,n))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|(((a)>>(n))+((a)<<(32-(n))))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* The changes to this macro may help or hinder, depending on the  * compiler and the achitecture.  gcc2 always seems to do well :-).  * Inspired by Dana How<how@isl.stanford.edu>  * DO NOT use the alternative version on machines with 8 byte longs. */
+comment|/* The changes to this macro may help or hinder, depending on the  * compiler and the achitecture.  gcc2 always seems to do well :-).  * Inspired by Dana How<how@isl.stanford.edu>  * DO NOT use the alternative version on machines with 8 byte longs.  * It does not seem to work on the Alpha, even when DES_LONG is 4  * bytes, probably an issue of accessing non-word aligned objects :-( */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DES_USR_PTR
+name|DES_PTR
 end_ifdef
 
 begin_define
@@ -455,7 +537,7 @@ name|R
 parameter_list|,
 name|S
 parameter_list|)
-value|{ \ 	u=((R^s[S  ])<<2);	\ 	t= R^s[S+1]; \ 	t=((t>>2)+(t<<30)); \ 	L^= \ 	*(unsigned long *)(des_SP+0x0100+((t    )&0xfc))+ \ 	*(unsigned long *)(des_SP+0x0300+((t>> 8)&0xfc))+ \ 	*(unsigned long *)(des_SP+0x0500+((t>>16)&0xfc))+ \ 	*(unsigned long *)(des_SP+0x0700+((t>>24)&0xfc))+ \ 	*(unsigned long *)(des_SP+       ((u    )&0xfc))+ \ 	*(unsigned long *)(des_SP+0x0200+((u>> 8)&0xfc))+ \ 	*(unsigned long *)(des_SP+0x0400+((u>>16)&0xfc))+ \ 	*(unsigned long *)(des_SP+0x0600+((u>>24)&0xfc)); }
+value|{ \ 	u=((R^s[S  ])<<2);	\ 	t= R^s[S+1]; \ 	t=ROTATE(t,2); \ 	L^= (\ 	*(DES_LONG *)((unsigned char *)des_SP+0x100+((t    )&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP+0x300+((t>> 8)&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP+0x500+((t>>16)&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP+0x700+((t>>24)&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP      +((u    )&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP+0x200+((u>> 8)&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP+0x400+((u>>16)&0xfc))+ \ 	*(DES_LONG *)((unsigned char *)des_SP+0x600+((u>>24)&0xfc))); }
 end_define
 
 begin_else
@@ -470,7 +552,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MSDOS
+name|undef
 end_ifdef
 
 begin_define
@@ -504,7 +586,7 @@ name|R
 parameter_list|,
 name|S
 parameter_list|)
-value|{\ 	u=(R^s[S  ]); \ 	t=R^s[S+1]; \ 	t=((t>>4L)+(t<<28L)); \ 	Q^=	des_SPtrans[1][(t     )&0x3f]| \ 		des_SPtrans[3][(t>> 8L)&0x3f]| \ 		des_SPtrans[5][(t>>16L)&0x3f]| \ 		des_SPtrans[7][(t>>24L)&0x3f]| \ 		des_SPtrans[0][(u     )&0x3f]| \ 		des_SPtrans[2][(u>> 8L)&0x3f]| \ 		des_SPtrans[4][(u>>16L)&0x3f]| \ 		des_SPtrans[6][(u>>24L)&0x3f]; }
+value|{\ 	u=(R^s[S  ]); \ 	t=R^s[S+1]; \ 	t=ROTATE(t,4); \ 	Q^=	des_SPtrans[1][(t     )&0x3f]| \ 		des_SPtrans[3][(t>> 8L)&0x3f]| \ 		des_SPtrans[5][(t>>16L)&0x3f]| \ 		des_SPtrans[7][(t>>24L)&0x3f]| \ 		des_SPtrans[0][(u     )&0x3f]| \ 		des_SPtrans[2][(u>> 8L)&0x3f]| \ 		des_SPtrans[4][(u>>16L)&0x3f]| \ 		des_SPtrans[6][(u>>24L)&0x3f]; }
 end_define
 
 begin_endif
@@ -549,7 +631,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|{ \ 	register unsigned long tt; \ 	PERM_OP(r,l,tt, 4,0x0f0f0f0fL); \ 	PERM_OP(l,r,tt,16,0x0000ffffL); \ 	PERM_OP(r,l,tt, 2,0x33333333L); \ 	PERM_OP(l,r,tt, 8,0x00ff00ffL); \ 	PERM_OP(r,l,tt, 1,0x55555555L); \ 	}
+value|{ \ 	register DES_LONG tt; \ 	PERM_OP(r,l,tt, 4,0x0f0f0f0fL); \ 	PERM_OP(l,r,tt,16,0x0000ffffL); \ 	PERM_OP(r,l,tt, 2,0x33333333L); \ 	PERM_OP(l,r,tt, 8,0x00ff00ffL); \ 	PERM_OP(r,l,tt, 1,0x55555555L); \ 	}
 end_define
 
 begin_define
@@ -562,7 +644,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|{ \ 	register unsigned long tt; \ 	PERM_OP(l,r,tt, 1,0x55555555L); \ 	PERM_OP(r,l,tt, 8,0x00ff00ffL); \ 	PERM_OP(l,r,tt, 2,0x33333333L); \ 	PERM_OP(r,l,tt,16,0x0000ffffL); \ 	PERM_OP(l,r,tt, 4,0x0f0f0f0fL); \ 	}
+value|{ \ 	register DES_LONG tt; \ 	PERM_OP(l,r,tt, 1,0x55555555L); \ 	PERM_OP(r,l,tt, 8,0x00ff00ffL); \ 	PERM_OP(l,r,tt, 2,0x33333333L); \ 	PERM_OP(r,l,tt,16,0x0000ffffL); \ 	PERM_OP(l,r,tt, 4,0x0f0f0f0fL); \ 	}
 end_define
 
 begin_endif
