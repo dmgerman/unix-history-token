@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_unlink[] = "@(#)unlink_.c	1.1";  *  * unlink (remove) a file  *  * calling sequence:  *	integer unlink  *	ierror = unlink(filename)  * where:  *	ierror will be a returned status (0 == OK)  *	filename is the file to be unlinked  */
+comment|/* char id_unlink[] = "@(#)unlink_.c	1.2";  *  * unlink (remove) a file  *  * calling sequence:  *	integer unlink  *	ierror = unlink(filename)  * where:  *	ierror will be a returned status (0 == OK)  *	filename is the file to be unlinked  */
 end_comment
 
 begin_include
@@ -8,6 +8,30 @@ include|#
 directive|include
 file|"../libI77/f_errno.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
@@ -28,7 +52,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|128
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if
