@@ -9951,7 +9951,7 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
-name|UCHAR_MAX
+name|NC
 operator|+
 literal|1
 operator|)
@@ -9972,17 +9972,33 @@ name|NULL
 condition|)
 comment|/* Not a fatal error */
 return|return;
+comment|/* Adjust for signed chars, if necessary */
+name|g
+operator|->
+name|charjump
+operator|=
+operator|&
+name|g
+operator|->
+name|charjump
+index|[
+operator|-
+operator|(
+name|CHAR_MIN
+operator|)
+index|]
+expr_stmt|;
 comment|/* If the character does not exist in the pattern, the jump 	 * is equal to the number of characters in the pattern. 	 */
 for|for
 control|(
 name|ch
 operator|=
-literal|0
+name|CHAR_MIN
 init|;
 name|ch
 operator|<
 operator|(
-name|UCHAR_MAX
+name|CHAR_MAX
 operator|+
 literal|1
 operator|)
@@ -10021,10 +10037,6 @@ name|g
 operator|->
 name|charjump
 index|[
-operator|(
-name|unsigned
-name|char
-operator|)
 name|g
 operator|->
 name|must
