@@ -1249,6 +1249,13 @@ literal|2
 operator|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|p
+operator|=
+name|URL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
