@@ -2885,6 +2885,13 @@ literal|0
 expr_stmt|;
 comment|/* disable control code 						 * processing */
 comment|/* Update tty to reflect screen size */
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+condition|)
+block|{
 name|svsp
 operator|->
 name|vs_tty
@@ -2927,6 +2934,19 @@ name|ws_ypixel
 operator|=
 literal|400
 expr_stmt|;
+name|svsp
+operator|->
+name|vs_tty
+operator|->
+name|t_winsize
+operator|.
+name|ws_row
+operator|=
+name|svsp
+operator|->
+name|screen_rows
+expr_stmt|;
+block|}
 comment|/* screen_rows already calculated in set_charset() */
 if|if
 condition|(
@@ -2971,18 +2991,6 @@ expr_stmt|;
 block|}
 name|svsp
 operator|->
-name|vs_tty
-operator|->
-name|t_winsize
-operator|.
-name|ws_row
-operator|=
-name|svsp
-operator|->
-name|screen_rows
-expr_stmt|;
-name|svsp
-operator|->
 name|scrr_len
 operator|=
 name|svsp
@@ -3002,6 +3010,18 @@ expr_stmt|;
 if|#
 directive|if
 name|PCVT_SIGWINCH
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+operator|&&
+name|svsp
+operator|->
+name|vs_tty
+operator|->
+name|t_pgrp
+condition|)
 name|pgsignal
 argument_list|(
 name|svsp

@@ -5400,6 +5400,12 @@ name|vt_pure_mode
 operator|=
 name|M_HPVT
 expr_stmt|;
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+condition|)
 name|svsp
 operator|->
 name|vs_tty
@@ -5510,6 +5516,12 @@ name|screen_rows
 operator|=
 literal|24
 expr_stmt|;
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+condition|)
 name|svsp
 operator|->
 name|vs_tty
@@ -5544,6 +5556,18 @@ block|}
 if|#
 directive|if
 name|PCVT_SIGWINCH
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+operator|&&
+name|svsp
+operator|->
+name|vs_tty
+operator|->
+name|t_pgrp
+condition|)
 name|pgsignal
 argument_list|(
 name|svsp
@@ -6783,6 +6807,13 @@ argument_list|)
 expr_stmt|;
 comment|/* update labels, row/col, page ind */
 comment|/* Update winsize struct to reflect screen size */
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+condition|)
+block|{
 name|svsp
 operator|->
 name|vs_tty
@@ -6838,6 +6869,14 @@ expr_stmt|;
 if|#
 directive|if
 name|PCVT_SIGWINCH
+if|if
+condition|(
+name|svsp
+operator|->
+name|vs_tty
+operator|->
+name|t_pgrp
+condition|)
 name|pgsignal
 argument_list|(
 name|svsp
@@ -6854,6 +6893,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PCVT_SIGWINCH */
+block|}
 return|return
 operator|(
 literal|1
