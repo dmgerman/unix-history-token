@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optab.c 1.1 %G%"
+literal|"@(#)optab.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1137,10 +1137,6 @@ block|}
 block|,
 block|{
 literal|"defname"
-block|,
-name|PSUBOP
-block|,
-name|HWORD
 block|}
 block|,
 block|{
