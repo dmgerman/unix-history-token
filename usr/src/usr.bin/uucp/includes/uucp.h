@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.11	86/02/12	*/
+comment|/*	@(#)uucp.h	5.12	%G%	*/
 end_comment
 
 begin_include
@@ -625,6 +625,14 @@ begin_comment
 comment|/*#define LOGBYSITE	"/usr/spool/uucp/LOG" /**/
 end_comment
 
+begin_comment
+comment|/*  * If you are doing rebilling and need connect accounting,  * define DO_CONNECT_ACCOUNTING  */
+end_comment
+
+begin_comment
+comment|/*#define DO_CONNECT_ACCOUNTING	/**/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -833,7 +841,7 @@ begin_define
 define|#
 directive|define
 name|LLEN
-value|50
+value|150
 end_define
 
 begin_define
