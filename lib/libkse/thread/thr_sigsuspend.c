@@ -75,10 +75,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|THR_SCHED_LOCK
+name|THR_LOCK_SWITCH
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -100,11 +98,6 @@ sizeof|sizeof
 argument_list|(
 name|sigset_t
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|THR_LOCK_SWITCH
-argument_list|(
-name|curthread
 argument_list|)
 expr_stmt|;
 name|THR_SET_STATE
