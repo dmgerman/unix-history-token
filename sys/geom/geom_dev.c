@@ -629,6 +629,12 @@ argument_list|()
 expr_stmt|;
 name|dev
 operator|->
+name|si_iosize_max
+operator|=
+name|MAXPHYS
+expr_stmt|;
+name|dev
+operator|->
 name|si_stripesize
 operator|=
 name|pp
