@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.17 1997/11/06 19:29:24 phk Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.18 1998/03/30 09:50:35 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1251,18 +1251,30 @@ operator|>
 name|msqptr
 operator|->
 name|msg_qbytes
-operator|&&
+condition|)
+block|{
+name|eval
+operator|=
+name|suser
+argument_list|(
 name|cred
+argument_list|,
+operator|&
+name|p
 operator|->
-name|cr_uid
-operator|!=
-literal|0
+name|p_acflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|eval
 condition|)
 return|return
 operator|(
-name|EPERM
+name|eval
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|msqbuf
