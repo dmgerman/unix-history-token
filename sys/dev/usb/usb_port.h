@@ -1244,12 +1244,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|USBVERBOSE
-end_define
-
 begin_comment
 comment|/* We don't use the soft interrupt code in FreeBSD. */
 end_comment
