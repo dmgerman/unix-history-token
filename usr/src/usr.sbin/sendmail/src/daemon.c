@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.88 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.89 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.88 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.89 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3633,6 +3633,23 @@ begin_comment
 comment|/* **  ANYNET_NTOA -- convert a network address to printable form. ** **	Parameters: **		sap -- a pointer to a sockaddr structure. ** **	Returns: **		A printable version of that sockaddr. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AF_LINK
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/if_dl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|char
 modifier|*
@@ -3761,8 +3778,40 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|AF_LINK
+case|case
+name|AF_LINK
+case|:
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"[LINK: %s]"
+argument_list|,
+name|link_ntoa
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_dl
+operator|*
+operator|)
+operator|&
+name|sap
+operator|->
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+endif|#
+directive|endif
 default|default:
-comment|/* this case is only to ensure syntactic correctness */
+comment|/* this case is needed when nothing is #defined */
+comment|/* in order to keep the switch syntactically correct */
 break|break;
 block|}
 comment|/* unknown family -- just dump bytes */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.160 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.161 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2275,6 +2275,16 @@ begin_comment
 comment|/* don't declare sys_errlist */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BSD4_4_SOCKADDR
+end_define
+
+begin_comment
+comment|/* has sa_len */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2366,6 +2376,16 @@ end_define
 
 begin_comment
 comment|/* don't declare sys_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_4_SOCKADDR
+end_define
+
+begin_comment
+comment|/* has sa_len */
 end_comment
 
 begin_define
@@ -2571,6 +2591,16 @@ end_define
 
 begin_comment
 comment|/* don't declare sys_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_4_SOCKADDR
+end_define
+
+begin_comment
+comment|/* has sa_len */
 end_comment
 
 begin_ifndef
