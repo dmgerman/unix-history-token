@@ -13,12 +13,6 @@ directive|include
 file|<dev/isp/isp_freebsd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|void
