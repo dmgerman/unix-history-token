@@ -1899,8 +1899,6 @@ argument_list|)
 decl_stmt|;
 name|off_t
 name|base_offset
-decl_stmt|,
-name|offset
 decl_stmt|;
 name|size_t
 name|size
