@@ -3506,15 +3506,12 @@ name|cmsg
 operator|->
 name|cmsg_len
 operator|==
-operator|(
-sizeof|sizeof
-expr|*
-name|cmsg
-operator|+
+name|CMSG_LEN
+argument_list|(
 sizeof|sizeof
 expr|*
 name|t
-operator|)
+argument_list|)
 condition|)
 block|{
 comment|/* Copy to avoid alignment problems: */
