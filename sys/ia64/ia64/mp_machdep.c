@@ -183,6 +183,13 @@ name|vhpt_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int64_t
+name|ia64_lapic_address
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1273,7 +1280,7 @@ name|pipi
 operator|=
 name|ia64_memory_address
 argument_list|(
-name|PAL_PIB_DEFAULT_ADDR
+name|ia64_lapic_address
 operator||
 operator|(
 operator|(

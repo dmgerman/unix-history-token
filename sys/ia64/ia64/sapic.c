@@ -57,6 +57,12 @@ directive|include
 file|<machine/intr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/pal.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -69,6 +75,14 @@ literal|"I/O SAPIC devices"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|u_int64_t
+name|ia64_lapic_address
+init|=
+name|PAL_PIB_DEFAULT_ADDR
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct

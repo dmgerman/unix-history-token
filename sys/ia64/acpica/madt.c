@@ -15,6 +15,13 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|u_int64_t
+name|ia64_lapic_address
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|struct
 name|sapic
@@ -180,6 +187,25 @@ literal|31
 decl_stmt|;
 block|}
 name|LOCAL_SAPIC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+comment|/* LOCAL APIC OVERRIDE */
+block|{
+name|APIC_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT64
+name|LocalApicAddress
+decl_stmt|;
+block|}
+name|LAPIC_OVERRIDE
 typedef|;
 end_typedef
 
@@ -409,6 +435,38 @@ end_function
 begin_function
 specifier|static
 name|void
+name|parse_lapic_override
+parameter_list|(
+name|LAPIC_OVERRIDE
+modifier|*
+name|lapic
+parameter_list|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"\t\tLocal APIC address=0x%lx\n"
+argument_list|,
+name|lapic
+operator|->
+name|LocalApicAddress
+argument_list|)
+expr_stmt|;
+name|ia64_lapic_address
+operator|=
+name|lapic
+operator|->
+name|LocalApicAddress
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|parse_platform_interrupt
 parameter_list|(
 name|PLATFORM_INTERRUPT_SOURCE
@@ -574,6 +632,26 @@ name|cpus
 operator|)
 return|;
 block|}
+comment|/* Save the address of the processor interrupt block. */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"\tLocal APIC address=0x%x\n"
+argument_list|,
+name|madt
+operator|->
+name|LocalApicAddress
+argument_list|)
+expr_stmt|;
+name|ia64_lapic_address
+operator|=
+name|madt
+operator|->
+name|LocalApicAddress
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -704,6 +782,15 @@ condition|)
 name|printf
 argument_list|(
 literal|"Local APIC override entry\n"
+argument_list|)
+expr_stmt|;
+name|parse_lapic_override
+argument_list|(
+operator|(
+name|LAPIC_OVERRIDE
+operator|*
+operator|)
+name|head
 argument_list|)
 expr_stmt|;
 break|break;

@@ -66,12 +66,19 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|u_int64_t
+name|ia64_lapic_address
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|IA64_INTERRUPT_BLOCK
 define|\
-value|(struct ia64_interrupt_block *)IA64_PHYS_TO_RR6(0xfee00000)
+value|(struct ia64_interrupt_block *)IA64_PHYS_TO_RR6(ia64_lapic_address)
 end_define
 
 begin_struct_decl
