@@ -4375,7 +4375,7 @@ block|, 	}
 block|,
 comment|/* Oxford Semiconductor OX12PCI840 PCI Parallel port */
 block|{
-literal|"Qxford Semiconductor OX12PCI840 Parallel port"
+literal|"Oxford Semiconductor OX12PCI840 Parallel port"
 block|,
 name|NULL
 block|,
@@ -4409,7 +4409,7 @@ literal|0x00
 block|,
 literal|0x00
 block|}
-block|, 		}
+block|, 	    }
 block|, 	}
 block|,
 comment|/* 	 * Oxford Semiconductor OX9160/OX16PCI954 PCI UARTS 	 * Second chip on Exsys EX-41098 8x cards 	 */
