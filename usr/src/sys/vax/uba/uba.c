@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.18	%G%	*/
+comment|/*	uba.c	4.19	%G%	*/
 end_comment
 
 begin_define
@@ -102,6 +102,26 @@ include|#
 directive|include
 file|"../h/dk.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_decl_stmt
+name|char
+name|ubasr_bits
+index|[]
+init|=
+name|UBASR_BITS
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Do transfer on device argument.  The controller  * and uba involved are implied by the device.  * We queue for resource wait in the uba code if necessary.  * We return 1 if the transfer was started, 0 if it was not.  * If you call this routine with the head of the queue for a  * UBA, it will automatically remove the device from the UBA  * queue before it returns.  If some other device is given  * as argument, it will be added to the request queue if the  * request cannot be started immediately.  This means that  * passing a device which is on the queue but not at the head  * of the request queue is likely to be a disaster.  */
@@ -1579,7 +1599,7 @@ name|VAX_780
 case|:
 name|printf
 argument_list|(
-literal|"UBA RESET %d:"
+literal|"uba%d: reset"
 argument_list|,
 name|uban
 argument_list|)
@@ -1602,7 +1622,7 @@ name|VAX_750
 case|:
 name|printf
 argument_list|(
-literal|"UNIBUS INIT:"
+literal|"uba0: reset"
 argument_list|)
 expr_stmt|;
 name|mtpr
@@ -1612,9 +1632,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* give devices time to recover from power fail */
 name|DELAY
 argument_list|(
-literal|100000
+literal|5000000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1800,7 +1821,9 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"HANG "
+literal|"uba%d: hung\n"
+argument_list|,
+name|uban
 argument_list|)
 expr_stmt|;
 name|ubareset
@@ -1957,7 +1980,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZERO VECTOR "
+literal|"uba%d: too many zero vectors\n"
 argument_list|)
 expr_stmt|;
 name|ubareset
@@ -1983,7 +2006,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"UBA%d SBI FAULT sr %x cnfgr %x\n"
+literal|"uba%d: sbi fault sr=%b cnfgr=%b\n"
 argument_list|,
 name|uban
 argument_list|,
@@ -1991,9 +2014,13 @@ name|uba
 operator|->
 name|uba_sr
 argument_list|,
+name|ubasr_bits
+argument_list|,
 name|uba
 operator|->
 name|uba_cnfgr
+argument_list|,
+name|nexflt_bits
 argument_list|)
 expr_stmt|;
 name|ubareset
@@ -2020,7 +2047,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"UBA%d ERROR SR %x FMER %x FUBAR %o\n"
+literal|"uba%d: uba error sr=%x fmer=%x fubar=%o\n"
 argument_list|,
 name|uban
 argument_list|,
