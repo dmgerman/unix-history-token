@@ -185,6 +185,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|uflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|dokerberos
 init|=
 literal|0
@@ -384,13 +392,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optlist
-value|"b:cdf:hikmNRrs:tvxy"
+value|"b:cdf:hikmNRrs:tuvxy"
 else|#
 directive|else
 define|#
 directive|define
 name|optlist
-value|"b:cdf:himNRrs:tvxy"
+value|"b:cdf:himNRrs:tuvxy"
 endif|#
 directive|endif
 while|while
@@ -604,6 +612,14 @@ literal|1
 argument_list|,
 literal|"dump number must be greater than 0"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|uflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1118,15 +1134,15 @@ name|stderr
 argument_list|,
 literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"restore -i [-chkmvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -i [-chkmuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -r [-ckvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -r [-ckuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -R [-ckvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -R [-ckuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -x [-chkmvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -x [-chkmuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|,
-literal|"restore -t [-chkvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -t [-chkuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|)
 expr_stmt|;
 name|done
