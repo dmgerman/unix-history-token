@@ -2079,7 +2079,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common code for dup, dup2, and fcntl(F_DUPFD).  * filedesc must be locked, but will be unlocked as a side effect.  */
+comment|/*  * Common code for dup, dup2, and fcntl(F_DUPFD).  */
 end_comment
 
 begin_function
