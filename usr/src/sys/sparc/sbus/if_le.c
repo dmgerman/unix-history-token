@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.2 (Berkeley) %G%  *  * from: $Header: if_le.c,v 1.17 92/07/10 06:45:17 torek Exp $  */
+comment|/*-  * Copyright (c) 1982, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.3 (Berkeley) %G%  *  * from: $Header: if_le.c,v 1.23 93/04/21 02:39:38 torek Exp $  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"bpfilter.h"
 end_include
 
 begin_comment
-comment|/*  * AMD 7990 LANCE  *  * This driver will generate and accept tailer encapsulated packets even  * though it buys us nothing.  The motivation was to avoid incompatibilities  * with VAXen, SUNs, and others that handle and benefit from them.  * This reasoning is dubious.  */
+comment|/*  * AMD 7990 LANCE  */
 end_comment
 
 begin_include
@@ -357,10 +357,16 @@ name|intrhand
 name|sc_ih
 decl_stmt|;
 comment|/* interrupt vectoring */
-name|int
-name|sc_interrupts
+name|struct
+name|evcnt
+name|sc_intrcnt
 decl_stmt|;
-comment|/* number of interrupts taken */
+comment|/* # of interrupts, per le */
+name|struct
+name|evcnt
+name|sc_errcnt
+decl_stmt|;
+comment|/* # of errors, per le */
 name|struct
 name|arpcom
 name|sc_ac
@@ -524,12 +530,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
-
 begin_function_decl
 name|void
 name|lesetladrf
@@ -540,11 +540,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -778,6 +773,12 @@ operator|&
 name|sc
 operator|->
 name|sc_if
+decl_stmt|;
+specifier|register
+name|struct
+name|bootpath
+modifier|*
+name|bp
 decl_stmt|;
 specifier|register
 name|int
@@ -1151,6 +1152,37 @@ operator|->
 name|sc_ih
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set up event counters. 	 */
+name|evcnt_attach
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"intr"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_intrcnt
+argument_list|)
+expr_stmt|;
+name|evcnt_attach
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"errs"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_errcnt
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_unit
@@ -1197,9 +1229,6 @@ name|if_start
 operator|=
 name|lestart
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ifp
 operator|->
 name|if_flags
@@ -1210,18 +1239,6 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
 expr_stmt|;
-else|#
-directive|else
-name|ifp
-operator|->
-name|if_flags
-operator|=
-name|IFF_BROADCAST
-operator||
-name|IFF_SIMPLEX
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IFF_NOTRAILERS
@@ -1264,14 +1281,57 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|SAME_LANCE
+parameter_list|(
+name|bp
+parameter_list|,
+name|sa
+parameter_list|)
+define|\
+value|((bp->val[0] == sa->sa_slot&& bp->val[1] == sa->sa_offset) || \ 	 (bp->val[0] == -1&& bp->val[1] == sc->sc_dev.dv_unit))
+name|bp
+operator|=
+name|sa
+operator|->
+name|sa_ra
+operator|.
+name|ra_bp
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|bp
+operator|->
+name|name
+argument_list|,
+literal|"le"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|SAME_LANCE
+argument_list|(
+name|bp
+argument_list|,
+name|sa
+argument_list|)
+condition|)
+name|bootdv
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_dev
+expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
 
 begin_comment
 comment|/*  * Setup the logical address filter  */
@@ -1322,14 +1382,12 @@ specifier|register
 name|u_char
 modifier|*
 name|cp
+decl_stmt|,
+name|c
 decl_stmt|;
 specifier|register
 name|u_long
 name|crc
-decl_stmt|;
-specifier|register
-name|u_long
-name|c
 decl_stmt|;
 specifier|register
 name|int
@@ -1413,7 +1471,7 @@ operator|->
 name|enm_addrlo
 argument_list|)
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1444,6 +1502,7 @@ name|IFF_ALLMULTI
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * One would think, given the AM7990 document's polynomial 		 * of 0x04c11db6, that this should be 0x6db88320 (the bit 		 * reversal of the AMD value), but that is not right.  See 		 * the BASIC listing: bit 0 (our bit 31) must then be set. 		 */
 name|cp
 operator|=
 operator|(
@@ -1456,31 +1515,28 @@ name|enm
 operator|->
 name|enm_addrlo
 expr_stmt|;
-name|c
-operator|=
-operator|*
-name|cp
-expr_stmt|;
 name|crc
 operator|=
 literal|0xffffffff
 expr_stmt|;
+for|for
+control|(
 name|len
 operator|=
 literal|6
-expr_stmt|;
-while|while
-condition|(
-name|len
+init|;
 operator|--
-operator|>
+name|len
+operator|>=
 literal|0
-condition|)
+condition|;
+control|)
 block|{
 name|c
 operator|=
 operator|*
 name|cp
+operator|++
 expr_stmt|;
 for|for
 control|(
@@ -1532,9 +1588,6 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
-name|cp
-operator|++
-expr_stmt|;
 block|}
 comment|/* Just want the 6 most significant bits. */
 name|crc
@@ -1571,11 +1624,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1679,36 +1727,11 @@ operator|=
 name|LE_C0_STOP
 expr_stmt|;
 comment|/* Setup the logical address filter */
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|lesetladrf
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ler2
-operator|->
-name|ler2_ladrf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|ler2
-operator|->
-name|ler2_ladrf
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* init receive and transmit rings */
 name|a
 operator|=
@@ -2518,7 +2541,9 @@ operator|)
 return|;
 name|sc
 operator|->
-name|sc_interrupts
+name|sc_intrcnt
+operator|.
+name|ev_count
 operator|++
 expr_stmt|;
 if|if
@@ -2528,6 +2553,13 @@ operator|&
 name|LE_C0_ERR
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_errcnt
+operator|.
+name|ev_count
+operator|++
+expr_stmt|;
 name|leerror
 argument_list|(
 name|sc
@@ -3514,7 +3546,7 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to enet. 	 */
+comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to enet, then discard things 	 * not destined for us (but be sure to keep broadcast/multicast). 	 */
 if|if
 condition|(
 name|sc
@@ -3539,12 +3571,8 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Keep the packet if it's a broadcast or has our 		 * physical ethernet address (or if we support 		 * multicast and it's one). 		 */
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|MULTICAST
 operator|(
 name|flags
 operator|&
@@ -3557,18 +3585,6 @@ operator|)
 operator|==
 literal|0
 operator|&&
-else|#
-directive|else
-operator|(
-name|flags
-operator|&
-name|M_BCAST
-operator|)
-operator|==
-literal|0
-operator|&&
-endif|#
-directive|endif
 name|bcmp
 argument_list|(
 name|et
@@ -4660,24 +4676,11 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
-case|case
-name|SIOCDELMULTI
-case|:
-comment|/* Update our multicast list  */
 name|error
 operator|=
-operator|(
-name|cmd
-operator|==
-name|SIOCADDMULTI
-operator|)
-condition|?
 name|ether_addmulti
 argument_list|(
 operator|(
@@ -4692,7 +4695,15 @@ name|sc
 operator|->
 name|sc_ac
 argument_list|)
-else|:
+expr_stmt|;
+goto|goto
+name|update_multicast
+goto|;
+case|case
+name|SIOCDELMULTI
+case|:
+name|error
+operator|=
 name|ether_delmulti
 argument_list|(
 operator|(
@@ -4708,6 +4719,8 @@ operator|->
 name|sc_ac
 argument_list|)
 expr_stmt|;
+name|update_multicast
+label|:
 if|if
 condition|(
 name|error
@@ -4732,8 +4745,6 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=
