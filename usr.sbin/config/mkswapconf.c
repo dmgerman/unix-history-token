@@ -316,6 +316,15 @@ name|f_rootdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fl
+operator|->
+name|f_dumpdev
+operator|!=
+name|NODEV
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -344,6 +353,17 @@ name|f_dumpdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"dev_t\tdumpdev = NODEV;\t\t\t/* unconfigured */\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
