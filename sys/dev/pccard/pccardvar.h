@@ -402,6 +402,18 @@ decl_stmt|;
 name|int
 name|pf_flags
 decl_stmt|;
+name|driver_intr_t
+modifier|*
+name|intr_handler
+decl_stmt|;
+name|void
+modifier|*
+name|intr_handler_arg
+decl_stmt|;
+name|void
+modifier|*
+name|intr_handler_cookie
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -551,6 +563,9 @@ name|int
 name|sc_enabled_count
 decl_stmt|;
 comment|/* num functions enabled */
+name|int
+name|intr_handler_count
+decl_stmt|;
 block|}
 struct|;
 end_struct

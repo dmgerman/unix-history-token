@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * Cardbus CIS definitions  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|cis_tupleinfo
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|cardbus_do_cis
@@ -16,6 +22,51 @@ name|dev
 parameter_list|,
 name|device_t
 name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cardbus_cis_read
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|u_int8_t
+name|id
+parameter_list|,
+name|struct
+name|cis_tupleinfo
+modifier|*
+modifier|*
+name|buff
+parameter_list|,
+name|int
+modifier|*
+name|nret
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cardbus_cis_free
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|cis_tupleinfo
+modifier|*
+name|buff
+parameter_list|,
+name|int
+modifier|*
+name|nret
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -303,6 +354,17 @@ directive|define
 name|CISTPL_END
 value|0xFF
 end_define
+
+begin_define
+define|#
+directive|define
+name|CISTPL_GENERIC
+value|-1
+end_define
+
+begin_comment
+comment|/* catchall */
+end_comment
 
 begin_comment
 comment|/* BAR */

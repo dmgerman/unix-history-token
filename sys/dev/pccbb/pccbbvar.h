@@ -150,10 +150,6 @@ name|PCCBB_PCIC_MEM_32
 value|0x02
 define|#
 directive|define
-name|PCCBB_CARDATTACHED
-value|0x01000000
-define|#
-directive|define
 name|PCCBB_16BIT_CARD
 value|0x02000000
 define|#
@@ -392,7 +388,7 @@ begin_define
 define|#
 directive|define
 name|CARDBUS_SYS_RES_MEMORY_START
-value|0x18020000
+value|0x44000000
 end_define
 
 begin_define
