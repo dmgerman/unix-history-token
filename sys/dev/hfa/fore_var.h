@@ -138,8 +138,7 @@ modifier|*
 name|hxq_descr
 decl_stmt|;
 comment|/* Element's transmit descriptor */
-name|Xmit_descr
-modifier|*
+name|vm_paddr_t
 name|hxq_descr_dma
 decl_stmt|;
 comment|/* Element's transmit descriptor */
@@ -201,8 +200,7 @@ modifier|*
 name|hrq_descr
 decl_stmt|;
 comment|/* Element's receive descriptor */
-name|Recv_descr
-modifier|*
+name|vm_paddr_t
 name|hrq_descr_dma
 decl_stmt|;
 comment|/* Element's receive descriptor */
@@ -247,8 +245,7 @@ modifier|*
 name|hbq_descr
 decl_stmt|;
 comment|/* Element's buffer descriptor array */
-name|Buf_descr
-modifier|*
+name|vm_paddr_t
 name|hbq_descr_dma
 decl_stmt|;
 comment|/* Element's buffer descriptor array */
@@ -478,8 +475,7 @@ modifier|*
 name|fu_xmit_stat
 decl_stmt|;
 comment|/* Status array (host) */
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|fu_xmit_statd
 decl_stmt|;
 comment|/* Status array (DMA) */
@@ -501,8 +497,7 @@ modifier|*
 name|fu_recv_stat
 decl_stmt|;
 comment|/* Status array (host) */
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|fu_recv_statd
 decl_stmt|;
 comment|/* Status array (DMA) */
@@ -511,8 +506,7 @@ modifier|*
 name|fu_recv_desc
 decl_stmt|;
 comment|/* Descriptor array (host) */
-name|Recv_descr
-modifier|*
+name|vm_paddr_t
 name|fu_recv_descd
 decl_stmt|;
 comment|/* Descriptor array (DMA) */
@@ -539,8 +533,7 @@ modifier|*
 name|fu_buf1s_stat
 decl_stmt|;
 comment|/* Status array (host) */
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|fu_buf1s_statd
 decl_stmt|;
 comment|/* Status array (DMA) */
@@ -549,8 +542,7 @@ modifier|*
 name|fu_buf1s_desc
 decl_stmt|;
 comment|/* Descriptor array (host) */
-name|Buf_descr
-modifier|*
+name|vm_paddr_t
 name|fu_buf1s_descd
 decl_stmt|;
 comment|/* Descriptor array (DMA) */
@@ -585,8 +577,7 @@ modifier|*
 name|fu_buf1l_stat
 decl_stmt|;
 comment|/* Status array (host) */
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|fu_buf1l_statd
 decl_stmt|;
 comment|/* Status array (DMA) */
@@ -595,8 +586,7 @@ modifier|*
 name|fu_buf1l_desc
 decl_stmt|;
 comment|/* Descriptor array (host) */
-name|Buf_descr
-modifier|*
+name|vm_paddr_t
 name|fu_buf1l_descd
 decl_stmt|;
 comment|/* Descriptor array (DMA) */
@@ -631,8 +621,7 @@ modifier|*
 name|fu_cmd_stat
 decl_stmt|;
 comment|/* Status array (host) */
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|fu_cmd_statd
 decl_stmt|;
 comment|/* Status array (DMA) */
@@ -641,8 +630,7 @@ modifier|*
 name|fu_stats
 decl_stmt|;
 comment|/* Device statistics buffer */
-name|Fore_stats
-modifier|*
+name|vm_paddr_t
 name|fu_statsd
 decl_stmt|;
 comment|/* Device statistics buffer (DMA) */
@@ -659,8 +647,7 @@ modifier|*
 name|fu_prom
 decl_stmt|;
 comment|/* Device PROM buffer */
-name|Fore_prom
-modifier|*
+name|vm_paddr_t
 name|fu_promd
 decl_stmt|;
 comment|/* Device PROM buffer (DMA) */

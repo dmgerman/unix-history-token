@@ -209,6 +209,9 @@ name|void
 modifier|*
 name|memp
 decl_stmt|;
+name|vm_paddr_t
+name|pmemp
+decl_stmt|;
 name|H_xmit_queue
 modifier|*
 name|hxp
@@ -256,12 +259,8 @@ operator|*
 operator|)
 name|memp
 expr_stmt|;
-name|memp
+name|pmemp
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|vtophys
 argument_list|(
 name|fup
@@ -271,7 +270,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memp
+name|pmemp
 operator|==
 name|NULL
 condition|)
@@ -286,11 +285,7 @@ name|fup
 operator|->
 name|fu_xmit_statd
 operator|=
-operator|(
-name|Q_status
-operator|*
-operator|)
-name|memp
+name|pmemp
 expr_stmt|;
 comment|/* 	 * Allocate memory for transmit descriptors 	 * 	 * We will allocate the transmit descriptors individually rather than  	 * as a single memory block, which will often be larger than a memory 	 * page.  On some systems (eg. FreeBSD) the physical addresses of  	 * adjacent virtual memory pages are not contiguous. 	 */
 name|hxp
@@ -352,10 +347,6 @@ name|hxp
 operator|->
 name|hxq_descr_dma
 operator|=
-operator|(
-name|Xmit_descr
-operator|*
-operator|)
 name|vtophys
 argument_list|(
 name|hxp
@@ -422,8 +413,7 @@ name|Q_status
 modifier|*
 name|qsp
 decl_stmt|;
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|qsp_dma
 decl_stmt|;
 name|int
@@ -550,7 +540,11 @@ name|qsp
 operator|++
 expr_stmt|;
 name|qsp_dma
-operator|++
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Q_status
+argument_list|)
 expr_stmt|;
 name|cqp
 operator|++

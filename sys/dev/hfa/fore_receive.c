@@ -238,6 +238,9 @@ block|{
 name|caddr_t
 name|memp
 decl_stmt|;
+name|vm_paddr_t
+name|pmemp
+decl_stmt|;
 comment|/* 	 * Allocate non-cacheable memory for receive status words 	 */
 name|memp
 operator|=
@@ -278,11 +281,8 @@ operator|*
 operator|)
 name|memp
 expr_stmt|;
-name|memp
+name|pmemp
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|vtophys
 argument_list|(
 name|fup
@@ -292,9 +292,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memp
+name|pmemp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 return|return
@@ -307,11 +307,7 @@ name|fup
 operator|->
 name|fu_recv_statd
 operator|=
-operator|(
-name|Q_status
-operator|*
-operator|)
-name|memp
+name|pmemp
 expr_stmt|;
 comment|/* 	 * Allocate memory for receive descriptors 	 */
 name|memp
@@ -353,11 +349,8 @@ operator|*
 operator|)
 name|memp
 expr_stmt|;
-name|memp
+name|pmemp
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|vtophys
 argument_list|(
 name|fup
@@ -367,9 +360,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memp
+name|pmemp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 return|return
@@ -382,11 +375,7 @@ name|fup
 operator|->
 name|fu_recv_descd
 operator|=
-operator|(
-name|Recv_descr
-operator|*
-operator|)
-name|memp
+name|pmemp
 expr_stmt|;
 return|return
 operator|(
@@ -431,16 +420,14 @@ name|Recv_descr
 modifier|*
 name|rdp
 decl_stmt|;
-name|Recv_descr
-modifier|*
+name|vm_paddr_t
 name|rdp_dma
 decl_stmt|;
 name|Q_status
 modifier|*
 name|qsp
 decl_stmt|;
-name|Q_status
-modifier|*
+name|vm_paddr_t
 name|qsp_dma
 decl_stmt|;
 name|int
@@ -603,13 +590,21 @@ name|qsp
 operator|++
 expr_stmt|;
 name|qsp_dma
-operator|++
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Q_status
+argument_list|)
 expr_stmt|;
 name|rdp
 operator|++
 expr_stmt|;
 name|rdp_dma
-operator|++
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Recv_descr
+argument_list|)
 expr_stmt|;
 name|cqp
 operator|++
@@ -1722,7 +1717,7 @@ name|fup
 operator|->
 name|fu_recv_statd
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Free the receive descriptors 	 */
@@ -1750,7 +1745,7 @@ name|fup
 operator|->
 name|fu_recv_descd
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 return|return;

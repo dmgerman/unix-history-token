@@ -837,8 +837,7 @@ name|cp
 decl_stmt|,
 name|bfr
 decl_stmt|;
-name|void
-modifier|*
+name|vm_paddr_t
 name|dma
 decl_stmt|;
 name|int
@@ -1284,10 +1283,6 @@ expr_stmt|;
 comment|/* 		 * Get a DMA address for the data 		 */
 name|dma
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|vtophys
 argument_list|(
 name|bfr

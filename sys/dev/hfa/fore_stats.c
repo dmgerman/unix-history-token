@@ -390,8 +390,7 @@ operator|&
 name|QSTAT_FREE
 condition|)
 block|{
-name|void
-modifier|*
+name|vm_paddr_t
 name|dma
 decl_stmt|;
 comment|/* 		 * Queue entry available, so set our view of things up 		 */
@@ -433,10 +432,6 @@ name|QSTAT_PENDING
 expr_stmt|;
 name|dma
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|vtophys
 argument_list|(
 name|fup

@@ -1229,10 +1229,6 @@ name|fup
 operator|->
 name|fu_promd
 operator|=
-operator|(
-name|Fore_prom
-operator|*
-operator|)
 name|vtophys
 argument_list|(
 name|fup
@@ -1246,7 +1242,7 @@ name|fup
 operator|->
 name|fu_promd
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|fup
