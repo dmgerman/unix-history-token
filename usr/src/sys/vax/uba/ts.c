@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.15	81/05/09	*/
+comment|/*	ts.c	4.16	81/05/10	*/
 end_comment
 
 begin_include
@@ -811,10 +811,6 @@ operator|&
 name|TS_WLK
 operator|)
 condition|)
-block|)
-end_block
-
-begin_block
 block|{
 name|uprintf
 argument_list|(
@@ -831,18 +827,12 @@ name|EIO
 expr_stmt|;
 return|return;
 block|}
-end_block
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_openf
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_blkno
@@ -852,38 +842,32 @@ name|daddr_t
 operator|)
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_nxrec
 operator|=
 name|INF
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_lastiow
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Close tape device.  *  * If tape was open for writing or last operation was  * a write, then write two EOF's and backspace over the last one.  * Unless this is a non-rewinding special file, rewind the tape.  * Make the tape available to others.  */
 end_comment
 
 begin_expr_stmt
-unit|tsclose
-operator|(
+name|tsclose
+argument_list|(
 name|dev
-operator|,
+argument_list|,
 name|flag
-operator|)
+argument_list|)
 specifier|register
 name|dev_t
 name|dev
