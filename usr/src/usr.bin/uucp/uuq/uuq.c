@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.4 (Berkeley) %G%"
+literal|"@(#)uuq.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -692,7 +692,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%3.1f minutes (@ %d baud)"
+literal|"%3.1f minutes (@ effective baudrate of %d)"
 argument_list|,
 name|minutes
 argument_list|,
