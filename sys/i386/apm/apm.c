@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.77 1998/12/10 23:36:14 msmith Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.78 1999/04/16 21:22:05 peter Exp $  */
 end_comment
 
 begin_include
@@ -2755,8 +2755,33 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
+name|disabled
+decl_stmt|,
 name|flags
 decl_stmt|;
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+literal|"apm"
+argument_list|,
+literal|0
+argument_list|,
+literal|"disabled"
+argument_list|,
+operator|&
+name|disabled
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|disabled
+operator|!=
+literal|0
+condition|)
+return|return
+name|ENXIO
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
