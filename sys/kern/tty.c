@@ -238,6 +238,24 @@ literal|"ttyout"
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CBLOCKS_PER_TTY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CBLOCKS_PER_TTY
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Table with character classes and parity. The 8th bit indicates parity,  * the 7th bit indicates the character is an alphameric or underscore (for  * ALTWERASE), and the low 6 bits indicate delay type.  If the low 6 bits  * are 0 then the character needs no special processing on output; classes  * other than 0 might be translated or (not currently) require delays.  */
 end_comment
@@ -1324,6 +1342,12 @@ name|t_winsize
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Add some cblocks to the clistfree pool. 		 */
+name|cblock_alloc_cblocks
+argument_list|(
+name|CBLOCKS_PER_TTY
+argument_list|)
+expr_stmt|;
 block|}
 name|CLR
 argument_list|(
@@ -1406,6 +1430,27 @@ operator|->
 name|t_session
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* 	 * If the tty has not already been closed, free the cblocks 	 * that were allocated in ttyopen() back to the system malloc 	 * pool. 	 */
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|,
+operator|(
+name|TS_ISOPEN
+operator||
+name|TS_WOPEN
+operator|)
+argument_list|)
+condition|)
+name|cblock_free_cblocks
+argument_list|(
+name|CBLOCKS_PER_TTY
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
