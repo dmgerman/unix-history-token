@@ -3540,10 +3540,11 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|LOG_FAC
-argument_list|(
+operator|(
 name|pri
-argument_list|)
+operator|&
+name|LOG_FACMASK
+operator|)
 operator|==
 name|LOG_CONSOLE
 condition|)
