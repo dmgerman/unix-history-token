@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.14 (Berkeley) %G%"
+literal|"@(#)local.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,24 +547,6 @@ name|left
 operator|)
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|SPRECC
-if|if
-condition|(
-name|m
-operator|==
-name|DOUBLE
-operator|&&
-name|ml
-operator|==
-name|FLOAT
-condition|)
-goto|goto
-name|clobber
-goto|;
-endif|#
-directive|endif
 comment|/* see makety() for constant conversions */
 break|break;
 block|}
