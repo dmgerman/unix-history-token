@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_pfil_hooks.h"
 end_include
 
@@ -67,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -4040,6 +4052,18 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_fragment
+argument_list|(
+name|m0
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -4777,6 +4801,18 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_mbuf
+argument_list|(
+name|m
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|->
 name|m_pkthdr
