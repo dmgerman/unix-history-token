@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.71 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.72 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -638,6 +638,9 @@ name|on
 decl_stmt|,
 name|type
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"lfs_read: ino %d\n"
@@ -647,6 +650,8 @@ operator|->
 name|i_number
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1100,6 +1105,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"lfs_write ino %d\n"
@@ -1109,6 +1117,8 @@ operator|->
 name|i_number
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1705,12 +1715,24 @@ name|struct
 name|inode
 modifier|*
 name|ip
-init|=
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_fsync\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ip
+operator|=
 name|VTOI
 argument_list|(
 name|vp
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|fflags
@@ -1767,6 +1789,10 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|prtactive
+decl_stmt|;
 specifier|register
 name|struct
 name|inode
@@ -1778,10 +1804,16 @@ name|mode
 decl_stmt|,
 name|error
 decl_stmt|;
-specifier|extern
-name|int
-name|prtactive
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_inactive\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|prtactive
