@@ -429,6 +429,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|rawoffset
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|off_t
 operator|)
