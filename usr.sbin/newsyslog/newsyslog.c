@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.1.1.1 1996/01/05 09:28:10 graichen Exp $"
+literal|"$Id: newsyslog.c,v 1.2 1996/01/09 08:40:08 graichen Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,19 +79,37 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|COMPRESS
+name|COMPRESS_PATH
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|COMPRESS
+name|COMPRESS_PATH
 value|"/usr/ucb/compress"
 end_define
 
 begin_comment
 comment|/* File compression program */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPRESS_PROG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|COMPRESS_PROG
+value|"compress"
+end_define
 
 begin_endif
 endif|#
@@ -433,14 +451,20 @@ begin_define
 define|#
 directive|define
 name|MAX_PID
-value|65534
+value|30000
 end_define
+
+begin_comment
+comment|/* was 65534, see /usr/include/sys/proc.h */
+end_comment
 
 begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|64
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1211,30 +1235,15 @@ condition|(
 operator|!
 name|f
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: "
+literal|"%s"
 argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|conf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|fgets
@@ -1444,27 +1453,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in config file; unknown user:\n"
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|errline
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Error in config file; unknown user:\n%s"
+argument_list|,
+name|errline
 argument_list|)
 expr_stmt|;
-block|}
 name|working
 operator|->
 name|uid
@@ -1527,27 +1524,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in config file; unknown group:\n"
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|errline
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Error in config file; unknown group:\n%s"
+argument_list|,
+name|errline
 argument_list|)
 expr_stmt|;
-block|}
 name|working
 operator|->
 name|gid
@@ -1629,27 +1614,15 @@ operator|->
 name|permissions
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in config file; bad permissions:\n"
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|errline
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Error in config file; bad permissions:\n%s"
+argument_list|,
+name|errline
 argument_list|)
 expr_stmt|;
-block|}
 name|q
 operator|=
 name|parse
@@ -1692,27 +1665,15 @@ operator|->
 name|numlogs
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error in config file; bad number:\n"
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|errline
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Error in config file; bad number:\n%s"
+argument_list|,
+name|errline
 argument_list|)
 expr_stmt|;
-block|}
 name|q
 operator|=
 name|parse
@@ -1907,23 +1868,16 @@ operator||=
 name|CE_BINARY
 expr_stmt|;
 else|else
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Illegal flag in config file -- %c\n"
+literal|"Illegal flag in config file -- %c"
 argument_list|,
 operator|*
 name|q
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|q
 operator|++
 expr_stmt|;
@@ -1994,27 +1948,15 @@ operator|!
 operator|*
 name|p
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Missing field in config file:\n"
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|errline
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Missing field in config file:\n%s"
+argument_list|,
+name|errline
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|p
@@ -2082,23 +2024,31 @@ block|{
 name|char
 name|file1
 index|[
-literal|128
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|,
 name|file2
 index|[
-literal|128
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
 name|zfile1
 index|[
-literal|128
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|,
 name|zfile2
 index|[
-literal|128
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -2438,18 +2388,13 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"can't start new log"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fchown
@@ -2461,18 +2406,13 @@ argument_list|,
 name|group_gid
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"can't chmod new log file"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -2497,19 +2437,14 @@ argument_list|(
 name|log
 argument_list|)
 condition|)
-block|{
 comment|/* Add status message */
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"can't add status message to log"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2558,13 +2493,9 @@ operator|>
 name|MAX_PID
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: preposterous process number: %d\n"
-argument_list|,
-name|progname
+literal|"preposterous process number: %d"
 argument_list|,
 name|syslog_pid
 argument_list|)
@@ -2580,22 +2511,11 @@ argument_list|,
 name|SIGHUP
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
+literal|"could not restart syslogd"
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"warning - could not restart syslogd"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|flags
@@ -2692,18 +2612,13 @@ argument_list|)
 operator|==
 name|EOF
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"log_trim: fclose:"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2764,27 +2679,13 @@ name|pid
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 literal|"fork"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2797,9 +2698,9 @@ name|void
 operator|)
 name|execl
 argument_list|(
-name|COMPRESS
+name|COMPRESS_PATH
 argument_list|,
-literal|"compress"
+name|COMPRESS_PROG
 argument_list|,
 literal|"-f"
 argument_list|,
@@ -2808,23 +2709,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|COMPRESS
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|COMPRESS_PATH
 argument_list|)
 expr_stmt|;
 block|}
@@ -2908,7 +2797,17 @@ name|tmp
 index|[
 name|MAXPATHLEN
 operator|+
-literal|3
+sizeof|sizeof
+argument_list|(
+literal|".0"
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|COMPRESS_POSTFIX
+argument_list|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
 operator|(
