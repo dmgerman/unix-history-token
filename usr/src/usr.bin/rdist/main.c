@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.6 (Berkeley) 83/10/20"
+literal|"@(#)main.c	4.7 (Berkeley) 83/10/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,6 +495,14 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'b'
+case|:
+name|options
+operator||=
+name|COMPARE
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|options
@@ -659,12 +667,12 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"Usage: rdist [-nqvwyD] [-f distfile] [-d var=value] [file ...]\n"
+literal|"Usage: rdist [-nqbrvwyD] [-f distfile] [-d var=value] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"or: rdist [-nqvwyD] -c source [...] machine[:dest]\n"
+literal|"or: rdist [-nqbrvwyD] -c source [...] machine[:dest]\n"
 argument_list|)
 expr_stmt|;
 name|exit

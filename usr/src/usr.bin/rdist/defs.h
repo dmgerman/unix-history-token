@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.5	83/10/20	*/
+comment|/*	defs.h	4.6	83/10/26	*/
 end_comment
 
 begin_include
@@ -257,15 +257,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|STRIP
+name|COMPARE
 value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|REMOVE
+name|STRIP
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|REMOVE
+value|0x20
 end_define
 
 begin_define
