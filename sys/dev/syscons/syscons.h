@@ -522,7 +522,7 @@ begin_define
 define|#
 directive|define
 name|BELL_DURATION
-value|5
+value|((5 * hz + 99) / 100)
 end_define
 
 begin_define
