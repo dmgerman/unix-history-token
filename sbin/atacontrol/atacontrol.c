@@ -57,6 +57,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
 begin_function
 name|char
 modifier|*
@@ -389,7 +395,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1502,9 +1508,20 @@ operator|==
 literal|1
 operator|)
 condition|)
-name|usage
-argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Invalid RAID device\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1543,9 +1560,20 @@ operator|==
 literal|1
 operator|)
 condition|)
-name|usage
-argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Invalid ATA channel\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|iocmd
 operator|.
@@ -2134,9 +2162,35 @@ name|raid_setup
 operator|.
 name|type
 condition|)
-name|usage
-argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Invalid RAID type\n"
+argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Valid RAID types : \n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"            RAID0 | stripe | RAID1 | mirror "
+literal|"| RAID0+1 | SPAN | JBOD\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|iocmd
@@ -2174,9 +2228,20 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|usage
-argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Invalid interleave\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 name|offset
 operator|=
 literal|4
@@ -2248,9 +2313,27 @@ operator|==
 literal|1
 operator|)
 condition|)
-name|usage
-argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Invalid device %s\n"
+argument_list|,
+name|argv
+index|[
+name|offset
+operator|+
+name|disk
+index|]
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 name|iocmd
 operator|.
 name|u
@@ -2263,6 +2346,27 @@ name|disk
 index|]
 operator|=
 name|dev
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|disk
+operator|<
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: At least 2 disks must be "
+literal|"specified to create RAID\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
 expr_stmt|;
 block|}
 name|iocmd
@@ -2419,9 +2523,23 @@ operator|==
 literal|1
 operator|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"atacontrol: Invalid device %s\n"
+argument_list|,
+name|argv
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 name|iocmd
 operator|.
 name|u
@@ -2938,7 +3056,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
