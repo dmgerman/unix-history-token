@@ -1000,6 +1000,13 @@ name|int
 name|howto
 parameter_list|)
 block|{
+name|int
+name|first_buf_printf
+decl_stmt|;
+name|first_buf_printf
+operator|=
+literal|1
+expr_stmt|;
 comment|/* collect extra flags that shutdown_nice might have set */
 name|howto
 operator||=
@@ -1080,11 +1087,6 @@ directive|endif
 name|waittime
 operator|=
 literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"syncing disks, buffers remaining... "
-argument_list|)
 expr_stmt|;
 name|sync
 argument_list|(
@@ -1187,6 +1189,21 @@ operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|first_buf_printf
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"syncing disks, buffers remaining... "
+argument_list|)
+expr_stmt|;
+name|first_buf_printf
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%d "
@@ -2201,6 +2218,14 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|char
+name|procname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2218,15 +2243,27 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-name|printf
+name|strlcpy
 argument_list|(
-literal|"Waiting (max %d seconds) for system process `%s' to stop..."
-argument_list|,
-name|kproc_shutdown_wait
+name|procname
 argument_list|,
 name|p
 operator|->
 name|p_comm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|procname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Waiting (max %d seconds) for system process `%s' to stop...\n"
+argument_list|,
+name|kproc_shutdown_wait
+argument_list|,
+name|procname
 argument_list|)
 expr_stmt|;
 name|error
@@ -2248,13 +2285,17 @@ name|EWOULDBLOCK
 condition|)
 name|printf
 argument_list|(
-literal|"timed out\n"
+literal|"Stop of '%s' timed out\n"
+argument_list|,
+name|procname
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"stopped\n"
+literal|"Process '%s' stopped\n"
+argument_list|,
+name|procname
 argument_list|)
 expr_stmt|;
 block|}

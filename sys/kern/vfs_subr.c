@@ -7042,6 +7042,9 @@ decl_stmt|;
 name|int
 name|syncer_final_iter
 decl_stmt|;
+name|int
+name|first_printf
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7055,6 +7058,10 @@ expr_stmt|;
 name|syncer_final_iter
 operator|=
 literal|0
+expr_stmt|;
+name|first_printf
+operator|=
+literal|1
 expr_stmt|;
 name|syncer_state
 operator|=
@@ -7106,6 +7113,11 @@ operator|&
 name|sync_mtx
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"done.\n"
+argument_list|)
+expr_stmt|;
 name|kthread_suspend_check
 argument_list|(
 name|td
@@ -7136,6 +7148,23 @@ name|starttime
 operator|!=
 name|time_second
 condition|)
+block|{
+if|if
+condition|(
+name|first_printf
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Syncer syncing disks, "
+literal|"buffers remaining... "
+argument_list|)
+expr_stmt|;
+name|first_printf
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%d "
@@ -7143,6 +7172,7 @@ argument_list|,
 name|net_worklist_len
 argument_list|)
 expr_stmt|;
+block|}
 name|starttime
 operator|=
 name|time_second
