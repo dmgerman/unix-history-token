@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.42 (Berkeley) %G%"
+literal|"@(#)util.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3253,32 +3253,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|EVENT
-modifier|*
-name|GlobalTimeout
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|EnableTimeout
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ReadProgress
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|char
 modifier|*
@@ -3415,12 +3389,6 @@ name|NULL
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|GlobalTimeout
-operator|==
-name|NULL
-condition|)
 name|ev
 operator|=
 name|setevent
@@ -3431,11 +3399,6 @@ name|readtimeout
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-else|else
-name|EnableTimeout
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 comment|/* try to read */
@@ -3491,21 +3454,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* clear the event if it has not sprung */
-if|if
-condition|(
-name|GlobalTimeout
-operator|==
-name|NULL
-condition|)
 name|clrevent
 argument_list|(
 name|ev
 argument_list|)
-expr_stmt|;
-else|else
-name|EnableTimeout
-operator|=
-name|FALSE
 expr_stmt|;
 comment|/* clean up the books and exit */
 name|LineNumber
@@ -3640,61 +3592,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|sfgetset
-parameter_list|(
-name|timeout
-parameter_list|)
-name|time_t
-name|timeout
-decl_stmt|;
-block|{
-comment|/* cancel pending timer */
-if|if
-condition|(
-name|GlobalTimeout
-operator|!=
-name|NULL
-condition|)
-block|{
-name|clrevent
-argument_list|(
-name|GlobalTimeout
-argument_list|)
-expr_stmt|;
-name|GlobalTimeout
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-comment|/* schedule fresh one if so requested */
-if|if
-condition|(
-name|timeout
-operator|!=
-literal|0
-condition|)
-block|{
-name|ReadProgress
-operator|=
-name|LineNumber
-expr_stmt|;
-name|GlobalTimeout
-operator|=
-name|setevent
-argument_list|(
-name|timeout
-argument_list|,
-name|readtimeout
-argument_list|,
-name|timeout
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_expr_stmt
 specifier|static
 name|readtimeout
@@ -3708,56 +3605,11 @@ end_expr_stmt
 
 begin_block
 block|{
-comment|/* terminate if ordinary timeout */
-if|if
-condition|(
-name|GlobalTimeout
-operator|==
-name|NULL
-condition|)
 name|longjmp
 argument_list|(
 name|CtxReadTimeout
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-comment|/* terminate if no progress was made -- reset state */
-if|if
-condition|(
-name|EnableTimeout
-operator|&&
-operator|(
-name|LineNumber
-operator|<=
-name|ReadProgress
-operator|)
-condition|)
-block|{
-name|EnableTimeout
-operator|=
-name|FALSE
-expr_stmt|;
-name|GlobalTimeout
-operator|=
-name|NULL
-expr_stmt|;
-name|longjmp
-argument_list|(
-name|CtxReadTimeout
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* schedule a new timeout */
-name|GlobalTimeout
-operator|=
-name|NULL
-expr_stmt|;
-name|sfgetset
-argument_list|(
-name|timeout
 argument_list|)
 expr_stmt|;
 block|}
