@@ -1004,13 +1004,21 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-argument|(z->zflags& ZONE_BOOT) ==
+operator|(
+name|z
+operator|->
+name|zflags
+operator|&
+name|ZONE_BOOT
+operator|)
+operator|==
 literal|0
 argument_list|,
-argument|(
+operator|(
 literal|"zdestroy() used with a zbootinit()'ed zone"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|z
