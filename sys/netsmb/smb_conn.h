@@ -990,12 +990,6 @@ name|smb_sopt
 name|vc_sopt
 decl_stmt|;
 comment|/* server options */
-name|struct
-name|smb_cred
-modifier|*
-name|vc_scred
-decl_stmt|;
-comment|/* used in reconnect procedure */
 name|int
 name|vc_txmax
 decl_stmt|;
@@ -1109,12 +1103,6 @@ name|struct
 name|smb_slock
 name|ss_stlock
 decl_stmt|;
-name|struct
-name|smb_cred
-modifier|*
-name|ss_cred
-decl_stmt|;
-comment|/* used in reconnect procedure */
 block|}
 struct|;
 end_struct
@@ -1349,11 +1337,6 @@ name|struct
 name|smb_connobj
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1425,9 +1408,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1445,9 +1428,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1561,11 +1544,6 @@ name|struct
 name|smb_vc
 modifier|*
 name|vcp
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1600,9 +1578,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1620,9 +1598,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1741,11 +1719,6 @@ name|struct
 name|smb_share
 modifier|*
 name|ssp
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1817,9 +1790,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1837,9 +1810,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2172,6 +2145,11 @@ name|struct
 name|proc
 modifier|*
 name|iod_p
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|iod_td
 decl_stmt|;
 name|struct
 name|smb_cred

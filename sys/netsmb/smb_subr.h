@@ -361,9 +361,9 @@ struct|struct
 name|smb_cred
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|scr_p
+name|scr_td
 decl_stmt|;
 name|struct
 name|ucred
@@ -409,9 +409,9 @@ modifier|*
 name|scred
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred

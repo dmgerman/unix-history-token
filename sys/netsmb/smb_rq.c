@@ -913,7 +913,9 @@ name|rqp
 operator|->
 name|sr_cred
 operator|->
-name|scr_p
+name|scr_td
+operator|->
+name|td_proc
 argument_list|)
 condition|)
 return|return
@@ -1219,7 +1221,9 @@ name|rqp
 operator|->
 name|sr_cred
 operator|->
-name|scr_p
+name|scr_td
+operator|->
+name|td_proc
 decl_stmt|;
 if|if
 condition|(
