@@ -6244,6 +6244,8 @@ operator|->
 name|sis_irq
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|sis_intr
 argument_list|,

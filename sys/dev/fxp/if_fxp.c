@@ -4299,7 +4299,8 @@ operator|->
 name|irq
 argument_list|,
 name|INTR_TYPE_NET
-comment|/*|INTR_MPSAFE*/
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|fxp_intr
 argument_list|,

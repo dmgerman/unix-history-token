@@ -1475,6 +1475,8 @@ operator|->
 name|irq
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|wi_intr
 argument_list|,
