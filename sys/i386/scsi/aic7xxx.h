@@ -133,11 +133,11 @@ begin_define
 define|#
 directive|define
 name|AHC_NSEG
-value|256
+value|32
 end_define
 
 begin_comment
-comment|/* number of dma segments supported */
+comment|/* The number of dma segments supported. 				 * AHC_NSEG can be maxed out at 256 entries, 				 * but the kernel will never need to transfer 				 * such a large (1MB) request.  To reduce the 				 * driver's memory consumption, we reduce the 				 * max to 32.  16 would work if all transfers 				 * are paged alined since the kernel will only 				 * generate at most a 64k transfer, but to 				 * handle non-page aligned transfers, you need 				 * 17, so we round to the next power of two 				 * to make allocating SG space easy and 				 * efficient. 				 */
 end_comment
 
 begin_define
