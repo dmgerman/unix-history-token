@@ -60,7 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_function_decl
@@ -321,7 +327,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-literal|0x4
+name|PCIR_COMMAND
 argument_list|,
 literal|2
 argument_list|)
@@ -330,7 +336,7 @@ if|if
 condition|(
 name|d
 operator|&
-literal|1
+name|PCIM_CMD_PORTEN
 condition|)
 return|return
 operator|(
