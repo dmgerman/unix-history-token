@@ -3287,7 +3287,7 @@ name|sopt
 operator|.
 name|sopt_p
 operator|=
-name|p
+name|NULL
 expr_stmt|;
 name|sopt
 operator|.
@@ -3462,7 +3462,7 @@ name|sopt
 operator|.
 name|sopt_p
 operator|=
-name|p
+name|NULL
 expr_stmt|;
 name|error
 operator|=
