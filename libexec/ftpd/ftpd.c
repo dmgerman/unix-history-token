@@ -12122,6 +12122,26 @@ name|st
 decl_stmt|;
 if|if
 condition|(
+name|guest
+operator|&&
+name|noguestmod
+condition|)
+block|{
+name|reply
+argument_list|(
+literal|550
+argument_list|,
+literal|"Operation not permitted"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|lstat
 argument_list|(
 name|name
