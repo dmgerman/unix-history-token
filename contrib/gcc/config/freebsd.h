@@ -4,7 +4,7 @@ comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 199
 end_comment
 
 begin_comment
-comment|/* Common FreeBSD configuration.     All FreeBSD architectures should include this file, which will specify    their commonalities.    Adapted from /usr/src/contrib/gcc/config/i386/freebsd.h,    /usr/src/contrib/gcc/config/svr4.h&     egcs/gcc/config/i386/freebsd-elf.h version by David O'Brien  */
+comment|/* Common FreeBSD configuration.     All FreeBSD architectures should include this file, which will specify    their commonalities.    Adapted from /usr/src/contrib/gcc/config/i386/freebsd.h,    /usr/src/contrib/gcc/config/svr4.h&     egcs/gcc/config/i386/freebsd-elf.h by    David O'Brien<obrien@FreeBSD.org>.  */
 end_comment
 
 begin_comment
@@ -27,9 +27,9 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|(DEFAULT_SWITCH_TAKES_ARG (CHAR) \    || (CHAR) == 'h' \    || (CHAR) == 'z'
+value|(DEFAULT_SWITCH_TAKES_ARG (CHAR)					\     || (CHAR) == 'h'							\     || (CHAR) == 'z'
 comment|/* ignored by ld */
-value|\    || (CHAR) == 'R')
+value|\     || (CHAR) == 'R')
 end_define
 
 begin_undef
@@ -87,7 +87,8 @@ begin_define
 define|#
 directive|define
 name|FBSD_CPP_PREDEFINES
-value|" -Dunix -D__FreeBSD__=5 -D__FreeBSD_cc_version=500002 -Asystem(unix) -Asystem(FreeBSD) "
+define|\
+value|" -D__FreeBSD__=5 -D__FreeBSD_cc_version=500002 -Dunix -Asystem(unix) -Asystem(FreeBSD) "
 end_define
 
 begin_define
@@ -111,7 +112,7 @@ value|FBSD_CPP_SPEC
 end_define
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.  Add the appropriate    libc_r if supporting threads.    (like the default, except no -lg, and no -p).  */
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling or need threads support.    (simular to the default, except no -lg, and no -p).  */
 end_comment
 
 begin_undef
@@ -293,7 +294,7 @@ name|HANDLE_SYSV_PRAGMA
 end_define
 
 begin_comment
-comment|/* FreeBSD ELF using our home-grown crtbegin.o/crtend.o does not support the    DWARF2 unwinding mechanisms.  Once `make world' bootstraping problems with    the EGCS crtstuff.c is overcome, we will switch to the non-sjlj-exceptions     type exception machanism.  */
+comment|/* FreeBSD ELF uses across the board will now use DWARF2 unwinding as the IA-64    psABI requires it.  */
 end_comment
 
 begin_define
@@ -335,7 +336,7 @@ value|"#"
 end_define
 
 begin_comment
-comment|/* Attach a special .ident directive to the end of the file to identify    the version of GCC which compiled this code.  The format of the    .ident string is patterned after the ones produced by native SVR4    C compilers.  */
+comment|/* Attach a special .ident directive to the end of the file to identify    the version of GCC which compiled this code.  The format of the .ident    string is patterned after the ones produced by native SVR4 C compilers.  */
 end_comment
 
 begin_undef
@@ -460,29 +461,6 @@ value|"\t.zero\t"
 end_define
 
 begin_comment
-comment|/* How to output some space.  The rules are different depending on the    object format.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_SKIP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_SKIP
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SIZE
-parameter_list|)
-define|\
-value|do {									\     if (TARGET_ELF)							\       {									\         fprintf ((FILE), "%s%u\n", SKIP_ASM_OP, (SIZE));		\       }									\     else								\       {									\         fprintf ((FILE), "\t.space\t%u\n", (SIZE));			\       }									\   } while (0)
-end_define
-
-begin_comment
 comment|/* A table of bytes codes used by the ASM_OUTPUT_ASCII and    ASM_OUTPUT_LIMITED_STRING macros.  Each byte in the table    corresponds to a particular byte value [0..255].  For any    given byte value, if the value in the corresponding table    position is zero, the given character can be output directly.    If the table value is 1, the byte must be output as a \ooo    octal escape.  If the tables value is anything else, then the    byte value should be output as a \ followed by the value    in the table.  Note that we can use standard UN*X escape    sequences for many control characters, but we don't use    \a to represent BEL because some SVR4 assemblers (e.g. on    the i386) don't know about that.  Also, we don't use \v    since some versions of gas, such as 2.2 did not accept it.  */
 end_comment
 
@@ -558,29 +536,6 @@ name|COMMON_ASM_OP
 value|"\t.comm\t"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ALIGNED_COMMON
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ALIGNED_COMMON
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|,
-name|SIZE
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|do {									\     if (TARGET_ELF)							\       {									\ 	fprintf ((FILE), "%s", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\       }									\     else								\       {									\ 	int rounded = (SIZE);						\ 	if (rounded == 0) rounded = 1;					\ 	rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;		\ 	rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)	\ 		   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));		\ 	fprintf ((FILE), "%s ", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u\n", (rounded));				\       }									\   } while (0)
-end_define
-
 begin_comment
 comment|/* This says how to output assembler code to declare an    uninitialized internal linkage data object.  Under SVR4/ELF,    the linker seems to want the alignment of data objects    to depend on their types.  We do exactly that here.  */
 end_comment
@@ -596,33 +551,6 @@ define|#
 directive|define
 name|LOCAL_ASM_OP
 value|"\t.local\t"
-end_define
-
-begin_comment
-comment|/* This says how to output assembler code to declare an    uninitialized internal linkage data object.  Under SVR4,    the linker seems to want the alignment of data objects    to depend on their types.  We do exactly that here.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ALIGNED_LOCAL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ALIGNED_LOCAL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|,
-name|SIZE
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|do {									\     if (TARGET_ELF)							\       {									\ 	fprintf ((FILE), "%s", LOCAL_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), "\n");						\ 	ASM_OUTPUT_ALIGNED_COMMON ((FILE), (NAME), (SIZE), (ALIGN));	\       }									\     else								\       {									\ 	int rounded = (SIZE);						\ 	if (rounded == 0) rounded = 1;					\ 	rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;		\ 	rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)	\ 		   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));		\ 	fputs ("\t.lcomm\t", (FILE));					\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u\n", (rounded));				\       }									\   } while (0)
 end_define
 
 begin_undef
@@ -884,52 +812,6 @@ value|void									\   dtors_section ()							\   {									\     if (in_section
 end_define
 
 begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global constructors.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     if (TARGET_ELF)							\       {									\ 	ctors_section ();						\ 	fprintf ((FILE), "%s ", INT_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), "\n");						\       }									\     else								\       {									\ 	fprintf (asm_out_file, "%s \"%s__CTOR_LIST__\",22,0,0,",	\ 		 ASM_STABS_OP, (TARGET_UNDERSCORES) ? "_" : "");	\ 	assemble_name (asm_out_file, name);				\ 	fputc ('\n', asm_out_file);					\       }									\   } while (0)
-end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     if (TARGET_ELF)							\       {									\ 	dtors_section ();						\ 	fprintf ((FILE), "%s ", INT_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), "\n");						\       }									\     else								\       {									\ 	fprintf (asm_out_file, "%s \"%s__DTOR_LIST__\",22,0,0,",	\ 		 ASM_STABS_OP, (TARGET_UNDERSCORES) ? "_" : "");	\ 	assemble_name (asm_out_file, name);				\ 	fputc ('\n', asm_out_file);					\       }									\   } while (0)
-end_define
-
-begin_comment
 comment|/* A C statement or statements to switch to the appropriate    section for output of RTX in mode MODE.  RTX is some kind    of constant in RTL.  The argument MODE is redundant except    in the case of a `const_int' rtx.  Currently, these always    go into the const section.  */
 end_comment
 
@@ -1135,7 +1017,7 @@ name|DBX_DEBUGGING_INFO
 end_define
 
 begin_comment
-comment|/* Use stabs instead of DWARF debug format.  */
+comment|/* This is BSD, so use stabs instead of DWARF debug format.  */
 end_comment
 
 begin_undef
@@ -1166,12 +1048,6 @@ undef|#
 directive|undef
 name|ASM_IDENTIFY_LANGUAGE
 end_undef
-
-begin_include
-include|#
-directive|include
-file|"dbxelf.h"
-end_include
 
 end_unit
 
