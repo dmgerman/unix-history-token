@@ -1396,6 +1396,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"sbni"
+block|,
+literal|"Granch SBNI12-xx adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"sio"
 block|,
 literal|"8250/16450/16550 Serial port"
