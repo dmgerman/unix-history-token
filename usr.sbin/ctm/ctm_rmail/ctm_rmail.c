@@ -600,7 +600,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"(cd %s&& ctm %s%s) 2>&1"
+literal|"(cd %s&& /usr/sbin/ctm %s%s) 2>&1"
 argument_list|,
 name|base_dir
 argument_list|,
