@@ -436,21 +436,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|__msgwrite
-parameter_list|(
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|cf_rendezvous
