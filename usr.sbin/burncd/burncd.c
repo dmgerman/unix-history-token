@@ -328,6 +328,8 @@ decl_stmt|,
 name|speed
 init|=
 literal|4
+operator|*
+literal|177
 decl_stmt|,
 name|test_write
 init|=
@@ -482,6 +484,8 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+operator|*
+literal|177
 expr_stmt|;
 if|if
 condition|(
@@ -584,10 +588,6 @@ name|EX_IOERR
 argument_list|,
 literal|"ioctl(CDRIOCGETBLOCKSIZE)"
 argument_list|)
-expr_stmt|;
-name|speed
-operator|*=
-literal|177
 expr_stmt|;
 if|if
 condition|(
