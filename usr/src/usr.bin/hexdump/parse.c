@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.6 (Berkeley) %G%"
+literal|"@(#)parse.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -81,21 +87,16 @@ begin_comment
 comment|/* format at end-of-data */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|addfile
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -119,7 +120,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|fp
 operator|=
@@ -130,26 +130,21 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: can't read %s.\n"
+literal|"%s: %s\n"
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|strerror
 argument_list|(
-literal|1
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|fgets
@@ -259,23 +254,18 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|add
-argument_list|(
-argument|fmt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fmt
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -303,19 +293,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|savep
-decl_stmt|,
-modifier|*
-name|emalloc
-argument_list|()
 decl_stmt|;
 comment|/* start new linked list of format units */
-comment|/* NOSTRICT */
 name|tfs
 operator|=
-operator|(
-name|FS
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
@@ -385,13 +366,8 @@ name|p
 condition|)
 break|break;
 comment|/* allocate a new format unit and link it in */
-comment|/* NOSTRICT */
 name|tfu
 operator|=
-operator|(
-name|FU
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
@@ -679,7 +655,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -691,21 +667,16 @@ literal|".#-+ 0123456789"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|size
-argument_list|(
-argument|fs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fs
+parameter_list|)
 name|FS
 modifier|*
 name|fs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FU
@@ -951,23 +922,18 @@ name|cursize
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|rewrite
-argument_list|(
-argument|fs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fs
+parameter_list|)
 name|FS
 modifier|*
 name|fs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 enum|enum
 block|{
@@ -1006,6 +972,11 @@ name|savech
 decl_stmt|,
 modifier|*
 name|fmtp
+decl_stmt|,
+name|cs
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|int
 name|nconv
@@ -1029,7 +1000,7 @@ operator|->
 name|nextfu
 control|)
 block|{
-comment|/* 		 * break each format unit into print units; each 		 * conversion character gets its own. 		 */
+comment|/* 		 * Break each format unit into print units; each conversion 		 * character gets its own. 		 */
 for|for
 control|(
 name|nconv
@@ -1053,13 +1024,8 @@ operator|->
 name|nextpr
 control|)
 block|{
-comment|/* NOSTRICT */
 name|pr
 operator|=
-operator|(
-name|PR
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
@@ -1087,7 +1053,7 @@ name|nextpr
 operator|=
 name|pr
 expr_stmt|;
-comment|/* skip preceding text and up to the next % sign */
+comment|/* Skip preceding text and up to the next % sign. */
 for|for
 control|(
 name|p1
@@ -1106,7 +1072,7 @@ operator|++
 name|p1
 control|)
 empty_stmt|;
-comment|/* only text in the string */
+comment|/* Only text in the string. */
 if|if
 condition|(
 operator|!
@@ -1128,7 +1094,7 @@ name|F_TEXT
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * get precision for %s -- if have a byte count, don't 			 * need it. 			 */
+comment|/* 			 * Get precision for %s -- if have a byte count, don't 			 * need it. 			 */
 if|if
 condition|(
 name|fu
@@ -1140,7 +1106,7 @@ name|sokay
 operator|=
 name|USEBCNT
 expr_stmt|;
-comment|/* skip to conversion character */
+comment|/* Skip to conversion character. */
 for|for
 control|(
 operator|++
@@ -1161,7 +1127,7 @@ empty_stmt|;
 block|}
 else|else
 block|{
-comment|/* skip any special chars, field width */
+comment|/* Skip any special chars, field width. */
 while|while
 condition|(
 name|index
@@ -1225,12 +1191,30 @@ name|p1
 operator|+
 literal|1
 expr_stmt|;
-comment|/* set end pointer */
-comment|/* 			 * figure out the byte count for each conversion; 			 * rewrite the format as necessary, set up blank- 			 * padding for end of data. 			 */
-switch|switch
-condition|(
+comment|/* Set end pointer. */
+name|cs
+index|[
+literal|0
+index|]
+operator|=
 operator|*
 name|p1
+expr_stmt|;
+comment|/* Set conversion string. */
+name|cs
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* 			 * Figure out the byte count for each conversion; 			 * rewrite the format as necessary, set up blank- 			 * padding for end of data. 			 */
+switch|switch
+condition|(
+name|cs
+index|[
+literal|0
+index|]
 condition|)
 block|{
 case|case
@@ -1290,39 +1274,7 @@ operator|=
 name|F_INT
 expr_stmt|;
 goto|goto
-name|sw1
-goto|;
-case|case
-literal|'l'
-case|:
-operator|++
-name|p2
-expr_stmt|;
-switch|switch
-condition|(
-name|p1
-index|[
-literal|1
-index|]
-condition|)
-block|{
-case|case
-literal|'d'
-case|:
-case|case
-literal|'i'
-case|:
-operator|++
-name|p1
-expr_stmt|;
-name|pr
-operator|->
-name|flags
-operator|=
-name|F_INT
-expr_stmt|;
-goto|goto
-name|sw1
+name|isint
 goto|;
 case|case
 literal|'o'
@@ -1336,53 +1288,38 @@ case|:
 case|case
 literal|'X'
 case|:
-operator|++
-name|p1
-expr_stmt|;
 name|pr
 operator|->
 name|flags
 operator|=
 name|F_UINT
 expr_stmt|;
-goto|goto
-name|sw1
-goto|;
-default|default:
-name|p1
+name|isint
+label|:
+name|cs
 index|[
 literal|2
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|badconv
-argument_list|(
-name|p1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* NOTREACHED */
-case|case
-literal|'o'
-case|:
-case|case
-literal|'u'
-case|:
-case|case
-literal|'x'
-case|:
-case|case
-literal|'X'
-case|:
-name|pr
-operator|->
-name|flags
+name|cs
+index|[
+literal|1
+index|]
 operator|=
-name|F_UINT
+name|cs
+index|[
+literal|0
+index|]
 expr_stmt|;
-name|sw1
-label|:
+name|cs
+index|[
+literal|0
+index|]
+operator|=
+literal|'q'
+expr_stmt|;
 switch|switch
 condition|(
 name|fu
@@ -1605,13 +1542,29 @@ case|:
 case|case
 literal|'x'
 case|:
-operator|*
-name|p1
+name|cs
+index|[
+literal|0
+index|]
+operator|=
+literal|'q'
+expr_stmt|;
+name|cs
+index|[
+literal|1
+index|]
 operator|=
 name|p1
 index|[
 literal|2
 index|]
+expr_stmt|;
+name|cs
+index|[
+literal|2
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 break|break;
 default|default:
@@ -1638,9 +1591,9 @@ name|flags
 operator|=
 name|F_C
 expr_stmt|;
-comment|/* *p1 = 'c';	set in conv_c */
+comment|/* cs[0] = 'c';	set in conv_c */
 goto|goto
-name|sw2
+name|isint2
 goto|;
 case|case
 literal|'p'
@@ -1651,13 +1604,15 @@ name|flags
 operator|=
 name|F_P
 expr_stmt|;
-operator|*
-name|p1
+name|cs
+index|[
+literal|0
+index|]
 operator|=
 literal|'c'
 expr_stmt|;
 goto|goto
-name|sw2
+name|isint2
 goto|;
 case|case
 literal|'u'
@@ -1668,8 +1623,8 @@ name|flags
 operator|=
 name|F_U
 expr_stmt|;
-comment|/* *p1 = 'c';	set in conv_u */
-name|sw2
+comment|/* cs[0] = 'c';	set in conv_u */
+name|isint2
 label|:
 switch|switch
 condition|(
@@ -1735,7 +1690,7 @@ name|p1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * copy to PR format string, set conversion character 			 * pointer, update original. 			 */
+comment|/* 			 * Copy to PR format string, set conversion character 			 * pointer, update original. 			 */
 name|savech
 operator|=
 operator|*
@@ -1743,27 +1698,48 @@ name|p2
 expr_stmt|;
 name|p1
 index|[
-literal|1
+literal|0
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|pr
 operator|->
 name|fmt
 operator|=
-name|strdup
+name|emalloc
+argument_list|(
+name|strlen
 argument_list|(
 name|fmtp
 argument_list|)
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
 operator|)
-condition|)
-name|nomem
-argument_list|()
+name|strcpy
+argument_list|(
+name|pr
+operator|->
+name|fmt
+argument_list|,
+name|fmtp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|pr
+operator|->
+name|fmt
+argument_list|,
+name|cs
+argument_list|)
 expr_stmt|;
 operator|*
 name|p2
@@ -1788,7 +1764,7 @@ name|fmtp
 operator|=
 name|p2
 expr_stmt|;
-comment|/* only one conversion character if byte count */
+comment|/* Only one conversion character if byte count. */
 if|if
 condition|(
 operator|!
@@ -1807,25 +1783,13 @@ operator|&&
 name|nconv
 operator|++
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: byte count with multiple conversion characters.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"byte count with multiple conversion characters"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 		 * if format unit byte count not specified, figure it out 		 * so can adjust rep count later. 		 */
+comment|/* 		 * If format unit byte count not specified, figure it out 		 * so can adjust rep count later. 		 */
 if|if
 condition|(
 operator|!
@@ -1858,7 +1822,7 @@ operator|->
 name|bcnt
 expr_stmt|;
 block|}
-comment|/* 	 * if the format string interprets any data at all, and it's 	 * not the same as the blocksize, and its last format unit 	 * interprets any data at all, and has no iteration count, 	 * repeat it as necessary. 	 * 	 * if, rep count is greater than 1, no trailing whitespace 	 * gets output from the last iteration of the format unit. 	 */
+comment|/* 	 * If the format string interprets any data at all, and it's 	 * not the same as the blocksize, and its last format unit 	 * interprets any data at all, and has no iteration count, 	 * repeat it as necessary. 	 * 	 * If, rep count is greater than 1, no trailing whitespace 	 * gets output from the last iteration of the format unit. 	 */
 for|for
 control|(
 name|fu
@@ -1999,22 +1963,87 @@ name|nextfu
 condition|)
 break|break;
 block|}
-block|}
-end_block
-
-begin_expr_stmt
-name|escape
+ifdef|#
+directive|ifdef
+name|DEBUG
+for|for
+control|(
+name|fu
+operator|=
+name|fs
+operator|->
+name|nextfu
+init|;
+name|fu
+condition|;
+name|fu
+operator|=
+name|fu
+operator|->
+name|nextfu
+control|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
 argument_list|(
-name|p1
+literal|"fmt:"
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pr
+operator|=
+name|fu
+operator|->
+name|nextpr
+init|;
+name|pr
+condition|;
+name|pr
+operator|=
+name|pr
+operator|->
+name|nextpr
+control|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" {%s}"
+argument_list|,
+name|pr
+operator|->
+name|fmt
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|escape
+parameter_list|(
+name|p1
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p1
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -2140,140 +2169,83 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|badcnt
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: bad byte count for conversion character %s.\n"
+literal|"%s: bad byte count"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|badsfmt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: %%s requires a precision or a byte count.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"%%s: requires a precision or a byte count\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|badfmt
-argument_list|(
-argument|fmt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fmt
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: bad format {%s}\n"
+literal|"\"%s\": bad format\n"
 argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|badconv
-argument_list|(
-argument|ch
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ch
+parameter_list|)
 name|char
 modifier|*
 name|ch
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: bad conversion character %%%s.\n"
+literal|"%%%s: bad conversion character\n"
 argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

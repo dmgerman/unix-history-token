@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	5.4 (Berkeley) %G%"
+literal|"@(#)conv.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -46,30 +52,22 @@ directive|include
 file|"hexdump.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|conv_c
-argument_list|(
-argument|pr
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pr
+parameter_list|,
+name|p
+parameter_list|)
 name|PR
 modifier|*
 name|pr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -258,32 +256,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|conv_u
-argument_list|(
-argument|pr
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pr
+parameter_list|,
+name|p
+parameter_list|)
 name|PR
 modifier|*
 name|pr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -456,7 +446,7 @@ operator|==
 literal|0x20
 condition|)
 block|{
-comment|/* od replace space with sp */
+comment|/* od replaced space with sp */
 operator|*
 name|pr
 operator|->
@@ -535,7 +525,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hexsyntax.c	5.2 (Berkeley) %G%"
+literal|"@(#)hexsyntax.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hexdump.h"
 end_include
 
@@ -56,31 +68,23 @@ begin_comment
 comment|/* bytes to skip */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|newsyntax
-argument_list|(
-argument|argc
-argument_list|,
-argument|argvp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argvp
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|argvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|enum
@@ -93,15 +97,8 @@ modifier|*
 name|fshead
 decl_stmt|;
 specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
 name|int
 name|length
-decl_stmt|,
-name|optind
 decl_stmt|;
 name|int
 name|ch
@@ -217,23 +214,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|"%s: bad length value"
 argument_list|,
-literal|"hexdump: bad length value.\n"
+name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'o'
@@ -270,23 +257,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|"%s: bad skip value"
 argument_list|,
-literal|"hexdump: bad skip value.\n"
+name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 operator|*
@@ -347,11 +324,6 @@ case|:
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -376,14 +348,12 @@ operator|+=
 name|optind
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -401,7 +371,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
