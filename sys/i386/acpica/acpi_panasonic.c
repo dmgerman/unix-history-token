@@ -949,13 +949,13 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|ACPI_SERIAL_END
 argument_list|(
 name|panasonic
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
 name|error
