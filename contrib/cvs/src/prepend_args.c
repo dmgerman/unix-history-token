@@ -33,12 +33,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../diff/system.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"prepend_args.h"
 end_include
 
@@ -98,7 +92,7 @@ control|)
 block|{
 while|while
 condition|(
-name|ISSPACE
+name|isspace
 argument_list|(
 operator|(
 name|unsigned
@@ -168,7 +162,7 @@ operator|*
 name|o
 operator|&&
 operator|!
-name|ISSPACE
+name|isspace
 argument_list|(
 operator|(
 name|unsigned
