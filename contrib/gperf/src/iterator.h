@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Provides an Iterator for keyword characters.     Copyright (C) 1989 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* This may look like C code, but it is really -*- C++ -*- */
+end_comment
+
+begin_comment
+comment|/* Provides an Iterator for keyword characters.     Copyright (C) 1989-1998 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,26 +14,23 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_iterator_h
+name|iterator_h
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_iterator_h
+name|iterator_h
+value|1
 end_define
 
-begin_include
-include|#
-directive|include
-file|"prototype.h"
-end_include
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|iterator
+begin_decl_stmt
+name|class
+name|Iterator
 block|{
+name|private
+label|:
+specifier|const
 name|char
 modifier|*
 name|str
@@ -55,62 +56,41 @@ name|int
 name|lo_bound
 decl_stmt|;
 comment|/* Smallest possible value, inclusive. */
+name|public
+label|:
+name|Iterator
+argument_list|(
+argument|const char *s
+argument_list|,
+argument|int lo
+argument_list|,
+argument|int hi
+argument_list|,
+argument|int word_end
+argument_list|,
+argument|int bad_val
+argument_list|,
+argument|int key_end
+argument_list|)
+empty_stmt|;
+name|int
+name|operator
+argument_list|()
+argument_list|(
+name|void
+argument_list|)
+expr_stmt|;
 block|}
-name|ITERATOR
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|iterator_init
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|s
-operator|,
-name|int
-name|lo
-operator|,
-name|int
-name|hi
-operator|,
-name|int
-name|word_end
-operator|,
-name|int
-name|bad_val
-operator|,
-name|int
-name|key_end
-operator|)
-argument_list|)
-decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|next
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _iterator_h */
-end_comment
 
 end_unit
 
