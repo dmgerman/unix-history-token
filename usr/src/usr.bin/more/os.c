@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.5 (Berkeley) %G%"
+literal|"@(#)os.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,12 +452,6 @@ begin_comment
 comment|/*  * Expand a filename, substituting any environment variables, etc.  * The implementation of this is necessarily very operating system  * dependent.  This implementation is unabashedly only for Unix systems.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|GLOB
-end_if
-
 begin_function_decl
 name|FILE
 modifier|*
@@ -701,37 +695,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|public
-name|char
-modifier|*
-name|glob
-parameter_list|(
-name|filename
-parameter_list|)
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|filename
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Returns NULL if the file can be opened and  * is an ordinary file, otherwise an error message  * (if it cannot be opened or is a directory, etc.)  */
