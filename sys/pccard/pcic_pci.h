@@ -178,6 +178,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TI12XX_SYSCNTL_PCI_CLOCK
+value|0x08000000u
+end_define
+
+begin_define
+define|#
+directive|define
 name|TI113X_SYSCNTL_SMIENB
 value|0x00800000u
 end_define

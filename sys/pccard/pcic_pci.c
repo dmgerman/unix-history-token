@@ -2623,23 +2623,13 @@ operator||=
 name|TI113X_SYSCNTL_INTRTIE
 expr_stmt|;
 block|}
-comment|/*  		 * I'm not sure that this helps/hurts things at all and 		 * plan on removing it in the 4.8 time frame unless someone 		 * can show that it really helps. 		 */
-name|syscntl
-operator|&=
-operator|~
-name|TI113X_SYSCNTL_SMIENB
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|TI113X_PCI_SYSTEM_CONTROL
-argument_list|,
-name|syscntl
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 		 * I've had reports that we need the pci clock enabled, 		 * but I'm unsure how wise this is in general, so it 		 * is ifdef'd out at the moment 		 */
+block|syscntl |= TI12XX_SYSCNTL_PCI_CLOCK; 		pci_write_config(dev, TI113X_PCI_SYSTEM_CONTROL, syscntl, 4);
+endif|#
+directive|endif
 comment|/* 		 * Some PCI add-in cards don't have good EEPROMs on them, 		 * so they get this MUX register wrong.  The MUX register 		 * defaults to 0, which is usually wrong for this register, 		 * so we initialize it to make sense. 		 * 		 * We don't bother to turn it off in the ISA case since it 		 * is an initialization issue. 		 * 		 * A few weird TI bridges don't have MFUNC, so filter 		 * those out too. 		 */
 if|if
 condition|(
