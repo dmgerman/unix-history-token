@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.12	82/01/17	*/
+comment|/*	ioctl.h	4.13	82/01/17	*/
 end_comment
 
 begin_comment
@@ -650,6 +650,72 @@ end_define
 
 begin_comment
 comment|/* get rid of tty association */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT
+value|(('t'<<8)|112)
+end_define
+
+begin_comment
+comment|/* on pty: set/clear packet mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_DATA
+value|0
+end_define
+
+begin_comment
+comment|/* data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_FLUSHREAD
+value|1
+end_define
+
+begin_comment
+comment|/* flush packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_FLUSHWRITE
+value|2
+end_define
+
+begin_comment
+comment|/* flush packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_STOP
+value|4
+end_define
+
+begin_comment
+comment|/* stop output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_START
+value|8
+end_define
+
+begin_comment
+comment|/* start output */
 end_comment
 
 begin_define
