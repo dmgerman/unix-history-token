@@ -551,27 +551,17 @@ name|REF_INIT
 value|NMBCLUSTERS
 end_define
 
-begin_comment
-comment|/*  * Full mbuf subsystem initialization done here.  *  * XXX: If ever we have system specific map setups to do, then move them to  *      machdep.c - for now, there is no reason for this stuff to go there.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|mbinit
+name|tunable_mbinit
 parameter_list|(
 name|void
 modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|vm_offset_t
-name|maxaddr
-decl_stmt|;
-name|vm_size_t
-name|mb_map_size
-decl_stmt|;
-comment|/* Sanity checks and pre-initialization for non-constants */
+comment|/* 	 * Sanity checks and pre-initialization for non-constants. 	 * This has to be done before VM initialization. 	 */
 if|if
 condition|(
 name|nmbufs
@@ -596,6 +586,45 @@ name|nmbcnt
 operator|=
 name|EXT_COUNTERS
 expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|tunable_mbinit
+argument_list|,
+name|SI_SUB_TUNABLES
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|tunable_mbinit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Full mbuf subsystem initialization done here.  *  * XXX: If ever we have system specific map setups to do, then move them to  *      machdep.c - for now, there is no reason for this stuff to go there.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|mbinit
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
+block|{
+name|vm_offset_t
+name|maxaddr
+decl_stmt|;
+name|vm_size_t
+name|mb_map_size
+decl_stmt|;
 comment|/* 	 * Setup the mb_map, allocate requested VM space. 	 */
 name|mb_map_size
 operator|=
