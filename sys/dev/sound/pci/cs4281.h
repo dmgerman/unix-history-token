@@ -487,6 +487,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CS4281PCI_PMCS_OFFSET
+value|(CS4281PCI_PMCS - 0x300)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CS4281PCI_CWPR
 value|0x3e0
 end_define
