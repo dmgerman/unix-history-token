@@ -415,6 +415,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|dataport
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|logged_in
 decl_stmt|;
 end_decl_stmt
@@ -1493,6 +1499,13 @@ name|bindname
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|bindport
+init|=
+literal|"ftp"
+decl_stmt|;
 name|int
 name|family
 init|=
@@ -1572,7 +1585,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:AdDElmMoOp:rRSt:T:u:UvW"
+literal|"46a:AdDElmMoOp:P:rRSt:T:u:UvW"
 argument_list|)
 operator|)
 operator|!=
@@ -1693,6 +1706,14 @@ case|case
 literal|'p'
 case|:
 name|pid_file
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|bindport
 operator|=
 name|optarg
 expr_stmt|;
@@ -1984,7 +2005,7 @@ name|getaddrinfo
 argument_list|(
 name|bindname
 argument_list|,
-literal|"ftp"
+name|bindport
 argument_list|,
 operator|&
 name|hints
@@ -2017,7 +2038,7 @@ name|getaddrinfo
 argument_list|(
 name|bindname
 argument_list|,
-literal|"ftp"
+name|bindport
 argument_list|,
 operator|&
 name|hints
@@ -2696,6 +2717,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|dataport
+operator|=
+name|ntohs
+argument_list|(
+name|ctrl_addr
+operator|.
+name|su_port
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* as per RFC 959 */
 ifdef|#
 directive|ifdef
 name|VIRTUAL_HOSTING
@@ -8484,10 +8517,9 @@ name|su_port
 operator|=
 name|htons
 argument_list|(
-literal|20
+name|dataport
 argument_list|)
 expr_stmt|;
-comment|/* ftp-data port */
 for|for
 control|(
 name|tries
