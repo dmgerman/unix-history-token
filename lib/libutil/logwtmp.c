@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logwtmp.c,v 1.6 1998/06/01 08:46:53 amurai Exp $"
+literal|"$Id: logwtmp.c,v 1.7 1998/10/09 00:39:09 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include

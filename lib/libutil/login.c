@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: login.c,v 1.4 1997/08/13 20:42:16 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
