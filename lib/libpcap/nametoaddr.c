@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: nametoaddr.c,v 1.21 94/06/20 19:07:54 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/lib/libpcap/nametoaddr.c,v 1.1.1.1 1995/01/20 04:13:03 jkh Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

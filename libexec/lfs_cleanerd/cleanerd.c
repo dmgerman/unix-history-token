@@ -527,7 +527,7 @@ operator|)
 return|;
 else|else
 block|{
-comment|/*  		 * from lfsSegUsage.c (Mendel's code). 		 * priority calculation is done using INTEGER arithmetic. 		 * sizes are in BLOCKS (that is why we use lblkno below). 		 * age is in seconds. 		 * 		 * priority = ((seg_size - live) * age) / (seg_size + live) 		 */
+comment|/* 		 * from lfsSegUsage.c (Mendel's code). 		 * priority calculation is done using INTEGER arithmetic. 		 * sizes are in BLOCKS (that is why we use lblkno below). 		 * age is in seconds. 		 * 		 * priority = ((seg_size - live) * age) / (seg_size + live) 		 */
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -967,7 +967,7 @@ name|fi_lfs
 operator|.
 name|lfs_ssize
 expr_stmt|;
-comment|/*  	 * We will clean if there are not enough free blocks or total clean 	 * space is less than BUSY_LIM % of possible clean space. 	 */
+comment|/* 	 * We will clean if there are not enough free blocks or total clean 	 * space is less than BUSY_LIM % of possible clean space. 	 */
 name|now
 operator|=
 name|time
@@ -1050,7 +1050,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/*  		 * We will also clean if the system is reasonably idle and 		 * the total clean space is less then IDLE_LIM % of possible 		 * clean space. 		 */
+comment|/* 		 * We will also clean if the system is reasonably idle and 		 * the total clean space is less then IDLE_LIM % of possible 		 * clean space. 		 */
 if|if
 condition|(
 name|getloadavg

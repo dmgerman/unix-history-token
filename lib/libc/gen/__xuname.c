@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: uname.c,v 1.2 1994/10/13 20:31:19 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

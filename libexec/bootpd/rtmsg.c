@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1984, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.2 1995/01/16 18:57:45 dfr Exp $  */
+comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.3 1995/01/30 11:11:43 dfr Exp $  */
 end_comment
 
 begin_include
@@ -350,7 +350,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set an individual arp entry   */
+comment|/*  * Set an individual arp entry  */
 end_comment
 
 begin_function

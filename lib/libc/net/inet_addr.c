@@ -108,7 +108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
+comment|/*  * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
 end_comment
 
 begin_function

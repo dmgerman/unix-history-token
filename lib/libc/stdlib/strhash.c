@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: /home/ncvs/src/lib/libc/stdlib/strhash.c,v 1.2 1995/03/26 19:32:24 ache Exp $"
+literal|"$Header: /home/ncvs/src/lib/libc/stdlib/strhash.c,v 1.3 1995/03/28 08:41:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,15 +21,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  *                      Copyright 1990  *               Terry Jones& Jordan Hubbard  *  *		  PCS Computer Systeme, GmbH.  *	             Munich, West Germany  *  *  *  All rights reserved.  *   *  This is unsupported software and is subject to change without notice.  *  the author makes no representations about the suitability of this software  *  for any purpose. It is supplied "as is" without express or implied  *  warranty.  *   *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both that  *  copyright notice and this permission notice appear in supporting  *  documentation, and that the name of the author not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission.  *  */
+comment|/*  *  *                      Copyright 1990  *               Terry Jones& Jordan Hubbard  *  *		  PCS Computer Systeme, GmbH.  *	             Munich, West Germany  *  *  *  All rights reserved.  *  *  This is unsupported software and is subject to change without notice.  *  the author makes no representations about the suitability of this software  *  for any purpose. It is supplied "as is" without express or implied  *  warranty.  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both that  *  copyright notice and this permission notice appear in supporting  *  documentation, and that the name of the author not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission.  *  */
 end_comment
 
 begin_comment
-comment|/*  * This is a fairly simple open addressing hash scheme.  * Terry did all the code, I just did the spec.  * Thanks again, you crazy Aussie..  *   */
+comment|/*  * This is a fairly simple open addressing hash scheme.  * Terry did all the code, I just did the spec.  * Thanks again, you crazy Aussie..  *  */
 end_comment
 
 begin_comment
-comment|/*  * $Log: strhash.c,v $  * Revision 1.2  1995/03/26  19:32:24  ache  * Hash 8bit chars without sign extension  *  * Revision 1.1  1995/03/26  10:21:55  jkh  * Add the strhash family of routines.  They provide a number of features  * that the db/hash functions don't, and they're much simpler to use for  * low-overhead string hashing.  *  * Revision 1.1  1995/02/25  02:16:34  jkh  * Second version of this - now support the essentials of a basic  * attributed file system for storing menu information and command  * templates.  This is not finished yet, but it does compile so I can  * commit it to the tree now and continue working on it.  *  * Revision 2.0  90/03/26  01:44:26  jkh  * pre-beta check-in  *   * Revision 1.8  90/03/09  19:22:35  jkh  * Fixed bogus comment.  *   * Revision 1.7  90/03/09  19:01:08  jkh  * Added comments, GPL.  *   * Revision 1.6  90/03/08  17:55:58  terry  * Rearranged hash_purge to be a tiny bit more efficient.  * Added verbose option to hash_stats.  *   * Revision 1.5  90/03/08  17:19:54  terry  * Added hash_purge. Added arg to hash_traverse. Changed all  * void * to Generic.  *   * Revision 1.4  90/03/08  12:02:35  terry  * Fixed problems with allocation that I screwed up last night.  * Changed bucket lists to be singly linked. Thanks to JKH, my hero.  *   * Revision 1.3  90/03/07  21:33:33  terry  * Cleaned up a few decls to keep gcc -Wall quiet.  *   * Revision 1.2  90/03/07  21:14:53  terry  * Comments. Added HASH_STATS define. Removed hash_find()  * and new_node().  *   * Revision 1.1  90/03/07  20:49:45  terry  * Initial revision  *   *  */
+comment|/*  * $Log: strhash.c,v $  * Revision 1.3  1995/03/28  08:41:02  jkh  * Fix a missing _hash() to prevent namespace pollution with the db/hash routines.  * Grrr.  If the dbhash routines weren't grossly overengineered I wouldn't  * even need to do this! :-(  *  * Also now export the hash_stats routine.  Manpage coming RSN - I promise.  *  * Revision 1.2  1995/03/26  19:32:24  ache  * Hash 8bit chars without sign extension  *  * Revision 1.1  1995/03/26  10:21:55  jkh  * Add the strhash family of routines.  They provide a number of features  * that the db/hash functions don't, and they're much simpler to use for  * low-overhead string hashing.  *  * Revision 1.1  1995/02/25  02:16:34  jkh  * Second version of this - now support the essentials of a basic  * attributed file system for storing menu information and command  * templates.  This is not finished yet, but it does compile so I can  * commit it to the tree now and continue working on it.  *  * Revision 2.0  90/03/26  01:44:26  jkh  * pre-beta check-in  *  * Revision 1.8  90/03/09  19:22:35  jkh  * Fixed bogus comment.  *  * Revision 1.7  90/03/09  19:01:08  jkh  * Added comments, GPL.  *  * Revision 1.6  90/03/08  17:55:58  terry  * Rearranged hash_purge to be a tiny bit more efficient.  * Added verbose option to hash_stats.  *  * Revision 1.5  90/03/08  17:19:54  terry  * Added hash_purge. Added arg to hash_traverse. Changed all  * void * to Generic.  *  * Revision 1.4  90/03/08  12:02:35  terry  * Fixed problems with allocation that I screwed up last night.  * Changed bucket lists to be singly linked. Thanks to JKH, my hero.  *  * Revision 1.3  90/03/07  21:33:33  terry  * Cleaned up a few decls to keep gcc -Wall quiet.  *  * Revision 1.2  90/03/07  21:14:53  terry  * Comments. Added HASH_STATS define. Removed hash_find()  * and new_node().  *  * Revision 1.1  90/03/07  20:49:45  terry  * Initial revision  *  *  */
 end_comment
 
 begin_include
@@ -531,7 +531,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * hash_search()  *  * Search the table for the given key. Then:  *  * 1) If you find it and there is no replacement function, just   *    return what you found. (This is a simple search).   * 2) If you find it and there is a replacement function, run  *    the function on the data you found, and replace the old  *    data with whatever is passed in datum. Return 0.  * 3) If you don't find it and there is some datum, insert a  *    new item into the table. Insertions go at the front of  *    the bucket. Return 0.  * 4) Otherwise just return 0.  *  */
+comment|/*  * hash_search()  *  * Search the table for the given key. Then:  *  * 1) If you find it and there is no replacement function, just  *    return what you found. (This is a simple search).  * 2) If you find it and there is a replacement function, run  *    the function on the data you found, and replace the old  *    data with whatever is passed in datum. Return 0.  * 3) If you don't find it and there is some datum, insert a  *    new item into the table. Insertions go at the front of  *    the bucket. Return 0.  * 4) Otherwise just return 0.  *  */
 end_comment
 
 begin_function
@@ -704,7 +704,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * assign_key()  *  * Set the key value of a node to be 'key'. Get some space from   * malloc and copy it in etc. Return 1 if all is well, 0 otherwise.  */
+comment|/*  * assign_key()  *  * Set the key value of a node to be 'key'. Get some space from  * malloc and copy it in etc. Return 1 if all is well, 0 otherwise.  */
 end_comment
 
 begin_function

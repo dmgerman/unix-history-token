@@ -4,7 +4,7 @@ comment|/* @(#)s_fabs.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_fabs.c,v 1.5 1994/08/18 23:06:42 jtc Exp $"
+literal|"$Id: s_fabs.c,v 1.1.1.1 1994/08/19 09:39:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/* w_scalbf.c -- float version of w_scalb.c.  * Conversion to float by I
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w_scalbf.c,v 1.1 1994/08/10 20:35:40 jtc Exp $"
+literal|"$Id: w_scalbf.c,v 1.1.1.1 1994/08/19 09:40:00 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * wrapper scalbf(float x, float fn) is provide for  * passing various standard test suite. One   * should use scalbn() instead.  */
+comment|/*  * wrapper scalbf(float x, float fn) is provide for  * passing various standard test suite. One  * should use scalbn() instead.  */
 end_comment
 
 begin_include

@@ -45,7 +45,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * This is a issue of basic "vi" look-and-feel. Defining VI_MOVE works  * like real vi: i.e. the transition from command<->insert modes moves  * the cursor.  *  * On the other hand we really don't want to move the cursor, because   * all the editing commands don't include the character under the cursor.  * Probably the best fix is to make all the editing commands aware of  * this fact.  */
+comment|/*  * This is a issue of basic "vi" look-and-feel. Defining VI_MOVE works  * like real vi: i.e. the transition from command<->insert modes moves  * the cursor.  *  * On the other hand we really don't want to move the cursor, because  * all the editing commands don't include the character under the cursor.  * Probably the best fix is to make all the editing commands aware of  * this fact.  */
 end_comment
 
 begin_define
@@ -77,7 +77,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * Undo information for both vi and emacs  */
+comment|/*  * Undo information for both vi and emacs  */
 end_comment
 
 begin_typedef

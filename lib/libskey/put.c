@@ -4513,7 +4513,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* convert English to binary     * returns 1 OK - all good words and parity is OK     *         0 word not in data base  *        -1 badly formed in put ie> 4 char word  *        -2 words OK but parity is wrong  */
+comment|/* convert English to binary  * returns 1 OK - all good words and parity is OK  *         0 word not in data base  *        -1 badly formed in put ie> 4 char word  *        -2 words OK but parity is wrong  */
 end_comment
 
 begin_function

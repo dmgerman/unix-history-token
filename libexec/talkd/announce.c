@@ -125,7 +125,7 @@ comment|/*  * Announce an invitation to talk.  */
 end_comment
 
 begin_comment
-comment|/*  * See if the user is accepting messages. If so, announce that   * a talk is requested.  */
+comment|/*  * See if the user is accepting messages. If so, announce that  * a talk is requested.  */
 end_comment
 
 begin_macro
@@ -261,7 +261,7 @@ value|120
 end_define
 
 begin_comment
-comment|/*  * Build a block of characters containing the message.   * It is sent blank filled and in a single block to  * try to keep the message in one piece if the recipient  * in in vi at the time  */
+comment|/*  * Build a block of characters containing the message.  * It is sent blank filled and in a single block to  * try to keep the message in one piece if the recipient  * in in vi at the time  */
 end_comment
 
 begin_macro

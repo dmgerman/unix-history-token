@@ -4,7 +4,7 @@ comment|/* This work is copyrighted. See COPYRIGHT.NEW for                   * *
 end_comment
 
 begin_comment
-comment|/* lib_color.c   *    * Handles color emulation of SYS V curses  *  */
+comment|/* lib_color.c  *  * Handles color emulation of SYS V curses  *  */
 end_comment
 
 begin_include

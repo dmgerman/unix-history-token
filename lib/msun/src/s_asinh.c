@@ -4,7 +4,7 @@ comment|/* @(#)s_asinh.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_asinh.c,v 1.6 1994/08/18 23:06:20 jtc Exp $"
+literal|"$Id: s_asinh.c,v 1.1.1.1 1994/08/19 09:39:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* asinh(x)  * Method :  *	Based on   *		asinh(x) = sign(x) * log [ |x| + sqrt(x*x+1) ]  *	we have  *	asinh(x) := x  if  1+x*x=1,  *		 := sign(x)*(log(x)+ln2)) for large |x|, else  *		 := sign(x)*log(2|x|+1/(|x|+sqrt(x*x+1))) if|x|>2, else  *		 := sign(x)*log1p(|x| + x^2/(1 + sqrt(1+x^2)))    */
+comment|/* asinh(x)  * Method :  *	Based on  *		asinh(x) = sign(x) * log [ |x| + sqrt(x*x+1) ]  *	we have  *	asinh(x) := x  if  1+x*x=1,  *		 := sign(x)*(log(x)+ln2)) for large |x|, else  *		 := sign(x)*log(2|x|+1/(|x|+sqrt(x*x+1))) if|x|>2, else  *		 := sign(x)*log1p(|x| + x^2/(1 + sqrt(1+x^2)))  */
 end_comment
 
 begin_include

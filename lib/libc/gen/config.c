@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: config.c,v 1.1 1994/11/13 20:47:43 phk Exp $  *  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: config.c,v 1.1 1994/01/14 12:24:39 jkh Exp $"
+literal|"$Id: config.c,v 1.1 1994/11/13 20:47:43 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * This file contains four procedures used to read config-files.  *  * char * config_open(const char *filename,int contlines)  *	Will open the named file, read it into a private malloc'ed area,  *	and close the file again.  *	All lines where the first !isspace() char is '#' are deleted.  *	If contlines are non-zero lines where the first char is isspace()   *	will be joined to the preceeding line.  *	In case of trouble the name of the offending system call will be  *	returned.  On success NULL is returned.  *  * void   config_close()  *	This will free the internal malloc'ed area.  *  * char * config_next()  *	This will return a pointer to the next entry in the area.  NULL is  *	returned at "end of file".  The return value is '\0' terminated, and  *	can be modified, but the contents must be copied somewhere else for  *	permanent use.  *  * char * config_skip(char **p)  *	This will pick out the next word from the string.  The return-value  *	points to the word found, and *p is advanced past the word.  NULL is  *	returned at "end of string".  *  * Many programs have a n*100 bytes config-file and N*1000 bytes of source  * to read it.  Doing pointer-aerobics on files that small is a waste of  * time, and bashing around with getchar/ungetc isn't much better.  These  * routines implement a simple algorithm and syntax.  *  * config_skip consider a contiguous string of !isspace() chars a word.  *  * 13nov1994 Poul-Henning Kamp  phk@login.dknet.dk  */
+comment|/*  * This file contains four procedures used to read config-files.  *  * char * config_open(const char *filename,int contlines)  *	Will open the named file, read it into a private malloc'ed area,  *	and close the file again.  *	All lines where the first !isspace() char is '#' are deleted.  *	If contlines are non-zero lines where the first char is isspace()  *	will be joined to the preceeding line.  *	In case of trouble the name of the offending system call will be  *	returned.  On success NULL is returned.  *  * void   config_close()  *	This will free the internal malloc'ed area.  *  * char * config_next()  *	This will return a pointer to the next entry in the area.  NULL is  *	returned at "end of file".  The return value is '\0' terminated, and  *	can be modified, but the contents must be copied somewhere else for  *	permanent use.  *  * char * config_skip(char **p)  *	This will pick out the next word from the string.  The return-value  *	points to the word found, and *p is advanced past the word.  NULL is  *	returned at "end of string".  *  * Many programs have a n*100 bytes config-file and N*1000 bytes of source  * to read it.  Doing pointer-aerobics on files that small is a waste of  * time, and bashing around with getchar/ungetc isn't much better.  These  * routines implement a simple algorithm and syntax.  *  * config_skip consider a contiguous string of !isspace() chars a word.  *  * 13nov1994 Poul-Henning Kamp  phk@login.dknet.dk  */
 end_comment
 
 begin_include
@@ -267,7 +267,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/*          * /^[ \t]*#[^\n]*$/d 	 *  	 * Delete all lines where the first !isspace() char is '#'           */
+comment|/*          * /^[ \t]*#[^\n]*$/d 	 * 	 * Delete all lines where the first !isspace() char is '#'          */
 name|ptr
 operator|=
 name|file_buf

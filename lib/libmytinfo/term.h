@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * term.h   *  * This file was generated automatically.  *  */
+comment|/*  * term.h  *  * This file was generated automatically.  *  */
 end_comment
 
 begin_ifndef
@@ -3602,7 +3602,7 @@ comment|/* OVERRIDE */
 end_comment
 
 begin_comment
-comment|/*   * 92/02/01 07:30:28  * @(#) mytinfo term.tail 3.2 92/02/01 public domain, By Ross Ridge  *  */
+comment|/*  * 92/02/01 07:30:28  * @(#) mytinfo term.tail 3.2 92/02/01 public domain, By Ross Ridge  *  */
 end_comment
 
 begin_if

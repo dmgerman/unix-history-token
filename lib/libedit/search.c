@@ -529,7 +529,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* c_setpat():   *	Set the history seatch pattern  */
+comment|/* c_setpat():  *	Set the history seatch pattern  */
 end_comment
 
 begin_function

@@ -1326,7 +1326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MPOOL_BKT -- get/create a BKT from the cache  *  * Parameters:  *	mp:	mpool cookie  *  * Returns:  *	NULL on failure and a pointer to the BKT on success	  */
+comment|/*  * MPOOL_BKT -- get/create a BKT from the cache  *  * Parameters:  *	mp:	mpool cookie  *  * Returns:  *	NULL on failure and a pointer to the BKT on success  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/* @(#)k_standard.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: k_standard.c,v 1.4 1994/08/10 20:31:44 jtc Exp $"
+literal|"$Id: k_standard.c,v 1.1.1.1 1994/08/19 09:39:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Standard conformance (non-IEEE) on exception cases.  * Mapping:  *	1 -- acos(|x|>1)  *	2 -- asin(|x|>1)  *	3 -- atan2(+-0,+-0)  *	4 -- hypot overflow  *	5 -- cosh overflow  *	6 -- exp overflow  *	7 -- exp underflow  *	8 -- y0(0)  *	9 -- y0(-ve)  *	10-- y1(0)  *	11-- y1(-ve)  *	12-- yn(0)  *	13-- yn(-ve)  *	14-- lgamma(finite) overflow  *	15-- lgamma(-integer)  *	16-- log(0)  *	17-- log(x<0)  *	18-- log10(0)  *	19-- log10(x<0)  *	20-- pow(0.0,0.0)  *	21-- pow(x,y) overflow  *	22-- pow(x,y) underflow  *	23-- pow(0,negative)   *	24-- pow(neg,non-integral)  *	25-- sinh(finite) overflow  *	26-- sqrt(negative)  *      27-- fmod(x,0)  *      28-- remainder(x,0)  *	29-- acosh(x<1)  *	30-- atanh(|x|>1)  *	31-- atanh(|x|=1)  *	32-- scalb overflow  *	33-- scalb underflow  *	34-- j0(|x|>X_TLOSS)  *	35-- y0(x>X_TLOSS)  *	36-- j1(|x|>X_TLOSS)  *	37-- y1(x>X_TLOSS)  *	38-- jn(|x|>X_TLOSS, n)  *	39-- yn(x>X_TLOSS, n)  *	40-- gamma(finite) overflow  *	41-- gamma(-integer)  *	42-- pow(NaN,0.0)  */
+comment|/*  * Standard conformance (non-IEEE) on exception cases.  * Mapping:  *	1 -- acos(|x|>1)  *	2 -- asin(|x|>1)  *	3 -- atan2(+-0,+-0)  *	4 -- hypot overflow  *	5 -- cosh overflow  *	6 -- exp overflow  *	7 -- exp underflow  *	8 -- y0(0)  *	9 -- y0(-ve)  *	10-- y1(0)  *	11-- y1(-ve)  *	12-- yn(0)  *	13-- yn(-ve)  *	14-- lgamma(finite) overflow  *	15-- lgamma(-integer)  *	16-- log(0)  *	17-- log(x<0)  *	18-- log10(0)  *	19-- log10(x<0)  *	20-- pow(0.0,0.0)  *	21-- pow(x,y) overflow  *	22-- pow(x,y) underflow  *	23-- pow(0,negative)  *	24-- pow(neg,non-integral)  *	25-- sinh(finite) overflow  *	26-- sqrt(negative)  *      27-- fmod(x,0)  *      28-- remainder(x,0)  *	29-- acosh(x<1)  *	30-- atanh(|x|>1)  *	31-- atanh(|x|=1)  *	32-- scalb overflow  *	33-- scalb underflow  *	34-- j0(|x|>X_TLOSS)  *	35-- y0(x>X_TLOSS)  *	36-- j1(|x|>X_TLOSS)  *	37-- y1(x>X_TLOSS)  *	38-- jn(|x|>X_TLOSS, n)  *	39-- yn(x>X_TLOSS, n)  *	40-- gamma(finite) overflow  *	41-- gamma(-integer)  *	42-- pow(NaN,0.0)  */
 end_comment
 
 begin_ifdef

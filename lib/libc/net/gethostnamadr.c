@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: gethostnamadr.c,v 1.5 1994/09/25 02:12:18 pst Exp $"
+literal|"@(#)$Id: gethostnamadr.c,v 1.6 1995/03/24 15:38:54 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostnamadr.c,v 1.5 1994/09/25 02:12:18 pst Exp $"
+literal|"$Id: gethostnamadr.c,v 1.6 1995/03/24 15:38:54 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 

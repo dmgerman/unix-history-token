@@ -226,7 +226,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry.  	 */
+comment|/* 	 * estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry. 	 */
 name|arraysz
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkversion.c  *  * By Ross Ridge  * Public Domain   * 92/02/01 07:30:09  *  * generates version.c  *  */
+comment|/*  * mkversion.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:30:09  *  * generates version.c  *  */
 end_comment
 
 begin_define

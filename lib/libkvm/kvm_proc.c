@@ -1271,7 +1271,7 @@ operator|->
 name|procbase
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Clear this pointer in case this call fails.  Otherwise, 		 * kvm_close() will free it again. 		 */
+comment|/* 		 * Clear this pointer in case this call fails.  Otherwise, 		 * kvm_close() will free it again. 		 */
 name|kd
 operator|->
 name|procbase
@@ -1848,7 +1848,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Read in an argument vector from the user address space of process p.  * addr is the user-space base address of narg null-terminated contiguous   * strings.  This is used to read in both the command arguments and  * environment strings.  Read at most maxcnt characters of strings.  */
+comment|/*  * Read in an argument vector from the user address space of process p.  * addr is the user-space base address of narg null-terminated contiguous  * strings.  This is used to read in both the command arguments and  * environment strings.  Read at most maxcnt characters of strings.  */
 end_comment
 
 begin_function

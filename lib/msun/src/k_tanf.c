@@ -4,7 +4,7 @@ comment|/* k_tanf.c -- float version of k_tan.c  * Conversion to float by Ian La
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: k_tanf.c,v 1.2 1994/08/18 23:06:18 jtc Exp $"
+literal|"$Id: k_tanf.c,v 1.1.1.1 1994/08/19 09:39:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,7 +523,7 @@ name|w
 return|;
 else|else
 block|{
-comment|/* if allow error up to 2 ulp,  			   simply return -1.0/(x+r) here */
+comment|/* if allow error up to 2 ulp, 			   simply return -1.0/(x+r) here */
 comment|/*  compute -1.0/(x+r) accurately */
 name|float
 name|a

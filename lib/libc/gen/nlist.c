@@ -294,7 +294,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Map the whole a.out file into our address space. 	 * We then find the string table withing this area. 	 * We do not just mmap the string table, as it probably 	 * does not start at a page boundary - we save ourselves a 	 * lot of nastiness by mmapping the whole file. 	 * 	 * This gives us an easy way to randomly access all the strings,  	 * without making the memory allocation permanent as with  	 * malloc/free (i.e., munmap will return it to the system). 	 */
+comment|/* 	 * Map the whole a.out file into our address space. 	 * We then find the string table withing this area. 	 * We do not just mmap the string table, as it probably 	 * does not start at a page boundary - we save ourselves a 	 * lot of nastiness by mmapping the whole file. 	 * 	 * This gives us an easy way to randomly access all the strings, 	 * without making the memory allocation permanent as with 	 * malloc/free (i.e., munmap will return it to the system). 	 */
 name|a_out_mmap
 operator|=
 name|mmap

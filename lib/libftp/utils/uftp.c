@@ -825,7 +825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Exacute few command separated by ';' . The character ' must use for mark complex     works*/
+comment|/* Exacute few command separated by ';' . The character ' must use for mark complex    works*/
 end_comment
 
 begin_macro

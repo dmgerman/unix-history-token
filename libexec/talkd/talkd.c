@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * The top level of the daemon, the format is heavily borrowed  * from rwhod.c. Basically: find out who and where you are;   * disconnect all descriptors and ttys, and then endless  * loop on waiting for and processing requests  */
+comment|/*  * The top level of the daemon, the format is heavily borrowed  * from rwhod.c. Basically: find out who and where you are;  * disconnect all descriptors and ttys, and then endless  * loop on waiting for and processing requests  */
 end_comment
 
 begin_include

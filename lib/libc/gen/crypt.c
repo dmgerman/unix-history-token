@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/lib/libc/gen/crypt.c,v 1.6 1993/08/29 22:03:56 nate Exp $"
+literal|"$Header: /home/ncvs/src/lib/libc/gen/crypt.c,v 1.2 1994/08/22 20:38:00 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  * UNIX password, and DES, encryption.  *   * since this is non-exportable, this is just a dummy.  if you want real  * encryption, make sure you've got libcrypt.a around.  */
+comment|/*  * UNIX password, and DES, encryption.  *  * since this is non-exportable, this is just a dummy.  if you want real  * encryption, make sure you've got libcrypt.a around.  */
 end_comment
 
 begin_expr_stmt

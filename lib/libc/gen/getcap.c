@@ -1265,7 +1265,7 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-comment|/* 				 * Enforce loop invariant: if no room  				 * left in record buffer, try to get 				 * some more. 				 */
+comment|/* 				 * Enforce loop invariant: if no room 				 * left in record buffer, try to get 				 * some more. 				 */
 if|if
 condition|(
 name|rp
@@ -2420,7 +2420,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cgetnext() gets either the first or next entry in the logical database   * specified by db_array.  It returns 0 upon completion of the database, 1  * upon returning an entry with more remaining, and -1 if an error occurs.  */
+comment|/*  * Cgetnext() gets either the first or next entry in the logical database  * specified by db_array.  It returns 0 upon completion of the database, 1  * upon returning an entry with more remaining, and -1 if an error occurs.  */
 end_comment
 
 begin_function
@@ -2741,7 +2741,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  		 * Line points to a name line. 		 */
+comment|/* 		 * Line points to a name line. 		 */
 name|i
 operator|=
 literal|0
@@ -2931,7 +2931,7 @@ name|rp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/*  		 * XXX  		 * Last argument of getent here should be nbuf if we want true 		 * sequential access in the case of duplicates.   		 * With NULL, getent will return the first entry found 		 * rather than the duplicate entry record.  This is a  		 * matter of semantics that should be resolved. 		 */
+comment|/* 		 * XXX 		 * Last argument of getent here should be nbuf if we want true 		 * sequential access in the case of duplicates. 		 * With NULL, getent will return the first entry found 		 * rather than the duplicate entry record.  This is a 		 * matter of semantics that should be resolved. 		 */
 name|status
 operator|=
 name|getent
@@ -3501,7 +3501,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Cgetustr retrieves the value of the string capability cap from the  * capability record pointed to by buf.  The difference between cgetustr()  * and cgetstr() is that cgetustr does not decode escapes but rather treats  * all characters literally.  A pointer to a  NUL terminated malloc'd   * copy of the string is returned in the char pointed to by str.  The   * length of the string not including the trailing NUL is returned on success,  * -1 if the requested string capability couldn't be found, -2 if a system   * error was encountered (storage allocation failure).  */
+comment|/*  * Cgetustr retrieves the value of the string capability cap from the  * capability record pointed to by buf.  The difference between cgetustr()  * and cgetstr() is that cgetustr does not decode escapes but rather treats  * all characters literally.  A pointer to a  NUL terminated malloc'd  * copy of the string is returned in the char pointed to by str.  The  * length of the string not including the trailing NUL is returned on success,  * -1 if the requested string capability couldn't be found, -2 if a system  * error was encountered (storage allocation failure).  */
 end_comment
 
 begin_function

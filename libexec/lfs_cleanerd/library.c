@@ -501,7 +501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If we are reading the ifile then we need to refresh it.  Even if  * we are mmapping it, it might have grown.  Finally, we need to   * refresh the file system information (statfs) info.  */
+comment|/*  * If we are reading the ifile then we need to refresh it.  Even if  * we are mmapping it, it might have grown.  Finally, we need to  * refresh the file system information (statfs) info.  */
 end_comment
 
 begin_function
@@ -557,7 +557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Gets the superblock from disk (possibly in face of errors)   */
+comment|/*  * Gets the superblock from disk (possibly in face of errors)  */
 end_comment
 
 begin_function
@@ -674,7 +674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * This function will map the ifile into memory.  It causes a  * fatal error on failure.  */
+comment|/*  * This function will map the ifile into memory.  It causes a  * fatal error on failure.  */
 end_comment
 
 begin_function
@@ -1735,7 +1735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * This will parse a partial segment and fill in BLOCK_INFO structures  * for each block described in the segment summary.  It will not include  * blocks or inodes from files with new version numbers.    */
+comment|/*  * This will parse a partial segment and fill in BLOCK_INFO structures  * for each block described in the segment summary.  It will not include  * blocks or inodes from files with new version numbers.  */
 end_comment
 
 begin_function
@@ -2590,7 +2590,7 @@ comment|/* #define MMAP_SEGMENT */
 end_comment
 
 begin_comment
-comment|/*   * read a segment into a memory buffer  */
+comment|/*  * read a segment into a memory buffer  */
 end_comment
 
 begin_function

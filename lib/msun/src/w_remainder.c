@@ -4,7 +4,7 @@ comment|/* @(#)w_remainder.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w_remainder.c,v 1.4 1994/08/10 20:35:32 jtc Exp $"
+literal|"$Id: w_remainder.c,v 1.1.1.1 1994/08/19 09:39:54 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * wrapper remainder(x,p)  */
+comment|/*  * wrapper remainder(x,p)  */
 end_comment
 
 begin_include

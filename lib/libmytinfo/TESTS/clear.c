@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * clear.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:29:47  *  * clear  *   * clears the terminal's screen  *  */
+comment|/*  * clear.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:29:47  *  * clear  *  * clears the terminal's screen  *  */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/* @(#)e_pow.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_pow.c,v 1.5 1994/08/18 23:05:51 jtc Exp $"
+literal|"$Id: e_pow.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_pow(x,y) return x**y  *  *		      n  * Method:  Let x =  2   * (1+f)  *	1. Compute and return log2(x) in two pieces:  *		log2(x) = w1 + w2,  *	   where w1 has 53-24 = 29 bit trailing zeros.  *	2. Perform y*log2(x) = n+y' by simulating muti-precision   *	   arithmetic, where |y'|<=0.5.  *	3. Return x**y = 2**n*exp(y'*log2)  *  * Special cases:  *	1.  (anything) ** 0  is 1  *	2.  (anything) ** 1  is itself  *	3.  (anything) ** NAN is NAN  *	4.  NAN ** (anything except 0) is NAN  *	5.  +-(|x|> 1) **  +INF is +INF  *	6.  +-(|x|> 1) **  -INF is +0  *	7.  +-(|x|< 1) **  +INF is +0  *	8.  +-(|x|< 1) **  -INF is +INF  *	9.  +-1         ** +-INF is NAN  *	10. +0 ** (+anything except 0, NAN)               is +0  *	11. -0 ** (+anything except 0, NAN, odd integer)  is +0  *	12. +0 ** (-anything except 0, NAN)               is +INF  *	13. -0 ** (-anything except 0, NAN, odd integer)  is +INF  *	14. -0 ** (odd integer) = -( +0 ** (odd integer) )  *	15. +INF ** (+anything except 0,NAN) is +INF  *	16. +INF ** (-anything except 0,NAN) is +0  *	17. -INF ** (anything)  = -0 ** (-anything)  *	18. (-anything) ** (integer) is (-1)**(integer)*(+anything**integer)  *	19. (-anything except 0 and inf) ** (non-integer) is NAN  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular  *			pow(integer,integer)  *	always returns the correct integer provided it is   *	representable.  *  * Constants :  * The hexadecimal values are the intended ones for the following   * constants. The decimal values may be used, provided that the   * compiler will convert from decimal to binary accurately enough   * to produce the hexadecimal values shown.  */
+comment|/* __ieee754_pow(x,y) return x**y  *  *		      n  * Method:  Let x =  2   * (1+f)  *	1. Compute and return log2(x) in two pieces:  *		log2(x) = w1 + w2,  *	   where w1 has 53-24 = 29 bit trailing zeros.  *	2. Perform y*log2(x) = n+y' by simulating muti-precision  *	   arithmetic, where |y'|<=0.5.  *	3. Return x**y = 2**n*exp(y'*log2)  *  * Special cases:  *	1.  (anything) ** 0  is 1  *	2.  (anything) ** 1  is itself  *	3.  (anything) ** NAN is NAN  *	4.  NAN ** (anything except 0) is NAN  *	5.  +-(|x|> 1) **  +INF is +INF  *	6.  +-(|x|> 1) **  -INF is +0  *	7.  +-(|x|< 1) **  +INF is +0  *	8.  +-(|x|< 1) **  -INF is +INF  *	9.  +-1         ** +-INF is NAN  *	10. +0 ** (+anything except 0, NAN)               is +0  *	11. -0 ** (+anything except 0, NAN, odd integer)  is +0  *	12. +0 ** (-anything except 0, NAN)               is +INF  *	13. -0 ** (-anything except 0, NAN, odd integer)  is +INF  *	14. -0 ** (odd integer) = -( +0 ** (odd integer) )  *	15. +INF ** (+anything except 0,NAN) is +INF  *	16. +INF ** (-anything except 0,NAN) is +0  *	17. -INF ** (anything)  = -0 ** (-anything)  *	18. (-anything) ** (integer) is (-1)**(integer)*(+anything**integer)  *	19. (-anything except 0 and inf) ** (non-integer) is NAN  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular  *			pow(integer,integer)  *	always returns the correct integer provided it is  *	representable.  *  * Constants :  * The hexadecimal values are the intended ones for the following  * constants. The decimal values may be used, provided that the  * compiler will convert from decimal to binary accurately enough  * to produce the hexadecimal values shown.  */
 end_comment
 
 begin_include
@@ -908,7 +908,7 @@ name|tiny
 operator|*
 name|tiny
 return|;
-comment|/* now |1-x| is tiny<= 2**-20, suffice to compute  	   log(x) by x-x^2/2+x^3/3-x^4/4 */
+comment|/* now |1-x| is tiny<= 2**-20, suffice to compute 	   log(x) by x-x^2/2+x^3/3-x^4/4 */
 name|t
 operator|=
 name|x

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 		      Library for ftpd clients.(libftp) 			Copyright by Oleg Orel 			 All rights reserved. 			 This  library is desined  for  free,  non-commercial  software  creation.  It is changeable and can be improved. The author would greatly appreciate  any  advises, new  components  and  patches  of  the  existing  programs. Commercial  usage is  also  possible  with  participation of it's author.   */
+comment|/* 		      Library for ftpd clients.(libftp) 			Copyright by Oleg Orel 			 All rights reserved.  This  library is desined  for  free,  non-commercial  software  creation. It is changeable and can be improved. The author would greatly appreciate any  advises, new  components  and  patches  of  the  existing  programs. Commercial  usage is  also  possible  with  participation of it's author.   */
 end_comment
 
 begin_ifndef
@@ -115,7 +115,7 @@ define|#
 directive|define
 name|QUIT
 value|(-5)
-comment|/* Few time ago QUIT character been  		     equivalence to zero, changed for clear 		     conflicts with reading functions */
+comment|/* Few time ago QUIT character been 		     equivalence to zero, changed for clear 		     conflicts with reading functions */
 define|#
 directive|define
 name|Ctrl
@@ -255,12 +255,12 @@ comment|/* 		     Warning! If server not supported REST-command, 		     then see
 name|int
 name|flags
 decl_stmt|;
-comment|/* FTP_REST,  		      FTP_NOEXIT */
+comment|/* FTP_REST, 		      FTP_NOEXIT */
 name|struct
 name|timeval
 name|timeout
 decl_stmt|;
-comment|/* How long must be waiting next character  		      from server */
+comment|/* How long must be waiting next character 		      from server */
 name|int
 name|port
 decl_stmt|;

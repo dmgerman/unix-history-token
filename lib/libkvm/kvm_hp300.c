@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Hp300 machine dependent routines for kvm.  Hopefully, the forthcoming   * vm code will one day obsolete this module.  */
+comment|/*  * Hp300 machine dependent routines for kvm.  Hopefully, the forthcoming  * vm code will one day obsolete this module.  */
 end_comment
 
 begin_include
@@ -666,7 +666,7 @@ operator|>>
 name|SG4_SHIFT1
 index|]
 expr_stmt|;
-comment|/* 		 * Can't use KREAD to read kernel segment table entries. 		 * Fortunately it is 1-to-1 mapped so we don't have to.  		 */
+comment|/* 		 * Can't use KREAD to read kernel segment table entries. 		 * Fortunately it is 1-to-1 mapped so we don't have to. 		 */
 if|if
 condition|(
 name|sta
@@ -922,7 +922,7 @@ operator|>>
 name|SEGSHIFT
 index|]
 expr_stmt|;
-comment|/* 		 * Can't use KREAD to read kernel segment table entries. 		 * Fortunately it is 1-to-1 mapped so we don't have to.  		 */
+comment|/* 		 * Can't use KREAD to read kernel segment table entries. 		 * Fortunately it is 1-to-1 mapped so we don't have to. 		 */
 if|if
 condition|(
 name|sta

@@ -754,7 +754,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/*       * We can show the actual character if it's either an ordinary printable      * or one of the high-half characters.      */
+comment|/*      * We can show the actual character if it's either an ordinary printable      * or one of the high-half characters.      */
 if|if
 condition|(
 name|isprint

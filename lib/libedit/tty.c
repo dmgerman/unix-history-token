@@ -39,7 +39,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*   * tty.c: tty interface stuff  */
+comment|/*  * tty.c: tty interface stuff  */
 end_comment
 
 begin_include

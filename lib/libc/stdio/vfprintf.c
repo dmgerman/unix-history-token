@@ -3338,7 +3338,7 @@ expr_stmt|;
 comment|/* ndigits after the decimal point */
 else|else
 block|{
-comment|/* 		 * To obtain ndigits after the decimal point for the 'e'  		 * and 'E' formats, round to ndigits + 1 significant  		 * figures. 		 */
+comment|/* 		 * To obtain ndigits after the decimal point for the 'e' 		 * and 'E' formats, round to ndigits + 1 significant 		 * figures. 		 */
 if|if
 condition|(
 name|ch

@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * File list interface for kvm.  pstat, fstat and netstat are   * users of this code, so we've factored it out into a separate module.  * Thus, we keep this grunge out of the other kvm applications (i.e.,  * most other applications are interested only in open/close/read/nlist).  */
+comment|/*  * File list interface for kvm.  pstat, fstat and netstat are  * users of this code, so we've factored it out into a separate module.  * Thus, we keep this grunge out of the other kvm applications (i.e.,  * most other applications are interested only in open/close/read/nlist).  */
 end_comment
 
 begin_include

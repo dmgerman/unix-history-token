@@ -764,7 +764,7 @@ argument_list|,
 literal|"Amnesiac"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The following is a work around for vhangup interactions 	 * which cause great problems getting window systems started. 	 * If the tty line is "-", we do the old style getty presuming 	 * that the file descriptors are already set up for us.  	 * J. Gettys - MIT Project Athena. 	 */
+comment|/* 	 * The following is a work around for vhangup interactions 	 * which cause great problems getting window systems started. 	 * If the tty line is "-", we do the old style getty presuming 	 * that the file descriptors are already set up for us. 	 * J. Gettys - MIT Project Athena. 	 */
 if|if
 condition|(
 name|argc

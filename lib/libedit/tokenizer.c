@@ -561,7 +561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* tok_line():  *	Bourne shell like tokenizing  *	Return:  *		-1: Internal error  *		 3: Quoted return  *		 2: Unmatched double quote  *		 1: Unmatched single quote  *		 0: Ok   */
+comment|/* tok_line():  *	Bourne shell like tokenizing  *	Return:  *		-1: Internal error  *		 3: Quoted return  *		 2: Unmatched double quote  *		 1: Unmatched single quote  *		 0: Ok  */
 end_comment
 
 begin_function

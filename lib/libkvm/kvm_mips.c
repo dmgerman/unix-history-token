@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * MIPS machine dependent routines for kvm.  Hopefully, the forthcoming   * vm code will one day obsolete this module.  */
+comment|/*  * MIPS machine dependent routines for kvm.  Hopefully, the forthcoming  * vm code will one day obsolete this module.  */
 end_comment
 
 begin_include
@@ -559,7 +559,7 @@ name|PGSHIFT
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Can't use KREAD to read kernel segment table entries. 	 * Fortunately it is 1-to-1 mapped so we don't have to.  	 */
+comment|/* 	 * Can't use KREAD to read kernel segment table entries. 	 * Fortunately it is 1-to-1 mapped so we don't have to. 	 */
 if|if
 condition|(
 name|lseek

@@ -671,7 +671,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/*  			 * yes - and maybe a third  			 */
+comment|/* 			 * yes - and maybe a third 			 */
 operator|*
 name|cp
 operator|=
@@ -699,7 +699,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  		 * no - done with current sequence, push back passed char  		 */
+comment|/* 		 * no - done with current sequence, push back passed char 		 */
 operator|*
 name|astate
 operator|=
@@ -756,7 +756,7 @@ name|UNVIS_VALIDPUSH
 operator|)
 return|;
 default|default:
-comment|/*  		 * decoder in unknown state - (probably uninitialized)  		 */
+comment|/* 		 * decoder in unknown state - (probably uninitialized) 		 */
 operator|*
 name|astate
 operator|=
@@ -772,7 +772,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * strunvis - decode src into dst   *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
+comment|/*  * strunvis - decode src into dst  *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
 end_comment
 
 begin_function

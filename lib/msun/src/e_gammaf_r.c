@@ -4,7 +4,7 @@ comment|/* e_gammaf_r.c -- float version of e_gamma_r.c.  * Conversion to float 
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_gammaf_r.c,v 1.1 1994/08/10 20:30:54 jtc Exp $"
+literal|"$Id: e_gammaf_r.c,v 1.1.1.1 1994/08/19 09:39:54 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_gammaf_r(x, signgamp)  * Reentrant version of the logarithm of the Gamma function   * with user provide pointer for the sign of Gamma(x).   *  * Method: See __ieee754_lgammaf_r  */
+comment|/* __ieee754_gammaf_r(x, signgamp)  * Reentrant version of the logarithm of the Gamma function  * with user provide pointer for the sign of Gamma(x).  *  * Method: See __ieee754_lgammaf_r  */
 end_comment
 
 begin_include

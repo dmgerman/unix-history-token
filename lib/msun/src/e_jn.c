@@ -4,7 +4,7 @@ comment|/* @(#)e_jn.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_jn.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
+literal|"$Id: e_jn.c,v 1.2 1995/04/07 23:13:42 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * __ieee754_jn(n, x), __ieee754_yn(n, x)  * floating point Bessel's function of the 1st and 2nd kind  * of order n  *            * Special cases:  *	y0(0)=y1(0)=yn(n,0) = -inf with division by zero signal;  *	y0(-ve)=y1(-ve)=yn(n,-ve) are NaN with invalid signal.  * Note 2. About jn(n,x), yn(n,x)  *	For n=0, j0(x) is called,  *	for n=1, j1(x) is called,  *	for n<x, forward recursion us used starting  *	from values of j0(x) and j1(x).  *	for n>x, a continued fraction approximation to  *	j(n,x)/j(n-1,x) is evaluated and then backward  *	recursion is used starting from a supposed value  *	for j(n,x). The resulting value of j(0,x) is  *	compared with the actual value to correct the  *	supposed value of j(n,x).  *  *	yn(n,x) is similar in all respects, except  *	that forward recursion is used for all  *	values of n>1.  *	  */
+comment|/*  * __ieee754_jn(n, x), __ieee754_yn(n, x)  * floating point Bessel's function of the 1st and 2nd kind  * of order n  *  * Special cases:  *	y0(0)=y1(0)=yn(n,0) = -inf with division by zero signal;  *	y0(-ve)=y1(-ve)=yn(n,-ve) are NaN with invalid signal.  * Note 2. About jn(n,x), yn(n,x)  *	For n=0, j0(x) is called,  *	for n=1, j1(x) is called,  *	for n<x, forward recursion us used starting  *	from values of j0(x) and j1(x).  *	for n>x, a continued fraction approximation to  *	j(n,x)/j(n-1,x) is evaluated and then backward  *	recursion is used starting from a supposed value  *	for j(n,x). The resulting value of j(0,x) is  *	compared with the actual value to correct the  *	supposed value of j(n,x).  *  *	yn(n,x) is similar in all respects, except  *	that forward recursion is used for all  *	values of n>1.  *  */
 end_comment
 
 begin_include
@@ -328,7 +328,7 @@ literal|0x52D00000
 condition|)
 block|{
 comment|/* x> 2**302 */
-comment|/* (x>> n**2)       *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Let s=sin(x), c=cos(x),       *		xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then      *      *		   n	sin(xn)*sqt2	cos(xn)*sqt2      *		----------------------------------      *		   0	 s-c		 c+s      *		   1	-s-c 		-c+s      *		   2	-s+c		-c-s      *		   3	 s+c		 c-s      */
+comment|/* (x>> n**2)      *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Let s=sin(x), c=cos(x),      *		xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then      *      *		   n	sin(xn)*sqt2	cos(xn)*sqt2      *		----------------------------------      *		   0	 s-c		 c+s      *		   1	-s-c 		-c+s      *		   2	-s+c		-c-s      *		   3	 s+c		 c-s      */
 switch|switch
 condition|(
 name|n
@@ -486,7 +486,7 @@ literal|0x3e100000
 condition|)
 block|{
 comment|/* x< 2**-29 */
-comment|/* x is tiny, return the first Taylor expansion of J(n,x)       * J(n,x) = 1/n!*(x/2)^n  - ...      */
+comment|/* x is tiny, return the first Taylor expansion of J(n,x)      * J(n,x) = 1/n!*(x/2)^n  - ...      */
 if|if
 condition|(
 name|n
@@ -553,7 +553,7 @@ block|}
 else|else
 block|{
 comment|/* use backward recurrence */
-comment|/* 			x      x^2      x^2        		 *  J(n,x)/J(n-1,x) =  ----   ------   ------   ..... 		 *			2n  - 2(n+1) - 2(n+2) 		 * 		 * 			1      1        1        		 *  (for large x)   =  ----  ------   ------   ..... 		 *			2n   2(n+1)   2(n+2) 		 *			-- - ------ - ------ -  		 *			 x     x         x 		 * 		 * Let w = 2n/x and h=2/x, then the above quotient 		 * is equal to the continued fraction: 		 *		    1 		 *	= ----------------------- 		 *		       1 		 *	   w - ----------------- 		 *			  1 		 * 	        w+h - --------- 		 *		       w+2h - ... 		 * 		 * To determine how many terms needed, let 		 * Q(0) = w, Q(1) = w(w+h) - 1, 		 * Q(k) = (w+k*h)*Q(k-1) - Q(k-2), 		 * When Q(k)> 1e4	good for single  		 * When Q(k)> 1e9	good for double  		 * When Q(k)> 1e17	good for quadruple  		 */
+comment|/* 			x      x^2      x^2 		 *  J(n,x)/J(n-1,x) =  ----   ------   ------   ..... 		 *			2n  - 2(n+1) - 2(n+2) 		 * 		 * 			1      1        1 		 *  (for large x)   =  ----  ------   ------   ..... 		 *			2n   2(n+1)   2(n+2) 		 *			-- - ------ - ------ - 		 *			 x     x         x 		 * 		 * Let w = 2n/x and h=2/x, then the above quotient 		 * is equal to the continued fraction: 		 *		    1 		 *	= ----------------------- 		 *		       1 		 *	   w - ----------------- 		 *			  1 		 * 	        w+h - --------- 		 *		       w+2h - ... 		 * 		 * To determine how many terms needed, let 		 * Q(0) = w, Q(1) = w(w+h) - 1, 		 * Q(k) = (w+k*h)*Q(k-1) - Q(k-2), 		 * When Q(k)> 1e4	good for single 		 * When Q(k)> 1e9	good for double 		 * When Q(k)> 1e17	good for quadruple 		 */
 comment|/* determine k */
 name|double
 name|t
@@ -700,7 +700,7 @@ name|b
 operator|=
 name|one
 expr_stmt|;
-comment|/*  estimate log((2/x)^n*n!) = n*log(2/x)+n*ln(n) 		 *  Hence, if n*(log(2n/x))> ... 		 *  single 8.8722839355e+01 		 *  double 7.09782712893383973096e+02 		 *  long double 1.1356523406294143949491931077970765006170e+04 		 *  then recurrent value may overflow and the result is  		 *  likely underflow to zero 		 */
+comment|/*  estimate log((2/x)^n*n!) = n*log(2/x)+n*ln(n) 		 *  Hence, if n*(log(2n/x))> ... 		 *  single 8.8722839355e+01 		 *  double 7.09782712893383973096e+02 		 *  long double 1.1356523406294143949491931077970765006170e+04 		 *  then recurrent value may overflow and the result is 		 *  likely underflow to zero 		 */
 name|tmp
 operator|=
 name|n
@@ -1093,7 +1093,7 @@ literal|0x52D00000
 condition|)
 block|{
 comment|/* x> 2**302 */
-comment|/* (x>> n**2)       *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Let s=sin(x), c=cos(x),       *		xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then      *      *		   n	sin(xn)*sqt2	cos(xn)*sqt2      *		----------------------------------      *		   0	 s-c		 c+s      *		   1	-s-c 		-c+s      *		   2	-s+c		-c-s      *		   3	 s+c		 c-s      */
+comment|/* (x>> n**2)      *	    Jn(x) = cos(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Yn(x) = sin(x-(2n+1)*pi/4)*sqrt(2/x*pi)      *	    Let s=sin(x), c=cos(x),      *		xn=x-(2n+1)*pi/4, sqt2 = sqrt(2),then      *      *		   n	sin(xn)*sqt2	cos(xn)*sqt2      *		----------------------------------      *		   0	 s-c		 c+s      *		   1	-s-c 		-c+s      *		   2	-s+c		-c-s      *		   3	 s+c		 c-s      */
 switch|switch
 condition|(
 name|n

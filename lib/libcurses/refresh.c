@@ -2595,7 +2595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Quickch() attempts to detect a pattern in the change of the window  * in order to optimize the change, e.g., scroll n lines as opposed to   * repainting the screen line by line.  */
+comment|/*  * Quickch() attempts to detect a pattern in the change of the window  * in order to optimize the change, e.g., scroll n lines as opposed to  * repainting the screen line by line.  */
 end_comment
 
 begin_function
@@ -2663,7 +2663,7 @@ decl_stmt|;
 name|u_int
 name|blank_hash
 decl_stmt|;
-comment|/*  	 * Find how many lines from the top of the screen are unchanged. 	 */
+comment|/* 	 * Find how many lines from the top of the screen are unchanged. 	 */
 for|for
 control|(
 name|top
@@ -2775,7 +2775,7 @@ operator|&=
 operator|~
 name|__ISDIRTY
 expr_stmt|;
-comment|/* 	* Find how many lines from bottom of screen are unchanged.  	*/
+comment|/* 	* Find how many lines from bottom of screen are unchanged. 	*/
 for|for
 control|(
 name|bot
@@ -2917,7 +2917,7 @@ return|return;
 endif|#
 directive|endif
 comment|/* NO_JERKINESS */
-comment|/* 	 * Search for the largest block of text not changed. 	 * Invariants of the loop: 	 * - Startw is the index of the beginning of the examined block in win.          * - Starts is the index of the beginning of the examined block in  	 *    curscr. 	 * - Curw is the index of one past the end of the exmined block in win. 	 * - Curs is the index of one past the end of the exmined block in 	 *   curscr. 	 * - bsize is the current size of the examined block.          */
+comment|/* 	 * Search for the largest block of text not changed. 	 * Invariants of the loop: 	 * - Startw is the index of the beginning of the examined block in win.          * - Starts is the index of the beginning of the examined block in 	 *    curscr. 	 * - Curw is the index of one past the end of the exmined block in win. 	 * - Curs is the index of one past the end of the exmined block in 	 *   curscr. 	 * - bsize is the current size of the examined block.          */
 for|for
 control|(
 name|bsize
@@ -3109,7 +3109,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Make sure that there is no overlap between the bottom and top  	 * regions and the middle scrolled block. 	 */
+comment|/* 	 * Make sure that there is no overlap between the bottom and top 	 * regions and the middle scrolled block. 	 */
 if|if
 condition|(
 name|bot
@@ -3471,7 +3471,7 @@ operator|*
 name|__LDATASIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Perform the rotation to maintain the consistency of curscr. 	 * This is hairy since we are doing an *in place* rotation. 	 * Invariants of the loop: 	 * - I is the index of the current line. 	 * - Target is the index of the target of line i. 	 * - Tmp1 points to current line (i). 	 * - Tmp2 and points to target line (target); 	 * - Cur_period is the index of the end of the current period.  	 *   (see below). 	 * 	 * There are 2 major issues here that make this rotation non-trivial: 	 * 1.  Scrolling in a scrolling region bounded by the top 	 *     and bottom regions determined (whose size is sc_region). 	 * 2.  As a result of the use of the mod function, there may be a  	 *     period introduced, i.e., 2 maps to 4, 4 to 6, n-2 to 0, and 	 *     0 to 2, which then causes all odd lines not to be rotated. 	 *     To remedy this, an index of the end ( = beginning) of the  	 *     current 'period' is kept, cur_period, and when it is reached,  	 *     the next period is started from cur_period + 1 which is  	 *     guaranteed not to have been reached since that would mean that 	 *     all records would have been reached. (think about it...). 	 *  	 * Lines in the rotation can have 3 attributes which are marked on the 	 * line so that curscr is consistent with the visual screen. 	 * 1.  Not dirty -- lines inside the scrolled block, top region or 	 *                  bottom region. 	 * 2.  Blank lines -- lines in the differential of the scrolling  	 *		      region adjacent to top and bot regions  	 *                    depending on scrolling direction. 	 * 3.  Dirty line -- all other lines are marked dirty. 	 */
+comment|/* 	 * Perform the rotation to maintain the consistency of curscr. 	 * This is hairy since we are doing an *in place* rotation. 	 * Invariants of the loop: 	 * - I is the index of the current line. 	 * - Target is the index of the target of line i. 	 * - Tmp1 points to current line (i). 	 * - Tmp2 and points to target line (target); 	 * - Cur_period is the index of the end of the current period. 	 *   (see below). 	 * 	 * There are 2 major issues here that make this rotation non-trivial: 	 * 1.  Scrolling in a scrolling region bounded by the top 	 *     and bottom regions determined (whose size is sc_region). 	 * 2.  As a result of the use of the mod function, there may be a 	 *     period introduced, i.e., 2 maps to 4, 4 to 6, n-2 to 0, and 	 *     0 to 2, which then causes all odd lines not to be rotated. 	 *     To remedy this, an index of the end ( = beginning) of the 	 *     current 'period' is kept, cur_period, and when it is reached, 	 *     the next period is started from cur_period + 1 which is 	 *     guaranteed not to have been reached since that would mean that 	 *     all records would have been reached. (think about it...). 	 * 	 * Lines in the rotation can have 3 attributes which are marked on the 	 * line so that curscr is consistent with the visual screen. 	 * 1.  Not dirty -- lines inside the scrolled block, top region or 	 *                  bottom region. 	 * 2.  Blank lines -- lines in the differential of the scrolling 	 *		      region adjacent to top and bot regions 	 *                    depending on scrolling direction. 	 * 3.  Dirty line -- all other lines are marked dirty. 	 */
 name|sc_region
 operator|=
 name|bot
@@ -4031,7 +4031,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Need to repoint any subwindow lines to the rotated 		 * line structured.  		 */
+comment|/* 		 * Need to repoint any subwindow lines to the rotated 		 * line structured. 		 */
 for|for
 control|(
 name|wp

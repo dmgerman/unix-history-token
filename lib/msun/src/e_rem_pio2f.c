@@ -4,7 +4,7 @@ comment|/* e_rem_pio2f.c -- float version of e_rem_pio2.c  * Conversion to float
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_rem_pio2f.c,v 1.1.1.1 1994/08/19 09:39:57 jkh Exp $"
+literal|"$Id: e_rem_pio2f.c,v 1.2 1995/04/07 23:23:25 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_rem_pio2f(x,y)  *   * return the remainder of x rem pi/2 in y[0]+y[1]   * use __kernel_rem_pio2f()  */
+comment|/* __ieee754_rem_pio2f(x,y)  *  * return the remainder of x rem pi/2 in y[0]+y[1]  * use __kernel_rem_pio2f()  */
 end_comment
 
 begin_include
@@ -45,7 +45,7 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/*  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi   */
+comment|/*  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi  */
 end_comment
 
 begin_ifdef
@@ -467,7 +467,7 @@ block|,
 literal|0x8C
 block|,
 literal|0x6B
-block|,  }
+block|, }
 block|;
 comment|/* This array is like the one in e_rem_pio2.c, but the numbers are    single precision and the last 8 bits are forced to 0.  */
 ifdef|#
@@ -1205,7 +1205,7 @@ return|return
 name|n
 return|;
 block|}
-comment|/*       * all other (large) arguments      */
+comment|/*      * all other (large) arguments      */
 if|if
 condition|(
 name|ix

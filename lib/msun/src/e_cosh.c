@@ -4,7 +4,7 @@ comment|/* @(#)e_cosh.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_cosh.c,v 1.5 1994/08/18 23:05:15 jtc Exp $"
+literal|"$Id: e_cosh.c,v 1.1.1.1 1994/08/19 09:39:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_cosh(x)  * Method :   * mathematically cosh(x) if defined to be (exp(x)+exp(-x))/2  *	1. Replace x by |x| (cosh(x) = cosh(-x)).   *	2.   *		                                        [ exp(x) - 1 ]^2   *	    0<= x<= ln2/2  :  cosh(x) := 1 + -------------------  *			       			           2*exp(x)  *  *		                                  exp(x) +  1/exp(x)  *	    ln2/2<= x<= 22     :  cosh(x) := -------------------  *			       			          2  *	    22<= x<= lnovft :  cosh(x) := exp(x)/2   *	    lnovft<= x<= ln2ovft:  cosh(x) := exp(x/2)/2 * exp(x/2)  *	    ln2ovft<  x	    :  cosh(x) := huge*huge (overflow)  *  * Special cases:  *	cosh(x) is |x| if x is +INF, -INF, or NaN.  *	only cosh(0)=1 is exact for finite x.  */
+comment|/* __ieee754_cosh(x)  * Method :  * mathematically cosh(x) if defined to be (exp(x)+exp(-x))/2  *	1. Replace x by |x| (cosh(x) = cosh(-x)).  *	2.  *		                                        [ exp(x) - 1 ]^2  *	    0<= x<= ln2/2  :  cosh(x) := 1 + -------------------  *			       			           2*exp(x)  *  *		                                  exp(x) +  1/exp(x)  *	    ln2/2<= x<= 22     :  cosh(x) := -------------------  *			       			          2  *	    22<= x<= lnovft :  cosh(x) := exp(x)/2  *	    lnovft<= x<= ln2ovft:  cosh(x) := exp(x/2)/2 * exp(x/2)  *	    ln2ovft<  x	    :  cosh(x) := huge*huge (overflow)  *  * Special cases:  *	cosh(x) is |x| if x is +INF, -INF, or NaN.  *	only cosh(0)=1 is exact for finite x.  */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/* e_powf.c -- float version of e_pow.c.  * Conversion to float by Ian L
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_powf.c,v 1.2 1994/08/18 23:05:54 jtc Exp $"
+literal|"$Id: e_powf.c,v 1.1.1.1 1994/08/19 09:39:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,7 +736,7 @@ name|tiny
 operator|*
 name|tiny
 return|;
-comment|/* now |1-x| is tiny<= 2**-20, suffice to compute  	   log(x) by x-x^2/2+x^3/3-x^4/4 */
+comment|/* now |1-x| is tiny<= 2**-20, suffice to compute 	   log(x) by x-x^2/2+x^3/3-x^4/4 */
 name|t
 operator|=
 name|x

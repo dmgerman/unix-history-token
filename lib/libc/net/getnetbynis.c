@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetbynis.c,v 1.1 1994/09/25 02:12:26 pst Exp $"
+literal|"@(#)$Id: getnetbynis.c,v 1.2 1994/09/26 02:50:43 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbynis.c,v 1.1 1994/09/25 02:12:26 pst Exp $"
+literal|"$Id: getnetbynis.c,v 1.2 1994/09/26 02:50:43 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

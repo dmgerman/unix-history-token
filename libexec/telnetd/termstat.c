@@ -1384,7 +1384,7 @@ name|LINEMODE
 end_ifdef
 
 begin_comment
-comment|/*  * defer_terminit  *  * Some things should not be done until after the login process has started  * and all the pty modes are set to what they are supposed to be.  This  * function is called when the pty state has been processed for the first time.   * It calls other functions that do things that were deferred in each module.  */
+comment|/*  * defer_terminit  *  * Some things should not be done until after the login process has started  * and all the pty modes are set to what they are supposed to be.  This  * function is called when the pty state has been processed for the first time.  * It calls other functions that do things that were deferred in each module.  */
 end_comment
 
 begin_function

@@ -469,7 +469,7 @@ operator|>=
 name|LINES
 condition|)
 block|{
-comment|/* The following linefeed (or simulation thereof) is 			 * supposed to scroll up the screen, since we are on 			 * the bottom line.  We make the assumption that 			 * linefeed will scroll.  If ns is in the capability 			 * list this won't work.  We should probably have an 			 * sc capability but sf will generally take the place 			 * if it works. 			 *  			 * Superbee glitch: in the middle of the screen have 			 * to use esc B (down) because linefeed screws up in 			 * "Efficient Paging" (what a joke) mode (which is 			 * essential in some SB's because CRLF mode puts 			 * garbage in at end of memory), but you must use 			 * linefeed to scroll since down arrow won't go past 			 * memory end. I turned this off after recieving Paul 			 * Eggert's Superbee description which wins better. 			 */
+comment|/* The following linefeed (or simulation thereof) is 			 * supposed to scroll up the screen, since we are on 			 * the bottom line.  We make the assumption that 			 * linefeed will scroll.  If ns is in the capability 			 * list this won't work.  We should probably have an 			 * sc capability but sf will generally take the place 			 * if it works. 			 * 			 * Superbee glitch: in the middle of the screen have 			 * to use esc B (down) because linefeed screws up in 			 * "Efficient Paging" (what a joke) mode (which is 			 * essential in some SB's because CRLF mode puts 			 * garbage in at end of memory), but you must use 			 * linefeed to scroll since down arrow won't go past 			 * memory end. I turned this off after recieving Paul 			 * Eggert's Superbee description which wins better. 			 */
 if|if
 condition|(
 name|NL

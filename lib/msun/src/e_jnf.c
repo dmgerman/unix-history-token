@@ -4,7 +4,7 @@ comment|/* e_jnf.c -- float version of e_jn.c.  * Conversion to float by Ian Lan
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_jnf.c,v 1.1.1.1 1994/08/19 09:39:55 jkh Exp $"
+literal|"$Id: e_jnf.c,v 1.2 1995/04/07 23:13:43 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,7 +360,7 @@ literal|0x30800000
 condition|)
 block|{
 comment|/* x< 2**-29 */
-comment|/* x is tiny, return the first Taylor expansion of J(n,x)       * J(n,x) = 1/n!*(x/2)^n  - ...      */
+comment|/* x is tiny, return the first Taylor expansion of J(n,x)      * J(n,x) = 1/n!*(x/2)^n  - ...      */
 if|if
 condition|(
 name|n
@@ -430,7 +430,7 @@ block|}
 else|else
 block|{
 comment|/* use backward recurrence */
-comment|/* 			x      x^2      x^2        		 *  J(n,x)/J(n-1,x) =  ----   ------   ------   ..... 		 *			2n  - 2(n+1) - 2(n+2) 		 * 		 * 			1      1        1        		 *  (for large x)   =  ----  ------   ------   ..... 		 *			2n   2(n+1)   2(n+2) 		 *			-- - ------ - ------ -  		 *			 x     x         x 		 * 		 * Let w = 2n/x and h=2/x, then the above quotient 		 * is equal to the continued fraction: 		 *		    1 		 *	= ----------------------- 		 *		       1 		 *	   w - ----------------- 		 *			  1 		 * 	        w+h - --------- 		 *		       w+2h - ... 		 * 		 * To determine how many terms needed, let 		 * Q(0) = w, Q(1) = w(w+h) - 1, 		 * Q(k) = (w+k*h)*Q(k-1) - Q(k-2), 		 * When Q(k)> 1e4	good for single  		 * When Q(k)> 1e9	good for double  		 * When Q(k)> 1e17	good for quadruple  		 */
+comment|/* 			x      x^2      x^2 		 *  J(n,x)/J(n-1,x) =  ----   ------   ------   ..... 		 *			2n  - 2(n+1) - 2(n+2) 		 * 		 * 			1      1        1 		 *  (for large x)   =  ----  ------   ------   ..... 		 *			2n   2(n+1)   2(n+2) 		 *			-- - ------ - ------ - 		 *			 x     x         x 		 * 		 * Let w = 2n/x and h=2/x, then the above quotient 		 * is equal to the continued fraction: 		 *		    1 		 *	= ----------------------- 		 *		       1 		 *	   w - ----------------- 		 *			  1 		 * 	        w+h - --------- 		 *		       w+2h - ... 		 * 		 * To determine how many terms needed, let 		 * Q(0) = w, Q(1) = w(w+h) - 1, 		 * Q(k) = (w+k*h)*Q(k-1) - Q(k-2), 		 * When Q(k)> 1e4	good for single 		 * When Q(k)> 1e9	good for double 		 * When Q(k)> 1e17	good for quadruple 		 */
 comment|/* determine k */
 name|float
 name|t
@@ -586,7 +586,7 @@ name|b
 operator|=
 name|one
 expr_stmt|;
-comment|/*  estimate log((2/x)^n*n!) = n*log(2/x)+n*ln(n) 		 *  Hence, if n*(log(2n/x))> ... 		 *  single 8.8722839355e+01 		 *  double 7.09782712893383973096e+02 		 *  long double 1.1356523406294143949491931077970765006170e+04 		 *  then recurrent value may overflow and the result is  		 *  likely underflow to zero 		 */
+comment|/*  estimate log((2/x)^n*n!) = n*log(2/x)+n*ln(n) 		 *  Hence, if n*(log(2n/x))> ... 		 *  single 8.8722839355e+01 		 *  double 7.09782712893383973096e+02 		 *  long double 1.1356523406294143949491931077970765006170e+04 		 *  then recurrent value may overflow and the result is 		 *  likely underflow to zero 		 */
 name|tmp
 operator|=
 name|n

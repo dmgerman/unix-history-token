@@ -267,7 +267,7 @@ literal|0
 argument_list|,
 literal|30
 argument_list|,
-literal|"** THIS FAILS ON MY MACHINE WITH A BUS ERROR   **"
+literal|"** THIS FAILS ON MY MACHINE WITH A BUS ERROR **"
 argument_list|)
 expr_stmt|;
 endif|#

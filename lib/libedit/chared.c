@@ -39,7 +39,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*   * chared.c: Character editor utilities  */
+comment|/*  * chared.c: Character editor utilities  */
 end_comment
 
 begin_include
@@ -169,7 +169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* c_insert():   *	Insert num characters  */
+comment|/* c_insert():  *	Insert num characters  */
 end_comment
 
 begin_function

@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * i386 machine dependent routines for kvm.  Hopefully, the forthcoming   * vm code will one day obsolete this module.  */
+comment|/*  * i386 machine dependent routines for kvm.  Hopefully, the forthcoming  * vm code will one day obsolete this module.  */
 end_comment
 
 begin_include

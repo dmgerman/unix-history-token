@@ -742,7 +742,7 @@ comment|/* Control strings length. */
 end_comment
 
 begin_comment
-comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure   * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of memcmp, and memcpy  * for comparing and copying arrays.  */
+comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure  * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of memcmp, and memcpy  * for comparing and copying arrays.  */
 end_comment
 
 begin_typedef

@@ -131,7 +131,7 @@ value|((s) == (char *) -1)
 end_define
 
 begin_comment
-comment|/*  * This routine fills in caps that either had defaults under termcap or  * can be manufactured from obsolete termcap capabilities.   */
+comment|/*  * This routine fills in caps that either had defaults under termcap or  * can be manufactured from obsolete termcap capabilities.  */
 end_comment
 
 begin_function

@@ -1315,7 +1315,7 @@ comment|/* end re_refresh */
 end_comment
 
 begin_comment
-comment|/* re_goto_bottom():  *	 used to go to last used screen line   */
+comment|/* re_goto_bottom():  *	 used to go to last used screen line  */
 end_comment
 
 begin_function
@@ -1367,7 +1367,7 @@ comment|/* end re_goto_bottom */
 end_comment
 
 begin_comment
-comment|/* re_insert():  *	insert num characters of s into d (in front of the character)  *	at dat, maximum length of d is dlen   */
+comment|/* re_insert():  *	insert num characters of s into d (in front of the character)  *	at dat, maximum length of d is dlen  */
 end_comment
 
 begin_function
@@ -1626,7 +1626,7 @@ comment|/* end re_insert */
 end_comment
 
 begin_comment
-comment|/* re_delete():  *	delete num characters d at dat, maximum length of d is dlen   */
+comment|/* re_delete():  *	delete num characters d at dat, maximum length of d is dlen  */
 end_comment
 
 begin_function
@@ -1984,7 +1984,7 @@ condition|)
 name|o
 operator|++
 expr_stmt|;
-comment|/*       * Remove any trailing blanks off of the end, being careful not to      * back up past the beginning.      */
+comment|/*      * Remove any trailing blanks off of the end, being careful not to      * back up past the beginning.      */
 while|while
 condition|(
 name|ofd
@@ -2865,7 +2865,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/*      * at this point we have something like this:      *       * /old                  /ofd    /osb               /ose    /ols     /oe      * v.....................v       v..................v       v........v      * eddie> Oh, my fredded gruntle-buggy is to me, as foo var lurgid as      * eddie> Oh, my fredded quiux buggy is to me, as gruntle-lurgid as      * ^.....................^     ^..................^       ^........^       * \new                  \nfd  \nsb               \nse     \nls    \ne      *       * fx is the difference in length between the the chars between nfd and      * nsb, and the chars between ofd and osb, and is thus the number of      * characters to delete if< 0 (new is shorter than old, as above),      * or insert (new is longer than short).      *      * sx is the same for the second differences.      */
+comment|/*      * at this point we have something like this:      *      * /old                  /ofd    /osb               /ose    /ols     /oe      * v.....................v       v..................v       v........v      * eddie> Oh, my fredded gruntle-buggy is to me, as foo var lurgid as      * eddie> Oh, my fredded quiux buggy is to me, as gruntle-lurgid as      * ^.....................^     ^..................^       ^........^      * \new                  \nfd  \nsb               \nse     \nls    \ne      *      * fx is the difference in length between the the chars between nfd and      * nsb, and the chars between ofd and osb, and is thus the number of      * characters to delete if< 0 (new is shorter than old, as above),      * or insert (new is longer than short).      *      * sx is the same for the second differences.      */
 comment|/*      * if we have a net insert on the first difference, AND inserting the net      * amount ((nsb-nfd) - (osb-ofd)) won't push the last useful character      * (which is ne if nls != ne, otherwise is nse) off the edge of the screen      * (el->el_term.t_size.h) else we do the deletes first so that we keep everything we need      * to.      */
 comment|/*      * if the last same is the same like the end, there is no last same part,      * otherwise we want to keep the last same part set p to the last useful      * old character      */
 name|p
@@ -3540,7 +3540,7 @@ literal|"with stuff to keep at end\r\n"
 operator|)
 argument_list|,)
 expr_stmt|;
-comment|/*  	     * We have to recalculate fx here because we set it 	     * to zero above as a flag saying that we hadn't done 	     * an early first insert. 	     */
+comment|/* 	     * We have to recalculate fx here because we set it 	     * to zero above as a flag saying that we hadn't done 	     * an early first insert. 	     */
 name|fx
 operator|=
 operator|(
@@ -4274,7 +4274,7 @@ comment|/* end re_fastputc */
 end_comment
 
 begin_comment
-comment|/* re_fastaddc():  *	we added just one char, handle it fast.  *	Assumes that screen cursor == real cursor   */
+comment|/* re_fastaddc():  *	we added just one char, handle it fast.  *	Assumes that screen cursor == real cursor  */
 end_comment
 
 begin_function
@@ -4461,7 +4461,7 @@ comment|/* end re_fastaddc */
 end_comment
 
 begin_comment
-comment|/* re_clear_display():  *	clear the screen buffers so that new new prompt starts fresh.   */
+comment|/* re_clear_display():  *	clear the screen buffers so that new new prompt starts fresh.  */
 end_comment
 
 begin_function
@@ -4542,7 +4542,7 @@ comment|/* end re_clear_display */
 end_comment
 
 begin_comment
-comment|/* re_clear_lines():  *	Make sure all lines are *really* blank   */
+comment|/* re_clear_lines():  *	Make sure all lines are *really* blank  */
 end_comment
 
 begin_function

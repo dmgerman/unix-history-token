@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.1.1.1 1994/08/28 14:49:04 csgr Exp $"
+literal|"$Id: rstat_proc.c,v 1.2 1994/10/15 13:39:54 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 

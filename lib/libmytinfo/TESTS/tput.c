@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tput.c  *   * By Ross Ridge  * Public Domain  * 92/02/01 07:30:39  *  */
+comment|/*  * tput.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:30:39  *  */
 end_comment
 
 begin_define

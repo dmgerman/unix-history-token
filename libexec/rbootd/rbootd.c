@@ -1334,7 +1334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  FindClient -- Find client associated with a packet. ** **	Parameters: **		rconn - the new packet.  ** **	Returns: **		Pointer to client info if found, NULL otherwise. ** **	Side Effects: **		None. ** **	Warnings: **		- This routine must be called with SIGHUP blocked since **		  a reconfigure can invalidate the information returned. */
+comment|/* **  FindClient -- Find client associated with a packet. ** **	Parameters: **		rconn - the new packet. ** **	Returns: **		Pointer to client info if found, NULL otherwise. ** **	Side Effects: **		None. ** **	Warnings: **		- This routine must be called with SIGHUP blocked since **		  a reconfigure can invalidate the information returned. */
 end_comment
 
 begin_function

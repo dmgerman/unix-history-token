@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*   * Some IEEE standard 754 recommended functions and remainder and sqrt for   * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each   * computer system should have its implementation of these functions using   * its own assembler.  ******************************************************************************  *  * IEEE 754 required operations:  *     drem(x,p)   *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)   *              returns the square root of x correctly rounded according to   *		the rounding mod.  *  * IEEE 754 recommended functions:  * (a) copysign(x,y)   *              returns x with the sign of y.   * (b) scalb(x,N)   *              returns  x * (2**N), for integer values N.  * (c) logb(x)   *              returns the unbiased exponent of x, a signed integer in   *              double precision, except that logb(0) is -INF, logb(INF)   *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)   *              returns the value TRUE if -INF< x< +INF and returns   *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
+comment|/*  * Some IEEE standard 754 recommended functions and remainder and sqrt for  * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each  * computer system should have its implementation of these functions using  * its own assembler.  ******************************************************************************  *  * IEEE 754 required operations:  *     drem(x,p)  *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)  *              returns the square root of x correctly rounded according to  *		the rounding mod.  *  * IEEE 754 recommended functions:  * (a) copysign(x,y)  *              returns x with the sign of y.  * (b) scalb(x,N)  *              returns  x * (2**N), for integer values N.  * (c) logb(x)  *              returns the unbiased exponent of x, a signed integer in  *              double precision, except that logb(0) is -INF, logb(INF)  *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)  *              returns the value TRUE if -INF< x< +INF and returns  *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
 end_comment
 
 begin_include
@@ -1900,11 +1900,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/* DREM(X,Y)  * RETURN X REM Y =X-N*Y, N=[X/Y] ROUNDED (ROUNDED TO EVEN IN THE HALF WAY CASE)  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * INTENDED FOR ASSEMBLY LANGUAGE  * CODED IN C BY K.C. NG, 3/23/85, 4/8/85.  *  * Warning: this code should not get compiled in unless ALL of  * the following machine-dependent routines are supplied.  *   * Required machine dependent functions (not on a VAX):  *     swapINX(i): save inexact flag and reset it to "i"  *     swapENI(e): save inexact enable and reset it to "e"  */
+comment|/* DREM(X,Y)  * RETURN X REM Y =X-N*Y, N=[X/Y] ROUNDED (ROUNDED TO EVEN IN THE HALF WAY CASE)  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * INTENDED FOR ASSEMBLY LANGUAGE  * CODED IN C BY K.C. NG, 3/23/85, 4/8/85.  *  * Warning: this code should not get compiled in unless ALL of  * the following machine-dependent routines are supplied.  *  * Required machine dependent functions (not on a VAX):  *     swapINX(i): save inexact flag and reset it to "i"  *     swapENI(e): save inexact enable and reset it to "e"  */
 end_comment
 
 begin_ifdef
-unit|double drem(x,y)	 double x,y; {
+unit|double drem(x,y) double x,y; {
 ifdef|#
 directive|ifdef
 name|national
@@ -1931,7 +1931,7 @@ directive|endif
 end_endif
 
 begin_comment
-unit|static const unsigned short mexp =0x7ff0, m25 =0x0190, m57 =0x0390; 	static const double zero=0.0; 	double hy,y1,t,t1; 	short k; 	long n; 	int i,e;  	unsigned short xexp,yexp, *px  =(unsigned short *)&x  ,  	      		nx,nf,	  *py  =(unsigned short *)&y  , 	      		sign,	  *pt  =(unsigned short *)&t  , 	      			  *pt1 =(unsigned short *)&t1 ;  	xexp = px[n0]& mexp ;
+unit|static const unsigned short mexp =0x7ff0, m25 =0x0190, m57 =0x0390; 	static const double zero=0.0; 	double hy,y1,t,t1; 	short k; 	long n; 	int i,e; 	unsigned short xexp,yexp, *px  =(unsigned short *)&x  , 	      		nx,nf,	  *py  =(unsigned short *)&y  , 	      		sign,	  *pt  =(unsigned short *)&t  , 	      			  *pt1 =(unsigned short *)&t1 ;  	xexp = px[n0]& mexp ;
 comment|/* exponent of x */
 end_comment
 
@@ -1975,7 +1975,7 @@ comment|/* if y is tiny (biased exponent<= 57), scale up y to y*2**57 */
 end_comment
 
 begin_comment
-unit|if( yexp<= m57 ) {py[n0]+=m57; nx+=m57; yexp+=m57;}  	nf=nx; 	py[n0]&= 0x7fff;	 	px[n0]&= 0x7fff;
+unit|if( yexp<= m57 ) {py[n0]+=m57; nx+=m57; yexp+=m57;}  	nf=nx; 	py[n0]&= 0x7fff; 	px[n0]&= 0x7fff;
 comment|/* mask off the least significant 27 bits of y */
 end_comment
 
@@ -2005,12 +2005,12 @@ comment|/* final adjustment */
 end_comment
 
 begin_comment
-unit|hy=y/2.0; 	if(x>hy||((x==hy)&&n%2==1)) x-=y;  	px[n0] ^= sign; 	if(nf!=0) { t=1.0; pt[n0]-=nf; x*=t;}
+unit|hy=y/2.0; 	if(x>hy||((x==hy)&&n%2==1)) x-=y; 	px[n0] ^= sign; 	if(nf!=0) { t=1.0; pt[n0]-=nf; x*=t;}
 comment|/* restore inexact flag and inexact enable */
 end_comment
 
 begin_endif
-unit|swapINX(i); swapENI(e);	  	return(x);	 }
+unit|swapINX(i); swapENI(e);  	return(x); }
 endif|#
 directive|endif
 end_endif
@@ -2022,7 +2022,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* SQRT  * RETURN CORRECTLY ROUNDED (ACCORDING TO THE ROUNDING MODE) SQRT  * FOR IEEE DOUBLE PRECISION ONLY, INTENDED FOR ASSEMBLY LANGUAGE  * CODED IN C BY K.C. NG, 3/22/85.  *  * Warning: this code should not get compiled in unless ALL of  * the following machine-dependent routines are supplied.  *   * Required machine dependent functions:  *     swapINX(i)  ...return the status of INEXACT flag and reset it to "i"  *     swapRM(r)   ...return the current Rounding Mode and reset it to "r"  *     swapENI(e)  ...return the status of inexact enable and reset it to "e"  *     addc(t)     ...perform t=t+1 regarding t as a 64 bit unsigned integer  *     subc(t)     ...perform t=t-1 regarding t as a 64 bit unsigned integer  */
+comment|/* SQRT  * RETURN CORRECTLY ROUNDED (ACCORDING TO THE ROUNDING MODE) SQRT  * FOR IEEE DOUBLE PRECISION ONLY, INTENDED FOR ASSEMBLY LANGUAGE  * CODED IN C BY K.C. NG, 3/22/85.  *  * Warning: this code should not get compiled in unless ALL of  * the following machine-dependent routines are supplied.  *  * Required machine dependent functions:  *     swapINX(i)  ...return the status of INEXACT flag and reset it to "i"  *     swapRM(r)   ...return the current Rounding Mode and reset it to "r"  *     swapENI(e)  ...return the status of inexact enable and reset it to "e"  *     addc(t)     ...perform t=t+1 regarding t as a 64 bit unsigned integer  *     subc(t)     ...perform t=t-1 regarding t as a 64 bit unsigned integer  */
 end_comment
 
 begin_comment
@@ -2031,7 +2031,7 @@ comment|/* b54=2**54 */
 end_comment
 
 begin_ifdef
-unit|long mx,scalx; 	long const mexp=0x7ff00000;         int i,j,r,e,swapINX(),swapRM(),swapENI();                unsigned long *py=(unsigned long *)&y   ,                       *pt=(unsigned long *)&t   ,                       *px=(unsigned long *)&x   ;
+unit|long mx,scalx; 	long const mexp=0x7ff00000;         int i,j,r,e,swapINX(),swapRM(),swapENI();         unsigned long *py=(unsigned long *)&y   ,                       *pt=(unsigned long *)&t   ,                       *px=(unsigned long *)&x   ;
 ifdef|#
 directive|ifdef
 name|national
@@ -2054,7 +2054,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Rounding Mode:  RN ...round-to-nearest   *                 RZ ...round-towards 0  *                 RP ...round-towards +INF  *		   RM ...round-towards -INF  */
+comment|/* Rounding Mode:  RN ...round-to-nearest  *                 RZ ...round-towards 0  *                 RP ...round-towards +INF  *		   RM ...round-towards -INF  */
 end_comment
 
 begin_comment
@@ -2126,7 +2126,7 @@ comment|/* triple to almost 56 sig. bits; now y approx. sqrt(x) to within 1 ulp 
 end_comment
 
 begin_comment
-unit|t=y*y; z=t;  pt[n0]+=0x00100000; t+=z; z=(x-z)*y;          t=z/(t+x) ;  pt[n0]+=0x00100000; y+=t;
+unit|t=y*y; z=t;  pt[n0]+=0x00100000; t+=z; z=(x-z)*y;         t=z/(t+x) ;  pt[n0]+=0x00100000; y+=t;
 comment|/* twiddle last bit to force y correctly rounded */
 end_comment
 

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bootpd.c,v 1.1.1.1 1994/09/10 14:44:54 csgr Exp $"
+literal|"$Id: bootpd.c,v 1.1.1.1 1994/09/30 05:45:04 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 

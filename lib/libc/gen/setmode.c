@@ -1649,7 +1649,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Given an array of bitcmd structures, compress by compacting consecutive  * '+', '-' and 'X' commands into at most 3 commands, one of each.  The 'u',  * 'g' and 'o' commands continue to be separate.  They could probably be   * compacted, but it's not worth the effort.  */
+comment|/*  * Given an array of bitcmd structures, compress by compacting consecutive  * '+', '-' and 'X' commands into at most 3 commands, one of each.  The 'u',  * 'g' and 'o' commands continue to be separate.  They could probably be  * compacted, but it's not worth the effort.  */
 end_comment
 
 begin_function

@@ -72,7 +72,7 @@ name|SINGLEUSE
 end_define
 
 begin_comment
-comment|/*  * One of these structures is malloced to describe the current directory  * position each time telldir is called. It records the current magic   * cookie returned by getdirentries and the offset within the buffer  * associated with that return value.  */
+comment|/*  * One of these structures is malloced to describe the current directory  * position each time telldir is called. It records the current magic  * cookie returned by getdirentries and the offset within the buffer  * associated with that return value.  */
 end_comment
 
 begin_struct

@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Routines to handle insertion, deletion, etc on the table  * of requests kept by the daemon. Nothing fancy here, linear  * search on a double-linked list. A time is kept with each   * entry so that overly old invitations can be eliminated.  *  * Consider this a mis-guided attempt at modularity  */
+comment|/*  * Routines to handle insertion, deletion, etc on the table  * of requests kept by the daemon. Nothing fancy here, linear  * search on a double-linked list. A time is kept with each  * entry so that overly old invitations can be eliminated.  *  * Consider this a mis-guided attempt at modularity  */
 end_comment
 
 begin_include
@@ -359,7 +359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look for an identical request, as opposed to a complimentary  * one as find_match does   */
+comment|/*  * Look for an identical request, as opposed to a complimentary  * one as find_match does  */
 end_comment
 
 begin_function

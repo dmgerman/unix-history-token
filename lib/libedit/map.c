@@ -39,7 +39,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * map.c: Editor function definitions   */
+comment|/*  * map.c: Editor function definitions  */
 end_comment
 
 begin_include
@@ -4416,7 +4416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* map_set_editor():  *	Set the editor   */
+comment|/* map_set_editor():  *	Set the editor  */
 end_comment
 
 begin_function

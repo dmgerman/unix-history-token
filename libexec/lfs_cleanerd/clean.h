@@ -157,7 +157,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * XXX: size (in bytes) of a segment  *	should lfs_bsize be fsbtodb(fs,1), blksize(fs), or lfs_dsize?   */
+comment|/*  * XXX: size (in bytes) of a segment  *	should lfs_bsize be fsbtodb(fs,1), blksize(fs), or lfs_dsize?  */
 end_comment
 
 begin_define

@@ -1576,7 +1576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up state necessary to do queries on the kernel namelist  * data base.  If the data base is out-of-data/incompatible with   * given executable, set up things so we revert to standard nlist call.  * Only called for live kernels.  Return 0 on success, -1 on failure.  */
+comment|/*  * Set up state necessary to do queries on the kernel namelist  * data base.  If the data base is out-of-data/incompatible with  * given executable, set up things so we revert to standard nlist call.  * Only called for live kernels.  Return 0 on success, -1 on failure.  */
 end_comment
 
 begin_function
@@ -1991,7 +1991,7 @@ specifier|register
 name|int
 name|nvalid
 decl_stmt|;
-comment|/* 	 * If we can't use the data base, revert to the  	 * slow library call. 	 */
+comment|/* 	 * If we can't use the data base, revert to the 	 * slow library call. 	 */
 if|if
 condition|(
 name|kd

@@ -661,7 +661,7 @@ argument_list|,
 name|oldsig
 argument_list|)
 expr_stmt|;
-comment|/* 	after the secret key is taken from the keyboard, the line feed is 	written to standard error instead of standard output.  That means that 	anyone using the program from a terminal won't notice, but capturing 	standard output will get the key words without a newline in front of 	them.  	*/
+comment|/* 	after the secret key is taken from the keyboard, the line feed is 	written to standard error instead of standard output.  That means that 	anyone using the program from a terminal won't notice, but capturing 	standard output will get the key words without a newline in front of 	them. 	*/
 name|fprintf
 argument_list|(
 name|stderr

@@ -4,7 +4,7 @@ comment|/* e_log10f.c -- float version of e_log10.c.  * Conversion to float by I
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_log10f.c,v 1.1.1.1 1994/08/19 09:39:56 jkh Exp $"
+literal|"$Id: e_log10f.c,v 1.2 1995/04/07 23:23:23 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 

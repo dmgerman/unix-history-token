@@ -3421,7 +3421,7 @@ comment|/* end term_deletechars */
 end_comment
 
 begin_comment
-comment|/* term_insertwrite():  *	Puts terminal in insert character mode or inserts num   *	characters in the line   */
+comment|/* term_insertwrite():  *	Puts terminal in insert character mode or inserts num  *	characters in the line  */
 end_comment
 
 begin_function
@@ -3743,7 +3743,7 @@ comment|/* end term_insertwrite */
 end_comment
 
 begin_comment
-comment|/* term_clear_EOL():  *	clear to end of line.  There are num characters to clear   */
+comment|/* term_clear_EOL():  *	clear to end of line.  There are num characters to clear  */
 end_comment
 
 begin_function
@@ -3828,7 +3828,7 @@ comment|/* end term_clear_EOL */
 end_comment
 
 begin_comment
-comment|/* term_clear_screen():  *	Clear the screen   */
+comment|/* term_clear_screen():  *	Clear the screen  */
 end_comment
 
 begin_function
@@ -4600,7 +4600,7 @@ comment|/* end term_set */
 end_comment
 
 begin_comment
-comment|/* term_get_size():  *	Return the new window size in lines and cols, and  *	true if the size was changed.   */
+comment|/* term_get_size():  *	Return the new window size in lines and cols, and  *	true if the size was changed.  */
 end_comment
 
 begin_function
@@ -6012,7 +6012,7 @@ operator|)
 operator|*
 name|p
 expr_stmt|;
-comment|/* 	     * Assign the arrow keys only if: 	     * 	     * 1. They are multi-character arrow keys and the user  	     *    has not re-assigned the leading character, or  	     *    has re-assigned the leading character to be 	     *	  ED_SEQUENCE_LEAD_IN 	     * 2. They are single arrow keys pointing to an unassigned key. 	     */
+comment|/* 	     * Assign the arrow keys only if: 	     * 	     * 1. They are multi-character arrow keys and the user 	     *    has not re-assigned the leading character, or 	     *    has re-assigned the leading character to be 	     *	  ED_SEQUENCE_LEAD_IN 	     * 2. They are single arrow keys pointing to an unassigned key. 	     */
 if|if
 condition|(
 name|arrow
@@ -7387,7 +7387,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*       * Try to use our local definition first      */
+comment|/*      * Try to use our local definition first      */
 name|scap
 operator|=
 name|NULL

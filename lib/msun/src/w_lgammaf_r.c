@@ -4,7 +4,7 @@ comment|/* w_lgammaf_r.c -- float version of w_lgamma_r.c.  * Conversion to floa
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w_lgammaf_r.c,v 1.1 1994/08/10 20:35:05 jtc Exp $"
+literal|"$Id: w_lgammaf_r.c,v 1.1.1.1 1994/08/19 09:39:59 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * wrapper float lgammaf_r(float x, int *signgamp)  */
+comment|/*  * wrapper float lgammaf_r(float x, int *signgamp)  */
 end_comment
 
 begin_include

@@ -39,7 +39,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * key.c: This module contains the procedures for maintaining  *	  the extended-key map.  *  *      An extended-key (key) is a sequence of keystrokes introduced   *	with an sequence introducer and consisting of an arbitrary   *	number of characters.  This module maintains a map (the el->el_key.map)   *	to convert these extended-key sequences into input strs   *	(XK_STR), editor functions (XK_CMD), or unix commands (XK_EXE).  *  *      Warning:  *	  If key is a substr of some other keys, then the longer  *	  keys are lost!!  That is, if the keys "abcd" and "abcef"  *	  are in el->el_key.map, adding the key "abc" will cause the first two  *	  definitions to be lost.  *  *      Restrictions:  *      -------------  *      1) It is not possible to have one key that is a  *	   substr of another.  */
+comment|/*  * key.c: This module contains the procedures for maintaining  *	  the extended-key map.  *  *      An extended-key (key) is a sequence of keystrokes introduced  *	with an sequence introducer and consisting of an arbitrary  *	number of characters.  This module maintains a map (the el->el_key.map)  *	to convert these extended-key sequences into input strs  *	(XK_STR), editor functions (XK_CMD), or unix commands (XK_EXE).  *  *      Warning:  *	  If key is a substr of some other keys, then the longer  *	  keys are lost!!  That is, if the keys "abcd" and "abcef"  *	  are in el->el_key.map, adding the key "abc" will cause the first two  *	  definitions to be lost.  *  *      Restrictions:  *      -------------  *      1) It is not possible to have one key that is a  *	   substr of another.  */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ file|"el.h"
 end_include
 
 begin_comment
-comment|/*   * The Nodes of the el->el_key.map.  The el->el_key.map is a linked list   * of these node elements  */
+comment|/*  * The Nodes of the el->el_key.map.  The el->el_key.map is a linked list  * of these node elements  */
 end_comment
 
 begin_struct
@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* key_get():  *	Calls the recursive function with entry point el->el_key.map  *      Looks up *ch in map and then reads characters until a  *      complete match is found or a mismatch occurs. Returns the  *      type of the match found (XK_STR, XK_CMD, or XK_EXE).  *      Returns NULL in val.str and XK_STR for no match.    *      The last character read is returned in *ch.  */
+comment|/* key_get():  *	Calls the recursive function with entry point el->el_key.map  *      Looks up *ch in map and then reads characters until a  *      complete match is found or a mismatch occurs. Returns the  *      type of the match found (XK_STR, XK_CMD, or XK_EXE).  *      Returns NULL in val.str and XK_STR for no match.  *      The last character read is returned in *ch.  */
 end_comment
 
 begin_function

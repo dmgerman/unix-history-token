@@ -538,7 +538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_paste_next():   *	Vi paste previous deletion to the right of the cursor  *	[p]  */
+comment|/* vi_paste_next():  *	Vi paste previous deletion to the right of the cursor  *	[p]  */
 end_comment
 
 begin_function
@@ -571,7 +571,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_paste_prev():   *	Vi paste previous deletion to the left of the cursor  *	[P]  */
+comment|/* vi_paste_prev():  *	Vi paste previous deletion to the left of the cursor  *	[P]  */
 end_comment
 
 begin_function
@@ -604,7 +604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_prev_space_word():   *	Vi move to the previous space delimited word  *	[B]  */
+comment|/* vi_prev_space_word():  *	Vi move to the previous space delimited word  *	[B]  */
 end_comment
 
 begin_function
@@ -702,7 +702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_prev_word():   *	Vi move to the previous word  *	[B]  */
+comment|/* vi_prev_word():  *	Vi move to the previous word  *	[B]  */
 end_comment
 
 begin_function
@@ -800,7 +800,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_next_space_word():   *	Vi move to the next space delimited word  *	[W]  */
+comment|/* vi_next_space_word():  *	Vi move to the next space delimited word  *	[W]  */
 end_comment
 
 begin_function
@@ -908,7 +908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_next_word():   *	Vi move to the next word  *	[w]  */
+comment|/* vi_next_word():  *	Vi move to the next word  *	[w]  */
 end_comment
 
 begin_function
@@ -1016,7 +1016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_change_case():   *	Vi change case of character under the cursor and advance one character  *	[~]  */
+comment|/* vi_change_case():  *	Vi change case of character under the cursor and advance one character  *	[~]  */
 end_comment
 
 begin_function
@@ -1125,7 +1125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_change_meta():   *	Vi change prefix command  *	[c]  */
+comment|/* vi_change_meta():  *	Vi change prefix command  *	[c]  */
 end_comment
 
 begin_function
@@ -1161,7 +1161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_insert_at_bol():   *	Vi enter insert mode at the beginning of line  *	[I]  */
+comment|/* vi_insert_at_bol():  *	Vi enter insert mode at the beginning of line  *	[I]  */
 end_comment
 
 begin_function
@@ -1251,7 +1251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_replace_char():   *	Vi replace character under the cursor with the next character typed  *	[r]  */
+comment|/* vi_replace_char():  *	Vi replace character under the cursor with the next character typed  *	[r]  */
 end_comment
 
 begin_function
@@ -1343,7 +1343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_replace_mode():   *	Vi enter replace mode  *	[R]  */
+comment|/* vi_replace_mode():  *	Vi enter replace mode  *	[R]  */
 end_comment
 
 begin_function
@@ -1435,7 +1435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_substitute_char():   *	Vi replace character under the cursor and enter insert mode  *	[r]  */
+comment|/* vi_substitute_char():  *	Vi replace character under the cursor and enter insert mode  *	[r]  */
 end_comment
 
 begin_function
@@ -1486,7 +1486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_substitute_line():   *	Vi substitute entire line  *	[S]  */
+comment|/* vi_substitute_line():  *	Vi substitute entire line  *	[S]  */
 end_comment
 
 begin_function
@@ -1536,7 +1536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_change_to_eol():   *	Vi change to end of line  *	[C]  */
+comment|/* vi_change_to_eol():  *	Vi change to end of line  *	[C]  */
 end_comment
 
 begin_function
@@ -1664,7 +1664,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_add():  *	Vi enter insert mode after the cursor   *	[a]  */
+comment|/* vi_add():  *	Vi enter insert mode after the cursor  *	[a]  */
 end_comment
 
 begin_function
@@ -1894,7 +1894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_delete_meta():  *	Vi delete prefix command   *	[d]  */
+comment|/* vi_delete_meta():  *	Vi delete prefix command  *	[d]  */
 end_comment
 
 begin_function
@@ -1927,7 +1927,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_end_word():  *	Vi move to the end of the current space delimited word   *	[E]   */
+comment|/* vi_end_word():  *	Vi move to the end of the current space delimited word  *	[E]  */
 end_comment
 
 begin_function
@@ -2913,7 +2913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_zero():  *	Vi move to the beginning of line   *	[0]  */
+comment|/* vi_zero():  *	Vi move to the beginning of line  *	[0]  */
 end_comment
 
 begin_function
@@ -3025,7 +3025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_delete_prev_char():  * 	Vi move to previous character (backspace)   *	[^H]  */
+comment|/* vi_delete_prev_char():  * 	Vi move to previous character (backspace)  *	[^H]  */
 end_comment
 
 begin_function
@@ -3220,7 +3220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* vi_kill_line_prev():  *	Vi cut from beginning of line to cursor   *	[^U]  */
+comment|/* vi_kill_line_prev():  *	Vi cut from beginning of line to cursor  *	[^U]  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/* @(#)e_acosh.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_acosh.c,v 1.6 1994/08/18 23:04:54 jtc Exp $"
+literal|"$Id: e_acosh.c,v 1.1.1.1 1994/08/19 09:39:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_acosh(x)  * Method :  *	Based on   *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := log(x)+ln2,	if x is large; else  *		acosh(x) := log(2x-1/(sqrt(x*x-1)+x)) if x>2; else  *		acosh(x) := log1p(t+sqrt(2.0*t+t*t)); where t=x-1.  *  * Special cases:  *	acosh(x) is NaN with signal if x<1.  *	acosh(NaN) is NaN without signal.  */
+comment|/* __ieee754_acosh(x)  * Method :  *	Based on  *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := log(x)+ln2,	if x is large; else  *		acosh(x) := log(2x-1/(sqrt(x*x-1)+x)) if x>2; else  *		acosh(x) := log1p(t+sqrt(2.0*t+t*t)); where t=x-1.  *  * Special cases:  *	acosh(x) is NaN with signal if x<1.  *	acosh(NaN) is NaN without signal.  */
 end_comment
 
 begin_include

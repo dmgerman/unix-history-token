@@ -4,7 +4,7 @@ comment|/* s_significandf.c -- float version of s_significand.c.  * Conversion t
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_significandf.c,v 1.1 1994/08/10 20:33:07 jtc Exp $"
+literal|"$Id: s_significandf.c,v 1.1.1.1 1994/08/19 09:39:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/* This work is copyrighted. See COPYRIGHT.OLD& COPYRIGHT.NEW for   * * 
 end_comment
 
 begin_comment
-comment|/* **	lib_insdel.c ** **	The routine winsdel(win, n). **  positive n insert n lines above current line **  negative n delete n lines starting from current line  ** */
+comment|/* **	lib_insdel.c ** **	The routine winsdel(win, n). **  positive n insert n lines above current line **  negative n delete n lines starting from current line ** */
 end_comment
 
 begin_include

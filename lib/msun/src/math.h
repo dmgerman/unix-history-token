@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_comment
-comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.1 1994/08/10 20:31:49 jtc Exp $  */
+comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.1.1.1 1994/08/19 09:39:57 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -258,7 +258,7 @@ value|_fdlib_version
 end_define
 
 begin_comment
-comment|/* if global variable _LIB_VERSION is not desirable, one may   * change the following to be a constant by:   *	#define _LIB_VERSION_TYPE const enum version  * In that case, after one initializes the value _LIB_VERSION (see  * s_lib_version.c) during compile time, it cannot be modified  * in the middle of a program  */
+comment|/* if global variable _LIB_VERSION is not desirable, one may  * change the following to be a constant by:  *	#define _LIB_VERSION_TYPE const enum version  * In that case, after one initializes the value _LIB_VERSION (see  * s_lib_version.c) during compile time, it cannot be modified  * in the middle of a program  */
 end_comment
 
 begin_decl_stmt
@@ -328,7 +328,7 @@ value|MAXFLOAT
 end_define
 
 begin_comment
-comment|/*   * set X_TLOSS = pi*2**52, which is possibly defined in<values.h>  * (one may replace the following line by "#include<values.h>")  */
+comment|/*  * set X_TLOSS = pi*2**52, which is possibly defined in<values.h>  * (one may replace the following line by "#include<values.h>")  */
 end_comment
 
 begin_define

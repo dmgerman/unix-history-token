@@ -1179,7 +1179,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		* It is not possible for us to support this 		* request as he asks. 		* 		* If our level is DEFAULT, then just ack whatever was 		* sent.  		* 		* If he can't change and we can't change, 		* then degenerate to NOSUPPORT. 		* 		* Otherwise we send our level back to him, (CANTCHANGE 		* or NOSUPPORT) and if CANTCHANGE, send 		* our value as well. 		*/
+comment|/* 		* It is not possible for us to support this 		* request as he asks. 		* 		* If our level is DEFAULT, then just ack whatever was 		* sent. 		* 		* If he can't change and we can't change, 		* then degenerate to NOSUPPORT. 		* 		* Otherwise we send our level back to him, (CANTCHANGE 		* or NOSUPPORT) and if CANTCHANGE, send 		* our value as well. 		*/
 if|if
 condition|(
 name|mylevel

@@ -44,7 +44,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * I think this routine could be improved, as it is now it searches a  * linked list of strbufs for one that has enough room left for the  * string. The only thing else I can think of doing would be to   * expand a buffer by realloc and then fix the string pointers if it  * moves.  */
+comment|/*  * I think this routine could be improved, as it is now it searches a  * linked list of strbufs for one that has enough room left for the  * string. The only thing else I can think of doing would be to  * expand a buffer by realloc and then fix the string pointers if it  * moves.  */
 end_comment
 
 begin_decl_stmt

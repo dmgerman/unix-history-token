@@ -35,7 +35,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/* kahan's cube root (53 bits IEEE double precision)  * for IEEE machines only  * coded in C by K.C. Ng, 4/30/85  *  * Accuracy:  *	better than 0.667 ulps according to an error analysis. Maximum  * error observed was 0.666 ulps in an 1,000,000 random arguments test.  *  * Warning: this code is semi machine dependent; the ordering of words in  * a floating point number must be known in advance. I assume that the  * long interger at the address of a floating point number will be the  * leading 32 bits of that floating point number (i.e., sign, exponent,  * and the 20 most significant bits).  * On a National machine, it has different ordering; therefore, this code   * must be compiled with flag -DNATIONAL.   */
+comment|/* kahan's cube root (53 bits IEEE double precision)  * for IEEE machines only  * coded in C by K.C. Ng, 4/30/85  *  * Accuracy:  *	better than 0.667 ulps according to an error analysis. Maximum  * error observed was 0.666 ulps in an 1,000,000 random arguments test.  *  * Warning: this code is semi machine dependent; the ordering of words in  * a floating point number must be known in advance. I assume that the  * long interger at the address of a floating point number will be the  * leading 32 bits of that floating point number (i.e., sign, exponent,  * and the 20 most significant bits).  * On a National machine, it has different ordering; therefore, this code  * must be compiled with flag -DNATIONAL.  */
 end_comment
 
 begin_if

@@ -4,7 +4,7 @@ comment|/* s_erff.c -- float version of s_erf.c.  * Conversion to float by Ian L
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_erff.c,v 1.2 1994/08/18 23:06:38 jtc Exp $"
+literal|"$Id: s_erff.c,v 1.1.1.1 1994/08/19 09:39:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ operator|-
 literal|3.9602282413e-06
 decl_stmt|,
 comment|/* 0xb684e21a */
-comment|/*  * Coefficients for approximation to  erf  in [0.84375,1.25]   */
+comment|/*  * Coefficients for approximation to  erf  in [0.84375,1.25]  */
 name|pa0
 init|=
 operator|-

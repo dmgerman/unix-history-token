@@ -1836,7 +1836,7 @@ operator|=
 name|n
 expr_stmt|;
 block|}
-comment|/*  					 * If netgroup 'foo' doesn't exist, 					 * try group 'foo' instead. 					 */
+comment|/* 					 * If netgroup 'foo' doesn't exist, 					 * try group 'foo' instead. 					 */
 if|if
 condition|(
 name|namehead
@@ -2333,7 +2333,7 @@ operator|=
 name|n
 expr_stmt|;
 block|}
-comment|/*  					 * If netgroup 'foo' doesn't exist, 					 * try group 'foo' instead. 					 */
+comment|/* 					 * If netgroup 'foo' doesn't exist, 					 * try group 'foo' instead. 					 */
 if|if
 condition|(
 name|namehead

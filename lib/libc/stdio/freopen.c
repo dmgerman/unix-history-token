@@ -86,7 +86,7 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*   * Re-direct an existing, open (probably) file to some other file.   * ANSI is written such that the original file gets closed if at  * all possible, no matter what.  */
+comment|/*  * Re-direct an existing, open (probably) file to some other file.  * ANSI is written such that the original file gets closed if at  * all possible, no matter what.  */
 end_comment
 
 begin_function

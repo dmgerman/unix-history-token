@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * battle.c - original author: Bruce Holloway  *		mods by: Chuck A DeGaul  */
+comment|/*  * battle.c - original author: Bruce Holloway  *		mods by: Chuck A DeGaul  */
 end_comment
 
 begin_include
@@ -3590,7 +3590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * I should use getopts() from libc.a, but I'm leary that other UNIX  * systems might not have it, although I'd love to use it.  */
+comment|/*  * I should use getopts() from libc.a, but I'm leary that other UNIX  * systems might not have it, although I'd love to use it.  */
 end_comment
 
 begin_function

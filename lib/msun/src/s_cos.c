@@ -4,7 +4,7 @@ comment|/* @(#)s_cos.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_cos.c,v 1.5 1994/08/18 23:06:34 jtc Exp $"
+literal|"$Id: s_cos.c,v 1.1.1.1 1994/08/19 09:39:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* cos(x)  * Return cosine function of x.  *  * kernel function:  *	__kernel_sin		... sine function on [-pi/4,pi/4]  *	__kernel_cos		... cosine function on [-pi/4,pi/4]  *	__ieee754_rem_pio2	... argument reduction routine  *  * Method.  *      Let S,C and T denote the sin, cos and tan respectively on   *	[-PI/4, +PI/4]. Reduce the argument x to y1+y2 = x-k*pi/2   *	in [-pi/4 , +pi/4], and let n = k mod 4.  *	We have  *  *          n        sin(x)      cos(x)        tan(x)  *     ----------------------------------------------------------  *	    0	       S	   C		 T  *	    1	       C	  -S		-1/T  *	    2	      -S	  -C		 T  *	    3	      -C	   S		-1/T  *     ----------------------------------------------------------  *  * Special cases:  *      Let trig be any of sin, cos, or tan.  *      trig(+-INF)  is NaN, with signals;  *      trig(NaN)    is that NaN;  *  * Accuracy:  *	TRIG(x) returns trig(x) nearly rounded   */
+comment|/* cos(x)  * Return cosine function of x.  *  * kernel function:  *	__kernel_sin		... sine function on [-pi/4,pi/4]  *	__kernel_cos		... cosine function on [-pi/4,pi/4]  *	__ieee754_rem_pio2	... argument reduction routine  *  * Method.  *      Let S,C and T denote the sin, cos and tan respectively on  *	[-PI/4, +PI/4]. Reduce the argument x to y1+y2 = x-k*pi/2  *	in [-pi/4 , +pi/4], and let n = k mod 4.  *	We have  *  *          n        sin(x)      cos(x)        tan(x)  *     ----------------------------------------------------------  *	    0	       S	   C		 T  *	    1	       C	  -S		-1/T  *	    2	      -S	  -C		 T  *	    3	      -C	   S		-1/T  *     ----------------------------------------------------------  *  * Special cases:  *      Let trig be any of sin, cos, or tan.  *      trig(+-INF)  is NaN, with signals;  *      trig(NaN)    is that NaN;  *  * Accuracy:  *	TRIG(x) returns trig(x) nearly rounded  */
 end_comment
 
 begin_include

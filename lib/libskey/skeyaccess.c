@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Figure out if UNIX passwords are permitted for any combination of user   * name, group member, terminal port, host_name or network:   *    * Programmatic interface: skeyaccess(user, port, host, addr)   *    * All arguments are null-terminated strings. Specify a null character pointer   * where information is not available.   *    * When no address information is given this code performs the host (internet)   * address lookup itself. It rejects addresses that appear to belong to   * someone else.   *    * When compiled with -DPERMIT_CONSOLE always permits UNIX passwords with   * console logins, no matter what the configuration file says.   *    * To build a stand-alone test version, compile with -DTEST and run it off an   * skey.access file in the current directory:   *    * Command-line interface: ./skeyaccess user port [host_or_ip_addr]   *    * Errors are reported via syslogd.   *    * Author: Wietse Venema, Eindhoven University of Technology.   */
+comment|/*   * Figure out if UNIX passwords are permitted for any combination of user   * name, group member, terminal port, host_name or network:   *   * Programmatic interface: skeyaccess(user, port, host, addr)   *   * All arguments are null-terminated strings. Specify a null character pointer   * where information is not available.   *   * When no address information is given this code performs the host (internet)   * address lookup itself. It rejects addresses that appear to belong to   * someone else.   *   * When compiled with -DPERMIT_CONSOLE always permits UNIX passwords with   * console logins, no matter what the configuration file says.   *   * To build a stand-alone test version, compile with -DTEST and run it off an   * skey.access file in the current directory:   *   * Command-line interface: ./skeyaccess user port [host_or_ip_addr]   *   * Errors are reported via syslogd.   *   * Author: Wietse Venema, Eindhoven University of Technology.   */
 end_comment
 
 begin_include
@@ -383,7 +383,7 @@ name|PERMIT
 operator|)
 return|;
 block|}
-comment|/*      * Bundle up the arguments in a structure so we won't have to drag around      * boring long argument lists.      *       * Look up the host address when only the name is given. We try to reject      * addresses that belong to someone else.      */
+comment|/*      * Bundle up the arguments in a structure so we won't have to drag around      * boring long argument lists.      *      * Look up the host address when only the name is given. We try to reject      * addresses that belong to someone else.      */
 name|login_info
 operator|.
 name|user

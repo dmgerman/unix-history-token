@@ -4,7 +4,7 @@ comment|/* @(#)e_atan2.c 5.1 93/09/24 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_atan2.c,v 1.6 1994/08/18 23:05:08 jtc Exp $"
+literal|"$Id: e_atan2.c,v 1.1.1.1 1994/08/19 09:39:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_atan2(y,x)  * Method :  *	1. Reduce y to positive by atan2(y,x)=-atan2(-y,x).  *	2. Reduce x to positive by (if x and y are unexceptional):   *		ARG (x+iy) = arctan(y/x)   	   ... if x> 0,  *		ARG (x+iy) = pi - arctan[y/(-x)]   ... if x< 0,  *  * Special cases:  *  *	ATAN2((anything), NaN ) is NaN;  *	ATAN2(NAN , (anything) ) is NaN;  *	ATAN2(+-0, +(anything but NaN)) is +-0  ;  *	ATAN2(+-0, -(anything but NaN)) is +-pi ;  *	ATAN2(+-(anything but 0 and NaN), 0) is +-pi/2;  *	ATAN2(+-(anything but INF and NaN), +INF) is +-0 ;  *	ATAN2(+-(anything but INF and NaN), -INF) is +-pi;  *	ATAN2(+-INF,+INF ) is +-pi/4 ;  *	ATAN2(+-INF,-INF ) is +-3pi/4;  *	ATAN2(+-INF, (anything but,0,NaN, and INF)) is +-pi/2;  *  * Constants:  * The hexadecimal values are the intended ones for the following   * constants. The decimal values may be used, provided that the   * compiler will convert from decimal to binary accurately enough   * to produce the hexadecimal values shown.  */
+comment|/* __ieee754_atan2(y,x)  * Method :  *	1. Reduce y to positive by atan2(y,x)=-atan2(-y,x).  *	2. Reduce x to positive by (if x and y are unexceptional):  *		ARG (x+iy) = arctan(y/x)   	   ... if x> 0,  *		ARG (x+iy) = pi - arctan[y/(-x)]   ... if x< 0,  *  * Special cases:  *  *	ATAN2((anything), NaN ) is NaN;  *	ATAN2(NAN , (anything) ) is NaN;  *	ATAN2(+-0, +(anything but NaN)) is +-0  ;  *	ATAN2(+-0, -(anything but NaN)) is +-pi ;  *	ATAN2(+-(anything but 0 and NaN), 0) is +-pi/2;  *	ATAN2(+-(anything but INF and NaN), +INF) is +-0 ;  *	ATAN2(+-(anything but INF and NaN), -INF) is +-pi;  *	ATAN2(+-INF,+INF ) is +-pi/4 ;  *	ATAN2(+-INF,-INF ) is +-3pi/4;  *	ATAN2(+-INF, (anything but,0,NaN, and INF)) is +-pi/2;  *  * Constants:  * The hexadecimal values are the intended ones for the following  * constants. The decimal values may be used, provided that the  * compiler will convert from decimal to binary accurately enough  * to produce the hexadecimal values shown.  */
 end_comment
 
 begin_include

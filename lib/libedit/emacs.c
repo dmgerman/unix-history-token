@@ -39,7 +39,7 @@ comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*   * emacs.c: Emacs functions  */
+comment|/*  * emacs.c: Emacs functions  */
 end_comment
 
 begin_include
@@ -1696,7 +1696,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* em_exchange_mark():  *	Exchange the cursor and mark   *	[^X^X]  */
+comment|/* em_exchange_mark():  *	Exchange the cursor and mark  *	[^X^X]  */
 end_comment
 
 begin_function

@@ -605,7 +605,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * strvis, strvisx - visually encode characters from src into dst  *	  *	Dst must be 4 times the size of src to account for possible  *	expansion.  The length of dst, not including the trailing NULL,  *	is returned.   *  *	Strvisx encodes exactly len bytes from src into dst.  *	This is useful for encoding a block of data.  */
+comment|/*  * strvis, strvisx - visually encode characters from src into dst  *  *	Dst must be 4 times the size of src to account for possible  *	expansion.  The length of dst, not including the trailing NULL,  *	is returned.  *  *	Strvisx encodes exactly len bytes from src into dst.  *	This is useful for encoding a block of data.  */
 end_comment
 
 begin_function

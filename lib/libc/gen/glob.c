@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * glob(3) -- a superset of the one defined in POSIX 1003.2.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags if pattern contained a globbing character.  * GLOB_NOMAGIC:  *	Same as GLOB_NOCHECK, but it will only append pattern if it did  *	not contain any magic characters.  [Used in csh style globbing]  * GLOB_ALTDIRFUNC:  *	Use alternately specified directory access functions.  * GLOB_TILDE:  *	expand ~user/foo to the /home/dir/of/user/foo  * GLOB_BRACE:  *	expand {1,2}{a,b} to 1a 1b 2a 2b   * gl_matchc:  *	Number of matches in the current invocation of glob.  */
+comment|/*  * glob(3) -- a superset of the one defined in POSIX 1003.2.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags if pattern contained a globbing character.  * GLOB_NOMAGIC:  *	Same as GLOB_NOCHECK, but it will only append pattern if it did  *	not contain any magic characters.  [Used in csh style globbing]  * GLOB_ALTDIRFUNC:  *	Use alternately specified directory access functions.  * GLOB_TILDE:  *	expand ~user/foo to the /home/dir/of/user/foo  * GLOB_BRACE:  *	expand {1,2}{a,b} to 1a 1b 2a 2b  * gl_matchc:  *	Number of matches in the current invocation of glob.  */
 end_comment
 
 begin_include
@@ -1290,7 +1290,7 @@ operator|==
 name|EOS
 condition|)
 block|{
-comment|/*  				 * We could not find a matching RBRACKET. 				 * Ignore and just look for RBRACE 				 */
+comment|/* 				 * We could not find a matching RBRACKET. 				 * Ignore and just look for RBRACE 				 */
 name|pe
 operator|=
 name|pm
@@ -1413,7 +1413,7 @@ operator|==
 name|EOS
 condition|)
 block|{
-comment|/*  				 * We could not find a matching RBRACKET. 				 * Ignore and just look for RBRACE 				 */
+comment|/* 				 * We could not find a matching RBRACKET. 				 * Ignore and just look for RBRACE 				 */
 name|pm
 operator|=
 name|pl
@@ -1478,7 +1478,7 @@ name|pl
 operator|++
 control|)
 continue|continue;
-comment|/*  				 * Append the rest of the pattern after the 				 * closing brace 				 */
+comment|/* 				 * Append the rest of the pattern after the 				 * closing brace 				 */
 for|for
 control|(
 name|pl
@@ -1670,7 +1670,7 @@ operator|==
 name|EOS
 condition|)
 block|{
-comment|/*  		 * handle a plain ~ or ~/ by expanding $HOME  		 * first and then trying the password file 		 */
+comment|/* 		 * handle a plain ~ or ~/ by expanding $HOME 		 * first and then trying the password file 		 */
 if|if
 condition|(
 operator|(
@@ -2052,7 +2052,7 @@ name|gl_flags
 operator||=
 name|GLOB_MAGCHAR
 expr_stmt|;
-comment|/* collapse adjacent stars to one,  			 * to avoid exponential behavior 			 */
+comment|/* collapse adjacent stars to one, 			 * to avoid exponential behavior 			 */
 if|if
 condition|(
 name|bufnext
@@ -2124,7 +2124,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* 	 * If there was no match we are going to append the pattern  	 * if GLOB_NOCHECK was specified or if GLOB_NOMAGIC was specified 	 * and the pattern did not contain any magic characters 	 * GLOB_NOMAGIC is there just for compatibility with csh. 	 */
+comment|/* 	 * If there was no match we are going to append the pattern 	 * if GLOB_NOCHECK was specified or if GLOB_NOMAGIC was specified 	 * and the pattern did not contain any magic characters 	 * GLOB_NOMAGIC is there just for compatibility with csh. 	 */
 if|if
 condition|(
 name|pglob

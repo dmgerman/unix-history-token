@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*		      Library for ftpd clients.(libftp) 			Copyright by Oleg Orel 			 All rights reserved. 			 This  library is desined  for  free,  non-commercial  software  creation.  It is changeable and can be improved. The author would greatly appreciate  any  advises, new  components  and  patches  of  the  exist ing  programs. Commercial  usage is  also  possible  with  participation of it's author.    */
+comment|/*		      Library for ftpd clients.(libftp) 			Copyright by Oleg Orel 			 All rights reserved.  This  library is desined  for  free,  non-commercial  software  creation. It is changeable and can be improved. The author would greatly appreciate any  advises, new  components  and  patches  of  the  exist ing  programs. Commercial  usage is  also  possible  with  participation of it's author.    */
 end_comment
 
 begin_include

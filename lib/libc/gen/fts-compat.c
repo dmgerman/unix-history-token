@@ -3933,7 +3933,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allow essentially unlimited paths; find, rm, ls should all work on any tree.  * Most systems will allow creation of paths much longer than MAXPATHLEN, even  * though the kernel won't resolve them.  Add the size (not just what's needed)  * plus 256 bytes so don't realloc the path 2 bytes at a time.   */
+comment|/*  * Allow essentially unlimited paths; find, rm, ls should all work on any tree.  * Most systems will allow creation of paths much longer than MAXPATHLEN, even  * though the kernel won't resolve them.  Add the size (not just what's needed)  * plus 256 bytes so don't realloc the path 2 bytes at a time.  */
 end_comment
 
 begin_function

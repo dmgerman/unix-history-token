@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"$Id: readline.c%v 3.50.1.9 1993/08/05 05:38:59 woo Exp $"
+literal|"$Id: readline.c,v 1.1.1.1 1995/04/25 15:05:09 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ comment|/* GNUPLOT - readline.c */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1986 - 1993   Thomas Williams, Colin Kelley  *  * Permission to use, copy, and distribute this software and its  * documentation for any purpose with or without fee is hereby granted,   * provided that the above copyright notice appear in all copies and   * that both that copyright notice and this permission notice appear   * in supporting documentation.  *  * Permission to modify the software is granted, but not the right to  * distribute the modified code.  Modifications are to be distributed   * as patches to released version.  *    * This software is provided "as is" without express or implied warranty.  *   *  * AUTHORS  *  *   Original Software:  *     Tom Tkacik  *  *   Msdos port and some enhancements:  *     Gershon Elber and many others.  *   * There is a mailing list for gnuplot users. Note, however, that the  * newsgroup   *	comp.graphics.gnuplot   * is identical to the mailing list (they  * both carry the same set of messages). We prefer that you read the  * messages through that newsgroup, to subscribing to the mailing list.  * (If you can read that newsgroup, and are already on the mailing list,  * please send a message info-gnuplot-request@dartmouth.edu, asking to be  * removed from the mailing list.)  *  * The address for mailing to list members is  *	   info-gnuplot@dartmouth.edu  * and for mailing administrative requests is   *	   info-gnuplot-request@dartmouth.edu  * The mailing list for bug reports is   *	   bug-gnuplot@dartmouth.edu  * The list of those interested in beta-test versions is  *	   info-gnuplot-beta@dartmouth.edu  */
+comment|/*  * Copyright (C) 1986 - 1993   Thomas Williams, Colin Kelley  *  * Permission to use, copy, and distribute this software and its  * documentation for any purpose with or without fee is hereby granted,  * provided that the above copyright notice appear in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation.  *  * Permission to modify the software is granted, but not the right to  * distribute the modified code.  Modifications are to be distributed  * as patches to released version.  *  * This software is provided "as is" without express or implied warranty.  *  *  * AUTHORS  *  *   Original Software:  *     Tom Tkacik  *  *   Msdos port and some enhancements:  *     Gershon Elber and many others.  *  * There is a mailing list for gnuplot users. Note, however, that the  * newsgroup  *	comp.graphics.gnuplot  * is identical to the mailing list (they  * both carry the same set of messages). We prefer that you read the  * messages through that newsgroup, to subscribing to the mailing list.  * (If you can read that newsgroup, and are already on the mailing list,  * please send a message info-gnuplot-request@dartmouth.edu, asking to be  * removed from the mailing list.)  *  * The address for mailing to list members is  *	   info-gnuplot@dartmouth.edu  * and for mailing administrative requests is  *	   info-gnuplot-request@dartmouth.edu  * The mailing list for bug reports is  *	   bug-gnuplot@dartmouth.edu  * The list of those interested in beta-test versions is  *	   info-gnuplot-beta@dartmouth.edu  */
 end_comment
 
 begin_ifdef
@@ -73,7 +73,7 @@ comment|/* a small portable version of GNU's readline */
 end_comment
 
 begin_comment
-comment|/* this is not the BASH or GNU EMACS version of READLINE due to Copyleft  	restrictions */
+comment|/* this is not the BASH or GNU EMACS version of READLINE due to Copyleft 	restrictions */
 end_comment
 
 begin_comment
@@ -1022,7 +1022,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* user_putc and user_puts should be used in the place of  * fputc(ch,stderr) and fputs(str,stderr) for all output  * of user typed characters.  This allows MS-Windows to   * display user input in a different color. */
+comment|/* user_putc and user_puts should be used in the place of  * fputc(ch,stderr) and fputs(str,stderr) for all output  * of user typed characters.  This allows MS-Windows to  * display user input in a different color. */
 end_comment
 
 begin_function
@@ -3071,7 +3071,7 @@ comment|/* Convert Arrow keystrokes to Control characters: TOS version */
 end_comment
 
 begin_comment
-comment|/* the volatile could be necessary to keep gcc from reordering     the two Super calls */
+comment|/* the volatile could be necessary to keep gcc from reordering    the two Super calls */
 end_comment
 
 begin_define

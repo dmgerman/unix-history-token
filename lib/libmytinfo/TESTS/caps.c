@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * caps.c  *   * By Ross Ridge  * Public Domain  * 92/02/01 07:29:45  *  * caps [-c | -t] [term]  *  * -c		use termcap names instead of terminfo variable names  * -t		use terminfo capnames instead of variables names  * term 	name of terminal to use  *  * prints out all the capabilities given the specified terminal. If no  * terminal is given, it is taken from the environment variable TERM.  *  */
+comment|/*  * caps.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:29:45  *  * caps [-c | -t] [term]  *  * -c		use termcap names instead of terminfo variable names  * -t		use terminfo capnames instead of variables names  * term 	name of terminal to use  *  * prints out all the capabilities given the specified terminal. If no  * terminal is given, it is taken from the environment variable TERM.  *  */
 end_comment
 
 begin_define

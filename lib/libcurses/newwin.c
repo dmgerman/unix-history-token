@@ -815,7 +815,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Set up line pointer array and line space. 	 */
+comment|/* 	 * Set up line pointer array and line space. 	 */
 if|if
 condition|(
 operator|(

@@ -539,7 +539,7 @@ return|;
 case|case
 literal|0
 case|:
-comment|/*  		 * child 		 */
+comment|/* 		 * child 		 */
 operator|(
 name|void
 operator|)

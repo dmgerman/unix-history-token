@@ -5097,7 +5097,7 @@ name|NULL
 block|,
 literal|0
 block|,
-literal|"\ prompt is a string, which may be contains %<char>  or ^<char> combitanion, which have next interprets:  %H, %h - full and short remote host names %M, %m - full and short local host names %u     - remote user's name %d     - remote current directory %D     - local current directory %f     - number of current frame %p     - the ftp's port number %t     - timeout  %T     - current time  %P     - uftp process id %%     - character % ^<char>- control character %^     - character ^ "
+literal|"\ prompt is a string, which may be contains %<char> or ^<char> combitanion, which have next interprets:  %H, %h - full and short remote host names %M, %m - full and short local host names %u     - remote user's name %d     - remote current directory %D     - local current directory %f     - number of current frame %p     - the ftp's port number %t     - timeout %T     - current time %P     - uftp process id %%     - character % ^<char>- control character %^     - character ^ "
 block|,
 literal|"list"
 block|,

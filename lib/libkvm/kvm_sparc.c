@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Sparc machine dependent routines for kvm.  Hopefully, the forthcoming   * vm code will one day obsolete this module.  */
+comment|/*  * Sparc machine dependent routines for kvm.  Hopefully, the forthcoming  * vm code will one day obsolete this module.  */
 end_comment
 
 begin_include
@@ -937,7 +937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Translate a kernel virtual address to a physical address using the  * mapping information in kd->vm.  Returns the result in pa, and returns  * the number of bytes that are contiguously available from this   * physical address.  This routine is used only for crashdumps.  */
+comment|/*  * Translate a kernel virtual address to a physical address using the  * mapping information in kd->vm.  Returns the result in pa, and returns  * the number of bytes that are contiguously available from this  * physical address.  This routine is used only for crashdumps.  */
 end_comment
 
 begin_function

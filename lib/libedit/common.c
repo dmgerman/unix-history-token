@@ -55,7 +55,7 @@ file|"el.h"
 end_include
 
 begin_comment
-comment|/* ed_end_of_file():   *	Indicate end of file  *	[^D]  */
+comment|/* ed_end_of_file():  *	Indicate end of file  *	[^D]  */
 end_comment
 
 begin_function
@@ -97,7 +97,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_insert():   *	Add character to the line  *	Insert a character [bound to all insert keys]  */
+comment|/* ed_insert():  *	Add character to the line  *	Insert a character [bound to all insert keys]  */
 end_comment
 
 begin_function
@@ -411,7 +411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_delete_prev_word():   *	Delete from beginning of current word to cursor  *	[M-^?] [^W]  */
+comment|/* ed_delete_prev_word():  *	Delete from beginning of current word to cursor  *	[M-^?] [^W]  */
 end_comment
 
 begin_function
@@ -584,7 +584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_delete_next_char():   *	Delete character under cursor  *	[^D] [x]  */
+comment|/* ed_delete_next_char():  *	Delete character under cursor  *	[^D] [x]  */
 end_comment
 
 begin_function
@@ -834,7 +834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_kill_line():   *	Cut to the end of line  *	[^K] [^K]  */
+comment|/* ed_kill_line():  *	Cut to the end of line  *	[^K] [^K]  */
 end_comment
 
 begin_function
@@ -929,7 +929,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_move_to_end():   *	Move cursor to the end of line  *	[^E] [^E]  */
+comment|/* ed_move_to_end():  *	Move cursor to the end of line  *	[^E] [^E]  */
 end_comment
 
 begin_function
@@ -1015,7 +1015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_move_to_beg():   *	Move cursor to the beginning of line  *	[^A] [^A]  */
+comment|/* ed_move_to_beg():  *	Move cursor to the beginning of line  *	[^A] [^A]  */
 end_comment
 
 begin_function
@@ -1109,7 +1109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_transpose_chars():   *	Exchange the character to the left of the cursor with the one under it  *	[^T] [^T]  */
+comment|/* ed_transpose_chars():  *	Exchange the character to the left of the cursor with the one under it  *	[^T] [^T]  */
 end_comment
 
 begin_function
@@ -1250,7 +1250,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_next_char():   *	Move to the right one character  *	[^F] [^F]  */
+comment|/* ed_next_char():  *	Move to the right one character  *	[^F] [^F]  */
 end_comment
 
 begin_function
@@ -1365,7 +1365,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_prev_word():   *	Move to the beginning of the current word  *	[M-b] [b]  */
+comment|/* ed_prev_word():  *	Move to the beginning of the current word  *	[M-b] [b]  */
 end_comment
 
 begin_function
@@ -1471,7 +1471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_prev_char():   *	Move to the left one character  *	[^B] [^B]  */
+comment|/* ed_prev_char():  *	Move to the left one character  *	[^B] [^B]  */
 end_comment
 
 begin_function
@@ -1589,7 +1589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_quoted_insert():   *	Add the next character typed verbatim  *	[^V] [^V]  */
+comment|/* ed_quoted_insert():  *	Add the next character typed verbatim  *	[^V] [^V]  */
 end_comment
 
 begin_function
@@ -1670,7 +1670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_digit():   *	Adds to argument or enters a digit  */
+comment|/* ed_digit():  *	Adds to argument or enters a digit  */
 end_comment
 
 begin_function
@@ -1895,7 +1895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_argument_digit():   *	Digit that starts argument  *	For ESC-n  */
+comment|/* ed_argument_digit():  *	Digit that starts argument  *	For ESC-n  */
 end_comment
 
 begin_function
@@ -2001,7 +2001,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_unassigned():   *	Indicates unbound character  *	Bound to keys that are not assigned  */
+comment|/* ed_unassigned():  *	Indicates unbound character  *	Bound to keys that are not assigned  */
 end_comment
 
 begin_function
@@ -2041,7 +2041,7 @@ comment|/**  ** TTY key handling.  **/
 end_comment
 
 begin_comment
-comment|/* ed_tty_sigint():   *	Tty interrupt character  *	[^C]  */
+comment|/* ed_tty_sigint():  *	Tty interrupt character  *	[^C]  */
 end_comment
 
 begin_function
@@ -2069,7 +2069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_dsusp():   *	Tty delayed suspend character  *	[^Y]  */
+comment|/* ed_tty_dsusp():  *	Tty delayed suspend character  *	[^Y]  */
 end_comment
 
 begin_function
@@ -2097,7 +2097,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_flush_output():   *	Tty flush output characters  *	[^O]  */
+comment|/* ed_tty_flush_output():  *	Tty flush output characters  *	[^O]  */
 end_comment
 
 begin_function
@@ -2125,7 +2125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_sigquit():   *	Tty quit character  *	[^\]  */
+comment|/* ed_tty_sigquit():  *	Tty quit character  *	[^\]  */
 end_comment
 
 begin_function
@@ -2153,7 +2153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_sigtstp():   *	Tty suspend character  *	[^Z]  */
+comment|/* ed_tty_sigtstp():  *	Tty suspend character  *	[^Z]  */
 end_comment
 
 begin_function
@@ -2181,7 +2181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_stop_output():   *	Tty disallow output characters  *	[^S]  */
+comment|/* ed_tty_stop_output():  *	Tty disallow output characters  *	[^S]  */
 end_comment
 
 begin_function
@@ -2209,7 +2209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_tty_start_output():   *	Tty allow output characters  *	[^Q]  */
+comment|/* ed_tty_start_output():  *	Tty allow output characters  *	[^Q]  */
 end_comment
 
 begin_function
@@ -2237,7 +2237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_newline():   *	Execute command  *	[^J]  */
+comment|/* ed_newline():  *	Execute command  *	[^J]  */
 end_comment
 
 begin_function
@@ -2313,7 +2313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_delete_prev_char():   *	Delete the character to the left of the cursor  *	[^?]  */
+comment|/* ed_delete_prev_char():  *	Delete the character to the left of the cursor  *	[^?]  */
 end_comment
 
 begin_function
@@ -2407,7 +2407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_clear_screen():   *	Clear screen leaving current line at the top  *	[^L]  */
+comment|/* ed_clear_screen():  *	Clear screen leaving current line at the top  *	[^L]  */
 end_comment
 
 begin_function
@@ -2447,7 +2447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_redisplay():   *	Redisplay everything  *	^R  */
+comment|/* ed_redisplay():  *	Redisplay everything  *	^R  */
 end_comment
 
 begin_function
@@ -2485,7 +2485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_start_over():   *	Erase current line and start from scratch  *	[^G]  */
+comment|/* ed_start_over():  *	Erase current line and start from scratch  *	[^G]  */
 end_comment
 
 begin_function
@@ -2518,7 +2518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_sequence_lead_in():   *	First character in a bound sequence  *	Placeholder for external keys  */
+comment|/* ed_sequence_lead_in():  *	First character in a bound sequence  *	Placeholder for external keys  */
 end_comment
 
 begin_function
@@ -2546,7 +2546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_prev_history():   *	Move to the previous history line  *	[^P] [k]  */
+comment|/* ed_prev_history():  *	Move to the previous history line  *	[^P] [k]  */
 end_comment
 
 begin_function
@@ -2708,7 +2708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_next_history():   *	Move to the next history line  *	[^N] [j]  */
+comment|/* ed_next_history():  *	Move to the next history line  *	[^N] [j]  */
 end_comment
 
 begin_function
@@ -2795,7 +2795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_search_prev_history():   *	Search previous in history for a line matching the current  *	next search history [M-P] [K]  */
+comment|/* ed_search_prev_history():  *	Search previous in history for a line matching the current  *	next search history [M-P] [K]  */
 end_comment
 
 begin_function
@@ -3153,7 +3153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_search_next_history():   *	Search next in history for a line matching the current  *	[M-N] [J]  */
+comment|/* ed_search_next_history():  *	Search next in history for a line matching the current  *	[M-N] [J]  */
 end_comment
 
 begin_function
@@ -3717,7 +3717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ed_command():   *	Editline extended command  *	[M-X] [:]  */
+comment|/* ed_command():  *	Editline extended command  *	[M-X] [:]  */
 end_comment
 
 begin_function

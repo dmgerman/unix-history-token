@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: crypt.c,v 1.2 1994/11/07 21:07:09 phk Exp $  *  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header$"
+literal|"$Header: /home/ncvs/src/lib/libcrypt/crypt.c,v 1.2 1994/11/07 21:07:09 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * UNIX password  *   * Use MD5 for what it is best at...  */
+comment|/*  * UNIX password  *  * Use MD5 for what it is best at...  */
 end_comment
 
 begin_function
@@ -480,7 +480,7 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/*  	 * and now, just to make sure things don't run too fast  	 * On a 60 Mhz Pentium this takes 34 msec, so you would 	 * need 30 seconds to build a 1000 entry dictionary... 	 */
+comment|/* 	 * and now, just to make sure things don't run too fast 	 * On a 60 Mhz Pentium this takes 34 msec, so you would 	 * need 30 seconds to build a 1000 entry dictionary... 	 */
 for|for
 control|(
 name|i

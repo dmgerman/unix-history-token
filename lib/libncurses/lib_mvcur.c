@@ -575,7 +575,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **	Make_seq_best(best, try) **	 **	Make_seq_best() copies try to best if try->cost< best->cost ** **	fixed the old version, now it really runs .. (-hm/08.04.93) ** */
+comment|/* **	Make_seq_best(best, try) ** **	Make_seq_best() copies try to best if try->cost< best->cost ** **	fixed the old version, now it really runs .. (-hm/08.04.93) ** */
 end_comment
 
 begin_function
@@ -2374,7 +2374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	add_op(seq, op, p0, p1, ... , p8) ** **	add_op() adds the operator op and the appropriate **  	number of paramaters to seq.  It also increases the  **  	cost appropriately. **	if op has no parameters, p0 is taken to be a count. */
+comment|/* **	add_op(seq, op, p0, p1, ... , p8) ** **	add_op() adds the operator op and the appropriate **  	number of paramaters to seq.  It also increases the **  	cost appropriately. **	if op has no parameters, p0 is taken to be a count. */
 end_comment
 
 begin_function

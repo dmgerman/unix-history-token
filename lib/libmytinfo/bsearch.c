@@ -101,7 +101,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * $OLog:	bsearch.c,v $  * Revision 1.1  88/06/11  20:41:48  root  * Initial revision  *  */
+comment|/*  * $OLog:	bsearch.c,v $  * Revision 1.1  88/06/11  20:41:48  root  * Initial revision  * */
 end_comment
 
 begin_endif
