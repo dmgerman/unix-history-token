@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass1.c,v 1.10 1995/05/30 03:47:23 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass1.c,v 1.11 1995/07/12 09:16:08 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -262,36 +262,16 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-name|md5
-condition|)
-block|{
-name|Free
+name|Delete
 argument_list|(
 name|md5
 argument_list|)
-operator|,
-name|md5
-operator|=
-literal|0
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|trash
-condition|)
-block|{
-name|Free
+name|Delete
 argument_list|(
 name|trash
 argument_list|)
-operator|,
-name|trash
-operator|=
-literal|0
 expr_stmt|;
-block|}
 name|cnt
 operator|=
 operator|-
@@ -932,6 +912,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|Delete
+argument_list|(
+name|md5
+argument_list|)
+expr_stmt|;
+name|Delete
+argument_list|(
+name|trash
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 name|MD5End

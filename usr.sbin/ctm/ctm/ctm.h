@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.6 1995/03/04 20:36:45 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.h,v 1.7 1995/05/30 03:47:21 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -75,6 +75,20 @@ define|#
 directive|define
 name|MAXSIZE
 value|(1024*1024*10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUBSUFF
+value|".ctm"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMPSUFF
+value|".ctmtmp"
 end_define
 
 begin_comment
@@ -172,6 +186,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CTM_Q_Name_Subst
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|CTM_Q_MD5_After
 value|0x0100
 end_define
@@ -234,6 +255,26 @@ define|#
 directive|define
 name|Free
 value|free
+end_define
+
+begin_define
+define|#
+directive|define
+name|Delete
+parameter_list|(
+name|foo
+parameter_list|)
+value|if (!foo) ; else {Free(foo); foo = 0; }
+end_define
+
+begin_define
+define|#
+directive|define
+name|String
+parameter_list|(
+name|foo
+parameter_list|)
+value|strdup(foo)
 end_define
 
 begin_ifndef
@@ -306,7 +347,7 @@ begin_decl_stmt
 name|EXTERN
 name|u_char
 modifier|*
-name|BaseDir
+name|TmpDir
 decl_stmt|;
 end_decl_stmt
 
@@ -314,7 +355,15 @@ begin_decl_stmt
 name|EXTERN
 name|u_char
 modifier|*
-name|TmpDir
+name|CatPtr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|u_char
+modifier|*
+name|Buffer
 decl_stmt|;
 end_decl_stmt
 
@@ -421,18 +470,6 @@ value|128
 end_define
 
 begin_function_decl
-name|char
-modifier|*
-name|String
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|Fatal_
 parameter_list|(
@@ -490,6 +527,31 @@ name|ctx
 parameter_list|,
 name|u_char
 name|term
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_char
+modifier|*
+name|Fname
+parameter_list|(
+name|FILE
+modifier|*
+name|fd
+parameter_list|,
+name|MD5_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|u_char
+name|term
+parameter_list|,
+name|int
+name|qual
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -577,6 +639,22 @@ parameter_list|,
 name|q
 parameter_list|)
 value|if(!((p) = Fdata(fd,(q),&ctx))) return BADREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETNAMECOPY
+parameter_list|(
+name|p
+parameter_list|,
+name|q
+parameter_list|,
+name|r
+parameter_list|,
+name|v
+parameter_list|)
+value|if(!((p)=Fname(fd,&ctx,(q),(r),(v)))) return BADREAD; else p=String(p)
 end_define
 
 begin_function_decl

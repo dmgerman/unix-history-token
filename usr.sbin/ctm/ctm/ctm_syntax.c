@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_syntax.c,v 1.4 1994/09/22 02:49:21 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_syntax.c,v 1.5 1995/05/30 03:47:28 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -90,6 +90,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Subst
+value|CTM_Q_Name_Subst
+end_define
+
+begin_define
+define|#
+directive|define
 name|After
 value|CTM_Q_MD5_After
 end_define
@@ -128,6 +135,8 @@ operator||
 name|File
 operator||
 name|New
+operator||
+name|Subst
 block|,
 name|Uid
 block|,
@@ -161,6 +170,8 @@ block|{
 name|Name
 operator||
 name|File
+operator||
+name|Subst
 block|,
 name|Uid
 block|,
@@ -200,6 +211,8 @@ block|{
 name|Name
 operator||
 name|File
+operator||
+name|Subst
 block|,
 name|Uid
 block|,
@@ -235,6 +248,8 @@ block|{
 name|Name
 operator||
 name|File
+operator||
+name|Subst
 block|,
 name|MD5
 operator||
@@ -254,6 +269,8 @@ init|=
 comment|/* Attribute Substitute */
 block|{
 name|Name
+operator||
+name|Subst
 block|,
 name|Uid
 block|,
