@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.9 %G%"
+literal|"@(#)call.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,6 +681,10 @@ operator|->
 name|symbol
 argument_list|)
 expr_stmt|;
+name|chk
+operator|=
+name|FALSE
+expr_stmt|;
 break|break;
 block|}
 name|q
@@ -735,6 +739,10 @@ name|p
 operator|->
 name|symbol
 argument_list|)
+expr_stmt|;
+name|chk
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
@@ -949,6 +957,10 @@ name|p
 operator|->
 name|symbol
 argument_list|)
+expr_stmt|;
+name|chk
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
