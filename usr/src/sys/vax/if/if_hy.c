@@ -138,13 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_uba.h"
+file|"../vaxif/if_hyreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_hyroute.h"
+file|"../vaxif/if_uba.h"
 end_include
 
 begin_include
