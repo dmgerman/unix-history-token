@@ -5363,7 +5363,7 @@ if|if
 condition|(
 name|ioflag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 block|{
 name|status
