@@ -1019,7 +1019,7 @@ begin_decl_stmt
 name|int
 name|enlastdel
 init|=
-literal|25
+literal|50
 decl_stmt|;
 end_decl_stmt
 
