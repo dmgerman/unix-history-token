@@ -481,9 +481,16 @@ name|locale
 decl_stmt|,
 modifier|*
 name|short_locale
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 modifier|*
 name|locale_nroff
+init|=
+literal|" -Tascii"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,7 +540,7 @@ block|,
 block|{
 name|NULL
 block|,
-literal|" -Tascii"
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -1995,14 +2002,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-break|break;
-block|}
+block|{
 name|locale_nroff
 operator|=
 name|pltable
 operator|->
 name|nroff
 expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 block|}
 endif|#
