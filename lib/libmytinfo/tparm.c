@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tparm.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:30:36  *  */
+comment|/*  * tparm.c  *  * By Ross Ridge  * Public Domain  * 92/02/01 07:30:36  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1292,7 +1292,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* GNU aritmitic parameter, what they 					   realy need is terminfo.	      */
+comment|/* GNU arithmetic parameter, what they 					   really need is terminfo.	      */
 name|int
 name|val
 decl_stmt|,
@@ -1984,6 +1984,16 @@ operator|*
 name|fmt
 operator|==
 literal|'$'
+operator|||
+operator|*
+name|fmt
+operator|==
+literal|'^'
+operator|||
+operator|*
+name|fmt
+operator|==
+literal|'\\'
 condition|)
 operator|*
 name|dp
