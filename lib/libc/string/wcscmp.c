@@ -41,7 +41,7 @@ literal|0
 end_if
 
 begin_endif
-unit|__RCSID("$NetBSD$");
+unit|__RCSID("$NetBSD: wcscmp.c,v 1.3 2001/01/05 12:13:12 itojun Exp $");
 endif|#
 directive|endif
 end_endif

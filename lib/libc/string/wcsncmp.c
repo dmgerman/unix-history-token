@@ -31,7 +31,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)strncmp.c	8.1 (Berkeley) 6/4/93"; __RCSID("$NetBSD$");
+unit|static char sccsid[] = "@(#)strncmp.c	8.1 (Berkeley) 6/4/93"; __RCSID("$NetBSD: wcsncmp.c,v 1.3 2001/01/05 12:13:13 itojun Exp $");
 endif|#
 directive|endif
 end_endif
