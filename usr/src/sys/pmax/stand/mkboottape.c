@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)mkboottape.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)mkboottape.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../dev/devDiskLabel.h"
+file|"dec_boot.h"
 end_include
 
 begin_decl_stmt
@@ -91,6 +91,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|Dec_DiskBoot
+name|decBootInfo
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This program takes a kernel and the name of the special device file that  * has the mini-root file system stored on it and creates a boot tape.  * The -b option makes a bootfile that can load the kernel and mini-root  * over the network using the 'boot 6/tftp/filename -m' PROM command.  *  * usage: mkboottape [-b] tapedev vmunix minirootdev size  */
 end_comment
@@ -117,9 +124,6 @@ name|int
 name|i
 decl_stmt|,
 name|n
-decl_stmt|;
-name|Dec_DiskBoot
-name|decBootInfo
 decl_stmt|;
 name|ProcSectionHeader
 name|shdr
@@ -231,7 +235,7 @@ name|open
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|O_CREAT
@@ -250,7 +254,7 @@ name|open
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|O_RDWR
@@ -272,7 +276,7 @@ literal|"%s: %s"
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|strerror
@@ -290,7 +294,7 @@ name|open
 argument_list|(
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 name|O_RDONLY
@@ -309,7 +313,7 @@ literal|"%s: %s"
 argument_list|,
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 name|strerror
@@ -327,10 +331,10 @@ name|open
 argument_list|(
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|)
@@ -346,7 +350,7 @@ literal|"%s: %s"
 argument_list|,
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 argument_list|,
 name|strerror
@@ -361,7 +365,7 @@ name|atoi
 argument_list|(
 name|argv
 index|[
-literal|4
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -889,10 +893,10 @@ name|ofd
 argument_list|,
 name|block
 argument_list|,
-name|n
+name|DEV_BSIZE
 argument_list|)
 operator|!=
-name|n
+name|DEV_BSIZE
 condition|)
 goto|goto
 name|deverr
@@ -906,8 +910,6 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|i
 operator|=
 operator|(
@@ -920,7 +922,29 @@ operator|<<
 name|DEV_BSHIFT
 operator|)
 operator|-
+operator|(
+operator|(
 name|length
+operator|+
+name|DEV_BSIZE
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|DEV_BSIZE
+operator|-
+literal|1
+operator|)
+operator|)
+expr_stmt|;
+name|n
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
+for|for
+control|(
 init|;
 name|i
 operator|>
@@ -931,20 +955,6 @@ operator|-=
 name|n
 control|)
 block|{
-name|n
-operator|=
-name|DEV_BSIZE
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|>
-name|i
-condition|)
-name|n
-operator|=
-name|i
-expr_stmt|;
 if|if
 condition|(
 name|write
