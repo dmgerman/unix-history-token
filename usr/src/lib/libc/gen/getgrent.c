@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getgrent.c	5.8 (Berkeley) %G%"
+literal|"@(#)getgrent.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,28 +86,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
-name|char
-modifier|*
-name|_gr_file
-init|=
-name|_PATH_GROUP
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-specifier|static
-name|start_gr
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
+name|int
 name|grscan
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|,
+name|start_gr
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -167,20 +153,11 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 condition|)
 return|return
 operator|(
-operator|(
-expr|struct
-name|group
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -218,11 +195,6 @@ argument_list|()
 condition|)
 return|return
 operator|(
-operator|(
-expr|struct
-name|group
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -252,11 +224,6 @@ condition|?
 operator|&
 name|_gr_group
 else|:
-operator|(
-expr|struct
-name|group
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -298,11 +265,6 @@ argument_list|()
 condition|)
 return|return
 operator|(
-operator|(
-expr|struct
-name|group
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -314,10 +276,6 @@ literal|1
 argument_list|,
 name|gid
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -336,11 +294,6 @@ condition|?
 operator|&
 name|_gr_group
 else|:
-operator|(
-expr|struct
-name|group
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -378,7 +331,7 @@ name|_gr_fp
 operator|=
 name|fopen
 argument_list|(
-name|_gr_file
+name|_PATH_GROUP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -463,32 +416,9 @@ argument_list|)
 expr_stmt|;
 name|_gr_fp
 operator|=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|setgrfile
-parameter_list|(
-name|file
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|file
-decl_stmt|;
-block|{
-name|_gr_file
-operator|=
-name|file
-expr_stmt|;
 block|}
 end_function
 
