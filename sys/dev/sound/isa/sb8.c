@@ -1625,7 +1625,7 @@ name|dev
 condition|)
 block|{
 case|case
-name|SOUND_MASK_PCM
+name|SOUND_MIXER_PCM
 case|:
 name|reg
 operator|=
@@ -1633,7 +1633,7 @@ literal|0x04
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_MIC
+name|SOUND_MIXER_MIC
 case|:
 name|reg
 operator|=
@@ -1645,7 +1645,7 @@ literal|3
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_VOLUME
+name|SOUND_MIXER_VOLUME
 case|:
 name|reg
 operator|=
@@ -1653,7 +1653,7 @@ literal|0x22
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_SYNTH
+name|SOUND_MIXER_SYNTH
 case|:
 name|reg
 operator|=
@@ -1661,7 +1661,7 @@ literal|0x26
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_CD
+name|SOUND_MIXER_CD
 case|:
 name|reg
 operator|=
@@ -1669,7 +1669,7 @@ literal|0x28
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_LINE
+name|SOUND_MIXER_LINE
 case|:
 name|reg
 operator|=
@@ -2015,7 +2015,7 @@ name|dev
 condition|)
 block|{
 case|case
-name|SOUND_MASK_VOLUME
+name|SOUND_MIXER_VOLUME
 case|:
 name|reg
 operator|=
@@ -2023,7 +2023,7 @@ literal|0x2
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_SYNTH
+name|SOUND_MIXER_SYNTH
 case|:
 name|reg
 operator|=
@@ -2031,7 +2031,7 @@ literal|0x6
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_CD
+name|SOUND_MIXER_CD
 case|:
 name|reg
 operator|=
@@ -2039,7 +2039,7 @@ literal|0x8
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_PCM
+name|SOUND_MIXER_PCM
 case|:
 name|reg
 operator|=
