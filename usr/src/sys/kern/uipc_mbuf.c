@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_mbuf.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_mbuf.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1447,6 +1447,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod and dtom  * will work for a structure of size len).  * Returns the resulting mbuf chain on success,  * frees it and returns null on failure.  */
+end_comment
+
 begin_function
 name|struct
 name|mbuf
@@ -1523,28 +1527,12 @@ name|count
 operator|=
 name|MIN
 argument_list|(
-name|MLEN
-operator|-
-name|m
+name|n
 operator|->
 name|m_len
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|count
-operator|>
-name|n
-operator|->
-name|m_len
-condition|)
-name|count
-operator|=
-name|n
-operator|->
-name|m_len
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -1584,12 +1572,6 @@ name|count
 expr_stmt|;
 name|n
 operator|->
-name|m_off
-operator|+=
-name|count
-expr_stmt|;
-name|n
-operator|->
 name|m_len
 operator|-=
 name|count
@@ -1600,7 +1582,13 @@ name|n
 operator|->
 name|m_len
 condition|)
-break|break;
+name|n
+operator|->
+name|m_off
+operator|+=
+name|count
+expr_stmt|;
+else|else
 name|n
 operator|=
 name|m_free
@@ -1611,6 +1599,8 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|len
+operator|&&
 name|n
 condition|)
 do|;
