@@ -209,7 +209,7 @@ name|getargs
 parameter_list|(
 name|char
 modifier|*
-modifier|*
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -245,8 +245,8 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|)
 block|{
 name|struct
@@ -345,8 +345,8 @@ name|getargs
 parameter_list|(
 name|char
 modifier|*
-modifier|*
 name|av
+index|[]
 parameter_list|)
 block|{
 name|struct
