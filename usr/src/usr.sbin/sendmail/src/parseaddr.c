@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.29	%G%"
+literal|"@(#)parseaddr.c	3.30	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,7 +1361,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	Parameters: **		pvp -- pointer to token vector. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
+comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHANY, MATCHONE, **	MATCHCLASS) then the address in avp matched is saved away **	in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over a MATCHONE or a MATCHCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY we just extend the match and start over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
 end_comment
 
 begin_struct
@@ -1439,12 +1439,6 @@ modifier|*
 name|avp
 decl_stmt|;
 comment|/* address vector pointer */
-name|char
-modifier|*
-modifier|*
-name|avfp
-decl_stmt|;
-comment|/* first word in current match */
 specifier|register
 name|char
 modifier|*
@@ -1566,8 +1560,6 @@ name|rwr
 operator|->
 name|r_lhs
 operator|,
-name|avfp
-operator|=
 name|avp
 operator|=
 name|pvp
@@ -1616,50 +1608,6 @@ specifier|register
 name|int
 name|class
 decl_stmt|;
-case|case
-name|MATCHONE
-case|:
-comment|/* match exactly one token */
-name|mlp
-operator|->
-name|first
-operator|=
-name|mlp
-operator|->
-name|last
-operator|=
-name|avp
-operator|++
-expr_stmt|;
-name|mlp
-operator|++
-expr_stmt|;
-name|avfp
-operator|=
-name|avp
-expr_stmt|;
-break|break;
-case|case
-name|MATCHANY
-case|:
-comment|/* match any number of tokens */
-name|mlp
-operator|->
-name|first
-operator|=
-name|avfp
-expr_stmt|;
-name|mlp
-operator|->
-name|last
-operator|=
-name|avp
-operator|++
-expr_stmt|;
-name|mlp
-operator|++
-expr_stmt|;
-break|break;
 case|case
 name|MATCHCLASS
 case|:
@@ -1732,7 +1680,14 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* mark match */
+comment|/* explicit fall-through */
+case|case
+name|MATCHONE
+case|:
+case|case
+name|MATCHANY
+case|:
+comment|/* match exactly one token */
 name|mlp
 operator|->
 name|first
@@ -1746,10 +1701,6 @@ operator|++
 expr_stmt|;
 name|mlp
 operator|++
-expr_stmt|;
-name|avfp
-operator|=
-name|avp
 expr_stmt|;
 break|break;
 default|default:
@@ -1769,10 +1720,6 @@ name|fail
 goto|;
 name|avp
 operator|++
-expr_stmt|;
-name|avfp
-operator|=
-name|avp
 expr_stmt|;
 break|break;
 block|}
@@ -1807,15 +1754,26 @@ operator|==
 name|MATCHANY
 condition|)
 block|{
-name|avfp
-operator|=
+comment|/* extend binding and continue */
 name|mlp
-operator|->
-name|first
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|last
+operator|=
+name|avp
+operator|++
+expr_stmt|;
+name|rvp
+operator|++
 expr_stmt|;
 break|break;
 block|}
-elseif|else
+name|avp
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1830,13 +1788,6 @@ name|MATCHCLASS
 condition|)
 block|{
 comment|/* back out binding */
-name|avp
-operator|--
-expr_stmt|;
-name|avfp
-operator|=
-name|avp
-expr_stmt|;
 name|mlp
 operator|--
 expr_stmt|;
@@ -1956,6 +1907,75 @@ operator|-
 literal|'1'
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|13
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"$%c:"
+argument_list|,
+name|rp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|pp
+operator|=
+name|m
+operator|->
+name|first
+expr_stmt|;
+do|do
+block|{
+name|printf
+argument_list|(
+literal|" %x=\""
+argument_list|,
+operator|*
+name|pp
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\""
+argument_list|,
+operator|*
+name|pp
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|pp
+operator|++
+operator|!=
+name|m
+operator|->
+name|last
+condition|)
+do|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 name|pp
 operator|=
 name|m
