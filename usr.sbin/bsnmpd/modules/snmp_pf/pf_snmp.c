@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -5388,8 +5394,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pfi_table_age = %zu"
+literal|"Dump: pfi_table_age = %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pfi_table_age
 argument_list|)
 expr_stmt|;
@@ -5406,8 +5415,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pfq_table_age = %zu"
+literal|"Dump: pfq_table_age = %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pfq_table_age
 argument_list|)
 expr_stmt|;
@@ -5424,8 +5436,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pft_table_age = %zu"
+literal|"Dump: pft_table_age = %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pft_table_age
 argument_list|)
 expr_stmt|;
