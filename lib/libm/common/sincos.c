@@ -194,6 +194,12 @@ return|return
 name|x
 return|;
 block|}
+name|a
+operator|=
+name|x
+operator|*
+name|x
+expr_stmt|;
 return|return
 name|x
 operator|+
@@ -201,9 +207,7 @@ name|x
 operator|*
 name|sin__S
 argument_list|(
-name|x
-operator|*
-name|x
+name|a
 argument_list|)
 return|;
 block|}
@@ -298,6 +302,12 @@ name|PIo2
 operator|-
 name|a
 expr_stmt|;
+name|c
+operator|=
+name|a
+operator|*
+name|a
+expr_stmt|;
 return|return
 name|a
 operator|+
@@ -305,9 +315,7 @@ name|a
 operator|*
 name|sin__S
 argument_list|(
-name|a
-operator|*
-name|a
+name|c
 argument_list|)
 return|;
 comment|/* rtn. S(PI/2-|x|) */
