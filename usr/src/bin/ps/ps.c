@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.13 (Berkeley) %G%"
+literal|"@(#)ps.c	4.10+ (Berkeley) 7/2/81"
 decl_stmt|;
 end_decl_stmt
 
@@ -1452,7 +1452,7 @@ name|SSYS
 condition|)
 name|printf
 argument_list|(
-literal|" net input"
+literal|" ip input"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2695,6 +2695,27 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'m'
+operator|&&
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'t'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 break|break;
 case|case
 literal|'n'
@@ -3188,6 +3209,16 @@ name|stb
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|stb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFCHR
 condition|)
 name|dp
 operator|->
