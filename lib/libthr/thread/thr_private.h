@@ -2204,6 +2204,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|_thread_critical_enter
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_critical_exit
+parameter_list|(
+name|pthread_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* #include<sys/aio.h> */
 end_comment
