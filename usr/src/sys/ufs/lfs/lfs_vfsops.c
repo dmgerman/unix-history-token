@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)lfs_vfsops.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)lfs_vfsops.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,6 +136,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ufs_start
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ufs_unmount
 parameter_list|()
 function_decl|;
@@ -183,6 +190,8 @@ name|ufs_vfsops
 init|=
 block|{
 name|ufs_mount
+block|,
+name|ufs_start
 block|,
 name|ufs_unmount
 block|,
@@ -1773,11 +1782,11 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * unmount system call  */
+comment|/*  * Make a filesystem operational.  * Nothing to do at the moment.  */
 end_comment
 
 begin_expr_stmt
-unit|ufs_unmount
+unit|ufs_start
 operator|(
 name|mp
 operator|,
@@ -1789,6 +1798,43 @@ operator|*
 name|mp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * unmount system call  */
+end_comment
+
+begin_macro
+name|ufs_unmount
+argument_list|(
+argument|mp
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
