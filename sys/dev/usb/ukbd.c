@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ukbd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_kbd.h"
 end_include
 
