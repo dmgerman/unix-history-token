@@ -188,14 +188,39 @@ comment|/* connection # associated with this state */
 name|u_char
 name|cs_filler
 decl_stmt|;
+union|union
+block|{
+name|char
+name|csu_hdr
+index|[
+name|MAX_HDR
+index|]
+decl_stmt|;
 name|struct
 name|ip
-name|cs_ip
+name|csu_ip
 decl_stmt|;
 comment|/* ip/tcp hdr from most recent packet */
 block|}
+name|slcs_u
+union|;
+block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|cs_ip
+value|slcs_u.csu_ip
+end_define
+
+begin_define
+define|#
+directive|define
+name|cs_hdr
+value|slcs_u.csu_hdr
+end_define
 
 begin_comment
 comment|/*  * all the state data for one serial line (we need one of these  * per line).  */
