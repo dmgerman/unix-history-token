@@ -1405,6 +1405,7 @@ name|OpenBSD
 operator|>=
 literal|199603
 operator|)
+operator|)
 operator|||
 expr|\
 operator|(
@@ -1417,7 +1418,6 @@ operator|(
 name|__FreeBSD_version
 operator|>=
 literal|501113
-operator|)
 operator|)
 operator|)
 name|strncpy
