@@ -7837,7 +7837,7 @@ name|SK_IF_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock(&(_sc)->sk_softc->sk_mtx)
+value|SK_LOCK((_sc)->sk_softc)
 end_define
 
 begin_define
@@ -7847,7 +7847,7 @@ name|SK_IF_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->sk_softc->sk_mtx)
+value|SK_UNLOCK((_sc)->sk_softc)
 end_define
 
 begin_comment
