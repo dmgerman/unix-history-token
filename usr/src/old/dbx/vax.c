@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c 1.3 %G%"
+literal|"@(#)vax.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1939,7 +1939,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print out an execution time error.  *  * Have to check if the -r option was specified; if so then  * the object file information hasn't been read in yet.  */
+comment|/*  * Print out an execution time error.  * Assumes the source position of the error has been calculated.  *  * Have to check if the -r option was specified; if so then  * the object file information hasn't been read in yet.  */
 end_comment
 
 begin_function
@@ -1955,9 +1955,6 @@ specifier|extern
 name|String
 name|sys_siglist
 index|[]
-decl_stmt|;
-name|String
-name|filename
 decl_stmt|;
 name|Integer
 name|err
@@ -2009,32 +2006,6 @@ literal|" type 'help' for help\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|curline
-operator|=
-name|srcline
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
-name|curfunc
-operator|=
-name|whatblock
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
-name|filename
-operator|=
-name|srcfilename
-argument_list|(
-name|pc
-argument_list|)
-expr_stmt|;
-name|setsource
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|errnum
