@@ -5636,6 +5636,17 @@ argument_list|,
 literal|"reset\n"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|ifnet
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6076,18 +6087,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* to be safe */
-name|sc
-operator|->
-name|ifatm
-operator|.
-name|ifnet
-operator|.
-name|if_flags
-operator|&=
-operator|~
-name|IFF_RUNNING
-expr_stmt|;
-comment|/* disable */
 return|return;
 block|}
 name|DBG
