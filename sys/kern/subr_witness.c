@@ -573,14 +573,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DDB
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -2204,14 +2201,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DDB
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -2429,6 +2423,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* DDB */
+end_comment
+
 begin_function
 name|void
 name|witness_lock
@@ -2500,7 +2498,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* DDB */
 if|if
 condition|(
 name|witness_cold
@@ -2948,7 +2945,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DDB */
 goto|goto
 name|out
 goto|;
@@ -3505,7 +3501,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DDB */
 goto|goto
 name|out
 goto|;
@@ -3630,7 +3625,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DDB */
 name|w
 operator|->
 name|w_file
