@@ -1,56 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.5 (Berkeley) %G%  */
 end_comment
-
-begin_comment
-comment|/*  * Protocol-Protocol Packet Buffer.  * (Eventually will be replace by system-wide structure).  */
-end_comment
-
-begin_struct
-struct|struct
-name|pq
-block|{
-name|int
-function_decl|(
-modifier|*
-name|pq_put
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* How to process data */
-name|struct
-name|mbuf
-modifier|*
-name|pq_data
-decl_stmt|;
-comment|/* Queued data */
-name|int
-name|pq_space
-decl_stmt|;
-comment|/* For accounting */
-name|int
-name|pq_flags
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|pq_unblock
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* called& cleared when unblocking */
-name|caddr_t
-name|pq_proto
-decl_stmt|;
-comment|/* for other service entries */
-name|caddr_t
-name|pq_next
-decl_stmt|;
-comment|/* next q, or route, or pcb */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  *  *  X.25 Logical Channel Descriptor  *  */
@@ -60,13 +11,26 @@ begin_struct
 struct|struct
 name|pklcd
 block|{
-name|struct
-name|pq
-name|lcd_downq
-decl_stmt|,
-name|lcd_upq
+name|int
+function_decl|(
+modifier|*
+name|lcd_send
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* if X.25 front end, direct connect */
+name|int
+function_decl|(
+modifier|*
+name|lcd_upper
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* switch to socket vs datagram vs ...*/
+name|caddr_t
+name|lcd_upnext
 decl_stmt|;
-comment|/* protocol glue for datagram service */
+comment|/* reference for lcd_upper() */
 name|short
 name|lcd_lcn
 decl_stmt|;
@@ -203,6 +167,11 @@ expr|struct
 name|sockaddr_x25
 name|lcd_laddr
 comment|/* Local Address (Called) */
+expr|struct
+name|sockbuf
+name|lcd_sb
+expr_stmt|;
+comment|/* alternate for datagram service */
 block|}
 struct|;
 end_struct
@@ -256,6 +225,10 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* link level output procedure */
+name|caddr_t
+name|pk_llnext
+decl_stmt|;
+comment|/* handle for next level down */
 name|int
 function_decl|(
 modifier|*

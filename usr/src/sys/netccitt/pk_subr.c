@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_subr.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -204,14 +204,6 @@ argument_list|,
 name|pk_recvspace
 argument_list|)
 expr_stmt|;
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_mbmax
-operator|=
-name|pk_sendspace
-expr_stmt|;
 name|lcp
 operator|->
 name|lcd_so
@@ -240,6 +232,17 @@ operator|=
 name|READY
 expr_stmt|;
 block|}
+else|else
+name|sbreserve
+argument_list|(
+operator|&
+name|lcp
+operator|->
+name|lcd_sb
+argument_list|,
+name|pk_sendpace
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2834,20 +2837,18 @@ if|if
 condition|(
 name|lcp
 operator|->
-name|lcd_downq
-operator|.
-name|pq_unblock
+name|lcd_upper
 condition|)
 call|(
 modifier|*
 name|lcp
 operator|->
-name|lcd_downq
-operator|.
-name|pq_unblock
+name|lcd_upper
 call|)
 argument_list|(
 name|lcp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
