@@ -666,6 +666,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_VCC_ON
+value|0x10
+end_define
+
+begin_comment
+comment|/* Turn on VCC on some chips. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_VCC_3V
 value|0x18
 end_define

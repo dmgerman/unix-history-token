@@ -37,6 +37,12 @@ modifier|*
 name|slt
 decl_stmt|;
 comment|/* Back ptr to slot */
+name|struct
+name|pcic_softc
+modifier|*
+name|sc
+decl_stmt|;
+comment|/* Back pointer to softc */
 name|u_char
 function_decl|(
 modifier|*
@@ -90,10 +96,37 @@ define|#
 directive|define
 name|PCIC_IO_MAPPED
 value|0x00000001
+comment|/* ExCA registers are io mapped */
 define|#
 directive|define
 name|PCIC_MEM_MAPPED
 value|0x00000002
+comment|/* ExCA registers mem mapped */
+define|#
+directive|define
+name|PCIC_VG_POWER
+value|0x00000004
+comment|/* Uses VG power regs */
+define|#
+directive|define
+name|PCIC_DF_POWER
+value|0x00000008
+comment|/* Uses DF step regs  */
+define|#
+directive|define
+name|PCIC_PD_POWER
+value|0x00000010
+comment|/* Uses CL-PD regs  */
+define|#
+directive|define
+name|PCIC_KING_POWER
+value|0x00000020
+comment|/* Uses IBM KING regs  */
+define|#
+directive|define
+name|PCIC_AB_POWER
+value|0x00000040
+comment|/* Use old A/B step power */
 name|int
 name|iorid
 decl_stmt|;

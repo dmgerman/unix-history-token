@@ -149,40 +149,97 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_struct
 specifier|static
+struct|struct
+block|{
+specifier|const
 name|char
 modifier|*
+name|name
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+block|}
 name|bridges
 index|[]
 init|=
 block|{
+block|{
 literal|"Intel i82365SL-A/B"
 block|,
+name|PCIC_AB_POWER
+block|}
+block|,
+block|{
 literal|"IBM PCIC"
 block|,
+name|PCIC_AB_POWER
+block|}
+block|,
+block|{
 literal|"VLSI 82C146"
 block|,
+name|PCIC_AB_POWER
+block|}
+block|,
+block|{
 literal|"Cirrus logic 672x"
 block|,
+name|PCIC_PD_POWER
+block|}
+block|,
+block|{
 literal|"Cirrus logic 6710"
 block|,
+name|PCIC_PD_POWER
+block|}
+block|,
+block|{
 literal|"Vadem 365"
 block|,
+name|PCIC_VG_POWER
+block|}
+block|,
+block|{
 literal|"Vadem 465"
 block|,
+name|PCIC_VG_POWER
+block|}
+block|,
+block|{
 literal|"Vadem 468"
 block|,
+name|PCIC_VG_POWER
+block|}
+block|,
+block|{
 literal|"Vadem 469"
 block|,
+name|PCIC_VG_POWER
+block|}
+block|,
+block|{
 literal|"Ricoh RF5C396"
 block|,
-literal|"IBM KING PCMCIA Controller"
-block|,
-literal|"Intel i82365SL-DF"
+name|PCIC_AB_POWER
 block|}
-decl_stmt|;
-end_decl_stmt
+block|,
+block|{
+literal|"IBM KING"
+block|,
+name|PCIC_KING_POWER
+block|}
+block|,
+block|{
+literal|"Intel i82365SL-DF"
+block|,
+name|PCIC_DF_POWER
+block|}
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Read a register from the PCIC.  */
@@ -1013,7 +1070,25 @@ name|sp
 operator|->
 name|controller
 index|]
+operator|.
+name|name
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator|=
+name|bridges
+index|[
+operator|(
+name|int
+operator|)
+name|sp
+operator|->
+name|controller
+index|]
+operator|.
+name|flags
 expr_stmt|;
 comment|/* 		 *	OK it seems we have a PCIC or lookalike. 		 *	Allocate a slot and initialise the data structures. 		 */
 name|validslots
