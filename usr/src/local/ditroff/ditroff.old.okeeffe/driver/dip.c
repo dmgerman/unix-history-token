@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.11	(Berkeley)	84/06/01  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.12	(Berkeley)	85/10/29  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
@@ -4924,7 +4924,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	getfontdata ( font, size )  |  | Results:	returns the family number of the font/size found.  The font  |		information pointer, fs, is set to point to data for "font"  |		at point size "size".  If no information for that font is  |		available, the info is read in from the appropriate font file.  |		The table "fontdata" holds all the fonts, and it is cleared  |		of a random font/size if necessary.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	getfontdata ( font, size )  |  | Results:	returns the family number of the font/size found.  If the  |		particular point size requested is not found, other sizes are  |		searched for.  The font information pointer, fs, is set to  |		point to data for "font" at point size "size".  If no infor-  |		mation for that font is available, the info is read in from  |		the appropriate font file.  The table "fontdata" holds all the  |		fonts, and it is cleared of a random font/size if necessary.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5102,7 +5102,20 @@ name|cdp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* open font file */
+name|bitbase
+operator|=
+name|s
+expr_stmt|;
+comment|/* try to open font file - if unsuccessful, hunt for */
+comment|/* a file of same style, different size to substitute */
+name|i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* direction to look in pstab (smaller first) */
+do|do
+block|{
 name|sprintf
 argument_list|(
 name|name
@@ -5118,13 +5131,10 @@ index|]
 argument_list|,
 name|pstab
 index|[
-name|s
+name|bitbase
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|fopen
@@ -5133,17 +5143,86 @@ name|name
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* File wasn't found. Try another ps */
+name|bitbase
+operator|+=
+name|i
+expr_stmt|;
+if|if
+condition|(
+name|bitbase
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* past beginning - look higher */
+name|i
+operator|=
+literal|1
+expr_stmt|;
+name|bitbase
+operator|=
+name|s
+operator|+
+name|i
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bitbase
+operator|>
+name|nsizes
+condition|)
+comment|/* past top - forget it */
+name|i
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+do|while
+condition|(
+name|fd
+operator|==
+name|NULL
+operator|&&
+name|i
+operator|!=
+literal|0
+condition|)
+do|;
+if|if
+condition|(
+name|fd
+operator|==
+name|NULL
+condition|)
+comment|/* completely unsuccessful */
 name|error
 argument_list|(
 name|FATAL
 argument_list|,
-literal|"can't open %s"
+literal|"can't open %s/%s.%d"
 argument_list|,
-name|name
+name|bitdir
+argument_list|,
+name|fontname
+index|[
+name|f
+index|]
+argument_list|,
+name|pstab
+index|[
+name|s
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* check for proper file mark */
