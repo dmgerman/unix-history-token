@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbareg.h	4.5	%G%	*/
+comment|/*	mbareg.h	4.6	%G%	*/
 end_comment
 
 begin_comment
@@ -709,6 +709,10 @@ name|mi_slave
 decl_stmt|;
 comment|/* slave to controller (TM03/TU16) */
 name|short
+name|mi_dk
+decl_stmt|;
+comment|/* driver number for iostat */
+name|short
 name|mi_alive
 decl_stmt|;
 comment|/* device exists */
@@ -716,10 +720,6 @@ name|short
 name|mi_type
 decl_stmt|;
 comment|/* driver specific unit type */
-name|short
-name|mi_dk
-decl_stmt|;
-comment|/* driver number for iostat */
 name|struct
 name|buf
 name|mi_tab
@@ -804,36 +804,6 @@ literal|4
 index|]
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mba_info
-name|mbinit
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* blanks for filling mba_info */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nummba
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Values for flags; normally MH_NOSEEK will be set when there is  * only a single drive on an massbus.  */
@@ -1041,6 +1011,61 @@ name|mi
 parameter_list|)
 value|((mi)->mi_mba->mba_drv[0].mbd_as = 1<< (mi)->mi_drive)
 end_define
+
+begin_comment
+comment|/*  * Kernel definitions related to mba.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_extern
+extern|extern	Xmba0int(
+end_extern
+
+begin_operator
+unit|)
+operator|,
+end_operator
+
+begin_expr_stmt
+name|Xmba1int
+argument_list|()
+operator|,
+name|Xmba2int
+argument_list|()
+operator|,
+name|Xmba3int
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mba_info
+name|mbinit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* blanks for filling mba_info */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nummba
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
