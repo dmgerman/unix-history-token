@@ -570,6 +570,7 @@ argument_list|,
 name|u_int8_t
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
@@ -588,6 +589,7 @@ argument_list|,
 name|u_int16_t
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|4
 case|:
@@ -663,6 +665,7 @@ argument_list|,
 name|u_int8_t
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
@@ -683,6 +686,7 @@ argument_list|,
 name|u_int16_t
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|4
 case|:
@@ -753,6 +757,7 @@ argument_list|,
 name|ldbu
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
@@ -773,6 +778,7 @@ argument_list|,
 name|ldwu
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|4
 case|:
@@ -852,6 +858,7 @@ argument_list|,
 name|stb
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
@@ -874,6 +881,7 @@ argument_list|,
 name|stw
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|4
 case|:
