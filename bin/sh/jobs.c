@@ -632,9 +632,9 @@ name|fcntl
 argument_list|(
 name|ttyfd
 argument_list|,
-name|FD_CLOEXEC
+name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 operator|<
 literal|0
