@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.4 1993/11/08 22:10:50 wollman Exp $"
+literal|"$Id: ifconfig.c,v 1.5 1994/01/10 18:01:52 ats Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1267,6 +1267,33 @@ operator|==
 name|NEXTARG
 condition|)
 block|{
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ifconfig: '%s' requires argument.\n"
+argument_list|,
+name|p
+operator|->
+name|c_name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 call|(
 modifier|*
 name|p
@@ -3528,7 +3555,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: bad value\n"
+literal|"ifconfig: %s: bad value\n"
 argument_list|,
 name|s
 argument_list|)
