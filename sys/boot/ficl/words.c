@@ -8788,6 +8788,11 @@ argument_list|(
 name|pVM
 argument_list|)
 decl_stmt|;
+name|dictCheckThreshold
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|dictAppendWord2
 argument_list|(
 name|dp
