@@ -5537,6 +5537,15 @@ block|{
 case|case
 name|SS_NOP
 case|:
+name|action_string
+operator|=
+literal|"No Recovery Action Needed"
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|SS_RETRY
 case|:
