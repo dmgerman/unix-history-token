@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.135 (Berkeley) %G%"
+literal|"@(#)conf.c	8.89.1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6482,6 +6482,8 @@ end_endif
 begin_decl_stmt
 name|int
 name|optopt
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -6493,6 +6495,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|optarg
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
