@@ -1256,7 +1256,6 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1393,7 +1392,6 @@ name|dest
 operator|=
 name|word
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1506,7 +1504,6 @@ operator|=
 name|word
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2241,9 +2238,7 @@ parameter_list|)
 name|device_t
 name|dev
 decl_stmt|;
-block|{
-return|return;
-block|}
+block|{  }
 end_function
 
 begin_comment
@@ -2509,7 +2504,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2598,7 +2592,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3737,7 +3730,6 @@ name|rl_idx
 operator|=
 name|idx
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3806,7 +3798,6 @@ name|segs
 operator|->
 name|ds_addr
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6794,7 +6785,6 @@ name|rl_rx_prodidx
 operator|=
 name|i
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7040,7 +7030,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7107,7 +7096,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7607,7 +7595,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8322,7 +8309,6 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8933,7 +8919,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9062,7 +9047,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9394,7 +9378,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9671,7 +9654,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9822,7 +9804,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
