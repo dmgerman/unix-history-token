@@ -2663,6 +2663,13 @@ block|}
 block|,
 comment|/* CIR3000 - Cirrus Logic V43 */
 block|{
+literal|0x0100440e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* CRD0001 - Cardinal MVP288IV ? */
+block|{
 literal|0x1200c31e
 block|,
 name|NULL
@@ -2768,6 +2775,13 @@ block|}
 block|,
 comment|/* SMM00C1 - Leopard 56k PnP */
 block|{
+literal|0x9012b04e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SUP1290 - Supra ? */
+block|{
 literal|0x1013b04e
 block|,
 name|NULL
@@ -2817,6 +2831,13 @@ block|}
 block|,
 comment|/* SUP2084 - SupraExpress 56i PnP */
 block|{
+literal|0x7121b04e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SUP2171 - SupraExpress 56i Sp? */
+block|{
 literal|0x8024b04e
 block|,
 name|NULL
@@ -2851,6 +2872,13 @@ name|NULL
 block|}
 block|,
 comment|/* USR0006 - USR Sportster 33.6k */
+block|{
+literal|0x11007256
+block|,
+name|NULL
+block|}
+block|,
+comment|/* USR0011 - USR ? */
 block|{
 literal|0x01017256
 block|,
@@ -2900,6 +2928,13 @@ name|NULL
 block|}
 block|,
 comment|/* USR3070 - U.S. Robotics 56K Voice INT */
+block|{
+literal|0x90307256
+block|,
+name|NULL
+block|}
+block|,
+comment|/* USR3090 - USR ? */
 block|{
 literal|0x90917256
 block|,
