@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insertln.c	5.15 (Berkeley) %G%"
+literal|"@(#)insertln.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,11 +61,6 @@ name|int
 name|y
 decl_stmt|,
 name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|end
 decl_stmt|;
 specifier|register
 name|__LINE
