@@ -1393,7 +1393,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 define|#
 directive|define
@@ -1401,14 +1401,14 @@ name|SaveCorner
 value|0
 else|#
 directive|else
-comment|/* defined(msdos) */
+comment|/* defined(MSDOS) */
 define|#
 directive|define
 name|SaveCorner
 value|1
 endif|#
 directive|endif
-comment|/* defined(msdos) */
+comment|/* defined(MSDOS) */
 define|#
 directive|define
 name|DoAttribute
@@ -1479,7 +1479,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 if|if
 condition|(
@@ -1499,7 +1499,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 name|upper
 operator|=
 operator|&
@@ -2092,15 +2092,8 @@ name|defined
 argument_list|(
 name|SLOWSCREEN
 argument_list|)
-name|bzero
+name|ClearArray
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|Terminal
-argument_list|,
-sizeof|sizeof
 name|Terminal
 argument_list|)
 expr_stmt|;
@@ -2584,15 +2577,8 @@ name|defined
 argument_list|(
 name|SLOWSCREEN
 argument_list|)
-name|bzero
+name|ClearArray
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|Terminal
-argument_list|,
-sizeof|sizeof
 name|Terminal
 argument_list|)
 expr_stmt|;
@@ -2675,13 +2661,15 @@ name|defined
 argument_list|(
 name|SLOWSCREEN
 argument_list|)
-name|bzero
+name|memset
 argument_list|(
 name|Terminal
 operator|+
 name|LINES
 operator|/
 literal|2
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 sizeof|sizeof
