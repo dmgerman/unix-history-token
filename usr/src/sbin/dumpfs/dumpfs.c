@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	2.5 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1060,9 +1060,9 @@ name|lseek
 argument_list|(
 literal|0
 argument_list|,
-literal|1
-argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
