@@ -1417,17 +1417,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KEF_USER
-value|0x00200
-end_define
-
-begin_comment
-comment|/* Process is not officially in the kernel */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|KEF_DIDRUN
 value|0x02000
 end_define
@@ -1956,10 +1945,6 @@ name|int
 name|p_suspcount
 decl_stmt|;
 comment|/* (j) # threads in suspended mode */
-name|int
-name|p_userthreads
-decl_stmt|;
-comment|/* (j) # threads in userland */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
