@@ -320,7 +320,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {	\ 		printf("%s:%d: " fmt "\n", __func__, __LINE__ , ##args);	\ 	} while (0)
+value|do {								\ 		printf("%s:%d: " fmt "\n", __func__, __LINE__, ##args);	\ 	} while (0)
 end_define
 
 begin_else
@@ -358,7 +358,8 @@ parameter_list|)
 block|{
 name|DPRINT
 argument_list|(
-literal|"sbfull, cc(%ld)>= hiwat(%ld): %d, mbcnt(%ld)>= mbmax(%ld): %d"
+literal|"sbfull, cc(%ld)>= hiwat(%ld): %d, "
+literal|"mbcnt(%ld)>= mbmax(%ld): %d"
 argument_list|,
 name|sb
 operator|->
@@ -508,13 +509,11 @@ name|cmp
 operator|==
 literal|'\0'
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -534,13 +533,11 @@ operator|+
 name|offset
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 name|offset
 operator|=
@@ -659,13 +656,11 @@ name|cmp
 operator|==
 literal|'\0'
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -685,13 +680,11 @@ operator|+
 name|offset
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 name|offset
 operator|=
@@ -719,7 +712,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {	\ 		sptr = str;	\ 		slen = sizeof(str) - 1;	\ 	} while(0)
+value|do {								\ 		sptr = str;						\ 		slen = sizeof(str) - 1;					\ 	} while(0)
 end_define
 
 begin_function
@@ -1140,6 +1133,7 @@ block|{
 case|case
 literal|' '
 case|:
+comment|/* tabs? '\t' */
 if|if
 condition|(
 operator|!
@@ -1173,11 +1167,17 @@ default|default:
 if|if
 condition|(
 name|spaces
-operator|==
+operator|!=
 literal|2
 condition|)
 block|{
-comment|/* make sure we have enough data left */
+name|inspaces
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* 					 * if we don't have enough characters 					 * left (cc< sizeof("HTTP/1.0") - 1) 					 * then see if the remaining ones 					 * are a request we can parse. 					 */
 if|if
 condition|(
 name|cc
@@ -1210,7 +1210,7 @@ condition|)
 block|{
 name|DPRINT
 argument_list|(
-literal|"mbufstrncmp ok"
+literal|"ok"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1221,7 +1221,7 @@ else|else
 block|{
 name|DPRINT
 argument_list|(
-literal|"mbufstrncmp bad"
+literal|"bad"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1242,8 +1242,6 @@ name|i
 argument_list|,
 literal|"HTTP/1.0"
 argument_list|)
-operator|==
-literal|1
 operator|||
 name|mbufstrcmp
 argument_list|(
@@ -1255,13 +1253,11 @@ name|i
 argument_list|,
 literal|"HTTP/1.1"
 argument_list|)
-operator|==
-literal|1
 condition|)
 block|{
 name|DPRINT
 argument_list|(
-literal|"mbufstrcmp ok"
+literal|"ok"
 argument_list|)
 expr_stmt|;
 name|soishttpconnected
@@ -1279,19 +1275,13 @@ else|else
 block|{
 name|DPRINT
 argument_list|(
-literal|"mbufstrcmp bad"
+literal|"bad"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|fallout
 goto|;
 block|}
-block|}
-name|inspaces
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 block|}
 block|}
 block|}
