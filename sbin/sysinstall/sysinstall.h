@@ -607,6 +607,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|Link
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|from
+operator|,
+name|char
+operator|*
+name|to
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|CopyFile
 name|__P
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.2 1994/10/26 05:41:02 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.3 1994/10/29 10:01:37 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -69,11 +69,35 @@ directive|include
 file|"sysinstall.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|char
+name|msg
+index|[]
+init|=
+literal|" You are now done with the first phase of the installation.  We will, for now, dump you rather unceremoniously into a shell where you can then ftp, SLIP, DOS floppy or carrier pigeon the bindist over.  This will NOT be so unfriendly in the BETA installation, and will lead instead to a menu offering you various helpful ways of getting the bindist.  This is all we had time for in the ALPHA, however.  Sorry! Thank you for your patience!"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|stage5
 parameter_list|()
 block|{
+name|dialog_msgbox
+argument_list|(
+name|TITLE
+argument_list|,
+name|msg
+argument_list|,
+literal|7
+argument_list|,
+literal|75
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|end_dialog
 argument_list|()
 expr_stmt|;

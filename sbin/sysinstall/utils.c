@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.13 1994/10/29 10:01:40 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.15 1994/11/01 10:10:43 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -837,6 +837,52 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|Link
+parameter_list|(
+name|char
+modifier|*
+name|from
+parameter_list|,
+name|char
+modifier|*
+name|to
+parameter_list|)
+block|{
+name|TellEm
+argument_list|(
+literal|"ln %s %s"
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|link
+argument_list|(
+name|from
+argument_list|,
+name|to
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Fatal
+argument_list|(
+literal|"Couldn't create link: %s -> %s\n"
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -41,78 +41,65 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|char
 modifier|*
 name|welcome
 index|[]
 init|=
 block|{
-literal|"View 'READ ME FIRST' File."
+literal|"1. README"
+block|,
+literal|"View `READ ME FIRST' File."
+block|,
+literal|"2. COPYRIGHT"
 block|,
 literal|"View FreeBSD Copyright Information."
 block|,
+literal|"3. Proceed"
+block|,
 literal|"Proceed with installation."
 block|,
-literal|"Repair existing installation ('fixit' mode)."
+literal|"4. Fixit"
+block|,
+literal|"Repair existing installation (`fixit' mode)."
+block|,
+literal|"5. Exit"
 block|,
 literal|"Exit to shell."
 block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|bailout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|stage0
 parameter_list|()
 block|{
-name|int
-name|valid
-init|=
-literal|0
-decl_stmt|;
+name|evil_goto
+label|:
 if|if
 condition|(
-operator|!
-name|access
-argument_list|(
-name|README_FILE
-argument_list|,
-name|R_OK
-argument_list|)
-condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|dialog_textbox
-argument_list|(
-literal|"READ ME FIRST"
-argument_list|,
-name|README_FILE
-argument_list|,
-literal|24
-argument_list|,
-literal|80
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
-do|do
-block|{
-if|if
-condition|(
-operator|!
 name|dialog_menu
 argument_list|(
 literal|"Welcome to FreeBSD!"
 argument_list|,
-literal|"Please select one of the following options.\n"
+literal|"Please select one of the following options:"
 argument_list|,
-literal|10
+literal|15
 argument_list|,
 literal|75
 argument_list|,
-literal|5
+literal|6
 argument_list|,
 literal|5
 argument_list|,
@@ -121,20 +108,11 @@ argument_list|,
 name|selection
 argument_list|)
 condition|)
-name|valid
-operator|=
-literal|1
-expr_stmt|;
-name|dialog_clear
+block|{
+name|bailout
 argument_list|()
 expr_stmt|;
 block|}
-do|while
-condition|(
-operator|!
-name|valid
-condition|)
-do|;
 switch|switch
 condition|(
 name|atoi
@@ -172,7 +150,13 @@ argument_list|,
 literal|80
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 block|}
+goto|goto
+name|evil_goto
+goto|;
 break|break;
 case|case
 literal|2
@@ -203,7 +187,13 @@ argument_list|,
 literal|80
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 block|}
+goto|goto
+name|evil_goto
+goto|;
 break|break;
 case|case
 literal|3
@@ -226,18 +216,38 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+goto|goto
+name|evil_goto
+goto|;
 break|break;
 case|case
 literal|5
 case|:
+name|bailout
+argument_list|()
+expr_stmt|;
+break|break;
+comment|/* hope not! :) */
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|bailout
+parameter_list|()
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* hope not! :) */
-block|}
 block|}
 end_function
 
