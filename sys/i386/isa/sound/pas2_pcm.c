@@ -6,7 +6,7 @@ name|_PAS2_PCM_C_
 end_define
 
 begin_comment
-comment|/*  * sound/pas2_pcm.c  *  * The low level driver for the Pro Audio Spectrum ADC/DAC.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/pas2_pcm.c  *  * The low level driver for the Pro Audio Spectrum ADC/DAC.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * pas2_pcm.c,v 1.7 1994/10/01 02:16:57 swallace Exp  */
 end_comment
 
 begin_include
@@ -267,7 +267,7 @@ argument_list|(
 name|FILTER_FREQUENCY
 argument_list|)
 expr_stmt|;
-comment|/*  * Set anti-aliasing filters according to sample rate. You really *NEED*  * to enable this feature for all normal recording unless you want to  * experiment with aliasing effects.  * These filters apply to the selected "recording" source.  * I (pfw) don't know the encoding of these 5 bits. The values shown  * come from the SDK found on ftp.uwp.edu:/pub/msdos/proaudio/. */
+comment|/*  * Set anti-aliasing filters according to sample rate. You really *NEED*  * to enable this feature for all normal recording unless you want to  * experiment with aliasing effects.  * These filters apply to the selected "recording" source.  * I (pfw) don't know the encoding of these 5 bits. The values shown  * come from the SDK found on ftp.uwp.edu:/pub/msdos/proaudio/.  */
 if|#
 directive|if
 operator|!
@@ -1596,6 +1596,9 @@ name|hw_config
 operator|->
 name|dma
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_AUTODMA
 name|audio_devs
 index|[
 name|my_devnum
@@ -1605,6 +1608,29 @@ name|buffcount
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|audio_devs
+index|[
+name|my_devnum
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DMA_AUTOMODE
+expr_stmt|;
+name|audio_devs
+index|[
+name|my_devnum
+index|]
+operator|->
+name|buffcount
+operator|=
+name|DSP_BUFFCOUNT
+expr_stmt|;
+endif|#
+directive|endif
 name|audio_devs
 index|[
 name|my_devnum

@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * tuning.h,v 1.2 1994/08/02 07:41:00 davidg Exp  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

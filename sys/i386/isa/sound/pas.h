@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * pas.h,v 1.6 1994/10/01 12:42:17 ache Exp  */
+end_comment
+
+begin_comment
 comment|/* 																*/
 end_comment
 

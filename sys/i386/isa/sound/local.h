@@ -4,7 +4,7 @@ comment|/* for FreeBSD */
 end_comment
 
 begin_comment
-comment|/*  * local.h,v 1.11 1994/11/01 17:26:50 ache Exp  */
+comment|/*  * $Id: local.h,v 1.11 1994/11/01 17:26:50 ache Exp  */
 end_comment
 
 begin_include
@@ -122,21 +122,21 @@ begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_BY
-value|"smpatel"
+value|"freebsd-hackers"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_HOST
-value|"xi.dorm.umd.edu"
+value|"freebsd.org"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_CONFIG_DOMAIN
-value|"dorm.umd.edu"
+value|"freebsd.org"
 end_define
 
 begin_comment
@@ -458,6 +458,12 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
+name|EXCLUDE_GUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|EXCLUDE_GUS16
 end_undef
 
@@ -512,12 +518,6 @@ directive|undef
 name|EXCLUDE_SBPRO
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|EXCLUDE_SB
-end_undef
-
 begin_endif
 endif|#
 directive|endif
@@ -533,12 +533,6 @@ begin_undef
 undef|#
 directive|undef
 name|EXCLUDE_SB16
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|EXCLUDE_SB
 end_undef
 
 begin_endif

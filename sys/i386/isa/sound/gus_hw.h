@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * gus_hw.h,v 1.3 1994/08/02 07:39:54 davidg Exp  */
+end_comment
+
+begin_comment
 comment|/*  * I/O addresses  */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/gus_wave.c  *  * Driver for the Gravis UltraSound wave table synth.  *  * Copyright by Hannu Savolainen 1993, 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/gus_wave.c  *  * Driver for the Gravis UltraSound wave table synth.  *  * Copyright by Hannu Savolainen 1993, 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: gus_wave.c,v 1.11 1995/01/04 20:07:27 pst Exp $  */
 end_comment
 
 begin_include
@@ -20,6 +20,24 @@ include|#
 directive|include
 file|"gus_hw.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|OUTB
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OUTB
+parameter_list|(
+name|val
+parameter_list|,
+name|port
+parameter_list|)
+value|outb(port, val)
+end_define
 
 begin_if
 if|#
@@ -3538,8 +3556,6 @@ comment|/* This disables writes to IRQ/DMA reg */
 name|gusintr
 argument_list|(
 literal|0
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Serve pending interrupts */
@@ -12032,6 +12048,26 @@ else|else
 block|{
 comment|/* 	 * ASIC not detected so the card must be 2.2 or 2.4. 	 * There could still be the 16-bit/mixer daughter card. 	 * It has the same codec/mixer than MAX. 	 * At this time there is no support for it but it will appear soon. 	 */
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printk
+argument_list|(
+literal|"snd4:<Gravis UltraSound %s (%dk)>"
+argument_list|,
+name|model_num
+argument_list|,
+operator|(
+name|int
+operator|)
+name|gus_mem_size
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* __FreeBSD__ */
 name|printk
 argument_list|(
 literal|"<Gravis UltraSound %s (%dk)>"
@@ -12046,6 +12082,9 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 ifndef|#
 directive|ifndef
 name|SCO
@@ -12207,6 +12246,9 @@ name|dmachan
 operator|=
 name|dma
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_AUTODMA
 name|audio_devs
 index|[
 name|gus_devnum
@@ -12216,6 +12258,29 @@ name|buffcount
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|audio_devs
+index|[
+name|gus_devnum
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DMA_AUTOMODE
+expr_stmt|;
+name|audio_devs
+index|[
+name|gus_devnum
+index|]
+operator|->
+name|buffcount
+operator|=
+name|DSP_BUFFCOUNT
+expr_stmt|;
+endif|#
+directive|endif
 name|audio_devs
 index|[
 name|gus_devnum
@@ -12441,6 +12506,11 @@ case|case
 name|LMODE_PCM
 case|:
 block|{
+name|int
+name|orig_qlen
+init|=
+name|pcm_qlen
+decl_stmt|;
 name|int
 name|flag
 decl_stmt|;

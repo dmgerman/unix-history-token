@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * sb.h,v 1.2 1994/08/02 07:40:34 davidg Exp  */
+end_comment
+
 begin_define
 define|#
 directive|define

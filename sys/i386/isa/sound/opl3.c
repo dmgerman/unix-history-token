@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/opl3.c  *  * A low level driver for Yamaha YM3812 and OPL-3 -chips  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/opl3.c  *  * A low level driver for Yamaha YM3812 and OPL-3 -chips  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * opl3.c,v 1.7 1994/10/01 02:16:50 swallace Exp  */
 end_comment
 
 begin_comment
-comment|/*  * Major improvements to the FM handling 30AUG92 by Rob Hooft,  */
-end_comment
-
-begin_comment
-comment|/*  * hooft@chem.ruu.nl  */
+comment|/*  * Major improvements to the FM handling 30AUG92 by Rob Hooft,  * hooft@chem.ruu.nl  */
 end_comment
 
 begin_include
@@ -4904,11 +4900,23 @@ condition|(
 name|opl3_enabled
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printk
+argument_list|(
+literal|"snd1:<Yamaha OPL-3 FM>"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printk
 argument_list|(
 literal|"<Yamaha OPL-3 FM>"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fm_model
 operator|=
 literal|2
@@ -4990,6 +4998,7 @@ name|ioaddr
 operator|=
 name|right_address
 expr_stmt|;
+comment|/* Enable OPL-3 mode */
 name|opl3_command
 argument_list|(
 name|right_address
@@ -4999,7 +5008,7 @@ argument_list|,
 name|OPL3_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Enable 									 * OPL-3 									 * mode 									 */
+comment|/* Select all 2-OP voices */
 name|opl3_command
 argument_list|(
 name|right_address
@@ -5009,15 +5018,26 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Select 									 * all 									 * 2-OP 									 * * 									 * voices 									 */
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printk
+argument_list|(
+literal|"snd1:<Yamaha 2-OP FM>"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printk
 argument_list|(
 literal|"<Yamaha 2-OP FM>"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fm_model
 operator|=
 literal|1

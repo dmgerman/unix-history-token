@@ -6,7 +6,7 @@ name|_PAS2_CARD_C_
 end_define
 
 begin_comment
-comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * pas2_card.c,v 1.11 1994/10/01 12:42:17 ache Exp  */
 end_comment
 
 begin_include
@@ -74,6 +74,14 @@ begin_decl_stmt
 specifier|static
 name|char
 name|pas_model
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|char
+name|board_rev_id
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +163,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The Revision D cards have a problem with their MVA508 interface. The  * kludge-o-rama fix is to make a 16-bit quantity with identical LSB and  * MSBs out of the output byte and to do a 16-bit out to the mixer port -  * 1. We need to do this because there was access problems, not timing  * problems.  */
+comment|/*  * The Revision D cards have a problem with their MVA508 interface. The  * kludge-o-rama fix is to make a 16-bit quantity with identical LSB and  * MSBs out of the output byte and to do a 16-bit out to the mixer port -  * 1.  */
 end_comment
 
 begin_function
@@ -1101,6 +1109,13 @@ name|hw_config
 argument_list|)
 condition|)
 block|{
+name|board_rev_id
+operator|=
+name|pas_read
+argument_list|(
+name|BOARD_REV_ID
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pas_model
@@ -1111,6 +1126,27 @@ name|CHIP_REV
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printk
+argument_list|(
+literal|"snd3:<%s rev %d>"
+argument_list|,
+name|pas_model_names
+index|[
+operator|(
+name|int
+operator|)
+name|pas_model
+index|]
+argument_list|,
+name|board_rev_id
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* __FreeBSD__ */
 name|printk
 argument_list|(
 literal|"<%s rev %d>"
@@ -1129,6 +1165,9 @@ name|BOARD_REV_ID
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 if|if
 condition|(

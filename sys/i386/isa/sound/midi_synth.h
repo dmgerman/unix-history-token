@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * midi_synth.h,v 1.2 1994/10/01 02:16:47 swallace Exp  */
+end_comment
+
 begin_function_decl
 name|int
 name|midi_synth_ioctl
