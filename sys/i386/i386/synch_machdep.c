@@ -100,8 +100,6 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
-block|,
 literal|"All mutexes queue head"
 block|,
 name|TAILQ_HEAD_INITIALIZER

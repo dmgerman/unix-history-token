@@ -259,13 +259,10 @@ name|mtx_lock
 decl_stmt|;
 comment|/* lock owner/gate/flags */
 specifier|volatile
-name|u_short
+name|u_int
 name|mtx_recurse
 decl_stmt|;
 comment|/* number of recursive holds */
-name|u_short
-name|mtx_f1
-decl_stmt|;
 name|u_int
 name|mtx_savefl
 decl_stmt|;
@@ -313,6 +310,7 @@ argument|mtx
 argument_list|)
 name|mtx_held
 expr_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mtx_file
@@ -471,6 +469,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Wrap the following functions with cpp macros so that filenames and line  * numbers are embedded in the code correctly.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -489,7 +491,7 @@ end_if
 
 begin_function_decl
 name|void
-name|mtx_enter
+name|_mtx_enter
 parameter_list|(
 name|mtx_t
 modifier|*
@@ -497,13 +499,21 @@ name|mtxp
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|mtx_try_enter
+name|_mtx_try_enter
 parameter_list|(
 name|mtx_t
 modifier|*
@@ -511,13 +521,21 @@ name|mtxp
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|mtx_exit
+name|_mtx_exit
 parameter_list|(
 name|mtx_t
 modifier|*
@@ -525,6 +543,14 @@ name|mtxp
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -533,6 +559,45 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|mtx_enter
+parameter_list|(
+name|mtxp
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|_mtx_enter((mtxp), (type), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_try_enter
+parameter_list|(
+name|mtxp
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|_mtx_try_enter((mtxp), (type), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_exit
+parameter_list|(
+name|mtxp
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|_mtx_exit((mtxp), (type), __FILE__, __LINE__)
+end_define
 
 begin_comment
 comment|/* Global locks */
@@ -925,7 +990,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|char * __CONCAT(n, __wf);					\ 	int __CONCAT(n, __wl)
+value|const char * __CONCAT(n, __wf);					\ 	int __CONCAT(n, __wl)
 end_define
 
 begin_define
@@ -1003,6 +1068,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1083,6 +1149,7 @@ parameter_list|(
 name|mtx_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1100,6 +1167,7 @@ parameter_list|(
 name|mtx_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1311,7 +1379,7 @@ value|\ "	cmpl	%%eax,%3;"
 comment|/* already have it? */
 value|\ "	je	2f;"
 comment|/* yes, recurse */
-value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:	lock; orl $" _V(MTX_RECURSE) ",%1;"				\ "	incw	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "=&a" (_res),
+value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:	lock; orl $" _V(MTX_RECURSE) ",%1;"				\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "=&a" (_res),
 comment|/* 0 (dummy output) */
 value|\ 	  "+m" (mtxp->mtx_lock),
 comment|/* 1 */
@@ -1471,7 +1539,7 @@ value|\ "	pushl	%3;"							\ "	pushl	%4;"							\ "	call	mtx_exit_hard;"
 comment|/* mtx_exit_hard(mtxp,type) */
 value|\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\
 comment|/* lock recursed, lower recursion level */
-value|\ "3:	decw	%1;"
+value|\ "3:	decl	%1;"
 comment|/* one less level */
 value|\ "	jnz	1f;"
 comment|/* still recursed, done */
@@ -1509,7 +1577,7 @@ name|inten1
 parameter_list|,
 name|inten2
 parameter_list|)
-value|({				\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movw	%1,%%ax;"						\ "	decw	%%ax;"							\ "	js	1f;"							\ "	movw	%%ax,%1;"						\ "	jmp	2f;"							\ "1:	movl	%0,%%eax;"						\ "	movl	$ " _V(MTX_UNOWNED) ",%%ecx;"				\ "	" inten1 ";"							\ "	" MPLOCKED ""							\ "	cmpxchgl %%ecx,%0;"				  		\ "	" inten2 ";"							\ "2:"									\ "# exitlock_spin"							\ 	: "+m" (mtxp->mtx_lock),
+value|({				\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	%1,%%eax;"						\ "	decl	%%eax;"							\ "	js	1f;"							\ "	movl	%%eax,%1;"						\ "	jmp	2f;"							\ "1:	movl	%0,%%eax;"						\ "	movl	$ " _V(MTX_UNOWNED) ",%%ecx;"				\ "	" inten1 ";"							\ "	" MPLOCKED ""							\ "	cmpxchgl %%ecx,%0;"				  		\ "	" inten2 ";"							\ "2:"									\ "# exitlock_spin"							\ 	: "+m" (mtxp->mtx_lock),
 comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_recurse),
 comment|/* 1 */
@@ -1768,7 +1836,7 @@ name|char
 name|STR_mtx_owned
 index|[]
 init|=
-literal|"mtx_owned(_mpp)"
+literal|"mtx_owned(mpp)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1777,7 +1845,7 @@ name|char
 name|STR_mtx_recurse
 index|[]
 init|=
-literal|"_mpp->mtx_recurse == 0"
+literal|"mpp->mtx_recurse == 0"
 decl_stmt|;
 end_decl_stmt
 
@@ -1860,7 +1928,7 @@ end_comment
 begin_function
 name|_MTX_INLINE
 name|void
-name|mtx_enter
+name|_mtx_enter
 parameter_list|(
 name|mtx_t
 modifier|*
@@ -1868,11 +1936,19 @@ name|mtxp
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|mtx_t
 modifier|*
-name|_mpp
+name|mpp
 init|=
 name|mtxp
 decl_stmt|;
@@ -1920,14 +1996,14 @@ block|{
 comment|/* 				 * Check for recursion, if we already 				 * have this lock we just bump the 				 * recursion count. 				 */
 if|if
 condition|(
-name|_mpp
+name|mpp
 operator|->
 name|mtx_lock
 operator|==
 name|CURTHD
 condition|)
 block|{
-name|_mpp
+name|mpp
 operator|->
 name|mtx_recurse
 operator|++
@@ -1966,7 +2042,7 @@ argument_list|()
 expr_stmt|;
 name|_getlock_norecurse
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,
@@ -1982,7 +2058,7 @@ else|else
 block|{
 name|_getlock_spin_block
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,
@@ -1998,7 +2074,7 @@ block|}
 else|else
 name|_getlock_norecurse
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,
@@ -2023,7 +2099,7 @@ name|MTX_RLIKELY
 condition|)
 name|_getlock_sleep
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,
@@ -2037,7 +2113,7 @@ expr_stmt|;
 else|else
 name|_getlock_norecurse
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,
@@ -2057,7 +2133,7 @@ condition|)
 do|;
 name|WITNESS_ENTER
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|type
 argument_list|)
@@ -2068,23 +2144,17 @@ name|KTR_LOCK
 argument_list|,
 name|STR_mtx_enter_fmt
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_description
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_recurse
 argument_list|)
@@ -2099,7 +2169,7 @@ end_comment
 begin_function
 name|_MTX_INLINE
 name|int
-name|mtx_try_enter
+name|_mtx_try_enter
 parameter_list|(
 name|mtx_t
 modifier|*
@@ -2107,24 +2177,32 @@ name|mtxp
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|mtx_t
 modifier|*
 specifier|const
-name|_mpp
+name|mpp
 init|=
 name|mtxp
 decl_stmt|;
 name|int
-name|_rval
+name|rval
 decl_stmt|;
-name|_rval
+name|rval
 operator|=
 name|atomic_cmpset_int
 argument_list|(
 operator|&
-name|_mpp
+name|mpp
 operator|->
 name|mtx_lock
 argument_list|,
@@ -2138,11 +2216,9 @@ directive|ifdef
 name|SMP_DEBUG
 if|if
 condition|(
-name|_rval
+name|rval
 operator|&&
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_witness
 operator|!=
@@ -2151,9 +2227,7 @@ condition|)
 block|{
 name|ASS
 argument_list|(
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_recurse
 operator|==
@@ -2162,13 +2236,13 @@ argument_list|)
 expr_stmt|;
 name|witness_try_enter
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|type
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -2180,25 +2254,21 @@ name|KTR_LOCK
 argument_list|,
 name|STR_mtx_try_enter_fmt
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_description
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|,
-name|_rval
+name|rval
 argument_list|)
 expr_stmt|;
 return|return
-name|_rval
+name|rval
 return|;
 block|}
 end_function
@@ -2218,7 +2288,7 @@ end_comment
 begin_function
 name|_MTX_INLINE
 name|void
-name|mtx_exit
+name|_mtx_exit
 parameter_list|(
 name|mtx_t
 modifier|*
@@ -2226,12 +2296,20 @@ name|mtxp
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|mtx_t
 modifier|*
 specifier|const
-name|_mpp
+name|mpp
 init|=
 name|mtxp
 decl_stmt|;
@@ -2239,7 +2317,7 @@ name|MPASS2
 argument_list|(
 name|mtx_owned
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|)
 argument_list|,
 name|STR_mtx_owned
@@ -2247,7 +2325,7 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_EXIT
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|type
 argument_list|)
@@ -2258,23 +2336,17 @@ name|KTR_LOCK
 argument_list|,
 name|STR_mtx_exit_fmt
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_description
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 argument_list|,
-name|__FILE__
+name|file
 argument_list|,
-name|__LINE__
+name|line
 argument_list|,
-operator|(
-name|_mpp
-operator|)
+name|mpp
 operator|->
 name|mtx_recurse
 argument_list|)
@@ -2299,7 +2371,7 @@ condition|)
 block|{
 name|MPASS2
 argument_list|(
-name|_mpp
+name|mpp
 operator|->
 name|mtx_recurse
 operator|==
@@ -2311,11 +2383,11 @@ expr_stmt|;
 name|atomic_cmpset_int
 argument_list|(
 operator|&
-name|_mpp
+name|mpp
 operator|->
 name|mtx_lock
 argument_list|,
-name|_mpp
+name|mpp
 operator|->
 name|mtx_lock
 argument_list|,
@@ -2353,7 +2425,7 @@ block|}
 else|else
 name|write_eflags
 argument_list|(
-name|_mpp
+name|mpp
 operator|->
 name|mtx_savefl
 argument_list|)
@@ -2372,7 +2444,7 @@ name|MTX_TOPHALF
 condition|)
 name|_exitlock_spin
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,,)
 expr_stmt|;
 else|else
@@ -2390,7 +2462,7 @@ name|ASS_IDIS
 expr_stmt|;
 name|_exitlock_spin
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,,
 literal|"sti"
 argument_list|)
@@ -2400,7 +2472,7 @@ else|else
 block|{
 name|_exitlock_spin
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 literal|"pushl %3"
 argument_list|,
@@ -2424,7 +2496,7 @@ name|MTX_RLIKELY
 condition|)
 name|_exitlock
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,
@@ -2439,7 +2511,7 @@ else|else
 block|{
 name|_exitlock_norecurse
 argument_list|(
-name|_mpp
+name|mpp
 argument_list|,
 name|CURTHD
 argument_list|,

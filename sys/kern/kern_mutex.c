@@ -147,6 +147,7 @@ name|char
 modifier|*
 name|w_description
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|w_file
@@ -1751,6 +1752,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -3889,6 +3891,7 @@ name|mtx_t
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -3928,6 +3931,7 @@ name|mtx_t
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
