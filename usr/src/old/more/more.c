@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.22 (Berkeley) 85/02/21"
+literal|"@(#)more.c	4.23 (Berkeley) 85/04/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -1002,6 +1002,12 @@ block|{
 if|if
 condition|(
 operator|(
+name|Home
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 operator|*
 name|Home
 operator|==
@@ -1009,10 +1015,22 @@ literal|'\0'
 operator|)
 operator|||
 operator|(
+name|eraseln
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 operator|*
 name|eraseln
 operator|==
 literal|'\0'
+operator|)
+operator|||
+operator|(
+name|EodClr
+operator|==
+name|NULL
 operator|)
 operator|||
 operator|(
