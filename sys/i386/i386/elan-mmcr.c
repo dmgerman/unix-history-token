@@ -333,17 +333,12 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_SOEKRIS
 name|char
 name|tmp
 index|[
 literal|10
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|SYSCTL_OUT
