@@ -387,6 +387,10 @@ name|gid_t
 name|de_gid
 decl_stmt|;
 name|struct
+name|label
+name|de_label
+decl_stmt|;
+name|struct
 name|timespec
 name|de_atime
 decl_stmt|;
