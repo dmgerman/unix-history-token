@@ -147,6 +147,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sem_timedwait
+parameter_list|(
+name|sem_t
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sem_trywait
 parameter_list|(
 name|sem_t
