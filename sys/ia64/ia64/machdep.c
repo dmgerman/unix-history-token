@@ -3107,10 +3107,6 @@ name|struct
 name|sigacts
 modifier|*
 name|psp
-init|=
-name|p
-operator|->
-name|p_sigacts
 decl_stmt|;
 name|struct
 name|sigframe
@@ -3129,6 +3125,17 @@ name|oonstack
 decl_stmt|,
 name|rndfsize
 decl_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|psp
+operator|=
+name|p
+operator|->
+name|p_sigacts
+expr_stmt|;
 name|frame
 operator|=
 name|p
@@ -3621,6 +3628,11 @@ operator|-
 name|rndfsize
 operator|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3719,6 +3731,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIGACTION
 argument_list|(
 name|p
@@ -3753,6 +3770,11 @@ operator|->
 name|p_sigmask
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|psignal
@@ -3849,6 +3871,11 @@ index|]
 operator|=
 name|sig
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
@@ -3921,6 +3948,11 @@ name|FRAME_R15
 index|]
 operator|=
 name|code
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|frame
 operator|->
@@ -4439,6 +4471,11 @@ name|mcp
 operator|->
 name|mc_sp
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -4493,6 +4530,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX ksc.sc_ownedfp ? */
