@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.51 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3626,23 +3626,13 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|)
-end_block
-
-begin_expr_stmt
 name|m
 operator|->
 name|m_mtstype
 operator|=
 literal|"Internet"
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* enter the mailer into the symbol table */
-end_comment
-
-begin_expr_stmt
 name|s
 operator|=
 name|stab
@@ -3656,9 +3646,6 @@ argument_list|,
 name|ST_ENTER
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|s
@@ -3692,9 +3679,6 @@ name|NextMailer
 operator|++
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|Mailer
 index|[
 name|i
@@ -3706,50 +3690,41 @@ name|s_mailer
 operator|=
 name|m
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|m
 operator|->
 name|m_mno
 operator|=
 name|i
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  MUNCHSTRING -- translate a string into internal form. ** **	Parameters: **		p -- the string to munch. **		delimptr -- if non-NULL, set to the pointer of the **			field delimiter character. ** **	Returns: **		the munched string. */
 end_comment
 
-begin_expr_stmt
-unit|char
-operator|*
+begin_function
+name|char
+modifier|*
 name|munchstring
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|delimptr
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|delimptr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -3927,7 +3902,7 @@ name|buf
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
