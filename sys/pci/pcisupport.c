@@ -6608,7 +6608,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|-
-literal|100
+literal|10000
 return|;
 comment|/* Low match priority */
 block|}
@@ -7942,7 +7942,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|-
-literal|100
+literal|10000
 return|;
 comment|/* Low match priority */
 block|}
