@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xinstall.c,v 1.4 1995/10/09 07:21:00 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,29 +620,6 @@ expr_stmt|;
 comment|/* get group and owner id's */
 if|if
 condition|(
-name|group
-operator|&&
-operator|!
-operator|(
-name|gp
-operator|=
-name|getgrnam
-argument_list|(
-name|group
-argument_list|)
-operator|)
-condition|)
-name|errx
-argument_list|(
-name|EX_NOUSER
-argument_list|,
-literal|"unknown group %s"
-argument_list|,
-name|group
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|owner
 operator|&&
 operator|!
@@ -662,6 +639,29 @@ argument_list|,
 literal|"unknown user %s"
 argument_list|,
 name|owner
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|group
+operator|&&
+operator|!
+operator|(
+name|gp
+operator|=
+name|getgrnam
+argument_list|(
+name|group
+argument_list|)
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_NOUSER
+argument_list|,
+literal|"unknown group %s"
+argument_list|,
+name|group
 argument_list|)
 expr_stmt|;
 name|no_target
