@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.5 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
