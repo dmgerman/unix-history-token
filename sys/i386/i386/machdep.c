@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_directio.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"opt_perfmon.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_swap.h"
 end_include
 
 begin_include
@@ -560,6 +572,31 @@ end_endif
 
 begin_comment
 comment|/* CPU_ENABLE_SSE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIRECTIO
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|ffs_rawread_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DIRECTIO */
 end_comment
 
 begin_macro
@@ -1617,6 +1654,29 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NSWBUF_MIN
+if|if
+condition|(
+name|nswbuf
+operator|<
+name|NSWBUF_MIN
+condition|)
+name|nswbuf
+operator|=
+name|NSWBUF_MIN
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DIRECTIO
+name|ffs_rawread_setup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|valloc
 argument_list|(
 name|swbuf
