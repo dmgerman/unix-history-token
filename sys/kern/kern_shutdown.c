@@ -2294,8 +2294,6 @@ argument_list|(
 literal|"Waiting (max %d seconds) for system process `%s' to stop..."
 argument_list|,
 name|kproc_shutdown_wait
-operator|*
-name|hz
 argument_list|,
 name|p
 operator|->
@@ -2309,6 +2307,8 @@ argument_list|(
 name|p
 argument_list|,
 name|kproc_shutdown_wait
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 if|if
