@@ -241,9 +241,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|endwin
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -251,12 +248,12 @@ argument_list|,
 literal|"\nAutosizing is impossible in dialog_textbox().\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|search_term
 index|[
@@ -284,9 +281,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|endwin
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -296,12 +290,12 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Get file size. Actually, 'file_size' is the real file size - 1,      since it's only the last byte offset from the beginning */
 if|if
@@ -323,9 +317,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|endwin
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -333,12 +324,12 @@ argument_list|,
 literal|"\nError getting file size in dialog_textbox().\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Restore file pointer to beginning of file after getting file size */
 if|if
@@ -356,9 +347,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|endwin
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -366,12 +354,12 @@ argument_list|,
 literal|"\nError moving file pointer in dialog_textbox().\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* Allocate space for read buffer */
 if|if
@@ -426,9 +414,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|endwin
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -436,12 +421,12 @@ argument_list|,
 literal|"\nError reading file in dialog_textbox().\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|buf
 index|[
