@@ -220,14 +220,6 @@ case|:
 comment|/* Get enhanced keystroke */
 if|if
 condition|(
-operator|!
-name|raw_kbd
-condition|)
-name|sleep_poll
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|KbdEmpty
 argument_list|()
 condition|)
