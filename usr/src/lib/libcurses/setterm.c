@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	8.4 (Berkeley) %G%"
+literal|"@(#)setterm.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,6 +26,16 @@ end_endif
 
 begin_comment
 comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_comment
+comment|/* TIOCGWINSZ on old systems. */
 end_comment
 
 begin_include
