@@ -1,10 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)mbuf.h	7.10 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mbuf.h	7.11 (Berkeley) %G%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_WAITOK
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Constants related to network buffer management.  * Mbufs are of a single size, MSIZE, which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES,  * which has no additional overhead and is used instead of the internal  * data area; this is done when at least MINCLSIZE of data must be stored.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
 end_comment
 
 begin_comment
-comment|/*  * Constants related to memory allocator.  */
+comment|/* BEGIN SHOULD MOVE TO MACHINE-SPECIFIC FILE (machparam.h) */
 end_comment
 
 begin_define
@@ -17,6 +38,12 @@ end_define
 begin_comment
 comment|/* size of an mbuf */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAPPED_MBUFS
+end_define
 
 begin_if
 if|#
@@ -78,46 +105,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MMINOFF
-value|12
-end_define
-
-begin_comment
-comment|/* mbuf header length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTAIL
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|MMAXOFF
-value|(MSIZE-MTAIL)
-end_define
-
-begin_comment
-comment|/* offset where data ends */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MLEN
-value|(MSIZE-MMINOFF-MTAIL)
-end_define
-
-begin_comment
-comment|/* mbuf data length */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -148,48 +135,69 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* END SHOULD MOVE TO MACHINE-SPECIFIC FILE (machparam.h) */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|NMBPCL
-value|(CLBYTES/MSIZE)
+name|MLEN
+value|(MSIZE - sizeof(struct m_hdr))
 end_define
 
 begin_comment
-comment|/* # mbufs per cluster */
-end_comment
-
-begin_comment
-comment|/*  * Macros for type conversion  */
-end_comment
-
-begin_comment
-comment|/* network cluster number to virtual address, and back */
+comment|/* normal data len */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|cltom
+name|MHLEN
+value|(MLEN - sizeof(struct pkthdr))
+end_define
+
+begin_comment
+comment|/* data len w/pkthdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINCLSIZE
+value|(MHLEN + MLEN)
+end_define
+
+begin_comment
+comment|/* smallest amount to put in cluster */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MAXCOMPRESS
+value|(MHLEN / 2)
+end_define
+
+begin_comment
+comment|/* max amount to copy for compression */
+end_comment
+
+begin_comment
+comment|/*  * Macros for type conversion  * mtod(m,t) -	convert mbuf pointer to data pointer of correct type  * dtom(x) -	convert data pointer within mbuf to mbuf pointer (XXX)  * mtocl(x) -	convert pointer within cluster to cluster index #  * cltom(x) -	convert cluster # to ptr to beginning of cluster  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtod
 parameter_list|(
-name|x
+name|m
+parameter_list|,
+name|t
 parameter_list|)
-value|((struct mbuf *)((int)mbutl + ((x)<< MCLSHIFT)))
+value|((t)((m)->m_data))
 end_define
-
-begin_define
-define|#
-directive|define
-name|mtocl
-parameter_list|(
-name|x
-parameter_list|)
-value|(((int)x - (int)mbutl)>> MCLSHIFT)
-end_define
-
-begin_comment
-comment|/* address in mbuf to mbuf head */
-end_comment
 
 begin_define
 define|#
@@ -201,60 +209,316 @@ parameter_list|)
 value|((struct mbuf *)((int)x& ~(MSIZE-1)))
 end_define
 
-begin_comment
-comment|/* mbuf head, to typed data */
-end_comment
+begin_define
+define|#
+directive|define
+name|mtocl
+parameter_list|(
+name|x
+parameter_list|)
+value|(((u_int)x - (u_int)mbutl)>> MCLSHIFT)
+end_define
 
 begin_define
 define|#
 directive|define
-name|mtod
+name|cltom
 parameter_list|(
 name|x
-parameter_list|,
-name|t
 parameter_list|)
-value|((t)((int)(x) + (x)->m_off))
+value|((caddr_t)mbutl[x])
 end_define
+
+begin_comment
+comment|/* header at beginning of each mbuf: */
+end_comment
+
+begin_struct
+struct|struct
+name|m_hdr
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|mh_next
+decl_stmt|;
+comment|/* next buffer in chain */
+name|struct
+name|mbuf
+modifier|*
+name|mh_nextpkt
+decl_stmt|;
+comment|/* next chain in queue/record */
+name|int
+name|mh_len
+decl_stmt|;
+comment|/* amount of data in this mbuf */
+name|caddr_t
+name|mh_data
+decl_stmt|;
+comment|/* location of data */
+name|short
+name|mh_type
+decl_stmt|;
+comment|/* type of data in this mbuf */
+name|short
+name|mh_flags
+decl_stmt|;
+comment|/* flags; see below */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* record/packet header in first mbuf of chain; valid if M_PKTHDR set */
+end_comment
+
+begin_struct
+struct|struct
+name|pkthdr
+block|{
+name|int
+name|len
+decl_stmt|;
+comment|/* total packet length */
+name|struct
+name|ifnet
+modifier|*
+name|rcvif
+decl_stmt|;
+comment|/* rcv interface */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* description of external storage mapped into mbuf, valid if M_EXT set */
+end_comment
+
+begin_struct
+struct|struct
+name|m_ext
+block|{
+name|caddr_t
+name|ext_buf
+decl_stmt|;
+comment|/* start of buffer */
+name|void
+function_decl|(
+modifier|*
+name|ext_free
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* free routine if not the usual */
+name|u_int
+name|ext_size
+decl_stmt|;
+comment|/* size of buffer, for ext_free */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
 name|mbuf
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|m_next
+name|m_hdr
+name|m_hdr
 decl_stmt|;
-comment|/* next buffer in chain */
-name|u_long
-name|m_off
+union|union
+block|{
+struct|struct
+block|{
+name|struct
+name|pkthdr
+name|MH_pkthdr
 decl_stmt|;
-comment|/* offset of data */
-name|short
-name|m_len
+comment|/* M_PKTHDR set */
+union|union
+block|{
+name|struct
+name|m_ext
+name|MH_ext
 decl_stmt|;
-comment|/* amount of data in this mbuf */
-name|short
-name|m_type
+comment|/* M_EXT set */
+name|char
+name|MH_databuf
+index|[
+name|MHLEN
+index|]
 decl_stmt|;
-comment|/* mbuf type (0 == free) */
-name|u_char
-name|m_dat
+block|}
+name|MH_dat
+union|;
+block|}
+name|MH
+struct|;
+name|char
+name|M_databuf
 index|[
 name|MLEN
 index|]
 decl_stmt|;
-comment|/* data storage */
-name|struct
-name|mbuf
-modifier|*
-name|m_act
-decl_stmt|;
-comment|/* link in higher-level mbuf list */
+comment|/* !M_PKTHDR, !M_EXT */
+block|}
+name|M_dat
+union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|m_next
+value|m_hdr.mh_next
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_len
+value|m_hdr.mh_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_data
+value|m_hdr.mh_data
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_type
+value|m_hdr.mh_type
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_flags
+value|m_hdr.mh_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_nextpkt
+value|m_hdr.mh_nextpkt
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_act
+value|m_nextpkt
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_pkthdr
+value|M_dat.MH.MH_pkthdr
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_ext
+value|M_dat.MH.MH_dat.MH_ext
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_pktdat
+value|M_dat.MH.MH_dat.MH_databuf
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_dat
+value|M_dat.M_databuf
+end_define
+
+begin_comment
+comment|/* mbuf flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_EXT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* has associated external storage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PKTHDR
+value|0x0002
+end_define
+
+begin_comment
+comment|/* start of record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_EOR
+value|0x0004
+end_define
+
+begin_comment
+comment|/* end of record */
+end_comment
+
+begin_comment
+comment|/* mbuf pkthdr flags, also in m_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BCAST
+value|0x0100
+end_define
+
+begin_comment
+comment|/* send/received as link-level broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MCAST
+value|0x0200
+end_define
+
+begin_comment
+comment|/* send/received as link-level multicast */
+end_comment
+
+begin_comment
+comment|/* flags copied when copying m_pkthdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COPYFLAGS
+value|(M_PKTHDR|M_EOR|M_BCAST|M_MCAST)
+end_define
 
 begin_comment
 comment|/* mbuf types */
@@ -403,71 +667,49 @@ begin_comment
 comment|/* interface address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MT_CONTROL
+value|14
+end_define
+
 begin_comment
-comment|/* flags to m_get */
+comment|/* extra-data protocol message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_OOBDATA
+value|15
+end_define
+
+begin_comment
+comment|/* expedited data  */
+end_comment
+
+begin_comment
+comment|/* flags to m_get/MGET */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|M_DONTWAIT
-value|0
+value|M_NOWAIT
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_WAIT
-value|1
+value|M_WAITOK
 end_define
 
 begin_comment
-comment|/* flags to m_pgalloc */
+comment|/*  * mbuf allocation/deallocation macros:  *  *	MGET(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain internal data.  *  *	MGETHDR(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain a packet header  * and internal data.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MPG_MBUFS
-value|0
-end_define
-
-begin_comment
-comment|/* put new mbufs on free list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPG_CLUSTERS
-value|1
-end_define
-
-begin_comment
-comment|/* put new clusters on free list */
-end_comment
-
-begin_comment
-comment|/* length to m_copy to copy all */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_COPYALL
-value|1000000000
-end_define
-
-begin_comment
-comment|/*  * m_pullup will pull up additional length if convenient;  * should be enough to hold headers of second-level and higher protocols.   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPULL_EXTRA
-value|32
-end_define
 
 begin_define
 define|#
@@ -476,49 +718,61 @@ name|MGET
 parameter_list|(
 name|m
 parameter_list|,
-name|i
+name|how
 parameter_list|,
-name|t
+name|type
 parameter_list|)
-define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_type != MT_FREE) panic("mget"); (m)->m_type = t; \ 		  mbstat.m_mtypes[MT_FREE]--; mbstat.m_mtypes[t]++; \ 		  mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i, t); \ 	  splx(ms); }
+value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 	} else \ 		(m) = m_retry((how), (type)); \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MGETHDR
+parameter_list|(
+name|m
+parameter_list|,
+name|how
+parameter_list|,
+name|type
+parameter_list|)
+value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 	} else \ 		(m) = m_retryhdr((how), (type)); \ }
 end_define
 
 begin_comment
-comment|/*  * Mbuf page cluster macros.  * MCLALLOC allocates mbuf page clusters.  * Note that it works only with a count of 1 at the moment.  * It must be called at splimp.  * MCLGET adds such clusters to a normal mbuf.  * m->m_len is set to MCLBYTES upon success, and to MLEN on failure.  * MCLFREE frees clusters allocated by MCLALLOC.  */
+comment|/*  * Mbuf cluster macros.  * MCLALLOC(caddr_t p, int how) allocates an mbuf cluster.  * MCLGET adds such clusters to a normal mbuf;  * the flag M_EXT is set upon success.  * MCLFREE releases a reference to a cluster allocated by MCLALLOC,  * freeing the cluster if the reference count has reached 0.  *  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
 end_comment
+
+begin_union
+union|union
+name|mcluster
+block|{
+name|union
+name|mcluster
+modifier|*
+name|mcl_next
+decl_stmt|;
+name|char
+name|mcl_buf
+index|[
+name|MCLBYTES
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_define
 define|#
 directive|define
 name|MCLALLOC
 parameter_list|(
-name|m
+name|p
 parameter_list|,
-name|i
+name|how
 parameter_list|)
 define|\
-value|{ if ((m)=mclfree) \ 	     {++mclrefcnt[mtocl(m)];mbstat.m_clfree--;mclfree = (m)->m_next;} \ 	}
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_HASCL
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_off>= MSIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTOCL
-parameter_list|(
-name|m
-parameter_list|)
-value|((struct mbuf *)(mtod((m), int)&~ MCLOFSET))
+value|{ int ms = splimp(); \ 		(void)m_clalloc(1, (how)); \ 	  if ((p) = (caddr_t)mclfree) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	  splx(ms); \ 	}
 end_define
 
 begin_define
@@ -527,9 +781,11 @@ directive|define
 name|MCLGET
 parameter_list|(
 name|m
+parameter_list|,
+name|how
 parameter_list|)
 define|\
-value|{ struct mbuf *p; \ 	  int ms = splimp(); \ 	  MCLALLOC(p, 1); \ 	  if (p) { \ 		(m)->m_off = (int)p - (int)(m); \ 		(m)->m_len = MCLBYTES; \ 	  } else \ 		(m)->m_len = MLEN; \ 	  splx(ms); \ 	}
+value|{ MCLALLOC((m)->m_ext.ext_buf, (how)); \ 	  if ((m)->m_ext.ext_buf != NULL) { \ 		(m)->m_data = (m)->m_ext.ext_buf; \ 		(m)->m_flags |= M_EXT; \ 		(m)->m_ext.ext_size = MCLBYTES;  \ 	  } \ 	  splx(ms); \ 	}
 end_define
 
 begin_define
@@ -537,10 +793,21 @@ define|#
 directive|define
 name|MCLFREE
 parameter_list|(
-name|m
+name|p
 parameter_list|)
-value|{ \ 	if (--mclrefcnt[mtocl(m)] == 0) \ 	    { (m)->m_next = mclfree;mclfree = (m);mbstat.m_clfree++;} \ 	}
+define|\
+value|{ int ms = splimp(); \ 	  if (--mclrefcnt[mtocl(p)] == 0) { \ 		((union mcluster *)(p))->mcl_next = mclfree; \ 		mclfree = (union mcluster *)(p); \ 		mbstat.m_clfree++; \ 	  } \ 	  splx(ms); \ 	}
 end_define
+
+begin_comment
+comment|/*  * MFREE(struct mbuf *m, struct mbuf *n)  * Free a single mbuf and associated external storage.  * Place the successor, if any, in n.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
 
 begin_define
 define|#
@@ -552,7 +819,161 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_type = MT_FREE; \ 	  if (M_HASCL(m)) { \ 		(n) = MTOCL(m); \ 		MCLFREE(n); \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); \ 	  splx(ms); \ 	  if (m_want) { \ 		  m_want = 0; \ 		  wakeup((caddr_t)&mfree); \ 	  } \ 	}
+value|{ mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 			    (m)->m_ext.ext_size); \ 		else \ 			MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (n) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFREE
+parameter_list|(
+name|m
+parameter_list|,
+name|nn
+parameter_list|)
+define|\
+value|{ mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (nn) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Copy mbuf pkthdr from from to to.  * from must have M_PKTHDR set, and to must be empty.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COPY_PKTHDR
+parameter_list|(
+name|to
+parameter_list|,
+name|from
+parameter_list|)
+value|{ \ 	(to)->m_pkthdr = (from)->m_pkthdr; \ 	(to)->m_flags = (from)->m_flags& M_COPYFLAGS; \ 	(to)->m_data = (to)->m_pktdat; \ }
+end_define
+
+begin_comment
+comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place  * an object of the specified size at the end of the mbuf, longword aligned.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|{ (m)->m_data += (MLEN - (len))&~ (sizeof(long) - 1); }
+end_define
+
+begin_comment
+comment|/*  * As above, for mbufs allocated with m_gethdr/MGETHDR  * or initialized by M_COPY_PKTHDR.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MH_ALIGN
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|{ (m)->m_data += (MHLEN - (len))&~ (sizeof(long) - 1); }
+end_define
+
+begin_comment
+comment|/*  * Compute the amount of space available  * before the current start of data in an mbuf.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LEADINGSPACE
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|((m)->m_flags& M_EXT ?
+comment|/* (m)->m_data - (m)->m_ext.ext_buf */
+value|0 : \ 	    (m)->m_flags& M_PKTHDR ? (m)->m_data - (m)->m_pktdat : \ 	    (m)->m_data - (m)->m_dat)
+end_define
+
+begin_comment
+comment|/*  * Compute the amount of space available  * after the end of data in an mbuf.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TRAILINGSPACE
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|((m)->m_flags& M_EXT ? (m)->m_ext.ext_buf + (m)->m_ext.ext_size - \ 	    ((m)->m_data + (m)->m_len) : \&(m)->m_dat[MLEN] - ((m)->m_data + (m)->m_len))
+end_define
+
+begin_comment
+comment|/*  * Arrange to prepend space of size plen to mbuf m.  * If a new mbuf must be allocated, how specifies whether to wait.  * If how is M_DONTWAIT and allocation fails, the original mbuf chain  * is freed and m is set to NULL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PREPEND
+parameter_list|(
+name|m
+parameter_list|,
+name|plen
+parameter_list|,
+name|how
+parameter_list|)
+value|{ \ 	if (M_LEADINGSPACE(m)>= (plen)) { \ 		(m)->m_data -= (plen); \ 		(m)->m_len += (plen); \ 	} else \ 		(m) = m_prepend((m), (plen), (how)); \ 	if ((m)&& (m)->m_flags& M_PKTHDR) \ 		(m)->m_pkthdr.len += (plen); \ }
+end_define
+
+begin_comment
+comment|/* change mbuf to new type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCHTYPE
+parameter_list|(
+name|m
+parameter_list|,
+name|t
+parameter_list|)
+value|{ \ 	mbstat.m_mtypes[(m)->m_type]--; \ 	mbstat.m_mtypes[t]++; \ 	(m)->m_type = t;\ }
+end_define
+
+begin_comment
+comment|/* length to m_copy to copy all */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COPYALL
+value|1000000000
 end_define
 
 begin_comment
@@ -610,15 +1031,17 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mbuf
+name|char
 name|mbutl
 index|[]
+index|[
+name|MCLBYTES
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* virtual address of net free mem */
+comment|/* virtual address of mclusters */
 end_comment
 
 begin_decl_stmt
@@ -631,7 +1054,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* page tables to map Netutl */
+comment|/* page tables to map mbutl */
 end_comment
 
 begin_decl_stmt
@@ -652,7 +1075,12 @@ name|struct
 name|mbuf
 modifier|*
 name|mfree
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|union
+name|mcluster
 modifier|*
 name|mclfree
 decl_stmt|;
@@ -664,16 +1092,52 @@ name|mclrefcnt
 index|[
 name|NMBCLUSTERS
 operator|+
-literal|1
+name|CLBYTES
+operator|/
+name|MCLBYTES
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|m_want
+name|max_linkhdr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* largest link-level header */
+end_comment
+
+begin_decl_stmt
+name|int
+name|max_protohdr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* largest protocol header */
+end_comment
+
+begin_decl_stmt
+name|int
+name|max_hdr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* largest link+protocol header */
+end_comment
+
+begin_decl_stmt
+name|int
+name|max_datalen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MHLEN - max_hdr */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -683,15 +1147,28 @@ name|m_get
 argument_list|()
 decl_stmt|,
 modifier|*
+name|m_gethdr
+argument_list|()
+decl_stmt|,
+modifier|*
 name|m_getclr
 argument_list|()
 decl_stmt|,
 modifier|*
-name|m_free
+name|m_retry
 argument_list|()
 decl_stmt|,
 modifier|*
-name|m_more
+name|m_retryhdr
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_free
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -701,15 +1178,97 @@ decl_stmt|,
 modifier|*
 name|m_pullup
 argument_list|()
+decl_stmt|,
+modifier|*
+name|m_prepend
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|caddr_t
+name|int
 name|m_clalloc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mbtypes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MBTYPES
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|mbtypes
+index|[]
+init|=
+block|{
+name|M_FREE
+block|,
+comment|/* MT_FREE	0	/* should be on free list */
+name|M_MBUF
+block|,
+comment|/* MT_DATA	1	/* dynamic (data) allocation */
+name|M_MBUF
+block|,
+comment|/* MT_HEADER	2	/* packet header */
+name|M_SOCKET
+block|,
+comment|/* MT_SOCKET	3	/* socket structure */
+name|M_PCB
+block|,
+comment|/* MT_PCB	4	/* protocol control block */
+name|M_RTABLE
+block|,
+comment|/* MT_RTABLE	5	/* routing tables */
+name|M_HTABLE
+block|,
+comment|/* MT_HTABLE	6	/* IMP host tables */
+literal|0
+block|,
+comment|/* MT_ATABLE	7	/* address resolution tables */
+name|M_MBUF
+block|,
+comment|/* MT_SONAME	8	/* socket name */
+name|M_SOOPTS
+block|,
+comment|/* MT_SOOPTS	10	/* socket options */
+name|M_FTABLE
+block|,
+comment|/* MT_FTABLE	11	/* fragment reassembly header */
+name|M_MBUF
+block|,
+comment|/* MT_RIGHTS	12	/* access rights */
+name|M_IFADDR
+block|,
+comment|/* MT_IFADDR	13	/* interface address */
+name|M_MBUF
+block|,
+comment|/* MT_CONTROL	14	/* extra-data protocol message */
+name|M_MBUF
+block|,
+comment|/* MT_OOBDATA	15	/* expedited data  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
