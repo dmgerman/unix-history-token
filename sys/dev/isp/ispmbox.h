@@ -1715,11 +1715,12 @@ name|u_int32_t
 name|req_resid
 decl_stmt|;
 name|u_int8_t
-name|_res1
+name|req_response
 index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* FC only */
 name|u_int8_t
 name|req_sense_data
 index|[
@@ -1760,6 +1761,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RQCS_RESID
+value|(RQCS_RU|RQCS_RO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RQCS_SV
 value|0x200
 end_define
@@ -1776,7 +1784,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* Residual Valid */
+comment|/* FCP Response Length Valid */
 end_comment
 
 begin_comment
@@ -1793,22 +1801,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|RQCS_INCOMPLETE
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
 name|RQCS_DMA_ERROR
 value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|RQCS_TRANSPORT_ERROR
-value|0x0003
 end_define
 
 begin_define
@@ -1837,6 +1831,38 @@ define|#
 directive|define
 name|RQCS_DATA_OVERRUN
 value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQCS_DATA_UNDERRUN
+value|0x0015
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQCS_QUEUE_FULL
+value|0x001C
+end_define
+
+begin_comment
+comment|/* 1X00 Only Completion Codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RQCS_INCOMPLETE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQCS_TRANSPORT_ERROR
+value|0x0003
 end_define
 
 begin_define
@@ -1933,13 +1959,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RQCS_DATA_UNDERRUN
-value|0x0015
-end_define
-
-begin_define
-define|#
-directive|define
 name|RQCS_XACT_ERR1
 value|0x0018
 end_define
@@ -1963,13 +1982,6 @@ define|#
 directive|define
 name|RQCS_BAD_ENTRY
 value|0x001B
-end_define
-
-begin_define
-define|#
-directive|define
-name|RQCS_QUEUE_FULL
-value|0x001C
 end_define
 
 begin_define
@@ -2008,7 +2020,7 @@ value|0x0021
 end_define
 
 begin_comment
-comment|/* 2100 Only Completion Codes */
+comment|/* 2X00 Only Completion Codes */
 end_comment
 
 begin_define
@@ -2040,7 +2052,7 @@ value|0x002B
 end_define
 
 begin_comment
-comment|/*  * State Flags (not applicable to 2100)  */
+comment|/*  * 1X00 specific State Flags   */
 end_comment
 
 begin_define
@@ -2093,7 +2105,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/*  * Status Flags (not applicable to 2100)  */
+comment|/*  * 1X00 Status Flags  */
 end_comment
 
 begin_define
@@ -2151,6 +2163,74 @@ directive|define
 name|RQSTF_NEGOTIATION
 value|0x0080
 end_define
+
+begin_comment
+comment|/*  * 2X00 specific state flags  */
+end_comment
+
+begin_comment
+comment|/* RQSF_SENT_CDB	*/
+end_comment
+
+begin_comment
+comment|/* RQSF_XFRD_DATA	*/
+end_comment
+
+begin_comment
+comment|/* RQSF_GOT_STATUS	*/
+end_comment
+
+begin_comment
+comment|/* RQSF_XFER_COMPLETE	*/
+end_comment
+
+begin_comment
+comment|/*  * 2X00 specific status flags  */
+end_comment
+
+begin_comment
+comment|/* RQSTF_ABORTED */
+end_comment
+
+begin_comment
+comment|/* RQSTF_TIMEOUT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RQSTF_DMA_ERROR
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|RQSTF_LOGOUT
+value|0x2000
+end_define
+
+begin_comment
+comment|/*  * Miscellaneous  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISP_EXEC_THROTTLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISP_EXEC_THROTTLE
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * FC (ISP2100) specific data structures  */

@@ -661,7 +661,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_QAVAIL
+name|ISP_QFREE
 parameter_list|(
 name|in
 parameter_list|,
@@ -671,6 +671,17 @@ name|qlen
 parameter_list|)
 define|\
 value|((in == out)? (qlen - 1) : ((in> out)? \ 	((qlen - 1) - (in - out)) : (out - in - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_QAVAIL
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|ISP_QFREE(isp->isp_reqidx, isp->isp_reqodx, RQUEST_QUEUE_LEN(isp))
 end_define
 
 begin_define
@@ -731,9 +742,11 @@ name|isp_lvdmode
 range|:
 literal|1
 decl_stmt|,
+name|isp_fast_mttr
 range|:
 literal|1
 decl_stmt|,
+comment|/* fast sram */
 name|isp_initiator_id
 range|:
 literal|4
@@ -885,10 +898,6 @@ name|DPARM_NARROW
 value|0x0080
 end_define
 
-begin_comment
-comment|/* Possibly only available with>= 7.55 fw */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -896,9 +905,12 @@ name|DPARM_ASYNC
 value|0x0040
 end_define
 
-begin_comment
-comment|/* Possibly only available with>= 7.55 fw */
-end_comment
+begin_define
+define|#
+directive|define
+name|DPARM_PPR
+value|0x0020
+end_define
 
 begin_define
 define|#
@@ -921,14 +933,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_80M_SYNCPARMS
+value|0x0c09
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_40M_SYNCPARMS
-value|0x080a
+value|0x0c0a
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISP_20M_SYNCPARMS
+value|0x0c0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_20M_SYNCPARMS_1040
 value|0x080c
 end_define
 
@@ -1254,7 +1280,8 @@ begin_comment
 comment|/*  * Soft Structure per host adapter  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|ispsoftc
 block|{
@@ -1311,19 +1338,19 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* board ever seen? */
-name|isp_fast_mttr
 range|:
 literal|1
 decl_stmt|,
-comment|/* fast sram */
 name|isp_bustype
 range|:
 literal|1
 decl_stmt|,
 comment|/* SBus or PCI */
+name|isp_loaded_fw
 range|:
 literal|1
 decl_stmt|,
+comment|/* loaded firmware */
 name|isp_dblev
 range|:
 literal|12
@@ -1416,8 +1443,9 @@ name|u_int32_t
 name|isp_result_dma
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|ispsoftc_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
