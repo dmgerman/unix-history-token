@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.77 1997/03/02 17:53:37 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.78 1997/03/03 12:58:20 bde Exp $  */
 end_comment
 
 begin_comment
@@ -7153,17 +7153,6 @@ comment|/*  * Top level filesystem related information gathering.  */
 end_comment
 
 begin_function_decl
-specifier|extern
-name|int
-name|vfs_sysctl
-name|__P
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|sysctl_ovfs_conf
@@ -7175,6 +7164,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vfs_sysctl
 name|SYSCTL_HANDLER_ARGS
@@ -7188,12 +7178,18 @@ name|int
 operator|*
 operator|)
 name|arg1
+operator|-
+literal|1
 decl_stmt|;
+comment|/* XXX */
 name|u_int
 name|namelen
 init|=
 name|arg2
+operator|+
+literal|1
 decl_stmt|;
+comment|/* XXX */
 name|struct
 name|vfsconf
 modifier|*
@@ -7208,13 +7204,6 @@ condition|(
 name|namelen
 operator|==
 literal|1
-operator|&&
-name|name
-index|[
-literal|0
-index|]
-operator|==
-name|VFS_VFSCONF
 condition|)
 return|return
 operator|(
@@ -7232,6 +7221,9 @@ operator|)
 return|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* all sysctl names at this level are at least name and field */
 if|if
 condition|(
@@ -7292,9 +7284,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|notyet
 return|return
 operator|(
 call|(
@@ -7328,16 +7317,9 @@ name|p
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
+block|}
 endif|#
 directive|endif
-block|}
 switch|switch
 condition|(
 name|name
@@ -7450,6 +7432,24 @@ operator|)
 return|;
 block|}
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_vfs
+argument_list|,
+name|VFS_GENERIC
+argument_list|,
+name|generic
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|vfs_sysctl
+argument_list|,
+literal|"Generic filesystem"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
