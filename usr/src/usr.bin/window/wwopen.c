@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwopen.c	3.21 %G%"
+literal|"@(#)wwopen.c	3.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,9 +699,21 @@ name|flags
 operator|&
 name|WWO_REVERSE
 condition|)
+if|if
+condition|(
+name|wwavailmodes
+operator|&
+name|WWM_REV
+condition|)
 name|m
 operator||=
 name|WWM_REV
+expr_stmt|;
+else|else
+name|flags
+operator|&=
+operator|~
+name|WWO_REVERSE
 expr_stmt|;
 for|for
 control|(

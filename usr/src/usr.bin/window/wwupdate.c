@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwupdate.c	3.16 %G%"
+literal|"@(#)wwupdate.c	3.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,10 +395,6 @@ literal|1
 index|]
 operator|.
 name|c_m
-operator|&
-name|tt
-operator|.
-name|tt_availmodes
 expr_stmt|;
 name|c
 operator|=
@@ -444,15 +440,9 @@ name|j
 operator|<
 name|wwncol
 operator|&&
-operator|(
 name|ns
 operator|->
 name|c_m
-operator|&
-name|tt
-operator|.
-name|tt_availmodes
-operator|)
 operator|==
 name|m
 condition|)
