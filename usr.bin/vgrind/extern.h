@@ -25,7 +25,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|_start
+name|s_start
 decl_stmt|;
 end_decl_stmt
 
