@@ -416,22 +416,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ntfs_bmap
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_bmap_args
-operator|*
-name|ap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -461,6 +445,22 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ntfs_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+name|ap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
