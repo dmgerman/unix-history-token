@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)util.c	8.2 (Berkeley) 4/2/94";
+unit|static const char sccsid[] = "@(#)util.c	8.2 (Berkeley) 4/2/94";
 endif|#
 directive|endif
 end_endif
