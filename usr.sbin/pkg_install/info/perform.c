@@ -1045,6 +1045,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Flags
+operator|&
+name|SHOW_FMTREV
+condition|)
+name|show_fmtrev
+argument_list|(
+literal|"Packing list format revision:\n"
+argument_list|,
+operator|&
+name|plist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|Quiet
 condition|)

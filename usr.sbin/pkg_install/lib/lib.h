@@ -315,6 +315,24 @@ name|PKG_PREFIX_VNAME
 value|"PKG_PREFIX"
 end_define
 
+begin_comment
+comment|/* Version numbers to assist with changes in package file format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PLIST_FMT_VER_MAJOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLIST_FMT_VER_MINOR
+value|1
+end_define
+
 begin_enum
 enum|enum
 name|_plist_t
@@ -445,6 +463,11 @@ name|head
 decl_stmt|,
 modifier|*
 name|tail
+decl_stmt|;
+name|int
+name|fmtver_maj
+decl_stmt|,
+name|fmtver_mnr
 decl_stmt|;
 block|}
 struct|;
@@ -1331,6 +1354,24 @@ parameter_list|,
 name|Boolean
 parameter_list|,
 name|Boolean
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Version */
+end_comment
+
+begin_function_decl
+name|int
+name|verscmp
+parameter_list|(
+name|Package
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
