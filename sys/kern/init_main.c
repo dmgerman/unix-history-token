@@ -1582,7 +1582,7 @@ name|switchticks
 operator|=
 name|ticks
 expr_stmt|;
-comment|/* 	 * Give the ``random'' number generator a thump. 	 * XXX: Does read_random() contain enough bits to be used here ? 	 */
+comment|/* 	 * Give the ``random'' number generator a thump. 	 */
 name|nanotime
 argument_list|(
 operator|&
