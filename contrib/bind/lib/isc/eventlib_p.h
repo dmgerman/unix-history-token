@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Perm
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.27 1999/06/03 20:36:05 vixie Exp $  */
+comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.28 2000/02/04 08:28:34 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_define
@@ -243,17 +255,53 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|sockaddr
-name|la
+name|sa
 decl_stmt|;
+name|struct
+name|sockaddr_in
+name|in
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
+name|struct
+name|sockaddr_un
+name|un
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|la
+union|;
 name|int
 name|lalen
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|sockaddr
-name|ra
+name|sa
 decl_stmt|;
+name|struct
+name|sockaddr_in
+name|in
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
+name|struct
+name|sockaddr_un
+name|un
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|ra
+union|;
 name|int
 name|ralen
 decl_stmt|;

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_load.c,v 8.97 1999/10/30 03:21:35 vixie Exp $"
+literal|"$Id: db_load.c,v 8.103 2000/04/21 06:54:02 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ comment|/*  * Portions Copyright (c) 1995 by International Business Machines, In
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -921,6 +921,24 @@ block|{
 case|case
 name|Z_PRIMARY
 case|:
+comment|/* Any updates should be saved before we attempt to reload. */
+name|INSIST
+argument_list|(
+operator|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+operator|(
+name|Z_NEED_DUMP
+operator||
+name|Z_NEED_SOAUPDATE
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 case|case
 name|Z_HINT
 case|:
@@ -1008,6 +1026,12 @@ expr_stmt|;
 name|filenames
 operator|=
 name|NULL
+expr_stmt|;
+name|zp
+operator|->
+name|z_minimum
+operator|=
+name|USE_MINIMUM
 expr_stmt|;
 block|}
 name|ttl
@@ -1408,8 +1432,8 @@ name|didinclude
 operator|=
 literal|1
 expr_stmt|;
-name|errs
-operator|+=
+name|i
+operator|=
 name|db_load
 argument_list|(
 name|buf
@@ -1422,6 +1446,19 @@ name|domain
 argument_list|,
 name|ISNOTIXFR
 argument_list|)
+expr_stmt|;
+name|errs
+operator|+=
+operator|(
+name|i
+operator|==
+operator|-
+literal|1
+operator|)
+condition|?
+literal|1
+else|:
+name|i
 expr_stmt|;
 continue|continue;
 case|case
@@ -3421,7 +3458,7 @@ name|n
 expr_stmt|;
 if|if
 condition|(
-name|default_ttl
+name|ttl
 operator|==
 name|USE_MINIMUM
 condition|)
@@ -3476,6 +3513,10 @@ name|ERRTO
 argument_list|(
 literal|"SOA \")\""
 argument_list|)
+expr_stmt|;
+name|multiline
+operator|=
+literal|0
 expr_stmt|;
 name|endline
 argument_list|(
@@ -4719,7 +4760,20 @@ name|NULL
 decl_stmt|;
 name|int
 name|ret
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|ttl
+operator|==
+name|USE_MINIMUM
+condition|)
+comment|/* no ttl set */
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
+name|ret
+operator|=
 name|parse_sec_rdata
 argument_list|(
 name|buf
@@ -4755,7 +4809,7 @@ argument_list|,
 operator|&
 name|errmsg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -4938,6 +4992,17 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|ttl
+operator|==
+name|USE_MINIMUM
+condition|)
+comment|/* no ttl set */
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
 name|dp
 operator|=
 name|savedata
@@ -5276,6 +5341,29 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|errs
+operator|+=
+name|purge_nonglue
+argument_list|(
+name|zp
+operator|->
+name|z_origin
+argument_list|,
+operator|(
+name|dataflags
+operator|&
+name|DB_F_HINT
+operator|)
+condition|?
+name|fcachetab
+else|:
+name|hashtab
+argument_list|,
+name|zp
+operator|->
+name|z_class
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|filenames
@@ -5478,7 +5566,7 @@ name|err
 operator|==
 name|CNAMEANDOTHER
 condition|)
-name|ns_notice
+name|ns_warning
 argument_list|(
 name|ns_log_load
 argument_list|,
@@ -9710,15 +9798,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
-name|la
-operator|||
 name|wordtouint32_error
 operator|||
 literal|255
 operator|<=
 name|la
+operator|||
+operator|(
+literal|0
+operator|==
+name|la
+operator|&&
+operator|*
+name|domain
+operator|!=
+literal|'\0'
+operator|)
 condition|)
 name|ERRTO
 argument_list|(

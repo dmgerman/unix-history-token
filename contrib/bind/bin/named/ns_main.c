@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 8.117 1999/11/08 23:01:38 vixie Exp $"
+literal|"$Id: ns_main.c,v 8.125 2000/04/21 06:54:08 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -426,11 +426,22 @@ operator|*
 literal|1024
 decl_stmt|,
 comment|/* TCP snd buf size */
+ifdef|#
+directive|ifdef
+name|BROKEN_RECVFROM
+name|nudptrans
+init|=
+literal|1
+decl_stmt|,
+else|#
+directive|else
 name|nudptrans
 init|=
 literal|20
 decl_stmt|,
 comment|/* #/udps per select */
+endif|#
+directive|endif
 name|listenmax
 init|=
 literal|50
@@ -1304,7 +1315,7 @@ literal|'v'
 case|:
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -1313,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3186,6 +3197,33 @@ return|;
 block|}
 if|if
 condition|(
+name|fcntl
+argument_list|(
+name|sp
+operator|->
+name|s_rfd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|sq_remove
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SERVFAIL
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|sq_openw
 argument_list|(
 name|sp
@@ -3943,9 +3981,23 @@ name|sp
 operator|->
 name|s_buf
 argument_list|,
+operator|(
 name|sp
 operator|->
 name|s_size
+operator|<=
+name|sp
+operator|->
+name|s_bufsize
+operator|)
+condition|?
+name|sp
+operator|->
+name|s_size
+else|:
+name|sp
+operator|->
+name|s_bufsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -5066,7 +5118,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IRIX_EMUL_IOCTL_SIOCGIFCONF
-comment|/*                * This is a fix for IRIX OS in which the call to ioctl with                * the flag SIOCGIFCONF may not return an entry for all the                * interfaces like most flavors of Unix.                */
+comment|/* 		 * This is a fix for IRIX OS in which the call to ioctl with 		 * the flag SIOCGIFCONF may not return an entry for all the 		 * interfaces like most flavors of Unix. 		 */
 if|if
 condition|(
 name|emul_ioctl
@@ -6461,6 +6513,48 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|ifp
+operator|->
+name|dfd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|ns_error
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|"F_SETFD: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|ifp
+operator|->
+name|dfd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|ns_debug
 argument_list|(
 name|ns_log_default
@@ -6965,6 +7059,48 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|fcntl
+argument_list|(
+name|ifp
+operator|->
+name|sfd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|ns_error
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|"F_SETFD: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|ifp
+operator|->
+name|sfd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|ifp
@@ -7443,6 +7579,33 @@ argument_list|,
 literal|"socket too high: %d"
 argument_list|,
 name|ds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|ds
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|ns_panic
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|1
+argument_list|,
+literal|"F_SETFD: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8052,6 +8215,12 @@ operator|->
 name|flags
 operator|&
 name|STREAM_AXFR
+operator|||
+name|qp
+operator|->
+name|flags
+operator|&
+name|STREAM_AXFRIXFR
 condition|)
 name|ns_freexfr
 argument_list|(
@@ -9061,6 +9230,12 @@ operator|->
 name|flags
 operator|&
 name|STREAM_AXFR
+operator|||
+name|sp
+operator|->
+name|flags
+operator|&
+name|STREAM_AXFRIXFR
 condition|)
 name|ns_freexfr
 argument_list|(
@@ -13211,6 +13386,13 @@ name|main_need_reap
 index|]
 operator|=
 name|reapchild
+expr_stmt|;
+name|handlers
+index|[
+name|main_need_noexpired
+index|]
+operator|=
+name|ns_noexpired
 expr_stmt|;
 block|}
 end_function

@@ -63,7 +63,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.13 1999/10/13 16:39:19 vixie Exp $"
+literal|"$Id: main.c,v 8.14 2000/03/30 23:25:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,7 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Browser command for help and view.  */
+comment|/*  * Browser command for help.  */
 end_comment
 
 begin_decl_stmt

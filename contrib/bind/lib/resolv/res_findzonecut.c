@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_findzonecut.c,v 8.8 1999/10/15 19:49:11 vixie Exp $"
+literal|"$Id: res_findzonecut.c,v 8.9 1999/12/21 09:33:34 cyarnell Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1949,7 +1949,7 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|!=
+operator|<
 literal|0
 condition|)
 block|{
@@ -1966,8 +1966,6 @@ name|p_class
 argument_list|(
 name|class
 argument_list|)
-operator|,
-name|n
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1977,6 +1975,30 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"get_glue: do_query('%s', %s') CNAME or DNAME found"
+operator|,
+name|nsrr
+operator|->
+name|name
+operator|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ndc.c,v 1.13 1999/10/13 16:39:16 vixie Exp $"
+literal|"$Id: ndc.c,v 1.14 2000/02/04 08:28:32 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,10 +167,15 @@ name|struct
 name|sockaddr_in
 name|in
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 name|struct
 name|sockaddr_un
 name|un
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|sockaddr_t
 typedef|;
@@ -3414,6 +3419,9 @@ name|char
 modifier|*
 name|slash
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 if|if
 condition|(
 name|name
@@ -3487,6 +3495,8 @@ literal|'\0'
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -3503,8 +3513,48 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|*
+name|char
+modifier|*
+name|ibuf
+init|=
+name|malloc
+argument_list|(
 name|slash
+operator|-
+name|name
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ibuf
+condition|)
+name|usage
+argument_list|(
+literal|"no memory for IP address (%s)"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|ibuf
+argument_list|,
+name|name
+argument_list|,
+name|slash
+operator|-
+name|name
+argument_list|)
+expr_stmt|;
+name|ibuf
+index|[
+name|slash
+operator|-
+name|name
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3530,7 +3580,7 @@ name|inet_pton
 argument_list|(
 name|AF_INET
 argument_list|,
-name|name
+name|ibuf
 argument_list|,
 operator|&
 name|addr
@@ -3586,10 +3636,10 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-operator|*
-name|slash
-operator|=
-literal|':'
+name|free
+argument_list|(
+name|ibuf
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -3650,6 +3700,9 @@ name|sockaddr_in
 argument_list|)
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
 case|case
 name|AF_UNIX
 case|:
@@ -3662,6 +3715,8 @@ name|sockaddr_un
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 default|default:
 name|abort
 argument_list|()

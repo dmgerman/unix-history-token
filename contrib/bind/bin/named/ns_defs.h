@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.89 1999/10/07 08:24:08 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.96 2000/04/21 06:54:06 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -399,8 +399,14 @@ comment|/* exec() needed. */
 name|main_need_reap
 block|,
 comment|/* need to reap dead children */
+name|main_need_noexpired
+block|,
+comment|/* ns_reconfig() needed w/ noexpired set */
 name|main_need_num
+block|,
 comment|/* number of needs, used for array bound. */
+name|main_need_tick
+comment|/* tick every second to poll for cleanup (NT)*/
 block|}
 name|main_need
 typedef|;
@@ -523,24 +529,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OPTION_USE_IXFR
-value|0x0110
-end_define
-
-begin_comment
-comment|/* Use by delault ixfr in zone transfer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPTION_MAINTAIN_IXFR_BASE
-value|0x0120
-end_define
-
-begin_define
-define|#
-directive|define
 name|OPTION_NODIALUP
 value|0x0200
 end_define
@@ -580,6 +568,28 @@ end_define
 
 begin_comment
 comment|/* Treat CR in zone files as space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_USE_IXFR
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Use by delault ixfr in zone transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_MAINTAIN_IXFR_BASE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Part of IXFR file name logic. */
 end_comment
 
 begin_define
@@ -1038,7 +1048,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* these fields are ordered to maintain word-alignment;  * be careful about changing them.  */
+comment|/*  * These fields are ordered to maintain word-alignment;  * be careful about changing them.  */
 end_comment
 
 begin_struct
@@ -1236,11 +1246,11 @@ comment|/* tmp file for the ixfr */
 name|int
 name|z_maintain_ixfr_base
 decl_stmt|;
-name|int
-name|z_log_size_ixfr
-decl_stmt|;
-name|int
+name|long
 name|z_max_log_size_ixfr
+decl_stmt|;
+name|u_int32_t
+name|z_serial_ixfr_start
 decl_stmt|;
 name|evTimerID
 name|z_timer
@@ -1667,6 +1677,17 @@ end_define
 
 begin_comment
 comment|/* has forwarders been set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_EXPIRED
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* expire timer has gone off */
 end_comment
 
 begin_comment
@@ -2159,6 +2180,35 @@ end_endif
 begin_typedef
 typedef|typedef
 struct|struct
+name|ns_delta
+block|{
+name|LINK
+argument_list|(
+argument|struct ns_delta
+argument_list|)
+name|d_link
+expr_stmt|;
+name|ns_updque
+name|d_changes
+decl_stmt|;
+block|}
+name|ns_delta
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|LIST
+argument_list|(
+argument|ns_delta
+argument_list|)
+name|ns_deltalist
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|_interface
 block|{
 name|int
@@ -2406,8 +2456,7 @@ modifier|*
 name|axfr
 decl_stmt|;
 comment|/* top np of an AXFR. */
-name|struct
-name|ns_updrec
+name|ns_deltalist
 modifier|*
 name|ixfr
 decl_stmt|;
@@ -2568,7 +2617,7 @@ begin_define
 define|#
 directive|define
 name|STREAM_AXFRIXFR
-value|0x22
+value|0x40
 end_define
 
 begin_define
@@ -2594,6 +2643,35 @@ end_define
 
 begin_struct
 struct|struct
+name|fwddata
+block|{
+name|struct
+name|sockaddr_in
+name|fwdaddr
+decl_stmt|;
+comment|/* address of NS */
+name|struct
+name|databuf
+modifier|*
+name|ns
+decl_stmt|;
+comment|/* databuf for NS record */
+name|struct
+name|databuf
+modifier|*
+name|nsdata
+decl_stmt|;
+comment|/* databuf for server address */
+name|int
+name|ref_count
+decl_stmt|;
+comment|/* how many users of this */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|fwdinfo
 block|{
 name|struct
@@ -2602,8 +2680,9 @@ modifier|*
 name|next
 decl_stmt|;
 name|struct
-name|sockaddr_in
-name|fwdaddr
+name|fwddata
+modifier|*
+name|fwddata
 decl_stmt|;
 block|}
 struct|;
@@ -2688,6 +2767,18 @@ comment|/* sent them a non autoritative answer */
 name|nssSentNXD
 block|,
 comment|/* sent them a negative response */
+name|nssRcvdUQ
+block|,
+comment|/* sent us an unapproved query */
+name|nssRcvdURQ
+block|,
+comment|/* sent us an unapproved recursive query */
+name|nssRcvdUXFR
+block|,
+comment|/* sent us an unapproved AXFR or IXFR */
+name|nssRcvdUUpd
+block|,
+comment|/* sent us an unapproved update */
 name|nssLast
 block|}
 enum|;

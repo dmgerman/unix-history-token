@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.90 1999/10/11 18:22:20 vixie Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.96 2000/04/21 06:54:06 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -591,9 +591,31 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|notify_afterload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ns_unnotify
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ns_stopnotify
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|ns_class
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1392,6 +1414,8 @@ argument_list|,
 name|int
 argument_list|,
 name|int
+argument_list|,
+name|int
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1727,6 +1751,11 @@ name|ns_reconfig
 argument_list|(
 name|void
 argument_list|)
+decl_stmt|,
+name|ns_noexpired
+argument_list|(
+name|void
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1891,6 +1920,27 @@ name|char
 modifier|*
 parameter_list|,
 name|ns_class
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|purge_nonglue
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|dname
+parameter_list|,
+name|struct
+name|hashbuf
+modifier|*
+name|htp
+parameter_list|,
+name|int
+name|class
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2832,7 +2882,7 @@ name|add_listen_on
 parameter_list|(
 name|options
 parameter_list|,
-name|u_int16_t
+name|u_short
 parameter_list|,
 name|ip_match_list
 parameter_list|)
