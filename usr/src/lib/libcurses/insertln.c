@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine performs an insert-line on the window, leaving  * (_cury,_curx) unchanged.  *  * %G% (Berkeley) @(#)insertln.c	1.1  */
+comment|/*  *	This routine performs an insert-line on the window, leaving  * (_cury,_curx) unchanged.  *  * %G% (Berkeley) @(#)insertln.c	1.2  */
 end_comment
 
 begin_macro
@@ -159,9 +159,6 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-return|return
-name|OK
-return|;
 block|}
 end_block
 
