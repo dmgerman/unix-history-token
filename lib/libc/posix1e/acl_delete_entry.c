@@ -228,6 +228,8 @@ operator|.
 name|acl_entry
 index|[
 name|i
+operator|+
+literal|1
 index|]
 expr_stmt|;
 comment|/* ...drop the count and zero the unused entry... */
