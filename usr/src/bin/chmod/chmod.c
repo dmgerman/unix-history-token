@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	8.2 (Berkeley) %G%"
+literal|"@(#)chmod.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,7 +204,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HRfhrwx"
+literal|"HRXfghorstuwx"
 argument_list|)
 operator|)
 operator|!=
@@ -212,9 +212,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -241,7 +238,7 @@ break|break;
 case|case
 literal|'f'
 case|:
-comment|/* no longer documented */
+comment|/* XXX: no longer documented. */
 name|fflag
 operator|=
 literal|1
@@ -264,72 +261,71 @@ operator||=
 name|FTS_LOGICAL
 expr_stmt|;
 break|break;
-comment|/* 		 * "-[rwx]" are valid mode commands.  If they are the entire 		 * argument, getopt has moved past them, so decrement optind. 		 * Regardless, we're done argument processing. 		 */
+comment|/* 		 * XXX 		 * "-[rwx]" are valid mode commands.  If they are the entire 		 * argument, getopt has moved past them, so decrement optind. 		 * Regardless, we're done argument processing. 		 */
+case|case
+literal|'g'
+case|:
+case|case
+literal|'o'
+case|:
 case|case
 literal|'r'
 case|:
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|optind
-operator|-
-literal|1
-index|]
-argument_list|,
-literal|"-r"
-argument_list|)
-condition|)
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|done
-goto|;
+case|case
+literal|'s'
+case|:
+case|case
+literal|'t'
+case|:
+case|case
+literal|'u'
+case|:
 case|case
 literal|'w'
 case|:
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|optind
-operator|-
-literal|1
-index|]
-argument_list|,
-literal|"-w"
-argument_list|)
-condition|)
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|done
-goto|;
+case|case
+literal|'X'
+case|:
 case|case
 literal|'x'
 case|:
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
 name|argv
 index|[
 name|optind
 operator|-
 literal|1
 index|]
-argument_list|,
-literal|"-x"
-argument_list|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|argv
+index|[
+name|optind
+operator|-
+literal|1
+index|]
+index|[
+literal|1
+index|]
+operator|==
+name|ch
+operator|&&
+name|argv
+index|[
+name|optind
+operator|-
+literal|1
+index|]
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
 condition|)
 operator|--
 name|optind
@@ -480,12 +476,16 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|fts_read
 argument_list|(
 name|ftsp
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 switch|switch
 condition|(
