@@ -388,9 +388,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* if write command output the data */
 if|if
@@ -433,9 +431,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 name|ata_pio_write
 argument_list|(
@@ -498,9 +494,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* issue command */
 if|if
@@ -560,9 +554,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* start DMA engine */
 if|if
@@ -599,15 +591,22 @@ name|ATA_R_READ
 argument_list|)
 condition|)
 block|{
+name|ata_prtdev
+argument_list|(
+name|request
+operator|->
+name|device
+argument_list|,
+literal|"error starting DMA\n"
+argument_list|)
+expr_stmt|;
 name|request
 operator|->
 name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* return and wait for interrupt */
 return|return
@@ -682,9 +681,7 @@ name|result
 operator|=
 name|EBUSY
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* start ATAPI operation */
 if|if
@@ -724,9 +721,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* command interrupt device ? just return and wait for interrupt */
 if|if
@@ -845,9 +840,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 block|}
 comment|/* this seems to be needed for some (slow) devices */
@@ -972,9 +965,7 @@ name|result
 operator|=
 name|EBUSY
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* check sanity and setup DMA engine */
 if|if
@@ -1018,9 +1009,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* start ATAPI operation */
 if|if
@@ -1056,9 +1045,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* wait for ready to write ATAPI command block */
 block|{
@@ -1157,9 +1144,7 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 block|}
 comment|/* this seems to be needed for some (slow) devices */
@@ -1251,15 +1236,27 @@ name|result
 operator|=
 name|EIO
 expr_stmt|;
-return|return
-name|ATA_OP_FINISHED
-return|;
+break|break;
 block|}
 comment|/* return and wait for interrupt */
 return|return
 name|ATA_OP_CONTINUES
 return|;
 block|}
+comment|/* request finish here */
+name|request
+operator|->
+name|device
+operator|->
+name|channel
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 end_function
 
