@@ -10409,6 +10409,14 @@ name|suffix
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|suffix
+operator|<
+name|g
+operator|->
+name|mlen
+condition|)
 name|ssuffix
 operator|=
 name|pmatches
