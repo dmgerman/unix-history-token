@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.7	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.8	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1501,6 +1501,10 @@ name|atyp
 index|[
 name|i
 index|]
+argument_list|,
+name|q
+operator|->
+name|fno
 argument_list|)
 condition|)
 block|{
@@ -1520,7 +1524,7 @@ endif|#
 directive|endif
 argument|q->name, i+
 literal|1
-argument|); 					viceversa(q); 					} 				} 			} 		}  	if( (q->decflag&(LDI|LIB|LUV|LST))&& r.l.decflag==LUV ){ 		if( chktype(&r.l.type,&q->symty.t ) ){
+argument|); 					viceversa(q); 					} 				} 			} 		}  	if( (q->decflag&(LDI|LIB|LUV|LST))&& r.l.decflag==LUV ){ 		if( chktype(&r.l.type,&q->symty.t, q->fno ) ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1750,7 +1754,7 @@ argument|; 			} 		q->fline = r.l.fline; 		q->fno = cfno; 		if( q->nargs ){ 			in
 literal|0
 argument|,qq=&q->symty; i<q->nargs; ++i,qq=qq->next ){ 				qq->next = tget(); 				qq->next->t = atyp[i]; 				} 			} 		}  	switch( r.l.decflag ){  	case LRV: 		q->use |= RVAL; 		return; 	case LUV: 		q->use |= VUSED+USED; 		return; 	case LUE: 		q->use |= EUSED+USED; 		return;
 comment|/* 01/04/80 */
-argument|case LUV | LUE: 	case LUM: 		q->use |= USED; 		return;  		} 	}  chktype( pt1, pt2 ) register ATYPE *pt1
+argument|case LUV | LUE: 	case LUM: 		q->use |= USED; 		return;  		} 	}  chktype( pt1, pt2, fno ) register ATYPE *pt1
 argument_list|,
 argument|*pt2; { 	TWORD t;
 comment|/* check the two type words to see if they are compatible */
@@ -1764,6 +1768,16 @@ literal|0
 argument||| pt2->extra ==
 literal|0
 argument|) ) return
+literal|0
+argument|;
+comment|/* if -p and pt1 is "too big" and 		** pt1 came from a llib-l file, we can't pass judgment on it. 		*/
+argument|if ( pflag&& pt1->extra> pt2->extra&& 			strncmp(fnm[fno],
+literal|"llib-l"
+argument|,
+literal|6
+argument|) ==
+literal|0
+argument|) 				return
 literal|0
 argument|; 		return pt1->extra != pt2->extra; 		}  	if( pt2->extra ){
 comment|/* constant passed in */
