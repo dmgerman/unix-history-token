@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by David L. Nugent<davidn@blaze.net.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David L. Nugent.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DAVID L. NUGENT ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1996 by David L. Nugent<davidn@blaze.net.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David L. Nugent.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DAVID L. NUGENT ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_user.c,v 1.1.1.2 1996/12/09 23:55:10 joerg Exp $  */
 end_comment
 
 begin_include
@@ -373,6 +373,59 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+comment|/* 	 * With M_NEXT, we only need to return the 	 * next uid to stdout 	 */
+if|if
+condition|(
+name|mode
+operator|==
+name|M_NEXT
+condition|)
+block|{
+name|uid_t
+name|next
+init|=
+name|pw_uidpolicy
+argument_list|(
+name|cnf
+argument_list|,
+name|args
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'q'
+argument_list|)
+condition|)
+return|return
+name|next
+return|;
+name|printf
+argument_list|(
+literal|"%ld:"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|next
+argument_list|)
+expr_stmt|;
+name|pw_group
+argument_list|(
+name|cnf
+argument_list|,
+name|mode
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+return|return
+name|EXIT_SUCCESS
+return|;
+block|}
 comment|/* 	 * We can do all of the common legwork here 	 */
 if|if
 condition|(
@@ -390,10 +443,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|stat
-argument_list|(
 name|cnf
 operator|->
 name|home
@@ -401,6 +450,14 @@ operator|=
 name|arg
 operator|->
 name|val
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|cnf
+operator|->
+name|home
 argument_list|,
 operator|&
 name|st
@@ -409,6 +466,7 @@ operator|==
 operator|-
 literal|1
 operator|||
+operator|!
 name|S_ISDIR
 argument_list|(
 name|st
@@ -418,7 +476,7 @@ argument_list|)
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_OSFILE
 argument_list|,
 literal|"root home `%s' is not a directory or does not exist\n"
 argument_list|,
@@ -548,7 +606,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_NOUSER
 argument_list|,
 literal|"group `%s' does not exist\n"
 argument_list|,
@@ -694,7 +752,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_NOUSER
 argument_list|,
 literal|"group `%s' does not exist\n"
 argument_list|,
@@ -779,7 +837,7 @@ argument_list|)
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_OSFILE
 argument_list|,
 literal|"skeleton `%s' is not a directory or does not exist\n"
 argument_list|,
@@ -839,7 +897,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"can't combine `-D' with `-n name'\n"
 argument_list|)
@@ -1087,7 +1145,7 @@ name|NULL
 argument_list|)
 condition|)
 return|return
-name|X_ALLOK
+name|EXIT_SUCCESS
 return|;
 name|perror
 argument_list|(
@@ -1095,7 +1153,7 @@ literal|"config update"
 argument_list|)
 expr_stmt|;
 return|return
-name|X_UPDERROR
+name|EX_IOERR
 return|;
 block|}
 if|if
@@ -1119,7 +1177,7 @@ name|getarg
 argument_list|(
 name|args
 argument_list|,
-literal|'p'
+literal|'P'
 argument_list|)
 operator|!=
 name|NULL
@@ -1149,7 +1207,7 @@ name|endpwent
 argument_list|()
 expr_stmt|;
 return|return
-name|X_ALLOK
+name|EXIT_SUCCESS
 return|;
 block|}
 if|if
@@ -1205,7 +1263,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"user name or id required\n"
 argument_list|)
@@ -1357,7 +1415,7 @@ name|getarg
 argument_list|(
 name|args
 argument_list|,
-literal|'p'
+literal|'P'
 argument_list|)
 operator|!=
 name|NULL
@@ -1372,7 +1430,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_NOUSER
 argument_list|,
 literal|"no such uid `%s'\n"
 argument_list|,
@@ -1383,7 +1441,7 @@ argument_list|)
 expr_stmt|;
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_NOUSER
 argument_list|,
 literal|"no such user `%s'\n"
 argument_list|,
@@ -1458,7 +1516,7 @@ literal|0
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"cannot remove user 'root'\n"
 argument_list|)
@@ -1550,7 +1608,7 @@ argument_list|)
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOUPDATE
+name|EX_IOERR
 argument_list|,
 literal|"Error updating passwd file: %s\n"
 argument_list|,
@@ -1696,7 +1754,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|X_ALLOK
+name|EXIT_SUCCESS
 return|;
 block|}
 elseif|else
@@ -1715,7 +1773,7 @@ name|getarg
 argument_list|(
 name|args
 argument_list|,
-literal|'p'
+literal|'P'
 argument_list|)
 operator|!=
 name|NULL
@@ -1753,7 +1811,7 @@ literal|0
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"can't rename `root' account\n"
 argument_list|)
@@ -1831,7 +1889,7 @@ literal|0
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"can't change uid of `root' account\n"
 argument_list|)
@@ -1977,7 +2035,7 @@ name|expire
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"Invalid password change date `%s'\n"
 argument_list|,
@@ -2003,7 +2061,7 @@ name|getarg
 argument_list|(
 name|args
 argument_list|,
-literal|'p'
+literal|'e'
 argument_list|)
 operator|)
 operator|!=
@@ -2066,9 +2124,9 @@ name|expire
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
-literal|"Invalid password change date `%s'\n"
+literal|"Invalid account expiry date `%s'\n"
 argument_list|,
 name|arg
 operator|->
@@ -2134,6 +2192,45 @@ name|cnf
 operator|->
 name|default_class
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|arg
+operator|=
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'w'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'h'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|pwd
+operator|->
+name|pw_passwd
+operator|=
+name|pw_password
+argument_list|(
+name|cnf
+argument_list|,
+name|args
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2146,7 +2243,7 @@ condition|)
 comment|/* Required */
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"login name required\n"
 argument_list|)
@@ -2170,7 +2267,7 @@ condition|)
 comment|/* Exists */
 name|cmderr
 argument_list|(
-name|X_EXISTS
+name|EX_DATAERR
 argument_list|,
 literal|"login name `%s' already exists\n"
 argument_list|,
@@ -2562,7 +2659,7 @@ literal|"-h file descriptor"
 argument_list|)
 expr_stmt|;
 return|return
-name|X_CMDERR
+name|EX_IOERR
 return|;
 block|}
 name|line
@@ -2600,7 +2697,7 @@ name|line
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"empty password read on file descriptor %d\n"
 argument_list|,
@@ -2618,6 +2715,33 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Special case: -N only displays& exits 	 */
+if|if
+condition|(
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'N'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|print_user
+argument_list|(
+name|pwd
+argument_list|,
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'P'
+argument_list|)
+operator|!=
+name|NULL
+argument_list|)
+return|;
 if|if
 condition|(
 operator|(
@@ -2655,7 +2779,7 @@ literal|"password update"
 argument_list|)
 expr_stmt|;
 return|return
-name|X_NOUPDATE
+name|EX_IOERR
 return|;
 block|}
 comment|/* 	 * Ok, user is created or changed - now edit group file 	 */
@@ -2703,7 +2827,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_NOUSER
 argument_list|,
 literal|"user '%s' disappeared during update\n"
 argument_list|,
@@ -3037,7 +3161,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|X_ALLOK
+name|EXIT_SUCCESS
 return|;
 block|}
 end_function
@@ -3128,7 +3252,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_EXISTS
+name|EX_DATAERR
 argument_list|,
 literal|"uid `%ld' has already been allocated\n"
 argument_list|,
@@ -3310,7 +3434,7 @@ name|max_uid
 condition|)
 name|cmderr
 argument_list|(
-name|X_EXISTS
+name|EX_SOFTWARE
 argument_list|,
 literal|"unable to allocate a new uid - range fully used\n"
 argument_list|)
@@ -3407,6 +3531,9 @@ name|default_group
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check the given gid, if any 	 */
+name|setgrent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|a_gid
@@ -3414,9 +3541,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|setgrent
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3475,7 +3599,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_NOUSER
 argument_list|,
 literal|"group `%s' is not defined\n"
 argument_list|,
@@ -3485,15 +3609,44 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-name|endgrent
-argument_list|()
-expr_stmt|;
 name|gid
 operator|=
 name|grp
 operator|->
 name|gr_gid
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|grp
+operator|=
+name|getgrnam
+argument_list|(
+name|nam
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|grp
+operator|->
+name|gr_mem
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|gid
+operator|=
+name|grp
+operator|->
+name|gr_gid
+expr_stmt|;
+comment|/* Already created? Use it anyway... */
 block|}
 else|else
 block|{
@@ -3558,9 +3711,51 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
-name|endgrent
-argument_list|()
+if|if
+condition|(
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'N'
+argument_list|)
+condition|)
+block|{
+name|addarg
+argument_list|(
+operator|&
+name|grpargs
+argument_list|,
+literal|'N'
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
+name|addarg
+argument_list|(
+operator|&
+name|grpargs
+argument_list|,
+literal|'q'
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|gid
+operator|=
+name|pw_group
+argument_list|(
+name|cnf
+argument_list|,
+name|M_NEXT
+argument_list|,
+operator|&
+name|grpargs
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|pw_group
 argument_list|(
 name|cnf
@@ -3571,6 +3766,26 @@ operator|&
 name|grpargs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|grp
+operator|=
+name|getgrnam
+argument_list|(
+name|nam
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|gid
+operator|=
+name|grp
+operator|->
+name|gr_gid
+expr_stmt|;
+block|}
 name|a_gid
 operator|=
 name|grpargs
@@ -3607,26 +3822,10 @@ operator|=
 name|t
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|grp
-operator|=
-name|getgrnam
-argument_list|(
-name|nam
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|gid
-operator|=
-name|grp
-operator|->
-name|gr_gid
-expr_stmt|;
 block|}
+name|endgrent
+argument_list|()
+expr_stmt|;
 return|return
 name|gid
 return|;
@@ -3700,7 +3899,7 @@ name|now
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_DATAERR
 argument_list|,
 literal|"invalid date/time `%s'\n"
 argument_list|,
@@ -3807,7 +4006,7 @@ name|now
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_DATAERR
 argument_list|,
 literal|"invalid date/time `%s'\n"
 argument_list|,
@@ -3916,7 +4115,7 @@ literal|'\0'
 condition|)
 name|cmderr
 argument_list|(
-name|X_NOTFOUND
+name|EX_CONFIG
 argument_list|,
 literal|"no base home directory set\n"
 argument_list|)
@@ -4145,7 +4344,7 @@ name|NULL
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_OSFILE
 argument_list|,
 literal|"can't find shell `%s' in shell paths\n"
 argument_list|,
@@ -4154,7 +4353,7 @@ argument_list|)
 expr_stmt|;
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_CONFIG
 argument_list|,
 literal|"no default shell available or defined\n"
 argument_list|)
@@ -4467,6 +4666,15 @@ literal|'h'
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+name|getarg
+argument_list|(
+name|args
+argument_list|,
+literal|'N'
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -4589,6 +4797,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|j
+decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -4862,7 +5073,7 @@ literal|"Login Name : %-10s   #%-22ld  Group : %-10s   #%ld\n"
 literal|" Full Name : %s\n"
 literal|"      Home : %-32.32s      Class : %s\n"
 literal|"     Shell : %-32.32s     Office : %s\n"
-literal|"Work Phone : %-32.32s Home Phone : %s\n\n"
+literal|"Work Phone : %-32.32s Home Phone : %s\n"
 argument_list|,
 name|pwd
 operator|->
@@ -4911,9 +5122,105 @@ argument_list|,
 name|hphone
 argument_list|)
 expr_stmt|;
+name|setgrent
+argument_list|()
+expr_stmt|;
+name|j
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|grp
+operator|=
+name|getgrent
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+name|i
+operator|<
+name|_UC_MAXGROUPS
+operator|&&
+name|grp
+operator|->
+name|gr_mem
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|grp
+operator|->
+name|gr_mem
+index|[
+name|i
+index|]
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+name|j
+operator|++
+operator|==
+literal|0
+condition|?
+literal|"    Groups : %s"
+else|:
+literal|",%s"
+argument_list|,
+name|grp
+operator|->
+name|gr_name
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+operator|++
+name|i
+expr_stmt|;
+block|}
+block|}
+name|endgrent
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|j
+condition|?
+literal|"\n"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 return|return
-name|X_ALLOK
+name|EXIT_SUCCESS
 return|;
 block|}
 end_function
@@ -4979,7 +5286,7 @@ literal|' '
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"invalid character `%c' in field\n"
 argument_list|,
@@ -5004,7 +5311,7 @@ literal|8
 condition|)
 name|cmderr
 argument_list|(
-name|X_CMDERR
+name|EX_DATAERR
 argument_list|,
 literal|"name too long `%s'\n"
 argument_list|,
