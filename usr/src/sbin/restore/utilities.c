@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.6	(Berkeley)	83/03/23"
+literal|"@(#)utilities.c	3.7	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,6 +330,9 @@ argument_list|,
 literal|"not on ino list"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|name

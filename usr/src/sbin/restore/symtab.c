@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.7	(Berkeley)	83/03/23"
+literal|"@(#)symtab.c	3.8	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -1326,9 +1326,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|long
-name|len
-decl_stmt|;
 name|np
 operator|=
 name|lookupparent
@@ -1986,6 +1983,9 @@ operator|=
 name|mynum
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|ep
@@ -1997,6 +1997,9 @@ argument_list|(
 name|char
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|allocsize
 argument_list|(
 name|ep
@@ -2067,6 +2070,9 @@ operator|*
 operator|)
 name|tep
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2200,6 +2206,9 @@ name|e_next
 operator|->
 name|e_index
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 operator|(
@@ -2264,6 +2273,9 @@ index|]
 operator|->
 name|e_index
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 operator|(
@@ -2322,6 +2334,9 @@ name|dumpdate
 operator|=
 name|dumpdate
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 operator|(
@@ -2363,6 +2378,9 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fd
