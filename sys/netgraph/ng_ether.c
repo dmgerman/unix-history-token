@@ -723,10 +723,11 @@ literal|0
 condition|)
 return|return;
 comment|/* Send out lower/orphan hook */
-name|NG_SEND_DATAQ
+operator|(
+name|void
+operator|)
+name|ng_queue_data
 argument_list|(
-name|error
-argument_list|,
 name|priv
 operator|->
 name|lower
@@ -737,7 +738,6 @@ argument_list|,
 name|meta
 argument_list|)
 expr_stmt|;
-comment|/* Any reflected packet must come later due to queuing */
 operator|*
 name|mp
 operator|=
