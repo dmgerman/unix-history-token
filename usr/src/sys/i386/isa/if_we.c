@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker  *  * %sccs.include.noredist.c%  *  *	@(#)if_we.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker  *  * %sccs.include.noredist.c%  *  *	@(#)if_we.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Western Digital 8003 ethernet/starlan adapter  *  * Supports the following interface cards:  * WD8003E, WD8003EBT, WD8003S, WD8003SBT  *  * The Western Digital card is one of many AT/MCA ethernet interfaces  * based on the National N8390/NS32490 Network Interface chip set.  */
+comment|/*  * Western Digital 8003 ethernet/starlan adapter  *  * Supports the following interface cards:  * WD8003E, WD8003EBT, WD8003S, WD8003SBT, WD8013EBT  *  * The Western Digital card is one of many AT/MCA ethernet interfaces  * based on the National DS8390 Network Interface chip set.  */
 end_comment
 
 begin_include
@@ -224,7 +224,7 @@ comment|/* i/o bus address, control	*/
 name|caddr_t
 name|we_io_nic_addr
 decl_stmt|;
-comment|/* i/o bus address, NS32490	*/
+comment|/* i/o bus address, DS8390	*/
 name|caddr_t
 name|we_vmem_addr
 decl_stmt|;
@@ -869,7 +869,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 * Shutdown NS32490 	 */
+comment|/* 	 * Shutdown DS8390 	 */
 name|s
 operator|=
 name|splimp
@@ -931,7 +931,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Initialization of interface (really just NS32490).   */
+comment|/*  * Initialization of interface (really just DS8390).   */
 end_comment
 
 begin_macro
@@ -1006,7 +1006,7 @@ operator|&
 name|WDF_RUNNING
 condition|)
 return|return;
-comment|/* 	 * Initialize NS32490 in order given in NSC NIC manual. 	 * this is stock code...please see the National manual for details. 	 */
+comment|/* 	 * Initialize DS8390 in order given in NSC NIC manual. 	 * this is stock code...please see the National manual for details. 	 */
 name|s
 operator|=
 name|splhigh
@@ -1170,10 +1170,6 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|WD_I_CONFIG
-value|0xff
 name|outb
 argument_list|(
 name|sc
@@ -1413,7 +1409,7 @@ name|union
 name|we_command
 name|wecmd
 decl_stmt|;
-comment|/* 	 * The NS32490 has only one transmit buffer, if it is busy we 	 * must wait until the transmit interrupt completes. 	 */
+comment|/* 	 * The DS8390 has only one transmit buffer, if it is busy we 	 * must wait until the transmit interrupt completes. 	 */
 name|s
 operator|=
 name|splhigh
@@ -1535,9 +1531,6 @@ name|m_len
 expr_stmt|;
 block|}
 comment|/* 	 * If this was a broadcast packet loop it 	 * back because the hardware can't hear its own 	 * transmits. 	 */
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|bcmp
@@ -1582,19 +1575,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Init transmit length registers, and set transmit start flag. 	 */
 name|s
 operator|=
@@ -1782,7 +1768,17 @@ operator|.
 name|cs_byte
 argument_list|)
 expr_stmt|;
-comment|/* outb(sc->we_io_nic_addr + WD_P0_IMR, 0); */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|we_io_nic_addr
+operator|+
+name|WD_P0_IMR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|weisr
 operator|.
 name|is_byte
@@ -1796,36 +1792,6 @@ operator|+
 name|WD_P0_ISR
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|printf
-argument_list|(
-literal|"weintr %x "
-argument_list|,
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|we_io_nic_addr
-operator|+
-name|WD_P0_ISR
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|we_io_nic_addr
-operator|+
-name|WD_P0_IMR
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|sc
@@ -1853,11 +1819,6 @@ operator|.
 name|is_txe
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"txe\n"
-argument_list|)
-expr_stmt|;
 comment|/* need to read these registers to clear status */
 name|sc
 operator|->
@@ -1890,11 +1851,6 @@ operator|.
 name|is_rxe
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"rxe\n"
-argument_list|)
-expr_stmt|;
 comment|/* need to read these registers to clear status */
 operator|(
 name|void
@@ -2235,15 +2191,6 @@ operator|+
 name|WD_P1_CURR
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Bd %x cur %x "
-argument_list|,
-name|bnry
-argument_list|,
-name|curr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Bdry
@@ -2252,19 +2199,10 @@ name|Bdry
 operator|>
 name|bnry
 condition|)
-block|{
 name|bnry
 operator|=
 name|Bdry
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"bd %x! "
-argument_list|,
-name|bnry
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|bnry
@@ -2301,13 +2239,6 @@ operator|-
 literal|4
 expr_stmt|;
 comment|/* count includes CRC */
-name|printf
-argument_list|(
-literal|"l %d"
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|pkt
 operator|=
 call|(
@@ -2497,15 +2428,6 @@ block|}
 name|outofbufs
 label|:
 comment|/* advance on chip Boundry register */
-name|printf
-argument_list|(
-literal|"nx %x "
-argument_list|,
-name|wer
-operator|->
-name|we_next_packet
-argument_list|)
-expr_stmt|;
 name|bnry
 operator|=
 name|wer
@@ -2635,25 +2557,7 @@ operator|+
 name|WD_P1_CURR
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"bd %x cur %x "
-argument_list|,
-name|bnry
-operator|-
-literal|1
-argument_list|,
-name|curr
-argument_list|)
-expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"bD %x\n"
-argument_list|,
-name|bnry
-argument_list|)
-expr_stmt|;
 name|Bdry
 operator|=
 name|bnry
@@ -3692,13 +3596,6 @@ name|sc
 operator|->
 name|we_if
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ty %x "
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -3710,11 +3607,6 @@ name|INET
 case|case
 name|ETHERTYPE_IP
 case|:
-name|printf
-argument_list|(
-literal|"ip "
-argument_list|)
-expr_stmt|;
 name|scn
 operator|=
 name|NETISR_IP
@@ -3728,11 +3620,6 @@ break|break;
 case|case
 name|ETHERTYPE_ARP
 case|:
-name|printf
-argument_list|(
-literal|"arp "
-argument_list|)
-expr_stmt|;
 name|arpinput
 argument_list|(
 operator|&
