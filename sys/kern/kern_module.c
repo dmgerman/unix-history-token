@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -337,6 +343,13 @@ block|{
 name|module_t
 name|mod
 decl_stmt|;
+if|if
+condition|(
+name|arg2
+operator|&
+name|RB_NOSYNC
+condition|)
+return|return;
 name|MOD_SLOCK
 expr_stmt|;
 name|TAILQ_FOREACH
