@@ -96,6 +96,10 @@ argument|disk
 argument_list|)
 name|d_list
 expr_stmt|;
+name|void
+modifier|*
+name|d_softc
+decl_stmt|;
 block|}
 struct|;
 end_struct
