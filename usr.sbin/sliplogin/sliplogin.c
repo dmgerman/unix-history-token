@@ -166,6 +166,31 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|restricted_environ
+index|[]
+init|=
+block|{
+literal|"PATH="
+name|_PATH_STDPATH
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|unit
 decl_stmt|;
@@ -351,6 +376,11 @@ name|j
 decl_stmt|,
 name|n
 decl_stmt|;
+name|environ
+operator|=
+name|restricted_environ
+expr_stmt|;
+comment|/* minimal protection for system() */
 operator|(
 name|void
 operator|)
