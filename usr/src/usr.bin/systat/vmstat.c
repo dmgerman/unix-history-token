@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.14 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
 end_include
 
 begin_include
