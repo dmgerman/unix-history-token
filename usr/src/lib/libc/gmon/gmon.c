@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.3 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,6 +312,8 @@ sizeof|sizeof
 argument_list|(
 name|MSG
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -353,6 +355,8 @@ sizeof|sizeof
 argument_list|(
 name|MSG
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|froms
@@ -435,6 +439,8 @@ sizeof|sizeof
 argument_list|(
 name|MSG
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|froms
@@ -1114,6 +1120,8 @@ sizeof|sizeof
 argument_list|(
 name|TOLIMIT
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
