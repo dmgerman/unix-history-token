@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.1 1995/11/28 23:55:20 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -197,11 +197,29 @@ directive|include
 file|<vm/vm.h>
 end_include
 
+begin_comment
+comment|/* for vtophys */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
 end_include
+
+begin_comment
+comment|/* for vtophys */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/pmap.h>
+end_include
+
+begin_comment
+comment|/* for vtophys */
+end_comment
 
 begin_include
 include|#
@@ -209,11 +227,9 @@ directive|include
 file|<machine/clock.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
-end_include
+begin_comment
+comment|/* for DELAY */
+end_comment
 
 begin_include
 include|#
@@ -235,14 +251,17 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
+comment|/* per-interface network data */
 name|caddr_t
 name|bpf
 decl_stmt|;
+comment|/* BPF token */
 name|struct
 name|fxp_csr
 modifier|*
 name|csr
 decl_stmt|;
+comment|/* control/status registers */
 name|struct
 name|fxp_cb_tx
 modifier|*
@@ -673,6 +692,10 @@ name|FXP_NRFABUFS
 value|32
 end_define
 
+begin_comment
+comment|/*  * Wait for the previous command to be accepted (but not necessarily  * completed).  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -708,6 +731,10 @@ condition|)
 empty_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Return identification string if this is device is ours.  */
+end_comment
 
 begin_function
 specifier|static
@@ -837,6 +864,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Map control/status registers. 	 */
 if|if
 condition|(
 operator|!
@@ -871,7 +899,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Now that the CSR is mapped, issue a software reset. 	 */
+comment|/* 	 * Issue a software reset. 	 */
 name|sc
 operator|->
 name|csr
@@ -885,6 +913,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allocate our interrupt. 	 */
 if|if
 condition|(
 operator|!
@@ -983,6 +1012,7 @@ name|fxp_stats
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Pre-allocate our receive buffers. 	 */
 for|for
 control|(
 name|i
@@ -1097,6 +1127,7 @@ name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Attach the interface. 	 */
 name|if_attach
 argument_list|(
 name|ifp
@@ -1670,6 +1701,7 @@ name|IFF_OACTIVE
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Grab a packet to transmit. 	 */
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -1694,6 +1726,7 @@ block|{
 comment|/* 		 * No more packets to send. 		 */
 return|return;
 block|}
+comment|/* 	 * Get pointer to next available (unused) descriptor. 	 */
 name|txp
 operator|=
 name|sc
@@ -2123,21 +2156,11 @@ expr|struct
 name|fxp_rfa
 operator|*
 operator|)
-operator|(
-name|mtod
-argument_list|(
 name|m
-argument_list|,
-name|u_long
-argument_list|)
-operator|&
-operator|~
-operator|(
-name|MCLBYTES
-operator|-
-literal|1
-operator|)
-operator|)
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 expr_stmt|;
 if|if
 condition|(
@@ -2148,6 +2171,7 @@ operator|&
 name|FXP_RFA_STATUS_C
 condition|)
 block|{
+comment|/* 				 * Remove first packet from the chain. 				 */
 name|sc
 operator|->
 name|rfa_headm
@@ -2162,6 +2186,7 @@ name|m_next
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 				 * Add a new buffer to the receive chain. If this 				 * fails, the old buffer is recycled instead. 				 */
 if|if
 condition|(
 name|fxp_add_rfabuf
@@ -2362,21 +2387,13 @@ name|scb_general
 operator|=
 name|vtophys
 argument_list|(
-name|mtod
-argument_list|(
 name|sc
 operator|->
 name|rfa_headm
-argument_list|,
-name|u_long
-argument_list|)
-operator|&
-operator|~
-operator|(
-name|MCLBYTES
-operator|-
-literal|1
-operator|)
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 argument_list|)
 expr_stmt|;
 name|csr
@@ -2393,6 +2410,10 @@ name|found
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Update packet in/out/collision statistics. The i82557 doesn't  * allow you to access these counters without doing a fairly  * expensive DMA to get _all_ of the statistics it maintains, so  * we do this operation here only once per second. The statistics  * counters in the kernel are updated from the previous dump-stats  * DMA and then a new dump-stats DMA is started. The on-chip  * counters are zeroed when the DMA completes. If we can't start  * the DMA immediately, we don't wait - we just prepare to read  * them again next time.  */
+end_comment
 
 begin_function
 name|void
@@ -2460,6 +2481,7 @@ expr_stmt|;
 comment|/* 	 * If there is a pending command, don't wait for it to 	 * be accepted - we'll pick up the stats the next time 	 * around. Make sure we don't count the stats twice 	 * however. 	 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|csr
@@ -2467,8 +2489,29 @@ operator|->
 name|scb_command
 operator|&
 name|FXP_SCB_COMMAND_MASK
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
+comment|/* 		 * Start another stats dump. By waiting for it to be 		 * accepted, we avoid having to do splhigh locking when 		 * writing scb_command in other parts of the driver. 		 */
+name|sc
+operator|->
+name|csr
+operator|->
+name|scb_command
+operator|=
+name|FXP_SCB_COMMAND_CU_DUMPRESET
+expr_stmt|;
+name|fxp_scb_wait
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * A previous command is still waiting to be accepted. 		 * Just zero our copy of the stats and wait for the 		 * next timer event to pdate them. 		 */
 name|sp
 operator|->
 name|tx_good
@@ -2487,22 +2530,7 @@ name|rx_good
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
-comment|/* 	 * Start another stats dump. By waiting for it to be accepted, 	 * we avoid having to do splhigh locking when writing scb_command 	 * in other parts of the driver. 	 */
-name|sc
-operator|->
-name|csr
-operator|->
-name|scb_command
-operator|=
-name|FXP_SCB_COMMAND_CU_DUMPRESET
-expr_stmt|;
-name|fxp_scb_wait
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Schedule another timeout one second from now. 	 */
 name|timeout
 argument_list|(
@@ -3372,21 +3400,13 @@ name|scb_general
 operator|=
 name|vtophys
 argument_list|(
-name|mtod
-argument_list|(
 name|sc
 operator|->
 name|rfa_headm
-argument_list|,
-name|u_long
-argument_list|)
-operator|&
-operator|~
-operator|(
-name|MCLBYTES
-operator|-
-literal|1
-operator|)
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 argument_list|)
 expr_stmt|;
 name|csr
@@ -3591,6 +3611,7 @@ expr|struct
 name|fxp_rfa
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If there are other buffers already on the list, attach this 	 * one to the end by fixing up the tail to point to this one. 	 */
 if|if
 condition|(
 name|sc
@@ -3607,23 +3628,13 @@ expr|struct
 name|fxp_rfa
 operator|*
 operator|)
-operator|(
-name|mtod
-argument_list|(
 name|sc
 operator|->
 name|rfa_tailm
-argument_list|,
-name|u_long
-argument_list|)
-operator|&
-operator|~
-operator|(
-name|MCLBYTES
-operator|-
-literal|1
-operator|)
-operator|)
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 expr_stmt|;
 name|sc
 operator|->
@@ -3666,13 +3677,11 @@ operator|=
 name|m
 expr_stmt|;
 return|return
+operator|(
 name|m
 operator|==
 name|oldm
-condition|?
-literal|1
-else|:
-literal|0
+operator|)
 return|;
 block|}
 end_function
