@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	8.1 (Berkeley) %G%"
+literal|"@(#)rec_search.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ file|"recno.h"
 end_include
 
 begin_comment
-comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op: 	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Warnings:  *	The EPG returned is in static memory, and will be overwritten by the  *	next search of any kind in any tree.  */
+comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op: 	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Returns:  *	The EPG for matching record, if any, or the EPG for the location  *	of the key, if it were inserted into the tree, is entered into  *	the bt_cur field of the tree.  A pointer to the field is returned.  */
 end_comment
 
 begin_function
@@ -94,10 +94,6 @@ name|SRCHOP
 name|op
 decl_stmt|;
 block|{
-specifier|static
-name|EPG
-name|e
-decl_stmt|;
 specifier|register
 name|indx_t
 name|index
@@ -176,13 +172,17 @@ operator|&
 name|P_RLEAF
 condition|)
 block|{
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|page
 operator|=
 name|h
 expr_stmt|;
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 operator|=
@@ -193,7 +193,9 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|)
 return|;
 block|}
