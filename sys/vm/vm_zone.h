@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.20 1998/04/15 17:47:40 bde Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.h,v 1.10 1998/04/25 04:50:03 dyson Exp $  */
 end_comment
 
 begin_if
@@ -369,7 +369,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DIAGNOSTIC
+name|INVARIANTS
 argument_list|)
 if|if
 condition|(
@@ -426,7 +426,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DIAGNOSTIC
+name|INVARIANTS
 argument_list|)
 if|if
 condition|(
@@ -519,7 +519,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DIAGNOSTIC
+name|INVARIANTS
 argument_list|)
 if|if
 condition|(
