@@ -282,8 +282,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|PSL_KERNSET
+value|(PSL_EE | PSL_ME | PSL_IR | PSL_DR | PSL_RI)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PSL_USERSET
-value|(PSL_EE | PSL_PR | PSL_ME | PSL_IR | PSL_DR | PSL_RI)
+value|(PSL_KERNSET | PSL_PR)
 end_define
 
 begin_define
