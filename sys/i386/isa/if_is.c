@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"errno.h"
 end_include
 
@@ -679,10 +685,13 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
+operator|(
+name|void
+operator|)
 name|splx
-argument_list|()
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function

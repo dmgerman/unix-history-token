@@ -4,7 +4,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: db_output.c,v $  * Revision 1.1  1992/03/25  21:45:18  pace  * Initial revision  *  * Revision 2.3  91/02/05  17:06:45  mrt  * 	Changed to new Mach copyright  * 	[91/01/31  16:18:41  mrt]  *   * Revision 2.2  90/08/27  21:51:25  dbg  * 	Put extra features of db_doprnt in _doprnt.  * 	[90/08/20            dbg]  * 	Reduce lint.  * 	[90/08/07            dbg]  * 	Created.  * 	[90/07/25            dbg]  *   */
+comment|/*  * HISTORY  * $Log: db_output.c,v $  * Revision 1.1.1.1  1993/06/12  14:57:37  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.1  1992/03/25  21:45:18  pace  * Initial revision  *  * Revision 2.3  91/02/05  17:06:45  mrt  * 	Changed to new Mach copyright  * 	[91/01/31  16:18:41  mrt]  *   * Revision 2.2  90/08/27  21:51:25  dbg  * 	Put extra features of db_doprnt in _doprnt.  * 	[90/08/20            dbg]  * 	Reduce lint.  * 	[90/08/07            dbg]  * 	Created.  * 	[90/07/25            dbg]  *   */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
