@@ -3027,6 +3027,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|check_utility_compat
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|chroot
 parameter_list|(
 specifier|const
