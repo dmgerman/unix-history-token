@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chgrp.c	4.3 82/03/31"
+literal|"@(#)chgrp.c	4.4 83/01/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,7 @@ name|atoi
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
