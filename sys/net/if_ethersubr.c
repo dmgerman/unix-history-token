@@ -3089,14 +3089,6 @@ operator|!=
 name|BDG_MCAST
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"ether_input: drop bdg packet, bif %p\n"
-argument_list|,
-name|bif
-argument_list|)
-expr_stmt|;
-comment|/*XXX*/
 name|m_freem
 argument_list|(
 name|m
