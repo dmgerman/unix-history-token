@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.43 (Berkeley) %G%"
+literal|"@(#)route.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5982,14 +5982,6 @@ case|:
 case|case
 name|RTM_DELADDR
 case|:
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"flags:"
-argument_list|)
-expr_stmt|;
 name|ifam
 operator|=
 operator|(
@@ -5998,6 +5990,18 @@ name|ifa_msghdr
 operator|*
 operator|)
 name|rtm
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"metric %d, flags:"
+argument_list|,
+name|ifam
+operator|->
+name|ifam_metric
+argument_list|)
 expr_stmt|;
 name|bprintf
 argument_list|(
