@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwdata.c	3.6 83/09/15"
+literal|"@(#)wwdata.c	3.7 83/09/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|tt_f100
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|tt_generic
 parameter_list|()
 function_decl|;
@@ -143,6 +150,14 @@ block|,
 literal|3
 block|,
 name|tt_h19
+block|}
+block|,
+block|{
+literal|"f100"
+block|,
+literal|4
+block|,
+name|tt_f100
 block|}
 block|,
 block|{
