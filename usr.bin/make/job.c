@@ -222,13 +222,6 @@ directive|include
 file|"var.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|STATIC
-value|static
-end_define
-
 begin_comment
 comment|/*  * Job Table definitions.  *  * The job "table" is kept as a linked Lst in 'jobs', with the number of  * active jobs maintained in the 'nJobs' variable. At no time will this  * exceed the value of 'maxJobs', initialized by the Job_Init function.  *  * When a job is finished, the Make_Update function is called on each of the  * parents of the node which was just remade. This takes care of the upward  * traversal of the dependency graph.  */
 end_comment
@@ -787,7 +780,7 @@ comment|/* The most children we can run at once */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|nJobs
 decl_stmt|;
@@ -815,7 +808,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|Boolean
 name|jobFull
 decl_stmt|;
@@ -864,7 +857,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|GNode
 modifier|*
 name|lastNode
@@ -876,7 +869,7 @@ comment|/* The node for which output was most recently 				 * produced. */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -930,7 +923,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|fifoFd
 decl_stmt|;
@@ -941,7 +934,7 @@ comment|/* Fd of our job fifo */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 name|fifoName
 index|[]
@@ -951,7 +944,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|fifoMaster
 decl_stmt|;
@@ -5847,7 +5840,7 @@ comment|/**  * JobDoOutput  *	This function is called at different times dependi
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|JobDoOutput
 parameter_list|(
