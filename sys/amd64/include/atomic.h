@@ -221,6 +221,11 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_DISABLE_CMPXCHG
+argument_list|)
 end_if
 
 begin_function
