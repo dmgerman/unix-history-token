@@ -949,7 +949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print a the closest symbol to value  *  * After matching the symbol according to the given strategy  * we print it in the name+offset format, provided the symbol's  * value is close enough (eg smaller than db_maxoff).  * We also attempt to print [filename:linenum] when applicable  * (eg for procedure names).  *  * If we could not find a reasonable name+offset representation,  * then we just print the value in hex.  Small values might get  * bogus symbol associations, e.g. 3 might get some absolute  * value like _INCLUDE_VERSION or something, therefore we do  * not accept symbols whose value is zero (and use plain hex).  */
+comment|/*  * Print a the closest symbol to value  *  * After matching the symbol according to the given strategy  * we print it in the name+offset format, provided the symbol's  * value is close enough (eg smaller than db_maxoff).  * We also attempt to print [filename:linenum] when applicable  * (eg for procedure names).  *  * If we could not find a reasonable name+offset representation,  * then we just print the value in hex.  Small values might get  * bogus symbol associations, e.g. 3 might get some absolute  * value like _INCLUDE_VERSION or something, therefore we do  * not accept symbols whose value is "small" (and use plain hex).  */
 end_comment
 
 begin_decl_stmt
@@ -1024,14 +1024,40 @@ condition|(
 name|name
 operator|==
 literal|0
+condition|)
+name|value
+operator|=
+name|off
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|>=
+name|DB_SMALL_VALUE_MIN
+operator|&&
+name|value
+operator|<=
+name|DB_SMALL_VALUE_MAX
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"%+#n"
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|name
+operator|==
+literal|0
 operator|||
 name|d
 operator|>=
 name|db_maxoff
-operator|||
-name|value
-operator|==
-literal|0
 condition|)
 block|{
 name|db_printf
