@@ -757,6 +757,19 @@ name|ptr
 init|=
 name|arg
 decl_stmt|;
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGALL
+argument_list|,
+literal|"%s index %d=>"
+argument_list|,
+name|msg
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|buf
@@ -786,6 +799,15 @@ literal|0
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|SNPRINTF
+argument_list|(
+name|buf
+argument_list|,
+name|TBA
+argument_list|,
+literal|"  "
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -825,31 +847,16 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
-name|STRNCAT
-argument_list|(
-name|buf
-argument_list|,
-literal|"\n"
-argument_list|,
-name|TBA
-argument_list|)
-expr_stmt|;
-block|}
 name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"%s index %d:%s"
-argument_list|,
-name|msg
-argument_list|,
-name|idx
-argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
