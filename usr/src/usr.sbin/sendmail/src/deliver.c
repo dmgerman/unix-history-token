@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.126 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.84.1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10387,6 +10387,13 @@ name|O_WRONLY
 operator||
 name|O_APPEND
 decl_stmt|;
+name|int
+name|oflags
+init|=
+name|O_WRONLY
+operator||
+name|O_APPEND
+decl_stmt|;
 if|if
 condition|(
 name|e
@@ -10491,6 +10498,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 endif|#
 directive|endif
 block|{
@@ -11193,16 +11201,7 @@ block|}
 comment|/*NOTREACHED*/
 block|}
 block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  HOSTSIGNATURE -- return the "signature" for a host. ** **	The signature describes how we are going to send this -- it **	can be just the hostname (for non-Internet hosts) or can be **	an ordered list of MX hosts. ** **	Parameters: **		m -- the mailer describing this host. **		host -- the host name. **		e -- the current envelope. ** **	Returns: **		The signature for this host. ** **	Side Effects: **		Can tweak the symbol table. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|hostsignature
@@ -11686,16 +11685,7 @@ operator|->
 name|s_hostsig
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  SETSTATUS -- set the address status for return messages ** **	Parameters: **		a -- the address to set. **		msg -- the text of the message, which must be in standard **			SMTP form (3 digits, a space, and a message). ** **	Returns: **		none. */
-end_comment
-
-begin_expr_stmt
 name|setstatus
 argument_list|(
 name|a
@@ -11707,16 +11697,10 @@ name|ADDRESS
 operator|*
 name|a
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|buf
