@@ -4650,11 +4650,8 @@ name|result
 operator|=
 name|malloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mlx_eventlog_entry
-argument_list|)
+comment|/*sizeof(struct mlx_eventlog_entry)*/
+literal|1024
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -4689,11 +4686,8 @@ name|mc
 operator|->
 name|mc_length
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mlx_eventlog_entry
-argument_list|)
+comment|/*sizeof(struct mlx_eventlog_entry)*/
+literal|1024
 expr_stmt|;
 name|mlx_mapcmd
 argument_list|(
@@ -4764,6 +4758,13 @@ name|out
 label|:
 if|if
 condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|mc
 operator|!=
 name|NULL
@@ -4775,19 +4776,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|error
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
 name|result
 operator|!=
 name|NULL
-operator|)
 condition|)
-block|{
 name|free
 argument_list|(
 name|result
@@ -4795,19 +4787,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* abort this event */
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
 name|MLX_PERIODIC_UNBUSY
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6054,6 +6040,7 @@ argument_list|(
 name|mc
 argument_list|)
 expr_stmt|;
+comment|/* we got an error, and we allocated a result */
 if|if
 condition|(
 operator|(
