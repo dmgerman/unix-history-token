@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.13 (Berkeley) 82/12/19"
+literal|"@(#)tar.c	4.14 (Berkeley) 83/01/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,6 +430,14 @@ begin_function_decl
 name|char
 modifier|*
 name|strcat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|getcwd
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1205,7 +1213,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|getwd
+name|getcwd
 argument_list|(
 name|wdir
 argument_list|)
@@ -1263,7 +1271,7 @@ else|else
 operator|(
 name|void
 operator|)
-name|getwd
+name|getcwd
 argument_list|(
 name|wdir
 argument_list|)
@@ -1335,7 +1343,7 @@ continue|continue;
 block|}
 name|parent
 operator|=
-name|getwd
+name|getcwd
 argument_list|(
 name|tempdir
 argument_list|)
@@ -5771,6 +5779,51 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_function
+name|char
+modifier|*
+name|getcwd
+parameter_list|(
+name|buf
+parameter_list|)
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|getwd
+argument_list|(
+name|buf
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"tar: %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
