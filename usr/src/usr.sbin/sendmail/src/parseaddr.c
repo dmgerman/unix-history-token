@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	2.2	%G%"
+literal|"@(#)parseaddr.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1199,6 +1199,24 @@ operator|==
 literal|'<'
 condition|)
 block|{
+if|if
+condition|(
+name|brccnt
+operator|<
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"multiple< spec"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|brccnt
 operator|++
 expr_stmt|;
@@ -1266,7 +1284,14 @@ name|brccnt
 operator|<=
 literal|0
 condition|)
+block|{
+name|brccnt
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* 		**  Turn "at" into "@", 		**	but only if "at" is a word. 		**	By the way, I violate the ARPANET RFC-733 		**	standard here, by assuming that 'space' delimits 		**	atoms.  I assume that is just a mistake, since 		**	it violates the spirit of the semantics 		**	of the document..... 		*/
 if|if
@@ -1342,9 +1367,10 @@ name|space
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* skip blanks */
+comment|/* if not a space, squirrel it away */
 if|if
 condition|(
+operator|(
 operator|!
 name|isascii
 argument_list|(
@@ -1356,6 +1382,11 @@ name|isspace
 argument_list|(
 name|c
 argument_list|)
+operator|)
+operator|&&
+name|brccnt
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
