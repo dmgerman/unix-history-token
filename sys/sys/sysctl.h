@@ -1222,8 +1222,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_MAXID
+name|KERN_JAILCANSETHOSTNAME
 value|35
+end_define
+
+begin_comment
+comment|/* int: jailed p can set hostname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_MAXID
+value|36
 end_define
 
 begin_comment
@@ -1236,7 +1247,7 @@ directive|define
 name|CTL_KERN_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "nisdomainname", CTLTYPE_STRING }, \ 	{ "update", CTLTYPE_INT }, \ 	{ "osreldate", CTLTYPE_INT }, \         { "ntp_pll", CTLTYPE_NODE }, \ 	{ "bootfile", CTLTYPE_STRING }, \ 	{ "maxfilesperproc", CTLTYPE_INT }, \ 	{ "maxprocperuid", CTLTYPE_INT }, \ 	{ "dumpdev", CTLTYPE_STRUCT },
 comment|/* we lie; don't print as int */
-value|\ 	{ "ipc", CTLTYPE_NODE }, \ 	{ "dummy", CTLTYPE_INT }, \ 	{ "ps_strings", CTLTYPE_INT }, \ 	{ "usrstack", CTLTYPE_INT }, \ 	{ "logsigexit", CTLTYPE_INT }, \ }
+value|\ 	{ "ipc", CTLTYPE_NODE }, \ 	{ "dummy", CTLTYPE_INT }, \ 	{ "ps_strings", CTLTYPE_INT }, \ 	{ "usrstack", CTLTYPE_INT }, \ 	{ "logsigexit", CTLTYPE_INT }, \ 	{ "jailcansethostname", CTLTYPE_INT }, \ }
 end_define
 
 begin_comment
