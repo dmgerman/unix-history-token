@@ -274,6 +274,12 @@ name|USB_PRODUCT_IODATA_USBETT
 block|}
 block|,
 block|{
+name|USB_VENDOR_ABOCOM
+block|,
+name|USB_PRODUCT_ABOCOM_URE450
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
