@@ -735,28 +735,5 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|void
-name|userret
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|frame
-parameter_list|,
-name|u_quad_t
-name|oticks
-parameter_list|)
-block|{
-comment|/* XXX: Coming soon */
-return|return;
-block|}
-end_function
-
 end_unit
 

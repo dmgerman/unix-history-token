@@ -2084,6 +2084,21 @@ comment|/* Find zombie process by id. */
 end_comment
 
 begin_decl_stmt
+name|void
+name|ast
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|trapframe
+operator|*
+name|framep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
