@@ -175,10 +175,12 @@ name|char
 modifier|*
 name|fmt_argv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

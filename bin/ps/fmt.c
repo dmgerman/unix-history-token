@@ -114,10 +114,12 @@ end_include
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|cmdpart
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -126,10 +128,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|shquote
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -139,10 +143,12 @@ end_function_decl
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|shquote
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -159,16 +165,18 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|dst
-decl_stmt|,
-modifier|*
 name|src
+decl_stmt|;
+name|char
+modifier|*
+name|dst
 decl_stmt|;
 specifier|static
 name|char
@@ -420,15 +428,18 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|cmdpart
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|arg0
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -464,11 +475,13 @@ name|char
 modifier|*
 name|fmt_argv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|argv
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cmd
@@ -480,10 +493,12 @@ block|{
 name|size_t
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ap
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|cp
 decl_stmt|;
