@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_IFACE_COOKIE
-value|858821773
+value|1108312559
 end_define
 
 begin_comment
@@ -134,7 +134,6 @@ name|NGM_IFACE_GET_IFNAME
 init|=
 literal|1
 block|,
-comment|/* returns struct ng_iface_ifname */
 name|NGM_IFACE_POINT2POINT
 block|,
 name|NGM_IFACE_BROADCAST
