@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -279,11 +279,15 @@ directive|define
 name|__volatile
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
+begin_comment
+comment|/*  * In non-ANSI C environments, new programs will want ANSI C keywords  * deleted from the program and old programs will want them left alone.  * Programs using the ANSI C keywords const, inline etc. as variables  * should define -DNO_ANSI_KEYWORDS.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_ANSI_KEYWORDS
+end_ifndef
 
 begin_define
 define|#
