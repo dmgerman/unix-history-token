@@ -622,6 +622,7 @@ specifier|static
 name|void
 name|dosysctl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -4689,8 +4690,7 @@ decl_stmt|,
 name|nintr
 decl_stmt|,
 name|inamlen
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|,
 name|istrnamlen
@@ -5223,6 +5223,7 @@ specifier|static
 name|void
 name|dosysctl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
