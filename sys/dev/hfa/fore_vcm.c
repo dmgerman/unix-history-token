@@ -331,6 +331,905 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u_int
+name|rate_tab
+index|[
+literal|255
+index|]
+init|=
+block|{
+literal|353207
+block|,
+comment|/*   0 */
+literal|312501
+block|,
+comment|/*   1 */
+literal|312501
+block|,
+comment|/*   2 */
+literal|312501
+block|,
+comment|/*   3 */
+literal|312501
+block|,
+comment|/*   4 */
+literal|312501
+block|,
+comment|/*   5 */
+literal|312501
+block|,
+comment|/*   6 */
+literal|312501
+block|,
+comment|/*   7 */
+literal|312501
+block|,
+comment|/*   8 */
+literal|312501
+block|,
+comment|/*   9 */
+literal|312501
+block|,
+comment|/*  10 */
+literal|312501
+block|,
+comment|/*  11 */
+literal|312501
+block|,
+comment|/*  12 */
+literal|312501
+block|,
+comment|/*  13 */
+literal|312501
+block|,
+comment|/*  14 */
+literal|312501
+block|,
+comment|/*  15 */
+literal|312501
+block|,
+comment|/*  16 */
+literal|312501
+block|,
+comment|/*  17 */
+literal|284091
+block|,
+comment|/*  18 */
+literal|284091
+block|,
+comment|/*  19 */
+literal|284091
+block|,
+comment|/*  20 */
+literal|284091
+block|,
+comment|/*  21 */
+literal|284091
+block|,
+comment|/*  22 */
+literal|284091
+block|,
+comment|/*  23 */
+literal|284091
+block|,
+comment|/*  24 */
+literal|284091
+block|,
+comment|/*  25 */
+literal|284091
+block|,
+comment|/*  26 */
+literal|284091
+block|,
+comment|/*  27 */
+literal|284091
+block|,
+comment|/*  28 */
+literal|284091
+block|,
+comment|/*  29 */
+literal|284091
+block|,
+comment|/*  30 */
+literal|284091
+block|,
+comment|/*  31 */
+literal|284091
+block|,
+comment|/*  32 */
+literal|284091
+block|,
+comment|/*  33 */
+literal|284091
+block|,
+comment|/*  34 */
+literal|284091
+block|,
+comment|/*  35 */
+literal|284091
+block|,
+comment|/*  36 */
+literal|284091
+block|,
+comment|/*  37 */
+literal|284091
+block|,
+comment|/*  38 */
+literal|260417
+block|,
+comment|/*  39 */
+literal|260417
+block|,
+comment|/*  40 */
+literal|260417
+block|,
+comment|/*  41 */
+literal|260417
+block|,
+comment|/*  42 */
+literal|260417
+block|,
+comment|/*  43 */
+literal|260417
+block|,
+comment|/*  44 */
+literal|260417
+block|,
+comment|/*  45 */
+literal|260417
+block|,
+comment|/*  46 */
+literal|260417
+block|,
+comment|/*  47 */
+literal|260417
+block|,
+comment|/*  48 */
+literal|260417
+block|,
+comment|/*  49 */
+literal|260417
+block|,
+comment|/*  50 */
+literal|260417
+block|,
+comment|/*  51 */
+literal|260417
+block|,
+comment|/*  52 */
+literal|260417
+block|,
+comment|/*  53 */
+literal|260417
+block|,
+comment|/*  54 */
+literal|260417
+block|,
+comment|/*  55 */
+literal|240385
+block|,
+comment|/*  56 */
+literal|240385
+block|,
+comment|/*  57 */
+literal|240385
+block|,
+comment|/*  58 */
+literal|240385
+block|,
+comment|/*  59 */
+literal|240385
+block|,
+comment|/*  60 */
+literal|240385
+block|,
+comment|/*  61 */
+literal|240385
+block|,
+comment|/*  62 */
+literal|240385
+block|,
+comment|/*  63 */
+literal|240385
+block|,
+comment|/*  64 */
+literal|240385
+block|,
+comment|/*  65 */
+literal|240385
+block|,
+comment|/*  66 */
+literal|240385
+block|,
+comment|/*  67 */
+literal|240385
+block|,
+comment|/*  68 */
+literal|240385
+block|,
+comment|/*  69 */
+literal|240385
+block|,
+comment|/*  70 */
+literal|223215
+block|,
+comment|/*  71 */
+literal|223215
+block|,
+comment|/*  72 */
+literal|223215
+block|,
+comment|/*  73 */
+literal|223215
+block|,
+comment|/*  74 */
+literal|223215
+block|,
+comment|/*  75 */
+literal|223215
+block|,
+comment|/*  76 */
+literal|223215
+block|,
+comment|/*  77 */
+literal|223215
+block|,
+comment|/*  78 */
+literal|223215
+block|,
+comment|/*  79 */
+literal|223215
+block|,
+comment|/*  80 */
+literal|223215
+block|,
+comment|/*  81 */
+literal|223215
+block|,
+comment|/*  82 */
+literal|223215
+block|,
+comment|/*  83 */
+literal|208334
+block|,
+comment|/*  84 */
+literal|208334
+block|,
+comment|/*  85 */
+literal|208334
+block|,
+comment|/*  86 */
+literal|208334
+block|,
+comment|/*  87 */
+literal|208334
+block|,
+comment|/*  88 */
+literal|208334
+block|,
+comment|/*  89 */
+literal|208334
+block|,
+comment|/*  90 */
+literal|208334
+block|,
+comment|/*  91 */
+literal|208334
+block|,
+comment|/*  92 */
+literal|208334
+block|,
+comment|/*  93 */
+literal|208334
+block|,
+comment|/*  94 */
+literal|195313
+block|,
+comment|/*  95 */
+literal|195313
+block|,
+comment|/*  96 */
+literal|195313
+block|,
+comment|/*  97 */
+literal|195313
+block|,
+comment|/*  98 */
+literal|195313
+block|,
+comment|/* 101 */
+literal|195313
+block|,
+comment|/* 102 */
+literal|195313
+block|,
+comment|/* 103 */
+literal|183824
+block|,
+comment|/* 104 */
+literal|183824
+block|,
+comment|/* 105 */
+literal|183824
+block|,
+comment|/* 106 */
+literal|183824
+block|,
+comment|/* 107 */
+literal|183824
+block|,
+comment|/* 108 */
+literal|183824
+block|,
+comment|/* 109 */
+literal|183824
+block|,
+comment|/* 110 */
+literal|183824
+block|,
+comment|/* 111 */
+literal|183824
+block|,
+comment|/* 112 */
+literal|173612
+block|,
+comment|/* 113 */
+literal|173612
+block|,
+comment|/* 114 */
+literal|173612
+block|,
+comment|/* 115 */
+literal|173612
+block|,
+comment|/* 116 */
+literal|173612
+block|,
+comment|/* 117 */
+literal|173612
+block|,
+comment|/* 118 */
+literal|173612
+block|,
+comment|/* 119 */
+literal|173612
+block|,
+comment|/* 120 */
+literal|164474
+block|,
+comment|/* 121 */
+literal|164474
+block|,
+comment|/* 122 */
+literal|164474
+block|,
+comment|/* 123 */
+literal|164474
+block|,
+comment|/* 124 */
+literal|164474
+block|,
+comment|/* 125 */
+literal|164474
+block|,
+comment|/* 126 */
+literal|164474
+block|,
+comment|/* 127 */
+literal|156250
+block|,
+comment|/* 128 */
+literal|156250
+block|,
+comment|/* 129 */
+literal|156250
+block|,
+comment|/* 130 */
+literal|156250
+block|,
+comment|/* 131 */
+literal|156250
+block|,
+comment|/* 132 */
+literal|156250
+block|,
+comment|/* 133 */
+literal|148810
+block|,
+comment|/* 134 */
+literal|148810
+block|,
+comment|/* 135 */
+literal|148810
+block|,
+comment|/* 136 */
+literal|148810
+block|,
+comment|/* 137 */
+literal|148810
+block|,
+comment|/* 138 */
+literal|148810
+block|,
+comment|/* 139 */
+literal|142046
+block|,
+comment|/* 140 */
+literal|142046
+block|,
+comment|/* 141 */
+literal|142046
+block|,
+comment|/* 142 */
+literal|142046
+block|,
+comment|/* 143 */
+literal|142046
+block|,
+comment|/* 144 */
+literal|135870
+block|,
+comment|/* 145 */
+literal|135870
+block|,
+comment|/* 146 */
+literal|135870
+block|,
+comment|/* 147 */
+literal|135870
+block|,
+comment|/* 148 */
+literal|130209
+block|,
+comment|/* 149 */
+literal|130209
+block|,
+comment|/* 150 */
+literal|130209
+block|,
+comment|/* 151 */
+literal|130209
+block|,
+comment|/* 152 */
+literal|130209
+block|,
+comment|/* 153 */
+literal|125000
+block|,
+comment|/* 154 */
+literal|125000
+block|,
+comment|/* 155 */
+literal|125000
+block|,
+comment|/* 156 */
+literal|125000
+block|,
+comment|/* 157 */
+literal|120193
+block|,
+comment|/* 158 */
+literal|120193
+block|,
+comment|/* 159 */
+literal|120193
+block|,
+comment|/* 160 */
+literal|115741
+block|,
+comment|/* 161 */
+literal|115741
+block|,
+comment|/* 162 */
+literal|115741
+block|,
+comment|/* 163 */
+literal|115741
+block|,
+comment|/* 164 */
+literal|111608
+block|,
+comment|/* 165 */
+literal|111608
+block|,
+comment|/* 166 */
+literal|111608
+block|,
+comment|/* 167 */
+literal|107759
+block|,
+comment|/* 168 */
+literal|107759
+block|,
+comment|/* 169 */
+literal|107759
+block|,
+comment|/* 170 */
+literal|104167
+block|,
+comment|/* 171 */
+literal|104167
+block|,
+comment|/* 172 */
+literal|104167
+block|,
+comment|/* 173 */
+literal|100807
+block|,
+comment|/* 174 */
+literal|100807
+block|,
+comment|/* 175 */
+literal|97657
+block|,
+comment|/* 176 */
+literal|97657
+block|,
+comment|/* 177 */
+literal|97657
+block|,
+comment|/* 178 */
+literal|94697
+block|,
+comment|/* 179 */
+literal|94697
+block|,
+comment|/* 180 */
+literal|91912
+block|,
+comment|/* 181 */
+literal|91912
+block|,
+comment|/* 182 */
+literal|89286
+block|,
+comment|/* 183 */
+literal|89286
+block|,
+comment|/* 184 */
+literal|86806
+block|,
+comment|/* 185 */
+literal|86806
+block|,
+comment|/* 186 */
+literal|84460
+block|,
+comment|/* 187 */
+literal|84460
+block|,
+comment|/* 188 */
+literal|82237
+block|,
+comment|/* 189 */
+literal|82237
+block|,
+comment|/* 190 */
+literal|80129
+block|,
+comment|/* 191 */
+literal|78125
+block|,
+comment|/* 192 */
+literal|78126
+block|,
+comment|/* 193 */
+literal|76220
+block|,
+comment|/* 194 */
+literal|74405
+block|,
+comment|/* 195 */
+literal|74405
+block|,
+comment|/* 196 */
+literal|72675
+block|,
+comment|/* 197 */
+literal|71023
+block|,
+comment|/* 198 */
+literal|69445
+block|,
+comment|/* 199 */
+literal|69445
+block|,
+comment|/* 200 */
+literal|67935
+block|,
+comment|/* 201 */
+literal|66490
+block|,
+comment|/* 202 */
+literal|65105
+block|,
+comment|/* 203 */
+literal|63776
+block|,
+comment|/* 204 */
+literal|62500
+block|,
+comment|/* 205 */
+literal|61275
+block|,
+comment|/* 206 */
+literal|60097
+block|,
+comment|/* 207 */
+literal|58963
+block|,
+comment|/* 208 */
+literal|57871
+block|,
+comment|/* 209 */
+literal|56819
+block|,
+comment|/* 210 */
+literal|54825
+block|,
+comment|/* 211 */
+literal|53880
+block|,
+comment|/* 212 */
+literal|52967
+block|,
+comment|/* 213 */
+literal|51230
+block|,
+comment|/* 214 */
+literal|50404
+block|,
+comment|/* 215 */
+literal|48829
+block|,
+comment|/* 216 */
+literal|47349
+block|,
+comment|/* 217 */
+literal|46642
+block|,
+comment|/* 218 */
+literal|45290
+block|,
+comment|/* 219 */
+literal|44015
+block|,
+comment|/* 220 */
+literal|42809
+block|,
+comment|/* 221 */
+literal|41119
+block|,
+comment|/* 222 */
+literal|40065
+block|,
+comment|/* 223 */
+literal|39063
+block|,
+comment|/* 224 */
+literal|37651
+block|,
+comment|/* 225 */
+literal|36338
+block|,
+comment|/* 226 */
+literal|35113
+block|,
+comment|/* 227 */
+literal|33968
+block|,
+comment|/* 228 */
+literal|32553
+block|,
+comment|/* 229 */
+literal|31250
+block|,
+comment|/* 230 */
+literal|30049
+block|,
+comment|/* 231 */
+literal|28936
+block|,
+comment|/* 232 */
+literal|27655
+block|,
+comment|/* 233 */
+literal|26261
+block|,
+comment|/* 234 */
+literal|25000
+block|,
+comment|/* 235 */
+literal|23855
+block|,
+comment|/* 236 */
+literal|22645
+block|,
+comment|/* 237 */
+literal|21259
+block|,
+comment|/* 238 */
+literal|20033
+block|,
+comment|/* 239 */
+literal|18826
+block|,
+comment|/* 240 */
+literal|17557
+block|,
+comment|/* 241 */
+literal|16277
+block|,
+comment|/* 242 */
+literal|15025
+block|,
+comment|/* 243 */
+literal|13767
+block|,
+comment|/* 244 */
+literal|12551
+block|,
+comment|/* 245 */
+literal|11282
+block|,
+comment|/* 246 */
+literal|10017
+block|,
+comment|/* 247 */
+literal|8779
+block|,
+comment|/* 248 */
+literal|7531
+block|,
+comment|/* 249 */
+literal|6263
+block|,
+comment|/* 250 */
+literal|5017
+block|,
+comment|/* 251 */
+literal|3761
+block|,
+comment|/* 252 */
+literal|2509
+block|,
+comment|/* 253 */
+literal|1254
+block|,
+comment|/* 254 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Find the best match of the high part of the Rate Control Information  *   * This function is called when a VC is opened in order to help  * in converting Fore's rate to PCR.  * The Fore's Rate Control Information is encoded as 32-bit field  * comprised of two 16-bit subfields.  *  * Arguments:  *	*pcr		Peak Cell Rate, will be updated with actual value  *  * Returns:  *	descr		the rate descriptor  *  */
+end_comment
+
+begin_function
+specifier|static
+name|uint32_t
+name|pcr2rate
+parameter_list|(
+name|int32_t
+modifier|*
+name|pcr
+parameter_list|)
+block|{
+name|u_int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|pcr
+operator|>=
+name|rate_tab
+index|[
+literal|0
+index|]
+condition|)
+block|{
+comment|/* special case link rate */
+operator|*
+name|pcr
+operator|=
+name|rate_tab
+index|[
+literal|0
+index|]
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|rate_tab
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|rate_tab
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|pcr
+operator|>=
+name|rate_tab
+index|[
+name|i
+index|]
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|==
+sizeof|sizeof
+argument_list|(
+name|rate_tab
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|rate_tab
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
+comment|/* smaller than smallest */
+name|i
+operator|--
+expr_stmt|;
+block|}
+comment|/* update with the actual value */
+operator|*
+name|pcr
+operator|=
+name|rate_tab
+index|[
+name|i
+index|]
+expr_stmt|;
+return|return
+operator|(
+operator|(
+literal|255
+operator|-
+name|i
+operator|)
+operator|<<
+literal|16
+operator|)
+operator||
+name|i
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Open a VCC  *   * This function is called via the common driver code after receiving a  * stack *_INIT command.  The common code has already validated most of  * the request so we just need to check a few more Fore-specific details.  * Then we just issue the command to the CP.  Note that we can't wait around  * for the CP to process the command, so we return success for now and abort  * the connection if the command later fails.  *  * Called at splimp.  *  * Arguments:  *	cup	pointer to device common unit  *	cvp	pointer to common VCC entry  *  * Returns:  *	0	open successful  *	else 	open failed  *  */
 end_comment
@@ -443,6 +1342,118 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+comment|/* 	 * Compute the PCR (but only for outgoing VCCs) 	 */
+name|fvp
+operator|->
+name|rate
+operator|=
+name|FORE_DEF_RATE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vcp
+operator|->
+name|vc_type
+operator|&
+name|VCC_OUT
+operator|)
+operator|&&
+name|cvp
+operator|->
+name|cv_connvc
+condition|)
+block|{
+name|Atm_attributes
+modifier|*
+name|attr
+init|=
+operator|&
+name|cvp
+operator|->
+name|cv_connvc
+operator|->
+name|cvc_attr
+decl_stmt|;
+if|if
+condition|(
+name|attr
+operator|&&
+name|attr
+operator|->
+name|traffic
+operator|.
+name|v
+operator|.
+name|forward
+operator|.
+name|PCR_all_traffic
+operator|>
+literal|0
+operator|&&
+name|attr
+operator|->
+name|traffic
+operator|.
+name|v
+operator|.
+name|forward
+operator|.
+name|PCR_all_traffic
+operator|<
+name|rate_tab
+index|[
+literal|0
+index|]
+operator|&&
+operator|(
+name|fup
+operator|->
+name|fu_shape
+operator|==
+name|FUS_SHAPE_ALL
+operator|||
+operator|(
+name|fup
+operator|->
+name|fu_shape
+operator|==
+name|FUS_SHAPE_ONE
+operator|&&
+name|fup
+operator|->
+name|fu_num_shaped
+operator|==
+literal|0
+operator|)
+operator|)
+condition|)
+block|{
+name|fvp
+operator|->
+name|rate
+operator|=
+name|pcr2rate
+argument_list|(
+operator|&
+name|attr
+operator|->
+name|traffic
+operator|.
+name|v
+operator|.
+name|forward
+operator|.
+name|PCR_all_traffic
+argument_list|)
+expr_stmt|;
+name|fup
+operator|->
+name|fu_num_shaped
+operator|++
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Only need to tell the CP about incoming VCCs 	 */
 if|if
@@ -983,6 +1994,19 @@ condition|)
 name|fup
 operator|->
 name|fu_open_vcc
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|fvp
+operator|->
+name|rate
+operator|!=
+literal|0
+condition|)
+name|fup
+operator|->
+name|fu_num_shaped
 operator|--
 expr_stmt|;
 name|DEVICE_UNLOCK

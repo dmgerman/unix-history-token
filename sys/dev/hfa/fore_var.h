@@ -36,6 +36,10 @@ name|Fore_aal
 name|fv_aal
 decl_stmt|;
 comment|/* CP version of AAL */
+name|uint32_t
+name|rate
+decl_stmt|;
+comment|/* Rate control (data/idle cell ratio) */
 block|}
 struct|;
 end_struct
@@ -669,6 +673,14 @@ name|int
 name|fu_ft4
 decl_stmt|;
 comment|/* Running ForeThought 4 firmware */
+comment|/* shaping enable */
+name|u_int
+name|fu_shape
+decl_stmt|;
+name|u_int
+name|fu_num_shaped
+decl_stmt|;
+comment|/* number of shaped VCCs */
 block|}
 struct|;
 end_struct
@@ -814,6 +826,31 @@ end_define
 begin_comment
 comment|/* Statistics request in progress */
 end_comment
+
+begin_comment
+comment|/*  * Shaping values  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUS_NO_SHAPING
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUS_SHAPE_ONE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUS_SHAPE_ALL
+value|2
+end_define
 
 begin_comment
 comment|/*  * Macros to access CP memory  */

@@ -40,6 +40,16 @@ decl_stmt|;
 name|Fore_unit
 name|fup
 decl_stmt|;
+comment|/* sysctl support */
+name|struct
+name|sysctl_ctx_list
+name|sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sysctl_tree
+decl_stmt|;
 block|}
 struct|;
 end_struct
