@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Initial implementation:  * Copyright (c) 2001 Robert Drehmel  * All rights reserved.  *  * As long as the above copyright statement and this notice remain  * unchanged, you can do what ever you want with this file.   *  * $FreeBSD$  */
+comment|/*  * Initial implementation:  * Copyright (c) 2001 Robert Drehmel  * All rights reserved.  *  * As long as the above copyright statement and this notice remain  * unchanged, you can do what ever you want with this file.   */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * FreeBSD/sparc64 kernel loader - machine dependent part  *  *  - implements copyin and readin functions that map kernel  *    pages on demand.  The machine independent code does not  *    know the size of the kernel early enough to pre-enter  *    TTEs and install just one 4MB mapping seemed to limiting  *    to me.  */
