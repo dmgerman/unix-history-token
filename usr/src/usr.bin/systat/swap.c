@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	8.1 (Berkeley) %G%"
+literal|"@(#)swap.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,6 +266,8 @@ specifier|static
 name|long
 modifier|*
 name|perdev
+decl_stmt|,
+name|blocksize
 decl_stmt|;
 end_decl_stmt
 
@@ -296,8 +298,6 @@ name|int
 name|nfree
 decl_stmt|,
 name|hlen
-decl_stmt|,
-name|blocksize
 decl_stmt|;
 end_decl_stmt
 
