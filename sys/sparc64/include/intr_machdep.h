@@ -137,6 +137,12 @@ name|PIL_TICK
 value|14
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
