@@ -497,6 +497,18 @@ literal|1
 decl_stmt|;
 comment|/* Is rts/cts enabled ? */
 name|unsigned
+name|nonstandard_pppoe
+range|:
+literal|1
+decl_stmt|;
+comment|/* Is PPPoE mode nonstandard */
+name|unsigned
+name|pppoe_configured
+range|:
+literal|1
+decl_stmt|;
+comment|/* temporary hack */
+name|unsigned
 name|parity
 decl_stmt|;
 comment|/* What parity is enabled? (tty flags) */
@@ -1158,6 +1170,20 @@ parameter_list|(
 name|struct
 name|physical
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|physical_SetPPPoEnonstandatd
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
