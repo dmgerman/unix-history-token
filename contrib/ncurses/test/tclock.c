@@ -483,7 +483,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
 name|use_default_colors

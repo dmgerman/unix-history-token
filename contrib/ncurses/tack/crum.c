@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: crum.c,v 1.2 1999/08/21 23:09:08 tom Exp $"
+literal|"$Id: crum.c,v 1.3 2000/03/04 21:09:18 tom Exp $"
 argument_list|)
 end_macro
 
@@ -479,7 +479,7 @@ operator|&
 literal|4
 condition|)
 block|{
-comment|/* paramiterized relative cursor movement */
+comment|/* parameterized relative cursor movement */
 if|if
 condition|(
 name|parm_right_cursor

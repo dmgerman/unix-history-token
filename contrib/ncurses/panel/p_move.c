@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_move.c,v 1.3 1999/09/29 15:22:32 juergen Exp $"
+literal|"$Id: p_move.c,v 1.5 1999/11/25 13:49:26 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -39,10 +39,6 @@ name|int
 name|startx
 parameter_list|)
 block|{
-name|WINDOW
-modifier|*
-name|win
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -55,7 +51,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|_nc_panel_is_linked
+name|IS_LINKED
 argument_list|(
 name|pan
 argument_list|)
@@ -69,18 +65,16 @@ name|PANEL
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|TRUE
 argument_list|)
-expr_stmt|;
-name|win
-operator|=
-name|pan
-operator|->
-name|win
 expr_stmt|;
 if|if
 condition|(
 name|mvwin
 argument_list|(
+name|pan
+operator|->
 name|win
 argument_list|,
 name|starty

@@ -29,7 +29,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: control.c,v 1.2 1999/06/16 00:45:59 tom Exp $"
+literal|"$Id: control.c,v 1.3 2000/03/04 21:10:59 tom Exp $"
 argument_list|)
 end_macro
 
@@ -237,7 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lines or columns effected (repitition factor) */
+comment|/* lines or columns effected (repetition factor) */
 end_comment
 
 begin_decl_stmt
@@ -305,7 +305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lines or columns effected (repitition factor) */
+comment|/* lines or columns effected (repetition factor) */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: firework.c,v 1.15 1999/10/16 21:33:39 tom Exp $  */
+comment|/*  * $Id: firework.c,v 1.16 1999/11/13 23:39:16 tom Exp $  */
 end_comment
 
 begin_include
@@ -784,7 +784,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
 name|use_default_colors

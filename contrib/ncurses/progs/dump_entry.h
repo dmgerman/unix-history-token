@@ -129,6 +129,54 @@ begin_comment
 comment|/* sort by termcap names */
 end_comment
 
+begin_comment
+comment|/* capability types for the comparison hook */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMP_BOOLEAN
+value|0
+end_define
+
+begin_comment
+comment|/* comparison on booleans */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMP_NUMBER
+value|1
+end_define
+
+begin_comment
+comment|/* comparison on numerics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMP_STRING
+value|2
+end_define
+
+begin_comment
+comment|/* comparison on strings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMP_USE
+value|3
+end_define
+
+begin_comment
+comment|/* comparison on use capabilities */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|NCURSES_CONST
@@ -252,6 +300,20 @@ parameter_list|)
 parameter_list|,
 name|TERMTYPE
 modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|repair_acsc
+parameter_list|(
+name|TERMTYPE
+modifier|*
+name|tp
 parameter_list|)
 function_decl|;
 end_function_decl

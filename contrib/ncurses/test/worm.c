@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  	 @@@        @@@    @@@@@@@@@@     @@@@@@@@@@@    @@@@@@@@@@@@ 	 @@@        @@@   @@@@@@@@@@@@    @@@@@@@@@@@@   @@@@@@@@@@@@@ 	 @@@        @@@  @@@@      @@@@   @@@@           @@@@ @@@  @@@@ 	 @@@   @@   @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@  @@@@  @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@@ @@@@ @@@@  @@@        @@@   @@@            @@@  @@@   @@@ 	  @@@@@@@@@@@@   @@@@      @@@@   @@@            @@@  @@@   @@@ 	   @@@@  @@@@     @@@@@@@@@@@@    @@@            @@@  @@@   @@@ 	    @@    @@       @@@@@@@@@@     @@@            @@@  @@@   @@@  				 Eric P. Scott 			  Caltech High Energy Physics 				 October, 1980  		Hacks to turn this into a test frame for cursor movement: 			Eric S. Raymond<esr@snark.thyrsus.com> 				January, 1995  		July 1995 (esr): worms is now in living color! :-)  Options: 	-f			fill screen with copies of 'WORM' at start. 	-l<n>			set worm length 	-n<n>			set number of worms 	-t			make worms leave droppings 	-T<start><end>	set trace interval 	-S			set single-stepping during trace interval 	-N			suppress cursor-movement optimization    This program makes a good torture-test for the ncurses cursor-optimization   code.  You can use -T to set the worm move interval over which movement   traces will be dumped.  The program stops and waits for one character of   input at the beginning and end of the interval.    $Id: worm.c,v 1.26 1999/10/23 01:31:40 tom Exp $ */
+comment|/*  	 @@@        @@@    @@@@@@@@@@     @@@@@@@@@@@    @@@@@@@@@@@@ 	 @@@        @@@   @@@@@@@@@@@@    @@@@@@@@@@@@   @@@@@@@@@@@@@ 	 @@@        @@@  @@@@      @@@@   @@@@           @@@@ @@@  @@@@ 	 @@@   @@   @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@  @@@@  @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@@ @@@@ @@@@  @@@        @@@   @@@            @@@  @@@   @@@ 	  @@@@@@@@@@@@   @@@@      @@@@   @@@            @@@  @@@   @@@ 	   @@@@  @@@@     @@@@@@@@@@@@    @@@            @@@  @@@   @@@ 	    @@    @@       @@@@@@@@@@     @@@            @@@  @@@   @@@  				 Eric P. Scott 			  Caltech High Energy Physics 				 October, 1980  		Hacks to turn this into a test frame for cursor movement: 			Eric S. Raymond<esr@snark.thyrsus.com> 				January, 1995  		July 1995 (esr): worms is now in living color! :-)  Options: 	-f			fill screen with copies of 'WORM' at start. 	-l<n>			set worm length 	-n<n>			set number of worms 	-t			make worms leave droppings 	-T<start><end>	set trace interval 	-S			set single-stepping during trace interval 	-N			suppress cursor-movement optimization    This program makes a good torture-test for the ncurses cursor-optimization   code.  You can use -T to set the worm move interval over which movement   traces will be dumped.  The program stops and waits for one character of   input at the beginning and end of the interval.    $Id: worm.c,v 1.30 2000/04/15 17:51:56 tom Exp $ */
 end_comment
 
 begin_include
@@ -14,32 +14,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|typeAlloc
-parameter_list|(
-name|type
-parameter_list|,
-name|n
-parameter_list|)
-value|(type *) malloc(n * sizeof(type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|typeRealloc
-parameter_list|(
-name|type
-parameter_list|,
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|(type *) realloc(p, n * sizeof(type))
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -1265,9 +1239,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
 name|struct
 name|worm
 modifier|*
@@ -1568,7 +1539,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
 name|use_default_colors
@@ -1648,7 +1619,7 @@ directive|endif
 comment|/* A_COLOR */
 name|ref
 operator|=
-name|typeAlloc
+name|typeMalloc
 argument_list|(
 name|short
 operator|*
@@ -1675,7 +1646,7 @@ index|[
 name|y
 index|]
 operator|=
-name|typeAlloc
+name|typeMalloc
 argument_list|(
 name|short
 argument_list|,
@@ -1764,7 +1735,7 @@ operator|!
 operator|(
 name|ip
 operator|=
-name|typeAlloc
+name|typeMalloc
 argument_list|(
 name|short
 argument_list|,
@@ -1822,7 +1793,7 @@ operator|!
 operator|(
 name|ip
 operator|=
-name|typeAlloc
+name|typeMalloc
 argument_list|(
 name|short
 argument_list|,
@@ -2030,6 +2001,9 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+name|int
+name|ch
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2134,23 +2108,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|ref
-operator|=
-name|typeRealloc
-argument_list|(
-name|short
-operator|*
-argument_list|,
-name|LINES
-argument_list|,
-name|ref
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|y
 operator|=
-name|COLS
+name|LINES
 init|;
 name|y
 operator|<=
@@ -2165,6 +2127,18 @@ name|ref
 index|[
 name|y
 index|]
+argument_list|)
+expr_stmt|;
+name|ref
+operator|=
+name|typeRealloc
+argument_list|(
+name|short
+operator|*
+argument_list|,
+name|LINES
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 for|for
@@ -2188,7 +2162,7 @@ index|[
 name|y
 index|]
 operator|=
-name|typeAlloc
+name|typeMalloc
 argument_list|(
 name|short
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_pad.c,v 1.27 1998/06/28 00:10:16 tom Exp $"
+literal|"$Id: lib_pad.c,v 1.29 2000/04/29 21:19:44 tom Exp $"
 argument_list|)
 end_macro
 
@@ -420,23 +420,23 @@ init|=
 literal|2
 decl_stmt|;
 comment|/* parameterize the threshold for hardscroll */
-name|short
+name|NCURSES_SIZE_T
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|m
 decl_stmt|,
 name|n
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|pmaxrow
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|pmaxcol
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|displaced
 decl_stmt|;
 name|bool
@@ -576,7 +576,7 @@ name|_maxx
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Trim the caller's screen size back to the actual limits. 	 */
+comment|/*      * Trim the caller's screen size back to the actual limits.      */
 if|if
 condition|(
 name|pmaxrow
@@ -709,7 +709,7 @@ name|displaced
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * For pure efficiency, we'd want to transfer scrolling information 	 * from the pad to newscr whenever the window is wide enough that 	 * its update will dominate the cost of the update for the horizontal 	 * band of newscr that it occupies.  Unfortunately, this threshold 	 * tends to be complex to estimate, and in any case scrolling the 	 * whole band and rewriting the parts outside win's image would look 	 * really ugly.  So.  What we do is consider the pad "wide" if it 	 * either (a) occupies the whole width of newscr, or (b) occupies 	 * all but at most one column on either vertical edge of the screen 	 * (this caters to fussy people who put boxes around full-screen 	 * windows).  Note that changing this formula will not break any code, 	 * merely change the costs of various update cases. 	 */
+comment|/*      * For pure efficiency, we'd want to transfer scrolling information      * from the pad to newscr whenever the window is wide enough that      * its update will dominate the cost of the update for the horizontal      * band of newscr that it occupies.  Unfortunately, this threshold      * tends to be complex to estimate, and in any case scrolling the      * whole band and rewriting the parts outside win's image would look      * really ugly.  So.  What we do is consider the pad "wide" if it      * either (a) occupies the whole width of newscr, or (b) occupies      * all but at most one column on either vertical edge of the screen      * (this caters to fussy people who put boxes around full-screen      * windows).  Note that changing this formula will not break any code,      * merely change the costs of various update cases.      */
 name|wide
 operator|=
 operator|(
@@ -997,7 +997,7 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Clean up debris from scrolling or resizing the pad, so we do not 	 * accidentally pick up the index value during the next call to this 	 * procedure.  The only rows that should have an index value are those 	 * that are displayed during this cycle. 	 */
+comment|/*      * Clean up debris from scrolling or resizing the pad, so we do not      * accidentally pick up the index value during the next call to this      * procedure.  The only rows that should have an index value are those      * that are displayed during this cycle.      */
 if|#
 directive|if
 name|USE_SCROLL_HINTS
@@ -1119,7 +1119,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 	 * Use the pad's current position, if it will be visible. 	 * If not, don't do anything; it's not an error. 	 */
+comment|/*      * Use the pad's current position, if it will be visible.      * If not, don't do anything; it's not an error.      */
 if|if
 condition|(
 name|win
@@ -1186,6 +1186,14 @@ operator|->
 name|_begx
 expr_stmt|;
 block|}
+name|newscr
+operator|->
+name|_leaveok
+operator|=
+name|win
+operator|->
+name|_leaveok
+expr_stmt|;
 name|win
 operator|->
 name|_flags
@@ -1193,7 +1201,7 @@ operator|&=
 operator|~
 name|_HASMOVED
 expr_stmt|;
-comment|/* 	 * Update our cache of the line-numbers that we displayed from the pad. 	 * We will use this on subsequent calls to this function to derive 	 * values to stuff into 'oldindex[]' -- for scrolling optimization. 	 */
+comment|/*      * Update our cache of the line-numbers that we displayed from the pad.      * We will use this on subsequent calls to this function to derive      * values to stuff into 'oldindex[]' -- for scrolling optimization.      */
 name|win
 operator|->
 name|_pad

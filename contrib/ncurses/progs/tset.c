@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tset.c,v 0.37 1999/03/14 12:30:02 tom Exp $"
+literal|"$Id: tset.c,v 0.41 2000/03/12 00:03:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -302,8 +302,8 @@ name|char
 modifier|*
 name|b
 parameter_list|)
-comment|/* strcasecmp isn't portable */
 block|{
+comment|/* strcasecmp isn't portable */
 while|while
 condition|(
 operator|*
@@ -357,42 +357,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-operator|!
-name|HAVE_STRDUP
-end_if
-
-begin_define
-define|#
-directive|define
-name|strdup
-value|_nc_strdup
-end_define
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|_nc_strdup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not HAVE_STRDUP */
-end_comment
 
 begin_function
 specifier|static
@@ -482,7 +446,7 @@ index|]
 decl_stmt|;
 name|perror
 argument_list|(
-name|strcat
+name|strncat
 argument_list|(
 name|strcpy
 argument_list|(
@@ -492,6 +456,13 @@ literal|"tset: "
 argument_list|)
 argument_list|,
 name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+operator|-
+literal|10
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1441,6 +1412,7 @@ condition|;
 operator|++
 name|arg
 control|)
+block|{
 comment|/* Optional conditionals. */
 switch|switch
 condition|(
@@ -1518,6 +1490,7 @@ default|default:
 goto|goto
 name|next
 goto|;
+block|}
 block|}
 name|next
 label|:
@@ -2089,7 +2062,7 @@ expr_stmt|;
 if|#
 directive|if
 name|HAVE_GETTTYNAM
-comment|/* 		 * We have the 4.3BSD library call getttynam(3); that means 		 * there's an /etc/ttys to look up device-to-type mappings in. 		 * Try ttyname(3); check for dialup or other mapping. 		 */
+comment|/* 	 * We have the 4.3BSD library call getttynam(3); that means 	 * there's an /etc/ttys to look up device-to-type mappings in. 	 * Try ttyname(3); check for dialup or other mapping. 	 */
 if|if
 condition|(
 operator|(
@@ -2305,7 +2278,7 @@ argument_list|(
 name|ttype
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If not a path, remove TERMCAP from the environment so we get a 	 * real entry from /etc/termcap.  This prevents us from being fooled 	 * by out of date stuff in the environment. 	 */
+comment|/*      * If not a path, remove TERMCAP from the environment so we get a      * real entry from /etc/termcap.  This prevents us from being fooled      * by out of date stuff in the environment.      */
 name|found
 label|:
 if|if
@@ -2327,7 +2300,7 @@ operator|!=
 literal|'/'
 condition|)
 block|{
-comment|/* 'unsetenv("TERMCAP")' is not portable. 		 * The 'environ' array is better. 		 */
+comment|/* 'unsetenv("TERMCAP")' is not portable. 	 * The 'environ' array is better. 	 */
 name|int
 name|n
 decl_stmt|;
@@ -2391,7 +2364,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* 	 * ttype now contains a pointer to the type of the terminal. 	 * If the first character is '?', ask the user. 	 */
+comment|/*      * ttype now contains a pointer to the type of the terminal.      * If the first character is '?', ask the user.      */
 if|if
 condition|(
 name|ttype
@@ -3515,7 +3488,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__OBSOLETE__
-comment|/* 	 * Conversion logic for some *really* ancient terminal glitches, 	 * not supported in terminfo.  Left here for succeeding generations 	 * to marvel at. 	 */
+comment|/*      * Conversion logic for some *really* ancient terminal glitches,      * not supported in terminfo.  Left here for succeeding generations      * to marvel at.      */
 if|if
 condition|(
 name|tgetflag
@@ -4046,7 +4019,7 @@ operator|+=
 literal|8
 control|)
 block|{
-comment|/* Get to the right column.  In BSD tset, this 			 * used to try a bunch of half-clever things 			 * with cup and hpa, for an average saving of 			 * somewhat less than two character times per 			 * tab stop, less that .01 sec at 2400cps. We 			 * lost all this cruft because it seemed to be 			 * introducing some odd bugs. 			 * ----------12345678----------- */
+comment|/* Get to the right column.  In BSD tset, this 	     * used to try a bunch of half-clever things 	     * with cup and hpa, for an average saving of 	     * somewhat less than two character times per 	     * tab stop, less that .01 sec at 2400cps. We 	     * lost all this cruft because it seemed to be 	     * introducing some odd bugs. 	     * ----------12345678----------- */
 operator|(
 name|void
 operator|)
@@ -4174,7 +4147,7 @@ else|:
 literal|"set to"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check 'delete' before 'backspace', since the key_backspace value 	 * is ambiguous. 	 */
+comment|/*      * Check 'delete' before 'backspace', since the key_backspace value      * is ambiguous.      */
 if|if
 condition|(
 name|newer
@@ -5044,6 +5017,7 @@ name|mode
 argument_list|)
 argument_list|)
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|TERMIOS
@@ -5069,6 +5043,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 comment|/* Get the terminal name from the entry. */
 name|ttype
@@ -5114,7 +5089,7 @@ argument_list|,
 name|ttype
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If erase, kill and interrupt characters could have been 		 * modified and not -Q, display the changes. 		 */
+comment|/* 	 * If erase, kill and interrupt characters could have been 	 * modified and not -Q, display the changes. 	 */
 if|if
 condition|(
 operator|!
@@ -5164,7 +5139,7 @@ condition|(
 name|sflag
 condition|)
 block|{
-comment|/* 		 * Figure out what shell we're using.  A hack, we look for an 		 * environmental variable SHELL ending in "csh". 		 */
+comment|/* 	 * Figure out what shell we're using.  A hack, we look for an 	 * environmental variable SHELL ending in "csh". 	 */
 if|if
 condition|(
 operator|(

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_enum.c,v 1.10 1999/05/16 17:23:14 juergen Exp $"
+literal|"$Id: fty_enum.c,v 1.11 2000/03/19 01:09:56 Bruno.Haible Exp $"
 argument_list|)
 end_macro
 
@@ -856,6 +856,7 @@ operator|(
 name|Compare
 argument_list|(
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -1030,6 +1031,7 @@ operator|(
 name|Compare
 argument_list|(
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*

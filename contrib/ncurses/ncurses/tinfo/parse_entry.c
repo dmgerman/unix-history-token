@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: parse_entry.c,v 1.39 1999/03/01 02:28:51 tom Exp $"
+literal|"$Id: parse_entry.c,v 1.44 2000/04/30 00:17:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -82,13 +82,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|struct
-name|token
-name|_nc_curr_token
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1180,12 +1173,8 @@ operator|->
 name|nuses
 index|]
 operator|.
-name|parent
+name|name
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|_nc_save_str
 argument_list|(
 name|_nc_curr_token
@@ -1349,8 +1338,8 @@ break|break;
 block|}
 block|}
 else|else
-comment|/* if (_nc_syntax == SYN_TERMINFO) */
 block|{
+comment|/* if (_nc_syntax == SYN_TERMINFO) */
 for|for
 control|(
 name|ap
@@ -1496,6 +1485,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|_nc_tracing
+operator|>=
+name|DEBUG_LEVEL
+argument_list|(
+literal|1
+argument_list|)
+condition|)
 name|_nc_warning
 argument_list|(
 literal|"extended capability '%s'"
@@ -1979,7 +1977,7 @@ index|[
 name|i
 index|]
 operator|.
-name|parent
+name|name
 argument_list|,
 literal|'+'
 argument_list|)
@@ -4091,8 +4089,8 @@ index|[
 literal|0
 index|]
 condition|)
-comment|/* ACS_ULCORNER */
 block|{
+comment|/* ACS_ULCORNER */
 operator|*
 name|bp
 operator|++
@@ -4116,8 +4114,8 @@ index|[
 literal|1
 index|]
 condition|)
-comment|/* ACS_HLINE */
 block|{
+comment|/* ACS_HLINE */
 operator|*
 name|bp
 operator|++
@@ -4141,8 +4139,8 @@ index|[
 literal|2
 index|]
 condition|)
-comment|/* ACS_URCORNER */
 block|{
+comment|/* ACS_URCORNER */
 operator|*
 name|bp
 operator|++
@@ -4166,8 +4164,8 @@ index|[
 literal|3
 index|]
 condition|)
-comment|/* ACS_VLINE */
 block|{
+comment|/* ACS_VLINE */
 operator|*
 name|bp
 operator|++
@@ -4191,8 +4189,8 @@ index|[
 literal|4
 index|]
 condition|)
-comment|/* ACS_LRCORNER */
 block|{
+comment|/* ACS_LRCORNER */
 operator|*
 name|bp
 operator|++
@@ -4216,8 +4214,8 @@ index|[
 literal|5
 index|]
 condition|)
-comment|/* ACS_LLCORNER */
 block|{
+comment|/* ACS_LLCORNER */
 operator|*
 name|bp
 operator|++
@@ -4241,8 +4239,8 @@ index|[
 literal|6
 index|]
 condition|)
-comment|/* ACS_TTEE */
 block|{
+comment|/* ACS_TTEE */
 operator|*
 name|bp
 operator|++
@@ -4266,8 +4264,8 @@ index|[
 literal|7
 index|]
 condition|)
-comment|/* ACS_RTEE */
 block|{
+comment|/* ACS_RTEE */
 operator|*
 name|bp
 operator|++
@@ -4291,8 +4289,8 @@ index|[
 literal|8
 index|]
 condition|)
-comment|/* ACS_BTEE */
 block|{
+comment|/* ACS_BTEE */
 operator|*
 name|bp
 operator|++
@@ -4316,8 +4314,8 @@ index|[
 literal|9
 index|]
 condition|)
-comment|/* ACS_LTEE */
 block|{
+comment|/* ACS_LTEE */
 operator|*
 name|bp
 operator|++
@@ -4341,8 +4339,8 @@ index|[
 literal|10
 index|]
 condition|)
-comment|/* ACS_PLUS */
 block|{
+comment|/* ACS_PLUS */
 operator|*
 name|bp
 operator|++

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getch.c,v 1.43 1999/03/08 02:35:10 tom Exp $"
+literal|"$Id: lib_getch.c,v 1.47 2000/05/28 01:12:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -93,12 +93,48 @@ name|FD_SET
 argument_list|(
 name|SP
 operator|->
+name|_ifd
+argument_list|,
+operator|&
+name|fdset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|->
+name|_checkfd
+operator|>=
+literal|0
+condition|)
+block|{
+name|FD_SET
+argument_list|(
+name|SP
+operator|->
 name|_checkfd
 argument_list|,
 operator|&
 name|fdset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|->
+name|_checkfd
+operator|>=
+name|nums
+condition|)
+name|nums
+operator|=
+name|SP
+operator|->
+name|_checkfd
+operator|+
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SP
@@ -123,10 +159,8 @@ condition|(
 name|SP
 operator|->
 name|_mouse_fd
-operator|>
-name|SP
-operator|->
-name|_checkfd
+operator|>=
+name|nums
 condition|)
 name|nums
 operator|=
@@ -161,6 +195,12 @@ name|n
 decl_stmt|;
 if|if
 condition|(
+name|SP
+operator|->
+name|_mouse_fd
+operator|>=
+literal|0
+operator|&&
 name|FD_ISSET
 argument_list|(
 name|SP
@@ -171,6 +211,7 @@ operator|&
 name|fdset
 argument_list|)
 condition|)
+block|{
 comment|/* Prefer mouse */
 name|n
 operator|=
@@ -185,7 +226,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|n
 operator|=
 name|read
@@ -199,6 +242,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|n
 return|;
@@ -209,10 +253,12 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
+block|{
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 block|}
 end_function
@@ -468,7 +514,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|HIDE_EINTR
-comment|/* 	 * Under System V curses with non-restarting signals, getch() returns 	 * with value ERR when a handled signal keeps it from completing. 	 * If signals restart system calls, OTOH, the signal is invisible 	 * except to its handler. 	 * 	 * We don't want this difference to show.  This piece of code 	 * tries to make it look like we always have restarting signals. 	 */
+comment|/*      * Under System V curses with non-restarting signals, getch() returns      * with value ERR when a handled signal keeps it from completing.      * If signals restart system calls, OTOH, the signal is invisible      * except to its handler.      *      * We don't want this difference to show.  This piece of code      * tries to make it look like we always have restarting signals.      */
 if|if
 condition|(
 name|n
@@ -718,17 +764,25 @@ argument_list|()
 expr_stmt|;
 name|T
 argument_list|(
-argument|(
+operator|(
 literal|"wgetch returning (pre-cooked): %#x = %s"
-argument|, ch, _trace_key(ch));
+operator|,
+name|ch
+operator|,
+name|_trace_key
+argument_list|(
+name|ch
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|returnCode
 argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Handle cooked mode.  Grab a string from the screen, 	 * stuff its contents in the FIFO queue, and pop off 	 * the first character to return it. 	 */
+comment|/*      * Handle cooked mode.  Grab a string from the screen,      * stuff its contents in the FIFO queue, and pop off      * the first character to return it.      */
 if|if
 condition|(
 name|head
@@ -930,7 +984,7 @@ operator|->
 name|_use_keypad
 condition|)
 block|{
-comment|/* 		 * This is tricky.  We only want to get special-key 		 * events one at a time.  But we want to accumulate 		 * mouse events until either (a) the mouse logic tells 		 * us it's picked up a complete gesture, or (b) 		 * there's a detectable time lapse after one. 		 * 		 * Note: if the mouse code starts failing to compose 		 * press/release events into clicks, you should probably 		 * increase the wait with mouseinterval(). 		 */
+comment|/* 	 * This is tricky.  We only want to get special-key 	 * events one at a time.  But we want to accumulate 	 * mouse events until either (a) the mouse logic tells 	 * us it's picked up a complete gesture, or (b) 	 * there's a detectable time lapse after one. 	 * 	 * Note: if the mouse code starts failing to compose 	 * press/release events into clicks, you should probably 	 * increase the wait with mouseinterval(). 	 */
 name|int
 name|runcount
 init|=
@@ -1074,10 +1128,18 @@ argument_list|()
 expr_stmt|;
 name|T
 argument_list|(
-argument|(
+operator|(
 literal|"wgetch returning (pre-cooked): %#x = %s"
-argument|, ch, _trace_key(ch));
+operator|,
+name|ch
+operator|,
+name|_trace_key
+argument_list|(
+name|ch
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|returnCode
 argument_list|(
 name|ch
@@ -1100,7 +1162,51 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Simulate ICRNL mode 	 */
+comment|/*      * If echo() is in effect, display the printable version of the      * key on the screen.  Carriage return and backspace are treated      * specially by Solaris curses:      *      * If carriage return is defined as a function key in the      * terminfo, e.g., kent, then Solaris may return either ^J (or ^M      * if nonl() is set) or KEY_ENTER depending on the echo() mode.       * We echo before translating carriage return based on nonl(),      * since the visual result simply moves the cursor to column 0.      *      * Backspace is a different matter.  Solaris curses does not      * translate it to KEY_BACKSPACE if kbs=^H.  This does not depend      * on the stty modes, but appears to be a hardcoded special case.      * This is a difference from ncurses, which uses the terminfo entry.      * However, we provide the same visual result as Solaris, moving the      * cursor to the left.      */
+if|if
+condition|(
+name|SP
+operator|->
+name|_echo
+operator|&&
+operator|!
+operator|(
+name|win
+operator|->
+name|_flags
+operator|&
+name|_ISPAD
+operator|)
+condition|)
+block|{
+name|chtype
+name|backup
+init|=
+operator|(
+name|ch
+operator|==
+name|KEY_BACKSPACE
+operator|)
+condition|?
+literal|'\b'
+else|:
+name|ch
+decl_stmt|;
+if|if
+condition|(
+name|backup
+operator|<
+name|KEY_MIN
+condition|)
+name|wechochar
+argument_list|(
+name|win
+argument_list|,
+name|backup
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Simulate ICRNL mode      */
 if|if
 condition|(
 operator|(
@@ -1117,7 +1223,7 @@ name|ch
 operator|=
 literal|'\n'
 expr_stmt|;
-comment|/* Strip 8th-bit if so desired.  We do this only for characters that 	 * are in the range 128-255, to provide compatibility with terminals 	 * that display only 7-bit characters.  Note that 'ch' may be a 	 * function key at this point, so we mustn't strip _those_. 	 */
+comment|/* Strip 8th-bit if so desired.  We do this only for characters that      * are in the range 128-255, to provide compatibility with terminals      * that display only 7-bit characters.  Note that 'ch' may be a      * function key at this point, so we mustn't strip _those_.      */
 if|if
 condition|(
 operator|(
@@ -1142,35 +1248,6 @@ condition|)
 name|ch
 operator|&=
 literal|0x7f
-expr_stmt|;
-if|if
-condition|(
-name|SP
-operator|->
-name|_echo
-operator|&&
-name|ch
-operator|<
-name|KEY_MIN
-operator|&&
-operator|!
-operator|(
-name|win
-operator|->
-name|_flags
-operator|&
-name|_ISPAD
-operator|)
-condition|)
-name|wechochar
-argument_list|(
-name|win
-argument_list|,
-operator|(
-name|chtype
-operator|)
-name|ch
-argument_list|)
 expr_stmt|;
 name|T
 argument_list|(

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: version.c,v 1.1 1999/10/23 13:28:49 tom Exp $"
+literal|"$Id: version.c,v 1.2 1999/12/04 21:27:23 tom Exp $"
 argument_list|)
 end_macro
 
@@ -50,11 +50,9 @@ name|sprintf
 argument_list|(
 name|my_version
 argument_list|,
-literal|"ncurses %d.%d.%d"
+literal|"ncurses %s.%d"
 argument_list|,
-name|NCURSES_VERSION_MAJOR
-argument_list|,
-name|NCURSES_VERSION_MINOR
+name|NCURSES_VERSION
 argument_list|,
 name|NCURSES_VERSION_PATCH
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_raw.c,v 1.3 1999/03/06 22:28:24 tom Exp $"
+literal|"$Id: lib_raw.c,v 1.7 2000/02/13 01:01:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -91,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<io.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_endif
@@ -242,6 +236,8 @@ operator|(
 name|ICANON
 operator||
 name|ISIG
+operator||
+name|IEXTEN
 operator|)
 expr_stmt|;
 name|cur_term
@@ -455,7 +451,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: this implementation may be wrong.  See the comment under 	 * intrflush(). 	 */
+comment|/*      * Note: this implementation may be wrong.  See the comment under      * intrflush().      */
 ifdef|#
 directive|ifdef
 name|TERMIOS
@@ -558,6 +554,16 @@ operator||=
 name|ISIG
 operator||
 name|ICANON
+operator||
+operator|(
+name|cur_term
+operator|->
+name|Ottyb
+operator|.
+name|c_lflag
+operator|&
+name|IEXTEN
+operator|)
 expr_stmt|;
 name|cur_term
 operator|->
@@ -713,7 +719,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: this implementation may be wrong.  See the comment under 	 * intrflush(). 	 */
+comment|/*      * Note: this implementation may be wrong.  See the comment under      * intrflush().      */
 ifdef|#
 directive|ifdef
 name|TERMIOS
@@ -778,7 +784,7 @@ name|flag
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This call does the same thing as the qiflush()/noqiflush() 	 * pair.  We know for certain that SVr3 intrflush() tweaks the 	 * NOFLSH bit; on the other hand, the match (in the SVr4 man 	 * pages) between the language describing NOFLSH in termio(7) 	 * and the language describing qiflush()/noqiflush() in 	 * curs_inopts(3x) is too exact to be coincidence. 	 */
+comment|/*      * This call does the same thing as the qiflush()/noqiflush() pair.  We      * know for certain that SVr3 intrflush() tweaks the NOFLSH bit; on the      * other hand, the match (in the SVr4 man pages) between the language      * describing NOFLSH in termio(7) and the language describing      * qiflush()/noqiflush() in curs_inopts(3x) is too exact to be coincidence.      */
 ifdef|#
 directive|ifdef
 name|TERMIOS

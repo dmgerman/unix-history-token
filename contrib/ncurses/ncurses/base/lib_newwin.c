@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.21 1999/10/03 00:42:03 tom Exp $"
+literal|"$Id: lib_newwin.c,v 1.24 2000/04/29 18:49:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -133,15 +133,6 @@ operator|<=
 name|win
 operator|->
 name|_maxy
-operator|&&
-name|win
-operator|->
-name|_line
-index|[
-name|i
-index|]
-operator|.
-name|text
 condition|;
 name|i
 operator|++
@@ -376,9 +367,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
 name|win
 operator|->
 name|_line
@@ -397,7 +385,17 @@ name|unsigned
 operator|)
 name|num_columns
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|win
+operator|->
+name|_line
+index|[
+name|i
+index|]
+operator|.
+name|text
 operator|==
 literal|0
 condition|)
@@ -518,7 +516,7 @@ name|begx
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	** make sure window fits inside the original one 	*/
+comment|/*        ** make sure window fits inside the original one      */
 if|if
 condition|(
 name|begy
@@ -823,6 +821,34 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|bool
+name|dimension_limit
+parameter_list|(
+name|int
+name|value
+parameter_list|)
+block|{
+name|NCURSES_SIZE_T
+name|test
+init|=
+name|value
+decl_stmt|;
+return|return
+operator|(
+name|test
+operator|==
+name|value
+operator|&&
+name|value
+operator|>
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|WINDOW
 modifier|*
 name|_nc_makenew
@@ -880,13 +906,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|dimension_limit
+argument_list|(
 name|num_lines
-operator|<=
-literal|0
+argument_list|)
 operator|||
+operator|!
+name|dimension_limit
+argument_list|(
 name|num_columns
-operator|<=
-literal|0
+argument_list|)
 condition|)
 return|return
 literal|0
@@ -1195,7 +1225,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 	     * This used to do 	     * 	     * win->_line[i].firstchar = win->_line[i].lastchar = _NOCHANGE; 	     * 	     * which marks the whole window unchanged.  That's how 	     * SVr1 curses did it, but SVr4 curses marks the whole new 	     * window changed. 	     * 	     * With the old SVr1-like code, say you have stdscr full of 	     * characters, then create a new window with newwin(), 	     * then do a printw(win, "foo        ");, the trailing spaces are 	     * completely ignored by the following refreshes.  So, you 	     * get "foojunkjunk" on the screen instead of "foo        " as 	     * you actually intended. 	     * 	     * SVr4 doesn't do this.  Instead the spaces are actually written. 	     * So that's how we want ncurses to behave. 	     */
+comment|/* 	 * This used to do 	 * 	 * win->_line[i].firstchar = win->_line[i].lastchar = _NOCHANGE; 	 * 	 * which marks the whole window unchanged.  That's how 	 * SVr1 curses did it, but SVr4 curses marks the whole new 	 * window changed. 	 * 	 * With the old SVr1-like code, say you have stdscr full of 	 * characters, then create a new window with newwin(), 	 * then do a printw(win, "foo        ");, the trailing spaces are 	 * completely ignored by the following refreshes.  So, you 	 * get "foojunkjunk" on the screen instead of "foo        " as 	 * you actually intended. 	 * 	 * SVr4 doesn't do this.  Instead the spaces are actually written. 	 * So that's how we want ncurses to behave. 	 */
 name|win
 operator|->
 name|_line

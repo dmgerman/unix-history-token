@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: color.c,v 1.1 1999/04/18 01:24:45 tom Exp $"
+literal|"$Id: color.c,v 1.2 2000/03/04 21:05:54 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1908,7 +1908,7 @@ name|int
 name|n
 parameter_list|)
 block|{
-comment|/* print the programable color display */
+comment|/* print the programmable color display */
 name|int
 name|i
 decl_stmt|,
