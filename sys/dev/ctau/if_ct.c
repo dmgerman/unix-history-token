@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Cronyx-Tau adapter driver for FreeBSD.  * Supports PPP/HDLC and Cisco/HDLC protocol in synchronous mode,  * and asyncronous channels with full modem control.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 1999-2004 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations a permission to use,  * modify and redistribute this software in source and binary forms,  * as long as this message is kept with the software, all derivative  * works or modified versions.  *  * Cronyx Id: if_ct.c,v 1.1.2.20.2.1 2004/02/13 14:48:24 rik Exp $  */
+comment|/*  * Cronyx-Tau adapter driver for FreeBSD.  * Supports PPP/HDLC and Cisco/HDLC protocol in synchronous mode,  * and asyncronous channels with full modem control.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-2002 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 1999-2004 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations a permission to use,  * modify and redistribute this software in source and binary forms,  * as long as this message is kept with the software, all derivative  * works or modified versions.  *  * Cronyx Id: if_ct.c,v 1.1.2.22 2004/02/26 19:06:51 rik Exp $  */
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|NCT
+name|NCTAU
 value|1
 end_define
 
@@ -46,7 +46,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"ct.h"
+file|"ctau.h"
 end_include
 
 begin_endif
@@ -57,7 +57,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NCT
+name|NCTAU
 operator|>
 literal|0
 end_if
@@ -408,7 +408,7 @@ end_if
 begin_error
 error|#
 directive|error
-error|The device ct requires sppp or netgraph.
+error|The device ctau requires sppp or netgraph.
 end_error
 
 begin_endif
@@ -1021,7 +1021,7 @@ name|ct_board_t
 modifier|*
 name|adapter
 index|[
-name|NCT
+name|NCTAU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1032,7 +1032,7 @@ name|drv_t
 modifier|*
 name|channel
 index|[
-name|NCT
+name|NCTAU
 operator|*
 name|NCHAN
 index|]
@@ -1045,7 +1045,7 @@ name|struct
 name|callout_handle
 name|led_timo
 index|[
-name|NCT
+name|NCTAU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1268,7 +1268,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 operator|*
 name|NCHAN
 condition|;
@@ -1598,7 +1598,7 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* printf ("ctx%d: irq %d not functional, mask=0x%04x, busy=0x%04x\n", 		b->num, irq, mask, busy); */
+comment|/* printf ("ct%d: irq %d not functional, mask=0x%04x, busy=0x%04x\n", 		b->num, irq, mask, busy); */
 name|ct_probe_irq
 argument_list|(
 name|b
@@ -1946,7 +1946,7 @@ if|if
 condition|(
 name|devcount
 operator|>=
-name|NCT
+name|NCTAU
 condition|)
 break|break;
 block|}
@@ -6900,7 +6900,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NCT
+name|NCTAU
 operator|*
 name|NCHAN
 operator|||
@@ -7254,7 +7254,7 @@ literal|0
 init|;
 name|s
 operator|<
-name|NCT
+name|NCTAU
 operator|*
 name|NCHAN
 condition|;
@@ -10714,9 +10714,51 @@ operator|=
 name|D_NAGGED
 block|, }
 decl_stmt|;
+elif|#
+directive|elif
+name|__FreeBSD_version
+operator|<
+literal|502103
+specifier|static
+name|struct
+name|cdevsw
+name|ct_cdevsw
+init|=
+block|{
+operator|.
+name|d_open
+operator|=
+name|ct_open
+block|,
+operator|.
+name|d_close
+operator|=
+name|ct_close
+block|,
+operator|.
+name|d_ioctl
+operator|=
+name|ct_ioctl
+block|,
+operator|.
+name|d_name
+operator|=
+literal|"ct"
+block|,
+operator|.
+name|d_maj
+operator|=
+name|CDEV_MAJOR
+block|,
+operator|.
+name|d_flags
+operator|=
+name|D_NAGGED
+block|, }
+decl_stmt|;
 else|#
 directive|else
-comment|/* __FreeBSD_version> 501000 */
+comment|/* __FreeBSD_version>= 502103 */
 specifier|static
 name|struct
 name|cdevsw
@@ -10756,8 +10798,6 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_NAGGED
-operator||
 name|D_NEEDGIANT
 block|, }
 decl_stmt|;
@@ -14286,7 +14326,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 condition|;
 operator|++
 name|i
@@ -14443,7 +14483,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 operator|*
 name|NCHAN
 condition|;
@@ -14491,7 +14531,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 condition|;
 operator|++
 name|i
@@ -14525,7 +14565,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 condition|;
 operator|++
 name|i
@@ -14565,7 +14605,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 condition|;
 operator|++
 name|i
@@ -14621,7 +14661,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 condition|;
 operator|++
 name|i
@@ -14684,7 +14724,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 operator|*
 name|NCHAN
 condition|;
@@ -14862,7 +14902,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCT
+name|NCTAU
 condition|;
 operator|++
 name|i
@@ -15110,6 +15150,11 @@ name|cdevsw
 modifier|*
 name|cdsw
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|502103
 name|dev
 operator|=
 name|udev2dev
@@ -15122,6 +15167,19 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|dev
+operator|=
+name|makedev
+argument_list|(
+name|CDEV_MAJOR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|type
@@ -15132,6 +15190,10 @@ name|MOD_LOAD
 case|:
 if|if
 condition|(
+name|dev
+operator|!=
+name|NODEV
+operator|&&
 operator|(
 name|cdsw
 operator|=
@@ -15632,7 +15694,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCT */
+comment|/* NCTAU */
 end_comment
 
 end_unit
