@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	8.2 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * The first boot and super blocks are given in absolute disk addresses.  * The byte-offset forms are preferred, as they don't imply a sector size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BBSIZE
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBSIZE
+value|8192
+end_define
 
 begin_comment
 comment|/*  * The following two constants set the default block and fragment sizes.  * Both constants must be a power of 2 and meet the following constraints:  *	MINBSIZE<= DESBLKSIZE<= MAXBSIZE  *	sectorsize<= DESFRAGSIZE<= DESBLKSIZE  *	DESBLKSIZE / DESFRAGSIZE<= 8  */
@@ -53,6 +71,32 @@ directive|define
 name|DEFAULTOPT
 value|FS_OPTTIME
 end_define
+
+begin_comment
+comment|/*  * Preference for optimization.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_OPTTIME
+value|0
+end_define
+
+begin_comment
+comment|/* minimize allocation time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_OPTSPACE
+value|1
+end_define
+
+begin_comment
+comment|/* minimize disk fragmentation */
+end_comment
 
 begin_comment
 comment|/*  * ROTDELAY gives the minimum number of milliseconds to initiate  * another disk transfer on the same cylinder. It is used in  * determining the rotationally optimal layout for disk blocks  * within a file; the default of fs_rotdelay is 4ms.  */
