@@ -1008,14 +1008,14 @@ name|fgrepflag
 condition|)
 name|oops
 argument_list|(
-literal|"usage: fgrep [-bchilnov] {-f patfile | [-e] strings} [file ...]"
+literal|"usage: fgrep [-bchilnosvx] {-f patfile | [-e] strings} [file ...]"
 argument_list|)
 expr_stmt|;
 else|else
 comment|/* encourage SVID options, though we provide 				 * others */
 name|oops
 argument_list|(
-literal|"usage: egrep [-bchilnov] {-f patfile | [-e] pattern} [file ...]"
+literal|"usage: egrep [-bchilnosv] {-f patfile | [-e] pattern} [file ...]"
 argument_list|)
 expr_stmt|;
 block|}
