@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.3 %G%"
+literal|"@(#)p2put.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -684,7 +684,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2ICON | %3d | %d	"
+literal|"P2ICON | %3d | 0x%x	"
 argument_list|,
 name|name
 operator|!=
@@ -756,7 +756,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2NAME | %3d | %d	"
+literal|"P2NAME | %3d | 0x%x	"
 argument_list|,
 name|lval
 operator|!=
@@ -817,7 +817,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2REG | %3d | %d\n"
+literal|"P2REG | %3d | 0x%x\n"
 argument_list|,
 name|rval
 argument_list|,
@@ -1986,12 +1986,11 @@ name|FPROC
 case|:
 comment|/* 		     *	formal procedures and functions are pointers 		     *	to structures which describe their environment. 		     */
 return|return
-name|ADDTYPE
-argument_list|(
+operator|(
 name|P2PTR
-argument_list|,
+operator||
 name|P2STRTY
-argument_list|)
+operator|)
 return|;
 default|default :
 name|panic
@@ -2115,7 +2114,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s (%d) |   0 | %d\n"
+literal|"%s (%d) |   0 | 0x%x\n"
 argument_list|,
 name|p2opnames
 index|[
@@ -2224,7 +2223,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s (%d) |   0 | %d	%d %d\n"
+literal|"%s (%d) |   0 | 0x%x	%d %d\n"
 argument_list|,
 name|p2opnames
 index|[
