@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.3 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,9 +440,6 @@ name|ndrives
 decl_stmt|;
 name|char
 modifier|*
-name|arg
-decl_stmt|,
-modifier|*
 modifier|*
 name|cp
 decl_stmt|,
@@ -499,7 +496,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:i:M:N:"
+literal|"c:M:N:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -522,17 +519,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'i'
-case|:
-name|interval
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'M'
 case|:
 name|memfile
@@ -546,6 +532,17 @@ case|:
 name|namelist
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|interval
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -845,10 +842,6 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|arg
-operator|=
-name|buf
-operator|,
 name|i
 operator|=
 literal|0
@@ -861,39 +854,27 @@ name|i
 operator|++
 control|)
 block|{
-name|dr_name
-index|[
-name|i
-index|]
-operator|=
-name|arg
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|dr_name
-index|[
-name|i
-index|]
+name|buf
 argument_list|,
 literal|"dk%d"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|arg
-operator|+=
-name|strlen
-argument_list|(
 name|dr_name
 index|[
 name|i
 index|]
+operator|=
+name|strdup
+argument_list|(
+name|buf
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 block|}
 name|read_names
@@ -1995,7 +1976,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: iostat [-c count] [-i interval] [-M core] [-N system] [drives]\n"
+literal|"usage: iostat [-c count] [-M core] [-N system] [-w wait] [drives]\n"
 argument_list|)
 expr_stmt|;
 name|exit
