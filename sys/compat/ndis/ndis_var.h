@@ -6080,6 +6080,20 @@ name|NDIS_SWI
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_PSTATE_RUNNING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDIS_PSTATE_SLEEPING
+value|2
+end_define
+
 begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
