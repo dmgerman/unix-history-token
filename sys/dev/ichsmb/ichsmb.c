@@ -327,7 +327,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -490,8 +490,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -565,8 +563,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -657,8 +653,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -739,8 +733,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -820,8 +812,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -909,8 +899,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -1008,8 +996,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1105,8 +1091,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -1198,8 +1182,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1314,8 +1296,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -1403,8 +1383,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1507,8 +1485,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -1602,8 +1578,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1729,8 +1703,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -1832,8 +1804,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1993,8 +1963,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -2304,8 +2272,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2419,8 +2385,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -2560,8 +2524,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2677,8 +2639,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 name|DBG
@@ -3002,8 +2962,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 for|for
@@ -3510,8 +3468,6 @@ operator|->
 name|mutex
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_NORECURSE
 argument_list|)
 expr_stmt|;
 comment|/* Too many loops? */
