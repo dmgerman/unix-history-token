@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 1 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 2 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -443,7 +443,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*           * Get the tables needed by this subsystem (FADT and any SSDTs).          * NOTE: All other tables are completely ignored at this time.          */
+comment|/*          * Get the tables needed by this subsystem (FADT and any SSDTs).          * NOTE: All other tables are completely ignored at this time.          */
 name|AcpiTbGetPrimaryTable
 argument_list|(
 operator|&

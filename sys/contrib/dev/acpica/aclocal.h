@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 173 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 175 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -170,12 +170,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 argument_list|)
 end_if
 
@@ -1394,7 +1394,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 name|NATIVE_CHAR
 modifier|*

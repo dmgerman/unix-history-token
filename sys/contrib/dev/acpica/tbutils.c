@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -303,6 +303,9 @@ argument_list|(
 operator|(
 literal|"Invalid table header length (0x%X) found\n"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|TableHeader
 operator|->
 name|Length
@@ -382,6 +385,9 @@ argument_list|(
 operator|(
 literal|"Invalid checksum (%X) in table %4.4s\n"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|Checksum
 operator|,
 name|TableHeader

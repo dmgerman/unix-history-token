@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -528,7 +528,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/*      * Each of these types can contain executable AML code within      * the declaration.        */
+comment|/*      * Each of these types can contain executable AML code within      * the declaration.      */
 switch|switch
 condition|(
 name|Type
@@ -921,7 +921,7 @@ block|{
 comment|/* Ignore error and move on to next device */
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 name|NATIVE_CHAR
 modifier|*
 name|ScopeName

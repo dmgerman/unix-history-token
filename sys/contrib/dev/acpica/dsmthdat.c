@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 62 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 63 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1272,19 +1272,62 @@ block|{
 comment|/*          * Check for an indirect store if an argument          * contains an object reference (stored as an Node).          * We don't allow this automatic dereferencing for          * locals, since a store to a local should overwrite          * anything there, including an object reference.          *          * If both Arg0 and Local0 contain RefOf (Local4):          *          * Store (1, Arg0)             - Causes indirect store to local4          * Store (1, Local0)           - Stores 1 in local0, overwriting          *                                  the reference to local4          * Store (1, DeRefof (Local0)) - Causes indirect store to local4          *          * Weird, but true.          */
 if|if
 condition|(
-operator|(
 name|Opcode
 operator|==
 name|AML_ARG_OP
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/*               * Make sure that the object is the correct type.  This may be overkill, but              * it is here because references were NS nodes in the past.  Now they are              * operand objects of type Reference.              */
+if|if
+condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
 name|CurrentObjDesc
 argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_OPERAND
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Invalid descriptor type while storing to method arg: %X\n"
+operator|,
+name|CurrentObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INTERNAL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*               * If we have a valid reference object that came from RefOf(), do the              * indirect store              */
+if|if
+condition|(
+operator|(
+name|CurrentObjDesc
+operator|->
+name|Common
+operator|.
+name|Type
 operator|==
-name|ACPI_DESC_TYPE_NAMED
+name|INTERNAL_TYPE_REFERENCE
+operator|)
+operator|&&
+operator|(
+name|CurrentObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+operator|==
+name|AML_REF_OF_OP
 operator|)
 condition|)
 block|{
@@ -1301,26 +1344,26 @@ name|CurrentObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Detach an existing object from the Node */
+comment|/* Detach an existing object from the referenced Node */
 name|AcpiNsDetachObject
 argument_list|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
 name|CurrentObjDesc
+operator|->
+name|Reference
+operator|.
+name|Object
 argument_list|)
 expr_stmt|;
-comment|/*              * Store this object into the Node              * (perform the indirect store)              */
+comment|/*                  * Store this object into the Node                  * (perform the indirect store)                  */
 name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
 name|CurrentObjDesc
+operator|->
+name|Reference
+operator|.
+name|Object
 argument_list|,
 name|ObjDesc
 argument_list|,
@@ -1335,6 +1378,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*          * Delete the existing object          * before storing the new one          */
 name|AcpiDsMethodDataDeleteValue

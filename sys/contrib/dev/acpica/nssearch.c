@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 86 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 89 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 if|if
 condition|(
 name|ACPI_LV_NAMES
@@ -550,7 +550,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Null param-  Table %p Name %X Return %p\n"
+literal|"Null param: Node %p Name %X ReturnNode %p\n"
 operator|,
 name|Node
 operator|,
@@ -563,7 +563,7 @@ expr_stmt|;
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"NsSearchAndEnter: bad (null) parameter\n"
+literal|"NsSearchAndEnter: Null parameter\n"
 operator|)
 argument_list|)
 expr_stmt|;

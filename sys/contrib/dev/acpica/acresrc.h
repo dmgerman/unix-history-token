@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acresrc.h - Resource Manager function prototypes  *       $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acresrc.h - Resource Manager function prototypes  *       $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 126 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 128 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1164,7 +1164,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 end_if
 
@@ -1577,13 +1577,13 @@ value|pl
 end_define
 
 begin_comment
-comment|/*  * Error reporting.  These versions add callers module and line#.  Since  * _THIS_MODULE gets compiled out when ACPI_DEBUG isn't defined, only  * use it in debug mode.  */
+comment|/*  * Error reporting.  These versions add callers module and line#.  Since  * _THIS_MODULE gets compiled out when ACPI_DEBUG_OUTPUT isn't defined, only  * use it in debug mode.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_define
@@ -1715,7 +1715,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_define
@@ -2392,13 +2392,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Some code only gets executed when the debugger is built in.  * Note that this is entirely independent of whether the  * DEBUG_PRINT stuff (set by ACPI_DEBUG) is on, or not.  */
+comment|/*  * Some code only gets executed when the debugger is built in.  * Note that this is entirely independent of whether the  * DEBUG_PRINT stuff (set by ACPI_DEBUG_OUTPUT) is on, or not.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_ifdef
 
 begin_define
@@ -2431,7 +2431,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * For 16-bit code, we want to shrink some things even though  * we are using ACPI_DEBUG to get the debug output  */
+comment|/*  * For 16-bit code, we want to shrink some things even though  * we are using ACPI_DEBUG_OUTPUT to get the debug output  */
 end_comment
 
 begin_if
@@ -2471,7 +2471,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_comment

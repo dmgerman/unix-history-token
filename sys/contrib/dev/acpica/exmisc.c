@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 107 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 108 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ break|break;
 case|case
 name|ACPI_DESC_TYPE_NAMED
 case|:
-comment|/*           * A named reference that has already been resolved to a Node          */
+comment|/*          * A named reference that has already been resolved to a Node          */
 name|ReferencedObj
 operator|=
 name|ObjDesc
@@ -606,7 +606,7 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * There are three cases to handle:      *       * 1) Two Integers concatenated to produce a new Buffer      * 2) Two Strings concatenated to produce a new String      * 3) Two Buffers concatenated to produce a new Buffer      */
+comment|/*      * There are three cases to handle:      *      * 1) Two Integers concatenated to produce a new Buffer      * 2) Two Strings concatenated to produce a new String      * 3) Two Buffers concatenated to produce a new Buffer      */
 switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE

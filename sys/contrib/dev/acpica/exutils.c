@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 102 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -395,7 +395,12 @@ comment|/* Report the error, but there isn't much else we can do */
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Could not release ACPI Global Lock\n"
+literal|"Could not release ACPI Global Lock, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

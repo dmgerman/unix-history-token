@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 42 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 44 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,14 +22,14 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_ifdef
 
 begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_DEBUGGER
+value|ACPI_CA_DEBUGGER
 end_define
 
 begin_macro
@@ -509,7 +509,7 @@ name|ReturnObj
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 name|UINT32
 name|PreviousAllocations
 decl_stmt|;
@@ -581,7 +581,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 comment|/* Memory allocation tracking */
 name|Allocations
 operator|=
@@ -1080,7 +1080,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ENABLE_DEBUGGER */
+comment|/* ACPI_DEBUGGER */
 end_comment
 
 end_unit

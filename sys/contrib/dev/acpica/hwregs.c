@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 133 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 134 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -573,7 +573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *    * RETURN:      The bit mask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bit mask.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *  * RETURN:      The bit mask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bit mask.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -60,11 +60,11 @@ argument_list|(
 literal|"AcpiEnable"
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we have ACPI tables */
+comment|/* Make sure we have the FADT*/
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DSDT
+name|AcpiGbl_FADT
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -72,7 +72,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"No ACPI tables present!\n"
+literal|"No FADT information present!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -82,14 +82,10 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiGbl_OriginalMode
-operator|=
-name|AcpiHwGetMode
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|AcpiGbl_OriginalMode
+name|AcpiHwGetMode
+argument_list|()
 operator|==
 name|ACPI_SYS_MODE_ACPI
 condition|)
@@ -156,7 +152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDisable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Returns the system to original ACPI/legacy mode, and  *              uninstalls the SCI interrupt handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDisable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Transfers the system into LEGACY mode.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -178,18 +174,51 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AcpiHwGetMode
-argument_list|()
-operator|!=
-name|AcpiGbl_OriginalMode
+operator|!
+name|AcpiGbl_FADT
 condition|)
 block|{
-comment|/* Restore original mode  */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_WARN
+operator|,
+literal|"No FADT information present!\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_ACPI_TABLES
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiHwGetMode
+argument_list|()
+operator|==
+name|ACPI_SYS_MODE_LEGACY
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OK
+operator|,
+literal|"Already in LEGACY mode.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Transition to LEGACY mode */
 name|Status
 operator|=
 name|AcpiHwSetMode
 argument_list|(
-name|AcpiGbl_OriginalMode
+name|ACPI_SYS_MODE_LEGACY
 argument_list|)
 expr_stmt|;
 if|if
@@ -205,7 +234,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unable to transition to original mode"
+literal|"Could not transition to LEGACY mode."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -215,13 +244,16 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Unload the SCI interrupt handler  */
-name|Status
-operator|=
-name|AcpiEvRemoveSciHandler
-argument_list|()
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_OK
+operator|,
+literal|"Transition to LEGACY mode successful\n"
+operator|)
+argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

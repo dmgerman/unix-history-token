@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 32 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -44,12 +44,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 argument_list|)
 end_if
 

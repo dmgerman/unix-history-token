@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 141 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 142 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2208,7 +2208,7 @@ name|Reference
 operator|.
 name|Object
 expr_stmt|;
-comment|/*                      * Create a new object that contains one element of the                       * buffer -- the element pointed to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
+comment|/*                      * Create a new object that contains one element of the                      * buffer -- the element pointed to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -2257,7 +2257,7 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*                      * Return the referenced element of the package.  We must add                       * another reference to the referenced object, however.                      */
+comment|/*                      * Return the referenced element of the package.  We must add                      * another reference to the referenced object, however.                      */
 name|ReturnDesc
 operator|=
 operator|*

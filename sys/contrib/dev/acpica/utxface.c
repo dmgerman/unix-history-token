@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -327,6 +327,11 @@ literal|"[Init] Going into ACPI mode\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|AcpiGbl_OriginalMode
+operator|=
+name|AcpiHwGetMode
+argument_list|()
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiEnable
@@ -445,7 +450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeObjects  *  * PARAMETERS:  Flags           - Init/enable Options  *  * RETURN:      Status  *  * DESCRIPTION: Completes namespace initialization by initializing device   *              objects and executing AML code for Regions, buffers, etc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeObjects  *  * PARAMETERS:  Flags           - Init/enable Options  *  * RETURN:      Status  *  * DESCRIPTION: Completes namespace initialization by initializing device  *              objects and executing AML code for Regions, buffers, etc.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -601,7 +606,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 comment|/* Shut down the debugger */
 name|AcpiDbTerminate
 argument_list|()

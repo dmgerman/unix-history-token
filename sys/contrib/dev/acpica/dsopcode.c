@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1009,7 +1009,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * The last parameter to all of these opcodes (ResultDesc) started      * out as a NameString, and should therefore now be a NS node      * after resolution in AcpiExResolveOperands().        */
+comment|/*      * The last parameter to all of these opcodes (ResultDesc) started      * out as a NameString, and should therefore now be a NS node      * after resolution in AcpiExResolveOperands().      */
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -2096,7 +2096,7 @@ argument_list|(
 name|ArgDesc
 argument_list|)
 expr_stmt|;
-comment|/*       * Create the actual data object      */
+comment|/*      * Create the actual data object      */
 switch|switch
 condition|(
 name|Op

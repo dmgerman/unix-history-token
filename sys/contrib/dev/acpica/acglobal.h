@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 128 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 130 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -433,12 +433,43 @@ name|NUM_NS_TYPES
 value|INTERNAL_TYPE_INVALID+1
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NUM_PREDEFINED_NAMES
+value|10
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|NUM_PREDEFINED_NAMES
 value|9
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|ACPI_EXTERN
@@ -480,7 +511,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG
+name|ACPI_DEBUG_OUTPUT
 end_ifdef
 
 begin_decl_stmt
@@ -715,7 +746,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DEBUGGER
 end_ifdef
 
 begin_decl_stmt
@@ -962,7 +993,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ENABLE_DEBUGGER */
+comment|/* ACPI_DEBUGGER */
 end_comment
 
 begin_endif

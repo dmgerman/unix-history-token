@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -3873,7 +3873,7 @@ block|,
 comment|/* 63 */
 name|ACPI_OP
 argument_list|(
-literal|"[NamePath]"
+literal|"-NamePath-"
 argument_list|,
 name|ARGP_NAMEPATH_OP
 argument_list|,
@@ -3893,7 +3893,7 @@ block|,
 comment|/* 64 */
 name|ACPI_OP
 argument_list|(
-literal|"[MethodCall]"
+literal|"-MethodCall-"
 argument_list|,
 name|ARGP_METHODCALL_OP
 argument_list|,
@@ -3915,7 +3915,7 @@ block|,
 comment|/* 65 */
 name|ACPI_OP
 argument_list|(
-literal|"[ByteList]"
+literal|"-ByteList-"
 argument_list|,
 name|ARGP_BYTELIST_OP
 argument_list|,
@@ -3933,7 +3933,7 @@ block|,
 comment|/* 66 */
 name|ACPI_OP
 argument_list|(
-literal|"[ReservedField]"
+literal|"-ReservedField-"
 argument_list|,
 name|ARGP_RESERVEDFIELD_OP
 argument_list|,
@@ -3951,7 +3951,7 @@ block|,
 comment|/* 67 */
 name|ACPI_OP
 argument_list|(
-literal|"[NamedField]"
+literal|"-NamedField-"
 argument_list|,
 name|ARGP_NAMEDFIELD_OP
 argument_list|,
@@ -3975,7 +3975,7 @@ block|,
 comment|/* 68 */
 name|ACPI_OP
 argument_list|(
-literal|"[AccessField]"
+literal|"-AccessField-"
 argument_list|,
 name|ARGP_ACCESSFIELD_OP
 argument_list|,
@@ -3993,7 +3993,7 @@ block|,
 comment|/* 69 */
 name|ACPI_OP
 argument_list|(
-literal|"[StaticString"
+literal|"-StaticString"
 argument_list|,
 name|ARGP_STATICSTRING_OP
 argument_list|,
@@ -4011,7 +4011,7 @@ block|,
 comment|/* 6A */
 name|ACPI_OP
 argument_list|(
-literal|"[Return Value]"
+literal|"-Return Value-"
 argument_list|,
 name|ARG_NONE
 argument_list|,
@@ -4031,7 +4031,7 @@ block|,
 comment|/* 6B */
 name|ACPI_OP
 argument_list|(
-literal|"UNKNOWN_OP!"
+literal|"-UNKNOWN_OP-"
 argument_list|,
 name|ARG_NONE
 argument_list|,
@@ -4049,7 +4049,7 @@ block|,
 comment|/* 6C */
 name|ACPI_OP
 argument_list|(
-literal|"ASCII_ONLY!"
+literal|"-ASCII_ONLY-"
 argument_list|,
 name|ARG_NONE
 argument_list|,
@@ -4067,7 +4067,7 @@ block|,
 comment|/* 6D */
 name|ACPI_OP
 argument_list|(
-literal|"PREFIX_ONLY!"
+literal|"-PREFIX_ONLY-"
 argument_list|,
 name|ARG_NONE
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -359,7 +359,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* include prefix '\\' or '^' */
+comment|/* Include prefix '\\' or '^' */
 name|End
 operator|++
 expr_stmt|;
@@ -456,268 +456,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              MethodCall          - Whether the namepath can be the start  *                                    of a method call  *  * RETURN:      None  *  * DESCRIPTION: Get next name (if method call, push appropriate # args).  Names  *              are looked up in either the parsed or internal namespace to  *              determine if the name represents a control method.  If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              MethodCall          - Whether the namepath can be the start  *                                    of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method.  If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PARSER_ONLY
-end_ifdef
-
 begin_function
-name|void
-name|AcpiPsGetNextNamepath
-parameter_list|(
-name|ACPI_PARSE_STATE
-modifier|*
-name|ParserState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Arg
-parameter_list|,
-name|UINT32
-modifier|*
-name|ArgCount
-parameter_list|,
-name|BOOLEAN
-name|MethodCall
-parameter_list|)
-block|{
-name|NATIVE_CHAR
-modifier|*
-name|Path
-decl_stmt|;
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|NameOp
-decl_stmt|;
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-decl_stmt|;
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Count
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-literal|"PsGetNextNamepath"
-argument_list|)
-expr_stmt|;
-name|Path
-operator|=
-name|AcpiPsGetNextNamestring
-argument_list|(
-name|ParserState
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Path
-operator|||
-operator|!
-name|MethodCall
-condition|)
-block|{
-comment|/* Null name case, create a null namepath object */
-name|AcpiPsInitOp
-argument_list|(
-name|Arg
-argument_list|,
-name|AML_INT_NAMEPATH_OP
-argument_list|)
-expr_stmt|;
-name|Arg
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|Name
-operator|=
-name|Path
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|AcpiGbl_ParsedNamespaceRoot
-condition|)
-block|{
-comment|/*          * Lookup the name in the parsed namespace          */
-name|Op
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|MethodCall
-condition|)
-block|{
-name|Op
-operator|=
-name|AcpiPsFind
-argument_list|(
-name|AcpiPsGetParentScope
-argument_list|(
-name|ParserState
-argument_list|)
-argument_list|,
-name|Path
-argument_list|,
-name|AML_METHOD_OP
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|Op
-condition|)
-block|{
-if|if
-condition|(
-name|Op
-operator|->
-name|Common
-operator|.
-name|AmlOpcode
-operator|==
-name|AML_METHOD_OP
-condition|)
-block|{
-comment|/*                  * The name refers to a control method, so this namepath is a                  * method invocation.  We need to 1) Get the number of arguments                  * associated with this method, and 2) Change the NAMEPATH                  * object into a METHODCALL object.                  */
-name|Count
-operator|=
-name|AcpiPsGetArg
-argument_list|(
-name|Op
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Count
-operator|&&
-name|Count
-operator|->
-name|Common
-operator|.
-name|AmlOpcode
-operator|==
-name|AML_BYTE_OP
-condition|)
-block|{
-name|NameOp
-operator|=
-name|AcpiPsAllocOp
-argument_list|(
-name|AML_INT_NAMEPATH_OP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NameOp
-condition|)
-block|{
-comment|/* Change arg into a METHOD CALL and attach the name */
-name|AcpiPsInitOp
-argument_list|(
-name|Arg
-argument_list|,
-name|AML_INT_METHODCALL_OP
-argument_list|)
-expr_stmt|;
-name|NameOp
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|Name
-operator|=
-name|Path
-expr_stmt|;
-comment|/* Point METHODCALL/NAME to the METHOD Node */
-name|NameOp
-operator|->
-name|Common
-operator|.
-name|Node
-operator|=
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
-name|Op
-expr_stmt|;
-name|AcpiPsAppendArg
-argument_list|(
-name|Arg
-argument_list|,
-name|NameOp
-argument_list|)
-expr_stmt|;
-operator|*
-name|ArgCount
-operator|=
-operator|(
-name|UINT32
-operator|)
-name|Count
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|Integer
-operator|&
-name|METHOD_FLAGS_ARG_COUNT
-expr_stmt|;
-block|}
-block|}
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/*              * Else this is normal named object reference.              * Just init the NAMEPATH object with the pathname.              * (See code below)              */
-block|}
-block|}
-comment|/*      * Either we didn't find the object in the namespace, or the object is      * something other than a control method.  Just initialize the Op with the      * pathname      */
-name|AcpiPsInitOp
-argument_list|(
-name|Arg
-argument_list|,
-name|AML_INT_NAMEPATH_OP
-argument_list|)
-expr_stmt|;
-name|Arg
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|Name
-operator|=
-name|Path
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiPsGetNextNamepath
 parameter_list|(
 name|ACPI_PARSE_STATE
@@ -746,6 +489,8 @@ name|NameOp
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -770,37 +515,13 @@ argument_list|(
 name|ParserState
 argument_list|)
 expr_stmt|;
+comment|/* Null path case is allowed */
 if|if
 condition|(
-operator|!
 name|Path
-operator|||
-operator|!
-name|MethodCall
 condition|)
 block|{
-comment|/* Null name case, create a null namepath object */
-name|AcpiPsInitOp
-argument_list|(
-name|Arg
-argument_list|,
-name|AML_INT_NAMEPATH_OP
-argument_list|)
-expr_stmt|;
-name|Arg
-operator|->
-name|Common
-operator|.
-name|Value
-operator|.
-name|Name
-operator|=
-name|Path
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/*      * Lookup the name in the internal namespace      */
+comment|/*          * Lookup the name in the internal namespace          */
 name|ScopeInfo
 operator|.
 name|Scope
@@ -829,7 +550,7 @@ operator|=
 name|Node
 expr_stmt|;
 block|}
-comment|/*      * Lookup object.  We don't want to add anything new to the namespace      * here, however.  So we use MODE_EXECUTE.  Allow searching of the      * parent tree, but don't open a new scope -- we just want to lookup the      * object  (MUST BE mode EXECUTE to perform upsearch)      */
+comment|/*          * Lookup object.  We don't want to add anything new to the namespace          * here, however.  So we use MODE_EXECUTE.  Allow searching of the          * parent tree, but don't open a new scope -- we just want to lookup the          * object  (MUST BE mode EXECUTE to perform upsearch)          */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -859,6 +580,8 @@ name|ACPI_SUCCESS
 argument_list|(
 name|Status
 argument_list|)
+operator|&&
+name|MethodCall
 condition|)
 block|{
 if|if
@@ -905,7 +628,10 @@ operator|!
 name|NameOp
 condition|)
 block|{
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Change arg into a METHOD CALL and attach name to it */
@@ -959,7 +685,10 @@ name|Node
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INTERNAL
+argument_list|)
 expr_stmt|;
 block|}
 name|ACPI_DEBUG_PRINT
@@ -988,12 +717,16 @@ name|Method
 operator|.
 name|ParamCount
 expr_stmt|;
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Else this is normal named object reference.          * Just init the NAMEPATH object with the pathname.          * (See code below)          */
+comment|/*              * Else this is normal named object reference.              * Just init the NAMEPATH object with the pathname.              * (See code below)              */
 block|}
-comment|/*      * Either we didn't find the object in the namespace, or the object is      * something other than a control method.  Just initialize the Op with the      * pathname.      */
+block|}
+comment|/*      * Regardless of success/failure above,        * Just initialize the Op with the pathname.      */
 name|AcpiPsInitOp
 argument_list|(
 name|Arg
@@ -1011,15 +744,13 @@ name|Name
 operator|=
 name|Path
 expr_stmt|;
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextSimpleArg  *  * PARAMETERS:  ParserState         - Current parser state object  *              ArgType             - The argument type (AML_*_ARG)  *              Arg                 - Where the argument is returned  *  * RETURN:      None  *  * DESCRIPTION: Get the next simple argument (constant, string, or namestring)  *  ******************************************************************************/
@@ -1526,12 +1257,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextArg  *  * PARAMETERS:  ParserState         - Current parser state object  *              ArgType             - The argument type (AML_*_ARG)  *              ArgCount            - If the argument points to a control method  *                                    the method's argument is returned here.  *  * RETURN:      An op object containing the next argument.  *  * DESCRIPTION: Get next argument (including complex list arguments that require  *              pushing the parser stack)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextArg  *  * PARAMETERS:  ParserState         - Current parser state object  *              ArgType             - The argument type (AML_*_ARG)  *              ArgCount            - If the argument points to a control method  *                                    the method's argument is returned here.  *  * RETURN:      Status, and an op object containing the next argument.  *  * DESCRIPTION: Get next argument (including complex list arguments that require  *              pushing the parser stack)  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_PARSE_OBJECT
-modifier|*
+name|ACPI_STATUS
 name|AcpiPsGetNextArg
 parameter_list|(
 name|ACPI_PARSE_STATE
@@ -1544,6 +1274,11 @@ parameter_list|,
 name|UINT32
 modifier|*
 name|ArgCount
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+modifier|*
+name|ReturnArg
 parameter_list|)
 block|{
 name|ACPI_PARSE_OBJECT
@@ -1564,6 +1299,11 @@ name|Field
 decl_stmt|;
 name|UINT32
 name|Subop
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -1605,9 +1345,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|Arg
 condition|)
 block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
 name|AcpiPsGetNextSimpleArg
 argument_list|(
 name|ParserState
@@ -1617,12 +1364,11 @@ argument_list|,
 name|Arg
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|ARGP_PKGLENGTH
 case|:
-comment|/* package length, nothing returned */
+comment|/* Package length, nothing returned */
 name|ParserState
 operator|->
 name|PkgEnd
@@ -1647,7 +1393,7 @@ operator|->
 name|PkgEnd
 condition|)
 block|{
-comment|/* non-empty list */
+comment|/* Non-empty list */
 while|while
 condition|(
 name|ParserState
@@ -1672,7 +1418,11 @@ operator|!
 name|Field
 condition|)
 block|{
-break|break;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1700,7 +1450,7 @@ operator|=
 name|Field
 expr_stmt|;
 block|}
-comment|/* skip to End of byte data */
+comment|/* Skip to End of byte data */
 name|ParserState
 operator|->
 name|Aml
@@ -1725,7 +1475,7 @@ operator|->
 name|PkgEnd
 condition|)
 block|{
-comment|/* non-empty list */
+comment|/* Non-empty list */
 name|Arg
 operator|=
 name|AcpiPsAllocOp
@@ -1735,10 +1485,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|Arg
 condition|)
 block|{
-comment|/* fill in bytelist data */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Fill in bytelist data */
 name|Arg
 operator|->
 name|Common
@@ -1768,8 +1525,7 @@ name|ParserState
 operator|->
 name|Aml
 expr_stmt|;
-block|}
-comment|/* skip to End of byte data */
+comment|/* Skip to End of byte data */
 name|ParserState
 operator|->
 name|Aml
@@ -1789,7 +1545,6 @@ case|:
 case|case
 name|ARGP_SIMPLENAME
 case|:
-block|{
 name|Subop
 operator|=
 name|AcpiPsPeekOpcode
@@ -1824,9 +1579,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|Arg
 condition|)
 block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
 name|AcpiPsGetNextNamepath
 argument_list|(
 name|ParserState
@@ -1839,7 +1603,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
 comment|/* single complex argument, nothing returned */
@@ -1848,7 +1611,6 @@ name|ArgCount
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -1902,11 +1664,20 @@ name|ArgType
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_OPERAND_TYPE
+expr_stmt|;
 break|break;
 block|}
-name|return_PTR
-argument_list|(
+operator|*
+name|ReturnArg
+operator|=
 name|Arg
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

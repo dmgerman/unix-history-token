@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -411,7 +411,7 @@ operator|&
 name|Temp
 argument_list|)
 expr_stmt|;
-comment|/*      * The default is zero, and since the allocation above zeroed       * the data, just do nothing on failure.      */
+comment|/*      * The default is zero, and since the allocation above zeroed      * the data, just do nothing on failure.      */
 if|if
 condition|(
 name|ACPI_SUCCESS
