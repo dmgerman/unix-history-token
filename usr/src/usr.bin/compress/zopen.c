@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)zopen.c	8.1 (Berkeley) %G%"
+literal|"@(#)zopen.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -890,7 +890,7 @@ name|maxmaxcode
 operator|=
 literal|1L
 operator|<<
-name|BITS
+name|maxbits
 expr_stmt|;
 if|if
 condition|(
@@ -928,7 +928,7 @@ call|(
 name|u_char
 call|)
 argument_list|(
-name|BITS
+name|maxbits
 operator||
 name|block_compress
 argument_list|)
@@ -3105,7 +3105,7 @@ name|maxmaxcode
 operator|=
 literal|1
 operator|<<
-name|BITS
+name|maxbits
 expr_stmt|;
 comment|/* Should NEVER generate this code. */
 name|hsize
