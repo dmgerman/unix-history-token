@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.25 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -719,10 +719,6 @@ function_decl|;
 name|struct
 name|partition
 name|oldpartition
-decl_stmt|;
-name|struct
-name|mfs_args
-name|args
 decl_stmt|;
 name|struct
 name|stat
@@ -2279,11 +2275,18 @@ argument_list|(
 name|fsi
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MFS
 if|if
 condition|(
 name|mfs
 condition|)
 block|{
+name|struct
+name|mfs_args
+name|args
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|buf
@@ -2349,6 +2352,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
