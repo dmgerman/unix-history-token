@@ -1149,7 +1149,7 @@ comment|/*  * List of all locks in the system.  */
 end_comment
 
 begin_macro
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|lock_object
@@ -1159,7 +1159,7 @@ end_macro
 begin_expr_stmt
 name|all_locks
 operator|=
-name|STAILQ_HEAD_INITIALIZER
+name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|all_locks
 argument_list|)
@@ -1188,6 +1188,8 @@ name|LO_INITIALIZED
 block|,
 comment|/* mtx_object.lo_flags */
 block|{
+name|NULL
+block|,
 name|NULL
 block|}
 block|,
@@ -1309,7 +1311,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|all_locks
@@ -1508,7 +1510,7 @@ operator|&
 name|all_mtx
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|lock
 argument_list|,
@@ -1748,7 +1750,7 @@ operator|&
 name|all_mtx
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|all_locks
@@ -1941,14 +1943,12 @@ expr_stmt|;
 name|lock_cur_cnt
 operator|--
 expr_stmt|;
-name|STAILQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|all_locks
 argument_list|,
 name|lock
-argument_list|,
-name|lock_object
 argument_list|,
 name|lo_list
 argument_list|)

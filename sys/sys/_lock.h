@@ -39,7 +39,7 @@ comment|/* General lock type. */
 name|u_int
 name|lo_flags
 decl_stmt|;
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|lock_object
 argument_list|)
