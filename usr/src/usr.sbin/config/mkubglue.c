@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkubglue.c	1.9	83/06/16	*/
+comment|/*	mkubglue.c	1.10	83/07/09	*/
 end_comment
 
 begin_comment
@@ -371,9 +371,23 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\tcalls\t$1,_%s\n\tpopr\t$0x3f\n\trei\n\n"
+literal|"\tcalls\t$1,_%s\n\tpopr\t$0x3f\n"
 argument_list|,
 name|vector
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#if defined(VAX750) || defined(VAX730)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\tincl\t_cnt+V_INTR\n#endif\n\trei\n\n"
 argument_list|)
 expr_stmt|;
 block|}
