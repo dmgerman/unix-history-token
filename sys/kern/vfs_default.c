@@ -3031,6 +3031,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|mntvnode_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
