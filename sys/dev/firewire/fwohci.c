@@ -4736,34 +4736,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fc
-operator|.
-name|timeout_callout
-argument_list|,
-name|FW_XFERTIMEOUT
-operator|*
-name|hz
-operator|*
-literal|10
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|fwohci_timeout
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6483,10 +6455,10 @@ name|stat
 condition|)
 block|{
 case|case
-name|FWOHCIEV_ACKCOMPL
+name|FWOHCIEV_ACKPEND
 case|:
 case|case
-name|FWOHCIEV_ACKPEND
+name|FWOHCIEV_ACKCOMPL
 case|:
 name|err
 operator|=
@@ -6498,6 +6470,9 @@ name|FWOHCIEV_ACKBSA
 case|:
 case|case
 name|FWOHCIEV_ACKBSB
+case|:
+case|case
+name|FWOHCIEV_ACKBSX
 case|:
 name|device_printf
 argument_list|(
@@ -6517,9 +6492,6 @@ name|stat
 index|]
 argument_list|)
 expr_stmt|;
-case|case
-name|FWOHCIEV_ACKBSX
-case|:
 name|err
 operator|=
 name|EBUSY
@@ -6673,7 +6645,6 @@ name|retry_req
 operator|!=
 name|NULL
 condition|)
-block|{
 name|xfer
 operator|->
 name|retry_req
@@ -6681,7 +6652,12 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|fw_xfer_done
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -6733,6 +6709,7 @@ default|default:
 break|break;
 block|}
 block|}
+comment|/* 			 * The watchdog timer takes care of split 			 * transcation timeout for ACKPEND case. 			 */
 block|}
 name|dbch
 operator|->
@@ -13936,7 +13913,9 @@ argument|], 				db[i+
 literal|1
 argument|].db.immed[
 literal|3
-argument|]); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((db[i].db.desc.control& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((db[i].db.desc.control& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((db[i].db.desc.control& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	u_int32_t fun;  	sc = (struct fwohci_softc *)fc;
+argument|]); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((db[i].db.desc.control& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((db[i].db.desc.control& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((db[i].db.desc.control& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	u_int32_t fun;  	device_printf(fc->dev,
+literal|"Initiate bus reset\n"
+argument|); 	sc = (struct fwohci_softc *)fc;
 comment|/* 	 * Set root hold-off bit so that non cyclemaster capable node 	 * shouldn't became the root node. 	 */
 if|#
 directive|if
@@ -14285,10 +14264,8 @@ literal|0x1f
 argument|; 				switch(stat){ 				case FWOHCIEV_ACKPEND:
 if|#
 directive|if
-literal|1
-argument|printf(
-literal|"fwohci_arcv: ack pending..\n"
-argument|);
+literal|0
+argument|printf("fwohci_arcv: ack pending..\n");
 endif|#
 directive|endif
 comment|/* fall through */

@@ -1382,6 +1382,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|fwmem_debug
+condition|)
 name|printf
 argument_list|(
 literal|"fwmem: no such device ID:%08x%08x\n"
@@ -1763,6 +1767,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|fwmem_debug
+condition|)
 name|printf
 argument_list|(
 literal|"fwmem: no such device ID:%08x%08x\n"
