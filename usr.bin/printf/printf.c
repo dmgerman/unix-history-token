@@ -239,7 +239,7 @@ name|f
 parameter_list|,
 name|func
 parameter_list|)
-value|do { \ 	char *b = NULL; \ 	if (fieldwidth) \ 		if (precision) \ 			(void)asprintf(&b, f, fieldwidth, precision, func); \ 		else \ 			(void)asprintf(&b, f, fieldwidth, func); \ 	else if (precision) \ 		(void)asprintf(&b, f, precision, func); \ 	else \ 		(void)asprintf(&b, f, func); \ 	if (b) { \ 		(void)fputs(b, stdout); \ 		free(b); \ 	} \ } while (0)
+value|do { \ 	char *b = NULL; \ 	if (havewidth) \ 		if (haveprec) \ 			(void)asprintf(&b, f, fieldwidth, precision, func); \ 		else \ 			(void)asprintf(&b, f, fieldwidth, func); \ 	else if (haveprec) \ 		(void)asprintf(&b, f, precision, func); \ 	else \ 		(void)asprintf(&b, f, func); \ 	if (b) { \ 		(void)fputs(b, stdout); \ 		free(b); \ 	} \ } while (0)
 end_define
 
 begin_function_decl
@@ -409,6 +409,10 @@ decl_stmt|,
 name|end
 decl_stmt|,
 name|fieldwidth
+decl_stmt|,
+name|haveprec
+decl_stmt|,
+name|havewidth
 decl_stmt|,
 name|precision
 decl_stmt|,
@@ -730,13 +734,17 @@ operator|(
 literal|1
 operator|)
 return|;
+name|havewidth
+operator|=
+literal|1
+expr_stmt|;
 operator|++
 name|fmt
 expr_stmt|;
 block|}
 else|else
 block|{
-name|fieldwidth
+name|havewidth
 operator|=
 literal|0
 expr_stmt|;
@@ -790,13 +798,17 @@ operator|(
 literal|1
 operator|)
 return|;
+name|haveprec
+operator|=
+literal|1
+expr_stmt|;
 operator|++
 name|fmt
 expr_stmt|;
 block|}
 else|else
 block|{
-name|precision
+name|haveprec
 operator|=
 literal|0
 expr_stmt|;
@@ -819,7 +831,7 @@ empty_stmt|;
 block|}
 block|}
 else|else
-name|precision
+name|haveprec
 operator|=
 literal|0
 expr_stmt|;
