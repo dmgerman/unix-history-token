@@ -3014,6 +3014,15 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f)
+define|#
+directive|define
+name|p2
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f, plurales(icmpstat.f))
 name|p
 argument_list|(
 name|icps_error
@@ -3205,12 +3214,29 @@ argument_list|,
 literal|"\t%lu message response%s generated\n"
 argument_list|)
 expr_stmt|;
+name|p2
+argument_list|(
+name|icps_badaddr
+argument_list|,
+literal|"\t%lu invalid return address%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|icps_badaddr
+argument_list|,
+literal|"\t%lu no return route%s\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
 undef|#
 directive|undef
 name|p1a
+undef|#
+directive|undef
+name|p2
 name|mib
 index|[
 literal|3

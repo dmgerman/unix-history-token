@@ -642,6 +642,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|in_ifaddr
+modifier|*
+name|ip_rtaddr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|,
+expr|struct
+name|route
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|ip_savecontrol
 name|__P
