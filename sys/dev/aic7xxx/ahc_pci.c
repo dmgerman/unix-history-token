@@ -4247,6 +4247,10 @@ name|C56_66
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|0
+comment|/* 	 * This code causes a machine with an aic7880 chipset 	 * to reboot spontaneously. Whatever it's supposed to do, 	 * it's doing it wrong. -wpaul 	 */
 if|if
 condition|(
 operator|!
@@ -4390,6 +4394,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
