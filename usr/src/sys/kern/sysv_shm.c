@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1814,6 +1814,7 @@ name|error
 operator|=
 name|vm_mmap
 argument_list|(
+operator|&
 name|p
 operator|->
 name|p_vmspace
@@ -2440,6 +2441,7 @@ name|void
 operator|)
 name|vm_deallocate
 argument_list|(
+operator|&
 name|p
 operator|->
 name|p_vmspace
@@ -2530,9 +2532,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|caddr_t
-name|kva
-decl_stmt|;
 if|if
 condition|(
 name|shp
