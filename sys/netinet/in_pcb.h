@@ -732,7 +732,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|mtx_init(&(inp)->inp_mtx, (d), NULL, MTX_DEF | MTX_RECURSE)
+value|mtx_init(&(inp)->inp_mtx, (d), NULL, MTX_DEF | MTX_RECURSE | MTX_DUPOK)
 end_define
 
 begin_define
