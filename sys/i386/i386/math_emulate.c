@@ -4618,7 +4618,7 @@ parameter_list|,
 name|high
 parameter_list|)
 define|\
-value|__asm__("addl %0,%0 ; adcl %1,%1\n\t" \ "movl %0,%%ecx ; movl %1,%%ebx\n\t" \ "addl %0,%0 ; adcl %1,%1\n\t" \ "addl %0,%0 ; adcl %1,%1\n\t" \ "addl %%ecx,%0 ; adcl %%ebx,%1" \ :"=a" (low),"=d" (high) \ :"0" (low),"1" (high):"cx","bx")
+value|__asm__("addl %0,%0 ; adcl %1,%1\n\t"				\ 		"movl %0,%%ecx ; movl %1,%%ebx\n\t"			\ 		"addl %0,%0 ; adcl %1,%1\n\t"				\ 		"addl %0,%0 ; adcl %1,%1\n\t"				\ 		"addl %%ecx,%0 ; adcl %%ebx,%1"				\ 		: "=a" (low), "=d" (high)				\ 		: "0" (low), "1" (high)					\ 		: "cx", "bx")
 end_define
 
 begin_define
@@ -4633,7 +4633,7 @@ parameter_list|,
 name|high
 parameter_list|)
 define|\
-value|__asm__("addl %4,%0 ; adcl $0,%1":"=r" (low),"=r" (high) \ :"0" (low),"1" (high),"r" ((u_int32_t) (val)))
+value|__asm__("addl %4,%0 ; adcl $0,%1"				\ 		:"=r" (low),"=r" (high)					\ 		:"0" (low),"1" (high),"r" ((u_int32_t) (val)))
 end_define
 
 begin_function
@@ -5256,7 +5256,7 @@ parameter_list|,
 name|rem
 parameter_list|)
 define|\
-value|__asm__("divl %6 ; xchgl %1,%2 ; divl %6" \ 	:"=d" (rem),"=a" (low),"=r" (high) \ 	:"0" (0),"1" (high),"2" (low),"c" (10))
+value|__asm__("divl %6 ; xchgl %1,%2 ; divl %6"			\ 		:"=d" (rem),"=a" (low),"=r" (high)			\ 		:"0" (0),"1" (high),"2" (low),"c" (10))
 end_define
 
 begin_function
@@ -6238,7 +6238,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|__asm__("notl %0 ; notl %1 ; addl $1,%0 ; adcl $0,%1" \ 	:"=r" (a->a),"=r" (a->b) \ 	:"0" (a->a),"1" (a->b))
+value|__asm__("notl %0 ; notl %1 ; addl $1,%0 ; adcl $0,%1"		\ 		: "=r" (a->a), "=r" (a->b)				\ 		: "0" (a->a), "1" (a->b))
 end_define
 
 begin_function
