@@ -214,6 +214,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|usage
 name|__P
@@ -584,6 +600,9 @@ name|endp
 argument_list|,
 name|p
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|len
 operator|+
 literal|1
@@ -779,6 +798,10 @@ literal|" "
 argument_list|,
 name|user_from_uid
 argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sb
 operator|.
 name|st_uid
@@ -788,6 +811,10 @@ argument_list|)
 argument_list|,
 name|group_from_gid
 argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sb
 operator|.
 name|st_gid
@@ -1156,6 +1183,9 @@ name|bp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|sbp
 operator|->
 name|st_blksize
@@ -1257,6 +1287,9 @@ name|from_fd
 argument_list|,
 name|bp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|blen
 argument_list|)
 operator|)
@@ -1271,6 +1304,9 @@ name|to_fd
 argument_list|,
 name|bp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|nread
 argument_list|)
 operator|!=
@@ -1457,6 +1493,9 @@ name|fchflags
 argument_list|(
 name|to_fd
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sbp
 operator|->
 name|st_flags
