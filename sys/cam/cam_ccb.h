@@ -1776,6 +1776,37 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ccb_pathinq_settings_fc
+block|{
+name|u_int64_t
+name|wwnn
+decl_stmt|;
+comment|/* world wide node name */
+name|u_int64_t
+name|wwpn
+decl_stmt|;
+comment|/* world wide port name */
+name|u_int32_t
+name|port
+decl_stmt|;
+comment|/* 24 bit port id, if known */
+name|u_int32_t
+name|bitrate
+decl_stmt|;
+comment|/* Mbps */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PATHINQ_SETTINGS_SIZE
+value|128
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1893,6 +1924,16 @@ block|{
 name|struct
 name|ccb_pathinq_settings_spi
 name|spi
+decl_stmt|;
+name|struct
+name|ccb_pathinq_settings_fc
+name|fc
+decl_stmt|;
+name|char
+name|ccb_pathinq_settings_opaque
+index|[
+name|PATHINQ_SETTINGS_SIZE
+index|]
 decl_stmt|;
 block|}
 name|xport_specific
