@@ -75,6 +75,12 @@ directive|include
 file|"fpu_extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"__sparc_utrap_private.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -1172,7 +1178,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|__fpu_panic
+name|__utrap_panic
 argument_list|(
 literal|"fpu_ftos"
 argument_list|)
@@ -2207,7 +2213,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|__fpu_panic
+name|__utrap_panic
 argument_list|(
 literal|"fpu_implode"
 argument_list|)

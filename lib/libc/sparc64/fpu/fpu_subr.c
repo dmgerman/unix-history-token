@@ -69,6 +69,12 @@ directive|include
 file|"fpu_extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"__sparc_utrap_private.h"
+end_include
+
 begin_comment
 comment|/*  * Shift the given number right rsh bits.  Any bits that `fall off' will get  * shoved into the sticky field; we return the resulting sticky.  Note that  * shifting NaNs is legal (this will never shift all bits out); a NaN's  * sticky field is ignored anyway.  */
 end_comment
@@ -123,7 +129,7 @@ name|fp
 argument_list|)
 operator|)
 condition|)
-name|__fpu_panic
+name|__utrap_panic
 argument_list|(
 literal|"fpu_rightshift 1"
 argument_list|)
@@ -191,7 +197,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|__fpu_panic
+name|__utrap_panic
 argument_list|(
 literal|"fpu_rightshift 2"
 argument_list|)

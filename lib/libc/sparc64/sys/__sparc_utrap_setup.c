@@ -92,14 +92,8 @@ block|,
 name|NULL
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ UT_ILLEGAL_INSTRUCTION, __sparc_utrap_gen, NULL, NULL, NULL }, 	{ UT_MEM_ADDRESS_NOT_ALIGNED, __sparc_utrap_gen, NULL, NULL, NULL },
-endif|#
-directive|endif
 block|{
-name|UT_TRAP_INSTRUCTION_16
+name|UT_ILLEGAL_INSTRUCTION
 block|,
 name|__sparc_utrap_gen
 block|,
@@ -109,7 +103,14 @@ name|NULL
 block|,
 name|NULL
 block|}
-block|, }
+block|,
+if|#
+directive|if
+literal|0
+block|{ UT_MEM_ADDRESS_NOT_ALIGNED, __sparc_utrap_gen, NULL, NULL, NULL },
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -75,6 +75,12 @@ directive|include
 file|"fpu_extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"__sparc_utrap_private.h"
+end_include
+
 begin_comment
 comment|/*  * N.B.: in all of the following, we assume the FP format is  *  *	---------------------------  *	| s | exponent | fraction |  *	---------------------------  *  * (which represents -1**s * 1.fraction * 2**exponent), so that the  * sign bit is way at the top (bit 31), the exponent is next, and  * then the remaining bits mark the fraction.  A zero exponent means  * zero or denormalized (0.fraction rather than 1.fraction), and the  * maximum possible exponent, 2bias+1, signals inf (fraction==0) or NaN.  *  * Since the sign bit is always the topmost bit---this holds even for  * integers---we set that outside all the *tof functions.  Each function  * returns the class code for the new number (but note that we use  * FPC_QNAN for all NaNs; fpu_explode will fix this if appropriate).  */
 end_comment
@@ -876,7 +882,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|__fpu_panic
+name|__utrap_panic
 argument_list|(
 literal|"fpu_explode"
 argument_list|)

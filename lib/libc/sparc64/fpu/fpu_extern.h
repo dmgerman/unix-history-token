@@ -17,18 +17,6 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|fpstate
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|utrapframe
 struct_decl|;
 end_struct_decl
@@ -56,24 +44,13 @@ comment|/* fpu.c */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|__fpu_exception
 parameter_list|(
 name|struct
 name|utrapframe
 modifier|*
 name|tf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|__fpu_panic
-parameter_list|(
-name|char
-modifier|*
-name|msg
 parameter_list|)
 function_decl|;
 end_function_decl

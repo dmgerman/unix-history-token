@@ -69,6 +69,12 @@ directive|include
 file|"fpu_extern.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"__sparc_utrap_private.h"
+end_include
+
 begin_function
 name|struct
 name|fpn
@@ -621,7 +627,7 @@ name|r
 operator|->
 name|fp_sticky
 condition|)
-name|__fpu_panic
+name|__utrap_panic
 argument_list|(
 literal|"fpu_add"
 argument_list|)
