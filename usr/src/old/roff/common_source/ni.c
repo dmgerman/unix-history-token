@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	4.1 %G%"
+literal|"@(#)ni.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,7 +210,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/term/tab37"
+literal|"/usr/lib/term/tablpr"
 decl_stmt|;
 end_decl_stmt
 
