@@ -1905,19 +1905,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|lmc_flags
-operator||=
-name|LMC_MODEMOK
-expr_stmt|;
-name|lmc_led_on
-argument_list|(
-name|sc
-argument_list|,
-name|LMC_MII16_LED1
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * remember the timer value 	 */
@@ -2032,13 +2019,6 @@ name|lmc_flags
 operator||=
 name|LMC_IFUP
 expr_stmt|;
-name|lmc_led_on
-argument_list|(
-name|sc
-argument_list|,
-name|LMC_MII16_LED1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * select what interrupts we want to get 	 */
 name|sc
 operator|->
@@ -2126,6 +2106,33 @@ name|lmc_running
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * check if the physical link is up 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|lmc_media
+operator|->
+name|get_link_status
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|lmc_flags
+operator||=
+name|LMC_MODEMOK
+expr_stmt|;
+name|lmc_led_on
+argument_list|(
+name|sc
+argument_list|,
+name|LMC_MII16_LED1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
