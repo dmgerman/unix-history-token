@@ -7258,6 +7258,11 @@ name|lookup_how
 expr_stmt|;
 name|more
 label|:
+name|pwd_init
+argument_list|(
+name|pwd
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|lookup_how
