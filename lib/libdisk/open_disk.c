@@ -716,10 +716,6 @@ operator|=
 name|q
 control|)
 block|{
-if|if
-condition|(
-name|sn
-condition|)
 name|sn
 operator|=
 name|NULL
