@@ -306,18 +306,18 @@ value|8192
 end_define
 
 begin_comment
-comment|/*  * Cylinder groups may have up to many cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to use 22 cylinders  * per group, which seems to be the largest value allowed given  * all the other default values.  */
+comment|/*  * Cylinder groups may have up to many cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to use as many as possible  * cylinders per group.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DESCPG
-value|22
+value|65536
 end_define
 
 begin_comment
-comment|/* desired fs_cpg */
+comment|/* desired fs_cpg ("infinity") */
 end_comment
 
 begin_comment
@@ -459,6 +459,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* # sectors/track */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ncyls
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # complete cylinders */
 end_comment
 
 begin_decl_stmt
@@ -608,7 +618,7 @@ begin_decl_stmt
 name|int
 name|cpg
 init|=
-name|DESCPG
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2702,6 +2712,59 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|ncyls
+operator|=
+name|fssize
+operator|/
+name|secpercyl
+expr_stmt|;
+if|if
+condition|(
+name|ncyls
+operator|==
+literal|0
+condition|)
+name|ncyls
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|cpg
+operator|==
+literal|0
+condition|)
+name|cpg
+operator|=
+name|DESCPG
+operator|<
+name|ncyls
+condition|?
+name|DESCPG
+else|:
+name|ncyls
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cpg
+operator|>
+name|ncyls
+condition|)
+block|{
+name|cpg
+operator|=
+name|ncyls
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Number of cylinders restricts cylinders per group to %d.\n"
+argument_list|,
+name|cpg
+argument_list|)
+expr_stmt|;
+block|}
 name|mkfs
 argument_list|(
 name|pp
