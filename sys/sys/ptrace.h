@@ -210,6 +210,12 @@ name|dbreg
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|proc_read_regs
