@@ -482,7 +482,6 @@ operator|.
 name|bv_cnt
 operator|>
 literal|0
-condition|)
 operator|||
 operator|(
 name|vp
@@ -493,7 +492,7 @@ name|VI_OBJDIRTY
 operator|)
 operator|!=
 literal|0
-block|)
+condition|)
 block|{
 name|splx
 argument_list|(
@@ -679,7 +678,6 @@ name|bv_cnt
 operator|>
 literal|0
 condition|)
-block|)
 block|{
 name|splx
 argument_list|(
@@ -758,34 +756,22 @@ name|bv_cnt
 operator|>
 literal|0
 condition|)
-block|)
-function|panic
-parameter_list|(
-function|"ffs_rawread_sync: dirty bufs"
-end_function
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-unit|} 		splx
-operator|(
-name|spl
-operator|)
+name|panic
+argument_list|(
+literal|"ffs_rawread_sync: dirty bufs"
+argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|}
+name|splx
+argument_list|(
+name|spl
+argument_list|)
+expr_stmt|;
 name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|upgraded
@@ -801,10 +787,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_block
-unit|} else
+block|}
+else|else
 block|{
 name|splx
 argument_list|(
@@ -817,16 +801,14 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}   static
+specifier|static
 name|int
 name|ffs_rawread_readahead
 parameter_list|(
