@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.1	82/03/27	*/
+comment|/*	route.h	4.2	82/03/28	*/
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTS_UP
+name|RTF_UP
 value|0x1
 end_define
 
@@ -121,6 +121,15 @@ name|RTHASHSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|rtentry
+modifier|*
+name|reroute
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

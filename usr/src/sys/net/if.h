@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.10	82/03/19	*/
+comment|/*	if.h	4.11	82/03/28	*/
 end_comment
 
 begin_comment
-comment|/*  * Structures defining a network interface, providing a packet  * transport mechanism (ala level 0 of the PUP protocols).  *  * Each interface accepts output datagrams of a specified maximum  * length, and provides higher level routines with input datagrams  * received from its medium.  *  * Output occurs when the routine if_output is called, with three parameters:  *	(*ifp->if_output)(ifp, m, pf)  * Here m is the mbuf chain to be sent and pf is the protocol family  * of the internetwork datagram format in which the data is wrapped  * (e.g. PF_PUP or PF_INET).  The output routine encapsulates the  * supplied datagram if necessary, and then transmits it on its medium.  *  * On input, each interface unwraps the data received by it, and either  * places it on the input queue of a internetwork datagram routine  * and posts the associated software interrupt, or passes the datagram to a raw  * packet input routine.  *  * Routines exist for locating interfaces by their internet addresses  * or for locating a interface on a certain network, as well as more general  * routing and gateway routines maintaining information used to locate  * interfaces.  These routines live in the files if.c and ip_ggp.c.  */
+comment|/*  * Structures defining a network interface, providing a packet  * transport mechanism (ala level 0 of the PUP protocols).  *  * Each interface accepts output datagrams of a specified maximum  * length, and provides higher level routines with input datagrams  * received from its medium.  *  * Output occurs when the routine if_output is called, with three parameters:  *	(*ifp->if_output)(ifp, m, dst)  * Here m is the mbuf chain to be sent and dst is the destination address.  * The output routine encapsulates the supplied datagram if necessary,  * and then transmits it on its medium.  *  * On input, each interface unwraps the data received by it, and either  * places it on the input queue of a internetwork datagram routine  * and posts the associated software interrupt, or passes the datagram to a raw  * packet input routine.  *  * Routines exist for locating interfaces by their addresses  * or for locating a interface on a certain network, as well as more general  * routing and gateway routines maintaining information used to locate  * interfaces.  These routines live in the files if.c and route.c  */
 end_comment
 
 begin_comment
@@ -32,6 +32,10 @@ name|short
 name|if_net
 decl_stmt|;
 comment|/* network number of interface */
+name|short
+name|if_flags
+decl_stmt|;
+comment|/* up/down, broadcast, etc. */
 name|int
 name|if_host
 index|[
@@ -40,12 +44,12 @@ index|]
 decl_stmt|;
 comment|/* local net host number */
 name|struct
-name|in_addr
+name|sockaddr
 name|if_addr
 decl_stmt|;
 comment|/* internet address of interface */
 name|struct
-name|in_addr
+name|sockaddr
 name|if_broadaddr
 decl_stmt|;
 comment|/* broadcast address of interface */
@@ -131,6 +135,39 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IFF_UP
+value|0x1
+end_define
+
+begin_comment
+comment|/* interface is up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_BROADCAST
+value|0x2
+end_define
+
+begin_comment
+comment|/* broadcast address valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_DEBUG
+value|0x4
+end_define
+
+begin_comment
+comment|/* turn on debugging */
+end_comment
+
 begin_comment
 comment|/*  * Output queues (ifp->if_snd) and internetwork datagram level (pup level 1)  * input routines have queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
 end_comment
@@ -204,17 +241,6 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|rawintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* raw packet input queue */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -239,6 +265,17 @@ end_endif
 
 begin_decl_stmt
 name|struct
+name|ifqueue
+name|rawintrq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* raw packet input queue */
+end_comment
+
+begin_decl_stmt
+name|struct
 name|ifnet
 modifier|*
 name|ifnet
@@ -253,14 +290,23 @@ name|if_ifwithaddr
 argument_list|()
 decl_stmt|,
 modifier|*
-name|if_ifonnetof
+name|if_ifwithnet
 argument_list|()
 decl_stmt|,
 modifier|*
-name|if_gatewayfor
+name|if_ifwithaf
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|ifnet
+modifier|*
+name|if_ifonnetof
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct

@@ -1,12 +1,54 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.1	82/03/27	*/
+comment|/*	route.c	4.2	82/03/28	*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"../h/param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/buf.h"
 end_include
 
 begin_include
@@ -36,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/in.h"
 end_include
 
@@ -48,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/af.h"
 end_include
 
@@ -55,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_comment
@@ -101,6 +149,10 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+specifier|register
+name|int
+name|key
+decl_stmt|;
 name|struct
 name|afhash
 name|h
@@ -121,6 +173,8 @@ init|=
 name|dst
 operator|->
 name|sa_family
+decl_stmt|,
+name|doinghost
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -130,8 +184,16 @@ expr_stmt|;
 if|if
 condition|(
 name|ro
+operator|&&
+name|ro
 operator|->
-name|ro_ifp
+name|ro_rt
+operator|&&
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_ifp
 condition|)
 comment|/* ??? */
 return|return;
@@ -333,7 +395,7 @@ literal|0
 expr_stmt|;
 name|m
 operator|=
-name|routethash
+name|routehash
 index|[
 name|h
 operator|.
@@ -352,12 +414,6 @@ goto|goto
 name|again
 goto|;
 block|}
-name|ro
-operator|->
-name|ro_ifp
-operator|=
-literal|0
-expr_stmt|;
 name|ro
 operator|->
 name|ro_rt
@@ -393,6 +449,10 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|;
+specifier|register
+name|int
+name|key
 decl_stmt|;
 name|struct
 name|afhash
@@ -517,7 +577,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|rtreq
+name|rtentry
 name|rq
 decl_stmt|;
 name|int
@@ -558,7 +618,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|rtreq
+name|rtentry
 argument_list|)
 argument_list|)
 condition|)
@@ -644,6 +704,10 @@ modifier|*
 modifier|*
 name|mprev
 decl_stmt|;
+specifier|register
+name|int
+name|key
+decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
@@ -664,6 +728,8 @@ init|=
 name|sa
 operator|->
 name|sa_family
+decl_stmt|,
+name|doinghost
 decl_stmt|;
 operator|(
 operator|*
@@ -756,7 +822,10 @@ name|rt
 operator|->
 name|rt_dst
 argument_list|,
-name|dst
+operator|&
+name|new
+operator|->
+name|rt_dst
 argument_list|)
 condition|)
 continue|continue;
@@ -847,7 +916,7 @@ name|SIOCADDRT
 condition|)
 return|return
 operator|(
-name|ESEARCH
+name|ESRCH
 operator|)
 return|;
 switch|switch
@@ -905,7 +974,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EINUSE
+name|EBUSY
 operator|)
 return|;
 if|if

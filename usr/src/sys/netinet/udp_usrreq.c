@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.22	82/03/15	*/
+comment|/*	udp_usrreq.c	4.23	82/03/28	*/
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"../net/udp_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_comment
@@ -863,6 +869,8 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
+literal|0
+argument_list|,
 literal|0
 argument_list|,
 name|inp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.7	82/03/19	*/
+comment|/*	if_loop.c	4.8	82/03/28	*/
 end_comment
 
 begin_comment
@@ -111,6 +111,12 @@ init|=
 operator|&
 name|loif
 decl_stmt|;
+specifier|register
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+decl_stmt|;
 name|ifp
 operator|->
 name|if_name
@@ -129,9 +135,27 @@ name|if_net
 operator|=
 name|LONET
 expr_stmt|;
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
 name|ifp
 operator|->
 name|if_addr
+expr_stmt|;
+name|sin
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
 operator|=
 name|if_makeaddr
 argument_list|(
@@ -141,6 +165,12 @@ name|if_net
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|=
+name|IFF_UP
 expr_stmt|;
 name|ifp
 operator|->
@@ -163,7 +193,7 @@ argument|ifp
 argument_list|,
 argument|m0
 argument_list|,
-argument|pf
+argument|dst
 argument_list|)
 end_macro
 
@@ -184,8 +214,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|pf
+name|struct
+name|sockaddr
+modifier|*
+name|dst
 decl_stmt|;
 end_decl_stmt
 
@@ -210,14 +242,16 @@ operator|++
 expr_stmt|;
 switch|switch
 condition|(
-name|pf
+name|dst
+operator|->
+name|sa_family
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|INET
 case|case
-name|PF_INET
+name|AF_INET
 case|:
 name|ifq
 operator|=
@@ -237,9 +271,6 @@ argument_list|(
 name|ifq
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m0
@@ -279,18 +310,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lo%d: can't encapsulate pf%d\n"
+literal|"lo%d: can't handle af%d\n"
 argument_list|,
 name|ifp
 operator|->
 name|if_unit
 argument_list|,
-name|pf
+name|dst
+operator|->
+name|sa_family
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m0

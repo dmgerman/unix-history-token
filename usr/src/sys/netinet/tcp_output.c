@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.35	82/03/20	*/
+comment|/*	tcp_output.c	4.36	82/03/28	*/
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"../net/tcp_debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_include
@@ -1765,6 +1771,8 @@ argument_list|,
 name|tp
 operator|->
 name|t_ipopt
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

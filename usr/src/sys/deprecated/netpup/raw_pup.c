@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.8	82/03/13	*/
+comment|/*	raw_pup.c	4.9	82/03/28	*/
 end_comment
 
 begin_include
@@ -74,35 +74,6 @@ comment|/*  * Raw PUP protocol interface.  */
 end_comment
 
 begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|rpup_ctlinput
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|COUNT
-argument_list|(
-name|RPUP_CTLINPUT
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * Encapsulate packet in PUP header which is supplied by the  * user.  This is done to allow user to specify PUP identifier.  */
 end_comment
 
@@ -160,10 +131,6 @@ name|struct
 name|sockaddr_pup
 modifier|*
 name|spup
-decl_stmt|;
-name|struct
-name|in_addr
-name|in
 decl_stmt|;
 name|struct
 name|ifnet
@@ -331,21 +298,13 @@ name|spup
 operator|->
 name|spup_addr
 expr_stmt|;
-name|in
-operator|.
-name|s_net
-operator|=
-name|spup
-operator|->
-name|spup_addr
-operator|.
-name|pp_net
-expr_stmt|;
 name|ifp
 operator|=
 name|if_ifonnetof
 argument_list|(
-name|in
+name|pup
+operator|->
+name|pup_dnet
 argument_list|)
 expr_stmt|;
 if|if
@@ -365,7 +324,12 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
-name|PF_PUP
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|spup
 argument_list|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.6	82/03/19	*/
+comment|/*	if_dmc.c	4.7	82/03/28	*/
 end_comment
 
 begin_include
@@ -227,12 +227,12 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|DMC_PF
+name|DMC_AF
 value|0xff
 end_define
 
 begin_comment
-comment|/* 8 bits of protocol type in ui_flags */
+comment|/* 8 bits of address type in ui_flags */
 end_comment
 
 begin_define
@@ -549,6 +549,12 @@ operator|->
 name|ui_unit
 index|]
 decl_stmt|;
+specifier|register
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+decl_stmt|;
 name|sc
 operator|->
 name|sc_if
@@ -603,11 +609,29 @@ operator|=
 literal|17
 expr_stmt|;
 comment|/* random number */
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
 name|sc
 operator|->
 name|sc_if
 operator|.
 name|if_addr
+expr_stmt|;
+name|sin
+operator|->
+name|sa_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
 operator|=
 name|if_makeaddr
 argument_list|(
@@ -882,6 +906,15 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
 return|return;
 block|}
 name|addr
@@ -983,6 +1016,14 @@ literal|"  first read queued, addr 0x%x\n"
 argument_list|,
 name|base
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator||=
+name|IFF_UP
 expr_stmt|;
 block|}
 end_block
@@ -1714,14 +1755,14 @@ name|ui
 operator|->
 name|ui_flags
 operator|&
-name|DMC_PF
+name|DMC_AF
 condition|)
 block|{
 ifdef|#
 directive|ifdef
 name|INET
 case|case
-name|PF_INET
+name|AF_INET
 case|:
 name|schednetisr
 argument_list|(
@@ -1739,7 +1780,7 @@ directive|endif
 default|default:
 name|printf
 argument_list|(
-literal|"dmc%d: unknown packet type %d\n"
+literal|"dmc%d: unknown address type %d\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1747,7 +1788,7 @@ name|ui
 operator|->
 name|ui_flags
 operator|&
-name|DMC_NET
+name|DMC_AF
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1997,7 +2038,7 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
-name|pf
+name|dst
 argument_list|)
 specifier|register
 expr|struct
@@ -2017,8 +2058,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|pf
+name|struct
+name|sockaddr
+modifier|*
+name|dst
 decl_stmt|;
 end_decl_stmt
 
@@ -2046,20 +2089,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pf
+name|dst
+operator|->
+name|sa_family
 operator|!=
 operator|(
 name|ui
 operator|->
 name|ui_flags
 operator|&
-name|DMC_PF
+name|DMC_AF
 operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dmc%d: protocol %d not supported\n"
+literal|"dmc%d: af%d not supported\n"
 argument_list|,
 name|ifp
 operator|->
@@ -2068,9 +2113,6 @@ argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m
@@ -2106,9 +2148,6 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m

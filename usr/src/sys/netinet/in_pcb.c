@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.21	82/03/23	*/
+comment|/*	in_pcb.c	4.22	82/03/28	*/
 end_comment
 
 begin_include
@@ -199,9 +199,12 @@ name|s_addr
 operator|&&
 name|if_ifwithaddr
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
-operator|->
-name|sin_addr
 argument_list|)
 operator|==
 literal|0
@@ -552,6 +555,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|ifaddr
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|IN_PCBCONNECT
@@ -609,6 +617,8 @@ argument_list|(
 name|sin
 operator|->
 name|sin_addr
+operator|.
+name|s_net
 argument_list|)
 expr_stmt|;
 if|if
@@ -617,9 +627,38 @@ name|ifp
 operator|==
 literal|0
 condition|)
+block|{
 name|ifp
 operator|=
-name|ifnet
+name|if_ifwithaf
+argument_list|(
+name|AF_INET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
+comment|/* XXX */
+block|}
+name|ifaddr
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|ifp
+operator|->
+name|if_addr
 expr_stmt|;
 block|}
 if|if
@@ -648,9 +687,9 @@ name|inp
 operator|->
 name|inp_laddr
 else|:
-name|ifp
+name|ifaddr
 operator|->
-name|if_addr
+name|sin_addr
 argument_list|,
 name|inp
 operator|->
@@ -696,9 +735,9 @@ name|inp
 operator|->
 name|inp_laddr
 operator|=
-name|ifp
+name|ifaddr
 operator|->
-name|if_addr
+name|sin_addr
 expr_stmt|;
 name|sin2
 operator|->
