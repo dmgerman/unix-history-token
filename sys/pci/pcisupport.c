@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.13.4.2 1995/09/09 23:10:21 davidg Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.13.4.3 1996/06/26 04:36:53 davidg Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -98,6 +98,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|chipset_device
@@ -156,14 +157,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* make sure formats expand to at most as many chars !!! */
+comment|/* make sure formats expand to at least as many chars !!! */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PPB_DESCR
-value|"generic PCI bridge (vendor=%x device=%x subclass=%x)"
+value|"generic PCI bridge (vendor=%04x device=%04x subclass=%1.2d)"
 end_define
 
 begin_function
@@ -218,7 +219,7 @@ argument_list|(
 sizeof|sizeof
 name|PPB_DESCR
 operator|+
-literal|5
+literal|1
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -351,6 +352,14 @@ literal|"Intel 82375EB PCI-EISA bridge"
 operator|)
 return|;
 case|case
+literal|0x04961039
+case|:
+return|return
+operator|(
+literal|"SiS 85c496"
+operator|)
+return|;
+case|case
 literal|0x04a38086
 case|:
 name|rev
@@ -392,7 +401,7 @@ literal|0x122d8086
 case|:
 return|return
 operator|(
-literal|"Intel 82437 PCI cache memory controller"
+literal|"Intel 82437FX PCI cache memory controller"
 operator|)
 return|;
 case|case
@@ -400,7 +409,15 @@ literal|0x122e8086
 case|:
 return|return
 operator|(
-literal|"Intel 82371 PCI-ISA bridge"
+literal|"Intel 82371FB PCI-ISA bridge"
+operator|)
+return|;
+case|case
+literal|0x12308086
+case|:
+return|return
+operator|(
+literal|"Intel 82371FB IDE interface"
 operator|)
 return|;
 case|case
@@ -409,38 +426,6 @@ case|:
 return|return
 operator|(
 literal|"Intel 82439"
-operator|)
-return|;
-case|case
-literal|0x70008086
-case|:
-return|return
-operator|(
-literal|"Intel 82371 PCI-ISA bridge"
-operator|)
-return|;
-case|case
-literal|0x70108086
-case|:
-return|return
-operator|(
-literal|"Intel 82371 Bus-Master IDE controller"
-operator|)
-return|;
-case|case
-literal|0x12308086
-case|:
-return|return
-operator|(
-literal|"Intel 82371 Bus-master IDE controller"
-operator|)
-return|;
-case|case
-literal|0x04961039
-case|:
-return|return
-operator|(
-literal|"SiS 85c496"
 operator|)
 return|;
 case|case
@@ -465,6 +450,46 @@ case|:
 return|return
 operator|(
 literal|"SiS 85c601"
+operator|)
+return|;
+case|case
+literal|0x70008086
+case|:
+return|return
+operator|(
+literal|"Intel 82371SB PCI-ISA bridge"
+operator|)
+return|;
+case|case
+literal|0x70108086
+case|:
+return|return
+operator|(
+literal|"Intel 82371SB IDE interface"
+operator|)
+return|;
+case|case
+literal|0x12378086
+case|:
+return|return
+operator|(
+literal|"Intel 82440FX (Natoma) PCI and memory controller"
+operator|)
+return|;
+case|case
+literal|0x84c48086
+case|:
+return|return
+operator|(
+literal|"Intel 82450KX (Orion) PCI memory controller"
+operator|)
+return|;
+case|case
+literal|0x84c58086
+case|:
+return|return
+operator|(
+literal|"Intel 82454GX (Orion) host to PCI bridge"
 operator|)
 return|;
 case|case
@@ -4438,6 +4463,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|vga_device
@@ -4612,6 +4638,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|lkm_device
@@ -4722,6 +4749,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|ign_device
