@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -31,13 +32,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)nfsd.c	8.9 (Berkeley) 3/29/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.9 (Berkeley) 3/29/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,49 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
 end_include
 
 begin_include
@@ -117,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<rpc/pmap_clnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_prot.h>
 end_include
 
 begin_ifdef
@@ -198,25 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|<libutil.h>
 end_include
 
 begin_include
@@ -241,12 +195,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libutil.h>
 end_include
 
 begin_comment
@@ -522,28 +470,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-name|struct
-name|group
-modifier|*
-name|grp
-decl_stmt|;
 name|struct
 name|nfsd_args
 name|nfsdargs
-decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pwd
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cr
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -560,12 +489,12 @@ name|isoaddr
 decl_stmt|,
 name|isopeer
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|timeval
-name|ktv
-decl_stmt|;
 name|fd_set
 name|ready
 decl_stmt|,
@@ -606,24 +535,51 @@ name|tp4cnt
 decl_stmt|,
 name|tp4flag
 decl_stmt|,
-name|tp4sock
-decl_stmt|,
 name|tpipcnt
 decl_stmt|,
 name|tpipflag
 decl_stmt|,
-name|tpipsock
-decl_stmt|,
 name|udpflag
 decl_stmt|;
-name|char
-modifier|*
-name|cp
+ifdef|#
+directive|ifdef
+name|notyet
+name|int
+name|tp4sock
 decl_stmt|,
+name|tpipsock
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NFSKERB
+name|struct
+name|group
+modifier|*
+name|grp
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pwd
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cr
+decl_stmt|;
+name|struct
+name|timeval
+name|ktv
+decl_stmt|;
+name|char
 modifier|*
 modifier|*
 name|cpp
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -1116,7 +1072,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't register with portmap for UDP."
+literal|"can't register with portmap for UDP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1153,7 +1109,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't register with portmap for TCP."
+literal|"can't register with portmap for TCP"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3221,7 +3177,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Accept failed: %m"
+literal|"accept failed: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3341,7 +3297,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"missing system call: NFS not available."
+literal|"missing system call: NFS not available"
 argument_list|)
 expr_stmt|;
 block|}
