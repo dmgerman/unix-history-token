@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.60 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.61 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,67 +10,67 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|<sys/specdev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ucred.h"
+file|<sys/ucred.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_comment
@@ -1881,6 +1881,19 @@ block|{
 name|dirty
 operator|++
 expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_stat
+operator|.
+name|f_type
+operator|!=
+name|MOUNT_LFS
+condition|)
 operator|(
 name|void
 operator|)
