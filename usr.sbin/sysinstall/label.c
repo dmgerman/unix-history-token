@@ -115,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|40
+value|128
 end_define
 
 begin_else
@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|30
+value|118
 end_define
 
 begin_endif
@@ -189,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|128
+value|256
 end_define
 
 begin_define
@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_NOMINAL_SIZE
-value|128
+value|192
 end_define
 
 begin_define
