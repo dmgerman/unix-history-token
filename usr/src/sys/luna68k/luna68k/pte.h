@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pte.h 1.13 92/01/20$  * OMRON: $Id: pte.h,v 1.2 92/06/14 06:22:11 moti Exp $  *  * from: hp300/hp300/pte.h	7.1 (Berkeley) 6/4/92  *  *	@(#)pte.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pte.h 1.13 92/01/20$  * from: hp300/hp300/pte.h	7.4 (Berkeley) 6/5/92  *  *	@(#)pte.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,6 +30,46 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* reserved at 1 */
+name|unsigned
+name|int
+name|sg_prot
+range|:
+literal|1
+decl_stmt|;
+comment|/* write protect bit */
+name|unsigned
+name|int
+name|sg_v
+range|:
+literal|2
+decl_stmt|;
+comment|/* valid bits */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ste40
+block|{
+name|unsigned
+name|int
+name|sg_ptaddr
+range|:
+literal|24
+decl_stmt|;
+comment|/* page table page addr */
+name|unsigned
+name|int
+range|:
+literal|4
+decl_stmt|;
+comment|/* reserved at 0 */
+name|unsigned
+name|int
+name|sg_u
+decl_stmt|;
+comment|/* hardware modified (dirty) bit */
 name|unsigned
 name|int
 name|sg_prot
@@ -206,6 +246,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SG_U
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* modified bit (68040) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SG_FRAME
 value|0xfffff000
 end_define
@@ -220,15 +271,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SG_PMASK
-value|0x003ff000
+name|SG_ISHIFT
+value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|SG_ISHIFT
-value|22
+name|SG_PMASK
+value|0x003ff000
 end_define
 
 begin_define
