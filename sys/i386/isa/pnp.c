@@ -2783,6 +2783,16 @@ operator|.
 name|id_flags
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|printf
+argument_list|(
+literal|" on isa"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|nod
@@ -2865,6 +2875,8 @@ literal|" on isa"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
