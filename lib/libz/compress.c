@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -16,6 +16,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|ZLIB_INTERNAL
+end_define
 
 begin_include
 include|#
@@ -285,6 +291,41 @@ name|sourceLen
 argument_list|,
 name|Z_DEFAULT_COMPRESSION
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ===========================================================================      If the default memLevel or windowBits for deflateInit() is changed, then    this function needs to be updated.  */
+end_comment
+
+begin_function
+name|uLong
+name|ZEXPORT
+name|compressBound
+parameter_list|(
+name|sourceLen
+parameter_list|)
+name|uLong
+name|sourceLen
+decl_stmt|;
+block|{
+return|return
+name|sourceLen
+operator|+
+operator|(
+name|sourceLen
+operator|>>
+literal|12
+operator|)
+operator|+
+operator|(
+name|sourceLen
+operator|>>
+literal|14
+operator|)
+operator|+
+literal|11
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* example.c -- usage example of the zlib compression library  * Copyright (C) 1995-2002 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* example.c -- usage example of the zlib compression library  * Copyright (C) 1995-2003 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -187,18 +187,13 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|out
-operator|,
-specifier|const
-name|char
-operator|*
-name|in
+name|fname
 operator|,
 name|Byte
 operator|*
 name|uncompr
 operator|,
-name|int
+name|uLong
 name|uncomprLen
 operator|)
 argument_list|)
@@ -436,6 +431,9 @@ decl_stmt|;
 name|uLong
 name|len
 init|=
+operator|(
+name|uLong
+operator|)
 name|strlen
 argument_list|(
 name|hello
@@ -553,9 +551,7 @@ begin_function
 name|void
 name|test_gzio
 parameter_list|(
-name|out
-parameter_list|,
-name|in
+name|fname
 parameter_list|,
 name|uncompr
 parameter_list|,
@@ -564,29 +560,38 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
-name|out
+name|fname
 decl_stmt|;
-comment|/* compressed output file */
-specifier|const
-name|char
-modifier|*
-name|in
-decl_stmt|;
-comment|/* compressed input file */
+comment|/* compressed file name */
 name|Byte
 modifier|*
 name|uncompr
 decl_stmt|;
-name|int
+name|uLong
 name|uncomprLen
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|NO_GZCOMPRESS
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"NO_GZCOMPRESS -- gz* functions cannot compress\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|int
 name|err
 decl_stmt|;
 name|int
 name|len
 init|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|hello
@@ -604,7 +609,7 @@ name|file
 operator|=
 name|gzopen
 argument_list|(
-name|out
+name|fname
 argument_list|,
 literal|"wb"
 argument_list|)
@@ -723,7 +728,7 @@ name|file
 operator|=
 name|gzopen
 argument_list|(
-name|in
+name|fname
 argument_list|,
 literal|"rb"
 argument_list|)
@@ -742,6 +747,11 @@ argument_list|,
 literal|"gzopen error\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|strcpy
 argument_list|(
@@ -754,8 +764,8 @@ argument_list|,
 literal|"garbage"
 argument_list|)
 expr_stmt|;
-name|uncomprLen
-operator|=
+if|if
+condition|(
 name|gzread
 argument_list|(
 name|file
@@ -767,10 +777,6 @@ name|unsigned
 operator|)
 name|uncomprLen
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uncomprLen
 operator|!=
 name|len
 condition|)
@@ -918,6 +924,31 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|gzungetc
+argument_list|(
+literal|' '
+argument_list|,
+name|file
+argument_list|)
+operator|!=
+literal|' '
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gzungetc error\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|gzgets
 argument_list|(
 name|file
@@ -928,11 +959,14 @@ operator|*
 operator|)
 name|uncompr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uncomprLen
 argument_list|)
 expr_stmt|;
-name|uncomprLen
-operator|=
+if|if
+condition|(
 name|strlen
 argument_list|(
 operator|(
@@ -941,15 +975,11 @@ operator|*
 operator|)
 name|uncompr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|uncomprLen
 operator|!=
-literal|6
+literal|7
 condition|)
 block|{
-comment|/* "hello!" */
+comment|/* " hello!" */
 name|fprintf
 argument_list|(
 name|stderr
@@ -983,7 +1013,7 @@ name|uncompr
 argument_list|,
 name|hello
 operator|+
-literal|7
+literal|6
 argument_list|)
 condition|)
 block|{
@@ -1019,6 +1049,8 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1049,9 +1081,12 @@ comment|/* compression stream */
 name|int
 name|err
 decl_stmt|;
-name|int
+name|uLong
 name|len
 init|=
+operator|(
+name|uLong
+operator|)
 name|strlen
 argument_list|(
 name|hello
@@ -1125,9 +1160,6 @@ name|c_stream
 operator|.
 name|total_in
 operator|!=
-operator|(
-name|uLong
-operator|)
 name|len
 operator|&&
 name|c_stream
@@ -1980,9 +2012,12 @@ comment|/* compression stream */
 name|int
 name|err
 decl_stmt|;
-name|int
+name|uInt
 name|len
 init|=
+operator|(
+name|uInt
+operator|)
 name|strlen
 argument_list|(
 name|hello
@@ -2931,6 +2966,18 @@ literal|"warning: different zlib version\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"zlib version %s = 0x%04x, compile flags = 0x%lx\n"
+argument_list|,
+name|ZLIB_VERSION
+argument_list|,
+name|ZLIB_VERNUM
+argument_list|,
+name|zlibCompileFlags
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|compr
 operator|=
 operator|(
@@ -3012,24 +3059,8 @@ else|:
 name|TESTFILE
 operator|)
 argument_list|,
-operator|(
-name|argc
-operator|>
-literal|2
-condition|?
-name|argv
-index|[
-literal|2
-index|]
-else|:
-name|TESTFILE
-operator|)
-argument_list|,
 name|uncompr
 argument_list|,
-operator|(
-name|int
-operator|)
 name|uncomprLen
 argument_list|)
 expr_stmt|;
@@ -3114,15 +3145,19 @@ argument_list|,
 name|uncomprLen
 argument_list|)
 expr_stmt|;
-name|exit
+name|free
 argument_list|(
-literal|0
+name|compr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|uncompr
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* to avoid warning */
 block|}
 end_function
 
