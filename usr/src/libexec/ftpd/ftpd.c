@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.8 (Berkeley) 83/01/18"
+literal|"@(#)ftpd.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1406,6 +1406,10 @@ name|cmd
 argument_list|,
 name|name
 argument_list|)
+operator|,
+name|name
+operator|=
+name|line
 expr_stmt|;
 name|fin
 operator|=
@@ -2059,6 +2063,37 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/* 	 * If no PORT command was specified, 	 * use the default address. 	 */
+if|if
+condition|(
+name|usedefault
+condition|)
+block|{
+name|data_dest
+operator|=
+name|his_addr
+expr_stmt|;
+name|data_dest
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|ntohs
+argument_list|(
+name|sp
+operator|->
+name|s_port
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|usedefault
+operator|=
+literal|1
+expr_stmt|;
 name|reply
 argument_list|(
 literal|150
@@ -2126,10 +2161,6 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
-name|usedefault
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2142,37 +2173,6 @@ name|fileno
 argument_list|(
 name|file
 argument_list|)
-expr_stmt|;
-comment|/* 	 * If no PORT command was specified, 	 * use the default address. 	 */
-if|if
-condition|(
-name|usedefault
-condition|)
-block|{
-name|data_dest
-operator|=
-name|his_addr
-expr_stmt|;
-name|data_dest
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|usedefault
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
