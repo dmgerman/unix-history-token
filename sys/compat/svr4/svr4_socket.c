@@ -264,7 +264,7 @@ operator|&
 name|svr4_head
 argument_list|)
 expr_stmt|;
-name|atomic_store_rel
+name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|svr4_str_initialized
