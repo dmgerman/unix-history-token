@@ -897,13 +897,6 @@ name|i
 operator|=
 literal|0
 init|;
-name|sin
-operator|->
-name|sin_zero
-index|[
-name|i
-index|]
-operator|&&
 name|i
 operator|<
 sizeof|sizeof
@@ -912,6 +905,13 @@ name|sin
 operator|->
 name|sin_zero
 argument_list|)
+operator|&&
+name|sin
+operator|->
+name|sin_zero
+index|[
+name|i
+index|]
 condition|;
 name|i
 operator|++
