@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"time.h"
 end_include
 
 begin_include
@@ -30,19 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ucred.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"namei.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"errno.h"
 end_include
 
 begin_include
@@ -60,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vnode.h"
 end_include
 
@@ -72,25 +60,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ufs/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|"quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/ufsmount.h"
+file|"ufsmount.h"
 end_include
 
 begin_comment
@@ -1664,24 +1652,26 @@ begin_comment
 comment|/*  * Q_QUOTAON - set up a quota file for a particular file system.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|quotaon
 argument_list|(
-name|ndp
+argument|p
 argument_list|,
-name|mp
+argument|mp
 argument_list|,
-name|type
+argument|type
 argument_list|,
-name|fname
+argument|fname
 argument_list|)
-specifier|register
-expr|struct
-name|nameidata
-operator|*
-name|ndp
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1740,6 +1730,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|;
 name|vpp
 operator|=
 operator|&
@@ -1750,14 +1744,14 @@ index|[
 name|type
 index|]
 expr_stmt|;
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_segflg
 operator|=
 name|UIO_USERSPACE
 expr_stmt|;
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_dirp
 operator|=
 name|fname
@@ -1768,7 +1762,10 @@ name|error
 operator|=
 name|vn_open
 argument_list|(
-name|ndp
+operator|&
+name|nd
+argument_list|,
+name|p
 argument_list|,
 name|FREAD
 operator||
@@ -1784,8 +1781,8 @@ operator|)
 return|;
 name|vp
 operator|=
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
@@ -1870,9 +1867,9 @@ expr_stmt|;
 comment|/* 	 * Save the credential of the process that turned on quotas. 	 * Set up the time limits for this quota. 	 */
 name|crhold
 argument_list|(
-name|ndp
+name|p
 operator|->
-name|ni_cred
+name|p_ucred
 argument_list|)
 expr_stmt|;
 name|ump
@@ -1882,9 +1879,9 @@ index|[
 name|type
 index|]
 operator|=
-name|ndp
+name|p
 operator|->
-name|ni_cred
+name|p_ucred
 expr_stmt|;
 name|ump
 operator|->

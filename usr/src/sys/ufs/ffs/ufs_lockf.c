@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -42,31 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"socket.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tty.h"
 end_include
 
 begin_include
@@ -84,19 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ufs/lockf.h"
+file|"lockf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|"quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
+file|"inode.h"
 end_include
 
 begin_comment

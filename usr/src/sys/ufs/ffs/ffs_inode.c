@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
 end_include
 
@@ -48,37 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/quota.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/ufsmount.h"
 end_include
 
 begin_include
@@ -91,6 +55,30 @@ begin_include
 include|#
 directive|include
 file|"malloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufsmount.h"
 end_include
 
 begin_define
@@ -3316,9 +3304,7 @@ name|ip
 operator|->
 name|i_spare0
 operator|==
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 condition|)
@@ -3331,9 +3317,7 @@ name|ip
 operator|->
 name|i_spare1
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -3361,19 +3345,9 @@ name|ip
 operator|->
 name|i_spare0
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
-expr_stmt|;
-name|u
-operator|.
-name|u_spare
-index|[
-literal|0
-index|]
-operator|++
 expr_stmt|;
 name|ip
 operator|->
@@ -3430,14 +3404,6 @@ operator|->
 name|i_spare0
 operator|=
 literal|0
-expr_stmt|;
-name|u
-operator|.
-name|u_spare
-index|[
-literal|0
-index|]
-operator|--
 expr_stmt|;
 name|ip
 operator|->

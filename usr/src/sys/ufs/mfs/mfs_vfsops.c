@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
 end_include
 
@@ -48,37 +42,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"signalvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|"quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/ufsmount.h"
+file|"ufsmount.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/mfsnode.h"
+file|"mfsnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/fs.h"
+file|"fs.h"
 end_include
 
 begin_decl_stmt
@@ -449,9 +449,7 @@ name|mfsp
 operator|->
 name|mfs_pid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -722,9 +720,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 name|int
 name|error

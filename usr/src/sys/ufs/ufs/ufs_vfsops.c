@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"namei.h"
 end_include
 
 begin_include
@@ -90,30 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/ufsmount.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ioctl.h"
 end_include
 
@@ -127,6 +103,30 @@ begin_include
 include|#
 directive|include
 file|"stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufsmount.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"inode.h"
 end_include
 
 begin_comment
@@ -2472,17 +2472,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-init|=
-operator|&
-name|u
-operator|.
-name|u_nd
-decl_stmt|;
 name|struct
 name|ufsmount
 modifier|*
@@ -2498,9 +2487,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 name|int
@@ -2531,6 +2518,8 @@ name|uid
 operator|=
 name|p
 operator|->
+name|p_cred
+operator|->
 name|p_ruid
 expr_stmt|;
 name|cmd
@@ -2556,6 +2545,8 @@ name|uid
 operator|==
 name|p
 operator|->
+name|p_cred
+operator|->
 name|p_ruid
 condition|)
 break|break;
@@ -2567,14 +2558,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|ndp
+name|p
 operator|->
-name|ni_cred
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -2615,7 +2606,7 @@ return|return
 operator|(
 name|quotaon
 argument_list|(
-name|ndp
+name|p
 argument_list|,
 name|mp
 argument_list|,
@@ -4343,8 +4334,11 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
+comment|/* XXX */
 return|return
 operator|(
 name|error
