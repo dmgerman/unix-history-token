@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.35 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1838,9 +1838,9 @@ operator|*
 name|cur
 operator|.
 name|xfer
+argument_list|)
 operator|*
 name|dk_ndrive
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|kread
