@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_enpreg.h	7.1	88/05/21	*/
+comment|/*  *	@(#)if_enpreg.h	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -615,6 +615,27 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RESET_ENP
+parameter_list|(
+name|addr
+parameter_list|)
+value|((addr) = (addr))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -627,13 +648,19 @@ end_define
 begin_endif
 endif|#
 directive|endif
+endif|lint
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 endif|notdef
 end_endif
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TAHOE
+name|tahoe
 end_ifdef
 
 begin_define
@@ -670,7 +697,7 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|TAHOE
+endif|tahoe
 end_endif
 
 begin_comment

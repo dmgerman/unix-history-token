@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb.c	7.2 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
+comment|/*  *	@(#)kdb.c	7.3 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
 end_comment
 
 begin_comment
@@ -72,12 +72,6 @@ end_define
 begin_comment
 comment|/* maximum allowed unit number */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -176,6 +170,12 @@ directive|define
 name|NCMD
 value|(1<< NCMDL2)
 end_define
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
+end_include
 
 begin_include
 include|#
@@ -1247,12 +1247,17 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|KI_MAPSIZ
 operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|map
+argument_list|)
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1271,12 +1276,17 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|KI_PTES
 operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|pte
+argument_list|)
 argument_list|)
 argument_list|,
 name|M_DEVBUF
