@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stand.h>
 end_include
 
@@ -1559,8 +1565,11 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%08x %04x %04x|"
+literal|"%08jx %04x %04x|"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bcache_ctl
 index|[
 name|i
