@@ -234,14 +234,6 @@ directive|include
 file|<net/net_osdep.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NGIF
-operator|>
-literal|0
-end_if
-
 begin_decl_stmt
 name|void
 name|gifattach
@@ -1874,15 +1866,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*NGIF> 0*/
-end_comment
 
 end_unit
 
