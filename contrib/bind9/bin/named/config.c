@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: config.c,v 1.11.2.4.8.28 2004/08/28 05:41:42 marka Exp $ */
+comment|/* $Id: config.c,v 1.11.2.4.8.29 2004/10/05 02:52:26 marka Exp $ */
 end_comment
 
 begin_include
@@ -2107,7 +2107,7 @@ name|new
 argument_list|,
 name|keys
 argument_list|,
-name|newsize
+name|oldsize
 argument_list|)
 expr_stmt|;
 name|isc_mem_put
@@ -2116,7 +2116,7 @@ name|mctx
 argument_list|,
 name|keys
 argument_list|,
-name|newsize
+name|oldsize
 argument_list|)
 expr_stmt|;
 block|}

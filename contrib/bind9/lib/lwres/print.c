@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: print.c,v 1.2.4.1 2004/08/28 06:25:25 marka Exp $ */
+comment|/* $Id: print.c,v 1.2.4.3 2004/09/16 07:01:13 marka Exp $ */
 end_comment
 
 begin_include
@@ -28,6 +28,12 @@ end_include
 begin_comment
 comment|/* for sprintf */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_define
 define|#
@@ -337,7 +343,7 @@ if|if
 condition|(
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -662,7 +668,7 @@ if|if
 condition|(
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -762,7 +768,7 @@ if|if
 condition|(
 name|precision
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|zero
 operator|=
@@ -1142,7 +1148,7 @@ if|if
 condition|(
 name|precision
 operator|>
-literal|2
+literal|2U
 condition|)
 name|precision
 operator|-=
@@ -1214,7 +1220,7 @@ if|if
 condition|(
 name|precision
 operator|>
-literal|2
+literal|2U
 condition|)
 name|precision
 operator|-=
@@ -1239,11 +1245,11 @@ if|if
 condition|(
 name|precision
 operator|!=
-literal|0
+literal|0U
 operator|||
 name|width
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|length
@@ -1284,7 +1290,7 @@ if|if
 condition|(
 name|width
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|pad
@@ -1342,7 +1348,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1372,7 +1378,7 @@ literal|'\0'
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1395,7 +1401,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1424,7 +1430,7 @@ literal|'\0'
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1447,7 +1453,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1492,7 +1498,7 @@ if|if
 condition|(
 name|precision
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 comment|/* 				 * cp need not be NULL terminated. 				 */
@@ -1517,7 +1523,7 @@ while|while
 condition|(
 name|n
 operator|!=
-literal|0
+literal|0U
 operator|&&
 operator|*
 name|tp
@@ -1551,7 +1557,7 @@ if|if
 condition|(
 name|width
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|pad
@@ -1590,7 +1596,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1610,13 +1616,13 @@ if|if
 condition|(
 name|precision
 operator|!=
-literal|0
+literal|0U
 condition|)
 while|while
 condition|(
 name|precision
 operator|>
-literal|0
+literal|0U
 operator|&&
 operator|*
 name|cp
@@ -1625,7 +1631,7 @@ literal|'\0'
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1653,7 +1659,7 @@ literal|'\0'
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1676,7 +1682,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1709,7 +1715,7 @@ if|if
 condition|(
 name|width
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|count
@@ -1739,11 +1745,11 @@ condition|(
 name|width
 operator|--
 operator|>
-literal|0
+literal|0U
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1763,7 +1769,7 @@ name|left
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1786,7 +1792,7 @@ if|if
 condition|(
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1846,7 +1852,7 @@ if|if
 condition|(
 name|width
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|pad
@@ -1889,7 +1895,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1943,7 +1949,7 @@ if|if
 condition|(
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1962,7 +1968,7 @@ if|if
 condition|(
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -1985,7 +1991,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -2011,7 +2017,7 @@ literal|'\0'
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -2034,7 +2040,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -2135,7 +2141,7 @@ if|if
 condition|(
 name|precision
 operator|>
-literal|512
+literal|512U
 condition|)
 name|precision
 operator|=
@@ -2257,7 +2263,7 @@ if|if
 condition|(
 name|width
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|pad
@@ -2296,7 +2302,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -2325,7 +2331,7 @@ literal|' '
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -2348,7 +2354,7 @@ literal|0
 operator|&&
 name|size
 operator|>
-literal|1
+literal|1U
 condition|)
 block|{
 operator|*
@@ -2380,7 +2386,7 @@ if|if
 condition|(
 name|size
 operator|>
-literal|0
+literal|0U
 condition|)
 operator|*
 name|str

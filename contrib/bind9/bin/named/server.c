@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: server.c,v 1.339.2.15.2.56 2004/06/18 04:39:48 marka Exp $ */
+comment|/* $Id: server.c,v 1.339.2.15.2.59 2004/11/10 22:13:56 marka Exp $ */
 end_comment
 
 begin_include
@@ -2229,6 +2229,9 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
+name|isc_boolean_t
+name|addroot
+decl_stmt|;
 name|result
 operator|=
 name|ns_config_getclass
@@ -2312,6 +2315,20 @@ else|else
 name|str
 operator|=
 literal|"*"
+expr_stmt|;
+name|addroot
+operator|=
+name|ISC_TF
+argument_list|(
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"*"
+argument_list|)
+operator|==
+literal|0
+argument_list|)
 expr_stmt|;
 name|isc_buffer_init
 argument_list|(
@@ -2448,6 +2465,39 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * "*" should match everything including the root (BIND 8 compat). 	 * As dns_name_matcheswildcard(".", "*.") returns FALSE add a 	 * explict entry for "." when the name is "*". 	 */
+if|if
+condition|(
+name|addroot
+condition|)
+block|{
+name|result
+operator|=
+name|dns_order_add
+argument_list|(
+name|order
+argument_list|,
+name|dns_rootname
+argument_list|,
+name|rdtype
+argument_list|,
+name|rdclass
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|dns_order_add
@@ -8845,13 +8895,13 @@ operator|->
 name|resolver
 argument_list|)
 expr_stmt|;
-name|INSIST
-argument_list|(
+if|if
+condition|(
 name|dispatch6
-operator|!=
+operator|==
 name|NULL
-argument_list|)
-expr_stmt|;
+condition|)
+continue|continue;
 name|result
 operator|=
 name|dns_dispatch_getlocaladdress
@@ -12724,8 +12774,12 @@ name|event
 operator|->
 name|ev_arg
 decl_stmt|;
-name|UNUSED
+name|INSIST
 argument_list|(
+name|task
+operator|==
+name|server
+operator|->
 name|task
 argument_list|)
 expr_stmt|;
@@ -12892,6 +12946,9 @@ argument_list|,
 literal|"loading zones"
 argument_list|)
 expr_stmt|;
+name|ns_os_started
+argument_list|()
+expr_stmt|;
 name|isc_log_write
 argument_list|(
 name|ns_g_lctx
@@ -12900,7 +12957,7 @@ name|NS_LOGCATEGORY_GENERAL
 argument_list|,
 name|NS_LOGMODULE_SERVER
 argument_list|,
-name|ISC_LOG_INFO
+name|ISC_LOG_NOTICE
 argument_list|,
 literal|"running"
 argument_list|)

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6 2002/07/12 00:17:19 marka Exp $"
+literal|"$Header: /proj/cvs/prod/bind9/lib/bind/dst/dst_api.c,v 1.4.2.6.8.1 2004/09/16 00:57:33 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3614,6 +3614,10 @@ name|char
 operator|*
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|p
 argument_list|,
@@ -3732,6 +3736,10 @@ operator|(
 specifier|const
 name|char
 operator|*
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&

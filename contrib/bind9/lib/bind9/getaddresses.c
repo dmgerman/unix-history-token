@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: getaddresses.c,v 1.13.126.5 2004/05/15 03:46:12 jinmei Exp $ */
+comment|/* $Id: getaddresses.c,v 1.13.126.6 2004/09/16 01:00:58 marka Exp $ */
 end_comment
 
 begin_include
@@ -316,7 +316,7 @@ argument_list|(
 name|hostname
 argument_list|)
 operator|<=
-literal|127
+literal|127U
 condition|)
 block|{
 name|char

@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004  Internet Systems Consortium, Inc. ("I
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-signzone.c,v 1.139.2.2.4.16 2004/08/28 06:25:29 marka Exp $ */
+comment|/* $Id: dnssec-signzone.c,v 1.139.2.2.4.17 2004/10/25 01:36:06 marka Exp $ */
 end_comment
 
 begin_include
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<isc/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/hash.h>
 end_include
 
 begin_include
@@ -9559,6 +9565,28 @@ name|ISC_ENTROPY_GOODONLY
 expr_stmt|;
 name|result
 operator|=
+name|isc_hash_create
+argument_list|(
+name|mctx
+argument_list|,
+name|ectx
+argument_list|,
+name|DNS_NAME_MAXWIRE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|fatal
+argument_list|(
+literal|"could not create hash context"
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
 name|dst_lib_init
 argument_list|(
 name|mctx
@@ -10913,6 +10941,9 @@ name|log
 argument_list|)
 expr_stmt|;
 name|dst_lib_destroy
+argument_list|()
+expr_stmt|;
+name|isc_hash_destroy
 argument_list|()
 expr_stmt|;
 name|cleanup_entropy

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: dig.h,v 1.71.2.6.2.6 2004/06/19 02:30:12 sra Exp $ */
+comment|/* $Id: dig.h,v 1.71.2.6.2.7 2004/09/06 01:33:06 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -634,6 +634,10 @@ name|char
 modifier|*
 name|servname
 decl_stmt|;
+name|char
+modifier|*
+name|userarg
+decl_stmt|;
 name|isc_bufferlist_t
 name|sendlist
 decl_stmt|,
@@ -688,6 +692,12 @@ name|dig_server
 block|{
 name|char
 name|servername
+index|[
+name|MXNAME
+index|]
+decl_stmt|;
+name|char
+name|userarg
 index|[
 name|MXNAME
 index|]
@@ -986,6 +996,11 @@ specifier|const
 name|char
 modifier|*
 name|servname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|userarg
 parameter_list|)
 function_decl|;
 end_function_decl

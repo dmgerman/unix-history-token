@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: host.c,v 1.76.2.5.2.9 2004/04/13 03:00:06 marka Exp $ */
+comment|/* $Id: host.c,v 1.76.2.5.2.10 2004/09/06 01:33:05 marka Exp $ */
 end_comment
 
 begin_include
@@ -1698,7 +1698,7 @@ literal|"Name: %s\n"
 argument_list|,
 name|query
 operator|->
-name|servname
+name|userarg
 argument_list|)
 expr_stmt|;
 name|isc_sockaddr_format

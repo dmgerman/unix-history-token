@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.119.2.3.2.16 2004/09/01 07:16:35 marka Exp $ */
+comment|/* $Id: main.c,v 1.119.2.3.2.17 2004/10/25 00:42:54 marka Exp $ */
 end_comment
 
 begin_include
@@ -2345,6 +2345,28 @@ condition|)
 name|ns_os_daemonize
 argument_list|()
 expr_stmt|;
+comment|/* 	 * We call isc_app_start() here as some versions of FreeBSD's fork() 	 * destroys all the signal handling it sets up. 	 */
+name|result
+operator|=
+name|isc_app_start
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"isc_app_start() failed: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|isc_log_write
 argument_list|(
 name|ns_g_lctx
@@ -3109,27 +3131,6 @@ expr_stmt|;
 name|ns_os_init
 argument_list|(
 name|program_name
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|isc_app_start
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-name|ns_main_earlyfatal
-argument_list|(
-literal|"isc_app_start() failed: %s"
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dns_result_register

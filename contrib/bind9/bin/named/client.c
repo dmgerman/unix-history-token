@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.176.2.13.4.22 2004/07/23 02:56:51 marka Exp $ */
+comment|/* $Id: client.c,v 1.176.2.13.4.23 2004/09/26 22:37:43 marka Exp $ */
 end_comment
 
 begin_include
@@ -8099,7 +8099,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"isc_socket_recv() failed: %s"
+literal|"isc_socket_recv2() failed: %s"
 argument_list|,
 name|isc_result_totext
 argument_list|(

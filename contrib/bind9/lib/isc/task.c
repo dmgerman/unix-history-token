@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: task.c,v 1.85.2.3.8.4 2004/03/08 21:06:29 marka Exp $ */
+comment|/* $Id: task.c,v 1.85.2.3.8.5 2004/10/15 00:45:45 marka Exp $ */
 end_comment
 
 begin_comment
@@ -346,13 +346,13 @@ decl_stmt|;
 name|isc_mutex_t
 name|lock
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_USETHREADS
 name|unsigned
 name|int
 name|workers
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_USETHREADS
 name|isc_thread_t
 modifier|*
 name|threads
@@ -3579,7 +3579,7 @@ operator|->
 name|work_available
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_free
 argument_list|(
 name|manager
 operator|->
@@ -3588,15 +3588,6 @@ argument_list|,
 name|manager
 operator|->
 name|threads
-argument_list|,
-name|manager
-operator|->
-name|workers
-operator|*
-sizeof|sizeof
-argument_list|(
-name|isc_thread_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3781,12 +3772,6 @@ name|mctx
 operator|=
 name|NULL
 expr_stmt|;
-name|manager
-operator|->
-name|workers
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|isc_mutex_init
@@ -3833,9 +3818,15 @@ directive|ifdef
 name|ISC_PLATFORM_USETHREADS
 name|manager
 operator|->
+name|workers
+operator|=
+literal|0
+expr_stmt|;
+name|manager
+operator|->
 name|threads
 operator|=
-name|isc_mem_get
+name|isc_mem_allocate
 argument_list|(
 name|mctx
 argument_list|,
@@ -3997,12 +3988,6 @@ name|exiting
 operator|=
 name|ISC_FALSE
 expr_stmt|;
-name|manager
-operator|->
-name|workers
-operator|=
-literal|0
-expr_stmt|;
 name|isc_mem_attach
 argument_list|(
 name|mctx
@@ -4146,20 +4131,13 @@ argument_list|)
 expr_stmt|;
 name|cleanup_threads
 label|:
-name|isc_mem_put
+name|isc_mem_free
 argument_list|(
 name|mctx
 argument_list|,
 name|manager
 operator|->
 name|threads
-argument_list|,
-name|workers
-operator|*
-sizeof|sizeof
-argument_list|(
-name|isc_thread_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cleanup_lock

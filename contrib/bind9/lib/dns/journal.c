@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.77.2.1.10.8 2004/05/14 05:27:47 marka Exp $ */
+comment|/* $Id: journal.c,v 1.77.2.1.10.9 2004/09/16 04:57:02 marka Exp $ */
 end_comment
 
 begin_include
@@ -4529,7 +4529,11 @@ name|JOURNAL_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"malformed transaction: %d SOAs"
+literal|"%s: malformed transaction: %d SOAs"
+argument_list|,
+name|j
+operator|->
+name|filename
 argument_list|,
 name|j
 operator|->
@@ -4607,8 +4611,12 @@ name|JOURNAL_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"malformed transaction: serial number "
+literal|"%s: malformed transaction: serial number "
 literal|"would decrease"
+argument_list|,
+name|j
+operator|->
+name|filename
 argument_list|)
 expr_stmt|;
 return|return
@@ -5672,7 +5680,11 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"applying diff to database (%u)"
+literal|"%s: applying diff to database (%u)"
+argument_list|,
+name|j
+operator|->
+name|filename
 argument_list|,
 name|db_serial
 argument_list|)
@@ -5742,7 +5754,11 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|,
-literal|"applying final diff to database (%u)"
+literal|"%s: applying final diff to database (%u)"
+argument_list|,
+name|j
+operator|->
+name|filename
 argument_list|,
 name|db_serial
 argument_list|)
@@ -6109,7 +6125,16 @@ name|JOURNAL_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"journal open failure"
+literal|"journal open failure: %s: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|,
+name|j
+operator|->
+name|filename
 argument_list|)
 expr_stmt|;
 return|return
@@ -6945,7 +6970,11 @@ name|JOURNAL_COMMON_LOGARGS
 argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
-literal|"journal corrupt: empty transaction"
+literal|"%s: journal corrupt: empty transaction"
+argument_list|,
+name|j
+operator|->
+name|filename
 argument_list|)
 expr_stmt|;
 name|FAIL

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_nw.c,v 1.3.2.4.4.3 2004/05/17 07:48:56 marka Exp $"
+literal|"$Id: dns_nw.c,v 1.3.2.4.4.4 2004/09/16 00:57:34 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3331,8 +3331,12 @@ name|t
 operator|=
 name|tolower
 argument_list|(
+operator|(
 operator|*
 name|t
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Remove trailing dots. */

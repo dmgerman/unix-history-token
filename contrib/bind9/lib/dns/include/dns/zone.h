@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.106.2.7.4.14 2004/03/06 08:14:01 marka Exp $ */
+comment|/* $Id: zone.h,v 1.106.2.7.4.15 2004/10/26 02:08:43 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -1817,7 +1817,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Replace the database of "zone" with a new database "db".  *  * If "dump" is ISC_TRUE, then the new zone contents are dumped  * into to the zone's master file for persistence.  When replacing  * a zone database by one just loaded from a master file, set  * "dump" to ISC_FALSE to avoid a redunant redump of the data just  * loaded.  Otherwise, it should be set to ISC_TRUE.  *  * If the "diff-on-reload" option is enabled in the configuration file,  * the differences between the old and the new database are added to the  * journal file, and the master file dump is postponed.  *  * Requires:  *	'zone' to be a valid zone.  */
+comment|/*  * Replace the database of "zone" with a new database "db".  *  * If "dump" is ISC_TRUE, then the new zone contents are dumped  * into to the zone's master file for persistence.  When replacing  * a zone database by one just loaded from a master file, set  * "dump" to ISC_FALSE to avoid a redunant redump of the data just  * loaded.  Otherwise, it should be set to ISC_TRUE.  *  * If the "diff-on-reload" option is enabled in the configuration file,  * the differences between the old and the new database are added to the  * journal file, and the master file dump is postponed.  *  * Requires:  *	'zone' to be a valid zone.  *  * Returns:  *	DNS_R_SUCCESS  *	DNS_R_BADZONE	zone failed basic consistancy checks:  *			* a single SOA must exist  *			* some NS records must exist.  *	Others  */
 end_comment
 
 begin_function_decl
