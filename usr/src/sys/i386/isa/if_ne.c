@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*-  * NE2000 Ethernet driver  * Copyright (C) 1990,91 W. Jolitz  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ne.c	7.2 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
+comment|/*-  * NE2000 Ethernet driver  * Copyright (C) 1990,91 W. Jolitz  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ne.c	7.3 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
 end_comment
 
 begin_include
@@ -223,6 +223,20 @@ name|neget
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ETHER_MIN_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_MAX_LEN
+value|1536
+end_define
 
 begin_comment
 comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * ns_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
