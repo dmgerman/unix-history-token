@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -235,11 +235,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
 name|c
 operator|=
 operator|(
@@ -251,6 +246,11 @@ operator|)
 name|MACH_CLOCK_ADDR
 expr_stmt|;
 comment|/* don't read clock registers while they are being updated */
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -532,6 +532,9 @@ name|t2
 decl_stmt|,
 name|t3
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* compute the year */
 name|t2
 operator|=
@@ -581,6 +584,11 @@ name|chiptime
 operator|*
 operator|)
 name|MACH_CLOCK_ADDR
+expr_stmt|;
+name|s
+operator|=
+name|splclock
+argument_list|()
 expr_stmt|;
 name|c
 operator|->
@@ -715,6 +723,14 @@ name|regb
 operator|&=
 operator|~
 name|REGB_SET_TIME
+expr_stmt|;
+name|MachEmptyWriteBuffer
+argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
