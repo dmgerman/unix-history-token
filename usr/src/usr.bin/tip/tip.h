@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tip.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tip.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
 end_include
 
 begin_include
@@ -684,11 +690,13 @@ parameter_list|)
 value|((((zzhack *)(&(v))))->zz_number)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+end_if
 
 begin_define
 define|#
@@ -710,10 +718,18 @@ parameter_list|)
 value|((((zzhack *)(&(v))))->zz_character[0])
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
 
 begin_define
 define|#
