@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strftime.c	5.5 (Berkeley) %G%"
+literal|"@(#)strftime.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,6 +492,25 @@ operator|)
 return|;
 continue|continue;
 case|case
+literal|'C'
+case|:
+if|if
+condition|(
+operator|!
+name|_fmt
+argument_list|(
+literal|"%a %b %e %H:%M:%S %Y"
+argument_list|,
+name|t
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+continue|continue;
+case|case
 literal|'c'
 case|:
 if|if
@@ -502,6 +521,29 @@ argument_list|(
 literal|"%m/%d/%y %H:%M:%S"
 argument_list|,
 name|t
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+continue|continue;
+case|case
+literal|'e'
+case|:
+if|if
+condition|(
+operator|!
+name|_conv
+argument_list|(
+name|t
+operator|->
+name|tm_mday
+argument_list|,
+literal|2
+argument_list|,
+literal|' '
 argument_list|)
 condition|)
 return|return
@@ -542,6 +584,8 @@ operator|->
 name|tm_mday
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -563,6 +607,8 @@ operator|->
 name|tm_hour
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -594,6 +640,8 @@ else|:
 literal|12
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -617,6 +665,64 @@ operator|+
 literal|1
 argument_list|,
 literal|3
+argument_list|,
+literal|'0'
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+continue|continue;
+case|case
+literal|'k'
+case|:
+if|if
+condition|(
+operator|!
+name|_conv
+argument_list|(
+name|t
+operator|->
+name|tm_hour
+argument_list|,
+literal|2
+argument_list|,
+literal|' '
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+continue|continue;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+operator|!
+name|_conv
+argument_list|(
+name|t
+operator|->
+name|tm_hour
+operator|%
+literal|12
+condition|?
+name|t
+operator|->
+name|tm_hour
+operator|%
+literal|12
+else|:
+literal|12
+argument_list|,
+literal|2
+argument_list|,
+literal|' '
 argument_list|)
 condition|)
 return|return
@@ -638,6 +744,8 @@ operator|->
 name|tm_min
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -661,6 +769,8 @@ operator|+
 literal|1
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -762,6 +872,8 @@ operator|->
 name|tm_sec
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -832,6 +944,8 @@ operator|/
 literal|7
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -875,6 +989,8 @@ operator|/
 literal|7
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -896,6 +1012,8 @@ operator|->
 name|tm_wday
 argument_list|,
 literal|1
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -942,6 +1060,8 @@ operator|%
 literal|100
 argument_list|,
 literal|2
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -965,6 +1085,8 @@ operator|+
 name|TM_YEAR_BASE
 argument_list|,
 literal|4
+argument_list|,
+literal|'0'
 argument_list|)
 condition|)
 return|return
@@ -1000,7 +1122,7 @@ continue|continue;
 case|case
 literal|'%'
 case|:
-comment|/* 			 * X311J/88-090 (4.12.3.5): if conversion char is 			 * undefined, behavior is undefined.  Print out the 			 * character itself as printf(3) also does. 			 */
+comment|/* 			 * X311J/88-090 (4.12.3.5): if conversion char is 			 * undefined, behavior is undefined.  Print out the 			 * character itself as printf(3) does. 			 */
 default|default:
 break|break;
 block|}
@@ -1038,6 +1160,8 @@ argument_list|(
 argument|n
 argument_list|,
 argument|digits
+argument_list|,
+argument|pad
 argument_list|)
 name|int
 name|n
@@ -1045,6 +1169,12 @@ operator|,
 name|digits
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|pad
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1113,7 +1243,7 @@ operator|*
 name|p
 operator|--
 operator|=
-literal|'0'
+name|pad
 expr_stmt|;
 return|return
 operator|(
