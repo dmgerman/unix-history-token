@@ -18,6 +18,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ccd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCCD
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -90,6 +104,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/device.h>
 end_include
 
@@ -120,7 +146,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ccdvar.h>
+file|<sys/dkbad.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ccdvar.h>
 end_include
 
 begin_if
@@ -154,14 +186,6 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 end_ifdef
-
-begin_decl_stmt
-name|int
-name|ccddebug
-init|=
-literal|0x00
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -198,6 +222,28 @@ name|CCDB_VNODE
 value|0x10
 end_define
 
+begin_decl_stmt
+name|int
+name|ccddebug
+init|=
+name|CCDB_FOLLOW
+operator||
+name|CCDB_INIT
+operator||
+name|CCDB_IO
+operator||
+name|CCDB_LABEL
+operator||
+name|CCDB_VNODE
+decl_stmt|;
+end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUG
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -210,7 +256,17 @@ name|ccdunit
 parameter_list|(
 name|x
 parameter_list|)
-value|DISKUNIT(x)
+value|dkunit(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ccdpart
+parameter_list|(
+name|x
+parameter_list|)
+value|dkpart(x)
 end_define
 
 begin_struct
@@ -268,72 +324,78 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|(MAKEDISKDEV(major((dev)), ccdunit((dev)), RAW_PART))
+value|(makedev(major((dev)), dkmakeminor(ccdunit((dev)), 0, RAW_PART)))
 end_define
 
 begin_comment
 comment|/* {b,c}devsw[] function prototypes */
 end_comment
 
-begin_expr_stmt
-name|dev_type_open
-argument_list|(
+begin_decl_stmt
+name|d_open_t
 name|ccdopen
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|dev_type_close
-argument_list|(
+begin_decl_stmt
+name|d_close_t
 name|ccdclose
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|dev_type_strategy
-argument_list|(
+begin_decl_stmt
+name|d_strategy_t
 name|ccdstrategy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|dev_type_ioctl
-argument_list|(
+begin_decl_stmt
+name|d_ioctl_t
 name|ccdioctl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|dev_type_read
-argument_list|(
+begin_decl_stmt
+name|d_read_t
 name|ccdread
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|dev_type_write
-argument_list|(
+begin_decl_stmt
+name|d_write_t
 name|ccdwrite
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* called by main() at boot time */
 end_comment
 
 begin_decl_stmt
-name|void
+name|int
 name|ccdattach
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|isa_device
+operator|*
+name|dp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
+name|ccdprobe
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|dp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -545,6 +607,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|loopdelay
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -599,27 +674,123 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_ccd
+index|[
+name|NCCD
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"ccd"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_DISK
+block|,
+literal|0
+block|,
+literal|"tty"
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|DISK_EXTERNALLEN
+block|,
+literal|0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNKNOWN
+block|,
+comment|/* not supported */
+literal|"Concatenated disk driver"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|isa_driver
+name|ccddriver
+init|=
+block|{
+name|ccdprobe
+block|,
+name|ccdattach
+block|,
+literal|"ccd"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|ccdprobe
+parameter_list|(
+name|dp
+parameter_list|)
+name|struct
+name|isa_device
+modifier|*
+name|dp
+decl_stmt|;
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ccdattach
 parameter_list|(
-name|num
+name|dp
 parameter_list|)
-name|int
-name|num
+name|struct
+name|isa_device
+modifier|*
+name|dp
 decl_stmt|;
 block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|num
+init|=
+name|dp
+operator|->
+name|id_unit
+decl_stmt|;
 if|if
 condition|(
 name|num
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -633,8 +804,55 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
+return|return
+literal|0
+return|;
 block|}
+if|if
+condition|(
+name|num
+operator|==
+name|NCCD
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|num
+condition|)
+name|printf
+argument_list|(
+literal|"ccd0-%d: Concatenated disk drivers\n"
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ccd0: Concatenated disk driver\n"
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|num
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* only do initialization first time around */
+return|return
+literal|0
+return|;
+block|}
+name|num
+operator|=
+name|NCCD
+expr_stmt|;
 name|ccd_softc
 operator|=
 operator|(
@@ -725,7 +943,9 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|numccd
 operator|=
@@ -781,6 +1001,20 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_ccd
+index|[
+name|dp
+operator|->
+name|id_unit
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2326,7 +2560,7 @@ name|dk_label
 expr_stmt|;
 name|part
 operator|=
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|dev
 argument_list|)
@@ -2573,7 +2807,7 @@ operator|)
 return|;
 name|part
 operator|=
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|dev
 argument_list|)
@@ -2789,7 +3023,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|bp
 operator|->
@@ -2975,7 +3209,7 @@ name|b_blkno
 expr_stmt|;
 if|if
 condition|(
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|bp
 operator|->
@@ -2996,7 +3230,7 @@ name|dk_label
 operator|.
 name|d_partitions
 index|[
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|bp
 operator|->
@@ -4196,6 +4430,81 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|loopdelay
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|k
+decl_stmt|,
+name|l
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"I'm now gonna wait for fifteen seconds\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Press Ctl-Alt-Esc NOW!\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|1000
+condition|;
+name|i
+operator|++
+control|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+literal|1000
+condition|;
+name|j
+operator|++
+control|)
+for|for
+control|(
+name|k
+operator|=
+literal|0
+init|;
+name|k
+operator|<
+literal|100
+condition|;
+name|k
+operator|++
+control|)
+name|l
+operator|=
+name|i
+operator|*
+name|j
+operator|*
+name|k
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|ccdioctl
 parameter_list|(
@@ -4212,7 +4521,7 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|u_long
+name|int
 name|cmd
 decl_stmt|;
 name|caddr_t
@@ -4906,7 +5215,7 @@ return|;
 comment|/* 		 * Don't unconfigure if any other partitions are open 		 * or if both the character and block flavors of this 		 * partition are open. 		 */
 name|part
 operator|=
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|dev
 argument_list|)
@@ -5279,7 +5588,7 @@ name|dk_label
 operator|.
 name|d_partitions
 index|[
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|dev
 argument_list|)
@@ -5363,15 +5672,9 @@ operator|)
 name|data
 argument_list|,
 literal|0
-argument_list|,
-operator|&
-name|cs
-operator|->
-name|sc_dkdev
-operator|.
-name|dk_cpulabel
 argument_list|)
 expr_stmt|;
+comment|/*,&cs->sc_dkdev.dk_cpulabel); */
 if|if
 condition|(
 name|error
@@ -5387,7 +5690,7 @@ name|DIOCWDINFO
 condition|)
 name|error
 operator|=
-name|writedisklabel
+name|correct_writedisklabel
 argument_list|(
 name|CCDLABELDEV
 argument_list|(
@@ -5402,15 +5705,9 @@ operator|->
 name|sc_dkdev
 operator|.
 name|dk_label
-argument_list|,
-operator|&
-name|cs
-operator|->
-name|sc_dkdev
-operator|.
-name|dk_cpulabel
 argument_list|)
 expr_stmt|;
+comment|/*&cs->sc_dkdev.dk_cpulabel); */
 block|}
 name|cs
 operator|->
@@ -5562,7 +5859,7 @@ index|]
 expr_stmt|;
 name|part
 operator|=
-name|DISKPART
+name|ccdpart
 argument_list|(
 name|dev
 argument_list|)
@@ -6026,18 +6323,7 @@ name|sc_dkdev
 operator|.
 name|dk_label
 decl_stmt|;
-name|struct
-name|cpu_disklabel
-modifier|*
-name|clp
-init|=
-operator|&
-name|cs
-operator|->
-name|sc_dkdev
-operator|.
-name|dk_cpulabel
-decl_stmt|;
+comment|/*	struct cpu_disklabel *clp =&cs->sc_dkdev.dk_cpulabel; */
 name|struct
 name|ccdgeom
 modifier|*
@@ -6048,6 +6334,14 @@ name|cs
 operator|->
 name|sc_geom
 decl_stmt|;
+name|struct
+name|dos_partition
+name|dos_partdummy
+decl_stmt|;
+name|struct
+name|dkbad
+name|dkbaddummy
+decl_stmt|;
 name|bzero
 argument_list|(
 name|lp
@@ -6059,17 +6353,7 @@ name|lp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|clp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|clp
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/*	bzero(clp, sizeof(*clp)); */
 name|lp
 operator|->
 name|d_secperunit
@@ -6223,6 +6507,20 @@ literal|1
 expr_stmt|;
 name|lp
 operator|->
+name|d_bbsize
+operator|=
+name|BBSIZE
+expr_stmt|;
+comment|/* XXX */
+name|lp
+operator|->
+name|d_sbsize
+operator|=
+name|SBSIZE
+expr_stmt|;
+comment|/* XXX */
+name|lp
+operator|->
 name|d_magic
 operator|=
 name|DISKMAGIC
@@ -6252,7 +6550,7 @@ if|if
 condition|(
 name|errstring
 operator|=
-name|readdisklabel
+name|correct_readdisklabel
 argument_list|(
 name|CCDLABELDEV
 argument_list|(
@@ -6267,15 +6565,10 @@ operator|->
 name|sc_dkdev
 operator|.
 name|dk_label
-argument_list|,
-operator|&
-name|cs
-operator|->
-name|sc_dkdev
-operator|.
-name|dk_cpulabel
+comment|/*,&dos_partdummy,&dkbaddummy*/
 argument_list|)
 condition|)
+comment|/*,&cs->sc_dkdev.dk_cpulabel)) */
 name|ccdmakedisklabel
 argument_list|(
 name|cs
@@ -6605,6 +6898,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCCD> 0 */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* c-argdecl-indent: 8 */
+end_comment
+
+begin_comment
+comment|/* c-indent-level: 8 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
