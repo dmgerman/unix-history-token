@@ -1343,6 +1343,9 @@ literal|"%s: read %lu specifications"
 argument_list|,
 name|file
 argument_list|,
+operator|(
+name|long
+operator|)
 name|spec
 operator|->
 name|nentries
