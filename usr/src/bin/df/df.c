@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.24 (Berkeley) %G%"
+literal|"@(#)df.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,10 +50,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * df  */
 end_comment
 
 begin_include
@@ -72,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -104,21 +106,77 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|bread
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|getmntpt
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|prtstat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|statfs
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
 name|ufs_df
-argument_list|()
-decl_stmt|,
-name|prtstat
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -156,34 +214,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|optind
-decl_stmt|;
-name|int
-name|err
-decl_stmt|,
-name|ch
-decl_stmt|,
-name|i
-decl_stmt|;
-name|long
-name|width
-decl_stmt|,
-name|maxwidth
-decl_stmt|,
-name|mntsize
-decl_stmt|;
-name|char
-modifier|*
-name|mntpt
-decl_stmt|,
-modifier|*
-name|mktemp
-argument_list|()
-decl_stmt|;
 name|struct
 name|stat
 name|stbuf
@@ -194,6 +224,24 @@ name|statfsbuf
 decl_stmt|,
 modifier|*
 name|mntbuf
+decl_stmt|;
+name|long
+name|width
+decl_stmt|,
+name|maxwidth
+decl_stmt|,
+name|mntsize
+decl_stmt|;
+name|int
+name|err
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|i
+decl_stmt|;
+name|char
+modifier|*
+name|mntpt
 decl_stmt|;
 while|while
 condition|(
@@ -245,17 +293,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: df [-ikn] [file | file_system ...]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -840,7 +879,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-*.*s%s    used   avail capacity"
+literal|"%-*.*s%s    Used   Avail Capacity"
 argument_list|,
 name|maxwidth
 argument_list|,
@@ -850,9 +889,9 @@ literal|"Filesystem"
 argument_list|,
 name|kflag
 condition|?
-literal|"  kbytes"
+literal|"1024-blocks"
 else|:
-literal|"512-blks"
+literal|" 512-blocks"
 argument_list|)
 expr_stmt|;
 if|if
@@ -903,7 +942,7 @@ name|used
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%8ld%8ld"
+literal|"   %8ld%8ld%8ld"
 argument_list|,
 name|sfsp
 operator|->
@@ -1094,13 +1133,6 @@ name|int
 name|fi
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|bread
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -1440,13 +1472,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|bread
@@ -1471,7 +1496,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-extern|extern errno;
 operator|(
 name|void
 operator|)
@@ -1538,6 +1562,29 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: df [-ikn] [file | file_system ...]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
