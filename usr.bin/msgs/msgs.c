@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: msgs.c,v 1.9 1997/07/29 06:47:18 charnier Exp $"
+literal|"$Id: msgs.c,v 1.10 1998/07/07 12:02:59 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,18 +1104,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|errno
+argument_list|,
+literal|"%s"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bounds
 operator|=
 name|fopen
