@@ -5722,6 +5722,9 @@ name|printf
 argument_list|(
 literal|"Sending IPPROTO_RSVP from %lx to %lx on vif %d (%s%s%d)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5731,6 +5734,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5798,6 +5804,9 @@ name|printf
 argument_list|(
 literal|"Warning: IPPROTO_RSVP from %lx to %lx without vif option\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5807,6 +5816,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
