@@ -388,11 +388,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|linebug
-value|syslog(LOG_ERR, "lockd: %d", __LINE__);
-name|linebug
 comment|/* 	 * Create a separate process, the client code is really a separate 	 * daemon that shares a lot of code. 	 */
 switch|switch
 condition|(
@@ -424,14 +419,13 @@ name|child
 operator|)
 return|;
 block|}
-name|linebug
 name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
 name|client_cleanup
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
@@ -473,9 +467,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|linebug
 name|reopen
-range|:
+label|:
 comment|/* Open the fifo for reading. */
 if|if
 condition|(
@@ -524,7 +517,6 @@ init|;
 condition|;
 control|)
 block|{
-name|linebug
 comment|/* Wait for contact... fifo's return EAGAIN when read with  		 * no data 		 */
 name|FD_SET
 argument_list|(
@@ -533,7 +525,7 @@ argument_list|,
 operator|&
 name|rdset
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -553,7 +545,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|linebug
 comment|/* Read the fixed length message. */
 if|if
 condition|(
@@ -753,7 +744,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|linebug
 if|if
 condition|(
 name|errno
