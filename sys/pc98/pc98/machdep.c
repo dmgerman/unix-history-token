@@ -6150,15 +6150,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|user
-modifier|*
-name|proc0uarea
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|vm_offset_t
 name|proc0kstack
 decl_stmt|;
@@ -9041,12 +9032,6 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
-name|proc0
-operator|.
-name|p_uarea
-operator|=
-name|proc0uarea
-expr_stmt|;
 name|thread0
 operator|.
 name|td_kstack

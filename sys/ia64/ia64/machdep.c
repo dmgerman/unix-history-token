@@ -443,14 +443,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|user
-modifier|*
-name|proc0uarea
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|proc0kstack
 decl_stmt|;
@@ -3002,33 +2994,13 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Init mapping for u page(s) for proc 0 	 */
-name|proc0uarea
-operator|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-name|pmap_steal_memory
-argument_list|(
-name|UAREA_PAGES
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Init mapping for kernel stack for proc 0 	 */
 name|proc0kstack
 operator|=
 operator|(
 name|vm_offset_t
 operator|)
 name|kstack
-expr_stmt|;
-name|proc0
-operator|.
-name|p_uarea
-operator|=
-name|proc0uarea
 expr_stmt|;
 name|thread0
 operator|.

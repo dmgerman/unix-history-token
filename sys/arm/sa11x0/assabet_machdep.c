@@ -705,10 +705,6 @@ name|kernel_l1pt
 decl_stmt|;
 name|struct
 name|pv_addr
-name|proc0_uarea
-decl_stmt|;
-name|struct
-name|pv_addr
 name|md_addr
 decl_stmt|;
 name|struct
@@ -1325,21 +1321,13 @@ argument_list|,
 name|KSTACK_PAGES
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate memory for the l1 and l2 page tables. The scheme to avoid 	 * wasting memory by allocating the l1pt on the first 16k memory was 	 * taken from NetBSD rpc_machdep.c. NKPT should be greater than 12 for 	 * this to work (which is supposed to be the case). 	 */
-comment|/* Allocate pages for process 0 kernel stack and uarea */
-name|valloc_pages
-argument_list|(
-name|proc0_uarea
-argument_list|,
-name|UAREA_PAGES
-argument_list|)
-expr_stmt|;
 name|lastalloced
 operator|=
-name|proc0_uarea
+name|kernelstack
 operator|.
 name|pv_va
 expr_stmt|;
+comment|/* 	 * Allocate memory for the l1 and l2 page tables. The scheme to avoid 	 * wasting memory by allocating the l1pt on the first 16k memory was 	 * taken from NetBSD rpc_machdep.c. NKPT should be greater than 12 for 	 * this to work (which is supposed to be the case). 	 */
 comment|/* 	 * Now we start construction of the L1 page table 	 * We start by mapping the L2 page tables into the L1. 	 * This means that we can replace L1 mappings later on if necessary 	 */
 name|l1pagetable
 operator|=
@@ -1595,29 +1583,6 @@ operator|.
 name|pv_pa
 argument_list|,
 name|KSTACK_PAGES
-operator|*
-name|PAGE_SIZE
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|PTE_CACHE
-argument_list|)
-expr_stmt|;
-name|pmap_map_chunk
-argument_list|(
-name|l1pagetable
-argument_list|,
-name|proc0_uarea
-operator|.
-name|pv_va
-argument_list|,
-name|proc0_uarea
-operator|.
-name|pv_pa
-argument_list|,
-name|UAREA_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1896,19 +1861,6 @@ argument_list|,
 operator|&
 name|thread0
 argument_list|)
-expr_stmt|;
-name|proc0
-operator|.
-name|p_uarea
-operator|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-name|proc0_uarea
-operator|.
-name|pv_va
 expr_stmt|;
 name|thread0
 operator|.
