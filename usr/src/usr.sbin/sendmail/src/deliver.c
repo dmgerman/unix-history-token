@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.84 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.85 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ if|#
 directive|if
 name|NAMED_BIND
 end_if
-
-begin_include
-include|#
-directive|include
-file|<arpa/nameser.h>
-end_include
 
 begin_include
 include|#

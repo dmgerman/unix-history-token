@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.20 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.21 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.20 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.21 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/nameser.h>
 end_include
 
 begin_include
@@ -186,13 +180,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HEADERSZ
+name|HFIXEDSZ
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HEADERSZ
+name|HFIXEDSZ
 value|12
 end_define
 
@@ -204,32 +198,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* don't use sizeof because sizeof(long) is different on 64-bit machines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHORTSIZE
-value|2
-end_define
-
-begin_comment
-comment|/* size of a short (really, must be 2) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LONGSIZE
-value|4
-end_define
-
-begin_comment
-comment|/* size of a long (really, must be 4) */
-end_comment
 
 begin_define
 define|#
@@ -678,7 +646,7 @@ operator|)
 operator|&
 name|answer
 operator|+
-name|HEADERSZ
+name|HFIXEDSZ
 expr_stmt|;
 name|eom
 operator|=
@@ -813,9 +781,9 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
-name|SHORTSIZE
+name|INT16SZ
 operator|+
-name|LONGSIZE
+name|INT32SZ
 expr_stmt|;
 name|GETSHORT
 argument_list|(
@@ -2255,7 +2223,7 @@ operator|)
 operator|&
 name|answer
 operator|+
-name|HEADERSZ
+name|HFIXEDSZ
 expr_stmt|;
 name|eom
 operator|=
@@ -2407,9 +2375,9 @@ argument_list|)
 expr_stmt|;
 name|ap
 operator|+=
-name|SHORTSIZE
+name|INT16SZ
 operator|+
-name|LONGSIZE
+name|INT32SZ
 expr_stmt|;
 name|GETSHORT
 argument_list|(

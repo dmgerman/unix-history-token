@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.53 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.54 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.53 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.54 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,12 +95,6 @@ if|#
 directive|if
 name|NAMED_BIND
 end_if
-
-begin_include
-include|#
-directive|include
-file|<arpa/nameser.h>
-end_include
 
 begin_include
 include|#
@@ -1023,7 +1017,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|IPADDRSIZE
+name|INADDRSZ
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1528,7 +1522,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|IPADDRSIZE
+name|INADDRSZ
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3317,7 +3311,7 @@ operator|)
 operator|&
 name|in_addr
 argument_list|,
-name|IPADDRSIZE
+name|INADDRSZ
 argument_list|,
 name|AF_INET
 argument_list|)
@@ -3740,7 +3734,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|IPADDRSIZE
+name|INADDRSZ
 argument_list|,
 name|AF_INET
 argument_list|)

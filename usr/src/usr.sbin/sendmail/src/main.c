@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.57 (Berkeley) %G%"
+literal|"@(#)main.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,12 +76,6 @@ if|#
 directive|if
 name|NAMED_BIND
 end_if
-
-begin_include
-include|#
-directive|include
-file|<arpa/nameser.h>
-end_include
 
 begin_include
 include|#
@@ -1994,7 +1988,7 @@ name|hp
 operator|->
 name|h_length
 operator|==
-name|IPADDRSIZE
+name|INADDRSZ
 condition|)
 block|{
 specifier|register
