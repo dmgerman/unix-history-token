@@ -20,11 +20,11 @@ comment|/*-------------------------------------------------------------------  *
 end_comment
 
 begin_comment
-comment|/*  *  Support for earliest LSI53C1010 boards.  *  Commercial chips will be fixed, and then the   *  corresponding code will get useless.  */
+comment|/*  *  Support for earliest LSI53C1010 boards.  *  *  This option enables work-arounds for the experimental   *  C1010 chips revision 0 to work in DT mode.  *  Since, officially supported chips (B0 stepping and later)  *  have been fixed, nobody, except driver maintainers,  *  should ever needed this option to have been defined.  *  This option and the code it addresses will be removed   *  from the source in some later version of the driver.  *  By the way, the 53C1010 B0 stepping (rev. 1) has been   *  tested ok with Ultra3 DT data transfers using this driver,  *  without these work-arounds being enabled.  */
 end_comment
 
 begin_comment
-comment|/* #define	SYMCONF_BROKEN_U3EN_SUPPORT */
+comment|/* #define	SYM_CONF_BROKEN_U3EN_SUPPORT */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|/*  *  Use Normal IO instead of MMIO.  */
 end_comment
 
 begin_comment
-comment|/* #define SYMCONF_IOMAPPED */
+comment|/* #define SYM_CONF_IOMAPPED */
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_TAG_ORDER
+name|SYM_CONF_MAX_TAG_ORDER
 value|(6)
 end_define
 
@@ -53,7 +53,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 value|(33)
 end_define
 
@@ -64,7 +64,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 value|(16)
 end_define
 
@@ -75,8 +75,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_LUN
-value|(8)
+name|SYM_CONF_MAX_LUN
+value|(64)
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ comment|/*  *  Max number of IO control blocks queued to the controller.  *  Eac
 end_comment
 
 begin_comment
-comment|/* #define SYMCONF_MAX_START	(PAGE_SIZE/8 - 16) */
+comment|/* #define SYM_CONF_MAX_START	(PAGE_SIZE/8 - 16) */
 end_comment
 
 begin_comment
@@ -94,11 +94,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 end_define
 
 begin_comment
-comment|/* #define SYMCONF_DEBUG_SUPPORT */
+comment|/* #define SYM_CONF_DEBUG_SUPPORT */
 end_comment
 
 begin_comment
@@ -106,7 +106,7 @@ comment|/*  *  Support for Immediate Arbitration.  *  Not advised.  */
 end_comment
 
 begin_comment
-comment|/* #define SYMCONF_IARB_SUPPORT */
+comment|/* #define SYM_CONF_IARB_SUPPORT */
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_USE_INTERNAL_ALLOCATOR
+name|SYM_CONF_USE_INTERNAL_ALLOCATOR
 end_define
 
 begin_comment
@@ -130,7 +130,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_HOST_ID
+name|SYM_SETUP_HOST_ID
 value|7
 end_define
 
@@ -141,7 +141,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_MIN_SYNC
+name|SYM_SETUP_MIN_SYNC
 value|(9)
 end_define
 
@@ -152,7 +152,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_MAX_WIDE
+name|SYM_SETUP_MAX_WIDE
 value|(1)
 end_define
 
@@ -163,7 +163,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_MAX_OFFS
+name|SYM_SETUP_MAX_OFFS
 value|(64)
 end_define
 
@@ -174,8 +174,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_MAX_TAG
-value|(64)
+name|SYM_SETUP_MAX_TAG
+value|(1<<SYM_CONF_MAX_TAG_ORDER)
 end_define
 
 begin_comment
@@ -185,7 +185,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_SYMBIOS_NVRAM
+name|SYM_SETUP_SYMBIOS_NVRAM
 value|(1)
 end_define
 
@@ -196,20 +196,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_TEKRAM_NVRAM
+name|SYM_SETUP_TEKRAM_NVRAM
 value|(1)
 end_define
 
 begin_comment
-comment|/*  *  PCI parity checking.  */
+comment|/*  *  PCI parity checking.  *  It should not be an option, but some poor or broken   *  PCI-HOST bridges have been reported to make problems   *  when this feature is enabled.  *  Setting this option to 0 tells the driver not to   *  enable the checking against PCI parity.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYM_SETUP_PCI_PARITY
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYMSETUP_PCI_PARITY
+name|SYM_SETUP_PCI_PARITY
 value|(1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  SCSI parity checking.  */
@@ -218,7 +229,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_SCSI_PARITY
+name|SYM_SETUP_SCSI_PARITY
 value|(1)
 end_define
 
@@ -229,20 +240,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_SCSI_LED
+name|SYM_SETUP_SCSI_LED
 value|(0)
 end_define
 
 begin_comment
-comment|/*  *  SCSI differential.  */
+comment|/*  *  SCSI High Voltage Differential support.  *  *  HVD/LVD/SE capable controllers (895, 895A, 896, 1010)   *  report the actual SCSI BUS mode from the STEST4 IO   *  register.  *  *  But for HVD/SE only capable chips (825a, 875, 885),   *  the driver uses some heuristic to probe against HVD.   *  Normally, the chip senses the DIFFSENS signal and   *  should switch its BUS tranceivers to high impedance   *  in situation of the driver having been wrong about   *  the actual BUS mode. May-be, the BUS mode probing of   *  the driver is safe, but, given that it may be partially   *  based on some previous IO register settings, it   *  cannot be stated so. Thus, decision has been taken   *  to require a user option to be set for the DIFF probing   *  to be applied for the 825a, 875 and 885 chips.  *    *  This setup option works as follows:  *  *    0  ->  HVD only supported for 895, 895A, 896, 1010.  *    1  ->  HVD probed  for 825A, 875, 885.  *    2  ->  HVD assumed for 825A, 875, 885 (not advised).  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYM_SETUP_SCSI_DIFF
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYMSETUP_SCSI_DIFF
+name|SYM_SETUP_SCSI_DIFF
 value|(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  IRQ mode.  */
@@ -251,7 +273,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_IRQ_MODE
+name|SYM_SETUP_IRQ_MODE
 value|(0)
 end_define
 
@@ -262,7 +284,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_SCSI_BUS_CHECK
+name|SYM_SETUP_SCSI_BUS_CHECK
 value|(1)
 end_define
 
@@ -273,7 +295,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMSETUP_BURST_ORDER
+name|SYM_SETUP_BURST_ORDER
 value|(7)
 end_define
 
@@ -284,14 +306,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_IARB_MAX
+name|SYM_CONF_IARB_MAX
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_SET_IARB_ON_ARB_LOST
+name|SYM_CONF_SET_IARB_ON_ARB_LOST
 value|1
 end_define
 
@@ -302,9 +324,53 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_RESIDUAL_SUPPORT
+name|SYM_CONF_RESIDUAL_SUPPORT
 value|1
 end_define
+
+begin_comment
+comment|/*  *  Supported maximum number of LUNs to announce to   *  the access method.  *  The driver supports up to 64 LUNs per target as   *  required by SPI-2/SPI-3. However some SCSI devices    *  designed prior to these specifications or not being    *  conformant may be highly confused when they are   *  asked about a LUN> 7.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYM_SETUP_MAX_LUN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYM_SETUP_MAX_LUN
+value|(8)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  *  Low priority probe map.  *   *  This option is used as a bitmap to tell the driver   *  about chips that are to be claimed with a low priority   *  (-2000) by the probe method. This allows any other driver   *  that may return some higher priority value for the same   *  chips to take precedence over this driver (sym).  *  This option may be used when both the ncr driver and this   *  driver are configured.  *  *  Bits are to be coded as follows:  *    1  ->  810a, 860  *    2  ->  825a, 875, 885, 895  *    4  ->  895a, 896, 1510d  *    8  ->  1010  *  *  For example, value 5 tells the driver to claim support   *  for 810a, 860, 895a, 896 and 1510d with low priority,   *  allowing the ncr driver to take precedence if configured.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYM_SETUP_LP_PROBE_MAP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYM_SETUP_LP_PROBE_MAP
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

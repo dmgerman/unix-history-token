@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-0.12.0-19991127"
+value|"sym-1.0.0-19991205"
 end_define
 
 begin_include
@@ -305,6 +305,12 @@ end_typedef
 begin_comment
 comment|/* Driver configuration and definitions */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_sym.h"
+end_include
 
 begin_include
 include|#
@@ -870,7 +876,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|SYMCONF_MAX_TAG_ORDER
+name|SYM_CONF_MAX_TAG_ORDER
 operator|>
 literal|8
 end_if
@@ -889,8 +895,8 @@ end_endif
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_TASK
-value|(1<<SYMCONF_MAX_TAG_ORDER)
+name|SYM_CONF_MAX_TASK
+value|(1<<SYM_CONF_MAX_TAG_ORDER)
 end_define
 
 begin_comment
@@ -900,14 +906,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYMCONF_MAX_TAG
+name|SYM_CONF_MAX_TAG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_TAG
-value|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TAG
+value|SYM_CONF_MAX_TASK
 end_define
 
 begin_endif
@@ -918,22 +924,22 @@ end_endif
 begin_if
 if|#
 directive|if
-name|SYMCONF_MAX_TAG
+name|SYM_CONF_MAX_TAG
 operator|>
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 end_if
 
 begin_undef
 undef|#
 directive|undef
-name|SYMCONF_MAX_TAG
+name|SYM_CONF_MAX_TAG
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_TAG
-value|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TAG
+value|SYM_CONF_MAX_TASK
 end_define
 
 begin_endif
@@ -959,7 +965,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 operator|>
 literal|16
 end_if
@@ -982,7 +988,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|>
 literal|64
 end_if
@@ -1005,7 +1011,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMCONF_MIN_ASYNC
+name|SYM_CONF_MIN_ASYNC
 value|(40)
 end_define
 
@@ -1016,14 +1022,14 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYMCONF_MAX_START
+name|SYM_CONF_MAX_START
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_QUEUE
-value|(SYMCONF_MAX_START+2)
+name|SYM_CONF_MAX_QUEUE
+value|(SYM_CONF_MAX_START+2)
 end_define
 
 begin_else
@@ -1034,15 +1040,15 @@ end_else
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_QUEUE
-value|(7*SYMCONF_MAX_TASK+2)
+name|SYM_CONF_MAX_QUEUE
+value|(7*SYM_CONF_MAX_TASK+2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_START
-value|(SYMCONF_MAX_QUEUE-2)
+name|SYM_CONF_MAX_START
+value|(SYM_CONF_MAX_QUEUE-2)
 end_define
 
 begin_endif
@@ -1053,7 +1059,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|SYMCONF_MAX_QUEUE
+name|SYM_CONF_MAX_QUEUE
 operator|>
 name|PAGE_SIZE
 operator|/
@@ -1063,27 +1069,27 @@ end_if
 begin_undef
 undef|#
 directive|undef
-name|SYMCONF_MAX_QUEUE
+name|SYM_CONF_MAX_QUEUE
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_QUEUE
+name|SYM_CONF_MAX_QUEUE
 value|PAGE_SIZE/8
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|SYMCONF_MAX_START
+name|SYM_CONF_MAX_START
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SYMCONF_MAX_START
-value|(SYMCONF_MAX_QUEUE-2)
+name|SYM_CONF_MAX_START
+value|(SYM_CONF_MAX_QUEUE-2)
 end_define
 
 begin_endif
@@ -1099,7 +1105,7 @@ begin_define
 define|#
 directive|define
 name|MAX_QUEUE
-value|SYMCONF_MAX_QUEUE
+value|SYM_CONF_MAX_QUEUE
 end_define
 
 begin_comment
@@ -1244,7 +1250,7 @@ begin_define
 define|#
 directive|define
 name|DEBUG_FLAGS
-value|(0x00)
+value|(0x0000)
 end_define
 
 begin_endif
@@ -1405,7 +1411,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYMCONF_USE_INTERNAL_ALLOCATOR
+name|SYM_CONF_USE_INTERNAL_ALLOCATOR
 end_ifdef
 
 begin_comment
@@ -2049,7 +2055,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SYMCONF_USE_INTERNAL_ALLOCATOR */
+comment|/* SYM_CONF_USE_INTERNAL_ALLOCATOR */
 end_comment
 
 begin_define
@@ -2279,7 +2285,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 end_ifdef
 
 begin_decl_stmt
@@ -2352,7 +2358,7 @@ name|SYM_TEKRAM_NVRAM
 value|(2)
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 union|union
 block|{
 name|Symbios_nvram
@@ -2440,7 +2446,7 @@ value|(dw)
 end_define
 
 begin_comment
-comment|/*  *  Access to the controller chip.  *  *  If SYMCONF_IOMAPPED is defined, the driver will use   *  normal IOs instead of the MEMORY MAPPED IO method    *  recommended by PCI specifications.  */
+comment|/*  *  Access to the controller chip.  *  *  If SYM_CONF_IOMAPPED is defined, the driver will use   *  normal IOs instead of the MEMORY MAPPED IO method    *  recommended by PCI specifications.  */
 end_comment
 
 begin_comment
@@ -2674,7 +2680,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SYMCONF_IOMAPPED
+name|SYM_CONF_IOMAPPED
 argument_list|)
 end_if
 
@@ -3566,7 +3572,7 @@ decl_stmt|;
 comment|/* LCB of LUN #0 (usual case)	*/
 if|#
 directive|if
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|>
 literal|1
 name|lcb_p
@@ -3581,7 +3587,7 @@ name|u32
 name|lun_map
 index|[
 operator|(
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|+
 literal|31
 operator|)
@@ -3594,7 +3600,7 @@ name|u32
 name|busy0_map
 index|[
 operator|(
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|+
 literal|31
 operator|)
@@ -3760,7 +3766,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|<=
 literal|1
 end_if
@@ -3942,7 +3948,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 end_ifdef
 
 begin_define
@@ -4060,7 +4066,7 @@ name|struct
 name|sym_tblmove
 name|data
 index|[
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 index|]
 decl_stmt|;
 comment|/* 	 *  Phase mismatch contexts. 	 *  We need two to handle correctly the SAVED DATA POINTER. 	 */
@@ -4321,7 +4327,7 @@ name|struct
 name|sym_tcb
 name|target
 index|[
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 index|]
 decl_stmt|;
 comment|/* 	 *  Target control block bus address array used by the SCRIPT  	 *  on reselection. 	 */
@@ -4610,7 +4616,7 @@ decl_stmt|;
 comment|/* 	 *  IMMEDIATE ARBITRATION (IARB) control. 	 * 	 *  We keep track in 'last_cp' of the last CCB that has been  	 *  queued to the SCRIPTS processor and clear 'last_cp' when  	 *  this CCB completes. If last_cp is not zero at the moment  	 *  we queue a new CCB, we set a flag in 'last_cp' that is  	 *  used by the SCRIPTS as a hint for setting IARB. 	 *  We donnot set more than 'iarb_max' consecutive hints for  	 *  IARB in order to leave devices a chance to reselect. 	 *  By the way, any non zero value of 'iarb_max' is unfair. :) 	 */
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 name|u_short
 name|iarb_max
 decl_stmt|;
@@ -4736,7 +4742,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 name|u32
 name|select2
 index|[
@@ -4761,7 +4767,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|u32
 name|dispatch
 index|[
@@ -4846,7 +4852,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 name|u32
 name|status
 index|[
@@ -4913,7 +4919,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 name|u32
 name|idle
 index|[
@@ -4932,7 +4938,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 name|u32
 name|ungetjob
 index|[
@@ -4969,7 +4975,7 @@ index|]
 decl_stmt|;
 if|#
 directive|if
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 operator|>
@@ -4982,7 +4988,7 @@ index|]
 decl_stmt|;
 elif|#
 directive|elif
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 operator|>
@@ -5024,7 +5030,7 @@ decl_stmt|;
 name|u32
 name|data_in
 index|[
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|*
 literal|2
 index|]
@@ -5038,7 +5044,7 @@ decl_stmt|;
 name|u32
 name|data_out
 index|[
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|*
 literal|2
 index|]
@@ -5051,7 +5057,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|u32
 name|pm0_data
 index|[
@@ -5220,7 +5226,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|u32
 name|no_data
 index|[
@@ -5263,7 +5269,7 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|u32
 name|sdata_in
 index|[
@@ -5379,11 +5385,11 @@ index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|u32
 name|dt_data_in
 index|[
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|*
 literal|2
 index|]
@@ -5397,7 +5403,7 @@ decl_stmt|;
 name|u32
 name|dt_data_out
 index|[
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|*
 literal|2
 index|]
@@ -7207,7 +7213,7 @@ block|,
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 	 *  Set IMMEDIATE ARBITRATION if we have been given  	 *  a hint to do so. (Some job to do after this one). 	 */
 name|SCR_FROM_REG
 argument_list|(
@@ -7371,7 +7377,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|SCR_JUMP
 operator|^
 name|IFTRUE
@@ -7508,7 +7514,7 @@ argument_list|)
 block|,
 endif|#
 directive|endif
-comment|/* SYMCONF_BROKEN_U3EN_SUPPORT */
+comment|/* SYM_CONF_BROKEN_U3EN_SUPPORT */
 name|SCR_JUMP
 block|,
 name|PADDR
@@ -7953,7 +7959,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 	 *  If STATUS is not GOOD, clear IMMEDIATE ARBITRATION,  	 *  since we may have to tamper the start queue from  	 *  the C code. 	 */
 name|SCR_JUMPR
 operator|^
@@ -8466,7 +8472,7 @@ literal|0
 block|,
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 name|SCR_JUMPR
 block|,
 literal|8
@@ -8479,7 +8485,7 @@ block|,
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 	 *  Set IMMEDIATE ARBITRATION, for the next time. 	 *  This will give us better chance to win arbitration  	 *  for the job we just wanted to do. 	 */
 name|SCR_REG_REG
 argument_list|(
@@ -8851,7 +8857,7 @@ literal|0
 block|,
 if|#
 directive|if
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 operator|>
@@ -8909,7 +8915,7 @@ literal|0
 block|,
 elif|#
 directive|elif
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 operator|>
@@ -9101,7 +9107,7 @@ block|}
 comment|/*-------------------------< DATA_IN>--------------------*/
 block|,
 block|{
-comment|/*  *  Because the size depends on the  *  #define SYMCONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYMCONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DATA_IN,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
+comment|/*  *  Because the size depends on the  *  #define SYM_CONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYM_CONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DATA_IN,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
 literal|0
 block|}
 comment|/*-------------------------< DATA_IN2>-------------------*/
@@ -9124,7 +9130,7 @@ block|, }
 comment|/*-------------------------< DATA_OUT>--------------------*/
 block|,
 block|{
-comment|/*  *  Because the size depends on the  *  #define SYMCONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYMCONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DATA_OUT,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
+comment|/*  *  Because the size depends on the  *  #define SYM_CONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYM_CONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DATA_OUT,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
 literal|0
 block|}
 comment|/*-------------------------< DATA_OUT2>-------------------*/
@@ -9162,7 +9168,7 @@ block|,
 comment|/* 	 *  MOVE the data according to the actual  	 *  DATA direction. 	 */
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|SCR_JUMPR
 operator|^
 name|IFFALSE
@@ -9384,7 +9390,7 @@ block|,
 comment|/* 	 *  MOVE the data according to the actual  	 *  DATA direction. 	 */
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|SCR_JUMPR
 operator|^
 name|IFFALSE
@@ -10403,7 +10409,7 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|SCR_JUMPR
 operator|^
 name|IFFALSE
@@ -10699,7 +10705,7 @@ block|,
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|SCR_JUMPR
 operator|^
 name|IFFALSE
@@ -11783,12 +11789,12 @@ argument_list|)
 block|,
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 block|}
 comment|/*-------------------------< DT_DATA_IN>--------------------*/
 block|,
 block|{
-comment|/*  *  Because the size depends on the  *  #define SYMCONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYMCONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DT_DATA_IN,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
+comment|/*  *  Because the size depends on the  *  #define SYM_CONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYM_CONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DT_DATA_IN,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
 literal|0
 block|}
 comment|/*-------------------------< DT_DATA_IN2>-------------------*/
@@ -11811,7 +11817,7 @@ block|, }
 comment|/*-------------------------< DT_DATA_OUT>--------------------*/
 block|,
 block|{
-comment|/*  *  Because the size depends on the  *  #define SYMCONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYMCONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DT_DATA_OUT,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
+comment|/*  *  Because the size depends on the  *  #define SYM_CONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYM_CONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DT_DATA_OUT,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
 literal|0
 block|}
 comment|/*-------------------------< DT_DATA_OUT2>-------------------*/
@@ -11833,7 +11839,7 @@ argument_list|)
 block|,
 endif|#
 directive|endif
-comment|/* SYMCONF_BROKEN_U3EN_SUPPORT */
+comment|/* SYM_CONF_BROKEN_U3EN_SUPPORT */
 block|}
 comment|/*-------------------------< ZERO>------------------------*/
 block|,
@@ -11984,7 +11990,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 condition|;
 name|i
 operator|++
@@ -12052,7 +12058,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 condition|;
 name|i
 operator|++
@@ -12108,7 +12114,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|p
 operator|=
 name|scrh
@@ -12123,7 +12129,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 condition|;
 name|i
 operator|++
@@ -12191,7 +12197,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 condition|;
 name|i
 operator|++
@@ -13578,7 +13584,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 condition|;
 name|i
 operator|++
@@ -13952,7 +13958,7 @@ if|if
 condition|(
 literal|10ul
 operator|*
-name|SYMCONF_MIN_ASYNC
+name|SYM_CONF_MIN_ASYNC
 operator|*
 name|np
 operator|->
@@ -14286,7 +14292,7 @@ expr_stmt|;
 comment|/* 	 *  Select burst length (dwords) 	 */
 name|burst_max
 operator|=
-name|SYMSETUP_BURST_ORDER
+name|SYM_SETUP_BURST_ORDER
 expr_stmt|;
 if|if
 condition|(
@@ -14516,7 +14522,7 @@ comment|/* Dma Fifo Size */
 comment|/* 	 *  Select some other 	 */
 if|if
 condition|(
-name|SYMSETUP_PCI_PARITY
+name|SYM_SETUP_PCI_PARITY
 condition|)
 name|np
 operator|->
@@ -14527,7 +14533,7 @@ expr_stmt|;
 comment|/* Master parity checking */
 if|if
 condition|(
-name|SYMSETUP_SCSI_PARITY
+name|SYM_SETUP_SCSI_PARITY
 condition|)
 name|np
 operator|->
@@ -14582,7 +14588,7 @@ name|np
 operator|->
 name|myaddr
 operator|=
-name|SYMSETUP_HOST_ID
+name|SYM_SETUP_HOST_ID
 expr_stmt|;
 block|}
 comment|/* 	 *  Prepare initial io register bits for burst length 	 */
@@ -14636,7 +14642,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SYMSETUP_SCSI_DIFF
+name|SYM_SETUP_SCSI_DIFF
 operator|==
 literal|1
 condition|)
@@ -14693,7 +14699,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|SYMSETUP_SCSI_DIFF
+name|SYM_SETUP_SCSI_DIFF
 operator|==
 literal|2
 condition|)
@@ -14722,7 +14728,7 @@ comment|/* 	 *  Set LED support from SCRIPTS. 	 *  Ignore this feature for board
 if|if
 condition|(
 operator|(
-name|SYMSETUP_SCSI_LED
+name|SYM_SETUP_SCSI_LED
 operator|||
 name|nvram
 operator|->
@@ -14758,7 +14764,7 @@ expr_stmt|;
 comment|/* 	 *  Set irq mode. 	 */
 switch|switch
 condition|(
-name|SYMSETUP_IRQ_MODE
+name|SYM_SETUP_IRQ_MODE
 operator|&
 literal|3
 condition|)
@@ -14801,7 +14807,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 condition|;
 name|i
 operator|++
@@ -14872,7 +14878,7 @@ name|tp
 operator|->
 name|usrtags
 operator|=
-name|SYMSETUP_MAX_TAG
+name|SYM_SETUP_MAX_TAG
 expr_stmt|;
 name|sym_nvram_setup_target
 argument_list|(
@@ -15224,7 +15230,7 @@ directive|endif
 comment|/* 	 *  Early C1010 chips need a work-around for DT  	 *  data transfer to work. 	 */
 ifndef|#
 directive|ifndef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 operator|!
@@ -15605,7 +15611,7 @@ name|qidx
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 	 *  If the previously queued CCB is not yet done,  	 *  set the IARB hint. The SCRIPTS will go with IARB  	 *  for this job when starting the previous one. 	 *  We leave devices a chance to win arbitration by  	 *  not using more than 'iarb_max' consecutive  	 *  immediate arbitrations. 	 */
 if|if
 condition|(
@@ -15993,7 +15999,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SYMSETUP_SCSI_BUS_CHECK
+name|SYM_SETUP_SCSI_BUS_CHECK
 condition|)
 goto|goto
 name|out
@@ -16136,7 +16142,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SYMSETUP_SCSI_BUS_CHECK
+name|SYM_SETUP_SCSI_BUS_CHECK
 operator|==
 literal|1
 condition|)
@@ -17061,7 +17067,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 condition|;
 name|i
 operator|++
@@ -18290,7 +18296,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 end_ifdef
 
 begin_comment
@@ -18331,7 +18337,7 @@ literal|8
 operator|-
 name|scrp
 operator|<=
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|*
 literal|8
 operator|+
@@ -18658,7 +18664,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SYMCONF_BROKEN_U3EN_SUPPORT */
+comment|/* SYM_CONF_BROKEN_U3EN_SUPPORT */
 end_comment
 
 begin_comment
@@ -18965,14 +18971,14 @@ operator|&
 operator|~
 name|U3EN
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 name|dt
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
 name|assert
 argument_list|(
 name|np
@@ -18982,15 +18988,13 @@ operator|&
 name|FE_U3EN
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
 name|uval
 operator||=
 name|U3EN
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 block|}
 else|else
 block|{
@@ -19105,7 +19109,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 operator|!
@@ -19242,7 +19246,7 @@ name|uval
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 operator|!
@@ -22441,7 +22445,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* Forget hints for IARB, they may be no longer relevant */
 name|cp
 operator|->
@@ -22811,7 +22815,7 @@ expr_stmt|;
 comment|/* 	 *  The last CCB queued used for IARB hint may be  	 *  no longer relevant. Forget it. 	 */
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 if|if
 condition|(
 name|np
@@ -23240,7 +23244,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 name|cp
 operator|->
 name|phys
@@ -23653,7 +23657,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 condition|;
 name|i
 operator|++
@@ -23710,7 +23714,7 @@ literal|1
 init|;
 name|k
 operator|<
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 condition|;
 name|k
 operator|++
@@ -23929,7 +23933,7 @@ condition|)
 continue|continue;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 			 *    If we are using IMMEDIATE ARBITRATION, we donnot  			 *    want to cancel the last queued CCB, since the  			 *    SCRIPTS may have anticipated the selection. 			 */
 if|if
 condition|(
@@ -24174,7 +24178,7 @@ literal|1
 init|;
 name|k
 operator|<
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 condition|;
 name|k
 operator|++
@@ -24771,7 +24775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Gerard's alchemy:) that deals with with the data   *  pointer for both MDP and the residual calculation.  *  *  I didn't want to bloat the code by more than 200   *  lignes for the handling of both MDP and the residual.  *  This has been achieved by using a data pointer   *  representation consisting in an index in the data   *  array (dp_sg) and a negative offset (dp_ofs) that   *  have the following meaning:  *  *  - dp_sg = SYMCONF_MAX_SG  *    we are at the end of the data script.  *  - dp_sg< SYMCONF_MAX_SG  *    dp_sg points to the next entry of the scatter array   *    we want to transfer.  *  - dp_ofs< 0  *    dp_ofs represents the residual of bytes of the   *    previous entry scatter entry we will send first.  *  - dp_ofs = 0  *    no residual to send first.  *  *  The function sym_evaluate_dp() accepts an arbitray   *  offset (basically from the MDP message) and returns   *  the corresponding values of dp_sg and dp_ofs.  */
+comment|/*  *  Gerard's alchemy:) that deals with with the data   *  pointer for both MDP and the residual calculation.  *  *  I didn't want to bloat the code by more than 200   *  lignes for the handling of both MDP and the residual.  *  This has been achieved by using a data pointer   *  representation consisting in an index in the data   *  array (dp_sg) and a negative offset (dp_ofs) that   *  have the following meaning:  *  *  - dp_sg = SYM_CONF_MAX_SG  *    we are at the end of the data script.  *  - dp_sg< SYM_CONF_MAX_SG  *    dp_sg points to the next entry of the scatter array   *    we want to transfer.  *  - dp_ofs< 0  *    dp_ofs represents the residual of bytes of the   *    previous entry scatter entry we will send first.  *  - dp_ofs = 0  *    no residual to send first.  *  *  The function sym_evaluate_dp() accepts an arbitray   *  offset (basically from the MDP message) and returns   *  the corresponding values of dp_sg and dp_ofs.  */
 end_comment
 
 begin_function
@@ -24912,7 +24916,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 *  Deduce the index of the sg entry. 	 *  Keep track of the index of the first valid entry. 	 *  If result is dp_sg = SYMCONF_MAX_SG, then we are at the  	 *  end of the data. 	 */
+comment|/* 	 *  Deduce the index of the sg entry. 	 *  Keep track of the index of the first valid entry. 	 *  If result is dp_sg = SYM_CONF_MAX_SG, then we are at the  	 *  end of the data. 	 */
 name|tmp
 operator|=
 name|scr_to_cpu
@@ -24926,7 +24930,7 @@ argument_list|)
 expr_stmt|;
 name|dp_sg
 operator|=
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 expr_stmt|;
 if|if
 condition|(
@@ -24955,7 +24959,7 @@ operator|)
 expr_stmt|;
 name|dp_sgmin
 operator|=
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|-
 name|cp
 operator|->
@@ -25038,12 +25042,9 @@ while|while
 condition|(
 name|dp_sg
 operator|<
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 condition|)
 block|{
-operator|++
-name|dp_sg
-expr_stmt|;
 name|tmp
 operator|=
 name|scr_to_cpu
@@ -25067,6 +25068,9 @@ name|tmp
 operator|&
 literal|0xffffff
 operator|)
+expr_stmt|;
+operator|++
+name|dp_sg
 expr_stmt|;
 if|if
 condition|(
@@ -25102,12 +25106,12 @@ if|if
 condition|(
 name|dp_sg
 operator|>
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|||
 operator|(
 name|dp_sg
 operator|==
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|&&
 name|dp_ofs
 operator|>
@@ -25279,7 +25283,7 @@ operator|-
 literal|8
 operator|-
 operator|(
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|-
 name|dp_sg
 operator|)
@@ -25665,7 +25669,7 @@ block|}
 comment|/* 	 *  We are now full comfortable in the computation  	 *  of the data residual (2's complement). 	 */
 name|dp_sgmin
 operator|=
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|-
 name|cp
 operator|->
@@ -25688,7 +25692,7 @@ name|ext_sg
 init|;
 name|dp_sg
 operator|<
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 condition|;
 operator|++
 name|dp_sg
@@ -26595,7 +26599,7 @@ block|}
 block|}
 ifndef|#
 directive|ifndef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 operator|!
@@ -28571,7 +28575,7 @@ name|lp
 operator|->
 name|busy_itlq
 operator|<
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 condition|)
 block|{
 name|tag
@@ -28592,7 +28596,7 @@ name|lp
 operator|->
 name|ia_tag
 operator|==
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 condition|)
 name|lp
 operator|->
@@ -28907,7 +28911,7 @@ name|lp
 operator|->
 name|if_tag
 operator|==
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 condition|)
 name|lp
 operator|->
@@ -29019,7 +29023,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 	 *  If we just complete the last queued CCB, 	 *  clear this info that is no longer relevant. 	 */
 if|if
 condition|(
@@ -29102,7 +29106,7 @@ name|np
 operator|->
 name|actccbs
 operator|>=
-name|SYMCONF_MAX_START
+name|SYM_CONF_MAX_START
 condition|)
 return|return
 literal|0
@@ -29578,7 +29582,7 @@ name|lunmp
 operator|=
 name|sym_calloc
 argument_list|(
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -29797,7 +29801,7 @@ name|itlq_tbl
 operator|=
 name|sym_calloc
 argument_list|(
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 argument_list|,
@@ -29820,7 +29824,7 @@ name|cb_tags
 operator|=
 name|sym_calloc
 argument_list|(
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 argument_list|,
 literal|"CB_TAGS"
 argument_list|)
@@ -29839,7 +29843,7 @@ name|lp
 operator|->
 name|itlq_tbl
 argument_list|,
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 argument_list|,
@@ -29865,7 +29869,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 condition|;
 name|i
 operator|++
@@ -29893,7 +29897,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 condition|;
 name|i
 operator|++
@@ -29935,7 +29939,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYMCONF_IOMAPPED
+name|SYM_CONF_IOMAPPED
 end_ifndef
 
 begin_function
@@ -30063,7 +30067,7 @@ literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|SYMCONF_IOMAPPED
+name|SYM_CONF_IOMAPPED
 name|err
 operator||=
 name|sym_regtest
@@ -31411,7 +31415,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SYMCONF_RESIDUAL_SUPPORT
+name|SYM_CONF_RESIDUAL_SUPPORT
 condition|)
 block|{
 comment|/* If user does not want residuals */
@@ -31869,7 +31873,7 @@ comment|/* 	 *  Wrong transfer residuals may be worse than just always  	 *  ret
 if|if
 condition|(
 operator|!
-name|SYMCONF_RESIDUAL_SUPPORT
+name|SYM_CONF_RESIDUAL_SUPPORT
 condition|)
 name|csio
 operator|->
@@ -32185,13 +32189,13 @@ name|ccb_h
 operator|->
 name|target_id
 operator|>=
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 operator|||
 name|ccb_h
 operator|->
 name|target_lun
 operator|>=
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 condition|)
 block|{
 name|sym_xpt_done2
@@ -32430,13 +32434,13 @@ name|ccb_h
 operator|->
 name|target_id
 operator|>=
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 operator|||
 name|ccb_h
 operator|->
 name|target_lun
 operator|>=
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 condition|)
 block|{
 name|sym_xpt_done2
@@ -32728,7 +32732,7 @@ expr_stmt|;
 comment|/* 		 *  For less than 128 tags, actual tags are numbered  		 *  1,3,5,..2*MAXTAGS+1,since we may have to deal  		 *  with devices that have problems with #TAG 0 or too  		 *  great #TAG numbers. For more tags (up to 256),  		 *  we use directly our tag number. 		 */
 if|#
 directive|if
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|>
 operator|(
 literal|512
@@ -33654,7 +33658,7 @@ literal|8
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 operator|(
@@ -33746,7 +33750,7 @@ literal|8
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SYMCONF_BROKEN_U3EN_SUPPORT
+name|SYM_CONF_BROKEN_U3EN_SUPPORT
 if|if
 condition|(
 operator|(
@@ -33959,7 +33963,7 @@ name|len
 expr_stmt|;
 name|s
 operator|=
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|-
 literal|1
 operator|-
@@ -34092,7 +34096,7 @@ name|cp
 operator|->
 name|segments
 operator|=
-name|SYMCONF_MAX_SG
+name|SYM_CONF_MAX_SG
 operator|-
 literal|1
 operator|-
@@ -34757,7 +34761,21 @@ name|cpi
 operator|->
 name|max_lun
 operator|=
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|SYM_SETUP_MAX_LUN
+operator|<
+name|SYM_CONF_MAX_LUN
+condition|)
+name|cpi
+operator|->
+name|max_lun
+operator|=
+name|SYM_SETUP_MAX_LUN
 operator|-
 literal|1
 expr_stmt|;
@@ -34790,7 +34808,7 @@ name|cpi
 operator|->
 name|sim_vid
 argument_list|,
-literal|"Gerard Roudier"
+literal|"FreeBSD"
 argument_list|,
 name|SIM_IDLEN
 argument_list|)
@@ -35089,7 +35107,7 @@ name|tip
 operator|->
 name|width
 operator|>
-name|SYMSETUP_MAX_WIDE
+name|SYM_SETUP_MAX_WIDE
 condition|)
 name|tip
 operator|->
@@ -35123,7 +35141,7 @@ name|tip
 operator|->
 name|offset
 operator|>
-name|SYMSETUP_MAX_OFFS
+name|SYM_SETUP_MAX_OFFS
 condition|)
 name|tip
 operator|->
@@ -35164,13 +35182,13 @@ name|tip
 operator|->
 name|period
 operator|<
-name|SYMSETUP_MIN_SYNC
+name|SYM_SETUP_MIN_SYNC
 condition|)
 name|tip
 operator|->
 name|period
 operator|=
-name|SYMSETUP_MIN_SYNC
+name|SYM_SETUP_MIN_SYNC
 expr_stmt|;
 if|if
 condition|(
@@ -35457,6 +35475,8 @@ literal|8
 block|,
 literal|4
 block|,
+literal|0
+block|,
 name|FE_ERL
 block|}
 block|,
@@ -35472,6 +35492,8 @@ block|,
 literal|8
 block|,
 literal|4
+block|,
+literal|1
 block|,
 name|FE_CACHE_SET
 operator||
@@ -35495,6 +35517,8 @@ literal|8
 block|,
 literal|4
 block|,
+literal|0
+block|,
 name|FE_WIDE
 operator||
 name|FE_BOF
@@ -35516,6 +35540,8 @@ block|,
 literal|8
 block|,
 literal|4
+block|,
+literal|2
 block|,
 name|FE_WIDE
 operator||
@@ -35547,6 +35573,8 @@ literal|8
 block|,
 literal|5
 block|,
+literal|1
+block|,
 name|FE_ULTRA
 operator||
 name|FE_CLK80
@@ -35572,6 +35600,8 @@ block|,
 literal|16
 block|,
 literal|5
+block|,
+literal|2
 block|,
 name|FE_WIDE
 operator||
@@ -35606,6 +35636,8 @@ block|,
 literal|16
 block|,
 literal|5
+block|,
+literal|2
 block|,
 name|FE_WIDE
 operator||
@@ -35633,13 +35665,15 @@ name|PCI_ID_SYM53C875_2
 block|,
 literal|0xff
 block|,
-literal|"875_2"
+literal|"875"
 block|,
 literal|6
 block|,
 literal|16
 block|,
 literal|5
+block|,
+literal|2
 block|,
 name|FE_WIDE
 operator||
@@ -35675,6 +35709,8 @@ literal|16
 block|,
 literal|5
 block|,
+literal|2
+block|,
 name|FE_WIDE
 operator||
 name|FE_ULTRA
@@ -35709,6 +35745,8 @@ literal|31
 block|,
 literal|7
 block|,
+literal|2
+block|,
 name|FE_WIDE
 operator||
 name|FE_ULTRA2
@@ -35742,6 +35780,8 @@ block|,
 literal|31
 block|,
 literal|7
+block|,
+literal|4
 block|,
 name|FE_WIDE
 operator||
@@ -35787,6 +35827,8 @@ literal|31
 block|,
 literal|7
 block|,
+literal|4
+block|,
 name|FE_WIDE
 operator||
 name|FE_ULTRA2
@@ -35821,7 +35863,7 @@ block|,
 block|{
 name|PCI_ID_LSI53C1010
 block|,
-literal|0x45
+literal|0x00
 block|,
 literal|"1010"
 block|,
@@ -35830,6 +35872,8 @@ block|,
 literal|62
 block|,
 literal|7
+block|,
+literal|8
 block|,
 name|FE_WIDE
 operator||
@@ -35878,6 +35922,8 @@ block|,
 literal|62
 block|,
 literal|7
+block|,
+literal|8
 block|,
 name|FE_WIDE
 operator||
@@ -35921,13 +35967,15 @@ name|PCI_ID_LSI53C1510D
 block|,
 literal|0xff
 block|,
-literal|"1510D"
+literal|"1510d"
 block|,
 literal|6
 block|,
 literal|31
 block|,
 literal|7
+block|,
+literal|4
 block|,
 name|FE_WIDE
 operator||
@@ -36162,6 +36210,17 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|chip
+operator|->
+name|lp_probe_bit
+operator|&
+name|SYM_SETUP_LP_PROBE_MAP
+operator|)
+condition|?
+operator|-
+literal|2000
+else|:
 literal|0
 return|;
 block|}
@@ -36877,7 +36936,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|SYMCONF_IOMAPPED
+name|SYM_CONF_IOMAPPED
 comment|/* 	 *  User want us to use normal IO with PCI. 	 *  Alloc/get/map/retrieve everything that deals with IO. 	 */
 ifdef|#
 directive|ifdef
@@ -37029,7 +37088,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* SYMCONF_IOMAPPED */
+comment|/* SYM_CONF_IOMAPPED */
 comment|/* 	 *  If the chip has RAM. 	 *  Alloc/get/map/retrieve the corresponding resources. 	 */
 if|if
 condition|(
@@ -37903,12 +37962,12 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|SYMCONF_IARB_SUPPORT
+name|SYM_CONF_IARB_SUPPORT
 comment|/* 	 *    If user does not want to use IMMEDIATE ARBITRATION 	 *    when we are reselected while attempting to arbitrate, 	 *    patch the SCRIPTS accordingly with a SCRIPT NO_OP. 	 */
 if|if
 condition|(
 operator|!
-name|SYMCONF_SET_IARB_ON_ARB_LOST
+name|SYM_CONF_SET_IARB_ON_ARB_LOST
 condition|)
 name|np
 operator|->
@@ -37927,12 +37986,12 @@ expr_stmt|;
 comment|/* 	 *    If user wants IARB to be set when we win arbitration  	 *    and have other jobs, compute the max number of consecutive  	 *    settings of IARB hints before we leave devices a chance to  	 *    arbitrate for reselection. 	 */
 ifdef|#
 directive|ifdef
-name|SYMSETUP_IARB_MAX
+name|SYM_SETUP_IARB_MAX
 name|np
 operator|->
 name|iarb_max
 operator|=
-name|SYMSETUP_IARB_MAX
+name|SYM_SETUP_IARB_MAX
 expr_stmt|;
 else|#
 directive|else
@@ -38219,7 +38278,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 condition|;
 name|i
 operator|++
@@ -38653,7 +38712,7 @@ literal|0
 init|;
 name|target
 operator|<
-name|SYMCONF_MAX_TARGET
+name|SYM_CONF_MAX_TARGET
 condition|;
 name|target
 operator|++
@@ -38677,7 +38736,7 @@ literal|0
 init|;
 name|lun
 operator|<
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 condition|;
 name|lun
 operator|++
@@ -38712,7 +38771,7 @@ name|lp
 operator|->
 name|itlq_tbl
 argument_list|,
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 operator|*
 literal|4
 argument_list|,
@@ -38731,7 +38790,7 @@ name|lp
 operator|->
 name|cb_tags
 argument_list|,
-name|SYMCONF_MAX_TASK
+name|SYM_CONF_MAX_TASK
 argument_list|,
 literal|"CB_TAGS"
 argument_list|)
@@ -38752,7 +38811,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|>
 literal|1
 if|if
@@ -38767,7 +38826,7 @@ name|tp
 operator|->
 name|lunmp
 argument_list|,
-name|SYMCONF_MAX_LUN
+name|SYM_CONF_MAX_LUN
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -38922,7 +38981,7 @@ name|devq
 operator|=
 name|cam_simq_alloc
 argument_list|(
-name|SYMCONF_MAX_START
+name|SYM_CONF_MAX_START
 argument_list|)
 expr_stmt|;
 if|if
@@ -38952,7 +39011,7 @@ name|unit
 argument_list|,
 literal|1
 argument_list|,
-name|SYMSETUP_MAX_TAG
+name|SYM_SETUP_MAX_TAG
 argument_list|,
 name|devq
 argument_list|)
@@ -39231,7 +39290,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 comment|/* 	 *  Get parity checking, host ID and verbose mode from NVRAM 	 */
 switch|switch
 condition|(
@@ -39325,7 +39384,7 @@ block|}
 comment|/*  *  Get target setup from NVRAM.  */
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 specifier|static
 name|void
 name|sym_Symbios_setup_target
@@ -39376,7 +39435,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 switch|switch
 condition|(
 name|nvp
@@ -39428,7 +39487,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 comment|/*  *  Get target set-up from Symbios format NVRAM.  */
 specifier|static
 name|void
@@ -39522,7 +39581,7 @@ operator|&
 name|SYMBIOS_QUEUE_TAGS_ENABLED
 operator|)
 condition|?
-name|SYMSETUP_MAX_TAG
+name|SYM_SETUP_MAX_TAG
 else|:
 literal|0
 expr_stmt|;
@@ -39730,7 +39789,7 @@ comment|/* SCSI parity checking disabled */
 block|}
 ifdef|#
 directive|ifdef
-name|SYMCONF_DEBUG_NVRAM
+name|SYM_CONF_DEBUG_NVRAM
 comment|/*  *  Dump Symbios format NVRAM for debugging purpose.  */
 name|void
 name|sym_display_Symbios_nvram
@@ -40299,14 +40358,14 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* SYMCONF_DEBUG_NVRAM */
+comment|/* SYM_CONF_DEBUG_NVRAM */
 endif|#
 directive|endif
-comment|/* SYMCONF_NVRAM_SUPPORT */
+comment|/* SYM_CONF_NVRAM_SUPPORT */
 comment|/*  *  Try reading Symbios or Tekram NVRAM  */
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 specifier|static
 name|int
 name|sym_read_Symbios_nvram
@@ -40347,11 +40406,11 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 comment|/* 	 *  Try to read SYMBIOS nvram. 	 *  Try to read TEKRAM nvram if Symbios nvram not found. 	 */
 if|if
 condition|(
-name|SYMSETUP_SYMBIOS_NVRAM
+name|SYM_SETUP_SYMBIOS_NVRAM
 operator|&&
 operator|!
 name|sym_read_Symbios_nvram
@@ -40375,7 +40434,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|SYMSETUP_TEKRAM_NVRAM
+name|SYM_SETUP_TEKRAM_NVRAM
 operator|&&
 operator|!
 name|sym_read_Tekram_nvram
@@ -40421,7 +40480,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|SYMCONF_NVRAM_SUPPORT
+name|SYM_CONF_NVRAM_SUPPORT
 comment|/*  *  24C16 EEPROM reading.  *  *  GPOI0 - data in/data out  *  GPIO1 - clock  *  Symbios NVRAM wiring now also used by Tekram.  */
 define|#
 directive|define
@@ -42162,7 +42221,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SYMCONF_NVRAM_SUPPORT */
+comment|/* SYM_CONF_NVRAM_SUPPORT */
 end_comment
 
 end_unit
