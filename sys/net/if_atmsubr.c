@@ -948,7 +948,7 @@ comment|/* 	 * Queue message on interface, and start output if interface 	 * not
 if|if
 condition|(
 operator|!
-name|IF_HANDOFF
+name|IF_HANDOFF_ADJ
 argument_list|(
 operator|&
 name|ifp
@@ -958,6 +958,16 @@ argument_list|,
 name|m
 argument_list|,
 name|ifp
+argument_list|,
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|atm_pseudohdr
+argument_list|)
 argument_list|)
 condition|)
 return|return
