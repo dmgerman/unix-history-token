@@ -4553,31 +4553,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-if|if
-condition|(
-operator|!
-operator|(
-name|command
-operator|&
-name|PCIM_CMD_MEMEN
-operator|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"failed to enable memory mapping!\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|rid
 operator|=
 name|TL_PCI_LOMEM
@@ -8691,6 +8666,14 @@ name|mii
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|tl_ifmedia_upd
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Send the RX go command */
 name|CMD_SET
