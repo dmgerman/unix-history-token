@@ -102,6 +102,7 @@ name|k
 decl_stmt|,
 name|outnum
 decl_stmt|;
+specifier|static
 name|char
 modifier|*
 name|outbuf
