@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.37 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.38 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.37 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.38 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4904,20 +4904,17 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+specifier|static
 name|char
 name|c0
 decl_stmt|;
 specifier|static
 name|char
 name|c1
-init|=
-literal|'A'
 decl_stmt|;
 specifier|static
 name|char
 name|c2
-init|=
-literal|'A'
 decl_stmt|;
 name|time_t
 name|now
