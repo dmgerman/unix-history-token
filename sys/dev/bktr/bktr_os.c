@@ -156,12 +156,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -183,16 +177,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|400000
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -202,21 +186,6 @@ end_include
 begin_comment
 comment|/* used by smbus and newbus */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
 
 begin_include
 include|#
@@ -244,21 +213,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|400000
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -278,11 +232,6 @@ end_include
 begin_comment
 comment|/* used by newbus */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1035,16 +984,6 @@ begin_comment
 comment|/****************************/
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|400000
-operator|)
-end_if
-
 begin_function_decl
 specifier|static
 name|int
@@ -1385,16 +1324,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>
-literal|410000
-operator|)
-end_if
-
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -1420,11 +1349,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * the boot time probe routine.  */
@@ -3877,15 +3801,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FreeBSD 4.x specific kernel interface routines */
-end_comment
 
 begin_comment
 comment|/*****************/

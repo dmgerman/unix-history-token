@@ -43,12 +43,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -89,6 +83,24 @@ end_else
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -96,16 +108,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
 
 begin_include
 include|#
@@ -128,11 +130,6 @@ include|#
 directive|include
 file|<sys/bus.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1330,6 +1327,56 @@ literal|0x03000F
 block|}
 block|,
 comment|/* GPIO mask */
+block|{
+name|CARD_PIXELVIEW_PLAYTV_PAK
+block|,
+comment|/* the card id */
+literal|"PixelView PlayTV Pak"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+literal|0
+block|,
+name|PFC8582_WADDR
+block|,
+comment|/* EEProm type */
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+block|,
+comment|/* 256 bytes */
+block|{
+literal|0x20000
+block|,
+literal|0x80000
+block|,
+literal|0
+block|,
+literal|0xa8000
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0xAA0000
+block|}
+block|,
+comment|/* GPIO mask */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2030,16 +2077,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCI_VENDOR_PINNACLE_ALT
-value|0xBD11
+name|PCI_VENDOR_IODATA
+value|0x10fc
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCI_VENDOR_IODATA
-value|0x10fc
+name|PCI_VENDOR_PINNACLE_ALT
+value|0xBD11
 end_define
+
+begin_comment
+comment|/* They got their own ID backwards? */
+end_comment
 
 begin_define
 define|#
@@ -2818,6 +2869,10 @@ condition|(
 name|subsystem_vendor_id
 operator|==
 name|PCI_VENDOR_PINNACLE_ALT
+operator|||
+name|subsystem_vendor_id
+operator|==
+name|PCI_VENDOR_PINNACLE_NEW
 condition|)
 block|{
 name|bktr
@@ -2864,11 +2919,11 @@ if|if
 condition|(
 name|subsystem_vendor_id
 operator|==
-literal|0x10fc
+name|PCI_VENDOR_IODATA
 operator|&&
 name|subsystem_id
 operator|==
-literal|0x4020
+name|MODEL_IODATA_GV_BCTV3_PCI
 condition|)
 block|{
 name|bktr
@@ -2909,87 +2964,6 @@ argument_list|)
 expr_stmt|;
 goto|goto
 name|checkTuner
-goto|;
-block|}
-if|if
-condition|(
-name|subsystem_vendor_id
-operator|==
-name|PCI_VENDOR_PINNACLE_NEW
-condition|)
-block|{
-name|bktr
-operator|->
-name|card
-operator|=
-name|cards
-index|[
-operator|(
-name|card
-operator|=
-name|CARD_PINNACLE_PCTV_RAVE
-operator|)
-index|]
-expr_stmt|;
-name|bktr
-operator|->
-name|card
-operator|.
-name|eepromAddr
-operator|=
-name|eeprom_i2c_address
-expr_stmt|;
-name|bktr
-operator|->
-name|card
-operator|.
-name|eepromSize
-operator|=
-call|(
-name|u_char
-call|)
-argument_list|(
-literal|256
-operator|/
-name|EEPROMBLOCKSIZE
-argument_list|)
-expr_stmt|;
-name|TDA9887_init
-argument_list|(
-name|bktr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* look for a tuner */
-name|tuner_i2c_address
-operator|=
-name|locate_tuner_address
-argument_list|(
-name|bktr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: tuner @ %#x\n"
-argument_list|,
-name|bktr_name
-argument_list|(
-name|bktr
-argument_list|)
-argument_list|,
-name|tuner_i2c_address
-argument_list|)
-expr_stmt|;
-name|select_tuner
-argument_list|(
-name|bktr
-argument_list|,
-name|TUNER_MT2032
-argument_list|)
-expr_stmt|;
-goto|goto
-name|checkDBX
 goto|;
 block|}
 comment|/* Vendor is unknown. We will use the standard probe code */
@@ -3723,6 +3697,44 @@ expr_stmt|;
 block|}
 name|checkTuner
 label|:
+if|if
+condition|(
+name|card
+operator|==
+name|CARD_MIRO
+operator|&&
+name|mt2032_init
+argument_list|(
+name|bktr
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_PINNACLE_PCTV_RAVE
+operator|)
+index|]
+expr_stmt|;
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|TUNER_MT2032
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
+block|}
 comment|/* look for a tuner */
 name|tuner_i2c_address
 operator|=
@@ -4915,7 +4927,7 @@ literal|1
 expr_stmt|;
 name|checkMSP
 label|:
-comment|/* If this is a Hauppauge Bt878 card, we need to enable the 	 * MSP 34xx audio chip.  	 * If this is a Hauppauge Bt848 card, reset the MSP device. 	 * The MSP reset line is wired to GPIO pin 5. On Bt878 cards a pulldown 	 * resistor holds the device in reset until we set GPIO pin 5.          */
+comment|/* If this is a Hauppauge Bt878 card, we need to enable the 	 * MSP 34xx audio chip.  	 * If this is a Hauppauge Bt848 card, reset the MSP device. 	 * The MSP reset line is wired to GPIO pin 5. On Bt878 cards a pulldown 	 * resistor holds the device in reset until we set GPIO pin 5. 	 */
 comment|/* Optionally skip the MSP reset. This is handy if you initialise the 	 * MSP audio in another operating system (eg Windows) first and then 	 * do a soft reboot. 	 */
 ifndef|#
 directive|ifndef

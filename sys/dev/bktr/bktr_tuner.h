@@ -275,13 +275,10 @@ end_comment
 
 begin_function_decl
 name|int
-name|TDA9887_init
+name|mt2032_init
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
-parameter_list|,
-name|int
-name|output2_enable
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -39,12 +39,6 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -102,6 +96,24 @@ end_else
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -109,16 +121,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
 
 begin_include
 include|#
@@ -141,11 +143,6 @@ include|#
 directive|include
 file|<sys/bus.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -526,17 +523,6 @@ parameter_list|,
 name|unsigned
 name|int
 name|freq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|mt2032_init
-parameter_list|(
-name|bktr_ptr_t
-name|bktr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2960,19 +2946,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tuner_type
-operator|==
-name|TUNER_MT2032
-condition|)
-block|{
-name|mt2032_init
-argument_list|(
-name|bktr
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4178,6 +4151,7 @@ value|0x86
 end_define
 
 begin_function
+specifier|static
 name|int
 name|TDA9887_init
 parameter_list|(
@@ -4193,22 +4167,6 @@ name|addr
 init|=
 name|TDA9887_ADDR
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|char buf[8];
-comment|/* NOTE: these are PAL values */
-block|buf[0] = 0;
-comment|/* sub address */
-block|buf[1] = 0x50;
-comment|/* output port1 inactive */
-block|buf[2] = 0x6e;
-comment|/* tuner takeover point / de-emphasis */
-block|buf[3] = 0x09;
-comment|/* fVIF = 38.9 MHz, fFM = 5.5 MHz */
-block|if (!output2_enable) 		buf[1] |= 0x80;  	if (i2cWriteBuf(bktr, addr, 4, buf) == -1) { 		printf("%s: TDA9887 write failed\n", bktr_name(bktr)); 		return -1; 	}
-else|#
-directive|else
 name|i2cWrite
 argument_list|(
 name|bktr
@@ -4235,6 +4193,24 @@ argument_list|,
 literal|0x6e
 argument_list|)
 expr_stmt|;
+comment|/* takeover point / de-emphasis */
+comment|/* PAL BG: 0x09  PAL I: 0x0a  NTSC: 0x04 */
+ifdef|#
+directive|ifdef
+name|MT2032_NTSC
+name|i2cWrite
+argument_list|(
+name|bktr
+argument_list|,
+name|addr
+argument_list|,
+literal|2
+argument_list|,
+literal|0x04
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|i2cWrite
 argument_list|(
 name|bktr
@@ -4305,7 +4281,7 @@ end_endif
 
 begin_function
 specifier|static
-name|u_char
+name|int
 name|_MT2032_GetRegister
 parameter_list|(
 name|bktr_ptr_t
@@ -4336,6 +4312,10 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s: MT2032 write failed (i2c addr %#x)\n"
@@ -4348,6 +4328,10 @@ argument_list|,
 name|MT2032_ADDR
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -4368,6 +4352,10 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s: MT2032 get register %d failed\n"
@@ -4381,7 +4369,8 @@ name|regNum
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -4442,7 +4431,6 @@ value|_MT2032_SetRegister(bktr,r,d)
 end_define
 
 begin_function
-specifier|static
 name|int
 name|mt2032_init
 parameter_list|(
@@ -4466,6 +4454,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 name|TDA9887_init
 argument_list|(
 name|bktr
@@ -4486,16 +4477,40 @@ condition|;
 name|i
 operator|++
 control|)
-name|rdbuf
-index|[
-name|i
-index|]
+block|{
+if|if
+condition|(
+operator|(
+name|x
 operator|=
 name|MT2032_GetRegister
 argument_list|(
 name|i
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+break|break;
+name|rdbuf
+index|[
+name|i
+index|]
+operator|=
+name|x
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|i
+operator|<
+literal|21
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|printf
 argument_list|(
 literal|"%s: MT2032: Companycode=%02x%02x Part=%02x Revision=%02x\n"
@@ -4526,6 +4541,31 @@ literal|0x14
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rdbuf
+index|[
+literal|0x13
+index|]
+operator|!=
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: MT2032 not found or unknown type\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* Initialize Registers per spec. */
 name|MT2032_SetRegister
 argument_list|(
@@ -5693,36 +5733,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: MT2032-SetIFFreq: 0x%02X%02X%02X%02X...\n"
-argument_list|,
-name|bktr_name
-argument_list|(
-name|bktr
-argument_list|)
-argument_list|,
-name|buf
-index|[
-literal|0x00
-index|]
-argument_list|,
-name|buf
-index|[
-literal|0x01
-index|]
-argument_list|,
-name|buf
-index|[
-literal|0x02
-index|]
-argument_list|,
-name|buf
-index|[
-literal|0x03
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* send only the relevant registers per Rev. 1.2 */
 name|MT2032_SetRegister
 argument_list|(
@@ -5935,6 +5945,34 @@ name|from
 decl_stmt|,
 name|to
 decl_stmt|;
+name|int
+name|stat
+decl_stmt|,
+name|tad
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MT2032_NTSC
+name|from
+operator|=
+literal|40750
+operator|*
+literal|1000
+expr_stmt|;
+name|to
+operator|=
+literal|46750
+operator|*
+literal|1000
+expr_stmt|;
+name|if2
+operator|=
+literal|45750
+operator|*
+literal|1000
+expr_stmt|;
+else|#
+directive|else
 name|from
 operator|=
 literal|32900
@@ -5953,20 +5991,10 @@ literal|38900
 operator|*
 literal|1000
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: setting frequency to %d\n"
-argument_list|,
-name|bktr_name
-argument_list|(
-name|bktr
-argument_list|)
-argument_list|,
-name|freq
-operator|*
-literal|62500
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
 name|MT2032_SetIFFreq
 argument_list|(
 name|bktr
@@ -5988,7 +6016,55 @@ name|from
 argument_list|,
 name|to
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|bktr
+operator|->
+name|tuner
+operator|.
+name|frequency
+operator|=
+name|freq
 expr_stmt|;
+name|stat
+operator|=
+name|MT2032_GetRegister
+argument_list|(
+literal|0x0e
+argument_list|)
+expr_stmt|;
+name|tad
+operator|=
+name|MT2032_GetRegister
+argument_list|(
+literal|0x0f
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s: frequency set to %d, st = %#x, tad = %#x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
+argument_list|,
+name|freq
+operator|*
+literal|62500
+argument_list|,
+name|stat
+argument_list|,
+name|tad
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

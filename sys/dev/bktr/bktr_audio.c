@@ -49,12 +49,6 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -95,6 +89,24 @@ end_else
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -102,16 +114,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300000
-operator|)
-end_if
 
 begin_include
 include|#
@@ -134,11 +136,6 @@ include|#
 directive|include
 file|<sys/bus.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -162,8 +162,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_PIXELVIEW_PLAYTV_PAK
 value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|21
 end_define
 
 begin_define
