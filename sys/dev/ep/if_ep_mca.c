@@ -462,7 +462,7 @@ argument_list|)
 expr_stmt|;
 name|SET_IRQ
 argument_list|(
-name|BASE
+name|sc
 argument_list|,
 name|rman_get_start
 argument_list|(
