@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.56 (Berkeley) %G%"
+literal|"@(#)main.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1994,7 +1994,7 @@ name|hp
 operator|->
 name|h_length
 operator|==
-literal|4
+name|IPADDRSIZE
 condition|)
 block|{
 specifier|register

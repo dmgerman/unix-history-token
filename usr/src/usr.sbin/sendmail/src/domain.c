@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.19 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.20 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.19 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.20 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,8 +193,12 @@ begin_define
 define|#
 directive|define
 name|HEADERSZ
-value|sizeof(HEADER)
+value|12
 end_define
+
+begin_comment
+comment|/* sizeof(HEADER) */
+end_comment
 
 begin_endif
 endif|#

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.8 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.9 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.8 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.9 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3264,12 +3264,7 @@ name|udb_addr
 operator|.
 name|sin_addr
 argument_list|,
-sizeof|sizeof
-name|up
-operator|->
-name|udb_addr
-operator|.
-name|sin_addr
+name|IPADDRSIZE
 argument_list|)
 expr_stmt|;
 name|up

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.106 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.107 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5074,6 +5074,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* **  The size of an IP address -- can't use sizeof because of problems **  on Crays, where everything is 64 bits.  This will break if/when **  IP addresses are expanded to eight bytes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPADDRSIZE
+value|4
+end_define
 
 begin_comment
 comment|/* **  Do some required dependencies */

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.52 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.53 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.52 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.53 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1023,12 +1023,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-sizeof|sizeof
-name|addr
-operator|.
-name|sin
-operator|.
-name|sin_addr
+name|IPADDRSIZE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1533,12 +1528,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-sizeof|sizeof
-name|addr
-operator|.
-name|sin
-operator|.
-name|sin_addr
+name|IPADDRSIZE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2755,7 +2745,8 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|u_long
+name|struct
+name|in_addr
 name|in_addr
 decl_stmt|;
 name|char
@@ -3302,6 +3293,8 @@ operator|=
 literal|'\0'
 expr_stmt|;
 name|in_addr
+operator|.
+name|s_addr
 operator|=
 name|inet_addr
 argument_list|(
@@ -3324,11 +3317,7 @@ operator|)
 operator|&
 name|in_addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in_addr
-argument_list|)
+name|IPADDRSIZE
 argument_list|,
 name|AF_INET
 argument_list|)
@@ -3751,12 +3740,7 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-sizeof|sizeof
-name|sap
-operator|->
-name|sin
-operator|.
-name|sin_addr
+name|IPADDRSIZE
 argument_list|,
 name|AF_INET
 argument_list|)
