@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.16 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2579,9 +2579,6 @@ decl_stmt|;
 name|int
 name|nincludes
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
@@ -2862,7 +2859,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* the input file must be marked safe */
-name|ret
+name|rval
 operator|=
 name|safefile
 argument_list|(
@@ -2881,7 +2878,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|rval
 operator|!=
 literal|0
 condition|)
@@ -2909,13 +2906,13 @@ name|uid
 argument_list|,
 name|errstring
 argument_list|(
-name|ret
+name|rval
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|ret
-return|;
+goto|goto
+name|resetuid
+goto|;
 block|}
 name|fp
 operator|=
@@ -2933,11 +2930,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|int
-name|ret
-init|=
+name|rval
+operator|=
 name|errno
-decl_stmt|;
+expr_stmt|;
 name|clrevent
 argument_list|(
 name|ev
@@ -2958,13 +2954,13 @@ literal|"include: open: %s\n"
 argument_list|,
 name|errstring
 argument_list|(
-name|ret
+name|rval
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|ret
-return|;
+goto|goto
+name|resetuid
+goto|;
 block|}
 if|if
 condition|(
@@ -2993,11 +2989,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|int
-name|ret
-init|=
+name|rval
+operator|=
 name|errno
-decl_stmt|;
+expr_stmt|;
 name|clrevent
 argument_list|(
 name|ev
@@ -3010,9 +3005,9 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return
-name|ret
-return|;
+goto|goto
+name|resetuid
+goto|;
 block|}
 name|ctladdr
 operator|->
@@ -3075,9 +3070,9 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|resetuid
+goto|;
 block|}
 comment|/* read the file -- each line is a comma-separated list. */
 name|FileName
