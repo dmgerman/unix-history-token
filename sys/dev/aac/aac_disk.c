@@ -876,7 +876,7 @@ operator|->
 name|ad_size
 operator|>=
 operator|(
-literal|2
+literal|1
 operator|*
 literal|1024
 operator|*
