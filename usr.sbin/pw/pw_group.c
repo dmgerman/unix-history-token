@@ -1,13 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_group.c,v 1.1.1.1.2.2 1996/12/11 00:14:16 joerg Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -18,7 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -255,11 +287,11 @@ name|a_name
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"group name or id required\n"
+literal|"group name or id required"
 argument_list|)
 expr_stmt|;
 if|if
@@ -432,11 +464,11 @@ name|NULL
 argument_list|)
 return|;
 block|}
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"unknown group `%s'\n"
+literal|"unknown group `%s'"
 argument_list|,
 name|a_name
 condition|?
@@ -495,16 +527,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|cmderr
+name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"Error updating group file: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"error updating group file"
 argument_list|)
 expr_stmt|;
 name|pw_log
@@ -604,11 +631,11 @@ operator|==
 name|NULL
 condition|)
 comment|/* Required */
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"group name required\n"
+literal|"group name required"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -619,11 +646,11 @@ operator|!=
 name|NULL
 condition|)
 comment|/* Exists */
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"group name `%s' already exists\n"
+literal|"group name `%s' already exists"
 argument_list|,
 name|a_name
 operator|->
@@ -878,7 +905,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"-h file descriptor"
 argument_list|)
@@ -920,11 +947,11 @@ operator|!
 operator|*
 name|line
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"empty password read on file descriptor %d\n"
+literal|"empty password read on file descriptor %d"
 argument_list|,
 name|fd
 argument_list|)
@@ -1105,11 +1132,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_NOUSER
 argument_list|,
-literal|"user `%s' does not exist\n"
+literal|"user `%s' does not exist"
 argument_list|,
 name|p
 argument_list|)
@@ -1242,7 +1269,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"group update"
 argument_list|)
@@ -1267,11 +1294,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"group disappeared during update\n"
+literal|"group disappeared during update"
 argument_list|)
 expr_stmt|;
 name|pw_log
@@ -1386,11 +1413,11 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"gid `%ld' has already been allocated\n"
+literal|"gid `%ld' has already been allocated"
 argument_list|,
 operator|(
 name|long
@@ -1596,11 +1623,11 @@ name|cnf
 operator|->
 name|max_gid
 condition|)
-name|cmderr
+name|errx
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"unable to allocate a new gid - range fully used\n"
+literal|"unable to allocate a new gid - range fully used"
 argument_list|)
 expr_stmt|;
 name|bm_dealloc
