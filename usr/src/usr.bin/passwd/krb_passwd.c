@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krb_passwd.c	5.1 (Berkeley) %G%"
+literal|"@(#)krb_passwd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,18 @@ begin_include
 include|#
 directive|include
 file|"kpasswd_proto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_define
@@ -1294,6 +1306,9 @@ name|struct
 name|update_data
 name|ud
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|ud
@@ -1305,6 +1320,9 @@ argument_list|,
 name|_PASSWORD_LEN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|ud
@@ -1354,6 +1372,11 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|ud
 argument_list|,
 sizeof|sizeof
@@ -1463,6 +1486,10 @@ name|void
 operator|)
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|proto_data
 argument_list|,
@@ -1477,6 +1504,10 @@ name|void
 operator|)
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|okey
 argument_list|,
 sizeof|sizeof
@@ -1490,6 +1521,10 @@ name|void
 operator|)
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|osched
 argument_list|,
 sizeof|sizeof
@@ -1503,6 +1538,10 @@ name|void
 operator|)
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|random_schedule
 argument_list|,
 sizeof|sizeof

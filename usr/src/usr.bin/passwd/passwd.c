@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	5.1 (Berkeley) %G%"
+literal|"@(#)passwd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,11 +187,6 @@ name|int
 name|errno
 decl_stmt|,
 name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 name|struct
 name|passwd
@@ -1664,9 +1659,6 @@ name|pstat
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|,
-name|waitpid
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1704,6 +1696,10 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pstat
 argument_list|,
