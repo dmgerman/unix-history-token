@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_devfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/snd/sound.h>
 end_include
 
