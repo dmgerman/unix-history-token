@@ -1346,6 +1346,16 @@ name|count
 operator|++
 expr_stmt|;
 block|}
+comment|/* No valid Px state found. */
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 name|AcpiOsFree
 argument_list|(
 name|buf
@@ -1359,16 +1369,6 @@ name|px_count
 operator|=
 name|count
 expr_stmt|;
-comment|/* No valid Px state found. */
-if|if
-condition|(
-name|count
-operator|==
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
 comment|/* Get the control and status registers (one of each). */
 name|buf
 operator|.
