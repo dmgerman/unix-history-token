@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.25 2001/12/12 20:05:48 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.26 2002/01/08 20:52:23 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.150 2001/11/27 03:25:16 enami Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.156 2001/12/29 15:00:45 pooka Exp $ */
 end_comment
 
 begin_comment
@@ -1888,6 +1888,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_IBM_SMART_CAPTURE_II
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_IBM_SMART_CAPTURE_II
+value|0x003c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_IBM_SMART_CAPTURE_II
+value|"IBM Smart Capture Card II"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_IBM_ETHERJET
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -3133,6 +3154,27 @@ define|#
 directive|define
 name|PCMCIA_STR_SOCKET_EA_ETHER
 value|"Socket Communications EA"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_SOCKET_LP_WLAN_CF
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_SOCKET_LP_WLAN_CF
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_SOCKET_LP_WLAN_CF
+value|"Socket Communications Low Power WLAN Card"
 end_define
 
 begin_define
@@ -4782,6 +4824,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_SIMPLETECH_SPECTRUM24_ALT
+value|{ "Symbol Technologies", "LA4111 Spectrum24 Wireless LAN PC Card", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_SIMPLETECH_SPECTRUM24_ALT
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_SIMPLETECH_SPECTRUM24_ALT
+value|"LA4111 Spectrum24 Wireless LAN PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_SMC_2632W
 value|{ "SMC", "SMC2632W", "Version 01.02", NULL }
 end_define
@@ -4970,6 +5033,90 @@ define|#
 directive|define
 name|PCMCIA_STR_ZOOM_AIR_4000
 value|"Zoom Air-4000"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_FMV_J181
+value|{ "PCMCIA MBH10302", "01", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_FMV_J181
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_FMV_J181
+value|"FUJITSU FMV-J181 PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_FMV_J182
+value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.01", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_FMV_J182
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_FMV_J182
+value|"FUJITSU FMV-J182 PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_FMV_J182A
+value|{ "FUJITSU", "LAN Card(FMV-J182)", "Ver.02", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_FMV_J182A
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_FMV_J182A
+value|"FUJITSU FMV-J182A PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_FUJITSU_ITCFJ182A
+value|{ "FUJITSU", "LAN Card(ITCFJ182)", "Ver.01", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUJITSU_ITCFJ182A
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUJITSU_ITCFJ182A
+value|"FUJITSU ITCFJ182A CompactCard"
 end_define
 
 end_unit
