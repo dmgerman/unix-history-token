@@ -92,26 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_comment
-comment|/* for vtophys */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_comment
-comment|/* for vtophys */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -122,37 +102,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/bus_pio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_memio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
 end_include
 
 begin_include
@@ -189,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usb_quirks.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_ethersubr.h>
 end_include
 
 begin_include
@@ -2215,6 +2171,9 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|usb_register_netisr
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2879,14 +2838,6 @@ decl_stmt|;
 name|u_int16_t
 name|len
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|c
 operator|=
 name|priv
@@ -2917,14 +2868,7 @@ operator|&
 name|IFF_RUNNING
 operator|)
 condition|)
-block|{
 return|return;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -2942,14 +2886,7 @@ name|status
 operator|==
 name|USBD_CANCELLED
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|printf
 argument_list|(
 literal|"kue%d: usb error on rx: %s\n"
@@ -3161,24 +3098,9 @@ name|done
 goto|;
 block|}
 block|}
-comment|/* Remove header from mbuf and pass it on. */
-name|m_adj
+comment|/* Put the packet on the special USB input queue. */
+name|usb_ether_input
 argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ether_input
-argument_list|(
-name|ifp
-argument_list|,
-name|eh
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -3220,11 +3142,6 @@ expr_stmt|;
 name|usbd_transfer
 argument_list|(
 name|xfer
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;

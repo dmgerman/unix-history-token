@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ee.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998, 1999, 2000  *	Bill Paul<wpaul@ee.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -92,26 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_comment
-comment|/* for vtophys */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_comment
-comment|/* for vtophys */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -122,37 +102,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/bus_pio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_memio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
 end_include
 
 begin_include
@@ -183,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usbdevs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_ethersubr.h>
 end_include
 
 begin_include
@@ -3147,6 +3103,9 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|usb_register_netisr
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -4007,14 +3966,6 @@ name|struct
 name|aue_rxpkt
 name|r
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|c
 operator|=
 name|priv
@@ -4045,14 +3996,7 @@ operator|&
 name|IFF_RUNNING
 operator|)
 condition|)
-block|{
 return|return;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -4070,14 +4014,7 @@ name|status
 operator|==
 name|USBD_CANCELLED
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|printf
 argument_list|(
 literal|"aue%d: usb error on rx: %s\n"
@@ -4264,11 +4201,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -4418,24 +4350,9 @@ name|done
 goto|;
 block|}
 block|}
-comment|/* Remove header from mbuf and pass it on. */
-name|m_adj
+comment|/* Put the packet on the special USB input queue. */
+name|usb_ether_input
 argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ether_input
-argument_list|(
-name|ifp
-argument_list|,
-name|eh
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -4477,11 +4394,6 @@ expr_stmt|;
 name|usbd_transfer
 argument_list|(
 name|xfer
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
