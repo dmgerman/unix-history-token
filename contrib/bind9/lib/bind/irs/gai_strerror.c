@@ -151,11 +151,20 @@ decl_stmt|;
 else|#
 directive|else
 comment|/* DO_PTHREADS */
+ifndef|#
+directive|ifndef
+name|LIBBIND_MUTEX_INITIALIZER
+define|#
+directive|define
+name|LIBBIND_MUTEX_INITIALIZER
+value|PTHREAD_MUTEX_INITIALIZER
+endif|#
+directive|endif
 specifier|static
 name|pthread_mutex_t
 name|lock
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|LIBBIND_MUTEX_INITIALIZER
 decl_stmt|;
 specifier|static
 name|pthread_key_t

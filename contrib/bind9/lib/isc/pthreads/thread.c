@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: thread.c,v 1.9.2.2.2.1 2004/03/06 08:14:54 marka Exp $ */
+comment|/* $Id: thread.c,v 1.9.2.2.2.2 2004/12/04 06:50:03 marka Exp $ */
 end_comment
 
 begin_include
@@ -136,6 +136,40 @@ name|ISC_R_UNEXPECTED
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PTHREAD_SCOPE_SYSTEM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NEED_PTHREAD_SCOPE_SYSTEM
+argument_list|)
+name|ret
+operator|=
+name|pthread_attr_setscope
+argument_list|(
+operator|&
+name|attr
+argument_list|,
+name|PTHREAD_SCOPE_SYSTEM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ISC_R_UNEXPECTED
+operator|)
+return|;
 endif|#
 directive|endif
 name|ret

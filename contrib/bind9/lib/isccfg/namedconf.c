@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.c,v 1.21.44.28 2004/06/04 02:33:01 marka Exp $ */
+comment|/* $Id: namedconf.c,v 1.21.44.29 2004/10/17 23:19:51 marka Exp $ */
 end_comment
 
 begin_include
@@ -3071,6 +3071,15 @@ literal|"host-statistics"
 block|,
 operator|&
 name|cfg_type_boolean
+block|,
+name|CFG_CLAUSEFLAG_NOTIMP
+block|}
+block|,
+block|{
+literal|"host-statistics-max"
+block|,
+operator|&
+name|cfg_type_uint32
 block|,
 name|CFG_CLAUSEFLAG_NOTIMP
 block|}

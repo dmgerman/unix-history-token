@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.88.2.5.2.23 2004/07/23 02:56:52 marka Exp $ */
+comment|/* $Id: update.c,v 1.88.2.5.2.25 2004/10/21 01:40:22 marka Exp $ */
 end_comment
 
 begin_include
@@ -2316,7 +2316,7 @@ name|dns_rdatatype_nsec
 condition|)
 return|return
 operator|(
-name|ISC_TRUE
+name|ISC_R_SUCCESS
 operator|)
 return|;
 name|result
@@ -3413,7 +3413,7 @@ comment|/*  * Predicate functions for delete_if().  */
 end_comment
 
 begin_comment
-comment|/*  * Return true iff 'update_rr' is neither a SOA nor an NS RR.  */
+comment|/*  * Return true iff 'db_rr' is neither a SOA nor an NS RR nor  * an RRSIG nor a NSEC.  */
 end_comment
 
 begin_function
@@ -3449,6 +3449,65 @@ operator|->
 name|type
 operator|!=
 name|dns_rdatatype_ns
+operator|&&
+name|db_rr
+operator|->
+name|type
+operator|!=
+name|dns_rdatatype_rrsig
+operator|&&
+name|db_rr
+operator|->
+name|type
+operator|!=
+name|dns_rdatatype_nsec
+operator|)
+condition|?
+name|ISC_TRUE
+else|:
+name|ISC_FALSE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return true iff 'db_rr' is neither a RRSIG nor a NSEC.  */
+end_comment
+
+begin_function
+specifier|static
+name|isc_boolean_t
+name|type_not_dnssec
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|update_rr
+parameter_list|,
+name|dns_rdata_t
+modifier|*
+name|db_rr
+parameter_list|)
+block|{
+name|UNUSED
+argument_list|(
+name|update_rr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|db_rr
+operator|->
+name|type
+operator|!=
+name|dns_rdatatype_rrsig
+operator|&&
+name|db_rr
+operator|->
+name|type
+operator|!=
+name|dns_rdatatype_nsec
 operator|)
 condition|?
 name|ISC_TRUE
@@ -10237,7 +10296,7 @@ name|CHECK
 argument_list|(
 name|delete_if
 argument_list|(
-name|true_p
+name|type_not_dnssec
 argument_list|,
 name|db
 argument_list|,

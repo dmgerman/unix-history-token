@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.91.2.5.8.12 2004/06/11 01:17:36 marka Exp $ */
+comment|/* $Id: validator.c,v 1.91.2.5.8.15 2005/02/09 05:13:02 marka Exp $ */
 end_comment
 
 begin_include
@@ -2477,6 +2477,19 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|nsecset
+operator|!=
+name|NULL
+operator|&&
+name|nsecset
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_nsec
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|dns_rdataset_first
@@ -3268,11 +3281,11 @@ name|ISC_TRUE
 expr_stmt|;
 if|if
 condition|(
-name|val
+name|rdataset
 operator|->
-name|nsecset
-operator|!=
-name|NULL
+name|type
+operator|==
+name|dns_rdatatype_nsec
 operator|&&
 name|rdataset
 operator|->
@@ -11685,11 +11698,59 @@ name|val
 operator|->
 name|havedlvsep
 condition|)
+block|{
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"not beneath secure root / DLV"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|->
+name|mustbesecure
+condition|)
+block|{
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"must be secure failure"
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|DNS_R_MUSTBESECURE
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|val
+operator|->
+name|event
+operator|->
+name|rdataset
+operator|->
+name|trust
+operator|=
+name|dns_trust_answer
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+block|}
 name|dns_name_copy
 argument_list|(
 name|dns_fixedname_name

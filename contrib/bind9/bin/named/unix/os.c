@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: os.c,v 1.46.2.4.8.16 2004/05/04 03:19:42 marka Exp $ */
+comment|/* $Id: os.c,v 1.46.2.4.8.19 2004/10/07 02:34:20 marka Exp $ */
 end_comment
 
 begin_include
@@ -264,6 +264,24 @@ name|isc_boolean_t
 name|done_setuid
 init|=
 name|ISC_FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dfd
+index|[
+literal|2
+index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -532,7 +550,9 @@ argument_list|)
 expr_stmt|;
 name|ns_main_earlyfatal
 argument_list|(
-literal|"capset failed: %s"
+literal|"capset failed: %s:"
+literal|" please ensure that the capset kernel"
+literal|" module is loaded.  see insmod(8)"
 argument_list|,
 name|strbuf
 argument_list|)
@@ -884,6 +904,37 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|pipe
+argument_list|(
+name|dfd
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|isc__strerror
+argument_list|(
+name|errno
+argument_list|,
+name|strbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|strbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ns_main_earlyfatal
+argument_list|(
+literal|"pipe(): %s"
+argument_list|,
+name|strbuf
+argument_list|)
+expr_stmt|;
+block|}
 name|pid
 operator|=
 name|fork
@@ -923,9 +974,81 @@ name|pid
 operator|!=
 literal|0
 condition|)
+block|{
+name|int
+name|n
+decl_stmt|;
+comment|/* 		 * Wait for the child to finish loading for the first time. 		 * This would be so much simpler if fork() worked once we 	         * were multi-threaded. 		 */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|dfd
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+name|char
+name|buf
+decl_stmt|;
+name|n
+operator|=
+name|read
+argument_list|(
+name|dfd
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|buf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|1
+condition|)
 name|_exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|n
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|dfd
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We're the child. 	 */
@@ -1055,6 +1178,76 @@ name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|ns_os_started
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+name|buf
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Signal to the parent that we stated successfully. 	 */
+if|if
+condition|(
+name|dfd
+index|[
+literal|0
+index|]
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|dfd
+index|[
+literal|1
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|write
+argument_list|(
+name|dfd
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|buf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|dfd
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|dfd
+index|[
+literal|0
+index|]
+operator|=
+name|dfd
+index|[
+literal|1
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1416,14 +1609,24 @@ condition|(
 operator|!
 name|non_root_caps
 condition|)
-endif|#
-directive|endif
 name|ns_main_earlyfatal
 argument_list|(
-literal|"-u not supported on Linux kernels older than "
-literal|"2.3.99-pre3 or 2.2.18 when using threads"
+literal|"-u with Linux threads not supported: "
+literal|"requires kernel support for "
+literal|"prctl(PR_SET_KEEPCAPS)"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ns_main_earlyfatal
+argument_list|(
+literal|"-u with Linux threads not supported: "
+literal|"no capabilities support or capabilities "
+literal|"disabled at build time"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if

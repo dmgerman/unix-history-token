@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: grammar.h,v 1.3.50.3 2004/03/08 09:05:07 marka Exp $ */
+comment|/* $Id: grammar.h,v 1.3.50.4 2004/11/30 01:15:44 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -665,6 +665,7 @@ end_comment
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_uint32
 decl_stmt|;
@@ -672,6 +673,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_uint64
 decl_stmt|;
@@ -679,6 +681,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_string
 decl_stmt|;
@@ -686,6 +689,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_boolean
 decl_stmt|;
@@ -693,6 +697,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_map
 decl_stmt|;
@@ -700,6 +705,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_list
 decl_stmt|;
@@ -707,6 +713,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_tuple
 decl_stmt|;
@@ -714,6 +721,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_sockaddr
 decl_stmt|;
@@ -721,6 +729,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_netprefix
 decl_stmt|;
@@ -728,6 +737,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|LIBISCCFG_EXTERNAL_DATA
+specifier|extern
 name|cfg_rep_t
 name|cfg_rep_void
 decl_stmt|;

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_print.c,v 1.3.2.1.4.5 2004/07/28 20:16:45 marka Exp $"
+literal|"$Id: ns_print.c,v 1.3.2.1.4.7 2004/09/16 07:01:12 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4427,13 +4427,18 @@ name|tmp
 operator|,
 literal|"\\# %u%s\t; %s"
 operator|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|edata
 operator|-
 name|rdata
+argument_list|)
 operator|,
 name|rdlen
 operator|!=
-literal|0
+literal|0U
 condition|?
 literal|" ("
 else|:

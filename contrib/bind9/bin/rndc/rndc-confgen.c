@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: rndc-confgen.c,v 1.9.2.6.2.4 2004/03/06 10:21:31 marka Exp $ */
+comment|/* $Id: rndc-confgen.c,v 1.9.2.6.2.5 2004/09/28 07:14:57 marka Exp $ */
 end_comment
 
 begin_include
@@ -1151,9 +1151,20 @@ name|buf
 argument_list|,
 name|len
 argument_list|,
-literal|"%s/%s"
+literal|"%s%s%s"
 argument_list|,
 name|chrootdir
+argument_list|,
+operator|(
+operator|*
+name|keyfile
+operator|!=
+literal|'/'
+operator|)
+condition|?
+literal|"/"
+else|:
+literal|""
 argument_list|,
 name|keyfile
 argument_list|)

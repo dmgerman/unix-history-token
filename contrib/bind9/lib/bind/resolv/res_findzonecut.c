@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_findzonecut.c,v 1.2.2.3.4.2 2004/03/16 12:34:18 marka Exp $"
+literal|"$Id: res_findzonecut.c,v 1.2.2.3.4.3 2004/09/16 07:06:11 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,10 +1716,18 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"get_soa: zname(%d) too small (%d)"
+literal|"get_soa: zname(%lu) too small (%lu)"
 operator|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|zsize
 operator|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|strlen
 argument_list|(
 name|t

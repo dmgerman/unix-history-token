@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getpwent_r.c,v 1.5.206.1 2004/03/09 08:33:36 marka Exp $"
+literal|"$Id: getpwent_r.c,v 1.5.206.2 2004/09/17 13:32:37 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,6 +641,8 @@ argument_list|()
 decl_stmt|;
 name|int
 name|res
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -800,6 +802,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|res
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(

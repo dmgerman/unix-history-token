@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irs_data.c,v 1.3.2.2.4.2 2004/03/17 00:29:49 marka Exp $"
+literal|"$Id: irs_data.c,v 1.3.2.2.4.3 2004/11/30 01:15:43 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,11 +576,20 @@ block|{
 ifdef|#
 directive|ifdef
 name|DO_PTHREADS
+ifndef|#
+directive|ifndef
+name|LIBBIND_MUTEX_INITIALIZER
+define|#
+directive|define
+name|LIBBIND_MUTEX_INITIALIZER
+value|PTHREAD_MUTEX_INITIALIZER
+endif|#
+directive|endif
 specifier|static
 name|pthread_mutex_t
 name|keylock
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|LIBBIND_MUTEX_INITIALIZER
 decl_stmt|;
 name|struct
 name|net_data

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.1 2004/03/09 08:33:43 marka Exp $  */
+comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.3.2.1.4.2 2004/12/05 22:38:43 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -861,6 +861,7 @@ comment|/* Global options */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|__evOptMonoTime
 decl_stmt|;

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_ioctl.c,v 1.19.2.5.2.14 2004/06/22 04:40:23 marka Exp $ */
+comment|/* $Id: ifiter_ioctl.c,v 1.19.2.5.2.15 2004/11/10 22:22:49 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1343,6 +1343,8 @@ goto|goto
 name|socket6_failure
 goto|;
 block|}
+name|result
+operator|=
 name|iter
 operator|->
 name|result6
@@ -1354,15 +1356,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|iter
-operator|->
-name|result6
+name|result
 operator|!=
 name|ISC_R_NOTIMPLEMENTED
 operator|&&
-name|iter
-operator|->
-name|result6
+name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)

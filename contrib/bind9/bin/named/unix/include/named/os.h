@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: os.h,v 1.14.2.2.8.8 2004/03/08 04:04:21 marka Exp $ */
+comment|/* $Id: os.h,v 1.14.2.2.8.9 2004/09/29 06:36:44 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -163,6 +163,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|ns_os_tzset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ns_os_started
 parameter_list|(
 name|void
 parameter_list|)
