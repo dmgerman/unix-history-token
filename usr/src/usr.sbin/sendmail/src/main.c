@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.4.1.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -863,18 +863,6 @@ ifdef|#
 directive|ifdef
 name|LOG
 end_ifdef
-
-begin_expr_stmt
-name|openlog
-argument_list|(
-literal|"sendmail"
-argument_list|,
-name|LOG_PID
-argument_list|,
-name|LOG_MAIL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#

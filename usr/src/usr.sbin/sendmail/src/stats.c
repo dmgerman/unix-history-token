@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	5.4.1.1 (Berkeley) %G%"
+literal|"@(#)stats.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,7 +145,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* if is possible to get mail from an unparseable address, 		   in this case, the q_mailer field is null, so that the 		   indirection below causes a dereference of a NULL pointer. 		*/
+comment|/* 		**  If is possible to get mail from an unparseable address, 		**  in this case, the q_mailer field is null, so that the 		**  indirection below causes a dereference of a NULL pointer. 		*/
 if|if
 condition|(
 name|e
@@ -184,7 +184,7 @@ operator|->
 name|m_mno
 index|]
 operator|+=
-name|kbytes
+name|KBYTES
 argument_list|(
 name|CurEnv
 operator|->
