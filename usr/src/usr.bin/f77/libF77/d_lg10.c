@@ -15,7 +15,7 @@ name|x
 decl_stmt|;
 block|{
 name|double
-name|log
+name|log10
 parameter_list|()
 function_decl|;
 return|return
