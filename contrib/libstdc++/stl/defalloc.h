@@ -12,6 +12,10 @@ comment|// default allocator.  It is provided only for backward compatibility.
 end_comment
 
 begin_comment
+comment|// This file WILL BE REMOVED in a future release.
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -20,19 +24,19 @@ comment|// DO NOT USE THIS FILE unless you have an old container implementation
 end_comment
 
 begin_comment
-comment|// that requires an allocator with the HP-style interface.  SGI STL
+comment|// that requires an allocator with the HP-style interface.
 end_comment
 
 begin_comment
-comment|// uses a different allocator interface.  SGI-style allocators are not
+comment|//
 end_comment
 
 begin_comment
-comment|// parametrized with respect to the object type; they traffic in void *
+comment|// Standard-conforming allocators have a very different interface.  The
 end_comment
 
 begin_comment
-comment|// pointers.  This file is not included by any other SGI STL header.
+comment|// standard default allocator is declared in the header<memory>.
 end_comment
 
 begin_ifndef

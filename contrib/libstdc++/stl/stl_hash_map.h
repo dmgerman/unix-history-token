@@ -44,6 +44,11 @@ directive|pragma
 name|set
 name|woff
 name|1174
+pragma|#
+directive|pragma
+name|set
+name|woff
+name|1375
 endif|#
 directive|endif
 ifndef|#
@@ -52,52 +57,58 @@ name|__STL_LIMITED_DEFAULT_TEMPLATES
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|=
 name|hash
 operator|<
-name|Key
+name|_Key
 operator|>
 operator|,
 name|class
-name|EqualKey
+name|_EqualKey
 operator|=
 name|equal_to
 operator|<
-name|Key
+name|_Key
 operator|>
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|=
-name|alloc
+name|__STL_DEFAULT_ALLOCATOR
+argument_list|(
+name|_Tp
+argument_list|)
 operator|>
 else|#
 directive|else
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|,
 name|class
-name|EqualKey
+name|_EqualKey
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|=
-name|alloc
+name|__STL_DEFAULT_ALLOCATOR
+argument_list|(
+name|_Tp
+argument_list|)
 operator|>
 endif|#
 directive|endif
@@ -112,34 +123,34 @@ operator|<
 name|pair
 operator|<
 specifier|const
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|>
 operator|,
-name|Key
+name|_Key
 operator|,
-name|HashFcn
+name|_HashFcn
 operator|,
-name|select1st
+name|_Select1st
 operator|<
 name|pair
 operator|<
 specifier|const
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|>
 expr|>
 operator|,
-name|EqualKey
+name|_EqualKey
 operator|,
-name|Alloc
+name|_Alloc
 operator|>
-name|ht
+name|_Ht
 expr_stmt|;
-name|ht
-name|rep
+name|_Ht
+name|_M_ht
 expr_stmt|;
 end_expr_stmt
 
@@ -151,7 +162,7 @@ end_label
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|key_type
 name|key_type
@@ -160,14 +171,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|T
+name|_Tp
 name|data_type
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|T
+name|_Tp
 name|mapped_type
 typedef|;
 end_typedef
@@ -175,7 +186,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|value_type
 name|value_type
@@ -185,7 +196,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|hasher
 name|hasher
@@ -195,7 +206,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|key_equal
 name|key_equal
@@ -205,7 +216,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|size_type
 name|size_type
@@ -215,7 +226,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|difference_type
 name|difference_type
@@ -225,7 +236,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|pointer
 name|pointer
@@ -235,7 +246,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|const_pointer
 name|const_pointer
@@ -245,7 +256,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|reference
 name|reference
@@ -255,7 +266,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|const_reference
 name|const_reference
@@ -265,7 +276,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|iterator
 name|iterator
@@ -275,10 +286,20 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|const_iterator
 name|const_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Ht
+operator|::
+name|allocator_type
+name|allocator_type
 expr_stmt|;
 end_typedef
 
@@ -289,7 +310,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|hash_funct
 argument_list|()
@@ -304,9 +325,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|key_eq
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|allocator_type
+name|get_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_ht
+operator|.
+name|get_allocator
 argument_list|()
 return|;
 block|}
@@ -321,62 +357,72 @@ begin_expr_stmt
 name|hash_map
 argument_list|()
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{}
 name|explicit
 name|hash_map
 argument_list|(
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{}
 name|hash_map
 argument_list|(
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{}
 name|hash_map
 argument_list|(
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{}
 ifdef|#
@@ -385,133 +431,143 @@ name|__STL_MEMBER_TEMPLATES
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_map
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_map
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_map
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_map
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 else|#
@@ -521,229 +577,249 @@ argument_list|(
 specifier|const
 name|value_type
 operator|*
-name|f
+name|__f
 argument_list|,
 specifier|const
 name|value_type
 operator|*
-name|l
+name|__l
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_map
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 endif|#
@@ -757,7 +833,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|size
 argument_list|()
@@ -772,7 +848,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|max_size
 argument_list|()
@@ -787,7 +863,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|empty
 argument_list|()
@@ -801,16 +877,16 @@ name|swap
 parameter_list|(
 name|hash_map
 modifier|&
-name|hs
+name|__hs
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|swap
 argument_list|(
-name|hs
+name|__hs
 operator|.
-name|rep
+name|_M_ht
 argument_list|)
 expr_stmt|;
 block|}
@@ -840,7 +916,7 @@ name|begin
 parameter_list|()
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|begin
 argument_list|()
@@ -854,7 +930,7 @@ name|end
 parameter_list|()
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|end
 argument_list|()
@@ -869,7 +945,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|begin
 argument_list|()
@@ -884,7 +960,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|end
 argument_list|()
@@ -906,15 +982,15 @@ name|bool
 operator|>
 name|insert
 argument_list|(
-argument|const value_type& obj
+argument|const value_type& __obj
 argument_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|obj
+name|__obj
 argument_list|)
 return|;
 block|}
@@ -930,23 +1006,23 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|void
 name|insert
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 else|#
@@ -954,35 +1030,35 @@ directive|else
 name|void
 name|insert
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|;   }
 name|void
 name|insert
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 endif|#
@@ -996,15 +1072,15 @@ name|bool
 operator|>
 name|insert_noresize
 argument_list|(
-argument|const value_type& obj
+argument|const value_type& __obj
 argument_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|insert_unique_noresize
 argument_list|(
-name|obj
+name|__obj
 argument_list|)
 return|;
 block|}
@@ -1017,15 +1093,15 @@ parameter_list|(
 specifier|const
 name|key_type
 modifier|&
-name|key
+name|__key
 parameter_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|find
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -1038,23 +1114,23 @@ argument_list|(
 specifier|const
 name|key_type
 operator|&
-name|key
+name|__key
 argument_list|)
 decl|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|find
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
 end_decl_stmt
 
 begin_function
-name|T
+name|_Tp
 modifier|&
 name|operator
 function|[]
@@ -1062,19 +1138,19 @@ parameter_list|(
 specifier|const
 name|key_type
 modifier|&
-name|key
+name|__key
 parameter_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|find_or_insert
 argument_list|(
 name|value_type
 argument_list|(
-name|key
+name|__key
 argument_list|,
-name|T
+name|_Tp
 argument_list|()
 argument_list|)
 argument_list|)
@@ -1091,16 +1167,16 @@ argument_list|(
 specifier|const
 name|key_type
 operator|&
-name|key
+name|__key
 argument_list|)
 decl|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|count
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -1115,15 +1191,15 @@ name|iterator
 operator|>
 name|equal_range
 argument_list|(
-argument|const key_type& key
+argument|const key_type& __key
 argument_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|equal_range
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -1138,16 +1214,16 @@ name|const_iterator
 operator|>
 name|equal_range
 argument_list|(
-argument|const key_type& key
+argument|const key_type& __key
 argument_list|)
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|equal_range
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -1160,15 +1236,15 @@ parameter_list|(
 specifier|const
 name|key_type
 modifier|&
-name|key
+name|__key
 parameter_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|erase
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -1179,14 +1255,14 @@ name|void
 name|erase
 parameter_list|(
 name|iterator
-name|it
+name|__it
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|erase
 argument_list|(
-name|it
+name|__it
 argument_list|)
 expr_stmt|;
 block|}
@@ -1197,19 +1273,19 @@ name|void
 name|erase
 parameter_list|(
 name|iterator
-name|f
+name|__f
 parameter_list|,
 name|iterator
-name|l
+name|__l
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|erase
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 expr_stmt|;
 block|}
@@ -1220,7 +1296,7 @@ name|void
 name|clear
 parameter_list|()
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|clear
 argument_list|()
@@ -1228,24 +1304,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_label
-name|public
-label|:
-end_label
-
 begin_function
 name|void
 name|resize
 parameter_list|(
 name|size_type
-name|hint
+name|__hint
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|resize
 argument_list|(
-name|hint
+name|__hint
 argument_list|)
 expr_stmt|;
 block|}
@@ -1258,7 +1329,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|bucket_count
 argument_list|()
@@ -1273,7 +1344,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|max_bucket_count
 argument_list|()
@@ -1286,16 +1357,16 @@ name|size_type
 name|elems_in_bucket
 argument_list|(
 name|size_type
-name|n
+name|__n
 argument_list|)
 decl|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|elems_in_bucket
 argument_list|(
-name|n
+name|__n
 argument_list|)
 return|;
 block|}
@@ -1306,19 +1377,19 @@ unit|};
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|,
 name|class
-name|EqualKey
+name|_EqlKey
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|>
 specifier|inline
 name|bool
@@ -1328,44 +1399,44 @@ operator|(
 specifier|const
 name|hash_map
 operator|<
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|,
-name|HashFcn
+name|_HashFcn
 operator|,
-name|EqualKey
+name|_EqlKey
 operator|,
-name|Alloc
+name|_Alloc
 operator|>
 operator|&
-name|hm1
+name|__hm1
 operator|,
 specifier|const
 name|hash_map
 operator|<
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|,
-name|HashFcn
+name|_HashFcn
 operator|,
-name|EqualKey
+name|_EqlKey
 operator|,
-name|Alloc
+name|_Alloc
 operator|>
 operator|&
-name|hm2
+name|__hm2
 operator|)
 block|{
 return|return
-name|hm1
+name|__hm1
 operator|.
-name|rep
+name|_M_ht
 operator|==
-name|hm2
+name|__hm2
 operator|.
-name|rep
+name|_M_ht
 return|;
 block|}
 end_expr_stmt
@@ -1380,50 +1451,50 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|,
 name|class
-name|EqualKey
+name|_EqlKey
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|>
 specifier|inline
 name|void
 name|swap
 argument_list|(
-argument|hash_map<Key
+argument|hash_map<_Key
 argument_list|,
-argument|T
+argument|_Tp
 argument_list|,
-argument|HashFcn
+argument|_HashFcn
 argument_list|,
-argument|EqualKey
+argument|_EqlKey
 argument_list|,
-argument|Alloc>& hm1
+argument|_Alloc>& __hm1
 argument_list|,
-argument|hash_map<Key
+argument|hash_map<_Key
 argument_list|,
-argument|T
+argument|_Tp
 argument_list|,
-argument|HashFcn
+argument|_HashFcn
 argument_list|,
-argument|EqualKey
+argument|_EqlKey
 argument_list|,
-argument|Alloc>& hm2
+argument|_Alloc>& __hm2
 argument_list|)
 block|{
-name|hm1
+name|__hm1
 operator|.
 name|swap
 argument_list|(
-name|hm2
+name|__hm2
 argument_list|)
 block|; }
 endif|#
@@ -1435,52 +1506,58 @@ name|__STL_LIMITED_DEFAULT_TEMPLATES
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|=
 name|hash
 operator|<
-name|Key
+name|_Key
 operator|>
 operator|,
 name|class
-name|EqualKey
+name|_EqualKey
 operator|=
 name|equal_to
 operator|<
-name|Key
+name|_Key
 operator|>
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|=
-name|alloc
+name|__STL_DEFAULT_ALLOCATOR
+argument_list|(
+name|_Tp
+argument_list|)
 operator|>
 else|#
 directive|else
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|,
 name|class
-name|EqualKey
+name|_EqualKey
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|=
-name|alloc
+name|__STL_DEFAULT_ALLOCATOR
+argument_list|(
+name|_Tp
+argument_list|)
 operator|>
 endif|#
 directive|endif
@@ -1495,34 +1572,34 @@ operator|<
 name|pair
 operator|<
 specifier|const
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|>
 operator|,
-name|Key
+name|_Key
 operator|,
-name|HashFcn
+name|_HashFcn
 operator|,
-name|select1st
+name|_Select1st
 operator|<
 name|pair
 operator|<
 specifier|const
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|>
 expr|>
 operator|,
-name|EqualKey
+name|_EqualKey
 operator|,
-name|Alloc
+name|_Alloc
 operator|>
-name|ht
+name|_Ht
 expr_stmt|;
-name|ht
-name|rep
+name|_Ht
+name|_M_ht
 expr_stmt|;
 end_expr_stmt
 
@@ -1534,7 +1611,7 @@ end_label
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|key_type
 name|key_type
@@ -1543,14 +1620,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|T
+name|_Tp
 name|data_type
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|T
+name|_Tp
 name|mapped_type
 typedef|;
 end_typedef
@@ -1558,7 +1635,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|value_type
 name|value_type
@@ -1568,7 +1645,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|hasher
 name|hasher
@@ -1578,7 +1655,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|key_equal
 name|key_equal
@@ -1588,7 +1665,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|size_type
 name|size_type
@@ -1598,7 +1675,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|difference_type
 name|difference_type
@@ -1608,7 +1685,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|pointer
 name|pointer
@@ -1618,7 +1695,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|const_pointer
 name|const_pointer
@@ -1628,7 +1705,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|reference
 name|reference
@@ -1638,7 +1715,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|const_reference
 name|const_reference
@@ -1648,7 +1725,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|iterator
 name|iterator
@@ -1658,10 +1735,20 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|typename
-name|ht
+name|_Ht
 operator|::
 name|const_iterator
 name|const_iterator
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|_Ht
+operator|::
+name|allocator_type
+name|allocator_type
 expr_stmt|;
 end_typedef
 
@@ -1672,7 +1759,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|hash_funct
 argument_list|()
@@ -1687,9 +1774,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|key_eq
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|allocator_type
+name|get_allocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_ht
+operator|.
+name|get_allocator
 argument_list|()
 return|;
 block|}
@@ -1704,62 +1806,72 @@ begin_expr_stmt
 name|hash_multimap
 argument_list|()
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{}
 name|explicit
 name|hash_multimap
 argument_list|(
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{}
 name|hash_multimap
 argument_list|(
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{}
 name|hash_multimap
 argument_list|(
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{}
 ifdef|#
@@ -1768,133 +1880,143 @@ name|__STL_MEMBER_TEMPLATES
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_multimap
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_multimap
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_multimap
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|hash_multimap
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 else|#
@@ -1904,229 +2026,249 @@ argument_list|(
 specifier|const
 name|value_type
 operator|*
-name|f
+name|__f
 argument_list|,
 specifier|const
 name|value_type
 operator|*
-name|l
+name|__l
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
 literal|100
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
 argument|hasher()
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
 argument|key_equal()
+argument_list|,
+argument|allocator_type()
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 name|hash_multimap
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|,
-argument|size_type n
+argument|size_type __n
 argument_list|,
-argument|const hasher& hf
+argument|const hasher& __hf
 argument_list|,
-argument|const key_equal& eql
+argument|const key_equal& __eql
+argument_list|,
+argument|const allocator_type& __a = allocator_type()
 argument_list|)
 operator|:
-name|rep
+name|_M_ht
 argument_list|(
-argument|n
+argument|__n
 argument_list|,
-argument|hf
+argument|__hf
 argument_list|,
-argument|eql
+argument|__eql
+argument_list|,
+argument|__a
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 endif|#
@@ -2140,7 +2282,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|size
 argument_list|()
@@ -2155,7 +2297,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|max_size
 argument_list|()
@@ -2170,7 +2312,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|empty
 argument_list|()
@@ -2184,16 +2326,16 @@ name|swap
 parameter_list|(
 name|hash_multimap
 modifier|&
-name|hs
+name|__hs
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|swap
 argument_list|(
-name|hs
+name|__hs
 operator|.
-name|rep
+name|_M_ht
 argument_list|)
 expr_stmt|;
 block|}
@@ -2223,7 +2365,7 @@ name|begin
 parameter_list|()
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|begin
 argument_list|()
@@ -2237,7 +2379,7 @@ name|end
 parameter_list|()
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|end
 argument_list|()
@@ -2252,7 +2394,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|begin
 argument_list|()
@@ -2267,7 +2409,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|end
 argument_list|()
@@ -2287,15 +2429,15 @@ parameter_list|(
 specifier|const
 name|value_type
 modifier|&
-name|obj
+name|__obj
 parameter_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|obj
+name|__obj
 argument_list|)
 return|;
 block|}
@@ -2311,23 +2453,23 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|>
 name|void
 name|insert
 argument_list|(
-argument|InputIterator f
+argument|_InputIterator __f
 argument_list|,
-argument|InputIterator l
+argument|_InputIterator __l
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 else|#
@@ -2335,35 +2477,35 @@ directive|else
 name|void
 name|insert
 argument_list|(
-argument|const value_type* f
+argument|const value_type* __f
 argument_list|,
-argument|const value_type* l
+argument|const value_type* __l
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|;   }
 name|void
 name|insert
 argument_list|(
-argument|const_iterator f
+argument|const_iterator __f
 argument_list|,
-argument|const_iterator l
+argument|const_iterator __l
 argument_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 block|; }
 endif|#
@@ -2372,15 +2514,15 @@ comment|/*__STL_MEMBER_TEMPLATES */
 name|iterator
 name|insert_noresize
 argument_list|(
-argument|const value_type& obj
+argument|const value_type& __obj
 argument_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|insert_equal_noresize
 argument_list|(
-name|obj
+name|__obj
 argument_list|)
 return|;
 block|}
@@ -2393,15 +2535,15 @@ parameter_list|(
 specifier|const
 name|key_type
 modifier|&
-name|key
+name|__key
 parameter_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|find
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -2414,16 +2556,16 @@ argument_list|(
 specifier|const
 name|key_type
 operator|&
-name|key
+name|__key
 argument_list|)
 decl|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|find
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -2436,16 +2578,16 @@ argument_list|(
 specifier|const
 name|key_type
 operator|&
-name|key
+name|__key
 argument_list|)
 decl|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|count
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -2460,15 +2602,15 @@ name|iterator
 operator|>
 name|equal_range
 argument_list|(
-argument|const key_type& key
+argument|const key_type& __key
 argument_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|equal_range
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -2483,16 +2625,16 @@ name|const_iterator
 operator|>
 name|equal_range
 argument_list|(
-argument|const key_type& key
+argument|const key_type& __key
 argument_list|)
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|equal_range
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -2505,15 +2647,15 @@ parameter_list|(
 specifier|const
 name|key_type
 modifier|&
-name|key
+name|__key
 parameter_list|)
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|erase
 argument_list|(
-name|key
+name|__key
 argument_list|)
 return|;
 block|}
@@ -2524,14 +2666,14 @@ name|void
 name|erase
 parameter_list|(
 name|iterator
-name|it
+name|__it
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|erase
 argument_list|(
-name|it
+name|__it
 argument_list|)
 expr_stmt|;
 block|}
@@ -2542,19 +2684,19 @@ name|void
 name|erase
 parameter_list|(
 name|iterator
-name|f
+name|__f
 parameter_list|,
 name|iterator
-name|l
+name|__l
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|erase
 argument_list|(
-name|f
+name|__f
 argument_list|,
-name|l
+name|__l
 argument_list|)
 expr_stmt|;
 block|}
@@ -2565,7 +2707,7 @@ name|void
 name|clear
 parameter_list|()
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|clear
 argument_list|()
@@ -2583,14 +2725,14 @@ name|void
 name|resize
 parameter_list|(
 name|size_type
-name|hint
+name|__hint
 parameter_list|)
 block|{
-name|rep
+name|_M_ht
 operator|.
 name|resize
 argument_list|(
-name|hint
+name|__hint
 argument_list|)
 expr_stmt|;
 block|}
@@ -2603,7 +2745,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|bucket_count
 argument_list|()
@@ -2618,7 +2760,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|max_bucket_count
 argument_list|()
@@ -2631,16 +2773,16 @@ name|size_type
 name|elems_in_bucket
 argument_list|(
 name|size_type
-name|n
+name|__n
 argument_list|)
 decl|const
 block|{
 return|return
-name|rep
+name|_M_ht
 operator|.
 name|elems_in_bucket
 argument_list|(
-name|n
+name|__n
 argument_list|)
 return|;
 block|}
@@ -2651,19 +2793,19 @@ unit|};
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HF
+name|_HF
 operator|,
 name|class
-name|EqKey
+name|_EqKey
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|>
 specifier|inline
 name|bool
@@ -2673,44 +2815,44 @@ operator|(
 specifier|const
 name|hash_multimap
 operator|<
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|,
-name|HF
+name|_HF
 operator|,
-name|EqKey
+name|_EqKey
 operator|,
-name|Alloc
+name|_Alloc
 operator|>
 operator|&
-name|hm1
+name|__hm1
 operator|,
 specifier|const
 name|hash_multimap
 operator|<
-name|Key
+name|_Key
 operator|,
-name|T
+name|_Tp
 operator|,
-name|HF
+name|_HF
 operator|,
-name|EqKey
+name|_EqKey
 operator|,
-name|Alloc
+name|_Alloc
 operator|>
 operator|&
-name|hm2
+name|__hm2
 operator|)
 block|{
 return|return
-name|hm1
+name|__hm1
 operator|.
-name|rep
+name|_M_ht
 operator|==
-name|hm2
+name|__hm2
 operator|.
-name|rep
+name|_M_ht
 return|;
 block|}
 end_expr_stmt
@@ -2725,50 +2867,50 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|Key
+name|_Key
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|HashFcn
+name|_HashFcn
 operator|,
 name|class
-name|EqualKey
+name|_EqlKey
 operator|,
 name|class
-name|Alloc
+name|_Alloc
 operator|>
 specifier|inline
 name|void
 name|swap
 argument_list|(
-argument|hash_multimap<Key
+argument|hash_multimap<_Key
 argument_list|,
-argument|T
+argument|_Tp
 argument_list|,
-argument|HashFcn
+argument|_HashFcn
 argument_list|,
-argument|EqualKey
+argument|_EqlKey
 argument_list|,
-argument|Alloc>& hm1
+argument|_Alloc>& __hm1
 argument_list|,
-argument|hash_multimap<Key
+argument|hash_multimap<_Key
 argument_list|,
-argument|T
+argument|_Tp
 argument_list|,
-argument|HashFcn
+argument|_HashFcn
 argument_list|,
-argument|EqualKey
+argument|_EqlKey
 argument_list|,
-argument|Alloc>& hm2
+argument|_Alloc>& __hm2
 argument_list|)
 block|{
-name|hm1
+name|__hm1
 operator|.
 name|swap
 argument_list|(
-name|hm2
+name|__hm2
 argument_list|)
 block|; }
 endif|#
@@ -2797,6 +2939,11 @@ directive|pragma
 name|reset
 name|woff
 name|1174
+pragma|#
+directive|pragma
+name|reset
+name|woff
+name|1375
 endif|#
 directive|endif
 name|__STL_END_NAMESPACE

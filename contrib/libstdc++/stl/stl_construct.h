@@ -27,62 +27,83 @@ end_include
 
 begin_expr_stmt
 name|__STL_BEGIN_NAMESPACE
+comment|// construct and destroy.  These functions are not part of the C++ standard,
+comment|// and are provided for backward compatibility with the HP STL.
 name|template
 operator|<
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|destroy
 argument_list|(
-argument|T* pointer
+argument|_Tp* __pointer
 argument_list|)
 block|{
-name|pointer
+name|__pointer
 operator|->
 expr|~
-name|T
+name|_Tp
 argument_list|()
 block|; }
 name|template
 operator|<
 name|class
-name|T1
+name|_T1
 operator|,
 name|class
-name|T2
+name|_T2
 operator|>
 specifier|inline
 name|void
 name|construct
 argument_list|(
-argument|T1* p
+argument|_T1* __p
 argument_list|,
-argument|const T2& value
+argument|const _T2& __value
 argument_list|)
 block|{
 name|new
 argument_list|(
-argument|p
+argument|__p
 argument_list|)
-name|T1
+name|_T1
 argument_list|(
-name|value
+name|__value
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_T1
+operator|>
+specifier|inline
+name|void
+name|construct
+argument_list|(
+argument|_T1* __p
+argument_list|)
+block|{
+name|new
+argument_list|(
+argument|__p
+argument_list|)
+name|_T1
+argument_list|()
+block|; }
+name|template
+operator|<
+name|class
+name|_ForwardIterator
 operator|>
 specifier|inline
 name|void
 name|__destroy_aux
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIterator __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIterator __last
 argument_list|,
 argument|__false_type
 argument_list|)
@@ -90,18 +111,18 @@ block|{
 for|for
 control|(
 init|;
-name|first
-operator|<
-name|last
+name|__first
+operator|!=
+name|__last
 condition|;
 operator|++
-name|first
+name|__first
 control|)
 name|destroy
 argument_list|(
 operator|&
 operator|*
-name|first
+name|__first
 argument_list|)
 expr_stmt|;
 block|}
@@ -111,15 +132,15 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIterator
 operator|>
 specifier|inline
 name|void
 name|__destroy_aux
 argument_list|(
-argument|ForwardIterator
+argument|_ForwardIterator
 argument_list|,
-argument|ForwardIterator
+argument|_ForwardIterator
 argument_list|,
 argument|__true_type
 argument_list|)
@@ -127,39 +148,39 @@ block|{}
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|__destroy
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIterator __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIterator __last
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
 typedef|typedef
 name|typename
 name|__type_traits
 operator|<
-name|T
+name|_Tp
 operator|>
 operator|::
 name|has_trivial_destructor
-name|trivial_destructor
+name|_Trivial_destructor
 expr_stmt|;
 name|__destroy_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|trivial_destructor
+name|_Trivial_destructor
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -169,26 +190,26 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIterator
 operator|>
 specifier|inline
 name|void
 name|destroy
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIterator __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIterator __last
 argument_list|)
 block|{
 name|__destroy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }

@@ -21,25 +21,26 @@ end_define
 
 begin_expr_stmt
 name|__STL_BEGIN_NAMESPACE
+comment|// uninitialized_copy
 comment|// Valid if copy construction is equivalent to assignment, and if the
 comment|//  destructor is trivial.
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_copy_aux
 argument_list|(
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIter __last
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|,
 argument|__true_type
 argument_list|)
@@ -47,11 +48,11 @@ block|{
 return|return
 name|copy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|)
 return|;
 block|}
@@ -61,55 +62,55 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_copy_aux
 argument_list|(
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIter __last
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|,
 argument|__false_type
 argument_list|)
 block|{
-name|ForwardIterator
-name|cur
+name|_ForwardIter
+name|__cur
 operator|=
-name|result
+name|__result
 block|;
 name|__STL_TRY
 block|{
 for|for
 control|(
 init|;
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|;
 operator|++
-name|first
+name|__first
 operator|,
 operator|++
-name|cur
+name|__cur
 control|)
 name|construct
 argument_list|(
 operator|&
 operator|*
-name|cur
+name|__cur
 argument_list|,
 operator|*
-name|first
+name|__first
 argument_list|)
 expr_stmt|;
 return|return
-name|cur
+name|__cur
 return|;
 block|}
 end_expr_stmt
@@ -119,9 +120,9 @@ name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|cur
+name|__cur
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -131,36 +132,36 @@ begin_expr_stmt
 unit|}   template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_copy
 argument_list|(
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIter __last
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
 typedef|typedef
 name|typename
 name|__type_traits
 operator|<
-name|T
+name|_Tp
 operator|>
 operator|::
 name|is_POD_type
-name|is_POD
+name|_Is_POD
 expr_stmt|;
 end_expr_stmt
 
@@ -168,13 +169,13 @@ begin_return
 return|return
 name|__uninitialized_copy_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|is_POD
+name|_Is_POD
 argument_list|()
 argument_list|)
 return|;
@@ -184,34 +185,34 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|uninitialized_copy
 argument_list|(
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIter __last
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|)
 block|{
 return|return
 name|__uninitialized_copy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|result
+name|__result
 argument_list|)
 argument_list|)
 return|;
@@ -227,36 +228,36 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|first
+name|__first
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|last
+name|__last
 parameter_list|,
 name|char
 modifier|*
-name|result
+name|__result
 parameter_list|)
 block|{
 name|memmove
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 argument_list|)
 expr_stmt|;
 return|return
-name|result
+name|__result
 operator|+
 operator|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|)
 return|;
 block|}
@@ -271,23 +272,23 @@ parameter_list|(
 specifier|const
 name|wchar_t
 modifier|*
-name|first
+name|__first
 parameter_list|,
 specifier|const
 name|wchar_t
 modifier|*
-name|last
+name|__last
 parameter_list|,
 name|wchar_t
 modifier|*
-name|result
+name|__result
 parameter_list|)
 block|{
 name|memmove
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|first
+name|__first
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -295,97 +296,101 @@ name|wchar_t
 argument_list|)
 operator|*
 operator|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|result
+name|__result
 operator|+
 operator|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|)
 return|;
 block|}
 end_function
 
+begin_comment
+comment|// uninitialized_copy_n (not part of the C++ standard)
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 name|pair
 operator|<
-name|InputIterator
+name|_InputIter
 operator|,
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 name|__uninitialized_copy_n
 argument_list|(
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|Size count
+argument|_Size __count
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|,
 argument|input_iterator_tag
 argument_list|)
 block|{
-name|ForwardIterator
-name|cur
+name|_ForwardIter
+name|__cur
 operator|=
-name|result
+name|__result
 block|;
 name|__STL_TRY
 block|{
 for|for
 control|(
 init|;
-name|count
+name|__count
 operator|>
 literal|0
 condition|;
 operator|--
-name|count
+name|__count
 operator|,
 operator|++
-name|first
+name|__first
 operator|,
 operator|++
-name|cur
+name|__cur
 control|)
 name|construct
 argument_list|(
 operator|&
 operator|*
-name|cur
+name|__cur
 argument_list|,
 operator|*
-name|first
+name|__first
 argument_list|)
 expr_stmt|;
 return|return
 name|pair
 operator|<
-name|InputIterator
+name|_InputIter
 operator|,
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 operator|(
-name|first
+name|__first
 operator|,
-name|cur
+name|__cur
 operator|)
 return|;
 block|}
@@ -396,9 +401,9 @@ name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|cur
+name|__cur
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -408,51 +413,102 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 specifier|inline
 name|pair
 operator|<
-name|RandomAccessIterator
+name|_RandomAccessIter
 operator|,
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 name|__uninitialized_copy_n
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIter __first
 argument_list|,
-argument|Size count
+argument|_Size __count
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|,
 argument|random_access_iterator_tag
 argument_list|)
 block|{
-name|RandomAccessIterator
-name|last
+name|_RandomAccessIter
+name|__last
 operator|=
-name|first
+name|__first
 operator|+
-name|count
+name|__count
 block|;
 return|return
-name|make_pair
-argument_list|(
-name|last
-argument_list|,
+name|pair
+operator|<
+name|_RandomAccessIter
+operator|,
+name|_ForwardIter
+operator|>
+operator|(
+name|__last
+operator|,
 name|uninitialized_copy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_InputIter
+operator|,
+name|class
+name|_Size
+operator|,
+name|class
+name|_ForwardIter
+operator|>
+specifier|inline
+name|pair
+operator|<
+name|_InputIter
+operator|,
+name|_ForwardIter
+operator|>
+name|__uninitialized_copy_n
+argument_list|(
+argument|_InputIter __first
+argument_list|,
+argument|_Size __count
+argument_list|,
+argument|_ForwardIter __result
+argument_list|)
+block|{
+return|return
+name|__uninitialized_copy_n
+argument_list|(
+name|__first
+argument_list|,
+name|__count
+argument_list|,
+name|__result
+argument_list|,
+name|__ITERATOR_CATEGORY
+argument_list|(
+name|__first
 argument_list|)
 argument_list|)
 return|;
@@ -463,42 +519,42 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 specifier|inline
 name|pair
 operator|<
-name|InputIterator
+name|_InputIter
 operator|,
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 name|uninitialized_copy_n
 argument_list|(
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|Size count
+argument|_Size __count
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|)
 block|{
 return|return
 name|__uninitialized_copy_n
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|count
+name|__count
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|iterator_category
+name|__ITERATOR_CATEGORY
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 return|;
@@ -510,84 +566,84 @@ comment|// Valid if copy construction is equivalent to assignment, and if the
 end_comment
 
 begin_comment
-comment|//  destructor is trivial.
+comment|// destructor is trivial.
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|__uninitialized_fill_aux
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIter __last
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
 argument|__true_type
 argument_list|)
 block|{
 name|fill
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|x
+name|__x
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 name|void
 name|__uninitialized_fill_aux
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIter __last
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
 argument|__false_type
 argument_list|)
 block|{
-name|ForwardIterator
-name|cur
+name|_ForwardIter
+name|__cur
 operator|=
-name|first
+name|__first
 block|;
 name|__STL_TRY
 block|{
 for|for
 control|(
 init|;
-name|cur
+name|__cur
 operator|!=
-name|last
+name|__last
 condition|;
 operator|++
-name|cur
+name|__cur
 control|)
 name|construct
 argument_list|(
 operator|&
 operator|*
-name|cur
+name|__cur
 argument_list|,
-name|x
+name|__x
 argument_list|)
 expr_stmt|;
 block|}
@@ -595,9 +651,9 @@ name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|cur
+name|__cur
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -607,46 +663,46 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|T1
+name|_Tp1
 operator|>
 specifier|inline
 name|void
 name|__uninitialized_fill
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIter __last
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
-argument|T1*
+argument|_Tp1*
 argument_list|)
 block|{
 typedef|typedef
 name|typename
 name|__type_traits
 operator|<
-name|T1
+name|_Tp1
 operator|>
 operator|::
 name|is_POD_type
-name|is_POD
+name|_Is_POD
 expr_stmt|;
 name|__uninitialized_fill_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|x
+name|__x
 argument_list|,
-name|is_POD
+name|_Is_POD
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -656,33 +712,33 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|uninitialized_fill
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIter __last
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|)
 block|{
 name|__uninitialized_fill
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|x
+name|__x
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
@@ -691,23 +747,23 @@ comment|//  destructor is trivial.
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_fill_n_aux
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|Size n
+argument|_Size __n
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
 argument|__true_type
 argument_list|)
@@ -715,11 +771,11 @@ block|{
 return|return
 name|fill_n
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|n
+name|__n
 argument_list|,
-name|x
+name|__x
 argument_list|)
 return|;
 block|}
@@ -729,57 +785,57 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_fill_n_aux
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|Size n
+argument|_Size __n
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
 argument|__false_type
 argument_list|)
 block|{
-name|ForwardIterator
-name|cur
+name|_ForwardIter
+name|__cur
 operator|=
-name|first
+name|__first
 block|;
 name|__STL_TRY
 block|{
 for|for
 control|(
 init|;
-name|n
+name|__n
 operator|>
 literal|0
 condition|;
 operator|--
-name|n
+name|__n
 operator|,
 operator|++
-name|cur
+name|__cur
 control|)
 name|construct
 argument_list|(
 operator|&
 operator|*
-name|cur
+name|__cur
 argument_list|,
-name|x
+name|__x
 argument_list|)
 expr_stmt|;
 return|return
-name|cur
+name|__cur
 return|;
 block|}
 end_expr_stmt
@@ -789,9 +845,9 @@ name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|cur
+name|__cur
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -801,39 +857,39 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|T1
+name|_Tp1
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_fill_n
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|Size n
+argument|_Size __n
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
-argument|T1*
+argument|_Tp1*
 argument_list|)
 block|{
 typedef|typedef
 name|typename
 name|__type_traits
 operator|<
-name|T1
+name|_Tp1
 operator|>
 operator|::
 name|is_POD_type
-name|is_POD
+name|_Is_POD
 expr_stmt|;
 end_expr_stmt
 
@@ -841,13 +897,13 @@ begin_return
 return|return
 name|__uninitialized_fill_n_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|n
+name|__n
 argument_list|,
-name|x
+name|__x
 argument_list|,
-name|is_POD
+name|_Is_POD
 argument_list|()
 argument_list|)
 return|;
@@ -857,42 +913,54 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|Size
+name|_Size
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|uninitialized_fill_n
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIter __first
 argument_list|,
-argument|Size n
+argument|_Size __n
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|)
 block|{
 return|return
 name|__uninitialized_fill_n
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|n
+name|__n
 argument_list|,
-name|x
+name|__x
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|// Extensions: __uninitialized_copy_copy, __uninitialized_copy_fill,
+end_comment
+
+begin_comment
+comment|// __uninitialized_fill_copy.
+end_comment
+
+begin_comment
+comment|// __uninitialized_copy_copy
+end_comment
 
 begin_comment
 comment|// Copies [first1, last1) into [result, result + (last1 - first1)), and
@@ -910,39 +978,39 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|InputIterator1
+name|_InputIter1
 operator|,
 name|class
-name|InputIterator2
+name|_InputIter2
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_copy_copy
 argument_list|(
-argument|InputIterator1 first1
+argument|_InputIter1 __first1
 argument_list|,
-argument|InputIterator1 last1
+argument|_InputIter1 __last1
 argument_list|,
-argument|InputIterator2 first2
+argument|_InputIter2 __first2
 argument_list|,
-argument|InputIterator2 last2
+argument|_InputIter2 __last2
 argument_list|,
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|)
 block|{
-name|ForwardIterator
-name|mid
+name|_ForwardIter
+name|__mid
 operator|=
 name|uninitialized_copy
 argument_list|(
-name|first1
+name|__first1
 argument_list|,
-name|last1
+name|__last1
 argument_list|,
-name|result
+name|__result
 argument_list|)
 block|;
 name|__STL_TRY
@@ -950,11 +1018,11 @@ block|{
 return|return
 name|uninitialized_copy
 argument_list|(
-name|first2
+name|__first2
 argument_list|,
-name|last2
+name|__last2
 argument_list|,
-name|mid
+name|__mid
 argument_list|)
 return|;
 block|}
@@ -962,9 +1030,9 @@ name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|mid
+name|__mid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -972,6 +1040,10 @@ end_expr_stmt
 
 begin_comment
 unit|}
+comment|// __uninitialized_fill_copy
+end_comment
+
+begin_comment
 comment|// Fills [result, mid) with x, and copies [first, last) into
 end_comment
 
@@ -983,36 +1055,36 @@ begin_expr_stmt
 unit|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|InputIterator
+name|_InputIter
 operator|>
 specifier|inline
-name|ForwardIterator
+name|_ForwardIter
 name|__uninitialized_fill_copy
 argument_list|(
-argument|ForwardIterator result
+argument|_ForwardIter __result
 argument_list|,
-argument|ForwardIterator mid
+argument|_ForwardIter __mid
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|,
-argument|InputIterator first
+argument|_InputIter __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIter __last
 argument_list|)
 block|{
 name|uninitialized_fill
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|mid
+name|__mid
 argument_list|,
-name|x
+name|__x
 argument_list|)
 block|;
 name|__STL_TRY
@@ -1020,11 +1092,11 @@ block|{
 return|return
 name|uninitialized_copy
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|mid
+name|__mid
 argument_list|)
 return|;
 block|}
@@ -1032,9 +1104,9 @@ name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|mid
+name|__mid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1042,6 +1114,10 @@ end_expr_stmt
 
 begin_comment
 unit|}
+comment|// __uninitialized_copy_fill
+end_comment
+
+begin_comment
 comment|// Copies [first1, last1) into [first2, first2 + (last1 - first1)), and
 end_comment
 
@@ -1053,59 +1129,59 @@ begin_expr_stmt
 unit|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIter
 operator|,
 name|class
-name|ForwardIterator
+name|_ForwardIter
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|__uninitialized_copy_fill
 argument_list|(
-argument|InputIterator first1
+argument|_InputIter __first1
 argument_list|,
-argument|InputIterator last1
+argument|_InputIter __last1
 argument_list|,
-argument|ForwardIterator first2
+argument|_ForwardIter __first2
 argument_list|,
-argument|ForwardIterator last2
+argument|_ForwardIter __last2
 argument_list|,
-argument|const T& x
+argument|const _Tp& __x
 argument_list|)
 block|{
-name|ForwardIterator
-name|mid2
+name|_ForwardIter
+name|__mid2
 operator|=
 name|uninitialized_copy
 argument_list|(
-name|first1
+name|__first1
 argument_list|,
-name|last1
+name|__last1
 argument_list|,
-name|first2
+name|__first2
 argument_list|)
 block|;
 name|__STL_TRY
 block|{
 name|uninitialized_fill
 argument_list|(
-name|mid2
+name|__mid2
 argument_list|,
-name|last2
+name|__last2
 argument_list|,
-name|x
+name|__x
 argument_list|)
 block|;   }
 name|__STL_UNWIND
 argument_list|(
 name|destroy
 argument_list|(
-name|first2
+name|__first2
 argument_list|,
-name|mid2
+name|__mid2
 argument_list|)
 argument_list|)
 block|; }
