@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.3 (Berkeley) %G%"
+literal|"@(#)local2.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mfile2"
+file|"pass2.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ctype.h"
+file|<ctype.h>
 end_include
 
 begin_ifdef
@@ -2739,6 +2739,12 @@ comment|/* tbl- 6 free regs on Tahoe (0-5) */
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|szty
+end_ifndef
+
 begin_macro
 name|szty
 argument_list|(
@@ -2768,6 +2774,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|rewfld
@@ -3501,6 +3512,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|shltype
+end_ifndef
+
 begin_expr_stmt
 name|shltype
 argument_list|(
@@ -3554,6 +3571,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|flshape
@@ -5382,6 +5404,13 @@ parameter_list|(
 name|p
 parameter_list|)
 value|p->in.right->tn.lval
+define|#
+directive|define
+name|nncon
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->in.op == ICON&& (p)->in.name[0] == 0)
 specifier|register
 name|int
 name|o
