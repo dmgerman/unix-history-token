@@ -1297,14 +1297,6 @@ break|break;
 case|case
 name|IA64_VEC_SINGLE_STEP_TRAP
 case|:
-comment|/* 		 * Clear single-step bit. 		 */
-name|framep
-operator|->
-name|tf_cr_ipsr
-operator|&=
-name|IA64_PSR_SS
-expr_stmt|;
-comment|/* FALLTHROUTH */
 case|case
 name|IA64_VEC_DEBUG
 case|:
