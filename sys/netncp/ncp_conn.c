@@ -68,7 +68,6 @@ name|SLIST_HEAD
 argument_list|(
 name|ncp_handle_head
 argument_list|,
-expr|struct
 name|ncp_handle
 argument_list|)
 expr_stmt|;
@@ -1244,7 +1243,6 @@ name|conn_list
 argument_list|,
 name|ncp
 argument_list|,
-expr|struct
 name|ncp_conn
 argument_list|,
 name|nc_next
@@ -2385,7 +2383,6 @@ name|lhlist
 argument_list|,
 name|refp
 argument_list|,
-expr|struct
 name|ncp_handle
 argument_list|,
 name|nh_next
@@ -2606,7 +2603,6 @@ name|lhlist
 argument_list|,
 name|hp
 argument_list|,
-expr|struct
 name|ncp_handle
 argument_list|,
 name|nh_next

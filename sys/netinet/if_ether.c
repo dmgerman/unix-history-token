@@ -308,7 +308,7 @@ name|llinfo_arp
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct llinfo_arp
+argument|llinfo_arp
 argument_list|)
 name|la_le
 expr_stmt|;
@@ -341,7 +341,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct llinfo_arp
+argument|llinfo_arp
 argument_list|)
 name|llinfo_arp
 expr_stmt|;

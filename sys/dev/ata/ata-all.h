@@ -1501,7 +1501,7 @@ value|0x7
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct ad_request
+argument|ad_request
 argument_list|)
 name|ata_queue
 expr_stmt|;
@@ -1509,7 +1509,7 @@ comment|/* head of ATA queue */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct atapi_request
+argument|atapi_request
 argument_list|)
 name|atapi_queue
 expr_stmt|;

@@ -526,7 +526,7 @@ decl_stmt|;
 comment|/* ASCII identifier, actual format varies with bus/handler */
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct pnpident
+argument|pnpident
 argument_list|)
 name|id_link
 expr_stmt|;
@@ -570,14 +570,14 @@ comment|/* handler which detected this device */
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct pnpident
+argument|pnpident
 argument_list|)
 name|pi_ident
 expr_stmt|;
 comment|/* list of identifiers */
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct pnpinfo
+argument|pnpinfo
 argument_list|)
 name|pi_link
 expr_stmt|;

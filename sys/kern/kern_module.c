@@ -80,7 +80,7 @@ typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct module
+argument|module
 argument_list|)
 name|modulelist_t
 expr_stmt|;
@@ -92,14 +92,14 @@ name|module
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct module
+argument|module
 argument_list|)
 name|link
 expr_stmt|;
 comment|/* chain together all modules */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct module
+argument|module
 argument_list|)
 name|flink
 expr_stmt|;

@@ -168,7 +168,7 @@ comment|/* 1>= hear sends if a member */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct in6_multi_mship
+argument|in6_multi_mship
 argument_list|)
 name|im6o_memberships
 expr_stmt|;

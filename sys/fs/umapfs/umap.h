@@ -135,7 +135,7 @@ name|umap_node
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct umap_node
+argument|umap_node
 argument_list|)
 name|umap_hash
 expr_stmt|;

@@ -295,7 +295,7 @@ comment|/* be nice to m68k ports */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ether_multi
+argument|ether_multi
 argument_list|)
 name|ac_multiaddrs
 expr_stmt|;
@@ -314,7 +314,7 @@ name|llinfo_arp
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct llinfo_arp
+argument|llinfo_arp
 argument_list|)
 name|la_list
 expr_stmt|;
@@ -598,7 +598,7 @@ decl_stmt|;
 comment|/* no. claims to this addr/range */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ether_multi
+argument|ether_multi
 argument_list|)
 name|enm_list
 expr_stmt|;

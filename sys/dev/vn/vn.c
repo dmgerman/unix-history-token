@@ -335,7 +335,7 @@ decl_stmt|;
 comment|/* options 			*/
 name|SLIST_ENTRY
 argument_list|(
-argument|struct vn_softc
+argument|vn_softc
 argument_list|)
 name|sc_list
 expr_stmt|;
@@ -348,7 +348,7 @@ specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct vn_softc
+argument|vn_softc
 argument_list|)
 name|vn_list
 expr_stmt|;

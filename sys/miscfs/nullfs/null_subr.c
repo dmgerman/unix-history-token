@@ -84,7 +84,6 @@ name|LIST_HEAD
 argument_list|(
 name|null_node_hashhead
 argument_list|,
-expr|struct
 name|null_node
 argument_list|)
 operator|*

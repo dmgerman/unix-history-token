@@ -333,7 +333,6 @@ name|LIST_HEAD
 argument_list|(
 name|nchashhead
 argument_list|,
-expr|struct
 name|namecache
 argument_list|)
 operator|*

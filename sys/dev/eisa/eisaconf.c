@@ -105,7 +105,7 @@ decl_stmt|;
 comment|/* resource manager handle */
 name|LIST_ENTRY
 argument_list|(
-argument|struct resvaddr
+argument|resvaddr
 argument_list|)
 name|links
 expr_stmt|;
@@ -120,7 +120,6 @@ name|LIST_HEAD
 argument_list|(
 name|resvlist
 argument_list|,
-expr|struct
 name|resvaddr
 argument_list|)
 expr_stmt|;
@@ -142,7 +141,7 @@ name|idesc
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct irq_node
+argument|irq_node
 argument_list|)
 name|links
 expr_stmt|;
@@ -155,7 +154,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|irqlist
 argument_list|,
-expr|struct
 name|irq_node
 argument_list|)
 expr_stmt|;

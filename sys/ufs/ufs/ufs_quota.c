@@ -3749,7 +3749,6 @@ name|LIST_HEAD
 argument_list|(
 name|dqhash
 argument_list|,
-expr|struct
 name|dquot
 argument_list|)
 operator|*
@@ -3785,7 +3784,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|dqfreelist
 argument_list|,
-argument|struct dquot
+argument|dquot
 argument_list|)
 name|dqfreelist
 expr_stmt|;

@@ -3348,7 +3348,6 @@ name|si_note
 argument_list|,
 name|kn
 argument_list|,
-expr|struct
 name|knote
 argument_list|,
 name|kn_selnext

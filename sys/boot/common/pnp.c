@@ -29,7 +29,7 @@ begin_macro
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct pnpinfo
+argument|pnpinfo
 argument_list|)
 end_macro
 

@@ -271,7 +271,7 @@ name|devstat
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct devstat
+argument|devstat
 argument_list|)
 name|dev_links
 expr_stmt|;

@@ -105,7 +105,7 @@ name|awi_bss
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct awi_bss
+argument|awi_bss
 argument_list|)
 name|list
 expr_stmt|;
@@ -328,7 +328,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct awi_bss
+argument|awi_bss
 argument_list|)
 name|sc_scan
 expr_stmt|;

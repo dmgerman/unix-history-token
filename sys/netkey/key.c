@@ -471,7 +471,7 @@ name|LIST_HEAD
 argument_list|(
 argument|_sptree
 argument_list|,
-argument|struct secpolicy
+argument|secpolicy
 argument_list|)
 name|sptree
 index|[
@@ -490,7 +490,7 @@ name|LIST_HEAD
 argument_list|(
 argument|_sahtree
 argument_list|,
-argument|struct secashead
+argument|secashead
 argument_list|)
 name|sahtree
 expr_stmt|;
@@ -506,7 +506,7 @@ name|LIST_HEAD
 argument_list|(
 argument|_regtree
 argument_list|,
-argument|struct secreg
+argument|secreg
 argument_list|)
 name|regtree
 index|[
@@ -533,7 +533,7 @@ name|LIST_HEAD
 argument_list|(
 argument|_acqtree
 argument_list|,
-argument|struct secacq
+argument|secacq
 argument_list|)
 name|acqtree
 expr_stmt|;

@@ -1389,7 +1389,7 @@ name|sc_term_sw
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct sc_term_sw
+argument|sc_term_sw
 argument_list|)
 name|link
 expr_stmt|;
@@ -1692,7 +1692,7 @@ name|rndrsw
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct sc_renderer
+argument|sc_renderer
 argument_list|)
 name|link
 expr_stmt|;

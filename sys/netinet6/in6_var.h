@@ -1372,7 +1372,7 @@ decl_stmt|;
 comment|/* Multicast address pointer */
 name|LIST_ENTRY
 argument_list|(
-argument|struct in6_multi_mship
+argument|in6_multi_mship
 argument_list|)
 name|i6mm_chain
 expr_stmt|;
@@ -1387,7 +1387,7 @@ name|in6_multi
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct in6_multi
+argument|in6_multi
 argument_list|)
 name|in6m_entry
 expr_stmt|;
@@ -1453,7 +1453,7 @@ end_endif
 begin_extern
 extern|extern LIST_HEAD(in6_multihead
 operator|,
-extern|struct in6_multi
+extern|in6_multi
 end_extern
 
 begin_expr_stmt

@@ -193,7 +193,7 @@ decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct ccb_hdr
+argument|ccb_hdr
 argument_list|)
 name|pending_ccbs
 operator|,

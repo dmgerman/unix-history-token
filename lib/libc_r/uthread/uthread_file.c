@@ -86,7 +86,7 @@ name|file_lock
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct file_lock
+argument|file_lock
 argument_list|)
 name|entry
 expr_stmt|;
@@ -95,7 +95,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|lock_head
 argument_list|,
-argument|struct pthread
+argument|pthread
 argument_list|)
 name|l_head
 expr_stmt|;
@@ -155,7 +155,7 @@ name|LIST_HEAD
 argument_list|(
 argument|file_list_head
 argument_list|,
-argument|struct file_lock
+argument|file_lock
 argument_list|)
 name|head
 expr_stmt|;

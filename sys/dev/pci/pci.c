@@ -277,7 +277,7 @@ name|pci_devinfo
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct pci_devinfo
+argument|pci_devinfo
 argument_list|)
 name|pci_links
 expr_stmt|;
@@ -302,7 +302,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|devlist
 argument_list|,
-argument|struct pci_devinfo
+argument|pci_devinfo
 argument_list|)
 name|pci_devq
 expr_stmt|;
@@ -1917,7 +1917,7 @@ comment|/* XXX this hasn't been tested */
 end_comment
 
 begin_comment
-unit|STAILQ_REMOVE(devlist_head, dinfo, struct pci_devinfo, pci_links); 	free(dinfo, M_DEVBUF);
+unit|STAILQ_REMOVE(devlist_head, dinfo, pci_devinfo, pci_links); 	free(dinfo, M_DEVBUF);
 comment|/* increment the generation count */
 end_comment
 

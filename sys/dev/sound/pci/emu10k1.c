@@ -81,7 +81,7 @@ name|emu_memblk
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct emu_memblk
+argument|emu_memblk
 argument_list|)
 name|link
 expr_stmt|;
@@ -121,7 +121,7 @@ decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct emu_memblk
+argument|emu_memblk
 argument_list|)
 name|blocks
 expr_stmt|;

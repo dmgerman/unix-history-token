@@ -379,7 +379,6 @@ name|LIST_HEAD
 argument_list|(
 name|idmaplist
 argument_list|,
-expr|struct
 name|idmap
 argument_list|)
 expr_stmt|;
@@ -391,7 +390,7 @@ name|idmap
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct idmap
+argument|idmap
 argument_list|)
 name|link
 expr_stmt|;

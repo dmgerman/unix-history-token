@@ -116,7 +116,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ng_node
+argument|ng_node
 argument_list|)
 name|nodelist
 expr_stmt|;
@@ -131,7 +131,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ng_type
+argument|ng_type
 argument_list|)
 name|typelist
 expr_stmt|;
@@ -157,7 +157,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ng_node
+argument|ng_node
 argument_list|)
 name|ID_hash
 index|[

@@ -91,7 +91,7 @@ decl_stmt|;
 comment|/* The node this hook is attached to */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ng_hook
+argument|ng_hook
 argument_list|)
 name|hooks
 expr_stmt|;
@@ -176,21 +176,21 @@ name|LIST_HEAD
 argument_list|(
 argument|hooks
 argument_list|,
-argument|struct ng_hook
+argument|ng_hook
 argument_list|)
 name|hooks
 expr_stmt|;
 comment|/* linked list of node hooks */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ng_node
+argument|ng_node
 argument_list|)
 name|nodes
 expr_stmt|;
 comment|/* linked list of all nodes */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ng_node
+argument|ng_node
 argument_list|)
 name|idnodes
 expr_stmt|;
@@ -666,7 +666,7 @@ comment|/* commands we can convert */
 comment|/* R/W data private to the base netgraph code DON'T TOUCH! */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ng_type
+argument|ng_type
 argument_list|)
 name|types
 expr_stmt|;

@@ -142,7 +142,7 @@ name|val
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct carg
+argument|carg
 argument_list|)
 name|list
 expr_stmt|;
@@ -153,7 +153,7 @@ end_struct
 begin_extern
 extern|extern LIST_HEAD(cargs
 operator|,
-extern|struct carg
+extern|carg
 end_extern
 
 begin_expr_stmt

@@ -168,7 +168,7 @@ name|uidinfo
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct uidinfo
+argument|uidinfo
 argument_list|)
 name|ui_hash
 expr_stmt|;
@@ -201,7 +201,6 @@ name|LIST_HEAD
 argument_list|(
 name|uihashhead
 argument_list|,
-expr|struct
 name|uidinfo
 argument_list|)
 operator|*

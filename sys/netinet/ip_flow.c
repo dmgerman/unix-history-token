@@ -130,7 +130,7 @@ name|LIST_HEAD
 argument_list|(
 argument|ipflowhead
 argument_list|,
-argument|struct ipflow
+argument|ipflow
 argument_list|)
 name|ipflows
 index|[

@@ -367,7 +367,7 @@ name|conf_phys_drv
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct conf_phys_drv
+argument|conf_phys_drv
 argument_list|)
 name|pd_link
 expr_stmt|;
@@ -391,7 +391,7 @@ name|conf_span
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct conf_span
+argument|conf_span
 argument_list|)
 name|s_link
 expr_stmt|;
@@ -417,7 +417,7 @@ name|conf_sys_drv
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct conf_sys_drv
+argument|conf_sys_drv
 argument_list|)
 name|sd_link
 expr_stmt|;
@@ -444,21 +444,21 @@ block|{
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct conf_phys_drv
+argument|conf_phys_drv
 argument_list|)
 name|cc_phys_drvs
 expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct conf_span
+argument|conf_span
 argument_list|)
 name|cc_spans
 expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct conf_sys_drv
+argument|conf_sys_drv
 argument_list|)
 name|cc_sys_drvs
 expr_stmt|;

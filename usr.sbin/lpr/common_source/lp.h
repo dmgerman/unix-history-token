@@ -216,7 +216,7 @@ name|req_user
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct req_user
+argument|req_user
 argument_list|)
 name|ru_link
 expr_stmt|;
@@ -237,7 +237,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|req_user_head
 argument_list|,
-expr|struct
 name|req_user
 argument_list|)
 expr_stmt|;
@@ -249,7 +248,7 @@ name|req_file
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct req_file
+argument|req_file
 argument_list|)
 name|rf_link
 expr_stmt|;
@@ -279,7 +278,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|req_file_head
 argument_list|,
-expr|struct
 name|req_file
 argument_list|)
 expr_stmt|;
@@ -291,7 +289,7 @@ name|req_jobid
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct req_jobid
+argument|req_jobid
 argument_list|)
 name|rj_link
 expr_stmt|;
@@ -309,7 +307,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|req_jobid_head
 argument_list|,
-expr|struct
 name|req_jobid
 argument_list|)
 expr_stmt|;

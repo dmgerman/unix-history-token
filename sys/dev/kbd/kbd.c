@@ -123,7 +123,7 @@ specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct keyboard_driver
+argument|keyboard_driver
 argument_list|)
 name|keyboard_drivers
 operator|=
@@ -674,7 +674,6 @@ name|keyboard_drivers
 argument_list|,
 name|driver
 argument_list|,
-expr|struct
 name|keyboard_driver
 argument_list|,
 name|link

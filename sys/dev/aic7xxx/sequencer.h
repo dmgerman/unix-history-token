@@ -145,7 +145,7 @@ name|patch_label
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct instruction
+argument|instruction
 argument_list|)
 name|links
 expr_stmt|;

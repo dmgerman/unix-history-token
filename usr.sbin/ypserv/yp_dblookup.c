@@ -231,7 +231,7 @@ name|CIRCLEQ_HEAD
 argument_list|(
 argument|circlehead
 argument_list|,
-argument|struct circleq_entry
+argument|circleq_entry
 argument_list|)
 name|qhead
 expr_stmt|;
@@ -248,7 +248,7 @@ name|dbptr
 decl_stmt|;
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|struct circleq_entry
+argument|circleq_entry
 argument_list|)
 name|links
 expr_stmt|;

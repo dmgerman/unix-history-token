@@ -161,7 +161,7 @@ decl_stmt|;
 comment|/* Private use by the caller. */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct bio
+argument|bio
 argument_list|)
 name|bio_queue
 expr_stmt|;
@@ -293,7 +293,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|bio_queue
 argument_list|,
-argument|struct bio
+argument|bio
 argument_list|)
 name|queue
 expr_stmt|;

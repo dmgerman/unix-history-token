@@ -124,7 +124,7 @@ name|LIST_HEAD
 argument_list|(
 argument|mii_listhead
 argument_list|,
-argument|struct mii_softc
+argument|mii_softc
 argument_list|)
 name|mii_phys
 expr_stmt|;
@@ -238,7 +238,7 @@ decl_stmt|;
 comment|/* generic device glue */
 name|LIST_ENTRY
 argument_list|(
-argument|struct mii_softc
+argument|mii_softc
 argument_list|)
 name|mii_list
 expr_stmt|;

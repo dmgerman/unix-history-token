@@ -27,7 +27,7 @@ name|rckey
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct rckey
+argument|rckey
 argument_list|)
 name|rk_next
 expr_stmt|;
@@ -49,7 +49,7 @@ name|rcsection
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct rcsection
+argument|rcsection
 argument_list|)
 name|rs_next
 expr_stmt|;
@@ -57,7 +57,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|rckey_head
 argument_list|,
-argument|struct rckey
+argument|rckey
 argument_list|)
 name|rs_keys
 expr_stmt|;
@@ -75,7 +75,7 @@ name|rcfile
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct rcfile
+argument|rcfile
 argument_list|)
 name|rf_next
 expr_stmt|;
@@ -83,7 +83,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|rcsec_head
 argument_list|,
-argument|struct rcsection
+argument|rcsection
 argument_list|)
 name|rf_sect
 expr_stmt|;

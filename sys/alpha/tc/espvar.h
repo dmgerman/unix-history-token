@@ -67,7 +67,7 @@ name|ecb
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct ecb
+argument|ecb
 argument_list|)
 name|chain
 expr_stmt|;
@@ -678,7 +678,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|ecb_list
 argument_list|,
-argument|struct ecb
+argument|ecb
 argument_list|)
 name|free_list
 operator|,

@@ -227,7 +227,7 @@ name|LIST_HEAD
 argument_list|(
 argument|ttylisthead
 argument_list|,
-argument|struct ttytab
+argument|ttytab
 argument_list|)
 end_macro
 
@@ -255,7 +255,7 @@ decl_stmt|;
 comment|/* terminal name */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ttytab
+argument|ttytab
 argument_list|)
 name|list
 expr_stmt|;

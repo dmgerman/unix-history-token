@@ -269,7 +269,7 @@ name|LIST_HEAD
 argument_list|(
 argument|ip6_fw_head
 argument_list|,
-argument|struct ip6_fw_chain
+argument|ip6_fw_chain
 argument_list|)
 end_macro
 

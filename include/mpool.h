@@ -53,14 +53,14 @@ name|_bkt
 block|{
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|struct _bkt
+argument|_bkt
 argument_list|)
 name|hq
 expr_stmt|;
 comment|/* hash queue */
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|struct _bkt
+argument|_bkt
 argument_list|)
 name|q
 expr_stmt|;
@@ -102,7 +102,7 @@ name|CIRCLEQ_HEAD
 argument_list|(
 argument|_lqh
 argument_list|,
-argument|struct _bkt
+argument|_bkt
 argument_list|)
 name|lqh
 expr_stmt|;
@@ -112,7 +112,7 @@ name|CIRCLEQ_HEAD
 argument_list|(
 argument|_hqh
 argument_list|,
-argument|struct _bkt
+argument|_bkt
 argument_list|)
 name|hqh
 index|[

@@ -193,7 +193,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct sc_term_sw
+argument|sc_term_sw
 argument_list|)
 name|sc_term_list
 operator|=

@@ -143,7 +143,7 @@ name|Struct_Objlist_Entry
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct Struct_Objlist_Entry
+argument|Struct_Objlist_Entry
 argument_list|)
 name|link
 expr_stmt|;
@@ -163,7 +163,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|Struct_Objlist
 argument_list|,
-argument|struct Struct_Objlist_Entry
+argument|Struct_Objlist_Entry
 argument_list|)
 name|Objlist
 expr_stmt|;
@@ -193,7 +193,7 @@ name|Struct_Funclist_Entry
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct Struct_Funclist_Entry
+argument|Struct_Funclist_Entry
 argument_list|)
 name|link
 expr_stmt|;
@@ -211,7 +211,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|Struct_Funclist
 argument_list|,
-argument|struct Struct_Funclist_Entry
+argument|Struct_Funclist_Entry
 argument_list|)
 name|Funclist
 expr_stmt|;

@@ -1121,7 +1121,7 @@ decl_stmt|;
 comment|/* driver specific */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct atapi_request
+argument|atapi_request
 argument_list|)
 name|chain
 expr_stmt|;

@@ -159,7 +159,7 @@ decl_stmt|;
 comment|/* tag ID of this request */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct ad_request
+argument|ad_request
 argument_list|)
 name|chain
 expr_stmt|;

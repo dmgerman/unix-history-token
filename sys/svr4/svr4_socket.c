@@ -145,7 +145,7 @@ decl_stmt|;
 comment|/* Inode where the socket lives on	*/
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct svr4_sockcache_entry
+argument|svr4_sockcache_entry
 argument_list|)
 name|entries
 expr_stmt|;
@@ -156,7 +156,7 @@ end_struct
 begin_extern
 extern|extern TAILQ_HEAD(svr4_sockcache_head
 operator|,
-extern|struct svr4_sockcache_entry
+extern|svr4_sockcache_entry
 end_extern
 
 begin_expr_stmt

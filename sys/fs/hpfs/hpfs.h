@@ -1321,7 +1321,7 @@ endif|#
 directive|endif
 name|LIST_ENTRY
 argument_list|(
-argument|struct hpfsnode
+argument|hpfsnode
 argument_list|)
 name|h_hash
 expr_stmt|;

@@ -238,7 +238,7 @@ name|function
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct exitlist
+argument|exitlist
 argument_list|)
 name|next
 expr_stmt|;
@@ -251,7 +251,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|exit_list_head
 argument_list|,
-expr|struct
 name|exitlist
 argument_list|)
 expr_stmt|;

@@ -197,7 +197,6 @@ name|SLIST_HEAD
 argument_list|(
 name|env_head
 argument_list|,
-expr|struct
 name|env_entry
 argument_list|)
 expr_stmt|;
@@ -213,7 +212,7 @@ name|ee_env
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct env_entry
+argument|env_entry
 argument_list|)
 name|ee_entries
 expr_stmt|;

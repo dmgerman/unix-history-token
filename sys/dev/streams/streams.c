@@ -236,7 +236,7 @@ decl_stmt|;
 comment|/* Inode where the socket lives on	*/
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct svr4_sockcache_entry
+argument|svr4_sockcache_entry
 argument_list|)
 name|entries
 expr_stmt|;
@@ -249,7 +249,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|svr4_sockcache_head
 argument_list|,
-argument|struct svr4_sockcache_entry
+argument|svr4_sockcache_entry
 argument_list|)
 end_macro
 

@@ -35,7 +35,7 @@ name|pcic_event
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct pcic_event
+argument|pcic_event
 argument_list|)
 name|pe_q
 expr_stmt|;
@@ -159,7 +159,7 @@ decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct pcic_event
+argument|pcic_event
 argument_list|)
 name|events
 expr_stmt|;

@@ -147,7 +147,7 @@ decl_stmt|;
 comment|/* client data count */
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct bounce_page
+argument|bounce_page
 argument_list|)
 name|links
 expr_stmt|;
@@ -167,7 +167,7 @@ name|STAILQ_HEAD
 argument_list|(
 argument|bp_list
 argument_list|,
-argument|struct bounce_page
+argument|bounce_page
 argument_list|)
 name|bounce_page_list
 expr_stmt|;
@@ -246,7 +246,7 @@ name|callback_arg
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct bus_dmamap
+argument|bus_dmamap
 argument_list|)
 name|links
 expr_stmt|;
@@ -259,7 +259,7 @@ specifier|static
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct bus_dmamap
+argument|bus_dmamap
 argument_list|)
 name|bounce_map_waitinglist
 expr_stmt|;
@@ -270,7 +270,7 @@ specifier|static
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct bus_dmamap
+argument|bus_dmamap
 argument_list|)
 name|bounce_map_callbacklist
 expr_stmt|;

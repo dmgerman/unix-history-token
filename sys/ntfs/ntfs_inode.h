@@ -292,7 +292,7 @@ decl_stmt|;
 comment|/* Device associated with the inode. */
 name|LIST_ENTRY
 argument_list|(
-argument|struct ntnode
+argument|ntnode
 argument_list|)
 name|i_hash
 expr_stmt|;
@@ -333,14 +333,14 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct fnode
+argument|fnode
 argument_list|)
 name|i_fnlist
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ntvattr
+argument|ntvattr
 argument_list|)
 name|i_valist
 expr_stmt|;
@@ -401,7 +401,7 @@ endif|#
 directive|endif
 name|LIST_ENTRY
 argument_list|(
-argument|struct fnode
+argument|fnode
 argument_list|)
 name|f_fnlist
 expr_stmt|;

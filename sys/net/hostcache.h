@@ -32,7 +32,7 @@ name|hcentry
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct hcentry
+argument|hcentry
 argument_list|)
 name|hc_link
 expr_stmt|;
@@ -114,7 +114,6 @@ name|LIST_HEAD
 argument_list|(
 name|hchead
 argument_list|,
-expr|struct
 name|hcentry
 argument_list|)
 expr_stmt|;

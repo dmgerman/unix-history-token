@@ -45,7 +45,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|kqlist
 argument_list|,
-argument|struct knote
+argument|knote
 argument_list|)
 name|kq_head
 expr_stmt|;

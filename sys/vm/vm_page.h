@@ -61,7 +61,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|pglist
 argument_list|,
-expr|struct
 name|vm_page
 argument_list|)
 expr_stmt|;
@@ -73,7 +72,7 @@ name|vm_page
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct vm_page
+argument|vm_page
 argument_list|)
 name|pageq
 expr_stmt|;
@@ -86,7 +85,7 @@ decl_stmt|;
 comment|/* hash table link (O,P)	*/
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct vm_page
+argument|vm_page
 argument_list|)
 name|listq
 expr_stmt|;

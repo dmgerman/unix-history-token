@@ -1482,7 +1482,7 @@ name|nfsreq
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct nfsreq
+argument|nfsreq
 argument_list|)
 name|r_chain
 expr_stmt|;
@@ -1558,7 +1558,7 @@ end_comment
 begin_extern
 extern|extern TAILQ_HEAD(nfs_reqq
 operator|,
-extern|struct nfsreq
+extern|nfsreq
 end_extern
 
 begin_expr_stmt
@@ -1805,14 +1805,14 @@ name|nfsuid
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct nfsuid
+argument|nfsuid
 argument_list|)
 name|nu_lru
 expr_stmt|;
 comment|/* LRU chain */
 name|LIST_ENTRY
 argument_list|(
-argument|struct nfsuid
+argument|nfsuid
 argument_list|)
 name|nu_hash
 expr_stmt|;
@@ -1900,7 +1900,7 @@ name|nfsrv_rec
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct nfsrv_rec
+argument|nfsrv_rec
 argument_list|)
 name|nr_link
 expr_stmt|;
@@ -1924,7 +1924,7 @@ name|nfssvc_sock
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct nfssvc_sock
+argument|nfssvc_sock
 argument_list|)
 name|ns_chain
 expr_stmt|;
@@ -1932,7 +1932,7 @@ comment|/* List of all nfssvc_sock's */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct nfsuid
+argument|nfsuid
 argument_list|)
 name|ns_uidlruhead
 expr_stmt|;
@@ -1964,7 +1964,7 @@ decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct nfsrv_rec
+argument|nfsrv_rec
 argument_list|)
 name|ns_rec
 expr_stmt|;
@@ -1994,7 +1994,7 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct nfsrv_descript
+argument|nfsrv_descript
 argument_list|)
 name|ns_tq
 expr_stmt|;
@@ -2002,7 +2002,7 @@ comment|/* Write gather lists */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct nfsuid
+argument|nfsuid
 argument_list|)
 name|ns_uidhashtbl
 index|[
@@ -2013,7 +2013,7 @@ name|LIST_HEAD
 argument_list|(
 argument|nfsrvw_delayhash
 argument_list|,
-argument|struct nfsrv_descript
+argument|nfsrv_descript
 argument_list|)
 name|ns_wdelayhashtbl
 index|[
@@ -2080,7 +2080,7 @@ end_define
 begin_extern
 extern|extern TAILQ_HEAD(nfssvc_sockhead
 operator|,
-extern|struct nfssvc_sock
+extern|nfssvc_sock
 end_extern
 
 begin_expr_stmt
@@ -2120,7 +2120,7 @@ name|nfsd
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct nfsd
+argument|nfsd
 argument_list|)
 name|nfsd_chain
 expr_stmt|;
@@ -2226,14 +2226,14 @@ decl_stmt|;
 comment|/* and end byte offset */
 name|LIST_ENTRY
 argument_list|(
-argument|struct nfsrv_descript
+argument|nfsrv_descript
 argument_list|)
 name|nd_hash
 expr_stmt|;
 comment|/* Hash list */
 name|LIST_ENTRY
 argument_list|(
-argument|struct nfsrv_descript
+argument|nfsrv_descript
 argument_list|)
 name|nd_tq
 expr_stmt|;
@@ -2241,7 +2241,7 @@ comment|/* and timer list */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct nfsrv_descript
+argument|nfsrv_descript
 argument_list|)
 name|nd_coalesce
 expr_stmt|;
@@ -2396,7 +2396,7 @@ end_define
 begin_extern
 extern|extern TAILQ_HEAD(nfsd_head
 operator|,
-extern|struct nfsd
+extern|nfsd
 end_extern
 
 begin_expr_stmt

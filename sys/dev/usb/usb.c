@@ -628,7 +628,7 @@ name|ue
 decl_stmt|;
 name|SIMPLEQ_ENTRY
 argument_list|(
-argument|struct usb_event_q
+argument|usb_event_q
 argument_list|)
 name|next
 expr_stmt|;
@@ -640,7 +640,6 @@ begin_decl_stmt
 name|Static
 name|SIMPLEQ_HEAD
 argument_list|(,
-expr|struct
 name|usb_event_q
 argument_list|)
 name|usb_events

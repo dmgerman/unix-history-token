@@ -183,7 +183,7 @@ name|http_auth
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct http_auth
+argument|http_auth
 argument_list|)
 name|ha_link
 expr_stmt|;
@@ -214,7 +214,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|http_auth_head
 argument_list|,
-expr|struct
 name|http_auth
 argument_list|)
 expr_stmt|;

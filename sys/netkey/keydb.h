@@ -65,7 +65,7 @@ name|secashead
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct secashead
+argument|secashead
 argument_list|)
 name|chain
 expr_stmt|;
@@ -88,7 +88,7 @@ name|LIST_HEAD
 argument_list|(
 argument|_satree
 argument_list|,
-argument|struct secasvar
+argument|secasvar
 argument_list|)
 name|savtree
 index|[
@@ -118,7 +118,7 @@ name|secasvar
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct secasvar
+argument|secasvar
 argument_list|)
 name|chain
 expr_stmt|;
@@ -255,7 +255,7 @@ name|secreg
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct secreg
+argument|secreg
 argument_list|)
 name|chain
 expr_stmt|;
@@ -284,7 +284,7 @@ name|secacq
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct secacq
+argument|secacq
 argument_list|)
 name|chain
 expr_stmt|;

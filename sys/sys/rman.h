@@ -42,7 +42,6 @@ name|CIRCLEQ_HEAD
 argument_list|(
 name|resource_head
 argument_list|,
-expr|struct
 name|resource
 argument_list|)
 expr_stmt|;
@@ -54,19 +53,18 @@ name|resource
 block|{
 name|CIRCLEQ_ENTRY
 argument_list|(
-argument|struct resource
+argument|resource
 argument_list|)
 name|r_link
 expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct resource
+argument|resource
 argument_list|)
 name|r_sharelink
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(,
-expr|struct
 name|resource
 argument_list|)
 operator|*
@@ -209,7 +207,7 @@ decl_stmt|;
 comment|/* mutex used to protect rm_list */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct rman
+argument|rman
 argument_list|)
 name|rm_link
 expr_stmt|;
@@ -242,7 +240,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|rman_head
 argument_list|,
-expr|struct
 name|rman
 argument_list|)
 expr_stmt|;

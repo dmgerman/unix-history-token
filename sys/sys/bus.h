@@ -181,7 +181,7 @@ name|resource_list_entry
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct resource_list_entry
+argument|resource_list_entry
 argument_list|)
 name|link
 expr_stmt|;
@@ -220,7 +220,6 @@ name|SLIST_HEAD
 argument_list|(
 name|resource_list
 argument_list|,
-expr|struct
 name|resource_list_entry
 argument_list|)
 expr_stmt|;

@@ -1523,7 +1523,7 @@ name|sg_vaddr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct sg_map_node
+argument|sg_map_node
 argument_list|)
 name|links
 expr_stmt|;
@@ -1878,7 +1878,7 @@ name|sense_data
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct acb
+argument|acb
 argument_list|)
 name|links
 expr_stmt|;
@@ -2416,14 +2416,14 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ccb_hdr
+argument|ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct acb
+argument|acb
 argument_list|)
 name|free_acb_list
 expr_stmt|;
@@ -2451,7 +2451,7 @@ comment|/* dmat for our sg maps */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct sg_map_node
+argument|sg_map_node
 argument_list|)
 name|sg_maps
 expr_stmt|;

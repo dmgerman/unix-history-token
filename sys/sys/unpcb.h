@@ -37,7 +37,6 @@ name|LIST_HEAD
 argument_list|(
 name|unp_head
 argument_list|,
-expr|struct
 name|unpcb
 argument_list|)
 expr_stmt|;
@@ -49,7 +48,7 @@ name|unpcb
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct unpcb
+argument|unpcb
 argument_list|)
 name|unp_link
 expr_stmt|;
@@ -89,7 +88,7 @@ decl_stmt|;
 comment|/* referencing socket linked list */
 name|LIST_ENTRY
 argument_list|(
-argument|struct unpcb
+argument|unpcb
 argument_list|)
 name|unp_reflink
 expr_stmt|;

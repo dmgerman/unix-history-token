@@ -627,7 +627,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|stailhead
 argument_list|,
-argument|struct deadq_entry
+argument|deadq_entry
 argument_list|)
 end_macro
 
@@ -656,7 +656,7 @@ name|dq_timeout
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct deadq_entry
+argument|deadq_entry
 argument_list|)
 name|dq_entries
 expr_stmt|;

@@ -97,7 +97,6 @@ name|SLIST_HEAD
 argument_list|(
 name|rcfile_head
 argument_list|,
-expr|struct
 name|rcfile
 argument_list|)
 expr_stmt|;
@@ -589,7 +588,6 @@ name|pf_head
 argument_list|,
 name|rcp
 argument_list|,
-expr|struct
 name|rcfile
 argument_list|,
 name|rf_next
@@ -1058,7 +1056,6 @@ name|rs_keys
 argument_list|,
 name|p
 argument_list|,
-expr|struct
 name|rckey
 argument_list|,
 name|rk_next

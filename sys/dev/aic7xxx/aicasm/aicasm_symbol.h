@@ -88,7 +88,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|symlist
 argument_list|,
-argument|struct symbol_node
+argument|symbol_node
 argument_list|)
 name|symlist_t
 expr_stmt|;
@@ -249,7 +249,7 @@ name|symbol_node
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct symbol_node
+argument|symbol_node
 argument_list|)
 name|links
 expr_stmt|;
@@ -301,20 +301,20 @@ name|scope
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct scope
+argument|scope
 argument_list|)
 name|scope_stack_links
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct scope
+argument|scope
 argument_list|)
 name|scope_links
 expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct scope
+argument|scope
 argument_list|)
 name|inner_scope
 expr_stmt|;
@@ -349,7 +349,6 @@ name|SLIST_HEAD
 argument_list|(
 name|scope_list
 argument_list|,
-expr|struct
 name|scope
 argument_list|)
 expr_stmt|;
@@ -360,7 +359,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|scope_tailq
 argument_list|,
-expr|struct
 name|scope
 argument_list|)
 expr_stmt|;

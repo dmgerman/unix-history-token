@@ -32,7 +32,7 @@ name|mc_addr
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct vlan_mc_entry
+argument|vlan_mc_entry
 argument_list|)
 name|mc_entries
 expr_stmt|;
@@ -76,7 +76,7 @@ name|SLIST_HEAD
 argument_list|(
 argument|__vlan_mchead
 argument_list|,
-argument|struct vlan_mc_entry
+argument|vlan_mc_entry
 argument_list|)
 name|vlan_mc_listhead
 expr_stmt|;

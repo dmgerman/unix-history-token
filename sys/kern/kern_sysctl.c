@@ -276,7 +276,6 @@ name|oid_parent
 argument_list|,
 name|oidp
 argument_list|,
-expr|struct
 name|sysctl_oid
 argument_list|,
 name|oid_link

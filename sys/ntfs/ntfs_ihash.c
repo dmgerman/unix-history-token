@@ -95,7 +95,6 @@ name|LIST_HEAD
 argument_list|(
 name|nthashhead
 argument_list|,
-expr|struct
 name|ntnode
 argument_list|)
 operator|*

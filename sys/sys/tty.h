@@ -265,7 +265,7 @@ decl_stmt|;
 comment|/* Generation number. */
 name|SLIST_ENTRY
 argument_list|(
-argument|struct tty
+argument|tty
 argument_list|)
 name|t_list
 expr_stmt|;

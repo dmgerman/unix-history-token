@@ -216,7 +216,7 @@ name|sio_u
 union|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct sigio
+argument|sigio
 argument_list|)
 name|sio_pgsigio
 expr_stmt|;
@@ -265,7 +265,6 @@ name|SLIST_HEAD
 argument_list|(
 name|sigiolst
 argument_list|,
-expr|struct
 name|sigio
 argument_list|)
 expr_stmt|;

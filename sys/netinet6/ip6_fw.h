@@ -243,7 +243,7 @@ name|ip6_fw_chain
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct ip6_fw_chain
+argument|ip6_fw_chain
 argument_list|)
 name|chain
 expr_stmt|;

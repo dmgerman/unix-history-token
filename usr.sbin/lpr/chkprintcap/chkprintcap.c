@@ -533,7 +533,7 @@ name|dirlist
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct dirlist
+argument|dirlist
 argument_list|)
 name|link
 expr_stmt|;
@@ -558,7 +558,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct dirlist
+argument|dirlist
 argument_list|)
 name|dirlist
 expr_stmt|;

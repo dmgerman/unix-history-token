@@ -60,7 +60,6 @@ name|LIST_HEAD
 argument_list|(
 name|workhead
 argument_list|,
-expr|struct
 name|worklist
 argument_list|)
 expr_stmt|;
@@ -258,28 +257,28 @@ decl_stmt|;
 comment|/* Offset into file. */
 name|LIST_ENTRY
 argument_list|(
-argument|struct buf
+argument|buf
 argument_list|)
 name|b_hash
 expr_stmt|;
 comment|/* Hash chain. */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct buf
+argument|buf
 argument_list|)
 name|b_vnbufs
 expr_stmt|;
 comment|/* Buffer's associated vnode. */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct buf
+argument|buf
 argument_list|)
 name|b_freelist
 expr_stmt|;
 comment|/* Free list position if not active. */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct buf
+argument|buf
 argument_list|)
 name|b_act
 expr_stmt|;
@@ -370,13 +369,13 @@ name|TAILQ_HEAD
 argument_list|(
 argument|cluster_list_head
 argument_list|,
-argument|struct buf
+argument|buf
 argument_list|)
 name|cluster_head
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct buf
+argument|buf
 argument_list|)
 name|cluster_entry
 expr_stmt|;
@@ -1371,7 +1370,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|buf_queue
 argument_list|,
-argument|struct buf
+argument|buf
 argument_list|)
 name|queue
 expr_stmt|;
@@ -2008,7 +2007,7 @@ end_comment
 begin_extern
 extern|extern TAILQ_HEAD(swqueue
 operator|,
-extern|struct buf
+extern|buf
 end_extern
 
 begin_expr_stmt
@@ -2020,7 +2019,7 @@ end_expr_stmt
 begin_extern
 extern|extern TAILQ_HEAD(bqueues
 operator|,
-extern|struct buf
+extern|buf
 end_extern
 
 begin_expr_stmt

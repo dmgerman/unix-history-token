@@ -163,7 +163,7 @@ name|un_lock
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct union_node
+argument|union_node
 argument_list|)
 name|un_cache
 expr_stmt|;

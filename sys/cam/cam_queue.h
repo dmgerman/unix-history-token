@@ -62,7 +62,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|ccb_hdr_tailq
 argument_list|,
-expr|struct
 name|ccb_hdr
 argument_list|)
 expr_stmt|;
@@ -73,7 +72,6 @@ name|LIST_HEAD
 argument_list|(
 name|ccb_hdr_list
 argument_list|,
-expr|struct
 name|ccb_hdr
 argument_list|)
 expr_stmt|;
@@ -84,7 +82,6 @@ name|SLIST_HEAD
 argument_list|(
 name|ccb_hdr_slist
 argument_list|,
-expr|struct
 name|ccb_hdr
 argument_list|)
 expr_stmt|;

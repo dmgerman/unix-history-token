@@ -29,7 +29,7 @@ name|tseg_qent
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct tseg_qent
+argument|tseg_qent
 argument_list|)
 name|tqe_q
 expr_stmt|;
@@ -58,7 +58,6 @@ name|LIST_HEAD
 argument_list|(
 name|tsegqe_head
 argument_list|,
-expr|struct
 name|tseg_qent
 argument_list|)
 expr_stmt|;

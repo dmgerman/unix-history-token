@@ -866,7 +866,6 @@ name|LIST_HEAD
 argument_list|(
 name|bufhashhdr
 argument_list|,
-expr|struct
 name|buf
 argument_list|)
 operator|*

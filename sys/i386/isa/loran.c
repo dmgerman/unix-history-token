@@ -77,7 +77,7 @@ typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct datapoint
+argument|datapoint
 argument_list|)
 name|dphead_t
 expr_stmt|;
@@ -123,7 +123,7 @@ name|epoch
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct datapoint
+argument|datapoint
 argument_list|)
 name|list
 expr_stmt|;

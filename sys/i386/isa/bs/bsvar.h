@@ -847,7 +847,7 @@ name|bsccb
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct bsccb
+argument|bsccb
 argument_list|)
 name|ccb_chain
 expr_stmt|;
@@ -931,7 +931,7 @@ block|{
 comment|/*0*/
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct targ_info
+argument|targ_info
 argument_list|)
 name|ti_tchain
 expr_stmt|;
@@ -939,7 +939,7 @@ comment|/* targ_info link */
 comment|/*4*/
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct targ_info
+argument|targ_info
 argument_list|)
 name|ti_wchain
 expr_stmt|;
@@ -1135,7 +1135,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|titab
 argument_list|,
-expr|struct
 name|targ_info
 argument_list|)
 expr_stmt|;

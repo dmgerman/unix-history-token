@@ -541,7 +541,7 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct usbd_pipe
+argument|usbd_pipe
 argument_list|)
 name|pipes
 expr_stmt|;
@@ -577,13 +577,13 @@ decl_stmt|;
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct usbd_xfer
+argument|usbd_xfer
 argument_list|)
 name|queue
 expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct usbd_pipe
+argument|usbd_pipe
 argument_list|)
 name|next
 expr_stmt|;
@@ -684,7 +684,7 @@ name|URQ_DEV_DMABUF
 value|0x20
 name|SIMPLEQ_ENTRY
 argument_list|(
-argument|struct usbd_xfer
+argument|usbd_xfer
 argument_list|)
 name|next
 expr_stmt|;

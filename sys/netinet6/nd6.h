@@ -439,7 +439,7 @@ name|nd_defrouter
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct nd_defrouter
+argument|nd_defrouter
 argument_list|)
 name|dr_entry
 expr_stmt|;
@@ -476,7 +476,7 @@ name|ndpr_ifp
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct nd_prefix
+argument|nd_prefix
 argument_list|)
 name|ndpr_entry
 expr_stmt|;
@@ -520,7 +520,7 @@ name|LIST_HEAD
 argument_list|(
 argument|pr_rtrhead
 argument_list|,
-argument|struct nd_pfxrouter
+argument|nd_pfxrouter
 argument_list|)
 name|ndpr_advrtrs
 expr_stmt|;
@@ -702,7 +702,7 @@ name|nd_pfxrouter
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct nd_pfxrouter
+argument|nd_pfxrouter
 argument_list|)
 name|pfr_entry
 expr_stmt|;
@@ -720,7 +720,6 @@ name|LIST_HEAD
 argument_list|(
 name|nd_drhead
 argument_list|,
-expr|struct
 name|nd_defrouter
 argument_list|)
 expr_stmt|;
@@ -731,7 +730,6 @@ name|LIST_HEAD
 argument_list|(
 name|nd_prhead
 argument_list|,
-expr|struct
 name|nd_prefix
 argument_list|)
 expr_stmt|;

@@ -27,7 +27,7 @@ name|ntvattr
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct ntvattr
+argument|ntvattr
 argument_list|)
 name|va_list
 expr_stmt|;

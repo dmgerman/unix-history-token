@@ -55,7 +55,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|ccb_queue
 argument_list|,
-expr|struct
 name|ccb_hdr
 argument_list|)
 expr_stmt|;

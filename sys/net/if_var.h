@@ -79,7 +79,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|ifnethead
 argument_list|,
-expr|struct
 name|ifnet
 argument_list|)
 expr_stmt|;
@@ -94,7 +93,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|ifaddrhead
 argument_list|,
-expr|struct
 name|ifaddr
 argument_list|)
 expr_stmt|;
@@ -109,7 +107,6 @@ name|TAILQ_HEAD
 argument_list|(
 name|ifprefixhead
 argument_list|,
-expr|struct
 name|ifprefix
 argument_list|)
 expr_stmt|;
@@ -120,7 +117,6 @@ name|LIST_HEAD
 argument_list|(
 name|ifmultihead
 argument_list|,
-expr|struct
 name|ifmultiaddr
 argument_list|)
 expr_stmt|;
@@ -177,7 +173,7 @@ decl_stmt|;
 comment|/* name, e.g. ``en'' or ``lo'' */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct ifnet
+argument|ifnet
 argument_list|)
 name|if_link
 expr_stmt|;
@@ -939,7 +935,7 @@ decl_stmt|;
 comment|/* back-pointer to interface */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct ifaddr
+argument|ifaddr
 argument_list|)
 name|ifa_link
 expr_stmt|;
@@ -1053,7 +1049,7 @@ decl_stmt|;
 comment|/* back-pointer to interface */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct ifprefix
+argument|ifprefix
 argument_list|)
 name|ifpr_list
 expr_stmt|;
@@ -1080,7 +1076,7 @@ name|ifmultiaddr
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct ifmultiaddr
+argument|ifmultiaddr
 argument_list|)
 name|ifma_link
 expr_stmt|;

@@ -68,14 +68,14 @@ name|si_udev
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct specinfo
+argument|specinfo
 argument_list|)
 name|si_hash
 expr_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct vnode
+argument|vnode
 argument_list|)
 name|si_hlist
 expr_stmt|;

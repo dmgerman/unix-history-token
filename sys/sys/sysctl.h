@@ -315,7 +315,6 @@ name|SLIST_HEAD
 argument_list|(
 name|sysctl_oid_list
 argument_list|,
-expr|struct
 name|sysctl_oid
 argument_list|)
 expr_stmt|;
@@ -336,7 +335,7 @@ name|oid_parent
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct sysctl_oid
+argument|sysctl_oid
 argument_list|)
 name|oid_link
 expr_stmt|;

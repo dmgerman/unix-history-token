@@ -305,13 +305,13 @@ union|union
 block|{
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct ida_qcb
+argument|ida_qcb
 argument_list|)
 name|stqe
 expr_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct ida_qcb
+argument|ida_qcb
 argument_list|)
 name|sle
 expr_stmt|;
@@ -506,14 +506,14 @@ comment|/* kernel QCB array */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ida_qcb
+argument|ida_qcb
 argument_list|)
 name|free_qcbs
 expr_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct ida_qcb
+argument|ida_qcb
 argument_list|)
 name|qcb_queue
 expr_stmt|;

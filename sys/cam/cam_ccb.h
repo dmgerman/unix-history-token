@@ -657,25 +657,25 @@ union|union
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct ccb_hdr
+argument|ccb_hdr
 argument_list|)
 name|le
 expr_stmt|;
 name|SLIST_ENTRY
 argument_list|(
-argument|struct ccb_hdr
+argument|ccb_hdr
 argument_list|)
 name|sle
 expr_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct ccb_hdr
+argument|ccb_hdr
 argument_list|)
 name|tqe
 expr_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct ccb_hdr
+argument|ccb_hdr
 argument_list|)
 name|stqe
 expr_stmt|;

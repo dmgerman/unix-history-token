@@ -5072,7 +5072,7 @@ name|__res_type_list
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|struct __res_type_list
+argument|__res_type_list
 argument_list|)
 name|rtl_entry
 expr_stmt|;

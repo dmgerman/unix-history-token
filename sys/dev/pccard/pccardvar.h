@@ -272,7 +272,7 @@ name|maxtwins
 decl_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct pccard_config_entry
+argument|pccard_config_entry
 argument_list|)
 name|cfe_list
 expr_stmt|;
@@ -311,13 +311,13 @@ decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct pccard_config_entry
+argument|pccard_config_entry
 argument_list|)
 name|cfe_head
 expr_stmt|;
 name|STAILQ_ENTRY
 argument_list|(
-argument|struct pccard_function
+argument|pccard_function
 argument_list|)
 name|pf_list
 expr_stmt|;
@@ -448,7 +448,7 @@ value|{ NULL, NULL, NULL, NULL }
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct pccard_function
+argument|pccard_function
 argument_list|)
 name|pf_head
 expr_stmt|;

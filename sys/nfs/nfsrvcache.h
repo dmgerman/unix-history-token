@@ -38,14 +38,14 @@ name|nfsrvcache
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct nfsrvcache
+argument|nfsrvcache
 argument_list|)
 name|rc_lru
 expr_stmt|;
 comment|/* LRU chain */
 name|LIST_ENTRY
 argument_list|(
-argument|struct nfsrvcache
+argument|nfsrvcache
 argument_list|)
 name|rc_hash
 expr_stmt|;

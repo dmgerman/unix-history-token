@@ -47,7 +47,7 @@ name|packet_filter_hook
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct packet_filter_hook
+argument|packet_filter_hook
 argument_list|)
 name|pfil_link
 expr_stmt|;
@@ -117,7 +117,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|pfil_list
 argument_list|,
-argument|struct packet_filter_hook
+argument|packet_filter_hook
 argument_list|)
 name|pfil_list_t
 expr_stmt|;

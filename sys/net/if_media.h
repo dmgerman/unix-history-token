@@ -94,7 +94,7 @@ name|ifmedia_entry
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct ifmedia_entry
+argument|ifmedia_entry
 argument_list|)
 name|ifm_list
 expr_stmt|;
@@ -140,7 +140,7 @@ comment|/* currently selected media */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct ifmedia_entry
+argument|ifmedia_entry
 argument_list|)
 name|ifm_list
 expr_stmt|;

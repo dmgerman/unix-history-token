@@ -133,7 +133,7 @@ name|natmpcb
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|struct natmpcb
+argument|natmpcb
 argument_list|)
 name|pcblist
 expr_stmt|;
@@ -280,7 +280,6 @@ name|LIST_HEAD
 argument_list|(
 name|npcblist
 argument_list|,
-expr|struct
 name|natmpcb
 argument_list|)
 expr_stmt|;

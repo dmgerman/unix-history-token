@@ -8004,7 +8004,6 @@ name|rl
 argument_list|,
 name|rle
 argument_list|,
-expr|struct
 name|resource_list_entry
 argument_list|,
 name|link

@@ -442,14 +442,14 @@ name|aiocblist
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct aiocblist
+argument|aiocblist
 argument_list|)
 name|list
 expr_stmt|;
 comment|/* List of jobs */
 name|TAILQ_ENTRY
 argument_list|(
-argument|struct aiocblist
+argument|aiocblist
 argument_list|)
 name|plist
 expr_stmt|;

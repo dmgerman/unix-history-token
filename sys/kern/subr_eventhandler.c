@@ -54,7 +54,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct eventhandler_list
+argument|eventhandler_list
 argument_list|)
 name|eventhandler_lists
 expr_stmt|;

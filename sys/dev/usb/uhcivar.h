@@ -84,7 +84,7 @@ name|stdend
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|struct uhci_intr_info
+argument|uhci_intr_info
 argument_list|)
 name|list
 expr_stmt|;
@@ -343,7 +343,7 @@ comment|/* QH free list */
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
-argument|struct usbd_xfer
+argument|usbd_xfer
 argument_list|)
 name|sc_free_xfers
 expr_stmt|;
@@ -365,7 +365,7 @@ decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|struct uhci_intr_info
+argument|uhci_intr_info
 argument_list|)
 name|sc_intrhead
 expr_stmt|;
