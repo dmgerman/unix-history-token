@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wellknown.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/in.h>
 end_include
 
@@ -81,7 +75,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
