@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.1, Mon Jul 10 21:55:11 MSD 1995  */
+comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.8, Thu Sep 28 20:24:38 MSK 1995  */
 end_comment
 
 begin_comment
@@ -527,7 +527,7 @@ comment|/* execute packet command */
 end_comment
 
 begin_comment
-comment|/*  * Packet commands  */
+comment|/*  * Mandatory packet commands  */
 end_comment
 
 begin_define
@@ -621,39 +621,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_PLAY_MSF
-value|0x47
-end_define
-
-begin_comment
-comment|/* play by MSF address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_PLAY_TRACK
-value|0x48
-end_define
-
-begin_comment
-comment|/* play by track number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_PAUSE
-value|0x4b
-end_define
-
-begin_comment
-comment|/* stop/start audio operation */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ATAPI_MODE_SELECT_BIG
 value|0x55
 end_define
@@ -671,6 +638,58 @@ end_define
 
 begin_comment
 comment|/* get device parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_PLAY_CD
+value|0xb4
+end_define
+
+begin_comment
+comment|/* universal play command */
+end_comment
+
+begin_comment
+comment|/*  * Optional packet commands  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_PLAY_MSF
+value|0x47
+end_define
+
+begin_comment
+comment|/* play by MSF address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_PAUSE
+value|0x4b
+end_define
+
+begin_comment
+comment|/* stop/start audio operation */
+end_comment
+
+begin_comment
+comment|/*  * Nonstandard packet commands  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_PLAY_TRACK
+value|0x48
+end_define
+
+begin_comment
+comment|/* play by track number */
 end_comment
 
 begin_define
@@ -702,10 +721,12 @@ define|#
 directive|define
 name|AT_PSIZE_12
 value|0
+comment|/* 12 bytes */
 define|#
 directive|define
 name|AT_PSIZE_16
 value|1
+comment|/* 16 bytes */
 name|unsigned
 label|:
 literal|3
@@ -742,7 +763,7 @@ name|devtype
 range|:
 literal|5
 decl_stmt|;
-comment|/* packet command size */
+comment|/* device type */
 define|#
 directive|define
 name|AT_TYPE_DIRECT
@@ -772,7 +793,7 @@ name|proto
 range|:
 literal|2
 decl_stmt|;
-comment|/* packet command size */
+comment|/* command protocol */
 define|#
 directive|define
 name|AT_PROTO_ATAPI
@@ -878,7 +899,6 @@ comment|/* DMA cycle timing */
 name|u_short
 name|flags
 decl_stmt|;
-comment|/* flags */
 define|#
 directive|define
 name|AT_FLAG_54_58
