@@ -2758,7 +2758,10 @@ literal|0
 condition|)
 name|s
 operator|=
+name|strdup
+argument_list|(
 name|PATH_LINTLIB
+argument_list|)
 expr_stmt|;
 name|appcstrg
 argument_list|(
