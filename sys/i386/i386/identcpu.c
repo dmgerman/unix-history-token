@@ -2054,6 +2054,7 @@ argument_list|,
 literal|"Overdrive CPU"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|0x0e
 case|:
