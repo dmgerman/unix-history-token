@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c 4.1 %G%"
+literal|"@(#)command.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -996,6 +996,48 @@ index|]
 operator|=
 name|dot
 expr_stmt|;
+name|IF
+name|kcore
+operator|&&
+name|savc
+operator|==
+literal|'p'
+name|THEN
+name|int
+name|pte
+operator|=
+name|access
+argument_list|(
+name|RD
+argument_list|,
+name|dot
+argument_list|,
+name|DSP
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"pte %X\n"
+argument_list|,
+name|pte
+argument_list|)
+expr_stmt|;
+name|masterpcbb
+operator|=
+operator|(
+name|pte
+operator|&
+name|PG_PFNUM
+operator|)
+operator|*
+literal|512
+expr_stmt|;
+name|getpcb
+argument_list|()
+expr_stmt|;
+name|FI
 name|ELSE
 name|error
 parameter_list|(

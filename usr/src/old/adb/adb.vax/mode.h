@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mode.h	4.1	81/05/14	*/
+comment|/*	mode.h	4.2	81/05/14	*/
 end_comment
 
 begin_include
@@ -237,6 +237,10 @@ name|rname
 decl_stmt|;
 name|INT
 name|roffs
+decl_stmt|;
+name|int
+modifier|*
+name|rkern
 decl_stmt|;
 block|}
 struct|;

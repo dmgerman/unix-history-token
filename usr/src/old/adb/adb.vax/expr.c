@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expr.c 4.1 %G%"
+literal|"@(#)expr.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -909,8 +909,24 @@ argument_list|(
 argument|savc
 argument_list|)
 name|THEN
+name|IF
+name|kcore
+name|THEN
 name|expv
 operator|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|regptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ELSE
+name|expv
+init|=
 operator|*
 operator|(
 name|ADDR
@@ -930,7 +946,8 @@ operator|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
+name|FI
 name|ELIF
 argument_list|(
 name|base
@@ -940,18 +957,16 @@ argument_list|(
 name|savc
 argument_list|)
 argument_list|)
-operator|!=
-operator|-
-literal|1
+decl|!= -1
 name|THEN
 name|expv
-operator|=
+init|=
 name|var
 index|[
 name|base
 index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|ELSE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.1	81/05/14	*/
+comment|/*	defs.h	4.2	81/05/14	*/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pte.h>
 end_include
 
 begin_include
@@ -672,6 +678,45 @@ name|fault
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|pcb
+name|pcb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kernel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kcore
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
+modifier|*
+name|sbr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|slr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|masterpcbb
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
