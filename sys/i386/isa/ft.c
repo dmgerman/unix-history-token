@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.16 1995/03/26 19:28:22 rgrimes Exp $  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
+comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.17 1995/03/28 07:55:26 bde Exp $  *  *  01/19/95 ++sg  *  Cleaned up recalibrate/seek code at attach time for FreeBSD 2.x.  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
 end_comment
 
 begin_include
@@ -2130,6 +2130,8 @@ parameter_list|(
 name|isadev
 parameter_list|,
 name|fdup
+parameter_list|,
+name|unithasfd
 parameter_list|)
 name|struct
 name|isa_device
@@ -2140,6 +2142,12 @@ decl|*
 name|fdup
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|unithasfd
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2377,7 +2385,14 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*    *  FT_INSIGHT - insight style    */
+comment|/*    *  FT_INSIGHT - insight style    *    *  Since insight requires turning the drive motor on, we will not    *  perform this probe if a floppy drive was already found with the    *  the given unit and controller.    */
+if|if
+condition|(
+name|unithasfd
+condition|)
+goto|goto
+name|out
+goto|;
 name|tape_start
 argument_list|(
 name|ftu
@@ -7684,6 +7699,11 @@ name|retries
 operator|++
 control|)
 block|{
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 name|out_fdc
 argument_list|(
 name|fdcu
@@ -7698,6 +7718,17 @@ argument_list|(
 name|fdcu
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|st0
+operator|&
+literal|0xc0
+operator|)
+operator|==
+literal|0x80
+condition|)
+continue|continue;
 name|pcn
 operator|=
 name|in_fdc
@@ -7728,11 +7759,6 @@ goto|goto
 name|intrdone
 goto|;
 block|}
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 block|}
@@ -8692,6 +8718,21 @@ name|s
 decl_stmt|,
 name|mbits
 decl_stmt|;
+specifier|static
+name|int
+name|mbmotor
+index|[]
+init|=
+block|{
+name|FDO_MOEN0
+block|,
+name|FDO_MOEN1
+block|,
+name|FDO_MOEN2
+block|,
+name|FDO_MOEN3
+block|}
+decl_stmt|;
 name|s
 operator|=
 name|splbio
@@ -8731,25 +8772,26 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* raise reset, enable DMA, motor on if needed */
+name|mbits
+operator|=
+name|ftu
+operator|&
+literal|3
+expr_stmt|;
 if|if
 condition|(
 name|motor
+operator|&&
+name|ftu
+operator|<
+literal|4
 condition|)
 name|mbits
-operator|=
-operator|(
-operator|!
+operator||=
+name|mbmotor
+index|[
 name|ftu
-operator|)
-condition|?
-name|FDO_MOEN0
-else|:
-name|FDO_MOEN1
-expr_stmt|;
-else|else
-name|mbits
-operator|=
-literal|0
+index|]
 expr_stmt|;
 name|outb
 argument_list|(
