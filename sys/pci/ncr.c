@@ -412,19 +412,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/ncrreg.h>
+file|<dev/pci/ncrreg.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: if_mn.c,v 1.1 1999/02/01 13:06:40 phk Exp $  *  * Driver for Siemens reference design card "Easy321-R1".  *  * This card contains a FALC54 E1/T1 framer and a MUNICH32X 32-channel HDLC  * controller.   *  * The driver supports E1 mode with up to 31 channels.  We send CRC4 but don't  * check it coming in.  *  * The FALC54 and MUNICH32X have far too many registers and weird modes for  * comfort, so I have not bothered typing it all into a "fooreg.h" file,  * you will (badly!) need the documentation anyway if you want to mess with  * this gadget.  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: if_mn.c,v 1.38 2003/06/11 06:24:36 obrien Exp $  *  * Driver for Siemens reference design card "Easy321-R1".  *  * This card contains a FALC54 E1/T1 framer and a MUNICH32X 32-channel HDLC  * controller.   *  * The driver supports E1 mode with up to 31 channels.  We send CRC4 but don't  * check it coming in.  *  * The FALC54 and MUNICH32X have far too many registers and weird modes for  * comfort, so I have not bothered typing it all into a "fooreg.h" file,  * you will (badly!) need the documentation anyway if you want to mess with  * this gadget.  */
 end_comment
 
 begin_include
@@ -95,13 +95,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
