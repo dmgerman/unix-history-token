@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|DFLDSIZ
-value|(6*1024*1024)
+value|(16*1024*1024)
 end_define
 
 begin_comment
