@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_usrreq.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_usrreq.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1180,6 +1180,24 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|op
+operator|==
+name|PRCO_SETOPT
+operator|&&
+operator|*
+name|mp
+condition|)
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+operator|*
+name|mp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ECONNRESET
@@ -1336,7 +1354,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|ENOPROTOOPT
 expr_stmt|;
 break|break;
 block|}
@@ -1421,7 +1439,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|ENOPROTOOPT
 expr_stmt|;
 break|break;
 block|}
