@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  * This program patches a filesystem into a kernel made with MFS_ROOT  * option.  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  * This program patches a filesystem into a kernel made with MD_ROOT  * option.  */
 end_comment
 
 begin_include
@@ -428,7 +428,7 @@ name|strcmp
 argument_list|(
 name|p
 argument_list|,
-literal|"MFS Filesystem goes here"
+literal|"MD Filesystem goes here"
 argument_list|)
 condition|)
 goto|goto
@@ -438,7 +438,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"MFS filesystem signature not found in %s\n"
+literal|"MD filesystem signature not found in %s\n"
 argument_list|,
 name|argv
 index|[
@@ -606,7 +606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * I added a '-f' option to force writing the image into the kernel, even when  * there is already data (i.e. not zero) in the written area. This is useful  * to rewrite a changed MFS-image. Beware: If the written image is larger than  * the space reserved in the kernel (with option MFS_ROOT) then  * THIS WILL CORRUPT THE KERNEL!  *  */
+comment|/*  * I added a '-f' option to force writing the image into the kernel, even when  * there is already data (i.e. not zero) in the written area. This is useful  * to rewrite a changed MD-image. Beware: If the written image is larger than  * the space reserved in the kernel (with option MD_ROOT) then  * THIS WILL CORRUPT THE KERNEL!  *  */
 end_comment
 
 end_unit
