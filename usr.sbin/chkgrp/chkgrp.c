@@ -186,6 +186,8 @@ name|err
 argument_list|(
 name|EX_IOERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gfn
 argument_list|)
 expr_stmt|;
