@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	7.8 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.h	7.9 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  */
+comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_FILLED and PG_DIRTY are added for the filesystems.  */
 end_comment
 
 begin_define
@@ -194,6 +194,28 @@ end_define
 
 begin_comment
 comment|/* page is placeholder for pagein (O) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_FILLED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* client flag to set when filled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_DIRTY
+value|0x1000
+end_define
+
+begin_comment
+comment|/* client flag to set when dirty */
 end_comment
 
 begin_define
@@ -468,40 +490,6 @@ parameter_list|)
 value|{ (m)->flags&= ~PG_CLEAN; }
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_DEBUG_INIT
-parameter_list|(
-name|m
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_DEBUG_INIT
-parameter_list|(
-name|m
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -513,7 +501,7 @@ name|object
 parameter_list|,
 name|offset
 parameter_list|)
-value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->page_lock = VM_PROT_NONE; \ 	(mem)->unlock_request = VM_PROT_NONE; \ 	(mem)->wire_count = 0; \ 	VM_PAGE_DEBUG_INIT(mem); \ }
+value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->page_lock = VM_PROT_NONE; \ 	(mem)->unlock_request = VM_PROT_NONE; \ 	(mem)->wire_count = 0; \ }
 end_define
 
 begin_decl_stmt
