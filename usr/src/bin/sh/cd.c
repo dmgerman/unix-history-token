@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cd.c	5.2 (Berkeley) %G%"
+literal|"@(#)cd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,28 +221,6 @@ name|cdcomppath
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|UDIR
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|didudir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if /u/logname expanded */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|cdcmd
@@ -429,19 +407,6 @@ modifier|*
 name|dest
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|UDIR
-if|if
-condition|(
-name|didudir
-condition|)
-name|print
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|INTOFF
 expr_stmt|;
 if|if
@@ -546,19 +511,6 @@ name|print
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|UDIR
-if|if
-condition|(
-name|didudir
-condition|)
-name|print
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|top
 label|:
 name|cdcomppath
