@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1320,6 +1320,11 @@ for|for
 control|(
 name|p
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 name|allproc
 init|;
 name|p
@@ -2176,6 +2181,11 @@ for|for
 control|(
 name|p
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 name|allproc
 init|;
 name|p

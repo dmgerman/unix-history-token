@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -279,6 +279,11 @@ for|for
 control|(
 name|p2
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 name|allproc
 init|;
 name|p2
@@ -439,6 +444,11 @@ expr_stmt|;
 comment|/* 		 * Scan the active and zombie procs to check whether this pid 		 * is in use.  Remember the lowest pid that's greater 		 * than nextpid, so we can avoid checking for a while. 		 */
 name|p2
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 name|allproc
 expr_stmt|;
 name|again
@@ -578,6 +588,11 @@ name|p2
 operator|->
 name|p_nxt
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
 name|allproc
 expr_stmt|;
 name|p2
@@ -596,6 +611,12 @@ name|p2
 operator|->
 name|p_prev
 operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|*
+operator|)
 operator|&
 name|allproc
 expr_stmt|;
