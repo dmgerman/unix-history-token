@@ -1345,14 +1345,10 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-name|int
-name|cnt
-decl_stmt|,
+name|gid_t
 name|gid
 decl_stmt|,
 name|lastgid
-decl_stmt|,
-name|ngroups
 decl_stmt|,
 name|groups
 index|[
@@ -1360,6 +1356,11 @@ name|NGROUPS
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|int
+name|cnt
+decl_stmt|,
+name|ngroups
 decl_stmt|;
 operator|(
 name|void

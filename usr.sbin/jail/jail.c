@@ -157,13 +157,14 @@ name|struct
 name|in_addr
 name|in
 decl_stmt|;
-name|int
-name|ch
-decl_stmt|,
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
 index|]
+decl_stmt|;
+name|int
+name|ch
 decl_stmt|,
 name|i
 decl_stmt|,

@@ -11063,15 +11063,16 @@ name|group
 modifier|*
 name|gr
 decl_stmt|;
-name|int
-name|ngroups
-decl_stmt|,
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|int
+name|ngroups
 decl_stmt|;
 name|cr
 operator|->
@@ -11220,7 +11221,7 @@ argument_list|,
 literal|"too many groups"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Convert from int's to gid_t's and compress out duplicate 		 */
+comment|/* 		 * Compress out duplicate. 		 */
 name|cr
 operator|->
 name|cr_ngroups
