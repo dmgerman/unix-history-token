@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netgraph/ng_message.h>
+file|<netgraph.h>
 end_include
 
 begin_define

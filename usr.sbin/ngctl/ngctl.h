@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netgraph.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_socket.h>
 end_include
 
