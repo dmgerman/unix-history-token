@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.49 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.50 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.49 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.50 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1749,7 +1749,7 @@ name|NULL
 condition|)
 name|uname
 operator|=
-name|DefUser
+literal|""
 expr_stmt|;
 else|else
 name|uname
@@ -5830,15 +5830,10 @@ condition|(
 name|user
 operator|==
 name|NULL
-operator|||
-operator|*
-name|user
-operator|==
-literal|'\0'
 condition|)
 name|user
 operator|=
-name|DefUser
+literal|""
 expr_stmt|;
 comment|/* 	**  Set up addr fields for controlling user. 	*/
 name|a
@@ -5890,6 +5885,11 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|user
+operator|!=
+literal|'\0'
+operator|&&
 operator|(
 name|pw
 operator|=
@@ -5938,21 +5938,15 @@ argument_list|(
 name|user
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
 block|}
 else|else
 block|{
-name|a
-operator|->
-name|q_uid
-operator|=
-name|DefUid
-expr_stmt|;
-name|a
-operator|->
-name|q_gid
-operator|=
-name|DefGid
-expr_stmt|;
 name|a
 operator|->
 name|q_user
@@ -5967,8 +5961,6 @@ name|a
 operator|->
 name|q_flags
 operator||=
-name|QGOODUID
-operator||
 name|QPRIMARY
 expr_stmt|;
 comment|/* flag as a "ctladdr"  */
