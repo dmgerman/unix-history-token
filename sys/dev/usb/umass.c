@@ -1913,10 +1913,9 @@ name|Static
 name|void
 name|umass_cam_rescan
 parameter_list|(
-name|struct
-name|umass_softc
+name|void
 modifier|*
-name|sc
+name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8797,12 +8796,24 @@ name|Static
 name|void
 name|umass_cam_rescan
 parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{
+comment|/* Note: The sc is only passed in for debugging prints. If the device 	 * is disconnected before umass_cam_rescan has been able to run the 	 * driver might bomb. 	 */
 name|struct
 name|umass_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|umass_softc
+operator|*
+operator|)
+name|addr
+decl_stmt|;
 name|struct
 name|cam_path
 modifier|*
@@ -9042,9 +9053,17 @@ name|cold
 condition|)
 block|{
 comment|/* Notify CAM of the new device. Any failure is benign, as the 		 * user can still do it by hand (camcontrol rescan<busno>). 		 * Only do this if we are not booting, because CAM does a scan 		 * after booting has completed, when interrupts have been 		 * enabled. 		 */
-name|umass_cam_rescan
+comment|/* XXX This will bomb if the driver is unloaded between attach 		 * and execution of umass_cam_rescan. 		 */
+name|timeout
 argument_list|(
+name|umass_cam_rescan
+argument_list|,
 name|sc
+argument_list|,
+name|MS_TO_TICKS
+argument_list|(
+literal|200
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
