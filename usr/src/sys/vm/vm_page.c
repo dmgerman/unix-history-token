@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.c	7.3 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.c	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -1326,6 +1326,22 @@ name|vm_offset_t
 name|offset
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+define|#
+directive|define
+name|vm_page_init
+parameter_list|(
+name|mem
+parameter_list|,
+name|object
+parameter_list|,
+name|offset
+parameter_list|)
+value|{\ 		(mem)->busy = TRUE; \ 		(mem)->tabled = FALSE; \ 		vm_page_insert((mem), (object), (offset)); \ 		(mem)->absent = FALSE; \ 		(mem)->fictitious = FALSE; \ 		(mem)->page_lock = VM_PROT_NONE; \ 		(mem)->unlock_request = VM_PROT_NONE; \ 		(mem)->laundry = FALSE; \ 		(mem)->active = FALSE; \ 		(mem)->inactive = FALSE; \ 		(mem)->wire_count = 0; \ 		(mem)->clean = TRUE; \ 		(mem)->copy_on_write = FALSE; \ 		(mem)->fake = TRUE; \ 		(mem)->pagerowned = FALSE; \ 		(mem)->ptpage = FALSE; \ 	}
+else|#
+directive|else
 define|#
 directive|define
 name|vm_page_init
@@ -1337,6 +1353,8 @@ parameter_list|,
 name|offset
 parameter_list|)
 value|{\ 		(mem)->busy = TRUE; \ 		(mem)->tabled = FALSE; \ 		vm_page_insert((mem), (object), (offset)); \ 		(mem)->absent = FALSE; \ 		(mem)->fictitious = FALSE; \ 		(mem)->page_lock = VM_PROT_NONE; \ 		(mem)->unlock_request = VM_PROT_NONE; \ 		(mem)->laundry = FALSE; \ 		(mem)->active = FALSE; \ 		(mem)->inactive = FALSE; \ 		(mem)->wire_count = 0; \ 		(mem)->clean = TRUE; \ 		(mem)->copy_on_write = FALSE; \ 		(mem)->fake = TRUE; \ 	}
+endif|#
+directive|endif
 name|vm_page_init
 argument_list|(
 name|mem
