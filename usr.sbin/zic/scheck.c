@@ -77,7 +77,6 @@ file|"private.h"
 end_include
 
 begin_function
-specifier|const
 name|char
 modifier|*
 name|scheck
@@ -120,7 +119,6 @@ name|int
 name|c
 decl_stmt|;
 specifier|register
-specifier|const
 name|char
 modifier|*
 name|result
@@ -362,6 +360,10 @@ literal|1
 condition|)
 name|result
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|format
 expr_stmt|;
 name|ifree
