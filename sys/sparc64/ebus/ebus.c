@@ -1275,6 +1275,7 @@ name|dinfo
 operator|->
 name|edi_compat
 expr_stmt|;
+break|break;
 case|case
 name|EBUS_IVAR_NAME
 case|:
@@ -1984,6 +1985,8 @@ name|i
 index|]
 operator|.
 name|size
+operator|-
+literal|1
 argument_list|,
 name|reg
 index|[
@@ -2084,6 +2087,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|reg
+argument_list|,
+name|M_OFWPROP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|edi
@@ -2093,7 +2103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NOTE: This does not free the name member (it is needed afterwars in some  * cases).  */
+comment|/*  * NOTE: This does not free the name member (it is needed afterwards in some  * cases).  */
 end_comment
 
 begin_function
