@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1242,62 +1242,35 @@ end_define
 
 begin_macro
 name|initprofclock
-argument_list|()
+argument_list|(
+argument|profprocs
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|profprocs
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-if|#
-directive|if
-name|NCLOCK
-operator|>
-literal|0
+specifier|register
 name|struct
-name|proc
+name|clkreg
 modifier|*
-name|p
+name|clk
 init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
-comment|/* 	 * If the high-res timer is running, force profiling off. 	 * Unfortunately, this gets reflected back to the user not as 	 * an error but as a lack of results. 	 */
-if|if
-condition|(
-name|clockon
-condition|)
-block|{
-name|p
-operator|->
-name|p_stats
-operator|->
-name|p_prof
-operator|.
-name|pr_scale
-operator|=
+operator|(
+expr|struct
+name|clkreg
+operator|*
+operator|)
+name|clkstd
+index|[
 literal|0
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Keep track of the number of user processes that are profiling 	 * by checking the scale value. 	 * 	 * XXX: this all assumes that the profiling code is well behaved; 	 * i.e. profil() is called once per process with pcscale non-zero 	 * to turn it on, and once with pcscale zero to turn it off. 	 * Also assumes you don't do any forks or execs.  Oh well, there 	 * is always adb... 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_stats
-operator|->
-name|p_prof
-operator|.
-name|pr_scale
-condition|)
-name|profprocs
-operator|++
-expr_stmt|;
-else|else
-name|profprocs
-operator|--
-expr_stmt|;
-endif|#
-directive|endif
+index|]
+decl_stmt|;
 comment|/* 	 * The profile interrupt interval must be an even divisor 	 * of the CLK_INTERVAL so that scaling from a system clock 	 * tick to a profile clock tick is possible using integer math. 	 */
 if|if
 condition|(
@@ -1329,32 +1302,21 @@ name|hz
 operator|*
 name|profscale
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|startprofclock
-argument_list|()
-end_macro
-
-begin_block
+comment|/* 	 * If a process maps the clock, we fail silently. 	 * Unfortunately, this gets reflected back to the user not as 	 * an error but as a lack of results. 	 */
+if|if
+condition|(
+name|clockon
+condition|)
+return|return;
+switch|switch
+condition|(
+name|profprocs
+condition|)
 block|{
-specifier|register
-name|struct
-name|clkreg
-modifier|*
-name|clk
-init|=
-operator|(
-expr|struct
-name|clkreg
-operator|*
-operator|)
-name|clkstd
-index|[
-literal|0
-index|]
-decl_stmt|;
+case|case
+literal|1
+case|:
+comment|/* start clock */
 name|clk
 operator|->
 name|clk_msb3
@@ -1393,32 +1355,11 @@ name|clk_cr3
 operator|=
 name|CLK_IENAB
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|stopprofclock
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|clkreg
-modifier|*
-name|clk
-init|=
-operator|(
-expr|struct
-name|clkreg
-operator|*
-operator|)
-name|clkstd
-index|[
+break|break;
+case|case
 literal|0
-index|]
-decl_stmt|;
+case|:
+comment|/* stop clock */
 name|clk
 operator|->
 name|clk_cr2
@@ -1431,6 +1372,8 @@ name|clk_cr3
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+block|}
 block|}
 end_block
 
