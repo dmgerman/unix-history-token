@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.28 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.29 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.28 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.29 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -962,7 +962,6 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|firstline
 condition|)
 return|return;
@@ -1930,6 +1929,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|firstone
 condition|)
 name|strcat
@@ -1965,6 +1965,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|firstone
 condition|)
 name|strcat
