@@ -9976,8 +9976,6 @@ name|is_procstack
 decl_stmt|,
 name|rv
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|Retry
 label|:
 name|PROC_LOCK
@@ -9998,9 +9996,7 @@ name|vmemlim
 operator|=
 name|lim_cur
 argument_list|(
-name|curthread
-operator|->
-name|td_proc
+name|p
 argument_list|,
 name|RLIMIT_VMEM
 argument_list|)

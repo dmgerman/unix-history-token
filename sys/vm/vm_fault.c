@@ -713,12 +713,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|vm_map_growstack
@@ -726,12 +720,6 @@ argument_list|(
 name|curproc
 argument_list|,
 name|vaddr
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
