@@ -2702,19 +2702,6 @@ name|Boolean
 name|dynamic
 decl_stmt|;
 comment|/* TRUE if the variable is local and we're 				 * expanding it in a non-local context. This 				 * is done to support dynamic sources. The 				 * result is just the invocation, unaltered */
-operator|*
-name|freePtr
-operator|=
-name|FALSE
-expr_stmt|;
-name|dynamic
-operator|=
-name|FALSE
-expr_stmt|;
-name|start
-operator|=
-name|str
-expr_stmt|;
 if|if
 condition|(
 name|str
@@ -2726,6 +2713,11 @@ literal|'\0'
 condition|)
 block|{
 comment|/* 	 * Error - there is only a dollar sign! 	 */
+operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
 operator|*
 name|lengthPtr
 operator|=
@@ -2924,6 +2916,11 @@ condition|)
 block|{
 comment|/* 	     * If we never did find the end character, return NULL 	     * right now, setting the length to be the distance to 	     * the end of the string, since that's what make does. 	     */
 operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
+operator|*
 name|lengthPtr
 operator|=
 name|tstr
@@ -2951,6 +2948,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* modify input string */
+name|start
+operator|=
+name|str
+expr_stmt|;
 name|Buf_AddByte
 argument_list|(
 name|buf
@@ -3313,6 +3314,10 @@ name|TRUE
 expr_stmt|;
 break|break;
 default|default:
+name|dynamic
+operator|=
+name|FALSE
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -3430,6 +3435,20 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+else|else
+block|{
+name|dynamic
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|dynamic
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3519,6 +3538,11 @@ return|;
 block|}
 else|else
 block|{
+operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
 name|Buf_Destroy
 argument_list|(
 name|buf
@@ -3538,6 +3562,18 @@ return|;
 block|}
 block|}
 block|}
+else|else
+block|{
+name|dynamic
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
 name|Buf_Destroy
 argument_list|(
 name|buf
@@ -3661,6 +3697,11 @@ break|break;
 block|}
 block|}
 comment|/* 	     * Error 	     */
+operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -3671,6 +3712,19 @@ name|varNoError
 operator|)
 return|;
 block|}
+name|dynamic
+operator|=
+name|FALSE
+expr_stmt|;
+name|start
+operator|=
+name|str
+expr_stmt|;
+operator|*
+name|freePtr
+operator|=
+name|FALSE
+expr_stmt|;
 name|haveModifier
 operator|=
 name|FALSE
