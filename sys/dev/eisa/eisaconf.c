@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.13 1996/01/29 03:13:20 gibbs Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.14 1996/01/31 18:02:19 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -2875,6 +2875,9 @@ modifier|*
 name|ma_prev
 decl_stmt|;
 comment|/* Prev Node entries relative to target address space */
+name|int
+name|retval
+decl_stmt|;
 name|offset
 operator|=
 name|req
@@ -3232,8 +3235,8 @@ name|offset
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
+name|retval
+operator|=
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -3244,7 +3247,16 @@ name|kdc
 operator|->
 name|kdc_datalen
 argument_list|)
-operator|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+return|return
+name|retval
 return|;
 block|}
 end_function
