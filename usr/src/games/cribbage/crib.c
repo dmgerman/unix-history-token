@@ -2,13 +2,31 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"deck.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cribbage.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cribcur.h"
 end_include
 
 begin_define
@@ -24,226 +42,6 @@ directive|define
 name|INSTRCMD
 value|"ul /usr/games/lib/crib.instr | more -f"
 end_define
-
-begin_decl_stmt
-name|CARD
-name|deck
-index|[
-name|CARDS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* a deck */
-end_comment
-
-begin_decl_stmt
-name|CARD
-name|phand
-index|[
-name|FULLHAND
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* player's hand */
-end_comment
-
-begin_decl_stmt
-name|CARD
-name|chand
-index|[
-name|FULLHAND
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* computer's hand */
-end_comment
-
-begin_decl_stmt
-name|CARD
-name|crib
-index|[
-name|CINHAND
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the crib */
-end_comment
-
-begin_decl_stmt
-name|CARD
-name|turnover
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the starter */
-end_comment
-
-begin_decl_stmt
-name|CARD
-name|known
-index|[
-name|CARDS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cards we have seen */
-end_comment
-
-begin_decl_stmt
-name|int
-name|knownum
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of cards we know */
-end_comment
-
-begin_decl_stmt
-name|int
-name|pscore
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* player score in current game */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cscore
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* comp score in current game */
-end_comment
-
-begin_decl_stmt
-name|int
-name|pgames
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number games player won */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cgames
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number games comp won */
-end_comment
-
-begin_decl_stmt
-name|int
-name|gamecount
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number games played */
-end_comment
-
-begin_decl_stmt
-name|int
-name|glimit
-init|=
-name|LGAME
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* game playe to glimit */
-end_comment
-
-begin_decl_stmt
-name|BOOLEAN
-name|iwon
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if comp won last game */
-end_comment
-
-begin_decl_stmt
-name|BOOLEAN
-name|explain
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* player mistakes explained */
-end_comment
-
-begin_decl_stmt
-name|BOOLEAN
-name|rflag
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if all cuts random */
-end_comment
-
-begin_decl_stmt
-name|BOOLEAN
-name|quiet
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if suppress random mess */
-end_comment
-
-begin_decl_stmt
-name|char
-name|expl
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* explanation */
-end_comment
 
 begin_function
 name|main
@@ -261,20 +59,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|fopen
-parameter_list|()
-function_decl|;
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-name|char
-modifier|*
-name|getline
-parameter_list|()
-function_decl|;
 specifier|register
 name|char
 modifier|*
@@ -292,6 +76,24 @@ name|char
 name|bust
 decl_stmt|;
 comment|/* flag for arg reader */
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+name|FILE
+modifier|*
+name|fopen
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|getline
+parameter_list|()
+function_decl|;
+name|int
+name|bye
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 operator|--
@@ -403,26 +205,105 @@ condition|)
 break|break;
 block|}
 block|}
+name|initscr
+argument_list|()
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|bye
+argument_list|)
+expr_stmt|;
+name|crmode
+argument_list|()
+expr_stmt|;
+name|noecho
+argument_list|()
+expr_stmt|;
+name|Playwin
+operator|=
+name|subwin
+argument_list|(
+name|stdscr
+argument_list|,
+name|PLAY_Y
+argument_list|,
+name|PLAY_X
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|Tablewin
+operator|=
+name|subwin
+argument_list|(
+name|stdscr
+argument_list|,
+name|TABLE_Y
+argument_list|,
+name|TABLE_X
+argument_list|,
+literal|0
+argument_list|,
+name|PLAY_X
+argument_list|)
+expr_stmt|;
+name|Compwin
+operator|=
+name|subwin
+argument_list|(
+name|stdscr
+argument_list|,
+name|COMP_Y
+argument_list|,
+name|COMP_X
+argument_list|,
+literal|0
+argument_list|,
+name|TABLE_X
+operator|+
+name|PLAY_X
+argument_list|)
+expr_stmt|;
+name|leaveok
+argument_list|(
+name|Playwin
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|leaveok
+argument_list|(
+name|Tablewin
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|leaveok
+argument_list|(
+name|Compwin
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|quiet
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nDo you need instructions for cribbage? "
+literal|"Do you need instructions for cribbage? "
 argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|getline
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|p
+name|getuchar
+argument_list|()
 operator|==
 literal|'Y'
 condition|)
@@ -432,9 +313,9 @@ argument_list|(
 name|INSTRCMD
 argument_list|)
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"\nFor the rules of this game, do 'man cribbage'\n"
+literal|"For the rules of this program, do \"man cribbage\""
 argument_list|)
 expr_stmt|;
 block|}
@@ -445,25 +326,23 @@ name|TRUE
 expr_stmt|;
 do|do
 block|{
-name|printf
+name|makeboard
+argument_list|()
+expr_stmt|;
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"\nL or S? "
+literal|"L or S? "
 else|:
-literal|"\nLong (to 121) or Short (to 61)? "
+literal|"Long (to 121) or Short (to 61)? "
 argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|getline
-argument_list|()
 expr_stmt|;
 name|glimit
 operator|=
 operator|(
-operator|*
-name|p
+name|getuchar
+argument_list|()
 operator|==
 literal|'S'
 condition|?
@@ -475,21 +354,16 @@ expr_stmt|;
 name|game
 argument_list|()
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"\nAnother game? "
+literal|"Another game? "
 argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|getline
-argument_list|()
 expr_stmt|;
 name|playing
 operator|=
 operator|(
-operator|*
-name|p
+name|getuchar
+argument_list|()
 operator|==
 literal|'Y'
 operator|)
@@ -533,11 +407,200 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+name|bye
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * play one game up to glimit points  */
+comment|/*  * bye:  *	Leave the program, cleaning things up as we go.  */
+end_comment
+
+begin_macro
+name|bye
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|mvcur
+argument_list|(
+literal|0
+argument_list|,
+name|COLS
+operator|-
+literal|1
+argument_list|,
+name|LINES
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|endwin
+argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * makeboard:  *	Print out the initial board on the screen  */
+end_comment
+
+begin_macro
+name|makeboard
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|extern
+name|int
+name|Lastscore
+index|[]
+decl_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|0
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"+---------------------------------------+"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|1
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|                                       |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|2
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|  .....:.....:.....:.....:.....:.....  |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|3
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|  .....:.....:.....:.....:.....:.....  |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|4
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|                                       |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|5
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|  .....:.....:.....:.....:.....:.....  |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|6
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|  .....:.....:.....:.....:.....:.....  |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|7
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"|                                       |"
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|8
+argument_list|,
+name|SCORE_X
+argument_list|,
+literal|"+---------------------------------------+"
+argument_list|)
+expr_stmt|;
+name|Lastscore
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|Lastscore
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * game:  *	Play one game up to glimit points  */
 end_comment
 
 begin_macro
@@ -586,7 +649,6 @@ if|if
 condition|(
 name|rflag
 condition|)
-block|{
 comment|/* player cuts deck */
 name|i
 operator|=
@@ -600,16 +662,15 @@ operator|%
 name|CARDS
 expr_stmt|;
 comment|/* random cut */
-block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"\nCut for crib? "
+literal|"Cut for crib? "
 else|:
-literal|"\nCut to see whose crib it is -- low card wins? "
+literal|"Cut to see whose crib it is -- low card wins? "
 argument_list|)
 expr_stmt|;
 name|i
@@ -646,7 +707,7 @@ operator|==
 name|i
 condition|)
 do|;
-name|printf
+name|addmsg
 argument_list|(
 name|quiet
 condition|?
@@ -655,7 +716,7 @@ else|:
 literal|"You cut the "
 argument_list|)
 expr_stmt|;
-name|printcard
+name|msgcard
 argument_list|(
 name|deck
 index|[
@@ -665,16 +726,19 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printf
+name|endmsg
+argument_list|()
+expr_stmt|;
+name|addmsg
 argument_list|(
 name|quiet
 condition|?
-literal|", I cut "
+literal|"I cut "
 else|:
-literal|",  I cut the "
+literal|"I cut the "
 argument_list|)
 expr_stmt|;
-name|printcard
+name|msgcard
 argument_list|(
 name|deck
 index|[
@@ -684,10 +748,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|".\n"
-argument_list|)
+name|endmsg
+argument_list|()
 expr_stmt|;
 name|flag
 operator|=
@@ -712,13 +774,13 @@ condition|(
 name|flag
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"We tied...\n"
+literal|"We tied..."
 else|:
-literal|"We tied and have to try again...\n"
+literal|"We tied and have to try again..."
 argument_list|)
 expr_stmt|;
 name|shuffle
@@ -729,9 +791,9 @@ expr_stmt|;
 continue|continue;
 block|}
 else|else
-block|{
 name|compcrib
 operator|=
+operator|(
 name|deck
 index|[
 name|i
@@ -745,8 +807,8 @@ name|j
 index|]
 operator|.
 name|rank
+operator|)
 expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
@@ -756,9 +818,9 @@ do|;
 block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"Loser (%s) gets first crib.\n"
+literal|"Loser (%s) gets first crib."
 argument_list|,
 operator|(
 name|iwon
@@ -805,9 +867,9 @@ operator|=
 operator|!
 name|compcrib
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"\nYou have %d points, I have %d.\n"
+literal|"You have %d points, I have %d."
 argument_list|,
 name|pscore
 argument_list|,
@@ -836,21 +898,12 @@ name|glimit
 operator|-
 name|cscore
 operator|>
-literal|30
-condition|)
-block|{
-if|if
-condition|(
-name|glimit
-operator|-
-name|cscore
-operator|>
 literal|60
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nYOU DOUBLE SKUNKED ME!\n\n"
+literal|"YOU DOUBLE SKUNKED ME!"
 argument_list|)
 expr_stmt|;
 name|pgames
@@ -858,11 +911,19 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|glimit
+operator|-
+name|cscore
+operator|>
+literal|30
+condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nYOU SKUNKED ME!\n\n"
+literal|"YOU SKUNKED ME!"
 argument_list|)
 expr_stmt|;
 name|pgames
@@ -870,12 +931,11 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nYOU WON!\n\n"
+literal|"YOU WON!"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -895,21 +955,12 @@ name|glimit
 operator|-
 name|pscore
 operator|>
-literal|30
-condition|)
-block|{
-if|if
-condition|(
-name|glimit
-operator|-
-name|pscore
-operator|>
 literal|60
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nI DOUBLE SKUNKED YOU!\n\n"
+literal|"I DOUBLE SKUNKED YOU!"
 argument_list|)
 expr_stmt|;
 name|cgames
@@ -917,11 +968,19 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|glimit
+operator|-
+name|pscore
+operator|>
+literal|30
+condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nI SKUNKED YOU!\n\n"
+literal|"I SKUNKED YOU!"
 argument_list|)
 expr_stmt|;
 name|cgames
@@ -929,12 +988,11 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"\nI WON!\n\n"
+literal|"I WON!"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -946,9 +1004,9 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-name|printf
+name|msg
 argument_list|(
-literal|"\nI have won %d games, you have won %d\n"
+literal|"I have won %d games, you have won %d"
 argument_list|,
 name|cgames
 argument_list|,
@@ -959,7 +1017,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * hand does up one hand of the game  */
+comment|/*  * playhand:  *	Do up one hand of the game  */
 end_comment
 
 begin_macro
@@ -981,6 +1039,42 @@ specifier|register
 name|int
 name|deckpos
 decl_stmt|;
+specifier|extern
+name|char
+name|Msgbuf
+index|[]
+decl_stmt|;
+name|werase
+argument_list|(
+name|Compwin
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|Compwin
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|CRIB_Y
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|clrtobot
+argument_list|()
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|LINES
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|Msgbuf
+argument_list|)
+expr_stmt|;
 name|knownum
 operator|=
 literal|0
@@ -1013,23 +1107,13 @@ argument_list|,
 name|FULLHAND
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nYour hand is: "
-argument_list|)
-expr_stmt|;
 name|prhand
 argument_list|(
 name|phand
 argument_list|,
 name|FULLHAND
 argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".\n"
+name|Playwin
 argument_list|)
 expr_stmt|;
 name|discard
@@ -1047,9 +1131,7 @@ name|deckpos
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 if|if
 condition|(
@@ -1059,10 +1141,18 @@ name|mycrib
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
+name|werase
+argument_list|(
+name|Tablewin
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|Tablewin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|score
@@ -1071,14 +1161,10 @@ name|mycrib
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 block|}
 end_block
@@ -1183,7 +1269,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * handle players discarding into the crib...  * note: we call cdiscard() after prining first message so player doesn't wait  */
+comment|/*  * discard:  *	Handle players discarding into the crib...  * Note: we call cdiscard() after prining first message so player doesn't wait  */
 end_comment
 
 begin_macro
@@ -1201,12 +1287,17 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|prompt
+decl_stmt|;
 name|CARD
 name|crd
 decl_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"It's %s crib...\n"
+literal|"It's %s crib..."
 argument_list|,
 operator|(
 name|mycrib
@@ -1217,13 +1308,19 @@ literal|"your"
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
+name|prompt
+operator|=
+operator|(
 name|quiet
 condition|?
 literal|"Discard --> "
 else|:
 literal|"Discard a card --> "
+operator|)
+expr_stmt|;
+name|msg
+argument_list|(
+name|prompt
 argument_list|)
 expr_stmt|;
 name|cdiscard
@@ -1241,6 +1338,8 @@ argument_list|(
 name|phand
 argument_list|,
 name|FULLHAND
+argument_list|,
+name|prompt
 argument_list|)
 index|]
 expr_stmt|;
@@ -1253,6 +1352,15 @@ argument_list|,
 name|FULLHAND
 argument_list|)
 expr_stmt|;
+name|prhand
+argument_list|(
+name|phand
+argument_list|,
+name|FULLHAND
+argument_list|,
+name|Playwin
+argument_list|)
+expr_stmt|;
 name|crib
 index|[
 literal|0
@@ -1261,13 +1369,9 @@ operator|=
 name|crd
 expr_stmt|;
 comment|/* next four lines same as last four except for cdiscard() */
-name|printf
+name|msg
 argument_list|(
-name|quiet
-condition|?
-literal|"Discard --> "
-else|:
-literal|"Discard a card --> "
+name|prompt
 argument_list|)
 expr_stmt|;
 name|crd
@@ -1281,6 +1385,8 @@ argument_list|,
 name|FULLHAND
 operator|-
 literal|1
+argument_list|,
+name|prompt
 argument_list|)
 index|]
 expr_stmt|;
@@ -1293,6 +1399,15 @@ argument_list|,
 name|FULLHAND
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|prhand
+argument_list|(
+name|phand
+argument_list|,
+name|FULLHAND
+argument_list|,
+name|Playwin
 argument_list|)
 expr_stmt|;
 name|crib
@@ -1350,14 +1465,13 @@ index|]
 operator|.
 name|suit
 operator|=
-operator|-
-literal|1
+name|EMPTY
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * cut the deck and set turnover  */
+comment|/*  * cut:  *	Cut the deck and set turnover  */
 end_comment
 
 begin_macro
@@ -1386,6 +1500,8 @@ block|{
 specifier|register
 name|int
 name|i
+decl_stmt|,
+name|cardx
 decl_stmt|;
 name|BOOLEAN
 name|win
@@ -1401,7 +1517,6 @@ if|if
 condition|(
 name|rflag
 condition|)
-block|{
 comment|/* random cut */
 name|i
 operator|=
@@ -1418,10 +1533,9 @@ operator|-
 name|pos
 operator|)
 expr_stmt|;
-block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
@@ -1453,7 +1567,7 @@ operator|+
 name|pos
 index|]
 expr_stmt|;
-name|printf
+name|addmsg
 argument_list|(
 name|quiet
 condition|?
@@ -1462,17 +1576,15 @@ else|:
 literal|"You cut the "
 argument_list|)
 expr_stmt|;
-name|printcard
+name|msgcard
 argument_list|(
 name|turnover
 argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|".\n"
-argument_list|)
+name|endmsg
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1483,9 +1595,9 @@ operator|==
 name|JACK
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"I get two for his heels.\n"
+literal|"I get two for his heels."
 argument_list|)
 expr_stmt|;
 name|win
@@ -1499,6 +1611,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|cardx
+operator|=
+name|CRIB_X
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1526,7 +1642,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|printf
+name|addmsg
 argument_list|(
 name|quiet
 condition|?
@@ -1535,17 +1651,15 @@ else|:
 literal|"I cut the "
 argument_list|)
 expr_stmt|;
-name|printcard
+name|msgcard
 argument_list|(
 name|turnover
 argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|".\n"
-argument_list|)
+name|endmsg
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1556,9 +1670,9 @@ operator|==
 name|JACK
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
-literal|"You get two for his heels.\n"
+literal|"You get two for his heels."
 argument_list|)
 expr_stmt|;
 name|win
@@ -1572,6 +1686,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|cardx
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|makeknown
 argument_list|(
@@ -1581,17 +1699,56 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|CRIB_Y
+argument_list|,
+name|cardx
+operator|+
+literal|1
+argument_list|,
+literal|"CRIB"
+argument_list|)
+expr_stmt|;
+name|prcard
+argument_list|(
+name|stdscr
+argument_list|,
+name|CRIB_Y
+operator|+
+literal|1
+argument_list|,
+name|cardx
+argument_list|,
+name|turnover
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 name|win
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * handle all the pegging...  */
+comment|/*  * peg:  *	Handle all the pegging...  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|CARD
+name|Table
+index|[
+literal|14
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Tcnt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|peg
@@ -1620,13 +1777,6 @@ index|[
 name|CINHAND
 index|]
 decl_stmt|;
-specifier|static
-name|CARD
-name|table
-index|[
-literal|14
-index|]
-decl_stmt|;
 name|CARD
 name|crd
 decl_stmt|;
@@ -1645,8 +1795,6 @@ name|int
 name|cnum
 decl_stmt|,
 name|pnum
-decl_stmt|,
-name|tcnt
 decl_stmt|,
 name|sum
 decl_stmt|;
@@ -1703,7 +1851,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-name|tcnt
+name|Tcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -1724,13 +1872,31 @@ operator|=
 operator|!
 name|mycrib
 expr_stmt|;
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|last
 operator|=
 name|TRUE
 expr_stmt|;
 comment|/* enable last flag */
+name|prtable
+argument_list|(
+name|sum
+argument_list|)
+expr_stmt|;
+name|prhand
+argument_list|(
+name|ph
+argument_list|,
+name|pnum
+argument_list|,
+name|Playwin
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|myturn
@@ -1760,9 +1926,9 @@ name|cnum
 condition|)
 block|{
 comment|/* go for comp? */
-name|printf
+name|msg
 argument_list|(
-literal|"GO.\n"
+literal|"GO."
 argument_list|)
 expr_stmt|;
 name|mego
@@ -1781,24 +1947,22 @@ argument_list|,
 name|sum
 argument_list|)
 condition|)
-block|{
 comment|/* can player move? */
 name|myturn
 operator|=
 operator|!
 name|myturn
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* give him his point */
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"You get one.\n"
+literal|"You get one."
 else|:
-literal|"You get one point.\n"
+literal|"You get one point."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1812,9 +1976,7 @@ literal|1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 name|sum
 operator|=
@@ -1826,9 +1988,13 @@ name|ugo
 operator|=
 name|FALSE
 expr_stmt|;
-name|tcnt
+name|Tcnt
 operator|=
 literal|0
+expr_stmt|;
+name|Hasread
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -1871,9 +2037,9 @@ index|[
 name|i
 index|]
 argument_list|,
-name|table
+name|Table
 argument_list|,
-name|tcnt
+name|Tcnt
 argument_list|,
 name|sum
 argument_list|)
@@ -1901,7 +2067,6 @@ name|j
 operator|<
 literal|0
 condition|)
-block|{
 comment|/* if nothing scores */
 name|j
 operator|=
@@ -1914,29 +2079,12 @@ argument_list|,
 name|sum
 argument_list|)
 expr_stmt|;
-block|}
 name|crd
 operator|=
 name|ch
 index|[
 name|j
 index|]
-expr_stmt|;
-name|printf
-argument_list|(
-name|quiet
-condition|?
-literal|"I play "
-else|:
-literal|"I play the "
-argument_list|)
-expr_stmt|;
-name|printcard
-argument_list|(
-name|crd
-argument_list|,
-name|FALSE
-argument_list|)
 expr_stmt|;
 name|remove
 argument_list|(
@@ -1957,20 +2105,13 @@ operator|.
 name|rank
 argument_list|)
 expr_stmt|;
-name|table
+name|Table
 index|[
-name|tcnt
+name|Tcnt
 operator|++
 index|]
 operator|=
 name|crd
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".  Total is %d"
-argument_list|,
-name|sum
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1979,16 +2120,26 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|addmsg
 argument_list|(
 name|quiet
 condition|?
-literal|".  I got %d"
+literal|"I get %d playing "
 else|:
-literal|".  I got %d points"
+literal|"I get %d points playing "
 argument_list|,
 name|k
 argument_list|)
+expr_stmt|;
+name|msgcard
+argument_list|(
+name|crd
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|endmsg
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2001,16 +2152,9 @@ name|k
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|".\n"
-argument_list|)
-expr_stmt|;
 name|myturn
 operator|=
 operator|!
@@ -2043,9 +2187,9 @@ name|pnum
 condition|)
 block|{
 comment|/* go for player */
-name|printf
+name|msg
 argument_list|(
-literal|"You have a GO.\n"
+literal|"You have a GO."
 argument_list|)
 expr_stmt|;
 name|ugo
@@ -2064,23 +2208,21 @@ argument_list|,
 name|sum
 argument_list|)
 condition|)
-block|{
 comment|/* can computer play? */
 name|myturn
 operator|=
 operator|!
 name|myturn
 expr_stmt|;
-block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"I get one.\n"
+literal|"I get one."
 else|:
-literal|"I get one point.\n"
+literal|"I get one point."
 argument_list|)
 expr_stmt|;
 if|if
@@ -2094,9 +2236,7 @@ literal|1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 name|sum
 operator|=
@@ -2108,9 +2248,13 @@ name|ugo
 operator|=
 name|FALSE
 expr_stmt|;
-name|tcnt
+name|Tcnt
 operator|=
 literal|0
+expr_stmt|;
+name|Hasread
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -2135,31 +2279,22 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"You play your last card, the "
-argument_list|)
-expr_stmt|;
-name|printcard
-argument_list|(
-name|crd
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".  "
+literal|"You play your last card"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-do|do
-block|{
-name|printf
+name|msg
 argument_list|(
-literal|"Your play ( "
+literal|"Your play: "
 argument_list|)
 expr_stmt|;
 name|prhand
@@ -2168,12 +2303,7 @@ name|ph
 argument_list|,
 name|pnum
 argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" ): "
+name|Playwin
 argument_list|)
 expr_stmt|;
 name|crd
@@ -2185,6 +2315,8 @@ argument_list|(
 name|ph
 argument_list|,
 name|pnum
+argument_list|,
+literal|"Your play: "
 argument_list|)
 index|]
 expr_stmt|;
@@ -2201,23 +2333,13 @@ argument_list|)
 operator|<=
 literal|31
 condition|)
-block|{
 break|break;
-block|}
 else|else
-block|{
-name|printf
+name|msg
 argument_list|(
-literal|"Total> 31 -- try again.\n"
+literal|"Total> 31 -- try again."
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-do|while
-condition|(
-name|TRUE
-condition|)
-do|;
 block|}
 name|makeknown
 argument_list|(
@@ -2243,9 +2365,9 @@ name|pegscore
 argument_list|(
 name|crd
 argument_list|,
-name|table
+name|Table
 argument_list|,
-name|tcnt
+name|Tcnt
 argument_list|,
 name|sum
 argument_list|)
@@ -2259,20 +2381,13 @@ operator|.
 name|rank
 argument_list|)
 expr_stmt|;
-name|table
+name|Table
 index|[
-name|tcnt
+name|Tcnt
 operator|++
 index|]
 operator|=
 name|crd
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Total is %d"
-argument_list|,
-name|sum
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2281,13 +2396,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|".  You got %d"
+literal|"You got %d"
 else|:
-literal|".  You got %d points"
+literal|"You got %d points"
 argument_list|,
 name|i
 argument_list|)
@@ -2303,16 +2418,9 @@ name|i
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|".\n"
-argument_list|)
-expr_stmt|;
 name|myturn
 operator|=
 operator|!
@@ -2337,7 +2445,7 @@ name|ugo
 operator|=
 name|FALSE
 expr_stmt|;
-name|tcnt
+name|Tcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -2346,6 +2454,10 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* disable last flag */
+name|Hasread
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2358,28 +2470,22 @@ condition|)
 break|break;
 comment|/* both done */
 block|}
-do|while
-condition|(
-name|TRUE
-condition|)
-do|;
 if|if
 condition|(
 name|last
 condition|)
-block|{
 if|if
 condition|(
 name|played
 condition|)
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"I get one for last.\n"
+literal|"I get one for last"
 else|:
-literal|"I get one point for last.\n"
+literal|"I get one point for last"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2393,20 +2499,18 @@ literal|1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
 else|else
 block|{
-name|printf
+name|msg
 argument_list|(
 name|quiet
 condition|?
-literal|"You get one for last.\n"
+literal|"You get one for last"
 else|:
-literal|"You get one point for last.\n"
+literal|"You get one point for last"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2420,22 +2524,74 @@ literal|1
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
-block|}
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * handle the scoring of the hands  */
+comment|/*  * prtable:  *	Print out the table with the current score  */
+end_comment
+
+begin_macro
+name|prtable
+argument_list|(
+argument|score
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|score
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|prhand
+argument_list|(
+name|Table
+argument_list|,
+name|Tcnt
+argument_list|,
+name|Tablewin
+argument_list|)
+expr_stmt|;
+name|mvwprintw
+argument_list|(
+name|Tablewin
+argument_list|,
+operator|(
+name|Tcnt
+operator|+
+literal|2
+operator|)
+operator|*
+literal|2
+argument_list|,
+name|Tcnt
+operator|+
+literal|1
+argument_list|,
+literal|"%2d"
+argument_list|,
+name|score
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|Tablewin
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * score:  *	Handle the scoring of the hands  */
 end_comment
 
 begin_macro
@@ -2453,6 +2609,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|sorthand
+argument_list|(
+name|crib
+argument_list|,
+name|CINHAND
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mycrib
@@ -2468,9 +2631,7 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 if|if
 condition|(
@@ -2482,9 +2643,7 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 if|if
 condition|(
@@ -2496,9 +2655,7 @@ literal|"crib"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
 else|else
@@ -2513,9 +2670,7 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 if|if
 condition|(
@@ -2527,9 +2682,7 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 if|if
 condition|(
@@ -2541,15 +2694,11 @@ literal|"crib"
 argument_list|)
 condition|)
 return|return
-operator|(
 name|TRUE
-operator|)
 return|;
 block|}
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 block|}
 end_block

@@ -453,8 +453,7 @@ index|]
 operator|.
 name|rank
 operator|=
-operator|-
-literal|1
+name|EMPTY
 expr_stmt|;
 block|}
 end_block

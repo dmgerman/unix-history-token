@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<curses.h>
 end_include
 
 begin_include
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|"cribbage.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cribcur.h"
 end_include
 
 begin_define
@@ -522,7 +528,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * evaluate and score a player hand or crib  */
+comment|/*  * plyrhand:  *	Evaluate and score a player hand or crib  */
 end_comment
 
 begin_macro
@@ -559,37 +565,20 @@ decl_stmt|;
 name|BOOLEAN
 name|win
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"Your %s is: "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 name|prhand
 argument_list|(
 name|hand
 argument_list|,
 name|CINHAND
 argument_list|,
-name|TRUE
+name|Playwin
 argument_list|)
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"  ["
-argument_list|)
-expr_stmt|;
-name|printcard
-argument_list|(
-name|turnover
+literal|"Your %s scores "
 argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"].   How many points? "
+name|s
 argument_list|)
 expr_stmt|;
 name|i
@@ -649,9 +638,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"It's really only %d points, I get %d.\n"
+literal|"It's really only %d points, I get %d."
 argument_list|,
 name|i
 argument_list|,
@@ -686,9 +675,9 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-name|printf
+name|msg
 argument_list|(
-literal|"You should have taken %d, not %d!\n"
+literal|"You should have taken %d, not %d!"
 argument_list|,
 name|i
 argument_list|,
@@ -700,18 +689,15 @@ if|if
 condition|(
 name|explain
 condition|)
-block|{
-name|printf
+name|msg
 argument_list|(
-literal|"Explanation: %s\n"
+literal|"Explanation: %s"
 argument_list|,
 name|expl
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|win
 operator|=
 name|chkscr
@@ -722,17 +708,14 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 return|return
-operator|(
 name|win
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * handle scoring and displaying the computers hand  */
+comment|/*  * comphand:  *	Handle scoring and displaying the computers hand  */
 end_comment
 
 begin_macro
@@ -777,37 +760,24 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"My %s ( "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 name|prhand
 argument_list|(
 name|h
 argument_list|,
 name|CINHAND
 argument_list|,
-name|TRUE
+name|Compwin
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"  ["
-argument_list|)
+name|Hasread
+operator|=
+name|FALSE
 expr_stmt|;
-name|printcard
+name|msg
 argument_list|(
-name|turnover
+literal|"My %s scores %d"
 argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"] ) scores %d.\n"
+name|s
 argument_list|,
 operator|(
 name|j
@@ -821,7 +791,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|chkscr
 argument_list|(
 operator|&
@@ -829,14 +798,28 @@ name|cscore
 argument_list|,
 name|j
 argument_list|)
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * add inc to scr and test for> glimit  */
+comment|/*  * chkscr:  *	Add inc to scr and test for> glimit, printing on the scoring  *	board while we're at it.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|Lastscore
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|chkscr
@@ -858,24 +841,198 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return
+name|BOOLEAN
+name|myturn
+decl_stmt|;
+name|myturn
+operator|=
 operator|(
-operator|(
-operator|(
+name|scr
+operator|==
+operator|&
+name|cscore
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|inc
+operator|!=
+literal|0
+condition|)
+block|{
+name|prpeg
+argument_list|(
+name|Lastscore
+index|[
+name|myturn
+index|]
+argument_list|,
+literal|'.'
+argument_list|,
+name|myturn
+argument_list|)
+expr_stmt|;
+name|Lastscore
+index|[
+name|myturn
+index|]
+operator|=
+operator|*
+name|scr
+expr_stmt|;
+block|}
 operator|*
 name|scr
 operator|+=
 name|inc
-operator|)
-operator|>=
+expr_stmt|;
+name|prpeg
+argument_list|(
+operator|*
+name|scr
+argument_list|,
+name|PEG
+argument_list|,
+name|myturn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|*
+name|scr
+operator|>
 name|glimit
-condition|?
-name|TRUE
-else|:
-name|FALSE
-operator|)
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * prpeg:  *	put out the peg character on the score board  */
+end_comment
+
+begin_expr_stmt
+name|prpeg
+argument_list|(
+name|score
+argument_list|,
+name|peg
+argument_list|,
+name|myturn
+argument_list|)
+specifier|register
+name|int
+name|score
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|peg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOLEAN
+name|myturn
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|y
+decl_stmt|,
+name|x
+decl_stmt|;
+if|if
+condition|(
+name|score
+operator|==
+literal|0
+operator|||
+name|score
+operator|>
+name|glimit
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|myturn
+condition|)
+name|y
+operator|=
+name|SCORE_Y
+operator|+
+literal|2
+expr_stmt|;
+else|else
+name|y
+operator|=
+name|SCORE_Y
+operator|+
+literal|5
+expr_stmt|;
+name|x
+operator|=
+operator|(
+name|score
+operator|-
+literal|1
+operator|)
+operator|%
+literal|30
+expr_stmt|;
+if|if
+condition|(
+name|score
+operator|>
+literal|90
+operator|||
+operator|(
+name|score
+operator|>
+literal|30
+operator|&&
+name|score
+operator|<=
+literal|60
+operator|)
+condition|)
+block|{
+name|y
+operator|++
+expr_stmt|;
+name|x
+operator|=
+literal|29
+operator|-
+name|x
+expr_stmt|;
+block|}
+name|x
+operator|+=
+name|x
+operator|/
+literal|5
+expr_stmt|;
+name|x
+operator|+=
+name|SCORE_X
+operator|+
+literal|3
+expr_stmt|;
+name|mvaddch
+argument_list|(
+name|y
+argument_list|,
+name|x
+argument_list|,
+name|peg
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

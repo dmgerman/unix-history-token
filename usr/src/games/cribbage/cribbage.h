@@ -159,6 +159,20 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|Lastscore
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* previous score for each */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|BOOLEAN
 name|iwon
 decl_stmt|;
@@ -199,6 +213,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* if suppress random mess */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|Hasread
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* has had chance to read msg */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|playing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* currently playing game */
 end_comment
 
 begin_decl_stmt

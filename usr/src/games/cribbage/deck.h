@@ -210,6 +210,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EMPTY
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAL
 parameter_list|(
 name|c
@@ -220,6 +227,12 @@ end_define
 begin_comment
 comment|/* val of rank */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
 
 begin_define
 define|#
@@ -234,6 +247,11 @@ directive|define
 name|FALSE
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
