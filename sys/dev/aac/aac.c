@@ -10257,7 +10257,7 @@ begin_define
 define|#
 directive|define
 name|AAC_LINUX_IOCTL_MIN
-value|0x2000
+value|0x0000
 end_define
 
 begin_define
