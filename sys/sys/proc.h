@@ -616,6 +616,11 @@ name|sigset_t
 name|td_siglist
 decl_stmt|;
 comment|/* (c) Sigs arrived, not delivered. */
+name|sigset_t
+modifier|*
+name|td_waitset
+decl_stmt|;
+comment|/* (c) Wait set for sigwait */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -818,17 +823,6 @@ end_define
 
 begin_comment
 comment|/* On the sleep queue. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_NOSIGPOST
-value|0x000400
-end_define
-
-begin_comment
-comment|/* Thread doesn't want signals */
 end_comment
 
 begin_define
@@ -4496,6 +4490,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|willexit
 parameter_list|)
 function_decl|;
 end_function_decl
