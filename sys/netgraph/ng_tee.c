@@ -1366,8 +1366,10 @@ comment|/* Duplicate packet and meta info if requried */
 if|if
 condition|(
 name|dup
-operator|!=
-name|NULL
+operator|&&
+name|dup
+operator|->
+name|hook
 condition|)
 block|{
 name|struct
