@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.48 (Berkeley) %G%"
+literal|"@(#)map.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,11 +74,20 @@ directive|ifdef
 name|NIS
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<rpcsvc/yp_prot.h>
-end_include
+begin_struct
+struct|struct
+name|dom_binding
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* needed on IRIX */
+end_comment
 
 begin_include
 include|#
