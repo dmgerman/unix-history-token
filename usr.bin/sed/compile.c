@@ -735,7 +735,7 @@ define|#
 directive|define
 name|EATSPACE
 parameter_list|()
-value|do {							\ 	if (p)								\ 		while (*p&& isascii(*p)&& isspace(*p))		\ 			p++;						\ 	} while (0)
+value|do {							\ 	if (p)								\ 		while (*p&& isspace((unsigned char)*p))                \ 			p++;						\ 	} while (0)
 end_define
 
 begin_function
@@ -3687,6 +3687,10 @@ name|ws
 operator|=
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
