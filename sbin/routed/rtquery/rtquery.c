@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.9 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_include
@@ -222,13 +222,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|pgmname
 decl_stmt|;
 end_decl_stmt
 
@@ -513,13 +506,6 @@ argument_list|(
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
-name|pgmname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -667,9 +653,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s:"
-argument_list|,
-name|pgmname
+literal|"rtquery: %s:"
 argument_list|,
 name|optarg
 argument_list|)
@@ -963,11 +947,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: [-np1v] [-r tgt_rt] [-w wtime]"
-literal|" host1 [host2 ...]\n"
-literal|"or\t-t {on=filename|more|off} host1 host2 ...\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|pgmname
+literal|"usage: rtquery [-np1] [-r addr] [-w timeout] host ..."
+argument_list|,
+literal|"       rtquery [-t op] host ..."
 argument_list|)
 expr_stmt|;
 name|exit
