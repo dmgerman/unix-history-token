@@ -5827,7 +5827,6 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-operator|&
 name|flags
 argument_list|,
 literal|0
