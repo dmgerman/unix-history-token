@@ -4666,6 +4666,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* return code is checked below, after sem[nz]cnt-- */
 ifdef|#
 directive|ifdef
 name|SEM_DEBUG
@@ -4683,27 +4684,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* sem_undo may have been reallocated */
-if|if
-condition|(
-name|eval
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|EINTR
-operator|)
-return|;
-ifdef|#
-directive|ifdef
-name|SEM_DEBUG
-name|printf
-argument_list|(
-literal|"semop:  good morning!\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Make sure that the semaphore still exists 		 */
 if|if
 condition|(
@@ -4757,6 +4737,28 @@ operator|->
 name|semncnt
 operator|--
 expr_stmt|;
+comment|/* 		 * Is it really morning, or was our sleep interrupted? 		 * (Delayed check of msleep() return code because we 		 * need to decrement sem[nz]cnt either way.) 		 */
+if|if
+condition|(
+name|eval
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINTR
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|SEM_DEBUG
+name|printf
+argument_list|(
+literal|"semop:  good morning!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|done
 label|:
