@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	align.h	1.1	86/07/20	*/
+comment|/*	align.h	1.2	90/12/04	*/
 end_comment
 
 begin_ifndef
@@ -55,7 +55,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../tahoealign/defs.h"
+file|"defs.h"
 end_include
 
 begin_comment

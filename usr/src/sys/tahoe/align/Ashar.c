@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Ashar.c	1.1	86/07/20	*/
+comment|/*	Ashar.c	1.2	90/12/04	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../tahoealign/align.h"
+file|"align.h"
 end_include
 
 begin_macro

@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	1.1	86/07/20	*/
+comment|/*	defs.h	1.2	90/12/04	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/psl.h"
+file|"../include/psl.h"
 end_include
 
 begin_comment
