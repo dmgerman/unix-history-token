@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.39 1995/10/12 02:02:03 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.40 1995/10/12 02:05:47 julian Exp $  */
 end_comment
 
 begin_comment
@@ -665,6 +665,7 @@ comment|/* NEW_SCSICONF */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_space
 name|__P
@@ -687,6 +688,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_rewind
 name|__P
@@ -706,6 +708,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_erase
 name|__P
@@ -753,6 +756,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_decide_mode
 name|__P
@@ -769,6 +773,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_rd_blk_lim
 name|__P
@@ -785,6 +790,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_touch_tape
 name|__P
@@ -798,6 +804,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_write_filemarks
 name|__P
@@ -817,6 +824,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_load
 name|__P
@@ -836,6 +844,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_mode_select
 name|__P
@@ -860,6 +869,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|st_comp
 name|__P
@@ -883,6 +893,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int32
 name|st_chkeod
 parameter_list|()
@@ -890,6 +901,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ststart
 parameter_list|(
@@ -903,6 +915,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|st_unmount
 parameter_list|()
@@ -910,6 +923,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|errval
 name|st_mount_tape
 parameter_list|()
@@ -917,6 +931,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|st_loadquirks
 parameter_list|()
@@ -930,6 +945,7 @@ name|NEW_SCSICONF
 end_ifndef
 
 begin_function_decl
+specifier|static
 name|void
 name|st_identify_drive
 parameter_list|()
@@ -942,6 +958,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|errval
 name|st_interpret_sense
 parameter_list|()
@@ -1157,6 +1174,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|errval
 name|st_open
 parameter_list|(
@@ -1183,6 +1201,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|errval
 name|st_ioctl
 parameter_list|(
@@ -1212,6 +1231,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|errval
 name|st_close
 parameter_list|(
@@ -1238,6 +1258,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|st_strategy
 parameter_list|(
@@ -1262,6 +1283,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|st_switch
@@ -5714,6 +5736,7 @@ comment|/*  * Do a synchronous read.  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|st_read
 parameter_list|(
@@ -6765,6 +6788,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|noisy_st
 init|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.66 1995/08/07 11:56:31 davidg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.67 1995/10/12 02:01:56 julian Exp $  */
 end_comment
 
 begin_define
@@ -236,6 +236,7 @@ value|makedev(major(DEV), dkmakeminor((U), dkslice(DEV), dkpart(DEV)))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|sd_get_parms
 name|__P
@@ -267,6 +268,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sd_sense_handler
 name|__P
@@ -281,6 +283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|sdstart
 name|__P
@@ -393,6 +396,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|sd_open
 name|__P
@@ -422,6 +426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|errval
 name|sd_ioctl
 parameter_list|(
@@ -451,6 +456,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|sd_close
 name|__P
@@ -480,6 +486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|sd_strategy
 parameter_list|(
@@ -504,6 +511,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|sd_switch
@@ -2372,6 +2380,7 @@ comment|/*  * Find out from the device what it's capacity is  */
 end_comment
 
 begin_function
+specifier|static
 name|u_int32
 name|sd_size
 parameter_list|(
@@ -2534,6 +2543,7 @@ comment|/*  * Tell the device to map out a defective block  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sd_reassign_blocks
 parameter_list|(
@@ -2749,6 +2759,7 @@ comment|/*  * Get the scsi driver to send a full inquiry to the  * device and us
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sd_get_parms
 parameter_list|(
