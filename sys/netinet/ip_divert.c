@@ -2887,9 +2887,18 @@ name|divert_packet
 expr_stmt|;
 break|break;
 case|case
+name|MOD_QUIESCE
+case|:
+comment|/* 		 * IPDIVERT may normally not be unloaded because of the 		 * potential race conditions.  Tell kldunload we can't be 		 * unloaded unless the unload is forced. 		 */
+name|err
+operator|=
+name|EPERM
+expr_stmt|;
+break|break;
+case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 * 		 * XXXRW: Note that there is a slight race here, as a new 		 * socket open request could be spinning on the lock and then 		 * we destroy the lock. 		 */
+comment|/* 		 * Forced unload. 		 * 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 * 		 * XXXRW: Note that there is a slight race here, as a new 		 * socket open request could be spinning on the lock and then 		 * we destroy the lock. 		 */
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -2957,9 +2966,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return
-name|EINVAL
-return|;
+name|err
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 break|break;
 block|}
 return|return
