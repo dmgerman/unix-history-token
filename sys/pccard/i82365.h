@@ -421,6 +421,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_TOPIC_FCR
+value|0x3e
+end_define
+
+begin_comment
+comment|/* Toshiba ToPIC: Function Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_TIME_SETUP0
 value|0x3a
 end_define
@@ -1449,6 +1460,32 @@ directive|define
 name|PCIC_RID_396
 value|0xb2
 end_define
+
+begin_comment
+comment|/* Toshiba ToPIC: Function Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_FCR_3V_EN
+value|0x01
+end_define
+
+begin_comment
+comment|/* Enable 3V cards */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_FCR_VS_EN
+value|0x02
+end_define
+
+begin_comment
+comment|/* Voltage Sense enable */
+end_comment
 
 begin_comment
 comment|/*  *	Mask of allowable interrupts.  *  *	For IBM-AT machines, irqs 3, 4, 5, 7, 9, 10, 11, 12, 14, 15 are  *	allowed.  Nearly all IBM-AT machines with pcic cards or bridges  *	wire these interrupts (or a subset thereof) to the corresponding  *	pins on the ISA bus.  Some older laptops are reported to not route  *	all the interrupt pins to the bus because the designers knew that  *	some would conflict with builtin devices.  *  *	For NEC PC98 machines, irq 3, 5, 6, 9, 10, 11, 12, 13 are allowed.  *	These correspond to the C-BUS signals INT 0, 1, 2, 3, 41, 42, 5, 6  *	respectively.  This is with the desktop C-BUS addin card.  *  *	Hiroshi TSUKADA-san writes in FreeBSD98-testers that cbus IRQ  *	6 is routed to the IRQ 7 pin of the pcic in pc98 cbus based  *	cards.  I do not know how pc98 laptop models are wired.  */

@@ -394,6 +394,46 @@ comment|/* Memory Window Page */
 end_comment
 
 begin_comment
+comment|/*  * Ricoh R5C47[5678] parts have these registers.  Maybe the 46x also use  * them, but I can't find out for sure without datasheets...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R5C47X_MISC_CONTROL_REGISTER_2
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|R5C47X_MCR2_CSC_TO_INTX_DISABLE
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Bit 7 */
+end_comment
+
+begin_comment
+comment|/*  * ToPIC specific stuff.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPIC_INTERRUPT_CONTROL
+value|0xa1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC_ICR_INTA
+value|0x1
+end_define
+
+begin_comment
 comment|/* sanpei */
 end_comment
 
@@ -827,15 +867,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CB_SOCKET_CONTROL
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
 name|CB_SOCKET_POWER
-value|0x14
+value|0x10
 end_define
 
 begin_define
@@ -863,6 +896,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CB_SE_POWER
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
 name|CB_SM_CD
 value|0x6
 end_define
@@ -870,6 +910,13 @@ end_define
 begin_comment
 comment|/* Socket MASK Card detect */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SM_POWER
+value|0x8
+end_define
 
 begin_define
 define|#
@@ -1079,6 +1126,94 @@ end_define
 begin_comment
 comment|/* Y.Y V Socket */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SP_CLKSTOP
+value|0x80
+end_define
+
+begin_comment
+comment|/* Cardbus clock stop protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VCC_0V
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VCC_5V
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VCC_3V
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VCC_XV
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VCC_YV
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_0V
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_12V
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_5V
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_3V
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_XV
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_YV
+value|0x05
+end_define
 
 end_unit
 
