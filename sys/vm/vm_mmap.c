@@ -950,8 +950,6 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
-do|do
-block|{
 if|if
 condition|(
 name|flags
@@ -959,7 +957,7 @@ operator|&
 name|MAP_ANON
 condition|)
 block|{
-comment|/* 			 * Mapping blank space is trivial. 			 */
+comment|/* 		 * Mapping blank space is trivial. 		 */
 name|handle
 operator|=
 name|NULL
@@ -972,8 +970,9 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
-break|break;
 block|}
+else|else
+block|{
 comment|/* 		 * Mapping file, get fp for validation. Obtain vnode and make 		 * sure it is of appropriate type. 		 * don't let the descriptor disappear on us if we block 		 */
 if|if
 condition|(
@@ -1143,11 +1142,6 @@ operator|)
 name|vp
 expr_stmt|;
 block|}
-do|while
-condition|(
-literal|0
-condition|)
-do|;
 comment|/* 	 * Do not allow more then a certain number of vm_map_entry structures 	 * per process.  Scale with the number of rforks sharing the map 	 * to make the limit reasonable for threads. 	 */
 if|if
 condition|(
