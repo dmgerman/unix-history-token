@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tc.c,v 1.3 1999/05/08 21:58:49 dfr Exp $ */
+comment|/* $Id: tc.c,v 1.4 1999/05/10 15:53:33 peter Exp $ */
 end_comment
 
 begin_comment
@@ -255,13 +255,6 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|driver_intr_t
-name|tc_intr
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
