@@ -2788,10 +2788,7 @@ name|eh
 operator|->
 name|ether_type
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|u_int16_t
-argument_list|)
+name|ETHER_TYPE_LEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -8714,7 +8711,7 @@ operator|->
 name|ether_type
 argument_list|)
 operator|==
-literal|0x800
+name|ETHERTYPE_IP
 operator|)
 condition|)
 block|{
