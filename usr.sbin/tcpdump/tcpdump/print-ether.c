@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ether.c,v 1.37 94/06/10 17:01:29 mccanne Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-ether.c,v 1.3 1995/03/08 12:52:30 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,6 +683,21 @@ case|case
 name|ETHERTYPE_AARP
 case|:
 name|aarp_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|ETHERTYPE_IPX
+case|:
+name|ipx_print
 argument_list|(
 name|p
 argument_list|,

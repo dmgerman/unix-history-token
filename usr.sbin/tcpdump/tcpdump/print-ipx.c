@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-ipx.c,v 1.6 94/06/20 19:44:38 leres Exp $"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-ipx.c,v 1.1 1995/03/08 12:52:34 olah Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,7 +406,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%lu.%02x:%02x:%02x:%02x:%02x:%02x"
+literal|"%lx.%02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|net
 argument_list|,
@@ -888,7 +888,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %lu/%d.%d"
+literal|" %lx/%d.%d"
 argument_list|,
 name|EXTRACT_LONG
 argument_list|(
@@ -953,7 +953,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %lu/%d.%d"
+literal|" %lx/%d.%d"
 argument_list|,
 name|EXTRACT_LONG
 argument_list|(
