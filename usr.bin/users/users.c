@@ -492,16 +492,8 @@ return|return
 operator|(
 name|strncmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|q
 argument_list|,
 name|UT_NAMESIZE
