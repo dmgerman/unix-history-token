@@ -7177,8 +7177,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-operator|++
 name|index
+operator|++
 index|]
 argument_list|)
 expr_stmt|;
@@ -7205,8 +7205,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-operator|++
 name|index
+operator|++
 index|]
 argument_list|)
 expr_stmt|;
