@@ -238,7 +238,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\nconst char data_file[] =\n{"
+literal|"\n\nchar data_file[] =\n{"
 argument_list|)
 expr_stmt|;
 name|srandom
