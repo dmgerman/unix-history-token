@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: keysock.c,v 1.24 2000/12/03 00:41:48 itojun Exp $	*/
+comment|/*	$KAME: keysock.c,v 1.25 2001/08/13 20:07:41 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -333,16 +333,6 @@ name|sadb_msg
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_output: Invalid message length.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_tooshort
@@ -389,16 +379,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_output: can't pullup mbuf\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_nomem
@@ -430,9 +410,6 @@ argument_list|(
 literal|"key_output: not M_PKTHDR ??"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
 name|KEYDEBUG
 argument_list|(
 name|KEYDEBUG_KEY_DUMP
@@ -443,8 +420,6 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|msg
 operator|=
 name|mtod
@@ -478,16 +453,6 @@ name|sadb_msg_len
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_output: Invalid message length.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invlen
@@ -630,16 +595,6 @@ operator|!
 name|m
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_sendup0: cannot pullup\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|in_nomem
@@ -751,16 +706,6 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_sendup0: sbappendaddr failed\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|in_nomem
@@ -1520,16 +1465,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
-argument_list|(
-literal|"key_sendup: m_copy fail\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -1810,13 +1745,6 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"key_usrreq: key_usrreq results %d\n"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 return|return

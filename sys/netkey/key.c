@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -417,12 +423,6 @@ begin_comment
 comment|/*  * Note on SA reference counting:  * - SAs that are not in DEAD state will have (total external reference + 1)  *   following value in reference count field.  they cannot be freed and are  *   referenced from SA header.  * - SAs that are in DEAD state will have (total external reference)  *   in reference count field.  they are ready to be freed.  reference from  *   SA header will be removed in key_delsav(), when the reference count  *   field hits 0 (= no external reference other than from SA header.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-end_ifdef
-
 begin_decl_stmt
 name|u_int32_t
 name|key_debug_level
@@ -430,11 +430,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1001,12 +996,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-end_ifdef
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -1027,11 +1016,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* max count of trial for the decision of spi value */
@@ -1209,6 +1193,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* ESP auth */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_key
+argument_list|,
+name|KEYCTL_ESP_AUTH
+argument_list|,
+name|esp_auth
+argument_list|,
+name|CTLFLAG_RW
+argument_list|, \
+operator|&
+name|ipsec_esp_auth
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* minimum ESP key length */
 end_comment
 
@@ -1324,7 +1333,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sav)) {                                               \ 		printf("%s: state mismatched (TREE=%d SA=%d)\n",             \ 			(name), (head), (sav));                              \ 		continue;                                                    \ 	}                                                                    \ } while (0)
+value|do { \ 	if ((head) != (sav)) {						\ 		ipseclog((LOG_DEBUG, "%s: state mismatched (TREE=%d SA=%d)\n", \ 			(name), (head), (sav)));			\ 		continue;						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1339,7 +1348,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	if ((head) != (sp)) {                                                \ 		printf("%s: direction mismatched (TREE=%d SP=%d), "          \ 			"anyway continue.\n",                                \ 			(name), (head), (sp));                               \ 	}                                                                    \ } while (0)
+value|do { \ 	if ((head) != (sp)) {						\ 		ipseclog((LOG_DEBUG, "%s: direction mismatched (TREE=%d SP=%d), " \ 			"anyway continue.\n",				\ 			(name), (head), (sp)));				\ 	}								\ } while (0)
 end_define
 
 begin_if
@@ -3355,17 +3364,21 @@ operator|->
 name|sa_family
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"protocol family mismatched %d != %d\n."
-argument_list|,
+operator|,
 name|isrc
 operator|->
 name|sa_family
-argument_list|,
+operator|,
 name|idst
 operator|->
 name|sa_family
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3446,13 +3459,17 @@ return|;
 endif|#
 directive|endif
 default|default:
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"invalid protocol family %d\n."
-argument_list|,
+operator|,
 name|isrc
 operator|->
 name|sa_family
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3914,20 +3931,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX What I do ? */
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+comment|/* XXX What should I do ? */
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_checkrequest: error %d returned "
 literal|"from key_acquire.\n"
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|error
 return|;
@@ -4414,7 +4430,7 @@ comment|/* don't check src */
 comment|/* check src address */
 block|switch (family) { 				case AF_INET: 					bzero(&sin, sizeof(sin)); 					sin.sin_family = AF_INET; 					sin.sin_len = sizeof(sin); 					bcopy(src,&sin.sin_addr, 					    sizeof(sin.sin_addr)); 					if (key_sockaddrcmp((struct sockaddr*)&sin, 					    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 						continue;  					break; 				case AF_INET6: 					bzero(&sin6, sizeof(sin6)); 					sin6.sin6_family = AF_INET6; 					sin6.sin6_len = sizeof(sin6); 					bcopy(src,&sin6.sin6_addr, 					    sizeof(sin6.sin6_addr)); 					if (IN6_IS_SCOPE_LINKLOCAL(&sin6.sin6_addr)) {
 comment|/* kame fake scopeid */
-block|sin6.sin6_scope_id = 						    ntohs(sin6.sin6_addr.s6_addr16[1]); 						sin6.sin6_addr.s6_addr16[1] = 0; 					} 					if (key_sockaddrcmp((struct sockaddr*)&sin6, 					    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 						continue; 					break; 				default: 					printf("key_allocsa: unknown address family=%d.\n", 						family); 					continue; 				}
+block|sin6.sin6_scope_id = 						    ntohs(sin6.sin6_addr.s6_addr16[1]); 						sin6.sin6_addr.s6_addr16[1] = 0; 					} 					if (key_sockaddrcmp((struct sockaddr*)&sin6, 					    (struct sockaddr *)&sav->sah->saidx.src, 0) != 0) 						continue; 					break; 				default: 					ipseclog((LOG_DEBUG, "key_allocsa: " 					    "unknown address family=%d.\n", 					    family)); 					continue; 				}
 endif|#
 directive|endif
 comment|/* check dst address */
@@ -4622,11 +4638,16 @@ condition|)
 continue|continue;
 break|break;
 default|default:
-name|printf
+name|ipseclog
 argument_list|(
-literal|"key_allocsa: unknown address family=%d.\n"
-argument_list|,
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"key_allocsa: "
+literal|"unknown address family=%d.\n"
+operator|,
 name|family
+operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4930,13 +4951,13 @@ endif|#
 directive|endif
 comment|/* INET6 */
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_freeso: unknown address family=%d.\n"
-argument_list|,
+operator|,
 name|so
 operator|->
 name|so_proto
@@ -4944,10 +4965,9 @@ operator|->
 name|pr_domain
 operator|->
 name|dom_family
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 return|return;
@@ -5586,16 +5606,15 @@ name|xpl0
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: Invalid msg length.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|error
 operator|=
@@ -5709,16 +5728,15 @@ name|xpl0
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: Invalid msg length.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -5780,17 +5798,16 @@ name|xisr
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: "
 literal|"invalid ipsecrequest length.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -5833,16 +5850,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -5898,20 +5914,19 @@ name|IPPROTO_IPCOMP
 case|:
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: invalid proto type=%u\n"
-argument_list|,
+operator|,
 name|xisr
 operator|->
 name|sadb_x_ipsecrequest_proto
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -5957,20 +5972,19 @@ case|case
 name|IPSEC_MODE_ANY
 case|:
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: invalid mode=%u\n"
-argument_list|,
+operator|,
 name|xisr
 operator|->
 name|sadb_x_ipsecrequest_mode
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -6029,22 +6043,20 @@ operator|>
 name|IPSEC_MANUAL_REQID_MAX
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
-literal|"key_msg2sp: reqid=%d "
-literal|"range violation, "
-literal|"updated by kernel.\n"
-argument_list|,
+operator|(
+name|LOG_DEBUG
+operator|,
+literal|"key_msg2sp: reqid=%d range "
+literal|"violation, updated by kernel.\n"
+operator|,
 name|xisr
 operator|->
 name|sadb_x_ipsecrequest_reqid
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|xisr
 operator|->
 name|sadb_x_ipsecrequest_reqid
@@ -6128,20 +6140,19 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: invalid level=%u\n"
-argument_list|,
+operator|,
 name|xisr
 operator|->
 name|sadb_x_ipsecrequest_level
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -6219,17 +6230,16 @@ name|src
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: invalid request "
 literal|"address length.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -6301,17 +6311,16 @@ name|dst
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: invalid request "
 literal|"address length.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -6389,16 +6398,15 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: becoming tlen< 0.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -6435,16 +6443,15 @@ block|}
 block|}
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_msg2sp: invalid policy type.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_freesp
 argument_list|(
 name|newsp
@@ -7461,16 +7468,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -7524,16 +7530,15 @@ name|sadb_x_policy
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -7573,16 +7578,15 @@ name|sadb_lifetime
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -7699,16 +7703,15 @@ name|IPSEC_DIR_OUTBOUND
 case|:
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: Invalid SP direction.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mhp
 operator|->
 name|msg
@@ -7738,16 +7741,15 @@ operator|==
 name|IPSEC_POLICY_BYPASS
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: Invalid policy type.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -7790,16 +7792,15 @@ name|xpl0
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: some policy requests part required.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -7863,16 +7864,15 @@ argument_list|(
 name|newsp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdadd: a SP entry exists already.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -8716,16 +8716,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_getnewspid: to allocate policy id is failed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -8846,16 +8845,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spddelete: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -8909,16 +8907,15 @@ name|sadb_x_policy
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spddelete: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -9020,16 +9017,15 @@ name|IPSEC_DIR_OUTBOUND
 case|:
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spddelete: Invalid SP direction.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -9057,16 +9053,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spddelete: no SP found.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -9286,16 +9281,15 @@ name|sadb_x_policy
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spddelete2: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_senderror
 argument_list|(
 name|so
@@ -9342,18 +9336,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spddelete2: no SP found id:%u.\n"
-argument_list|,
+operator|,
 name|id
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|key_senderror
 argument_list|(
 name|so
@@ -9777,16 +9770,15 @@ name|sadb_x_policy
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdget: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -9831,18 +9823,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdget: no SP found id:%u.\n"
-argument_list|,
+operator|,
 name|id
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -10322,16 +10313,15 @@ name|m
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_spdflush: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -12034,16 +12024,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_newsa: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|errp
 operator|=
@@ -12154,16 +12143,15 @@ argument_list|(
 name|newsav
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_newsa: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|errp
 operator|=
@@ -12741,16 +12729,15 @@ operator|.
 name|ss_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_checkspidup: address family mismatched.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
@@ -12887,24 +12874,22 @@ operator|!=
 name|state
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_getsavbyspi: "
-literal|"invalid sav->state "
-literal|"(queue: %d SA: %d)\n"
-argument_list|,
+literal|"invalid sav->state (queue: %d SA: %d)\n"
+operator|,
 name|state
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|state
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -13171,16 +13156,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -13314,16 +13298,15 @@ condition|(
 name|error
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: invalid key_auth values.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|fail
 goto|;
@@ -13353,16 +13336,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -13504,16 +13486,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -13566,16 +13547,15 @@ condition|(
 name|error
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsatval: invalid key_enc value.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|fail
 goto|;
@@ -13667,16 +13647,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -13708,16 +13687,15 @@ name|SADB_X_SATYPE_IPCOMP
 case|:
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: invalid SA type.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|EINVAL
@@ -13768,16 +13746,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -13931,16 +13908,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -14025,16 +14001,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setsaval: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|ENOBUFS
@@ -14315,13 +14290,13 @@ operator|<=
 literal|255
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: illegal range of SPI %u.\n"
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -14331,10 +14306,9 @@ name|sav
 operator|->
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14376,17 +14350,16 @@ name|SADB_X_EXT_DERIV
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: "
 literal|"invalid flag (derived) given to old-esp.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14426,17 +14399,16 @@ operator|&
 name|SADB_X_EXT_DERIV
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: "
 literal|"invalid flag (derived) given to AH SA.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14450,17 +14422,16 @@ operator|!=
 name|SADB_EALG_NONE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: "
 literal|"protocol and algorithm mismated.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -14488,17 +14459,16 @@ operator|!=
 name|SADB_AALG_NONE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: "
 literal|"protocol and algorithm mismated.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -14527,16 +14497,15 @@ operator|>=
 literal|0x10000
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: invalid cpi for IPComp.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -14553,16 +14522,15 @@ literal|4
 expr_stmt|;
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: Invalid satype.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EPROTONOSUPPORT
 return|;
@@ -14603,17 +14571,16 @@ operator|!
 name|algo
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: "
 literal|"unknown authentication algorithm.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14653,27 +14620,26 @@ operator|<
 name|keylen
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: invalid AH key length %d "
 literal|"(%d-%d allowed)\n"
-argument_list|,
+operator|,
 name|keylen
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14724,16 +14690,15 @@ operator|!=
 name|SADB_SATYPE_AH
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: no satisfy algorithm for AH\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14778,16 +14743,15 @@ operator|!
 name|algo
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: unknown encryption algorithm.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14827,27 +14791,26 @@ operator|<
 name|keylen
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: invalid ESP key length %d "
 literal|"(%d-%d allowed)\n"
-argument_list|,
+operator|,
 name|keylen
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymin
-argument_list|,
+operator|,
 name|algo
 operator|->
 name|keymax
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14898,16 +14861,15 @@ operator|!=
 name|SADB_SATYPE_ESP
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: no satisfy algorithm for ESP\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14915,16 +14877,15 @@ block|}
 else|#
 directive|else
 comment|/*IPSEC_ESP*/
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: ESP not supported in this configuration\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -14965,16 +14926,15 @@ operator|!
 name|algo
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_mature: unknown compression algorithm.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -16688,16 +16648,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_newbuf: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
@@ -18797,17 +18756,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_timehandler: "
 literal|"There is no CURRENT time, why?\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 comment|/* check SOFT lifetime */
@@ -18977,17 +18935,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_timehandler: "
 literal|"There is no CURRENT time, why?\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -19129,25 +19086,24 @@ operator|!=
 name|SADB_SASTATE_DEAD
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_timehandler: "
 literal|"invalid sav->state "
 literal|"(queue: %d SA: %d): "
 literal|"kill it anyway\n"
-argument_list|,
+operator|,
 name|SADB_SASTATE_DEAD
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|state
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 			 * do not call key_freesav() here. 			 * sav should already be freed, and sav->refcnt 			 * shows other references to sav 			 * (such as from SPD). 			 */
 block|}
@@ -19750,16 +19706,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_getspi: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -19800,16 +19755,15 @@ name|sadb_address
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_getspi: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -19932,16 +19886,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_getspi: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -20304,16 +20257,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_getspi: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21000,18 +20952,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_do_getnewspi: SPI %u exists already.\n"
-argument_list|,
+operator|,
 name|min
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -21081,16 +21032,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_do_getnewspi: to allocate spi is failed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -21235,16 +21185,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21364,16 +21313,15 @@ name|NULL
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21427,16 +21375,15 @@ name|sadb_address
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21592,16 +21539,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: no SA index found.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21672,22 +21618,21 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: no larval SA with sequence %u exists.\n"
-argument_list|,
+operator|,
 name|mhp
 operator|->
 name|msg
 operator|->
 name|sadb_msg_seq
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21719,13 +21664,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: no such a SA found (spi:%u)\n"
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -21735,10 +21680,9 @@ name|sa0
 operator|->
 name|sadb_sa_spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21766,13 +21710,13 @@ operator|!=
 name|proto
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: protocol mismatched (DB=%u param=%u)\n"
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|sah
@@ -21780,12 +21724,11 @@ operator|->
 name|saidx
 operator|.
 name|proto
-argument_list|,
+operator|,
 name|proto
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21811,13 +21754,13 @@ operator|->
 name|sadb_sa_spi
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: SPI mismatched (DB:%u param:%u)\n"
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -21827,7 +21770,7 @@ name|sav
 operator|->
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -21837,10 +21780,9 @@ name|sa0
 operator|->
 name|sadb_sa_spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21867,26 +21809,25 @@ operator|->
 name|sadb_msg_pid
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: pid mismatched (DB:%u param:%u)\n"
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|pid
-argument_list|,
+operator|,
 name|mhp
 operator|->
 name|msg
 operator|->
 name|sadb_msg_pid
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -21989,16 +21930,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22255,16 +22195,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_add: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22384,16 +22323,15 @@ name|NULL
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_add: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22448,16 +22386,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* XXX need more */
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_add: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22624,16 +22561,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_add: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22689,16 +22625,15 @@ name|sadb_sa_spi
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_add: SA already exists.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22797,16 +22732,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_update: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -22968,16 +22902,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setident: invalid identity.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -23042,16 +22975,15 @@ operator|->
 name|sadb_ident_type
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setident: ident type mismatch.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|EINVAL
 return|;
@@ -23113,16 +23045,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setident: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ENOBUFS
 return|;
@@ -23162,16 +23093,15 @@ name|idents
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_setident: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ENOBUFS
 return|;
@@ -23508,16 +23438,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -23550,16 +23479,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -23600,16 +23528,15 @@ name|sadb_address
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -23634,16 +23561,15 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Caller wants us to delete all non-LARVAL SAs 		 * that match the src/dst.  This is used during 		 * IKE INITIAL-CONTACT. 		 */
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete: doing delete all.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_delete_all
 argument_list|(
@@ -23674,16 +23600,15 @@ name|sadb_sa
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -23824,16 +23749,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete: no SA found.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -24232,24 +24156,23 @@ operator|!=
 name|state
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_delete_all: "
 literal|"invalid sav->state "
 literal|"(queue: %d SA: %d)\n"
-argument_list|,
+operator|,
 name|state
-argument_list|,
+operator|,
 name|sav
 operator|->
 name|state
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 name|key_sa_chgstate
@@ -24514,16 +24437,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_get: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -24565,16 +24487,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_get: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -24628,16 +24549,15 @@ name|sadb_address
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_get: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -24774,16 +24694,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_get: no SA found.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -24823,16 +24742,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_get: there was invalid proto in SAD.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -26619,16 +26537,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_newacq: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
@@ -26854,16 +26771,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_newspacq: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
@@ -27099,16 +27015,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_acquire2: must specify sequence number.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -27198,16 +27113,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_acquire2: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -27250,16 +27164,15 @@ name|NULL
 condition|)
 block|{
 comment|/* error */
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_acquire2: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -27314,16 +27227,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* error */
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_acquire2: invalid message is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -27427,16 +27339,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_acquire2: a SA exists already.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -27465,23 +27376,22 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_acquire2: error %d returned "
 literal|"from key_acquire.\n"
-argument_list|,
+operator|,
 name|mhp
 operator|->
 name|msg
 operator|->
 name|sadb_msg_errno
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -27639,16 +27549,15 @@ operator|==
 name|so
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_register: socket exists already.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -27684,16 +27593,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_register: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -29253,16 +29161,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_flush: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -29428,16 +29335,15 @@ name|m
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_flush: No more memory.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -29639,16 +29545,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_dump: invalid satype is passed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -29800,16 +29705,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_dump: there was invalid proto in SAD.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|key_senderror
 argument_list|(
@@ -30324,7 +30228,7 @@ if|#
 directive|if
 literal|0
 comment|/*kdebug_sadb assumes msg in linear buffer*/
-block|KEYDEBUG(KEYDEBUG_KEY_DUMP, 		printf("key_parse: passed sadb_msg\n"); 		kdebug_sadb(msg));
+block|KEYDEBUG(KEYDEBUG_KEY_DUMP, 		ipseclog((LOG_DEBUG, "key_parse: passed sadb_msg\n")); 		kdebug_sadb(msg));
 endif|#
 directive|endif
 if|if
@@ -30411,16 +30315,15 @@ operator|.
 name|len
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: invalid message length.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invlen
@@ -30443,20 +30346,19 @@ operator|!=
 name|PF_KEY_V2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: PF_KEY version %u is mismatched.\n"
-argument_list|,
+operator|,
 name|msg
 operator|->
 name|sadb_msg_version
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invver
@@ -30479,20 +30381,19 @@ operator|>
 name|SADB_MAX
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: invalid type %u is passed.\n"
-argument_list|,
+operator|,
 name|msg
 operator|->
 name|sadb_msg_type
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invmsgtype
@@ -30739,21 +30640,20 @@ case|:
 case|case
 name|SADB_EXPIRE
 case|:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: must specify satype "
 literal|"when msg type=%u.\n"
-argument_list|,
+operator|,
 name|msg
 operator|->
 name|sadb_msg_type
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invsatype
@@ -30808,20 +30708,19 @@ case|:
 case|case
 name|SADB_X_SPDDELETE2
 case|:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: illegal satype=%u\n"
-argument_list|,
+operator|,
 name|msg
 operator|->
 name|sadb_msg_type
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invsatype
@@ -30848,20 +30747,19 @@ case|:
 case|case
 name|SADB_SATYPE_MIP
 case|:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: type %u isn't supported.\n"
-argument_list|,
+operator|,
 name|msg
 operator|->
 name|sadb_msg_satype
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invsatype
@@ -30889,20 +30787,19 @@ condition|)
 break|break;
 comment|/*FALLTHROUGH*/
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: invalid type %u is passed.\n"
-argument_list|,
+operator|,
 name|msg
 operator|->
 name|sadb_msg_satype
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invsatype
@@ -30993,16 +30890,15 @@ operator|->
 name|sadb_address_proto
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: upper layer protocol mismatched.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invaddr
@@ -31034,16 +30930,15 @@ operator|->
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: address family mismatched.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invaddr
@@ -31074,16 +30969,15 @@ operator|->
 name|sa_len
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: address struct size mismatched.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invaddr
@@ -31174,16 +31068,15 @@ goto|;
 block|}
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: unsupported address family.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invaddr
@@ -31259,16 +31152,15 @@ operator|>
 name|plen
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_parse: illegal prefixlen.\n"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfkeystat
 operator|.
 name|out_invaddr
@@ -31723,21 +31615,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_align: duplicate ext_type %u "
 literal|"is passed.\n"
-argument_list|,
+operator|,
 name|ext
 operator|->
 name|sadb_ext_type
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -31754,20 +31645,19 @@ return|;
 block|}
 break|break;
 default|default:
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"key_align: invalid ext_type %u is passed.\n"
-argument_list|,
+operator|,
 name|ext
 operator|->
 name|sadb_ext_type
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m

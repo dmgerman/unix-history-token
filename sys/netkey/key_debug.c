@@ -150,28 +150,6 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|IPSEC_DEBUG
-argument_list|)
-operator|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -3314,15 +3292,6 @@ directive|endif
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(_KERNEL) || (defined(_KERNEL)&& defined(IPSEC_DEBUG)) */
-end_comment
 
 end_unit
 

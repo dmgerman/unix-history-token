@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key_debug.h,v 1.7 2000/07/04 04:08:16 itojun Exp $	*/
+comment|/*	$KAME: key_debug.h,v 1.10 2001/08/05 08:37:52 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -23,27 +23,11 @@ directive|define
 name|_NETKEY_KEY_DEBUG_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|IPSEC_DEBUG
-argument_list|)
-operator|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/* debug flags */
@@ -187,14 +171,9 @@ name|lev
 parameter_list|,
 name|arg
 parameter_list|)
-value|if ((key_debug_level& (lev)) == (lev)) { arg; }
+define|\
+value|do { if ((key_debug_level& (lev)) == (lev)) { arg; } } while (0)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -445,31 +424,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KEYDEBUG
-parameter_list|(
-name|lev
-parameter_list|,
-name|arg
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!defined(_KERNEL) || (defined(_KERNEL)&& defined(IPSEC_DEBUG))*/
-end_comment
 
 begin_endif
 endif|#
