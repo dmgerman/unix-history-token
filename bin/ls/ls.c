@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.19 1998/04/24 07:49:47 des Exp $"
+literal|"$Id: ls.c,v 1.20 1998/04/24 12:43:26 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,7 +668,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"?1ABCFHLPRTWabcdfgikloqrstu"
+literal|"1ABCFHLPRTWabcdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
