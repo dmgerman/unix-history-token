@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.11 1996/09/05 07:33:24 peter Exp $"
+literal|"$Id: xinstall.c,v 1.12 1996/09/05 07:54:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -583,7 +583,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'d'
+literal|'D'
 case|:
 name|debug
 operator|++
@@ -2953,7 +2953,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: install [-Ccdps] [-f flags] [-g group] [-m mode] [-o owner] file1 file2;\n\tor file1 ... fileN directory\n"
+literal|"usage: install [-CcDps] [-f flags] [-g group] [-m mode] [-o owner] file1 file2;\n\tor file1 ... fileN directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
