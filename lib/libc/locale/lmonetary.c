@@ -198,6 +198,8 @@ if|if
 condition|(
 operator|!
 name|ret
+operator|&&
+name|_monetary_using_locale
 condition|)
 name|_monetary_locale
 operator|.

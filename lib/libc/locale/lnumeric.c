@@ -152,6 +152,8 @@ if|if
 condition|(
 operator|!
 name|ret
+operator|&&
+name|_numeric_using_locale
 condition|)
 name|_numeric_locale
 operator|.
