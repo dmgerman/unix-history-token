@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_dblookup.c,v 1.1 1997/11/09 20:54:38 wpaul Exp wpaul $"
+literal|"$Id: yp_dblookup.c,v 1.16 1999/04/14 04:05:59 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2507,6 +2507,14 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|key
+operator|->
+name|size
+operator|!=
+name|lkey
+operator|.
+name|size
+operator|||
 name|strncmp
 argument_list|(
 operator|(
@@ -2528,14 +2536,6 @@ name|key
 operator|->
 name|size
 argument_list|)
-operator|||
-name|key
-operator|->
-name|size
-operator|!=
-name|lkey
-operator|.
-name|size
 condition|)
 if|if
 condition|(
