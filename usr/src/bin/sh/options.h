@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)options.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  *  *	@(#)options.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -109,8 +109,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|Eflag
+value|optval[10]
+end_define
+
+begin_define
+define|#
+directive|define
 name|NOPTS
-value|10
+value|11
 end_define
 
 begin_ifdef
@@ -129,7 +136,7 @@ operator|+
 literal|1
 index|]
 init|=
-literal|"efIijnsxzv"
+literal|"efIijnsxzvE"
 decl_stmt|;
 end_decl_stmt
 
