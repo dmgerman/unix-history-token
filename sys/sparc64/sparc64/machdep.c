@@ -2484,7 +2484,6 @@ name|mc_fp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|mc
 operator|->
 name|mc_fp
@@ -2638,7 +2637,6 @@ name|pcb_ufp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|pcb
 operator|->
 name|pcb_ufp
