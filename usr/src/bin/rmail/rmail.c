@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.4 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,7 +496,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"%s -em -f%s"
+literal|"%s -ee -f%s"
 argument_list|,
 name|MAILER
 argument_list|,
