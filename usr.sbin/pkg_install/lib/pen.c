@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pen.c,v 1.22 1996/06/20 18:33:54 jkh Exp $"
+literal|"$Id: pen.c,v 1.22.2.1 1997/10/09 07:10:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -643,6 +643,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|Current
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
 name|vsystem
 argument_list|(
 literal|"rm -rf %s"
