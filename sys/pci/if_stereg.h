@@ -22,7 +22,7 @@ value|0x0201
 end_define
 
 begin_comment
-comment|/*  * D-Link PCI device/vendor ID for the DFE-550TX.  */
+comment|/*  * D-Link PCI device/vendor ID for the DL10050[AB] chip  */
 end_comment
 
 begin_define
@@ -35,7 +35,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DL_DEVICEID_550TX
+name|DL_DEVICEID_DL10050
 value|0x1002
 end_define
 
