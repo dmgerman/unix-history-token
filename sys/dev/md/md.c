@@ -3984,19 +3984,6 @@ condition|)
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-name|uma_zdestroy
-argument_list|(
-name|sc
-operator|->
-name|uma
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4799,7 +4786,6 @@ name|object
 operator|!=
 name|NULL
 condition|)
-block|{
 name|vm_object_deallocate
 argument_list|(
 name|sc
@@ -4807,7 +4793,6 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
