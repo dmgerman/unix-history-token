@@ -1658,6 +1658,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -1667,6 +1670,8 @@ operator|->
 name|clone_evh
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|devstat_remove_entry
 argument_list|(
 name|cdp
@@ -1850,6 +1855,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1961,6 +1972,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -2019,6 +2035,9 @@ name|flags
 operator||=
 name|ATA_D_MEDIA_CHANGED
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|cdp
 operator|->
 name|clone_evh
@@ -2034,6 +2053,8 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|acd_set_ioparm
 argument_list|(
 name|cdp

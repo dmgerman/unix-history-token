@@ -438,9 +438,14 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|eventhandler_tag
 name|clonetag
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|minimum_command_size
 decl_stmt|;
@@ -1554,6 +1559,12 @@ name|changerq
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1659,6 +1670,11 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2261,6 +2277,9 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|dev_clone
@@ -2270,6 +2289,8 @@ operator|->
 name|clonetag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|softc
@@ -3288,6 +3309,9 @@ name|si_drv1
 operator|=
 name|periph
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|softc
 operator|->
 name|clonetag
@@ -3303,6 +3327,8 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Add an async callback so that we get 	 * notified if this device goes away. 	 */
 name|xpt_setup_ccb
 argument_list|(

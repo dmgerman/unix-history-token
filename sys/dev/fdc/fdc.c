@@ -1202,11 +1202,14 @@ name|devstat
 modifier|*
 name|device_stats
 decl_stmt|;
-name|eventhandler_tag
-name|clonetag
-decl_stmt|;
 name|dev_t
 name|masterdev
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+name|eventhandler_tag
+name|clonetag
 decl_stmt|;
 name|dev_t
 name|clonedevs
@@ -1216,6 +1219,8 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|device_t
 name|dev
 decl_stmt|;
@@ -1597,6 +1602,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1615,6 +1626,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -5049,6 +5065,12 @@ begin_comment
 comment|/* NCARD> 0 */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/*  * Create a clone device upon request by devfs.  */
 end_comment
@@ -5290,6 +5312,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Configuration/initialization, per drive.  */
@@ -5984,9 +6011,6 @@ name|fd_data
 modifier|*
 name|fd
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|fd
 operator|=
 name|device_get_softc
@@ -5994,6 +6018,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|fd
 operator|->
 name|clonetag
@@ -6009,6 +6036,8 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fd
 operator|->
 name|masterdev
@@ -6037,6 +6066,13 @@ operator|->
 name|fdu
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+block|{
+name|int
+name|i
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -6061,6 +6097,9 @@ index|]
 operator|=
 name|NODEV
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|fd
 operator|->
 name|device_stats
@@ -6110,9 +6149,6 @@ name|fd_data
 modifier|*
 name|fd
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|fd
 operator|=
 name|device_get_softc
@@ -6145,6 +6181,13 @@ operator|->
 name|masterdev
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+block|{
+name|int
+name|i
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -6190,6 +6233,9 @@ operator|->
 name|clonetag
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
