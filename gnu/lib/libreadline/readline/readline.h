@@ -3,6 +3,10 @@ begin_comment
 comment|/* Readline.h -- the names of functions callable from within readline. */
 end_comment
 
+begin_comment
+comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -25,39 +29,6 @@ directive|include
 file|<readline/keymaps.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FUNCTION_DEF
-argument_list|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|int
-name|Function
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|__FUNCTION_DEF
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FUNCTION_DEF */
-end_comment
-
 begin_comment
 comment|/* The functions for manipulating the text of the line within readline. Most of these functions are bound to keys by default. */
 end_comment
@@ -65,6 +36,9 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|rl_tilde_expand
+argument_list|()
+decl_stmt|,
 name|rl_beg_of_line
 argument_list|()
 decl_stmt|,
@@ -158,6 +132,9 @@ decl_stmt|,
 name|rl_possible_completions
 argument_list|()
 decl_stmt|,
+name|rl_insert_completions
+argument_list|()
+decl_stmt|,
 name|rl_do_lowercase_version
 argument_list|()
 decl_stmt|,
@@ -205,8 +182,41 @@ argument_list|()
 decl_stmt|,
 name|rl_dump_functions
 argument_list|()
+decl_stmt|,
+name|rl_delete_horizontal_space
+argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* #define PAREN_MATCHING */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PAREN_MATCHING
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|rl_insert_close
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PAREN_MATCHING */
+end_comment
 
 begin_comment
 comment|/* These are *both* defined even when VI_MODE is not. */
@@ -219,6 +229,27 @@ name|rl_vi_editing_mode
 argument_list|()
 decl_stmt|,
 name|rl_emacs_editing_mode
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Non incremental history searching. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_noninc_forward_search
+argument_list|()
+decl_stmt|,
+name|rl_noninc_reverse_search
+argument_list|()
+decl_stmt|,
+name|rl_noninc_forward_search_again
+argument_list|()
+decl_stmt|,
+name|rl_noninc_reverse_search_again
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -239,6 +270,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|rl_vi_redo
+argument_list|()
+decl_stmt|,
+name|rl_vi_tilde_expand
+argument_list|()
+decl_stmt|,
 name|rl_vi_movement_mode
 argument_list|()
 decl_stmt|,
@@ -321,9 +358,6 @@ name|rl_vi_search
 argument_list|()
 decl_stmt|,
 name|rl_vi_search_again
-argument_list|()
-decl_stmt|,
-name|rl_vi_dosearch
 argument_list|()
 decl_stmt|,
 name|rl_vi_subst
@@ -658,21 +692,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|Function
+name|CPPFunction
 modifier|*
 name|rl_attempted_completion_function
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* If non-null, this contains the address of a function to call if the    standard meaning for expanding a tilde fails.  The function is called    with the text (sans tilde, as in "foo"), and returns a malloc()'ed string    which is the expansion, or a NULL pointer if there is no expansion. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|Function
-modifier|*
-name|rl_tilde_expander
 decl_stmt|;
 end_decl_stmt
 
@@ -701,7 +723,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If non-zero then this is the address of a function you want called    while Readline is waiting for character input.     */
+comment|/* The address of a function to call periodically while Readline is    awaiting character input, or NULL, for no event handling. */
 end_comment
 
 begin_decl_stmt

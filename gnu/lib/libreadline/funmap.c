@@ -4,17 +4,12 @@ comment|/* funmap.c -- attach names to functions. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1988, 1989, 1991 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     Readline is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
-end_comment
-
-begin_comment
-comment|/* #define STATIC_MALLOC */
+comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
 
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|STATIC_MALLOC
@@ -22,7 +17,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|char
 modifier|*
 name|xmalloc
@@ -40,7 +35,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|char
 modifier|*
 name|xmalloc
@@ -61,17 +56,65 @@ begin_comment
 comment|/* STATIC_MALLOC */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sysdep.h"
-end_include
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BUFSIZ
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BUFSIZ */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STDLIB_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"ansi_stdlib.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STDLIB_H */
+end_comment
 
 begin_include
 include|#
@@ -220,6 +263,12 @@ name|rl_delete
 block|}
 block|,
 block|{
+literal|"delete-horizontal-space"
+block|,
+name|rl_delete_horizontal_space
+block|}
+block|,
+block|{
 literal|"digit-argument"
 block|,
 name|rl_digit_argument
@@ -280,6 +329,12 @@ name|rl_forward_word
 block|}
 block|,
 block|{
+literal|"insert-completions"
+block|,
+name|rl_insert_completions
+block|}
+block|,
+block|{
 literal|"kill-line"
 block|,
 name|rl_kill_line
@@ -295,6 +350,18 @@ block|{
 literal|"next-history"
 block|,
 name|rl_get_next_history
+block|}
+block|,
+block|{
+literal|"non-incremental-forward-search-history"
+block|,
+name|rl_noninc_forward_search
+block|}
+block|,
+block|{
+literal|"non-incremental-reverse-search-history"
+block|,
+name|rl_noninc_reverse_search
 block|}
 block|,
 block|{
@@ -514,12 +581,6 @@ name|rl_vi_delete_to
 block|}
 block|,
 block|{
-literal|"vi-dosearch"
-block|,
-name|rl_vi_dosearch
-block|}
-block|,
-block|{
 literal|"vi-eWord"
 block|,
 name|rl_vi_eWord
@@ -622,7 +683,7 @@ name|rl_vi_put
 block|}
 block|,
 block|{
-literal|"vi-replace, "
+literal|"vi-replace"
 block|,
 name|rl_vi_replace
 block|}
@@ -825,12 +886,10 @@ begin_comment
 comment|/* Make the funmap contain all of the default entries. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rl_initialize_funmap
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -883,7 +942,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Stupid comparison routine for qsort () ing strings. */
@@ -912,8 +971,27 @@ end_function
 
 begin_block
 block|{
-return|return
-operator|(
+name|int
+name|r
+decl_stmt|;
+name|r
+operator|=
+operator|*
+operator|*
+name|s1
+operator|-
+operator|*
+operator|*
+name|s2
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+name|r
+operator|=
 name|strcmp
 argument_list|(
 operator|*
@@ -922,7 +1000,9 @@ argument_list|,
 operator|*
 name|s2
 argument_list|)
-operator|)
+expr_stmt|;
+return|return
+name|r
 return|;
 block|}
 end_block

@@ -26,6 +26,38 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* A structure used to pass the current state of the history stuff around. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_hist_state
+block|{
+name|HIST_ENTRY
+modifier|*
+modifier|*
+name|entries
+decl_stmt|;
+comment|/* Pointer to the entries themselves. */
+name|int
+name|offset
+decl_stmt|;
+comment|/* The location pointer within this array. */
+name|int
+name|length
+decl_stmt|;
+comment|/* Number of elements within this array. */
+name|int
+name|size
+decl_stmt|;
+comment|/* Number of slots allocated to this array. */
+block|}
+name|HISTORY_STATE
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* For convenience only.  You set this when interpreting history commands.    It is the logical offset of the first history element. */
 end_comment
 
@@ -44,6 +76,31 @@ begin_function_decl
 specifier|extern
 name|void
 name|using_history
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the current HISTORY_STATE of the history. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|HISTORY_STATE
+modifier|*
+name|history_get_history_state
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set the state of the current history array to STATE. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|history_set_history_state
 parameter_list|()
 function_decl|;
 end_function_decl
