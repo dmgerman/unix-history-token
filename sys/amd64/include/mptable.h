@@ -8613,9 +8613,14 @@ name|i
 decl_stmt|,
 name|pg
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|u_char
 name|mpbiosreason
 decl_stmt|;
+endif|#
+directive|endif
 name|u_long
 name|mpbioswarmvec
 decl_stmt|;
