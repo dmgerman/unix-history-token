@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.33 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.34 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.33 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.34 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2335,23 +2335,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|closeident
-label|:
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|clrevent
-argument_list|(
-name|ev
-argument_list|)
-expr_stmt|;
 goto|goto
-name|noident
+name|closeident
 goto|;
 block|}
 if|if
@@ -2625,6 +2610,21 @@ expr_stmt|;
 goto|goto
 name|finish
 goto|;
+name|closeident
+label|:
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|clrevent
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* IDENTPROTO */
