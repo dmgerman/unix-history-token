@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.1	%G%	*/
+comment|/*	fs.h	1.2	%G%	*/
 end_comment
 
 begin_comment
@@ -526,6 +526,17 @@ name|cg_irotor
 decl_stmt|;
 comment|/* position of last used inode */
 name|short
+name|cg_frotor
+decl_stmt|;
+comment|/* position of last used frag */
+name|short
+name|cg_frsum
+index|[
+name|FRAG
+index|]
+decl_stmt|;
+comment|/* counts of available frags */
+name|short
 name|cg_b
 index|[
 name|MAXCPG
@@ -580,6 +591,23 @@ name|getfs
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|inside
+index|[]
+decl_stmt|,
+name|around
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|fragtbl
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

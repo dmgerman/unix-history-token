@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	1.2 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,7 +608,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nifree\t%d\nndir\t%d\nnffree\t%d\nnbfree\t%d\n"
+literal|"nifree\t%d\nndir\t%d\nnffree\t%d\nnbfree\t%d\nfrsum"
 argument_list|,
 name|acg
 operator|.
@@ -627,9 +627,53 @@ operator|.
 name|cg_nbfree
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+operator|,
+name|j
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FRAG
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|printf
 argument_list|(
-literal|"iused:\t"
+literal|"\t%d"
+argument_list|,
+name|acg
+operator|.
+name|cg_frsum
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|j
+operator|+=
+name|i
+operator|*
+name|acg
+operator|.
+name|cg_frsum
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\nsum of frsum: %d\niused:\t"
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 name|pbits
@@ -727,18 +771,6 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_define
-define|#
-directive|define
-name|isset
-parameter_list|(
-name|cp
-parameter_list|,
-name|i
-parameter_list|)
-value|(cp)[(i)/NBBY]&(1<<((i)%NBBY))
-end_define
 
 begin_expr_stmt
 name|pbits
