@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_signal[] = "@(#)signal_.c	1.1";  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 16  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  */
+comment|/* char id_signal[] = "@(#)signal_.c	1.2";  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 16  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
 end_comment
 
 begin_include
@@ -9,9 +9,18 @@ directive|include
 file|"../libI77/f_errno.h"
 end_include
 
-begin_comment
-comment|/*** NOTE: the type casts for procp and signal are problematical but work ***/
-end_comment
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|dispatch
+index|[
+literal|17
+index|]
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|int
@@ -23,6 +32,13 @@ argument_list|)
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|int
+name|sig_trap
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|long
@@ -90,6 +106,15 @@ operator|<
 literal|0
 condition|)
 comment|/* function address passed */
+block|{
+name|dispatch
+index|[
+operator|*
+name|sigp
+index|]
+operator|=
+name|procp
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -103,10 +128,11 @@ operator|)
 operator|*
 name|sigp
 argument_list|,
-name|procp
+name|sig_trap
 argument_list|)
 operator|)
 return|;
+block|}
 else|else
 comment|/* integer value passed */
 return|return
@@ -127,6 +153,47 @@ name|int
 operator|)
 operator|*
 name|flag
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|sig_trap
+argument_list|(
+argument|sn
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|sn
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|long
+name|lsn
+init|=
+operator|(
+name|long
+operator|)
+name|sn
+decl_stmt|;
+return|return
+operator|(
+call|(
+modifier|*
+name|dispatch
+index|[
+name|sn
+index|]
+call|)
+argument_list|(
+operator|&
+name|lsn
 argument_list|)
 operator|)
 return|;
