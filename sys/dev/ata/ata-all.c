@@ -930,6 +930,12 @@ operator|!
 name|ata_delayed_attach
 condition|)
 block|{
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|ch
@@ -1148,6 +1154,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 literal|0
@@ -3081,6 +3092,8 @@ name|ch
 decl_stmt|;
 name|int
 name|ctlr
+decl_stmt|,
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -3104,6 +3117,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 comment|/*      * run through all ata devices and look for real ATA& ATAPI devices      * using the hints we found in the early probe, this avoids some of      * the delays probing of non-exsistent devices can cause.      */
 for|for
 control|(
@@ -3427,6 +3445,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

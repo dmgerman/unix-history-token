@@ -4606,6 +4606,12 @@ modifier|*
 name|request
 parameter_list|)
 block|{
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|request
@@ -4639,6 +4645,11 @@ argument_list|(
 name|request
 argument_list|,
 name|M_AD
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
