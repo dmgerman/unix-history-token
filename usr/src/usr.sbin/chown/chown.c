@@ -35,7 +35,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.4 (Berkeley) %G%"
+literal|"@(#)chown.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,10 +473,14 @@ if|if
 condition|(
 name|rflag
 operator|&&
+operator|(
 name|stbuf
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFDIR
 condition|)
 block|{
@@ -795,10 +799,14 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|st
+operator|(
+name|stbuf
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFDIR
 condition|)
 block|{
