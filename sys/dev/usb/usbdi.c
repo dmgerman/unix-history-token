@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.80 2001/04/13 11:19:58 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.87 2001/11/21 15:37:41 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2624,7 +2624,7 @@ literal|"usbd_clear_endpoint_stall\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Clearing en endpoint stall resets the enpoint toggle, so 	 * do the same to the HC toggle. 	 */
+comment|/*  	 * Clearing en endpoint stall resets the endpoint toggle, so 	 * do the same to the HC toggle. 	 */
 name|pipe
 operator|->
 name|methods
