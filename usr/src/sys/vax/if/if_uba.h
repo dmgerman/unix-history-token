@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.h	4.3	81/12/03	*/
+comment|/*	if_uba.h	4.4	81/12/09	*/
 end_comment
 
 begin_comment
@@ -39,28 +39,28 @@ comment|/* uba regs, in vm */
 struct|struct
 name|ifrw
 block|{
+name|caddr_t
+name|ifrw_addr
+decl_stmt|;
+comment|/* virt addr of header */
+name|int
+name|ifrw_bdp
+decl_stmt|;
+comment|/* unibus bdp */
 name|int
 name|ifrw_info
 decl_stmt|;
 comment|/* value from ubaalloc */
-name|short
-name|ifrw_bdp
+name|int
+name|ifrw_proto
 decl_stmt|;
-comment|/* unibus bdp */
+comment|/* map register prototype */
 name|struct
 name|pte
 modifier|*
 name|ifrw_mr
 decl_stmt|;
 comment|/* base of map registers */
-name|int
-name|ifrw_proto
-decl_stmt|;
-comment|/* map register prototype */
-name|caddr_t
-name|ifrw_addr
-decl_stmt|;
-comment|/* virt addr of header */
 block|}
 name|ifu_r
 struct|,
