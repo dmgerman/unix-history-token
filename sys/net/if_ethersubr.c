@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -594,6 +600,20 @@ parameter_list|)
 value|do { error = (e); goto bad;} while (0)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_function_decl
 name|int
 name|ether_ipfw_chk
@@ -627,6 +647,11 @@ name|int
 name|ether_ipfw
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Ethernet output routine.  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  * Assumes that ifp is actually pointer to arpcom structure.  */
@@ -1742,6 +1767,17 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|ip_fw
 modifier|*
@@ -1752,6 +1788,16 @@ argument_list|(
 name|m
 argument_list|)
 decl_stmt|;
+else|#
+directive|else
+name|void
+modifier|*
+name|rule
+init|=
+name|NULL
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
@@ -1802,6 +1848,17 @@ literal|0
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 if|if
 condition|(
 name|IPFW_LOADED
@@ -1851,6 +1908,8 @@ return|;
 comment|/* consumed e.g. in a pipe */
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Queue message on interface, update output statistics if 	 * successful, and start output if interface not yet active. 	 */
 name|IFQ_HANDOFF
 argument_list|(
@@ -1868,6 +1927,20 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * ipfw processing for ethernet packets (in and out).  * The second parameter is NULL from ether_demux, and ifp from  * ether_output_frame. This section of code could be used from  * bridge.c as well as long as we use some extra info  * to distinguish that case from ether_output_frame();  */
@@ -2241,6 +2314,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Process a received Ethernet packet; the packet is in the  * mbuf chain m with the ethernet header at the front.  */
@@ -2778,6 +2856,17 @@ name|l
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|ip_fw
 modifier|*
@@ -2788,6 +2877,8 @@ argument_list|(
 name|m
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|ifp
@@ -2810,6 +2901,17 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 if|if
 condition|(
 name|rule
@@ -2818,6 +2920,8 @@ comment|/* packet was already bridged */
 goto|goto
 name|post_stats
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2972,6 +3076,17 @@ operator|->
 name|if_imcasts
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|post_stats
 label|:
 if|if
@@ -3013,6 +3128,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	 * If VLANs are configured on the interface, check to 	 * see if the device performed the decapsulation and 	 * provided us with the tag. 	 */
 if|if
 condition|(
@@ -3843,6 +3960,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -3863,6 +3994,11 @@ literal|"Pass ether pkts through firewall"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -4452,11 +4588,16 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
