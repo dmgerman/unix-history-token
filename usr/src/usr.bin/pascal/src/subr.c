@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c 1.2 %G%"
+literal|"@(#)subr.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -516,17 +516,11 @@ name|nbyte
 argument_list|)
 operator|)
 operator|==
-operator|-
-literal|1
-operator|||
-name|p1
-operator|==
 literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 name|p2

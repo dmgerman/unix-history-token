@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c 1.1 %G%"
+literal|"@(#)hash.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,8 +522,7 @@ if|if
 condition|(
 name|cp
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|yerror
