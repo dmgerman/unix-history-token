@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.24 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -83,6 +83,31 @@ end_endif
 begin_comment
 comment|/*  * System call interface to the socket abstraction.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|COMPAT_OLDSOCK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -515,7 +540,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 end_ifdef
 
 begin_macro
@@ -668,7 +693,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* COMPAT_43 */
+comment|/* COMPAT_OLDSOCK */
 end_comment
 
 begin_define
@@ -719,7 +744,7 @@ name|anamelen
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 name|int
 name|compat_43
 decl_stmt|;
@@ -1103,7 +1128,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|uap
@@ -2038,7 +2063,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 name|msg
 operator|.
 name|msg_flags
@@ -2090,7 +2115,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 end_ifdef
 
 begin_macro
@@ -2689,7 +2714,7 @@ name|iov
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 name|msg
 operator|.
 name|msg_flags
@@ -3016,7 +3041,7 @@ name|cmsghdr
 argument_list|)
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 operator|&&
 name|mp
 operator|->
@@ -3060,7 +3085,7 @@ name|bad
 goto|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|mp
@@ -3368,7 +3393,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 end_ifdef
 
 begin_macro
@@ -3653,7 +3678,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 end_ifdef
 
 begin_macro
@@ -4265,7 +4290,7 @@ name|aiov
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 name|msg
 operator|.
 name|msg_flags
@@ -4869,7 +4894,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|mp
@@ -4980,7 +5005,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|mp
@@ -5011,7 +5036,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 comment|/* 		 * We assume that old recvmsg calls won't receive access 		 * rights and other control info, esp. as control info 		 * is always optional and those options didn't exist in 4.3. 		 * If we receive rights, trim the cmsghdr; anything else 		 * is tossed. 		 */
 if|if
 condition|(
@@ -6087,7 +6112,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 end_ifdef
 
 begin_macro
@@ -6240,7 +6265,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* COMPAT_43 */
+comment|/* COMPAT_OLDSOCK */
 end_comment
 
 begin_define
@@ -6295,7 +6320,7 @@ name|alen
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 name|int
 name|compat_43
 decl_stmt|;
@@ -6464,7 +6489,7 @@ name|m_len
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|uap
@@ -6570,7 +6595,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 end_ifdef
 
 begin_macro
@@ -6723,7 +6748,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* COMPAT_43 */
+comment|/* COMPAT_OLDSOCK */
 end_comment
 
 begin_define
@@ -6778,7 +6803,7 @@ name|alen
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 name|int
 name|compat_43
 decl_stmt|;
@@ -6968,7 +6993,7 @@ name|m_len
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|uap
@@ -7125,7 +7150,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 if|if
 condition|(
 name|type
@@ -7242,7 +7267,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|COMPAT_43
+name|COMPAT_OLDSOCK
 argument_list|)
 operator|&&
 name|BYTE_ORDER
