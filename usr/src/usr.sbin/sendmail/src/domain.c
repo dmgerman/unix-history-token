@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.5 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.6 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.5 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.6 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2080,8 +2080,6 @@ name|TRUE
 expr_stmt|;
 if|if
 condition|(
-name|trymx
-operator|&&
 operator|*
 operator|*
 name|dp
@@ -2092,6 +2090,8 @@ block|{
 comment|/* got a match -- save that info */
 if|if
 condition|(
+name|trymx
+operator|&&
 name|mxmatch
 operator|==
 name|NULL
