@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.63		%G%"
+literal|"@(#)sendmail.h	3.64		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,6 +1050,39 @@ end_define
 
 begin_comment
 comment|/* canonical user, next N tokens */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONDIF
+value|'\030'
+end_define
+
+begin_comment
+comment|/* conditional if-then */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONDELSE
+value|'\031'
+end_define
+
+begin_comment
+comment|/* conditional else */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONDFI
+value|'\032'
+end_define
+
+begin_comment
+comment|/* conditional fi */
 end_comment
 
 begin_comment
