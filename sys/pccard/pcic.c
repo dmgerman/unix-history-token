@@ -114,12 +114,6 @@ directive|include
 file|<machine/clock.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/laptops.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
