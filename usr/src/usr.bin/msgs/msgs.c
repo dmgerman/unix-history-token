@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.9 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2761,6 +2761,11 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|kill
