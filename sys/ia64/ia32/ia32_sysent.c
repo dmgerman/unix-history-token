@@ -5153,31 +5153,31 @@ comment|/* 380 = kse_wakeup */
 block|{
 name|AS
 argument_list|(
-name|kse_new_args
+name|kse_create_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_new
+name|kse_create
 block|}
 block|,
-comment|/* 381 = kse_new */
+comment|/* 381 = kse_create */
 block|{
 name|AS
 argument_list|(
-name|thread_wakeup_args
+name|kse_thr_interrupt_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|thread_wakeup
+name|kse_thr_interrupt
 block|}
 block|,
-comment|/* 382 = thread_wakeup */
+comment|/* 382 = kse_thr_interrupt */
 block|{
 literal|0
 block|,
@@ -5185,10 +5185,10 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|kse_yield
+name|kse_release
 block|}
 block|,
-comment|/* 383 = kse_yield */
+comment|/* 383 = kse_release */
 block|{
 literal|0
 block|,

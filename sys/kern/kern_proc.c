@@ -1436,7 +1436,7 @@ end_function
 
 begin_function
 name|int
-name|thread_wakeup
+name|kse_thr_interrupt
 parameter_list|(
 name|struct
 name|thread
@@ -1444,7 +1444,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|thread_wakeup_args
+name|kse_thr_interrupt_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1482,7 +1482,7 @@ end_function
 
 begin_function
 name|int
-name|kse_yield
+name|kse_release
 parameter_list|(
 name|struct
 name|thread
@@ -1490,7 +1490,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|kse_yield_args
+name|kse_release_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1537,7 +1537,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"kse_yield: no threads in our proc"
+literal|"kse_release: no threads in our proc"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1611,12 +1611,12 @@ comment|/*   * No new KSEG: first call: use current KSE, don't schedule an upcal
 end_comment
 
 begin_comment
-comment|/* struct kse_new_args { 	struct kse_mailbox *mbx; 	int	new_grp_flag; }; */
+comment|/* struct kse_create_args { 	struct kse_mailbox *mbx; 	int newgroup; }; */
 end_comment
 
 begin_function
 name|int
-name|kse_new
+name|kse_create
 parameter_list|(
 name|struct
 name|thread
@@ -1624,7 +1624,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|kse_new_args
+name|kse_create_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1711,7 +1711,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|new_grp_flag
+name|newgroup
 condition|)
 block|{
 name|newkg
@@ -1914,7 +1914,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|new_grp_flag
+name|newgroup
 condition|)
 name|ksegrp_link
 argument_list|(

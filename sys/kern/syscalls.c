@@ -1153,15 +1153,15 @@ comment|/* 379 = kse_exit */
 literal|"kse_wakeup"
 block|,
 comment|/* 380 = kse_wakeup */
-literal|"kse_new"
+literal|"kse_create"
 block|,
-comment|/* 381 = kse_new */
-literal|"thread_wakeup"
+comment|/* 381 = kse_create */
+literal|"kse_thr_interrupt"
 block|,
-comment|/* 382 = thread_wakeup */
-literal|"kse_yield"
+comment|/* 382 = kse_thr_interrupt */
+literal|"kse_release"
 block|,
-comment|/* 383 = kse_yield */
+comment|/* 383 = kse_release */
 literal|"__mac_get_proc"
 block|,
 comment|/* 384 = __mac_get_proc */

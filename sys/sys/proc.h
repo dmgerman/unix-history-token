@@ -547,7 +547,7 @@ name|td_intr_nesting_level
 decl_stmt|;
 comment|/* (k) Interrupt recursion. */
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|td_mailbox
 decl_stmt|;

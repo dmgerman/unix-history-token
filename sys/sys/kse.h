@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYS_KSE_H
+name|_SYS_KSE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYS_KSE_H
+name|_SYS_KSE_H_
 end_define
 
 begin_include
@@ -40,12 +40,11 @@ end_struct_decl
 begin_typedef
 typedef|typedef
 name|void
-name|kse_fn_t
+name|kse_func_t
 parameter_list|(
 name|struct
 name|kse_mailbox
 modifier|*
-name|mbx
 parameter_list|)
 function_decl|;
 end_typedef
@@ -56,7 +55,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 block|{
 name|ucontext_t
 name|tm_context
@@ -68,7 +67,7 @@ name|tm_flags
 decl_stmt|;
 comment|/* Thread flags */
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm_next
 decl_stmt|;
@@ -97,13 +96,13 @@ struct|struct
 name|kse_mailbox
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|km_curthread
 decl_stmt|;
 comment|/* Currently running thread */
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|km_completed
 decl_stmt|;
@@ -117,7 +116,7 @@ name|int
 name|km_flags
 decl_stmt|;
 comment|/* KSE flags */
-name|void
+name|kse_func_t
 modifier|*
 name|km_func
 decl_stmt|;
@@ -149,9 +148,42 @@ end_ifndef
 
 begin_function_decl
 name|int
+name|kse_create
+parameter_list|(
+name|struct
+name|kse_mailbox
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kse_exit
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kse_release
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kse_thr_interrupt
+parameter_list|(
+name|struct
+name|kse_thr_mailbox
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -165,37 +197,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|kse_new
-parameter_list|(
-name|struct
-name|kse_mailbox
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function_decl
-name|int
-name|kse_yield
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* !_SYS_KSE_H_ */
+end_comment
 
 end_unit
 

@@ -1230,7 +1230,7 @@ operator|+
 name|offsetof
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 argument_list|,
 name|tm_context
 argument_list|)
@@ -1276,7 +1276,7 @@ operator|+
 name|offsetof
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 argument_list|,
 name|tm_context
 argument_list|)
@@ -1323,7 +1323,7 @@ operator|+
 name|offsetof
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 argument_list|,
 name|tm_next
 argument_list|)

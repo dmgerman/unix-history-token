@@ -14371,7 +14371,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|kse_new_args
+name|kse_create_args
 block|{
 name|char
 name|mbx_l_
@@ -14401,7 +14401,7 @@ argument_list|)
 index|]
 decl_stmt|;
 name|char
-name|new_grp_flag_l_
+name|newgroup_l_
 index|[
 name|PADL_
 argument_list|(
@@ -14410,10 +14410,10 @@ argument_list|)
 index|]
 decl_stmt|;
 name|int
-name|new_grp_flag
+name|newgroup
 decl_stmt|;
 name|char
-name|new_grp_flag_r_
+name|newgroup_r_
 index|[
 name|PADR_
 argument_list|(
@@ -14427,7 +14427,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|thread_wakeup_args
+name|kse_thr_interrupt_args
 block|{
 name|char
 name|tmbx_l_
@@ -14435,13 +14435,13 @@ index|[
 name|PADL_
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 operator|*
 argument_list|)
 index|]
 decl_stmt|;
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tmbx
 decl_stmt|;
@@ -14451,7 +14451,7 @@ index|[
 name|PADR_
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 operator|*
 argument_list|)
 index|]
@@ -14462,7 +14462,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|kse_yield_args
+name|kse_release_args
 block|{
 name|register_t
 name|dummy
@@ -19231,14 +19231,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kse_new
+name|kse_create
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 parameter_list|,
 name|struct
-name|kse_new_args
+name|kse_create_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -19246,14 +19246,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thread_wakeup
+name|kse_thr_interrupt
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 parameter_list|,
 name|struct
-name|thread_wakeup_args
+name|kse_thr_interrupt_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -19261,14 +19261,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kse_yield
+name|kse_release
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 parameter_list|,
 name|struct
-name|kse_yield_args
+name|kse_release_args
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1785,21 +1785,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|IA32_SYS_kse_new
+name|IA32_SYS_kse_create
 value|381
 end_define
 
 begin_define
 define|#
 directive|define
-name|IA32_SYS_thread_wakeup
+name|IA32_SYS_kse_thr_interrupt
 value|382
 end_define
 
 begin_define
 define|#
 directive|define
-name|IA32_SYS_kse_yield
+name|IA32_SYS_kse_release
 value|383
 end_define
 
