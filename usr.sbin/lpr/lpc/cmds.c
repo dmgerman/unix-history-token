@@ -2727,7 +2727,7 @@ operator|->
 name|printer
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Turn off the owner execute bit of the lock file to enable printing. 	 */
+comment|/* 	 * For enable==1 ('start'), turn off the LFM_PRINT_DIS bit of the 	 * lock file to re-enable printing.  For enable==2 ('up'), also 	 * turn off the LFM_QUEUE_DIS bit to re-enable queueing. 	 */
 name|seteuid
 argument_list|(
 name|euid
@@ -2758,11 +2758,7 @@ literal|2
 condition|?
 literal|0
 else|:
-operator|(
-name|LFM_PRINT_DIS
-operator||
 name|LFM_QUEUE_DIS
-operator|)
 operator|)
 decl_stmt|;
 if|if
