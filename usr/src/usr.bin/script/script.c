@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,31 +39,22 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.4 (Berkeley) %G%"
+literal|"@(#)script.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * script  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -83,12 +77,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -98,21 +86,17 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_decl_stmt
 name|char
@@ -156,17 +140,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fname
-init|=
-literal|"typescript"
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|finish
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -239,55 +214,50 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|shell
-operator|=
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
+name|int
+name|finish
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
 name|getenv
-argument_list|(
-literal|"SHELL"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|shell
-operator|==
-literal|0
-condition|)
-name|shell
-operator|=
-literal|"/bin/sh"
-expr_stmt|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-expr_stmt|;
+parameter_list|()
+function_decl|;
 while|while
 condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
 name|argc
-operator|>
-literal|0
-operator|&&
+argument_list|,
 name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
+argument_list|,
+literal|"a"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
 condition|)
-block|{
 switch|switch
 condition|(
-name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|1
-index|]
+operator|(
+name|char
+operator|)
+name|ch
 condition|)
 block|{
 case|case
@@ -297,12 +267,15 @@ name|aflg
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: script [ -a ] [ typescript ]\n"
+literal|"usage: script [-a] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -312,12 +285,13 @@ argument_list|)
 expr_stmt|;
 block|}
 name|argc
-operator|--
-operator|,
-name|argv
-operator|++
+operator|-=
+name|optind
 expr_stmt|;
-block|}
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -330,6 +304,11 @@ name|argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+else|else
+name|fname
+operator|=
+literal|"typescript"
 expr_stmt|;
 if|if
 condition|(
@@ -360,6 +339,23 @@ name|fail
 argument_list|()
 expr_stmt|;
 block|}
+name|shell
+operator|=
+name|getenv
+argument_list|(
+literal|"SHELL"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|shell
+operator|==
+name|NULL
+condition|)
+name|shell
+operator|=
+literal|"/bin/sh"
+expr_stmt|;
 name|getmaster
 argument_list|()
 expr_stmt|;
@@ -459,14 +455,15 @@ end_macro
 
 begin_block
 block|{
+specifier|register
+name|int
+name|cc
+decl_stmt|;
 name|char
 name|ibuf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|int
-name|cc
 decl_stmt|;
 operator|(
 name|void
@@ -583,17 +580,25 @@ end_macro
 
 begin_block
 block|{
+specifier|register
+name|int
+name|cc
+decl_stmt|;
 name|time_t
 name|tvec
+decl_stmt|,
+name|time
+argument_list|()
 decl_stmt|;
 name|char
 name|obuf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|int
-name|cc
+decl_stmt|,
+modifier|*
+name|ctime
+argument_list|()
 decl_stmt|;
 operator|(
 name|void
@@ -611,7 +616,7 @@ operator|(
 name|time_t
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -897,7 +902,15 @@ begin_block
 block|{
 name|time_t
 name|tvec
+decl_stmt|,
+name|time
+argument_list|()
 decl_stmt|;
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|subchild
@@ -911,7 +924,7 @@ operator|(
 name|time_t
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fprintf
