@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2917,14 +2917,6 @@ return|;
 block|}
 end_block
 
-begin_decl_stmt
-name|int
-name|bug_refs
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Vnode reference, just increment the count  */
 end_comment
@@ -2946,40 +2938,6 @@ operator|->
 name|v_usecount
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
-name|curproc
-condition|)
-block|{
-comment|/* NEEDSWORK: debugging */
-name|curproc
-operator|->
-name|p_spare
-index|[
-literal|2
-index|]
-operator|++
-expr_stmt|;
-block|}
-empty_stmt|;
-if|if
-condition|(
-name|bug_refs
-condition|)
-block|{
-name|vprint
-argument_list|(
-literal|"vref: "
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -3059,40 +3017,6 @@ operator|->
 name|v_usecount
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
-name|curproc
-condition|)
-block|{
-comment|/* NEEDSWORK: debugging */
-name|curproc
-operator|->
-name|p_spare
-index|[
-literal|2
-index|]
-operator|--
-expr_stmt|;
-block|}
-empty_stmt|;
-if|if
-condition|(
-name|bug_refs
-condition|)
-block|{
-name|vprint
-argument_list|(
-literal|"vref: "
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
 if|if
 condition|(
 name|vp
@@ -3993,6 +3917,12 @@ expr_stmt|;
 name|vp
 operator|->
 name|v_mountb
+operator|=
+name|NULL
+expr_stmt|;
+name|vp
+operator|->
+name|v_mount
 operator|=
 name|NULL
 expr_stmt|;
