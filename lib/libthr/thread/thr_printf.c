@@ -391,7 +391,7 @@ name|char
 name|c
 parameter_list|)
 block|{
-name|write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -422,7 +422,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
