@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.4 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -808,7 +808,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s -l %s -n %s %s '%s%s%s:%s'"
+literal|"/usr/ucb/rsh %s -l %s -n %s %s '%s%s%s:%s'"
 argument_list|,
 name|host
 argument_list|,
@@ -840,7 +840,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s -n %s %s '%s%s%s:%s'"
+literal|"/usr/ucb/rsh %s -n %s %s '%s%s%s:%s'"
 argument_list|,
 name|argv
 index|[
