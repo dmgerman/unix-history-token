@@ -3063,6 +3063,7 @@ name|msg
 operator|=
 literal|"bad pathname (need leading '/')"
 expr_stmt|;
+break|break;
 case|case
 name|E_BAD_VALUE
 case|:
@@ -3070,10 +3071,11 @@ name|msg
 operator|=
 literal|"bad value"
 expr_stmt|;
+break|break;
 default|default:
 name|msg
 operator|=
-literal|"unkown error"
+literal|"unknown error"
 expr_stmt|;
 break|break;
 block|}
