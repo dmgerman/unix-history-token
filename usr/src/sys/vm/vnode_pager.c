@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -244,6 +244,14 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -385,9 +393,11 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 operator|==
 literal|0
@@ -614,6 +624,14 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -658,7 +676,7 @@ if|#
 directive|if
 literal|0
 comment|/* can hang if done at reboot on NFS FS */
-block|(void) VOP_FSYNC(vp, curproc->p_ucred);
+block|(void) VOP_FSYNC(vp, p->p_ucred, p);
 endif|#
 directive|endif
 name|vrele
@@ -1514,6 +1532,14 @@ name|error
 decl_stmt|,
 name|size
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1683,6 +1709,17 @@ name|uio_resid
 operator|=
 name|size
 expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1728,7 +1765,7 @@ name|auio
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -1747,7 +1784,7 @@ name|auio
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_ucred
 argument_list|)
