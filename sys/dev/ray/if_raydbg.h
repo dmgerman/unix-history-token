@@ -8,7 +8,7 @@ comment|/*  * Debugging odds and odds  */
 end_comment
 
 begin_comment
-comment|/*  * RAY_DEBUG settings  *  *	RECERR		Recoverable error's  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	MBUF		MBUFs dumped - needs one of TX, RX, MGT, or CTL  *	RX		packet types reported  *	CM		common memory re-mapping  *	COM		new command sleep/wakeup  *	STOP		driver detaching  *	CTL		CTL packets  *	MGT		MGT packets  */
+comment|/*  * RAY_DEBUG settings  *  *	RECERR		Recoverable error's  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	MBUF		MBUFs dumped - needs one of TX, RX, MGT, or CTL  *	RX		packet types reported  *	CM		common memory re-mapping  *	COM		new command sleep/wakeup  *	STOP		driver detaching  *	CTL		CTL packets  *	MGT		MGT packets  *	TX		TX routine info  *	DCOM		dump comq entries  */
 end_comment
 
 begin_define
@@ -109,6 +109,13 @@ name|RAY_DBG_TX
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|RAY_DBG_DCOM
+value|0x8000
+end_define
+
 begin_comment
 comment|/* Cut and paste this into a kernel configuration file */
 end_comment
@@ -151,6 +158,8 @@ value|\
 comment|/* RAY_DBG_MGT		| */
 value|\
 comment|/* RAY_DBG_TX		| */
+value|\
+comment|/* RAY_DBG_DCOM		| */
 value|\ 			0				\ 			)
 end_define
 
