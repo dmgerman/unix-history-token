@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whereis.c	5.3 (Berkeley) %G%"
+literal|"@(#)whereis.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,39 @@ name|bindirs
 index|[]
 init|=
 block|{
+literal|"/bin"
+block|,
+literal|"/sbin"
+block|,
+literal|"/usr/ucb"
+block|,
+literal|"/usr/bin"
+block|,
+literal|"/usr/sbin"
+block|,
+literal|"/usr/old"
+block|,
+literal|"/usr/contrib"
+block|,
+literal|"/usr/games"
+block|,
+literal|"/usr/local"
+block|,
+literal|"/usr/libexec"
+block|,
+literal|"/usr/include"
+block|,
+literal|"/usr/hosts"
+block|,
+literal|"/usr/share"
+block|,
+comment|/*?*/
+literal|"/etc"
+block|,
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* before reorg */
 literal|"/etc"
 block|,
 literal|"/bin"
@@ -108,10 +141,16 @@ literal|"/usr/hosts"
 block|,
 literal|"/usr/include"
 block|,
+endif|#
+directive|endif
 literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* This needs to be redone - man pages live with sources */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -158,6 +197,53 @@ init|=
 block|{
 literal|"/usr/src/bin"
 block|,
+literal|"/usr/src/sbin"
+block|,
+literal|"/usr/src/etc"
+block|,
+literal|"/usr/src/pgrm"
+block|,
+literal|"/usr/src/usr.bin"
+block|,
+literal|"/usr/src/usr.sbin"
+block|,
+literal|"/usr/src/usr.ucb"
+block|,
+literal|"/usr/src/usr.new"
+block|,
+literal|"/usr/src/usr.lib"
+block|,
+literal|"/usr/src/libexec"
+block|,
+literal|"/usr/src/libdata"
+block|,
+literal|"/usr/src/share"
+block|,
+literal|"/usr/src/contrib"
+block|,
+literal|"/usr/src/athena"
+block|,
+literal|"/usr/src/devel"
+block|,
+literal|"/usr/src/games"
+block|,
+literal|"/usr/src/local"
+block|,
+literal|"/usr/src/man"
+block|,
+literal|"/usr/src/root"
+block|,
+literal|"/usr/src/old"
+block|,
+literal|"/usr/src/include"
+block|,
+comment|/* still need libs */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* before reorg */
+literal|"/usr/src/bin"
+block|,
 literal|"/usr/src/usr.bin"
 block|,
 literal|"/usr/src/etc"
@@ -196,6 +282,8 @@ literal|"/usr/src/ucb/pascal/utilities"
 block|,
 literal|"/usr/src/undoc"
 block|,
+endif|#
+directive|endif
 literal|0
 block|}
 decl_stmt|;
