@@ -1352,6 +1352,9 @@ index|[
 name|NEWFS_CMD_MAX
 index|]
 decl_stmt|;
+name|int
+name|soft
+decl_stmt|;
 block|}
 name|PartInfo
 typedef|;
@@ -2324,6 +2327,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* FixItMode starts shell onc urrent device (ie Serial port) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|StartName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Which name we were started as */
 end_comment
 
 begin_comment
@@ -5159,6 +5175,20 @@ name|src
 parameter_list|,
 name|int
 name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* modules.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|moduleInitialize
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

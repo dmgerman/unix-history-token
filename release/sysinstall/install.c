@@ -2991,52 +2991,9 @@ condition|(
 name|RunningAsInit
 condition|)
 block|{
-comment|/* Fix up kernel first */
-if|if
-condition|(
-operator|!
-name|file_readable
-argument_list|(
-literal|"/kernel"
-argument_list|)
-condition|)
-block|{
-name|char
-modifier|*
-name|generic_kernel
-init|=
-literal|"/kernel.GENERIC"
-decl_stmt|;
-if|if
-condition|(
-name|file_readable
-argument_list|(
-name|generic_kernel
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|vsystem
-argument_list|(
-literal|"cp -p %s /kernel"
-argument_list|,
-name|generic_kernel
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to copy /kernel into place!"
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_FAILURE
-return|;
-block|}
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 comment|/* Snapshot any boot -c changes back to the new kernel */
 name|cp
 operator|=
@@ -3078,8 +3035,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Kernel copied OK, but unable to save boot -c changes\n"
-literal|"to it.  See the debug screen (ALT-F2) for details."
+literal|"Unable to save boot -c changes to new kernel,\n"
+literal|"please see the debug screen (ALT-F2) for details."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3100,6 +3057,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|kstat
+operator|||
+operator|!
+name|OnVTY
+condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -3139,21 +3104,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-block|}
-else|else
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Can't find a kernel image to link to on the root file system!\n"
-literal|"You're going to have a hard time getting this system to\n"
-literal|"boot from the hard disk, I'm afraid!"
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_FAILURE
-return|;
-block|}
-block|}
 comment|/* BOGON #1: Resurrect /dev after bin distribution screws it up */
 name|dialog_clear_norefresh
 argument_list|()
@@ -3910,6 +3860,34 @@ name|dname
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|root
+operator|->
+name|soft
+condition|)
+block|{
+name|i
+operator|=
+name|vsystem
+argument_list|(
+literal|"tunefs -n enable %s"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Warning:  Unable to enable softupdates for root filesystem on %s"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Switch to block device */
 name|sprintf
 argument_list|(
@@ -4203,6 +4181,31 @@ operator|->
 name|mountpoint
 argument_list|,
 literal|"fsck -y %s/dev/%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
+argument_list|,
+name|c2
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|->
+name|soft
+condition|)
+name|command_shell_add
+argument_list|(
+name|tmp
+operator|->
+name|mountpoint
+argument_list|,
+literal|"tunefs -n enable %s/dev/%s"
 argument_list|,
 name|RunningAsInit
 condition|?

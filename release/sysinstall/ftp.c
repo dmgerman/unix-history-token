@@ -84,7 +84,6 @@ comment|/* List of sub directories to look for under a given FTP server. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|char
 modifier|*

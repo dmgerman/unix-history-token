@@ -711,6 +711,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"wx"
+block|,
+literal|"Intel Gigabit Ethernet (82452) card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"xe"
 block|,
 literal|"Xircom/Intel EtherExpress Pro100/16 ethernet card"
