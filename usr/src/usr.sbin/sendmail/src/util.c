@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -1513,6 +1513,38 @@ decl_stmt|;
 name|char
 name|svchar
 decl_stmt|;
+comment|/* strip out 0200 bits -- these can look like TELNET protocol */
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_LIMITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+name|p
+operator|=
+name|l
+expr_stmt|;
+while|while
+condition|(
+operator|(
+operator|*
+name|p
+operator|++
+operator|&=
+operator|~
+literal|0200
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+block|}
 do|do
 block|{
 comment|/* find the end of the line */
@@ -1545,6 +1577,14 @@ expr_stmt|;
 comment|/* check for line overflow */
 while|while
 condition|(
+operator|(
+name|p
+operator|-
+name|l
+operator|)
+operator|>
+name|SMTPLINELIM
+operator|&&
 name|bitnset
 argument_list|(
 name|M_LIMITS
@@ -1553,14 +1593,6 @@ name|m
 operator|->
 name|m_flags
 argument_list|)
-operator|&&
-operator|(
-name|p
-operator|-
-name|l
-operator|)
-operator|>
-name|SMTPLINELIM
 condition|)
 block|{
 specifier|register
