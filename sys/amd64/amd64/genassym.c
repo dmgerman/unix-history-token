@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.74 1999/07/29 07:10:35 msmith Exp $  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.75 1999/07/29 08:33:00 peter Exp $  */
 end_comment
 
 begin_include
@@ -245,34 +245,6 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"#define\tP_FORW %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_procq
-operator|.
-name|tqe_next
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_BACK %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_procq
-operator|.
-name|tqe_prev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tP_VMSPACE %#x\n"
 argument_list|,
 name|OS
@@ -321,46 +293,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_PRI %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_priority
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_RTPRIO_TYPE %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_rtprio
-operator|.
-name|type
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_RTPRIO_PRIO %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_rtprio
-operator|.
-name|prio
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tP_STAT %#x\n"
 argument_list|,
 name|OS
@@ -380,30 +312,6 @@ argument_list|(
 name|proc
 argument_list|,
 name|p_wchan
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_FLAG %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_flag
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_PID %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|proc
-argument_list|,
-name|p_pid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -833,96 +741,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROF %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|user
-argument_list|,
-name|u_stats
-operator|.
-name|p_prof
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tU_PROFSCALE %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|user
-argument_list|,
-name|u_stats
-operator|.
-name|p_prof
-operator|.
-name|pr_scale
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPR_BASE %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|uprof
-argument_list|,
-name|pr_base
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPR_SIZE %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|uprof
-argument_list|,
-name|pr_size
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPR_OFF %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|uprof
-argument_list|,
-name|pr_off
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPR_SCALE %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|uprof
-argument_list|,
-name|pr_scale
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tRU_MINFLT %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|rusage
-argument_list|,
-name|ru_minflt
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tPCB_FLAGS %#x\n"
 argument_list|,
 name|OS
@@ -986,126 +804,6 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"#define\tTF_ES %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_es
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_DS %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_ds
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_EDI %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_edi
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_ESI %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_esi
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_EBP %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_ebp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_ISP %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_isp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_EBX %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_ebx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_EDX %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_edx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_ECX %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_ecx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_EAX %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_eax
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tTF_TRAPNO %#x\n"
 argument_list|,
 name|OS
@@ -1130,18 +828,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EIP %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_eip
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tTF_CS %#x\n"
 argument_list|,
 name|OS
@@ -1161,30 +847,6 @@ argument_list|(
 name|trapframe
 argument_list|,
 name|tf_eflags
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_ESP %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_esp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tTF_SS %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|trapframe
-argument_list|,
-name|tf_ss
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1366,30 +1028,6 @@ argument_list|(
 name|bootinfo
 argument_list|,
 name|bi_kernend
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tBI_ENVP %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|bootinfo
-argument_list|,
-name|bi_envp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tBI_MODULEP %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|bootinfo
-argument_list|,
-name|bi_modulep
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1673,18 +1311,6 @@ argument_list|(
 name|globaldata
 argument_list|,
 name|gd_prv_PADDR1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_GLOBALDATA %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|globaldata
 argument_list|)
 argument_list|)
 expr_stmt|;
