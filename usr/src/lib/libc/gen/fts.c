@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.24 (Berkeley) %G%"
+literal|"@(#)fts.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2088,12 +2088,20 @@ name|type
 operator|==
 name|BREAD
 condition|)
+block|{
 name|cur
 operator|->
 name|fts_info
 operator|=
 name|FTS_DNR
 expr_stmt|;
+name|cur
+operator|->
+name|fts_errno
+operator|=
+name|errno
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
