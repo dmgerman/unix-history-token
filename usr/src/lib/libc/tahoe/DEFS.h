@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	DEFS.h	5.1	86/08/01	*/
+comment|/*	DEFS.h	5.2	86/08/01	*/
 end_comment
 
 begin_comment
