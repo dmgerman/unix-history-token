@@ -1404,6 +1404,10 @@ name|virtual_end
 operator|=
 name|vm_max_kernel_address
 expr_stmt|;
+name|kernel_vm_end
+operator|=
+name|vm_max_kernel_address
+expr_stmt|;
 comment|/* 	 * Allocate the kernel tsb. 	 */
 name|pa
 operator|=
@@ -5347,7 +5351,13 @@ parameter_list|(
 name|vm_offset_t
 name|addr
 parameter_list|)
-block|{ }
+block|{
+name|panic
+argument_list|(
+literal|"pmap_growkernel: can't grow kernel"
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
