@@ -4041,6 +4041,17 @@ value|(TARGET_PUSH_ARGS&& !ACCUMULATE_OUTGOING_ARGS)
 end_define
 
 begin_comment
+comment|/* We want the stack and args grow in opposite directions, even if    PUSH_ARGS is 0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUSH_ARGS_REVERSED
+value|1
+end_define
+
+begin_comment
 comment|/* Offset of first parameter from the argument pointer register value.  */
 end_comment
 
@@ -4942,19 +4953,11 @@ name|IX86_BUILTIN_CMPLTSS
 block|,
 name|IX86_BUILTIN_CMPLESS
 block|,
-name|IX86_BUILTIN_CMPGTSS
-block|,
-name|IX86_BUILTIN_CMPGESS
-block|,
 name|IX86_BUILTIN_CMPNEQSS
 block|,
 name|IX86_BUILTIN_CMPNLTSS
 block|,
 name|IX86_BUILTIN_CMPNLESS
-block|,
-name|IX86_BUILTIN_CMPNGTSS
-block|,
-name|IX86_BUILTIN_CMPNGESS
 block|,
 name|IX86_BUILTIN_CMPORDSS
 block|,
@@ -6006,7 +6009,7 @@ parameter_list|,
 name|REGNO
 parameter_list|)
 define|\
-value|asm_fprintf ((FILE), "\tpush{l}\t%%e%s\n", reg_names[(REGNO)])
+value|do {									\   if (TARGET_64BIT)							\     asm_fprintf ((FILE), "\tpush{q}\t%%r%s\n",				\ 		 reg_names[(REGNO)] + (REX_INT_REGNO_P (REGNO) != 0));	\   else									\     asm_fprintf ((FILE), "\tpush{l}\t%%e%s\n", reg_names[(REGNO)]);	\ } while (0)
 end_define
 
 begin_comment
@@ -6023,7 +6026,7 @@ parameter_list|,
 name|REGNO
 parameter_list|)
 define|\
-value|asm_fprintf ((FILE), "\tpop{l}\t%%e%s\n", reg_names[(REGNO)])
+value|do {									\   if (TARGET_64BIT)							\     asm_fprintf ((FILE), "\tpop{q}\t%%r%s\n",				\ 		 reg_names[(REGNO)] + (REX_INT_REGNO_P (REGNO) != 0));	\   else									\     asm_fprintf ((FILE), "\tpop{l}\t%%e%s\n", reg_names[(REGNO)]);	\ } while (0)
 end_define
 
 begin_comment
