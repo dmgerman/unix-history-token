@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -4960,17 +4966,24 @@ operator|&
 name|_MC_FLAGS_ASYNC_CONTEXT
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-operator|(
+comment|/* 		 * We can get an async context passed to us while we 		 * entered the kernel through a syscall: sigreturn(2). 		 * Hence, we cannot assert that the trapframe is not 		 * a syscall frame, but we can assert that if it is 		 * the syscall is sigreturn(2). 		 */
+if|if
+condition|(
 name|tf
 operator|->
 name|tf_flags
 operator|&
 name|FRAME_SYSCALL
-operator|)
+condition|)
+name|KASSERT
+argument_list|(
+name|tf
+operator|->
+name|tf_scratch
+operator|.
+name|gr15
 operator|==
-literal|0
+name|SYS_sigreturn
 argument_list|,
 operator|(
 literal|"foo"
