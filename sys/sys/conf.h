@@ -1081,7 +1081,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dev_ref
+name|dev_refl
 parameter_list|(
 name|struct
 name|cdev

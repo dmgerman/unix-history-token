@@ -219,7 +219,7 @@ end_function
 
 begin_function
 name|void
-name|dev_ref
+name|dev_refl
 parameter_list|(
 name|struct
 name|cdev

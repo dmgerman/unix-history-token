@@ -963,7 +963,7 @@ expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
-name|dev_ref
+name|dev_refl
 argument_list|(
 name|dev
 argument_list|)
