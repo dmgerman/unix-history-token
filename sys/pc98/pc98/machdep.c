@@ -5721,19 +5721,7 @@ operator|&=
 operator|~
 name|FP_SOFTFP
 expr_stmt|;
-comment|/* 	 * Arrange to trap the next npx or `fwait' instruction (see npx.c 	 * for why fwait must be trapped at least if there is an npx or an 	 * emulator).  This is mainly to handle the case where npx0 is not 	 * configured, since the npx routines normally set up the trap 	 * otherwise.  It should be done only at boot time, but doing it 	 * here allows modifying `npx_exists' for testing the emulator on 	 * systems with an npx. 	 */
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator||
-name|CR0_MP
-operator||
-name|CR0_TS
-argument_list|)
-expr_stmt|;
-comment|/* Initialize the npx (if any) for the current process. */
-comment|/* 	 * XXX the above load_cr0() also initializes it and is a layering 	 * violation if NPX is configured.  It drops the npx partially 	 * and this would be fatal if we were interrupted now, and decided 	 * to force the state to the pcb, and checked the invariant 	 * (CR0_TS clear) if and only if PCPU_GET(fpcurthread) != NULL). 	 * ALL of this can happen except the check.  The check used to 	 * happen and be fatal later when we didn't complete the drop 	 * before returning to user mode.  This should be fixed properly 	 * soon. 	 */
+comment|/* 	 * Drop the FP state if we hold it, so that the process gets a 	 * clean FP state if it uses the FPU again. 	 */
 name|fpstate_drop
 argument_list|(
 name|td
@@ -5768,23 +5756,15 @@ operator|=
 name|rcr0
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|cr0
-operator||=
-name|CR0_NE
-expr_stmt|;
-comment|/* Done by npxinit() */
-endif|#
-directive|endif
+comment|/* 	 * CR0_MP, CR0_NE and CR0_TS are also set by npx_probe() for the 	 * BSP.  See the comments there about why we set them. 	 */
 name|cr0
 operator||=
 name|CR0_MP
 operator||
+name|CR0_NE
+operator||
 name|CR0_TS
 expr_stmt|;
-comment|/* Done at every execve() too. */
 ifndef|#
 directive|ifndef
 name|I386_CPU
