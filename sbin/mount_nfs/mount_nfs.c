@@ -907,7 +907,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|setflags
+name|set_flags
 parameter_list|(
 name|int
 modifier|*
@@ -1574,7 +1574,7 @@ name|altflags
 operator|=
 literal|0
 expr_stmt|;
-name|setflags
+name|set_flags
 argument_list|(
 operator|&
 name|altflags
@@ -1621,7 +1621,7 @@ operator|&
 name|altflags
 argument_list|)
 expr_stmt|;
-name|setflags
+name|set_flags
 argument_list|(
 operator|&
 name|altflags
