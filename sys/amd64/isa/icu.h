@@ -19,54 +19,6 @@ directive|define
 name|_I386_ISA_ICU_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * Note:  *	Most of the SMP equivilants of the icu macros are coded  *	elsewhere in an MP-safe fashion.  *	In particular note that the 'imen' variable is opaque.  *	DO NOT access imen directly, use INTREN()/INTRDIS().  */
-end_comment
-
-begin_function_decl
-name|void
-name|INTREN
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|INTRDIS
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|imen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* interrupt mask enable */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOCORE */
-end_comment
-
 begin_comment
 comment|/*  * Interrupt enable bits - in normal order of priority (which we change)  */
 end_comment
@@ -437,6 +389,10 @@ name|OCW3_RIS
 value|0x01
 end_define
 
+begin_comment
+comment|/* 1 = read IS, 0 = read IR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -444,12 +400,20 @@ name|OCW3_RR
 value|0x02
 end_define
 
+begin_comment
+comment|/* register read */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|OCW3_P
 value|0x04
 end_define
+
+begin_comment
+comment|/* poll mode command */
+end_comment
 
 begin_comment
 comment|/* 0x08 must be 1 to select OCW3 vs OCW2 */
@@ -521,24 +485,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HWI_MASK
-value|0xffff
-end_define
-
-begin_comment
-comment|/* bits for h/w interrupts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NHWI
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|ICU_IMR_OFFSET
 value|1
 end_define
@@ -561,23 +507,40 @@ begin_comment
 comment|/* non-specific EOI */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICU_SETPRI
-value|(OCW2_R | OCW2_SL)
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
-begin_comment
-comment|/* set rotation priority */
-end_comment
+begin_function_decl
+name|void
+name|atpic_handle_intr
+parameter_list|(
+name|void
+modifier|*
+name|cookie
+parameter_list|,
+name|struct
+name|intrframe
+name|iframe
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
-name|INTRCNT_COUNT
-value|(1 + ICU_LEN + 2 * ICU_LEN)
-end_define
+begin_function_decl
+name|void
+name|atpic_startup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
