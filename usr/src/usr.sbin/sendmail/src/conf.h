@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.45 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -253,6 +253,17 @@ end_define
 
 begin_comment
 comment|/* output ugly UUCP From lines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETUNIX
+value|1
+end_define
+
+begin_comment
+comment|/* include unix domain support */
 end_comment
 
 begin_define
@@ -598,7 +609,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  SunOS */
+comment|/* **  SunOS and Solaris ** **	Tested on SunOS 4.1.x (a.k.a. Solaris 1.1.x) and **	Solaris 2.2 (a.k.a. SunOS 5.2). */
 end_comment
 
 begin_if
@@ -645,6 +656,17 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -677,12 +699,6 @@ name|e
 parameter_list|)
 value|seteuid(e)
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/sysmacros.h>
-end_include
 
 begin_include
 include|#
@@ -796,7 +812,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** DG/UX 5.4.2 */
+comment|/* **  DG/UX ** **	Tested on 5.4.2 */
 end_comment
 
 begin_ifdef
@@ -900,6 +916,22 @@ undef|#
 directive|undef
 name|SETPROCTITLE
 end_undef
+
+begin_comment
+comment|/* these include files must be included early on DG/UX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
 
 begin_define
 define|#
@@ -1079,6 +1111,24 @@ directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/var/run/sendmial.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1407,6 +1457,175 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Mach386 ** **	For mt Xinu's Mach386 system. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MACH
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MACH386
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* has flock(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDSTRTOL
+value|1
+end_define
+
+begin_comment
+comment|/* need the strtol() function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* **  4.3 BSD -- this is for very old systems ** **	You'll also have to install a new resolver library. **	I don't guarantee that support for this environment is complete. */
 end_comment
 
@@ -1566,6 +1785,16 @@ directive|define
 name|LA_TYPE
 value|LA_SHORT
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NETUNIX
+end_undef
+
+begin_comment
+comment|/* no unix domain socket support */
+end_comment
 
 begin_endif
 endif|#
@@ -2242,6 +2471,12 @@ directive|ifdef
 name|SYSTEM5
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2345,10 +2580,18 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__STDC__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MACH386
+argument_list|)
+operator|)
 operator|||
 name|defined
 argument_list|(
