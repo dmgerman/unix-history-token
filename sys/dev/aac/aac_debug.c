@@ -10,6 +10,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_aac.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AAC_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2645,6 +2657,15 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AAC_DEBUG */
+end_comment
 
 end_unit
 
