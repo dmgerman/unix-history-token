@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1293,7 +1293,7 @@ name|winch
 parameter_list|(
 name|win
 parameter_list|)
-value|(win->lines[win->cury]->line[win->curx]->ch& 0177)
+value|(win->lines[win->cury]->line[win->curx].ch& 0177)
 end_define
 
 begin_comment
