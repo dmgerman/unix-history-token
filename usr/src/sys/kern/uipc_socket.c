@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1157,13 +1157,28 @@ begin_block
 block|{
 name|int
 name|s
-init|=
-name|splnet
-argument_list|()
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If protocol is connection-based, can only connect once. 	 * Otherwise, if connected, try to disconnect first. 	 * This allows user to disconnect by connecting to, e.g., 	 * a null address. 	 */
 if|if
 condition|(
