@@ -424,7 +424,7 @@ operator|(
 name|_GB2312State
 operator|*
 operator|)
-name|gs
+name|ps
 expr_stmt|;
 if|if
 condition|(
