@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	4.2 (Berkeley) %G%"
+literal|"@(#)exp.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* EXP(X)  * RETURN THE EXPONENTIAL OF X  * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 2/15/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)	  *	copysign(x,y)	  *	finite(x)  *  * Kernel function:  *	exp__E(x,c)  *  * Method:  *	1. Argument Reduction: given the input x, find r and integer k such   *	   that  *	                   x = k*ln2 + r,  |r|<= 0.5*ln2 .    *	   r will be represented as r := z+c for better accuracy.  *  *	2. Compute E(r)=exp(r)-1 by   *  *			E(r=z+c) := z + exp__E(z,r)  *  *	3. exp(x) = 2^k * ( E(r) + 1 ).  *  * Special cases:  *	exp(INF) is INF, exp(NAN) is NAN;  *	exp(-INF)=  0;  *	for finite argument, only exp(0)=1 is exact.  *  * Accuracy:  *	exp(x) returns the exponential of x nearly rounded. In a test run  *	with 1,156,000 random arguments on a VAX, the maximum observed  *	error was .768 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* EXP(X)  * RETURN THE EXPONENTIAL OF X  * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 2/15/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)	  *	copysign(x,y)	  *	finite(x)  *  * Kernel function:  *	exp__E(x,c)  *  * Method:  *	1. Argument Reduction: given the input x, find r and integer k such   *	   that  *	                   x = k*ln2 + r,  |r|<= 0.5*ln2 .    *	   r will be represented as r := z+c for better accuracy.  *  *	2. Compute expm1(r)=exp(r)-1 by   *  *			expm1(r=z+c) := z + exp__E(z,r)  *  *	3. exp(x) = 2^k * ( expm1(r) + 1 ).  *  * Special cases:  *	exp(INF) is INF, exp(NaN) is NaN;  *	exp(-INF)=  0;  *	for finite argument, only exp(0)=1 is exact.  *  * Accuracy:  *	exp(x) returns the exponential of x nearly rounded. In a test run  *	with 1,156,000 random arguments on a VAX, the maximum observed  *	error was .768 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -174,7 +174,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double format */
+comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
@@ -254,6 +254,9 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VAX
 if|if
 condition|(
 name|x
@@ -265,6 +268,9 @@ operator|(
 name|x
 operator|)
 return|;
+comment|/* x is NaN */
+endif|#
+directive|endif
 if|if
 condition|(
 name|x
@@ -325,7 +331,7 @@ operator|)
 operator|-
 name|lo
 expr_stmt|;
-comment|/* return 2^k*[E(x) + 1]  */
+comment|/* return 2^k*[expm1(x) + 1]  */
 name|z
 operator|+=
 name|exp__E

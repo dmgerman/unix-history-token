@@ -1,10 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	@(#)j0.c	4.1	%G%	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)j0.c	4.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
-comment|/* 	floating point Bessel's function 	of the first and second kinds 	of order zero  	j0(x) returns the value of J0(x) 	for all real values of x.  	There are no error returns. 	Calls sin, cos, sqrt.  	There is a niggling bug in J0 which 	causes errors up to 2e-16 for x in the 	interval [-8,8]. 	The bug is caused by an inappropriate order 	of summation of the series.  rhm will fix it 	someday.  	Coefficients are from Hart& Cheney. 	#5849 (19.22D) 	#6549 (19.25D) 	#6949 (19.41D)  	y0(x) returns the value of Y0(x) 	for positive real values of x. 	For x<=0, error number EDOM is set and a 	large negative value is returned.  	Calls sin, cos, sqrt, log, j0.  	The values of Y0 have not been checked 	to more than ten places.  	Coefficients are from Hart& Cheney. 	#6245 (18.78D) 	#6549 (19.25D) 	#6949 (19.41D) */
+comment|/* 	floating point Bessel's function 	of the first and second kinds 	of order zero  	j0(x) returns the value of J0(x) 	for all real values of x.  	There are no error returns. 	Calls sin, cos, sqrt.  	There is a niggling bug in J0 which 	causes errors up to 2e-16 for x in the 	interval [-8,8]. 	The bug is caused by an inappropriate order 	of summation of the series.  rhm will fix it 	someday.  	Coefficients are from Hart& Cheney. 	#5849 (19.22D) 	#6549 (19.25D) 	#6949 (19.41D)  	y0(x) returns the value of Y0(x) 	for positive real values of x. 	For x<=0, if on the VAX, error number EDOM is set and 	the reserved operand fault is generated; 	otherwise (an IEEE machine) an invalid operation is performed.  	Calls sin, cos, sqrt, log, j0.  	The values of Y0 have not been checked 	to more than ten places.  	Coefficients are from Hart& Cheney. 	#6245 (18.78D) 	#6549 (19.25D) 	#6949 (19.41D) */
 end_comment
 
 begin_include
@@ -13,17 +31,40 @@ directive|include
 file|<math.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* IEEE double */
+end_comment
+
 begin_decl_stmt
-name|int
-name|errno
+specifier|static
+name|double
+name|zero
+init|=
+literal|0.e0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -458,10 +499,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|arg
@@ -469,16 +506,36 @@ operator|<=
 literal|0.
 condition|)
 block|{
-name|errno
-operator|=
-name|EDOM
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VAX
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
 return|return
 operator|(
-operator|-
-name|HUGE
+name|infnan
+argument_list|(
+name|EDOM
+argument_list|)
 operator|)
 return|;
+comment|/* NaN */
+else|#
+directive|else
+comment|/* IEEE double */
+return|return
+operator|(
+name|zero
+operator|/
+name|zero
+operator|)
+return|;
+comment|/* IEEE machines: invalid operation */
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
