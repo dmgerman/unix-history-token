@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.13 (Berkeley) 83/07/02"
+literal|"@(#)savecore.c	4.14 (Berkeley) 84/07/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,10 +132,11 @@ end_define
 begin_decl_stmt
 name|struct
 name|nlist
-name|nl
+name|current_nl
 index|[]
 init|=
 block|{
+comment|/* namelist for currently running system */
 define|#
 directive|define
 name|X_DUMPDEV
@@ -188,6 +189,51 @@ define|#
 directive|define
 name|X_DUMPMAG
 value|6
+block|{
+literal|"_dumpmag"
+block|}
+block|,
+block|{
+literal|""
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|nlist
+name|dump_nl
+index|[]
+init|=
+block|{
+comment|/* name list for dumped system */
+block|{
+literal|"_dumpdev"
+block|}
+block|,
+comment|/* entries MUST be the same as */
+block|{
+literal|"_dumplo"
+block|}
+block|,
+comment|/*	those in current_nl[]  */
+block|{
+literal|"_time"
+block|}
+block|,
+block|{
+literal|"_dumpsize"
+block|}
+block|,
+block|{
+literal|"_version"
+block|}
+block|,
+block|{
+literal|"_panicstr"
+block|}
+block|,
 block|{
 literal|"_dumpmag"
 block|}
@@ -366,6 +412,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|Verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -382,6 +434,82 @@ name|int
 name|argc
 decl_stmt|;
 block|{
+while|while
+condition|(
+operator|(
+name|argc
+operator|>
+literal|1
+operator|)
+operator|&&
+operator|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|)
+condition|)
+block|{
+switch|switch
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'v'
+case|:
+name|Verbose
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"savecore: illegal flag -%c\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: savecore [-v] dirname [ system ]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -397,7 +525,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore dirname [ system ]\n"
+literal|"usage: savecore [-v] dirname [ system ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -488,7 +616,7 @@ name|dumplo
 operator|+
 name|ok
 argument_list|(
-name|nl
+name|dump_nl
 index|[
 name|X_DUMPMAG
 index|]
@@ -520,6 +648,38 @@ argument_list|(
 name|dumpfd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+operator|&&
+operator|(
+name|word
+operator|!=
+name|dumpmag
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dumplo = %d (%d bytes)\n"
+argument_list|,
+name|dumplo
+operator|/
+literal|512
+argument_list|,
+name|dumplo
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"magic number mismatch: %x != %x\n"
+argument_list|,
+name|word
+argument_list|,
+name|dumpmag
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|word
@@ -567,7 +727,7 @@ name|dumplo
 operator|+
 name|ok
 argument_list|(
-name|nl
+name|dump_nl
 index|[
 name|X_DUMPMAG
 index|]
@@ -754,16 +914,36 @@ name|char
 operator|*
 name|cp
 block|;
+name|char
+operator|*
+name|dump_sys
+block|;
+name|dump_sys
+operator|=
+name|system
+condition|?
+name|system
+else|:
+literal|"/vmunix"
+block|;
 name|nlist
 argument_list|(
 literal|"/vmunix"
 argument_list|,
-name|nl
+name|current_nl
 argument_list|)
 block|;
+name|nlist
+argument_list|(
+name|dump_sys
+argument_list|,
+name|dump_nl
+argument_list|)
+block|;
+comment|/* 	 * Some names we need for the currently running system, 	 * others for the system that was running when the dump was made. 	 * The values obtained from the current system are used 	 * to look for things in /dev/kmem that cannot be found 	 * in the dump_sys namelist, but are presumed to be the same 	 * (since the disk partitions are probably the same!) 	 */
 if|if
 condition|(
-name|nl
+name|current_nl
 index|[
 name|X_DUMPDEV
 index|]
@@ -791,7 +971,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|nl
+name|current_nl
 index|[
 name|X_DUMPLO
 index|]
@@ -819,7 +999,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|nl
+name|dump_nl
 index|[
 name|X_TIME
 index|]
@@ -833,7 +1013,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"savecore: /vmunix: time not in namelist\n"
+literal|"savecore: %s: time not in namelist\n"
+argument_list|,
+name|dump_sys
 argument_list|)
 expr_stmt|;
 name|exit
@@ -847,7 +1029,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|nl
+name|dump_nl
 index|[
 name|X_DUMPSIZE
 index|]
@@ -861,7 +1043,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"savecore: /vmunix: dumpsize not in namelist\n"
+literal|"savecore: %s: dumpsize not in namelist\n"
+argument_list|,
+name|dump_sys
 argument_list|)
 expr_stmt|;
 name|exit
@@ -872,10 +1056,14 @@ expr_stmt|;
 block|}
 end_if
 
+begin_comment
+comment|/* we need VERSION in both images */
+end_comment
+
 begin_if
 if|if
 condition|(
-name|nl
+name|current_nl
 index|[
 name|X_VERSION
 index|]
@@ -890,6 +1078,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"savecore: /vmunix: version not in namelist\n"
+argument_list|,
+name|dump_sys
 argument_list|)
 expr_stmt|;
 name|exit
@@ -903,7 +1093,37 @@ end_if
 begin_if
 if|if
 condition|(
-name|nl
+name|dump_nl
+index|[
+name|X_VERSION
+index|]
+operator|.
+name|n_value
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"savecore: %s: version not in namelist\n"
+argument_list|,
+name|dump_sys
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|dump_nl
 index|[
 name|X_PANICSTR
 index|]
@@ -917,7 +1137,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"savecore: /vmunix: panicstr not in namelist\n"
+literal|"savecore: %s: panicstr not in namelist\n"
+argument_list|,
+name|dump_sys
 argument_list|)
 expr_stmt|;
 name|exit
@@ -928,10 +1150,14 @@ expr_stmt|;
 block|}
 end_if
 
+begin_comment
+comment|/* we need DUMPMAG in both images */
+end_comment
+
 begin_if
 if|if
 condition|(
-name|nl
+name|current_nl
 index|[
 name|X_DUMPMAG
 index|]
@@ -946,6 +1172,36 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"savecore: /vmunix: dumpmag not in namelist\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|dump_nl
+index|[
+name|X_DUMPMAG
+index|]
+operator|.
+name|n_value
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"savecore: %s: dumpmag not in namelist\n"
+argument_list|,
+name|dump_sys
 argument_list|)
 expr_stmt|;
 name|exit
@@ -976,7 +1232,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nl
+name|current_nl
 index|[
 name|X_DUMPDEV
 index|]
@@ -1016,7 +1272,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nl
+name|current_nl
 index|[
 name|X_DUMPLO
 index|]
@@ -1056,7 +1312,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nl
+name|current_nl
 index|[
 name|X_DUMPMAG
 index|]
@@ -1155,7 +1411,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|nl
+name|current_nl
 index|[
 name|X_VERSION
 index|]
@@ -1241,7 +1497,7 @@ name|dumplo
 operator|+
 name|ok
 argument_list|(
-name|nl
+name|dump_nl
 index|[
 name|X_VERSION
 index|]
@@ -1286,6 +1542,12 @@ name|vers
 argument_list|,
 name|core_vers
 argument_list|)
+operator|&&
+operator|(
+name|system
+operator|==
+literal|0
+operator|)
 condition|)
 name|fprintf
 argument_list|(
@@ -1325,7 +1587,7 @@ name|dumplo
 operator|+
 name|ok
 argument_list|(
-name|nl
+name|dump_nl
 index|[
 name|X_PANICSTR
 index|]
@@ -1447,7 +1709,7 @@ name|dumplo
 operator|+
 name|ok
 argument_list|(
-name|nl
+name|dump_nl
 index|[
 name|X_TIME
 index|]
@@ -1494,11 +1756,22 @@ name|dumptime
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"dump time not found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 end_if
 
 begin_expr_stmt
@@ -2021,7 +2294,7 @@ name|dumplo
 operator|+
 name|ok
 argument_list|(
-name|nl
+name|dump_nl
 index|[
 name|X_DUMPSIZE
 index|]
