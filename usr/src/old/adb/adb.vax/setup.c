@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	4.6 82/10/28"
+literal|"@(#)setup.c	4.7 84/07/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -911,33 +911,6 @@ operator|.
 name|e2
 operator|=
 name|MAXSTOR
-expr_stmt|;
-if|if
-condition|(
-name|filhdr
-operator|.
-name|a_magic
-operator|&&
-name|u
-operator|.
-name|u_exdata
-operator|.
-name|ux_mag
-operator|&&
-name|filhdr
-operator|.
-name|a_magic
-operator|!=
-name|u
-operator|.
-name|u_exdata
-operator|.
-name|ux_mag
-condition|)
-name|printf
-argument_list|(
-literal|"corefile not from this program"
-argument_list|)
 expr_stmt|;
 block|}
 end_block
