@@ -157,49 +157,49 @@ value|(1<< SWI_CLOCK)
 end_define
 
 begin_comment
-comment|/*  * Corresponding interrupt-disable masks for cpl.  The ordering is now by  * inclusion (where each mask is considered as a set of bits). Everything  * includes SWI_CLOCK_MASK so that softclock() doesn't  * run while other swi handlers are running and timeout routines can call  * swi handlers.  * SWI_TTY_MASK includes SWI_NET_MASK  * in case tty interrupts are processed at splsofttty() for a tty that is in  * SLIP or PPP line discipline (this is weaker than merging net_imask with  * tty_imask in isa.c - splimp() must mask hard and soft tty interrupts, but  * spltty() apparently only needs to mask soft net interrupts).  */
+comment|/*  * Corresponding interrupt-disable masks for cpl.  The ordering is now by  * inclusion (where each mask is considered as a set of bits).  Everything  * except SWI_CLOCK_MASK includes SWI_LOW_MASK so that softclock() and low  * priority swi's don't run while other swi handlers are running and timeout  * routines can call swi handlers.  SWI_TTY_MASK includes SWI_NET_MASK in  * case tty interrupts are processed at splsofttty() for a tty that is in  * SLIP or PPP line discipline (this is weaker than merging net_imask with  * tty_imask in isa.c - splimp() must mask hard and soft tty interrupts, but  * spltty() apparently only needs to mask soft net interrupts).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SWI_TTY_MASK
-value|(SWI_TTY_PENDING | SWI_CLOCK_MASK | SWI_NET_MASK)
+value|(SWI_TTY_PENDING | SWI_LOW_MASK | SWI_NET_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWI_CAMNET_MASK
-value|(SWI_CAMNET_PENDING | SWI_CLOCK_MASK)
+value|(SWI_CAMNET_PENDING | SWI_LOW_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWI_CAMBIO_MASK
-value|(SWI_CAMBIO_PENDING | SWI_CLOCK_MASK)
+value|(SWI_CAMBIO_PENDING | SWI_LOW_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWI_NET_MASK
-value|(SWI_NET_PENDING | SWI_CLOCK_MASK)
+value|(SWI_NET_PENDING | SWI_LOW_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWI_VM_MASK
-value|(SWI_VM_PENDING | SWI_CLOCK_MASK)
+value|(SWI_VM_PENDING | SWI_LOW_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWI_TQ_MASK
-value|(SWI_TQ_PENDING | SWI_CLOCK_MASK)
+value|(SWI_TQ_PENDING | SWI_LOW_MASK)
 end_define
 
 begin_define
@@ -207,6 +207,13 @@ define|#
 directive|define
 name|SWI_CLOCK_MASK
 value|SWI_CLOCK_PENDING
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_LOW_MASK
+value|(SWI_TQ_PENDING | SWI_CLOCK_MASK)
 end_define
 
 begin_define

@@ -1510,7 +1510,7 @@ continue|continue;
 operator|*
 name|maskptr
 operator||=
-name|SWI_CLOCK_MASK
+name|SWI_LOW_MASK
 operator||
 operator|(
 literal|1
@@ -1919,7 +1919,7 @@ index|]
 operator|=
 name|mask
 operator||
-name|SWI_CLOCK_MASK
+name|SWI_LOW_MASK
 operator||
 operator|(
 literal|1
