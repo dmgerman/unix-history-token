@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	1.3 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,6 +433,9 @@ index|[
 name|NBUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -493,6 +496,10 @@ operator|.
 name|data
 operator|=
 name|NULL
+expr_stmt|;
+name|i
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -569,7 +576,7 @@ operator|=
 name|bplen
 expr_stmt|;
 block|}
-comment|/* 		 * Store record under primary name. 		 */
+comment|/* 		 * Store record under name field. 		 */
 operator|(
 operator|(
 name|char
@@ -623,39 +630,7 @@ name|key
 operator|.
 name|data
 operator|=
-name|namebuf
-expr_stmt|;
-name|np
-operator|=
-name|namebuf
-expr_stmt|;
-name|cp
-operator|=
 name|nf
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|':'
-operator|||
-operator|*
-name|cp
-operator|==
-literal|'|'
-condition|)
-block|{
-operator|*
-name|np
-operator|=
-literal|'\0'
 expr_stmt|;
 name|key
 operator|.
@@ -663,7 +638,7 @@ name|size
 operator|=
 name|strlen
 argument_list|(
-name|namebuf
+name|nf
 argument_list|)
 operator|+
 literal|1
@@ -697,20 +672,19 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cp
+name|printf
+argument_list|(
+literal|"Hashed %d records.\r"
+argument_list|,
+name|i
 operator|++
+argument_list|)
 expr_stmt|;
-break|break;
-block|}
-operator|*
-name|np
-operator|++
-operator|=
-operator|*
-name|cp
-operator|++
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Store references for other names. 		 */
 operator|(
 operator|(
@@ -750,7 +724,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|namebuf
+name|nf
 argument_list|)
 expr_stmt|;
 name|data
@@ -764,11 +738,21 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* need extra byte for tag */
-for|for
-control|(
+name|key
+operator|.
+name|data
+operator|=
+name|namebuf
+expr_stmt|;
 name|np
 operator|=
 name|namebuf
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|nf
 init|;
 operator|*
 name|cp
@@ -917,6 +901,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
