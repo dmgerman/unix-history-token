@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.1 (Berkeley) %G%  *  * from: $Header: conf.c,v 1.15 93/05/05 09:43:29 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.2 (Berkeley) %G%  *  * from: $Header: conf.c,v 1.17 93/10/31 05:37:39 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -881,6 +881,20 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"cgsix.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|cgsix
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"bsdaudio.h"
 end_include
 
@@ -1285,10 +1299,14 @@ name|cdev_notdef
 argument_list|()
 block|,
 comment|/* 66 */
-name|cdev_notdef
-argument_list|()
+name|cdev_fb_init
+argument_list|(
+name|NCGSIX
+argument_list|,
+name|cgsix
+argument_list|)
 block|,
-comment|/* 67 */
+comment|/* 67: /dev/cgsix */
 name|cdev_notdef
 argument_list|()
 block|,
