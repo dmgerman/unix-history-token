@@ -8478,9 +8478,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
 name|map
-operator|!=
-name|kmem_map
+operator|->
+name|system_map
 condition|)
 name|mtx_lock
 argument_list|(
@@ -8511,9 +8512,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|map
-operator|!=
-name|kmem_map
+operator|->
+name|system_map
 condition|)
 name|mtx_unlock
 argument_list|(
