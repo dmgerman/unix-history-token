@@ -681,11 +681,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|stopprofclock
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|MALLOC
 argument_list|(
 name|p
@@ -709,6 +704,11 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * If parent is waiting for us to exit or exec, 	 * P_PPWAIT is set; we will wakeup the parent below. 	 */
 name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|stopprofclock
 argument_list|(
 name|p
 argument_list|)

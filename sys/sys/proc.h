@@ -1962,6 +1962,10 @@ name|p_runtime
 decl_stmt|;
 comment|/* (j) Real time. */
 name|int
+name|p_profthreads
+decl_stmt|;
+comment|/* (c) Num threads in addupc_task */
+name|int
 name|p_traceflag
 decl_stmt|;
 comment|/* (o) Kernel trace points. */
@@ -2558,6 +2562,17 @@ end_define
 
 begin_comment
 comment|/* Has started profiling. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_STOPPROF
+value|0x00008
+end_define
+
+begin_comment
+comment|/* Has thread in requesting to stop prof */
 end_comment
 
 begin_define
