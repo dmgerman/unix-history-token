@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cardd.h,v 1.4 1996/04/18 04:25:12 nate Exp $  *  *	Common include file for PCMCIA daemon  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cardd.h,v 1.5 1996/06/18 19:52:29 nate Exp $  *  *	Common include file for PCMCIA daemon  */
 end_comment
 
 begin_include
@@ -26,6 +26,24 @@ include|#
 directive|include
 file|"readcis.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXTERN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXTERN
+value|extern
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -292,6 +310,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|slot
 modifier|*
@@ -303,6 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|allocblk
 modifier|*
@@ -315,6 +335,7 @@ comment|/* I/O blocks in the pool */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|allocblk
 modifier|*
@@ -327,6 +348,7 @@ comment|/* Memory in the pool */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|int
 name|pool_irq
 index|[
@@ -340,6 +362,7 @@ comment|/* IRQ allocations */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|driver
 modifier|*
@@ -352,6 +375,7 @@ comment|/* List of drivers */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
 name|struct
 name|card
 modifier|*
@@ -360,6 +384,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|EXTERN
 name|bitstr_t
 modifier|*
 name|mem_avail
@@ -367,6 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|EXTERN
 name|bitstr_t
 modifier|*
 name|io_avail
@@ -374,92 +400,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|EXTERN
 name|int
 name|verbose
-decl_stmt|,
-name|do_log
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|newstr
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* util.c functions */
+end_comment
 
 begin_function_decl
-name|void
-name|die
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|xmalloc
+name|unsigned
+name|long
+name|alloc_memory
 parameter_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|log_1s
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|logerr
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|reset_slot
-parameter_list|(
-name|struct
-name|slot
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|execute
-parameter_list|(
-name|struct
-name|cmd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|readfile
-parameter_list|(
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -479,11 +435,97 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|long
-name|alloc_memory
+name|void
+name|die
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|execute
+parameter_list|(
+name|struct
+name|cmd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|log_1s
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|log_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|logerr
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|newstr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|reset_slot
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|xmalloc
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* file.c */
+end_comment
+
+begin_function_decl
+name|void
+name|readfile
+parameter_list|(
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

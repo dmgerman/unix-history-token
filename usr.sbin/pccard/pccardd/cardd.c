@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cardd.c,v 1.18 1997/10/06 11:36:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
 
 begin_include
 include|#
@@ -83,11 +77,11 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
+begin_define
+define|#
+directive|define
+name|EXTERN
+end_define
 
 begin_include
 include|#
@@ -105,6 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|struct
 name|card_config
 modifier|*
@@ -118,6 +113,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|int
+name|assign_io
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|setup_slot
 parameter_list|(
@@ -129,68 +137,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|read_ether
-parameter_list|(
-name|struct
-name|slot
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|dump_config_file
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pr_cmd
-parameter_list|(
-name|struct
-name|cmd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|readslots
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|slot_change
-parameter_list|(
-name|struct
-name|slot
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|card_removed
-parameter_list|(
-name|struct
-name|slot
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|card_inserted
 parameter_list|(
@@ -202,8 +149,65 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|assign_io
+specifier|static
+name|void
+name|card_removed
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|dump_config_file
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pr_cmd
+parameter_list|(
+name|struct
+name|cmd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|read_ether
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|readslots
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|slot_change
 parameter_list|(
 name|struct
 name|slot
@@ -365,12 +369,14 @@ condition|)
 name|dump_config_file
 argument_list|()
 expr_stmt|;
+name|log_setup
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|debug
 condition|)
-block|{
 if|if
 condition|(
 name|daemon
@@ -385,43 +391,9 @@ argument_list|(
 literal|"fork failed"
 argument_list|)
 expr_stmt|;
-name|openlog
-argument_list|(
-literal|"cardd"
-argument_list|,
-name|LOG_PID
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
-expr_stmt|;
-name|do_log
-operator|=
-literal|1
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Before readslots\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|readslots
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"After readslots\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|slots
@@ -431,6 +403,13 @@ condition|)
 name|die
 argument_list|(
 literal|"no PC-CARD slots"
+argument_list|)
+expr_stmt|;
+name|log_1s
+argument_list|(
+literal|"pccardd started"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -472,16 +451,6 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Doing select\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|count
 operator|=
 name|select
@@ -498,18 +467,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"select=%d\n"
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|count
@@ -518,7 +475,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|logerr
 argument_list|(
 literal|"select"
 argument_list|)
@@ -694,6 +651,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_cmd
 parameter_list|(
@@ -793,18 +751,6 @@ operator|<
 literal|0
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"opened %s\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sp
 operator|=
 name|xmalloc
@@ -869,7 +815,7 @@ operator|&
 name|mem
 argument_list|)
 condition|)
-name|warn
+name|logerr
 argument_list|(
 literal|"ioctl (PIOCRWMEM)"
 argument_list|)
@@ -877,9 +823,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+name|log_1s
 argument_list|(
-literal|"mem=%x\n"
+literal|"mem=0x%x\n"
 argument_list|,
 name|mem
 argument_list|)
@@ -925,7 +871,7 @@ operator|&
 name|mem
 argument_list|)
 condition|)
-name|warn
+name|logerr
 argument_list|(
 literal|"ioctl (PIOCRWMEM)"
 argument_list|)
@@ -1005,38 +951,13 @@ name|state
 argument_list|)
 condition|)
 block|{
-name|warn
+name|logerr
 argument_list|(
 literal|"ioctl (PIOCGSTATE)"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%p %p %d %d\n"
-argument_list|,
-name|sp
-argument_list|,
-operator|&
-name|sp
-operator|->
-name|state
-argument_list|,
-name|state
-operator|.
-name|state
-argument_list|,
-name|sp
-operator|->
-name|state
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|state
@@ -1327,18 +1248,13 @@ condition|)
 block|{
 name|log_1s
 argument_list|(
-literal|"No card in database for \"%s\""
+literal|"No card in database for \"%s\"(\"%s\")"
 argument_list|,
 name|sp
 operator|->
 name|cis
 operator|->
 name|manuf
-argument_list|)
-expr_stmt|;
-name|log_1s
-argument_list|(
-literal|"vers: \"%s\""
 argument_list|,
 name|sp
 operator|->
@@ -1408,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Once assigned, then set up the I/O& mem contexts, and 	 * set up the windows, and then attach the driver. 	 */
+comment|/* 	 * 	 * Once assigned, set up the I/O& mem contexts, set up the 	 * windows, and then attach the driver. 	 */
 if|if
 condition|(
 name|setup_slot
@@ -1437,6 +1353,7 @@ comment|/*  *	read_ether - read ethernet address from card. Offset is  *	the off
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|read_ether
 parameter_list|(
@@ -1572,7 +1489,7 @@ index|[
 literal|10
 index|]
 expr_stmt|;
-name|printf
+name|log_1s
 argument_list|(
 literal|"Ether=%02x:%02x:%02x:%02x:%02x:%02x\n"
 argument_list|,
@@ -1627,6 +1544,7 @@ comment|/*  *	assign_driver - Assign driver to card.  *	First, see if an existin
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|card_config
 modifier|*
@@ -1692,10 +1610,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|log_1s
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Found existing driver (%s) for %s\n"
 argument_list|,
 name|conf
@@ -1922,6 +1838,7 @@ comment|/*  *	assign_io - Allocate resources to slot matching the  *	configurati
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|assign_io
 parameter_list|(
@@ -2122,7 +2039,7 @@ condition|)
 return|return
 operator|(
 operator|-
-literal|1
+literal|2
 operator|)
 return|;
 name|sp
@@ -2151,10 +2068,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|log_1s
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Using mem addr 0x%x, size %d, card addr 0x%x\n"
 argument_list|,
 name|sp
@@ -2167,13 +2082,13 @@ name|sp
 operator|->
 name|mem
 operator|.
-name|cardaddr
+name|size
 argument_list|,
 name|sp
 operator|->
 name|mem
 operator|.
-name|size
+name|cardaddr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2410,10 +2325,8 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|log_1s
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Using I/O addr 0x%x, size %d\n"
 argument_list|,
 name|sp
@@ -2455,6 +2368,7 @@ comment|/*  *	setup_slot - Allocate the I/O and memory contexts  *	return true i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|setup_slot
 parameter_list|(
@@ -2665,23 +2579,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+name|log_1s
 argument_list|(
-literal|"Setting config reg at offs 0x%x"
+literal|"Setting config reg at offs 0x%lx to 0x%x, Reset time = %d ms\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" to 0x%x\n"
 argument_list|,
 name|c
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Reset time = %d ms\n"
 argument_list|,
 name|sp
 operator|->
@@ -2799,18 +2707,6 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Setting CCSR reg to 0x%x\n"
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|mem
 operator|.
@@ -2818,34 +2714,6 @@ name|window
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Mem@ %x %d %x\n"
-argument_list|,
-name|sp
-operator|->
-name|mem
-operator|.
-name|addr
-argument_list|,
-name|sp
-operator|->
-name|mem
-operator|.
-name|size
-argument_list|,
-name|sp
-operator|->
-name|mem
-operator|.
-name|cardaddr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sp
@@ -2989,9 +2857,13 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|printf
+name|log_1s
 argument_list|(
-literal|"Assigning I/O window 0, start 0x%x, size 0x%x flags 0x%x\n"
+literal|"Assigning I/O window %d, start 0x%x, size 0x%x flags 0x%x\n"
+argument_list|,
+name|io
+operator|.
+name|window
 argument_list|,
 name|io
 operator|.
@@ -3149,11 +3021,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|log_1s
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Assign %s%d, io 0x%x, mem 0x%x, %d bytes, irq %x, flags %x\n"
+literal|"Assign %s%d, io 0x%x, mem 0x%lx, %d bytes, irq %d, flags %x\n"
 argument_list|,
 name|drv
 operator|.
@@ -3186,7 +3056,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 comment|/* 	 * If the driver fails to be connected to the device, 	 * then it may mean that the driver did not recognise it. 	 */
 name|memcpy
 argument_list|(
@@ -3216,20 +3085,6 @@ name|drv
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|perror
-argument_list|(
-name|sp
-operator|->
-name|card
-operator|->
-name|manuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|log_1s
 argument_list|(
 literal|"driver allocation failed for %s"

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: readcis.c,v 1.10 1997/10/06 11:36:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2858,10 +2858,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Tuple code = 0x%x, len = %d\n"
 argument_list|,
 name|code

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: file.c,v 1.12 1997/10/06 11:36:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
 
 begin_include
 include|#
@@ -284,7 +278,6 @@ name|struct
 name|cmd
 modifier|*
 modifier|*
-name|cp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -332,15 +325,18 @@ name|in
 operator|==
 literal|0
 condition|)
-name|err
+block|{
+name|logerr
 argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|die
+argument_list|(
+literal|"readfile"
+argument_list|)
+expr_stmt|;
+block|}
 name|parsefile
 argument_list|()
 expr_stmt|;
@@ -367,10 +363,8 @@ name|config
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|log_1s
 argument_list|(
-name|stderr
-argument_list|,
 literal|"warning: card %s(%s) has no valid configuration\n"
 argument_list|,
 name|cp
@@ -1743,10 +1737,8 @@ name|pusht
 operator|=
 literal|1
 expr_stmt|;
-name|fprintf
+name|log_1s
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s at line %d, near %s\n"
 argument_list|,
 name|filename
