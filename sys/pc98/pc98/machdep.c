@@ -9923,6 +9923,17 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Giant is used early for at least debugger traps, unexpected traps, 	 * and vm86bios initialization. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+literal|"Giant"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -10192,17 +10203,6 @@ argument_list|(
 name|GLDT_SEL
 argument_list|,
 name|SEL_KPL
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We grab Giant during the vm86bios routines, so we need to ensure 	 * that it is up and running before we use vm86. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-literal|"Giant"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|vm86_initialize
