@@ -1080,13 +1080,14 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Use KERN_PROC_PROC instead of KERN_PROC_ALL, since we 	 * just want processes and not individual kernel threads. 	 */
 name|plist
 operator|=
 name|kvm_getprocs
 argument_list|(
 name|kd
 argument_list|,
-name|KERN_PROC_ALL
+name|KERN_PROC_PROC
 argument_list|,
 literal|0
 argument_list|,
