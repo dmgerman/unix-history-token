@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	8.1 (Berkeley) %G%"
+literal|"@(#)compress.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,24 +198,6 @@ name|char
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
