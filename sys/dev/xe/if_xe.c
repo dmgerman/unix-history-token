@@ -15,28 +15,6 @@ begin_comment
 comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  The  * following cards are currently known to work with the driver:  *   Xircom CreditCard 10/100 (CE3)  *   Xircom CreditCard Ethernet + Modem 28 (CEM28)  *   Xircom CreditCard Ethernet 10/100 + Modem 56 (CEM56)  *   Xircom RealPort Ethernet 10  *   Xircom RealPort Ethernet 10/100  *   Xircom RealPort Ethernet 10/100 + Modem 56 (REM56, REM56G)  *   Intel EtherExpress Pro/100 PC Card Mobile Adapter 16 (Pro/100 M16A)  *   Compaq Netelligent 10/100 PC Card (CPQ-10/100)  *  * Some other cards *should* work, but support for them is either broken or in   * an unknown state at the moment.  I'm always interested in hearing from  * people who own any of these cards:  *   Xircom CreditCard 10Base-T (PS-CE2-10)  *   Xircom CreditCard Ethernet + ModemII (CEM2)  *   Xircom CEM28 and CEM33 Ethernet/Modem cards (may be variants of CEM2?)  *  * Thanks to all who assisted with the development and testing of the driver,  * especially: Werner Koch, Duke Kamstra, Duncan Barclay, Jason George, Dru  * Nelson, Mike Kephart, Bill Rainey and Douglas Rand.  Apologies if I've left  * out anyone who deserves a mention here.  *  * Special thanks to Ade Lovett for both hosting the mailing list and doing  * the CEM56/REM56 support code; and the FreeBSD UK Users' Group for hosting  * the web pages.  *  * Contact points:  *  * Driver web page: http://ukug.uk.freebsd.org/~scott/xe_drv/  *  * Mailing list: http://www.lovett.com/lists/freebsd-xircom/  * or send "subscribe freebsd-xircom" to<majordomo@lovett.com>  *  * Author email:<scott@uk.freebsd.org>  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XE_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|XE_DEBUG
-value|2
-end_define
-
-begin_comment
-comment|/* Increase for more voluminous output! */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
