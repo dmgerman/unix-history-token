@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: tsunamireg.h,v 1.1 1999/05/26 23:22:03 gallatin Exp $ */
 end_comment
 
 begin_comment
@@ -161,6 +161,21 @@ name|tsunami_cchip
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  *  cchip csc defines  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSC_P1P
+value|(1L<< 14)
+end_define
+
+begin_comment
+comment|/* pchip1 present if this bit is set in  				   chip->csc */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -248,6 +263,38 @@ block|}
 name|tsunami_pchip
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * pchip window defines  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WINDOW_ENABLE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDOW_DISABLE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDOW_SCATTER_GATHER
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WINDOW_DIRECT_MAPPED
+value|0x0
+end_define
 
 begin_define
 define|#
