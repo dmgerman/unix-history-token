@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.11 (Berkeley) %G%"
+literal|"@(#)order.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1076,24 +1076,15 @@ operator|<
 literal|0x80000000
 condition|)
 block|{
-name|sul
-operator|+=
-literal|2
-expr_stmt|;
 name|p
 operator|->
 name|in
 operator|.
 name|su
 operator|=
-name|max
-argument_list|(
 name|sul
-argument_list|,
-name|szr
 operator|+
-name|sur
-argument_list|)
+literal|2
 expr_stmt|;
 return|return;
 block|}
