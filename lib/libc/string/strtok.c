@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Softweyr LLC.  All rights reserved.  *  * strtok_r, from Berkeley strtok  * Oct 13, 1998 by Wes Peters<wes@softweyr.com>  *  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Softweyr LLC, the  *      University of California, Berkeley, and its contributors.  *  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY SOFTWEYR LLC, THE REGENTS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL SOFTWEYR LLC, THE  * REGENTS, OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1998 Softweyr LLC.  All rights reserved.  *  * strtok_r, from Berkeley strtok  * Oct 13, 1998 by Wes Peters<wes@softweyr.com>  *  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Softweyr LLC, the  *      University of California, Berkeley, and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY SOFTWEYR LLC, THE REGENTS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL SOFTWEYR LLC, THE  * REGENTS, OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -77,12 +77,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
-block|}
-comment|/*      * Skip (span) leading delimiters (s += strspn(s, delim), sort of).      */
+comment|/* 	 * Skip (span) leading delimiters (s += strspn(s, delim), sort of). 	 */
 name|cont
 label|:
 name|c
@@ -112,34 +112,32 @@ operator|!=
 literal|0
 condition|;
 control|)
-block|{
 if|if
 condition|(
 name|c
 operator|==
 name|sc
 condition|)
-block|{
 goto|goto
 name|cont
 goto|;
-block|}
-block|}
 if|if
 condition|(
 name|c
 operator|==
 literal|0
 condition|)
-comment|/* no non-delimiter characters */
 block|{
+comment|/* no non-delimiter characters */
 operator|*
 name|last
 operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|tok
@@ -148,7 +146,7 @@ name|s
 operator|-
 literal|1
 expr_stmt|;
-comment|/*      * Scan token (scan for delimiters: s += strcspn(s, delim), sort of).      * Note that delim must have one NUL; we stop if we see that, too.      */
+comment|/* 	 * Scan token (scan for delimiters: s += strcspn(s, delim), sort of). 	 * Note that delim must have one NUL; we stop if we see that, too. 	 */
 for|for
 control|(
 init|;
@@ -190,12 +188,10 @@ name|c
 operator|==
 literal|0
 condition|)
-block|{
 name|s
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 else|else
 block|{
 name|char
@@ -218,7 +214,9 @@ operator|=
 name|s
 expr_stmt|;
 return|return
+operator|(
 name|tok
+operator|)
 return|;
 block|}
 block|}
@@ -255,6 +253,7 @@ modifier|*
 name|last
 decl_stmt|;
 return|return
+operator|(
 name|strtok_r
 argument_list|(
 name|s
@@ -264,18 +263,16 @@ argument_list|,
 operator|&
 name|last
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DEBUG_STRTOK
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * Test the tokenizer.  */
@@ -284,7 +281,9 @@ end_comment
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|test
@@ -350,7 +349,6 @@ argument_list|,
 name|sep
 argument_list|)
 control|)
-block|{
 name|printf
 argument_list|(
 literal|"Next word is \"%s\".\n"
@@ -358,7 +356,6 @@ argument_list|,
 name|word
 argument_list|)
 expr_stmt|;
-block|}
 name|phrase
 operator|=
 literal|"foo"
@@ -434,7 +431,6 @@ operator|&
 name|brkb
 argument_list|)
 control|)
-block|{
 name|printf
 argument_list|(
 literal|"So far we're at %s:%s\n"
@@ -445,9 +441,10 @@ name|phrase
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
