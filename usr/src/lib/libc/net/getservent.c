@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getservent.c	4.4	82/12/17	*/
+comment|/*	getservent.c	4.5	83/01/02	*/
 end_comment
 
 begin_include
@@ -394,7 +394,6 @@ name|cp
 operator|!=
 name|NULL
 condition|)
-block|{
 operator|*
 name|cp
 operator|++
@@ -403,6 +402,8 @@ literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+name|cp
+operator|&&
 operator|*
 name|cp
 condition|)
@@ -454,7 +455,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|cp
 operator|!=
 name|NULL
@@ -465,7 +465,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 block|}
 operator|*
 name|q
