@@ -814,6 +814,14 @@ name|tcp_msl
 operator|=
 name|TCPTV_MSL
 expr_stmt|;
+name|tcp_rexmit_min
+operator|=
+name|TCPTV_MIN
+expr_stmt|;
+name|tcp_rexmit_slop
+operator|=
+name|TCPTV_CPU_VAR
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -2719,7 +2727,7 @@ name|tp
 operator|->
 name|t_rttmin
 operator|=
-name|TCPTV_MIN
+name|tcp_rexmit_min
 expr_stmt|;
 name|tp
 operator|->

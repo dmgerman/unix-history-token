@@ -133,15 +133,30 @@ begin_comment
 comment|/* max probes before drop */
 end_comment
 
+begin_comment
+comment|/*  * TCPTV_MIN represents the minimum allowed retransmit interval.  It  * is currently one second but will ultimately be reduced to 3 ticks  * for algorithmic stability, leaving the 200ms variance to deal with  * delayed-acks, protocol overheads.  A 1 second minimum badly breaks  * throughput on any network faster then a modem that has minor but  * continuous packet loss unrelated to congestion, such as on a wireless  * network.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TCPTV_MIN
-value|(  1*hz)
+value|( hz )
 end_define
 
 begin_comment
 comment|/* minimum allowable value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPTV_CPU_VAR
+value|( hz/5 )
+end_define
+
+begin_comment
+comment|/* cpu variance (200ms) */
 end_comment
 
 begin_define
@@ -246,7 +261,7 @@ name|tvmin
 parameter_list|,
 name|tvmax
 parameter_list|)
-value|do { \ 	(tv) = (value); \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
+value|do { \ 	(tv) = (value) + tcp_rexmit_slop; \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
 end_define
 
 begin_ifdef
@@ -314,6 +329,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tcp_maxpersistidle
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_rexmit_min
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_rexmit_slop
 decl_stmt|;
 end_decl_stmt
 
