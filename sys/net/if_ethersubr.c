@@ -1987,20 +1987,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-init|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|BDG_ACTIVE
@@ -2074,7 +2060,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
+comment|/* 	 * Queue message on interface, update output statistics if 	 * successful, and start output if interface not yet active. 	 */
 if|if
 condition|(
 name|IF_QFULL
@@ -2179,7 +2165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a received Ethernet packet;  * the packet is in the mbuf chain m without  * the ether header, which is provided separately.  *  * First we perform any link layer operations, then continue  * to the upper layers with ether_demux().  */
+comment|/*  * Process a received Ethernet packet;  * the packet is in the mbuf chain m without  * the ether header, which is provided separately.  *  * NOTA BENE: for many drivers "eh" is a pointer into the first mbuf or  * cluster, right before m_data. So be very careful when working on m,  * as you could destroy *eh !!  * A (probably) more convenient and efficient interface to ether_input  * is to have the whole packet (with the ethernet header) into the mbuf:  * modules which do not need the ethernet header can easily drop it, while  * others (most noticeably bridge and ng_ether) do not need to do additional  * work to put the ethernet header back into the mbuf.  *  * First we perform any link layer operations, then continue  * to the upper layers with ether_demux().  */
 end_comment
 
 begin_function
@@ -2292,12 +2278,6 @@ name|NULL
 condition|)
 return|return;
 block|}
-if|#
-directive|if
-literal|0
-block|printf("--eth_in: %s%d %6D -> %6D ty 0x%04x\n", 		ifp->if_name, ifp->if_unit, 		eh->ether_shost, ":", 		eh->ether_dhost, ":", 		ntohs(eh->ether_type));
-endif|#
-directive|endif
 comment|/* Check for bridging mode */
 if|if
 condition|(

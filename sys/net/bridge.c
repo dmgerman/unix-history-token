@@ -570,7 +570,7 @@ operator||
 name|IFF_MUTE
 operator|)
 expr_stmt|;
-name|DDB
+name|DEB
 argument_list|(
 argument|printf(
 literal|">> now %s%d promisc OFF if_flags 0x%x bdg_flags 0x%x\n"
@@ -878,7 +878,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * parse the config string, set IFF_USED, name and cluster_id  * for all interfaces found.  * The config string is a list of "if[:cluster]" with  * a number of possible separators ([-,; ])  */
+comment|/*  * parse the config string, set IFF_USED, name and cluster_id  * for all interfaces found.  * The config string is a list of "if[:cluster]" with  * a number of possible separators (see "sep").  */
 end_comment
 
 begin_function
@@ -1117,7 +1117,7 @@ argument_list|,
 name|cluster
 argument_list|)
 expr_stmt|;
-name|DDB
+name|DEB
 argument_list|(
 argument|printf(
 literal|"--++  found %s\n"
@@ -2831,16 +2831,6 @@ argument_list|(
 literal|"bdg_forward: bad dst"
 argument_list|)
 expr_stmt|;
-name|DEB
-argument_list|(
-argument|printf(
-literal|"bdg_forward %6D -> %6D ty 0x%04x dst %p once %d\n"
-argument|,         eh->ether_shost,
-literal|":"
-argument|,         eh->ether_dhost,
-literal|":"
-argument|,         ntohs(eh->ether_type), dst, once);
-argument_list|)
 comment|/*      * Do filtering in a very similar way to what is done in ip_output.      * Only if firewall is loaded, enabled, and the packet is not      * from ether_output() (src==NULL, or we would filter it twice).      * Additional restrictions may apply e.g. non-IP, short packets,      * and pkts already gone through a pipe.      */
 if|if
 condition|(
