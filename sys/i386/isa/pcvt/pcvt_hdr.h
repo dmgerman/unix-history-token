@@ -4913,10 +4913,12 @@ decl_stmt|;
 comment|/* save G3 ptr */
 name|u_short
 modifier|*
+modifier|*
 name|sc_GL
 decl_stmt|;
 comment|/* save GL ptr */
 name|u_short
+modifier|*
 modifier|*
 name|sc_GR
 decl_stmt|;
@@ -5118,10 +5120,12 @@ decl_stmt|;
 comment|/* Select Character Attrib bit array */
 name|u_short
 modifier|*
+modifier|*
 name|GL
 decl_stmt|;
 comment|/* ptr to current GL conversion table*/
 name|u_short
+modifier|*
 modifier|*
 name|GR
 decl_stmt|;
@@ -5177,6 +5181,7 @@ name|ss
 decl_stmt|;
 comment|/* flag, single shift G2 / G3 -> GL */
 name|u_short
+modifier|*
 modifier|*
 name|Gs
 decl_stmt|;

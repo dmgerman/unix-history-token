@@ -242,9 +242,12 @@ name|video
 operator|=
 name|attrib
 operator||
+operator|(
+operator|*
 name|svsp
 operator|->
 name|GL
+operator|)
 index|[
 name|ch
 operator|-
@@ -259,9 +262,12 @@ name|video
 operator|=
 name|attrib
 operator||
+operator|(
+operator|*
 name|svsp
 operator|->
 name|Gs
+operator|)
 index|[
 name|ch
 operator|-
@@ -305,9 +311,12 @@ name|video
 operator|=
 name|attrib
 operator||
+operator|(
+operator|*
 name|svsp
 operator|->
 name|GR
+operator|)
 index|[
 name|ch
 operator|-
@@ -994,6 +1003,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G1
@@ -1007,6 +1017,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G0
@@ -1596,6 +1607,7 @@ name|svsp
 operator|->
 name|Gs
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G2
@@ -1621,6 +1633,7 @@ name|svsp
 operator|->
 name|Gs
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G3
@@ -1779,6 +1792,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G2
@@ -1798,6 +1812,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G3
@@ -1817,6 +1832,7 @@ name|svsp
 operator|->
 name|GR
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G2
@@ -1836,6 +1852,7 @@ name|svsp
 operator|->
 name|GR
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G3
@@ -1855,6 +1872,7 @@ name|svsp
 operator|->
 name|GR
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G1
@@ -3754,6 +3772,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G0
@@ -3763,6 +3782,7 @@ name|svsp
 operator|->
 name|GR
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G2

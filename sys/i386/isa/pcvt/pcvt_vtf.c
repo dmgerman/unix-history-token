@@ -2181,6 +2181,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G0
@@ -2190,6 +2191,7 @@ name|svsp
 operator|->
 name|GR
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G2
@@ -2230,6 +2232,7 @@ name|svsp
 operator|->
 name|GL
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G0
@@ -2239,6 +2242,7 @@ name|svsp
 operator|->
 name|GR
 operator|=
+operator|&
 name|svsp
 operator|->
 name|G2
