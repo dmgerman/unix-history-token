@@ -1465,6 +1465,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|path_mtu_discovery
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ss_fltsz
 decl_stmt|;
 end_decl_stmt
