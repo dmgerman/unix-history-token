@@ -1814,6 +1814,9 @@ name|struct
 name|save87
 name|dummy
 decl_stmt|;
+name|critical_t
+name|savecrit
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1821,6 +1824,11 @@ name|npx_exists
 condition|)
 return|return;
 comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets npxproc = NULL as important side effects. 	 */
+name|savecrit
+operator|=
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|npxsave
 argument_list|(
 operator|&
@@ -1859,6 +1867,11 @@ expr_stmt|;
 name|start_emulating
 argument_list|()
 expr_stmt|;
+name|critical_exit
+argument_list|(
+name|savecrit
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1878,6 +1891,14 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|critical_t
+name|savecrit
+decl_stmt|;
+name|savecrit
+operator|=
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1896,6 +1917,11 @@ name|curpcb
 argument_list|)
 operator|->
 name|pcb_savefpu
+argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|(
+name|savecrit
 argument_list|)
 expr_stmt|;
 ifdef|#
