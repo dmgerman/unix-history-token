@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	1.13 (Berkeley) %G%"
+literal|"@(#)symbols.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6520,12 +6520,6 @@ operator|->
 name|class
 operator|!=
 name|TAG
-name|and
-name|s
-operator|->
-name|class
-operator|!=
-name|MODULE
 name|endfind
 argument_list|(
 name|s
@@ -6615,12 +6609,6 @@ operator|->
 name|class
 operator|!=
 name|TAG
-name|and
-name|t
-operator|->
-name|class
-operator|!=
-name|MODULE
 name|endfind
 argument_list|(
 name|t
