@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.21 (Berkeley) %G%"
+literal|"@(#)csh.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1432,14 +1432,9 @@ name|setintr
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
 name|settell
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      * Save the remaining arguments in argv.      */
 name|setq
 argument_list|(
@@ -2537,16 +2532,11 @@ name|OHIST
 init|=
 name|HIST
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
 name|bool
 name|otell
 init|=
 name|cantell
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|Bin
 name|saveB
@@ -2742,14 +2732,9 @@ argument_list|(
 name|omask
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
 name|settell
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -2901,15 +2886,10 @@ name|enterhist
 operator|=
 name|oenterhist
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
 name|cantell
 operator|=
 name|otell
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|resexit
 argument_list|(

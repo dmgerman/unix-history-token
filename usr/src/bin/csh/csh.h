@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1140,12 +1140,6 @@ name|lineloc
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TELL
-end_ifdef
-
 begin_decl_stmt
 name|bool
 name|cantell
@@ -1154,15 +1148,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Is current source tellable ? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TELL */
 end_comment
 
 begin_comment

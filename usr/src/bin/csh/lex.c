@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.11 (Berkeley) %G%"
+literal|"@(#)lex.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6079,9 +6079,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
 if|if
 condition|(
 name|cantell
@@ -6222,8 +6219,6 @@ name|c
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|again
 label|:
 name|buf
@@ -6641,16 +6636,11 @@ name|sb
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
 if|if
 condition|(
 name|cantell
 condition|)
 return|return;
-endif|#
-directive|endif
 if|if
 condition|(
 name|whyles
@@ -6744,6 +6734,16 @@ name|off_t
 name|l
 decl_stmt|;
 block|{
+name|fseekp
+operator|=
+name|l
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cantell
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|notdef
@@ -6755,21 +6755,6 @@ name|wp
 decl_stmt|;
 endif|#
 directive|endif
-name|fseekp
-operator|=
-name|l
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TELL
-if|if
-condition|(
-operator|!
-name|cantell
-condition|)
-block|{
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -6779,7 +6764,7 @@ return|return;
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/* 	 * Christos: I don't understand this? both wp and l are local. What is 	 * this used for? I suspect the author meant fseek = wp->w_start 	 */
+comment|/* 	 * Christos: I don't understand this? both wp and l are local. What is 	 * this used for? I suspect the author meant fseek = wp->w_start 	 * This seek/tell stuff needs to be re-written... 	 */
 for|for
 control|(
 name|wp
@@ -6813,12 +6798,7 @@ name|w_start
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|TELL
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -6882,12 +6862,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TELL
-end_ifdef
 
 begin_function
 name|void
@@ -6994,11 +6968,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

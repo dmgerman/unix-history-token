@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.7 (Berkeley) %G%"
+literal|"@(#)misc.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -572,7 +572,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|NOTUSED
 end_ifdef
 
 begin_function
@@ -664,7 +664,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* notdef */
+comment|/* NOTUSED */
 end_comment
 
 begin_ifndef
