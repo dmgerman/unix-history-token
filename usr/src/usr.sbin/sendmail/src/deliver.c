@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.12	%G%"
+literal|"@(#)deliver.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1183,14 +1183,6 @@ directive|endif
 endif|DEBUG
 end_endif
 
-begin_expr_stmt
-name|rewind
-argument_list|(
-name|stdin
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* create a pipe to shove the mail through */
 end_comment
@@ -2151,6 +2143,11 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* output the body of the message */
+name|rewind
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -2162,13 +2159,15 @@ operator|&&
 operator|(
 name|i
 operator|=
-name|read
+name|fread
 argument_list|(
-literal|0
-argument_list|,
 name|buf
 argument_list|,
+literal|1
+argument_list|,
 name|BUFSIZ
+argument_list|,
+name|stdin
 argument_list|)
 operator|)
 operator|>
