@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.70 2003/09/20 05:23:50 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.71 2003/09/20 17:54:30 imp Exp   */
 end_comment
 
 begin_comment
@@ -5942,6 +5942,27 @@ define|#
 directive|define
 name|PCMCIA_STR_EXP_EXPMULTIMEDIA
 value|"EXP IDE/ATAPI DVD Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_EXP_THINLANCOMBO
+value|{ "PCMCIA LAN", "Ethernet", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_EXP_THINLANCOMBO
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_EXP_THINLANCOMBO
+value|"EXP ThinLan Combo"
 end_define
 
 begin_define
