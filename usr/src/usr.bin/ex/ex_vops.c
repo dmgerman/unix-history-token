@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops.c	7.2	%G%"
+literal|"@(#)ex_vops.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2230,6 +2230,9 @@ name|oldhold
 init|=
 name|hold
 decl_stmt|;
+name|int
+name|oldmask
+decl_stmt|;
 if|if
 condition|(
 name|value
@@ -2249,6 +2252,16 @@ condition|)
 name|cnt
 operator|=
 literal|1
+expr_stmt|;
+name|oldmask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGWINCH
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|vsave
 argument_list|()
@@ -2495,6 +2508,14 @@ argument_list|,
 literal|1
 argument_list|,
 name|ind
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|oldmask
 argument_list|)
 expr_stmt|;
 block|}

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tty.h	7.3	%G%  */
+comment|/* sccs id:	@(#)ex_tty.h	7.4	%G%  */
 end_comment
 
 begin_comment
@@ -933,6 +933,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Save COLUMNS for a hack in open mode */
+end_comment
+
+begin_decl_stmt
+name|var
+name|struct
+name|winsize
+name|winsz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Save window size for stopping comparisons */
 end_comment
 
 begin_decl_stmt
