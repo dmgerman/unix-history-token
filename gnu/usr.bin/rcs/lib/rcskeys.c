@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *                     RCS keyword table and match operation  */
+comment|/* RCS keyword table and match operation */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
+comment|/* Copyright 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991, 1992, 1993, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_comment
-comment|/* $Log: rcskeys.c,v $  * Revision 5.2  1991/08/19  03:13:55  eggert  * Say `T const' instead of `const T'; it's less confusing for pointer types.  * (This change was made in other source files too.)  *  * Revision 5.1  1991/04/21  11:58:25  eggert  * Don't put , just before } in initializer.  *  * Revision 5.0  1990/08/22  08:12:54  eggert  * Add -k.  Ansify and Posixate.  *  * Revision 4.3  89/05/01  15:13:02  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.2  87/10/18  10:36:33  narten  * Updating version numbers. Changes relative to 1.1 actuallyt  * relative to 4.1  *   * Revision 1.2  87/09/24  14:00:10  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 4.1  83/05/04  10:06:53  wft  * Initial revision.  *   */
+comment|/*  * $Log: rcskeys.c,v $  * Revision 5.4  1995/06/16 06:19:24  eggert  * Update FSF address.  *  * Revision 5.3  1993/11/03 17:42:27  eggert  * Add Name keyword.  *  * Revision 5.2  1991/08/19  03:13:55  eggert  * Say `T const' instead of `const T'; it's less confusing for pointer types.  * (This change was made in other source files too.)  *  * Revision 5.1  1991/04/21  11:58:25  eggert  * Don't put , just before } in initializer.  *  * Revision 5.0  1990/08/22  08:12:54  eggert  * Add -k.  Ansify and Posixate.  *  * Revision 4.3  89/05/01  15:13:02  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.2  87/10/18  10:36:33  narten  * Updating version numbers. Changes relative to 1.1 actuallyt  * relative to 4.1  *   * Revision 1.2  87/09/24  14:00:10  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 4.1  83/05/04  10:06:53  wft  * Initial revision.  *   */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|keysId
 argument_list|,
-literal|"$Id: rcskeys.c,v 5.2 1991/08/19 03:13:55 eggert Exp $"
+literal|"$Id: rcskeys.c,v 5.4 1995/06/16 06:19:24 eggert Exp $"
 argument_list|)
 end_macro
 
@@ -36,7 +36,7 @@ index|[]
 init|=
 block|{
 comment|/* This must be in the same order as rcsbase.h's enum markers type. */
-name|nil
+literal|0
 block|,
 name|AUTHOR
 block|,
@@ -49,6 +49,8 @@ block|,
 name|LOCKER
 block|,
 name|LOG
+block|,
+name|NAME
 block|,
 name|RCSFILE
 block|,

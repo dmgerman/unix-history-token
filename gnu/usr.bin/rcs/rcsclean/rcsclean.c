@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* rcsclean - clean up working files */
+comment|/* Clean up working files.  */
 end_comment
 
 begin_comment
-comment|/* Copyright 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:  	rcs-bugs@cs.purdue.edu  */
+comment|/* Copyright 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:  	rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ argument|rcscleanId
 argument_list|,
 literal|"rcsclean"
 argument_list|,
-literal|"$Id: rcsclean.c,v 5.1 1991/11/03 01:11:44 eggert Exp $"
+literal|"$Id: rcsclean.c,v 5.9 1995/06/16 06:19:24 eggert Exp $"
 argument_list|)
 end_macro
 
@@ -106,7 +106,7 @@ specifier|const
 name|usage
 index|[]
 init|=
-literal|"\nrcsclean: usage: rcsclean [-ksubst] [-{nqru}[rev]] [-Vn] [-xsuffixes] [file ...]"
+literal|"\nrcsclean: usage: rcsclean -ksubst -{nqru}[rev] -T -Vn -xsuff -zzone file ..."
 decl_stmt|;
 specifier|static
 name|struct
@@ -130,7 +130,7 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|changelock
+name|dounlock
 decl_stmt|,
 name|expmode
 decl_stmt|,
@@ -141,6 +141,9 @@ decl_stmt|,
 name|unlockflag
 decl_stmt|,
 name|waslocked
+decl_stmt|;
+name|int
+name|Ttimeflag
 decl_stmt|;
 name|struct
 name|hshentries
@@ -166,7 +169,7 @@ literal|1
 expr_stmt|;
 name|rev
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|suffixes
 operator|=
@@ -177,6 +180,10 @@ operator|=
 name|true
 expr_stmt|;
 name|unlockflag
+operator|=
+name|false
+expr_stmt|;
+name|Ttimeflag
 operator|=
 name|false
 expr_stmt|;
@@ -206,8 +213,8 @@ if|if
 condition|(
 operator|--
 name|argc
-operator|<=
-literal|0
+operator|<
+literal|1
 condition|)
 block|{
 if|#
@@ -232,7 +239,7 @@ else|#
 directive|else
 name|faterror
 argument_list|(
-literal|"no file names specified"
+literal|"no pathnames specified"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -246,6 +253,10 @@ name|argv
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|*
+name|a
+operator|||
 operator|*
 name|a
 operator|++
@@ -336,6 +347,22 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'T'
+case|:
+if|if
+condition|(
+operator|*
+name|a
+condition|)
+goto|goto
+name|unknown
+goto|;
+name|Ttimeflag
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|unlockflag
@@ -363,10 +390,19 @@ operator|=
 name|a
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|zone_set
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|unknown
 label|:
-name|faterror
+name|error
 argument_list|(
 literal|"unknown option: %s%s"
 argument_list|,
@@ -378,7 +414,36 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-do|do
+name|dounlock
+operator|=
+name|perform
+operator|&
+name|unlockflag
+expr_stmt|;
+if|if
+condition|(
+name|nerror
+condition|)
+name|cleanup
+argument_list|()
+expr_stmt|;
+else|else
+for|for
+control|(
+init|;
+literal|0
+operator|<
+name|argc
+condition|;
+name|cleanup
+argument_list|()
+operator|,
+operator|++
+name|argv
+operator|,
+operator|--
+name|argc
+control|)
 block|{
 name|ffree
 argument_list|()
@@ -389,15 +454,13 @@ operator|!
 operator|(
 literal|0
 operator|<
-name|pairfilenames
+name|pairnames
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|unlockflag
-operator|&
-name|perform
+name|dounlock
 condition|?
 name|rcswriteopen
 else|:
@@ -413,7 +476,7 @@ name|workptr
 operator|=
 name|Iopen
 argument_list|(
-name|workfilename
+name|workname
 argument_list|,
 name|FOPEN_R_WORK
 argument_list|,
@@ -424,6 +487,27 @@ operator|)
 operator|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|same_file
+argument_list|(
+name|RCSstat
+argument_list|,
+name|workstat
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|rcserror
+argument_list|(
+literal|"RCS file is the same as working file %s."
+argument_list|,
+name|workname
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|gettree
 argument_list|()
 expr_stmt|;
@@ -568,12 +652,6 @@ name|locker_expansion
 operator|&
 name|unlockflag
 expr_stmt|;
-name|changelock
-operator|=
-name|unlocked
-operator|&
-name|perform
-expr_stmt|;
 if|if
 condition|(
 name|unlocked
@@ -595,13 +673,23 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|unlocked
+operator|&&
 operator|!
+name|checkaccesslist
+argument_list|()
+condition|)
+continue|continue;
+if|if
+condition|(
 name|dorewrite
 argument_list|(
-name|unlockflag
+name|dounlock
 argument_list|,
-name|changelock
+name|unlocked
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -700,13 +788,18 @@ name|delta
 operator|->
 name|num
 argument_list|,
-name|RCSfilename
+name|RCSname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|perform
+operator|&
+name|unlocked
+condition|)
+block|{
 name|if_advise_access
 argument_list|(
-name|changelock
-operator|&&
 name|deltas
 operator|->
 name|first
@@ -720,13 +813,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|donerewrite
 argument_list|(
-name|changelock
+name|true
+argument_list|,
+name|Ttimeflag
+condition|?
+name|RCSstat
+operator|.
+name|st_mtime
+else|:
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 operator|!
@@ -738,7 +845,7 @@ name|stdout
 argument_list|,
 literal|"rm -f %s\n"
 argument_list|,
-name|workfilename
+name|workname
 argument_list|)
 expr_stmt|;
 name|Izclose
@@ -753,31 +860,17 @@ name|perform
 operator|&&
 name|un_link
 argument_list|(
-name|workfilename
+name|workname
 argument_list|)
 operator|!=
 literal|0
 condition|)
 name|eerror
 argument_list|(
-name|workfilename
+name|workname
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|cleanup
-argument_list|()
-operator|,
-operator|++
-name|argv
-operator|,
-literal|0
-operator|<
-operator|--
-name|argc
-condition|)
-do|;
 name|tempunlink
 argument_list|()
 expr_stmt|;
@@ -831,11 +924,8 @@ operator|&
 name|fcopy
 argument_list|)
 expr_stmt|;
-name|Ozclose
-argument_list|(
-operator|&
-name|frewrite
-argument_list|)
+name|ORCSclose
+argument_list|()
 expr_stmt|;
 name|dirtempunlink
 argument_list|()
@@ -846,7 +936,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|lint
+name|RCS_lint
 end_if
 
 begin_define
@@ -862,11 +952,13 @@ directive|endif
 end_endif
 
 begin_function
-name|exiting
 name|void
 name|exiterr
 parameter_list|()
 block|{
+name|ORCSerror
+argument_list|()
+expr_stmt|;
 name|dirtempunlink
 argument_list|()
 expr_stmt|;
@@ -896,7 +988,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|lock
+name|rcslock
 modifier|*
 modifier|*
 name|al
@@ -1128,6 +1220,7 @@ index|[
 literal|1
 index|]
 operator|||
+operator|(
 name|en
 index|[
 literal|1
@@ -1140,6 +1233,7 @@ name|en
 index|[
 literal|2
 index|]
+operator|)
 operator|)
 condition|)
 continue|continue;
@@ -1214,11 +1308,32 @@ operator|+=
 name|s
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|void_closedir
+define|#
+directive|define
+name|close_directory
+parameter_list|(
+name|d
+parameter_list|)
+value|(closedir(d), 0)
+else|#
+directive|else
+define|#
+directive|define
+name|close_directory
+parameter_list|(
+name|d
+parameter_list|)
+value|closedir(d)
+endif|#
+directive|endif
 if|if
 condition|(
 name|errno
 operator|||
-name|closedir
+name|close_directory
 argument_list|(
 name|d
 argument_list|)

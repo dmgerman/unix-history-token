@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
+comment|/* Check out working files from revisions of RCS files.  */
 end_comment
 
 begin_comment
-comment|/*  *                     RCS checkout operation  */
+comment|/* Copyright 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  *                       check out revisions from RCS files  *****************************************************************************  */
-end_comment
-
-begin_comment
-comment|/* $Log: co.c,v $  * Revision 5.9  1991/10/07  17:32:46  eggert  * ci -u src/RCS/co.c,v src/co.c<<\.  * -k affects just working file, not RCS file.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Warn before removing somebody else's file.  * Add -M.  Fix co -j bugs.  Tune.  *  * Revision 5.7  1991/04/21  11:58:15  eggert  * Ensure that working file is newer than RCS file after co -[lu].  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1990/12/04  05:18:38  eggert  * Don't checkaccesslist() unless necessary.  * Use -I for prompts and -q for diagnostics.  *  * Revision 5.5  1990/11/01  05:03:26  eggert  * Fix -j.  Add -I.  *  * Revision 5.4  1990/10/04  06:30:11  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:09  eggert  * co -kv yields a readonly working file.  *  * Revision 5.2  1990/09/04  08:02:13  eggert  * Standardize yes-or-no procedure.  *  * Revision 5.0  1990/08/22  08:10:02  eggert  * Permit multiple locks by same user.  Add setuid support.  * Remove compile-time limits; use malloc instead.  * Permit dates past 1999/12/31.  Switch to GMT.  * Make lock and temp files faster and safer.  * Ansify and Posixate.  Add -k, -V.  Remove snooping.  Tune.  *  * Revision 4.7  89/05/01  15:11:41  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.6  88/08/09  19:12:15  eggert  * Fix "co -d" core dump; rawdate wasn't always initialized.  * Use execv(), not system(); fix putchar('\0') and diagnose() botches; remove lint  *   * Revision 4.5  87/12/18  11:35:40  narten  * lint cleanups (from Guy Harris)  *   * Revision 4.4  87/10/18  10:20:53  narten  * Updating version numbers changes relative to 1.1, are actually  * relative to 4.2  *   * Revision 1.3  87/09/24  13:58:30  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:21:38  jenkins  * Port to suns  *   * Revision 4.2  83/12/05  13:39:48  wft  * made rewriteflag external.  *   * Revision 4.1  83/05/10  16:52:55  wft  * Added option -u and -f.  * Added handling of default branch.  * Replaced getpwuid() with getcaller().  * Removed calls to stat(); now done by pairfilenames().  * Changed and renamed rmoldfile() to rmworkfile().  * Replaced catchints() calls with restoreints(), unlink()--link() with rename();  *   * Revision 3.7  83/02/15  15:27:07  wft  * Added call to fastcopy() to copy remainder of RCS file.  *  * Revision 3.6  83/01/15  14:37:50  wft  * Added ignoring of interrupts while RCS file is renamed; this avoids  * deletion of RCS files during the unlink/link window.  *  * Revision 3.5  82/12/08  21:40:11  wft  * changed processing of -d to use DATEFORM; removed actual from  * call to preparejoin; re-fixed printing of done at the end.  *  * Revision 3.4  82/12/04  18:40:00  wft  * Replaced getdelta() with gettree(), SNOOPDIR with SNOOPFILE.  * Fixed printing of "done".  *  * Revision 3.3  82/11/28  22:23:11  wft  * Replaced getlogin() with getpwuid(), flcose() with ffclose(),  * %02d with %.2d, mode generation for working file with WORKMODE.  * Fixed nil printing. Fixed -j combined with -l and -p, and exit  * for non-existing revisions in preparejoin().  *  * Revision 3.2  82/10/18  20:47:21  wft  * Mode of working file is now maintained even for co -l, but write permission  * is removed.  * The working file inherits its mode from the RCS file, plus write permission  * for the owner. The write permission is not given if locking is strict and  * co does not lock.  * An existing working file without write permission is deleted automatically.  * Otherwise, co asks (empty answer: abort co).  * Call to getfullRCSname() added, check for write error added, call  * for getlogin() fixed.  *  * Revision 3.1  82/10/13  16:01:30  wft  * fixed type of variables receiving from getc() (char -> int).  * removed unused variables.  */
+comment|/*  * $Log: co.c,v $  * Revision 5.18  1995/06/16 06:19:24  eggert  * Update FSF address.  *  * Revision 5.17  1995/06/01 16:23:43  eggert  * (main, preparejoin): Pass argument instead of using `join' static variable.  * (main): Add -kb.  *  * Revision 5.16  1994/03/17 14:05:48  eggert  * Move buffer-flushes out of critical sections, since they aren't critical.  * Use ORCSerror to clean up after a fatal error.  Remove lint.  * Specify subprocess input via file descriptor, not file name.  *  * Revision 5.15  1993/11/09 17:40:15  eggert  * -V now prints version on stdout and exits.  Don't print usage twice.  *  * Revision 5.14  1993/11/03 17:42:27  eggert  * Add -z.  Generate a value for the Name keyword.  * Don't arbitrarily limit the number of joins.  * Improve quality of diagnostics.  *  * Revision 5.13  1992/07/28  16:12:44  eggert  * Add -V.  Check that working and RCS files are distinct.  *  * Revision 5.12  1992/02/17  23:02:08  eggert  * Add -T.  *  * Revision 5.11  1992/01/24  18:44:19  eggert  * Add support for bad_creat0.  lint -> RCS_lint  *  * Revision 5.10  1992/01/06  02:42:34  eggert  * Update usage string.  *  * Revision 5.9  1991/10/07  17:32:46  eggert  * -k affects just working file, not RCS file.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Warn before removing somebody else's file.  * Add -M.  Fix co -j bugs.  Tune.  *  * Revision 5.7  1991/04/21  11:58:15  eggert  * Ensure that working file is newer than RCS file after co -[lu].  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1990/12/04  05:18:38  eggert  * Don't checkaccesslist() unless necessary.  * Use -I for prompts and -q for diagnostics.  *  * Revision 5.5  1990/11/01  05:03:26  eggert  * Fix -j.  Add -I.  *  * Revision 5.4  1990/10/04  06:30:11  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:09  eggert  * co -kv yields a readonly working file.  *  * Revision 5.2  1990/09/04  08:02:13  eggert  * Standardize yes-or-no procedure.  *  * Revision 5.0  1990/08/22  08:10:02  eggert  * Permit multiple locks by same user.  Add setuid support.  * Remove compile-time limits; use malloc instead.  * Permit dates past 1999/12/31.  Switch to GMT.  * Make lock and temp files faster and safer.  * Ansify and Posixate.  Add -k, -V.  Remove snooping.  Tune.  *  * Revision 4.7  89/05/01  15:11:41  narten  * changed copyright header to reflect current distribution rules  *   * Revision 4.6  88/08/09  19:12:15  eggert  * Fix "co -d" core dump; rawdate wasn't always initialized.  * Use execv(), not system(); fix putchar('\0') and diagnose() botches; remove lint  *   * Revision 4.5  87/12/18  11:35:40  narten  * lint cleanups (from Guy Harris)  *   * Revision 4.4  87/10/18  10:20:53  narten  * Updating version numbers changes relative to 1.1, are actually  * relative to 4.2  *   * Revision 1.3  87/09/24  13:58:30  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf   * warnings)  *   * Revision 1.2  87/03/27  14:21:38  jenkins  * Port to suns  *   * Revision 4.2  83/12/05  13:39:48  wft  * made rewriteflag external.  *   * Revision 4.1  83/05/10  16:52:55  wft  * Added option -u and -f.  * Added handling of default branch.  * Replaced getpwuid() with getcaller().  * Removed calls to stat(); now done by pairfilenames().  * Changed and renamed rmoldfile() to rmworkfile().  * Replaced catchints() calls with restoreints(), unlink()--link() with rename();  *   * Revision 3.7  83/02/15  15:27:07  wft  * Added call to fastcopy() to copy remainder of RCS file.  *  * Revision 3.6  83/01/15  14:37:50  wft  * Added ignoring of interrupts while RCS file is renamed; this avoids  * deletion of RCS files during the unlink/link window.  *  * Revision 3.5  82/12/08  21:40:11  wft  * changed processing of -d to use DATEFORM; removed actual from  * call to preparejoin; re-fixed printing of done at the end.  *  * Revision 3.4  82/12/04  18:40:00  wft  * Replaced getdelta() with gettree(), SNOOPDIR with SNOOPFILE.  * Fixed printing of "done".  *  * Revision 3.3  82/11/28  22:23:11  wft  * Replaced getlogin() with getpwuid(), flcose() with ffclose(),  * %02d with %.2d, mode generation for working file with WORKMODE.  * Fixed nil printing. Fixed -j combined with -l and -p, and exit  * for non-existing revisions in preparejoin().  *  * Revision 3.2  82/10/18  20:47:21  wft  * Mode of working file is now maintained even for co -l, but write permission  * is removed.  * The working file inherits its mode from the RCS file, plus write permission  * for the owner. The write permission is not given if locking is strict and  * co does not lock.  * An existing working file without write permission is deleted automatically.  * Otherwise, co asks (empty answer: abort co).  * Call to getfullRCSname() added, check for write error added, call  * for getlogin() fixed.  *  * Revision 3.1  82/10/13  16:01:30  wft  * fixed type of variables receiving from getc() (char -> int).  * removed unused variables.  */
 end_comment
 
 begin_include
@@ -20,6 +16,21 @@ include|#
 directive|include
 file|"rcsbase.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|addjoin
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -64,7 +75,8 @@ name|preparejoin
 name|P
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -131,13 +143,13 @@ modifier|*
 name|expandarg
 decl_stmt|,
 modifier|*
-name|join
-decl_stmt|,
-modifier|*
 name|suffixarg
 decl_stmt|,
 modifier|*
 name|versionarg
+decl_stmt|,
+modifier|*
+name|zonearg
 decl_stmt|;
 end_decl_stmt
 
@@ -146,16 +158,21 @@ specifier|static
 name|char
 specifier|const
 modifier|*
+modifier|*
 name|joinlist
-index|[
-name|joinlength
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* revisions to be joined */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|joinlength
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -249,7 +266,7 @@ argument|coId
 argument_list|,
 literal|"co"
 argument_list|,
-literal|"$Id: co.c,v 5.9 1991/10/07 17:32:46 eggert Exp $"
+literal|"$Id: co.c,v 5.18 1995/06/16 06:19:24 eggert Exp $"
 argument_list|)
 end_macro
 
@@ -261,11 +278,14 @@ specifier|const
 name|cmdusage
 index|[]
 init|=
-literal|"\nco usage: co -{flpqru}[rev] -ddate -jjoinlist -sstate -w[login] -Vn file ..."
+literal|"\nco usage: co -{fIlMpqru}[rev] -ddate -jjoins -ksubst -sstate -T -w[who] -Vn -xsuff -zzone file ..."
 decl_stmt|;
 name|char
 modifier|*
 name|a
+decl_stmt|,
+modifier|*
+name|joinflag
 decl_stmt|,
 modifier|*
 modifier|*
@@ -288,13 +308,13 @@ decl_stmt|;
 name|char
 specifier|const
 modifier|*
-name|joinfilename
+name|joinname
 decl_stmt|,
 modifier|*
 name|newdate
 decl_stmt|,
 modifier|*
-name|neworkfilename
+name|neworkname
 decl_stmt|;
 name|int
 name|changelock
@@ -309,6 +329,9 @@ name|tostdout
 decl_stmt|,
 name|workstatstat
 decl_stmt|;
+name|int
+name|Ttimeflag
+decl_stmt|;
 name|struct
 name|buf
 name|numericrev
@@ -320,6 +343,16 @@ index|[
 name|datesize
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|OPEN_O_BINARY
+name|int
+name|stdout_mode
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|setrid
 argument_list|()
 expr_stmt|;
@@ -331,7 +364,11 @@ name|rev
 operator|=
 name|state
 operator|=
-name|nil
+literal|0
+expr_stmt|;
+name|joinflag
+operator|=
+literal|0
 expr_stmt|;
 name|bufautobegin
 argument_list|(
@@ -349,6 +386,10 @@ operator|=
 name|X_DEFAULT
 expr_stmt|;
 name|tostdout
+operator|=
+name|false
+expr_stmt|;
+name|Ttimeflag
 operator|=
 name|false
 expr_stmt|;
@@ -443,7 +484,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"-l overrides -u."
+literal|"-u overridden by -l."
 argument_list|)
 expr_stmt|;
 block|}
@@ -466,7 +507,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"-l overrides -u."
+literal|"-l overridden by -u."
 argument_list|)
 expr_stmt|;
 block|}
@@ -543,14 +584,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|join
+name|joinflag
 condition|)
 name|redefined
 argument_list|(
 literal|'j'
 argument_list|)
 expr_stmt|;
-name|join
+name|joinflag
 operator|=
 name|a
 expr_stmt|;
@@ -589,6 +630,22 @@ operator|=
 name|a
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'T'
+case|:
+if|if
+condition|(
+operator|*
+name|a
+condition|)
+goto|goto
+name|unknown
+goto|;
+name|Ttimeflag
+operator|=
+name|true
+expr_stmt|;
 break|break;
 case|case
 literal|'w'
@@ -646,6 +703,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'z'
+case|:
+name|zonearg
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+name|zone_set
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'k'
 case|:
 comment|/*  set keyword expand mode  */
@@ -681,7 +752,9 @@ condition|)
 break|break;
 comment|/* fall into */
 default|default:
-name|faterror
+name|unknown
+label|:
+name|error
 argument_list|(
 literal|"unknown option: %s%s"
 argument_list|,
@@ -695,6 +768,15 @@ block|}
 empty_stmt|;
 block|}
 comment|/* end of option processing */
+comment|/* Now handle all pathnames.  */
+if|if
+condition|(
+name|nerror
+condition|)
+name|cleanup
+argument_list|()
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|argc
@@ -708,51 +790,30 @@ argument_list|,
 name|cmdusage
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tostdout
-condition|)
-if|#
-directive|if
-name|text_equals_binary_stdio
-operator|||
-name|text_work_stdio
-name|workstdout
-operator|=
-name|stdout
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-operator|(
-name|workstdout
-operator|=
-name|fdopen
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-name|FOPEN_W_WORK
-argument_list|)
-operator|)
-condition|)
-name|efaterror
-argument_list|(
-literal|"stdout"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* now handle all filenames */
-do|do
+else|else
+for|for
+control|(
+init|;
+literal|0
+operator|<
+name|argc
+condition|;
+name|cleanup
+argument_list|()
+operator|,
+operator|++
+name|argv
+operator|,
+operator|--
+name|argc
+control|)
 block|{
 name|ffree
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|pairfilenames
+name|pairnames
 argument_list|(
 name|argc
 argument_list|,
@@ -772,18 +833,18 @@ operator|<=
 literal|0
 condition|)
 continue|continue;
-comment|/* now RCSfilename contains the name of the RCS file, and finptr 	 * points at it.  workfilename contains the name of the working file. 	 * Also, RCSstat has been set.          */
+comment|/* 	 * RCSname contains the name of the RCS file, and finptr 	 * points at it.  workname contains the name of the working file. 	 * Also, RCSstat has been set.          */
 name|diagnose
 argument_list|(
 literal|"%s  -->  %s\n"
 argument_list|,
-name|RCSfilename
+name|RCSname
 argument_list|,
 name|tostdout
 condition|?
-literal|"stdout"
+literal|"standard output"
 else|:
-name|workfilename
+name|workname
 argument_list|)
 expr_stmt|;
 name|workstatstat
@@ -796,13 +857,54 @@ condition|(
 name|tostdout
 condition|)
 block|{
-name|neworkfilename
+if|#
+directive|if
+name|OPEN_O_BINARY
+name|int
+name|newmode
+init|=
+name|Expand
+operator|==
+name|BINARY_EXPAND
+condition|?
+name|OPEN_O_BINARY
+else|:
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|stdout_mode
+operator|!=
+name|newmode
+condition|)
+block|{
+name|stdout_mode
+operator|=
+name|newmode
+expr_stmt|;
+name|oflush
+argument_list|()
+expr_stmt|;
+name|VOID
+name|setmode
+parameter_list|(
+name|STDOUT_FILENO
+parameter_list|,
+name|newmode
+parameter_list|)
+function_decl|;
+block|}
+endif|#
+directive|endif
+name|neworkname
 operator|=
 literal|0
 expr_stmt|;
 name|neworkptr
 operator|=
 name|workstdout
+operator|=
+name|stdout
 expr_stmt|;
 block|}
 else|else
@@ -811,18 +913,41 @@ name|workstatstat
 operator|=
 name|stat
 argument_list|(
-name|workfilename
+name|workname
 argument_list|,
 operator|&
 name|workstat
 argument_list|)
 expr_stmt|;
-name|neworkfilename
+if|if
+condition|(
+name|workstatstat
+operator|==
+literal|0
+operator|&&
+name|same_file
+argument_list|(
+name|RCSstat
+argument_list|,
+name|workstat
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|rcserror
+argument_list|(
+literal|"RCS file is the same as working file %s."
+argument_list|,
+name|workname
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|neworkname
 operator|=
 name|makedirtemp
 argument_list|(
-name|workfilename
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -832,9 +957,9 @@ operator|!
 operator|(
 name|neworkptr
 operator|=
-name|fopen
+name|fopenSafer
 argument_list|(
-name|neworkfilename
+name|neworkname
 argument_list|,
 name|FOPEN_W_WORK
 argument_list|)
@@ -847,17 +972,15 @@ name|errno
 operator|==
 name|EACCES
 condition|)
-name|error
+name|workerror
 argument_list|(
-literal|"%s: parent directory isn't writable"
-argument_list|,
-name|workfilename
+literal|"permission denied on parent directory"
 argument_list|)
 expr_stmt|;
 else|else
 name|eerror
 argument_list|(
-name|neworkfilename
+name|neworkname
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -869,15 +992,31 @@ expr_stmt|;
 comment|/* reads in the delta tree */
 if|if
 condition|(
+operator|!
 name|Head
-operator|==
-name|nil
 condition|)
 block|{
 comment|/* no revisions; create empty file */
 name|diagnose
 argument_list|(
 literal|"no revisions present; generating empty revision 0.0\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lockflag
+condition|)
+name|warn
+argument_list|(
+literal|"no revisions, so nothing can be %slocked"
+argument_list|,
+name|lockflag
+operator|<
+literal|0
+condition|?
+literal|"un"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|Ozclose
@@ -907,15 +1046,27 @@ name|newdate
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Can't reserve a delta, so don't call addlock */
 block|}
 else|else
 block|{
+name|int
+name|locks
+init|=
+name|lockflag
+condition|?
+name|findlock
+argument_list|(
+name|false
+argument_list|,
+operator|&
+name|targetdelta
+argument_list|)
+else|:
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|rev
-operator|!=
-name|nil
 condition|)
 block|{
 comment|/* expand symbolic revision number */
@@ -933,21 +1084,10 @@ condition|)
 continue|continue;
 block|}
 else|else
+block|{
 switch|switch
 condition|(
-name|lockflag
-operator|<
-literal|0
-condition|?
-name|findlock
-argument_list|(
-name|false
-argument_list|,
-operator|&
-name|targetdelta
-argument_list|)
-else|:
-literal|0
+name|locks
 condition|)
 block|{
 default|default:
@@ -982,6 +1122,7 @@ name|num
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/* get numbers of deltas to be generated */
 if|if
@@ -1029,6 +1170,8 @@ else|:
 name|addlock
 argument_list|(
 name|targetdelta
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -1037,19 +1180,22 @@ name|changelock
 operator|<
 literal|0
 operator|||
+operator|(
 name|changelock
 operator|&&
 operator|!
 name|checkaccesslist
 argument_list|()
+operator|)
 operator|||
-operator|!
 name|dorewrite
 argument_list|(
 name|lockflag
 argument_list|,
 name|changelock
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -1073,7 +1219,7 @@ operator|==
 name|VAL_EXPAND
 condition|)
 block|{
-name|error
+name|rcserror
 argument_list|(
 literal|"cannot combine -kv and -l"
 argument_list|)
@@ -1082,11 +1228,13 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|join
+name|joinflag
 operator|&&
 operator|!
 name|preparejoin
-argument_list|()
+argument_list|(
+name|joinflag
+argument_list|)
 condition|)
 continue|continue;
 name|diagnose
@@ -1139,7 +1287,18 @@ literal|0
 operator|<
 name|lockflag
 expr_stmt|;
-name|joinfilename
+name|targetdelta
+operator|->
+name|name
+operator|=
+name|namedrev
+argument_list|(
+name|rev
+argument_list|,
+name|targetdelta
+argument_list|)
+expr_stmt|;
+name|joinname
 operator|=
 name|buildrevision
 argument_list|(
@@ -1147,7 +1306,7 @@ name|gendeltas
 argument_list|,
 name|targetdelta
 argument_list|,
-name|join
+name|joinflag
 operator|&&
 name|tostdout
 condition|?
@@ -1160,8 +1319,8 @@ else|:
 name|neworkptr
 argument_list|,
 name|Expand
-operator|!=
-name|OLD_EXPAND
+operator|<
+name|MIN_UNEXPAND
 argument_list|)
 expr_stmt|;
 if|#
@@ -1198,13 +1357,49 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|donerewrite
 argument_list|(
 name|changelock
+argument_list|,
+name|Ttimeflag
+condition|?
+name|RCSstat
+operator|.
+name|st_mtime
+else|:
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|changelock
+condition|)
+block|{
+name|locks
+operator|+=
+name|lockflag
+expr_stmt|;
+if|if
+condition|(
+literal|1
+operator|<
+name|locks
+condition|)
+name|rcswarn
+argument_list|(
+literal|"You now have %d locks."
+argument_list|,
+name|locks
+argument_list|)
+expr_stmt|;
+block|}
 name|newdate
 operator|=
 name|targetdelta
@@ -1213,7 +1408,7 @@ name|date
 expr_stmt|;
 if|if
 condition|(
-name|join
+name|joinflag
 condition|)
 block|{
 name|newdate
@@ -1223,7 +1418,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|joinfilename
+name|joinname
 condition|)
 block|{
 name|aflush
@@ -1231,17 +1426,28 @@ argument_list|(
 name|neworkptr
 argument_list|)
 expr_stmt|;
-name|joinfilename
+name|joinname
 operator|=
-name|neworkfilename
+name|neworkname
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Expand
+operator|==
+name|BINARY_EXPAND
+condition|)
+name|workerror
+argument_list|(
+literal|"merging binary files"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|buildjoin
 argument_list|(
-name|joinfilename
+name|joinname
 argument_list|)
 condition|)
 continue|continue;
@@ -1253,58 +1459,9 @@ operator|!
 name|tostdout
 condition|)
 block|{
-name|r
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|mtimeflag
-operator|&&
-name|newdate
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|join
-condition|)
-name|aflush
-argument_list|(
-name|neworkptr
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-name|setfiledate
-argument_list|(
-name|neworkfilename
-argument_list|,
-name|newdate
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|r
-operator|==
-literal|0
-condition|)
-block|{
-name|ignoreints
-argument_list|()
-expr_stmt|;
-name|r
-operator|=
-name|chnamemod
-argument_list|(
-operator|&
-name|neworkptr
-argument_list|,
-name|neworkfilename
-argument_list|,
-name|workfilename
-argument_list|,
+name|mode_t
+name|m
+init|=
 name|WORKMODE
 argument_list|(
 name|RCSstat
@@ -1317,24 +1474,68 @@ name|Expand
 operator|==
 name|VAL_EXPAND
 operator|||
+operator|(
 name|lockflag
 operator|<=
 literal|0
 operator|&&
 name|StrictLocks
 operator|)
+operator|)
 argument_list|)
+decl_stmt|;
+name|time_t
+name|t
+init|=
+name|mtimeflag
+operator|&&
+name|newdate
+condition|?
+name|date2time
+argument_list|(
+name|newdate
+argument_list|)
+else|:
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+name|aflush
+argument_list|(
+name|neworkptr
+argument_list|)
+expr_stmt|;
+name|ignoreints
+argument_list|()
+expr_stmt|;
+name|r
+operator|=
+name|chnamemod
+argument_list|(
+operator|&
+name|neworkptr
+argument_list|,
+name|neworkname
+argument_list|,
+name|workname
+argument_list|,
+literal|1
+argument_list|,
+name|m
+argument_list|,
+name|t
 argument_list|)
 expr_stmt|;
 name|keepdirtemp
 argument_list|(
-name|neworkfilename
+name|neworkname
 argument_list|)
 expr_stmt|;
 name|restoreints
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|r
@@ -1344,14 +1545,14 @@ condition|)
 block|{
 name|eerror
 argument_list|(
-name|workfilename
+name|workname
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
 literal|"see %s"
 argument_list|,
-name|neworkfilename
+name|neworkname
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1363,20 +1564,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-do|while
-condition|(
-name|cleanup
-argument_list|()
-operator|,
-operator|++
-name|argv
-operator|,
-operator|--
-name|argc
-operator|>=
-literal|1
-condition|)
-do|;
 name|tempunlink
 argument_list|()
 expr_stmt|;
@@ -1417,11 +1604,8 @@ operator|&
 name|finptr
 argument_list|)
 expr_stmt|;
-name|Ozclose
-argument_list|(
-operator|&
-name|frewrite
-argument_list|)
+name|ORCSclose
+argument_list|()
 expr_stmt|;
 if|#
 directive|if
@@ -1462,7 +1646,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|lint
+name|RCS_lint
 end_if
 
 begin_define
@@ -1478,11 +1662,13 @@ directive|endif
 end_endif
 
 begin_function
-name|exiting
 name|void
 name|exiterr
 parameter_list|()
 block|{
+name|ORCSerror
+argument_list|()
+expr_stmt|;
 name|dirtempunlink
 argument_list|()
 expr_stmt|;
@@ -1506,7 +1692,7 @@ specifier|static
 name|int
 name|rmworkfile
 parameter_list|()
-comment|/* Function: prepares to remove workfilename, if it exists, and if  * it is read-only.  * Otherwise (file writable):  *   if !quietmode asks the user whether to really delete it (default: fail);  *   otherwise failure.  * Returns true if permission is gotten.  */
+comment|/*  * Prepare to remove workname, if it exists, and if  * it is read-only.  * Otherwise (file writable):  *   if !quietmode asks the user whether to really delete it (default: fail);  *   otherwise failure.  * Returns true if permission is gotten.  */
 block|{
 if|if
 condition|(
@@ -1536,7 +1722,7 @@ name|false
 argument_list|,
 literal|"writable %s exists%s; remove it? [ny](n): "
 argument_list|,
-name|workfilename
+name|workname
 argument_list|,
 name|myself
 argument_list|(
@@ -1563,7 +1749,7 @@ literal|"checkout aborted"
 else|:
 literal|"writable %s exists; checkout aborted"
 argument_list|,
-name|workfilename
+name|workname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1595,7 +1781,7 @@ comment|/* Function: removes the lock held by caller on delta.  * Returns -1 if 
 block|{
 specifier|register
 name|struct
-name|lock
+name|rcslock
 modifier|*
 name|next
 decl_stmt|,
@@ -1608,7 +1794,7 @@ modifier|*
 name|num
 decl_stmt|;
 name|struct
-name|lock
+name|rcslock
 name|dummy
 decl_stmt|;
 name|int
@@ -1638,8 +1824,6 @@ expr_stmt|;
 while|while
 condition|(
 name|next
-operator|!=
-name|nil
 condition|)
 block|{
 name|whomatch
@@ -1698,7 +1882,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|error
+name|rcserror
 argument_list|(
 literal|"revision %s locked by %s; use co -r or rcs -u"
 argument_list|,
@@ -1728,8 +1912,6 @@ block|}
 if|if
 condition|(
 name|next
-operator|!=
-name|nil
 condition|)
 block|{
 comment|/*found one; delete it */
@@ -1753,9 +1935,8 @@ name|delta
 operator|->
 name|lockedby
 operator|=
-name|nil
+literal|0
 expr_stmt|;
-comment|/* reset locked-by */
 return|return
 literal|1
 return|;
@@ -1776,7 +1957,6 @@ end_comment
 begin_function
 specifier|static
 name|char
-specifier|const
 modifier|*
 name|addjoin
 parameter_list|(
@@ -1786,7 +1966,7 @@ name|char
 modifier|*
 name|joinrev
 decl_stmt|;
-comment|/* Add joinrev's number to joinlist, yielding address of char past joinrev,  * or nil if no such revision exists.  */
+comment|/* Add joinrev's number to joinlist, yielding address of char past joinrev,  * or 0 if no such revision exists.  */
 block|{
 specifier|register
 name|char
@@ -1796,7 +1976,6 @@ decl_stmt|;
 specifier|register
 name|struct
 name|hshentry
-specifier|const
 modifier|*
 name|d
 decl_stmt|;
@@ -1899,19 +2078,19 @@ operator|(
 name|char
 operator|*
 operator|)
-name|nil
+literal|0
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|nil
+literal|0
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|nil
+literal|0
 argument_list|,
 operator|&
 name|joindeltas
@@ -1948,7 +2127,7 @@ name|j
 return|;
 block|}
 return|return
-name|nil
+literal|0
 return|;
 block|}
 end_function
@@ -1957,19 +2136,16 @@ begin_function
 specifier|static
 name|int
 name|preparejoin
-parameter_list|()
-comment|/* Function: Parses a join list pointed to by join and places pointers to the  * revision numbers into joinlist.  */
-block|{
+parameter_list|(
+name|j
+parameter_list|)
 specifier|register
 name|char
-specifier|const
 modifier|*
 name|j
 decl_stmt|;
-name|j
-operator|=
-name|join
-expr_stmt|;
+comment|/* Parse join list J and place pointers to the  * revision numbers into joinlist.  */
+block|{
 name|lastjoin
 operator|=
 operator|-
@@ -2024,16 +2200,38 @@ operator|-
 literal|2
 condition|)
 block|{
-name|error
+name|joinlist
+operator|=
+operator|(
+name|joinlength
+operator|*=
+literal|2
+operator|)
+operator|==
+literal|0
+condition|?
+name|tnalloc
 argument_list|(
-literal|"too many joins"
+name|char
+specifier|const
+operator|*
+argument_list|,
+name|joinlength
+operator|=
+literal|16
+argument_list|)
+else|:
+name|trealloc
+argument_list|(
+name|char
+specifier|const
+operator|*
+argument_list|,
+name|joinlist
+argument_list|,
+name|joinlength
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|false
-operator|)
-return|;
 block|}
 if|if
 condition|(
@@ -2125,14 +2323,11 @@ return|;
 block|}
 else|else
 block|{
-name|error
+name|rcsfaterror
 argument_list|(
 literal|"join pair incomplete"
 argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
 block|}
 block|}
 else|else
@@ -2189,14 +2384,11 @@ return|;
 block|}
 else|else
 block|{
-name|error
+name|rcsfaterror
 argument_list|(
 literal|"join pair incomplete"
 argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
 block|}
 block|}
 block|}
@@ -2206,17 +2398,11 @@ name|lastjoin
 operator|<
 literal|1
 condition|)
-block|{
-name|error
+name|rcsfaterror
 argument_list|(
 literal|"empty join"
 argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
-block|}
-else|else
 return|return
 name|true
 return|;
@@ -2245,7 +2431,7 @@ decl_stmt|;
 end_function
 
 begin_comment
-comment|/* Yield the common ancestor of r1 and r2 if successful, nil otherwise.  * Work reliably only if r1 and r2 are not branch numbers.  */
+comment|/* Yield the common ancestor of r1 and r2 if successful, 0 otherwise.  * Work reliably only if r1 and r2 are not branch numbers.  */
 end_comment
 
 begin_block
@@ -2257,7 +2443,7 @@ name|t1
 decl_stmt|,
 name|t2
 decl_stmt|;
-name|unsigned
+name|int
 name|l1
 decl_stmt|,
 name|l2
@@ -2363,9 +2549,6 @@ name|l1
 operator|>
 literal|2
 condition|?
-operator|(
-name|unsigned
-operator|)
 literal|2
 else|:
 name|l1
@@ -2383,9 +2566,6 @@ name|l2
 operator|>
 literal|2
 condition|?
-operator|(
-name|unsigned
-operator|)
 literal|2
 else|:
 name|l2
@@ -2466,7 +2646,7 @@ name|l3
 argument_list|)
 return|;
 block|}
-name|error
+name|rcserror
 argument_list|(
 literal|"common ancestor of %s and %s undefined"
 argument_list|,
@@ -2476,7 +2656,7 @@ name|r2
 argument_list|)
 expr_stmt|;
 return|return
-name|nil
+literal|0
 return|;
 block|}
 end_block
@@ -2525,7 +2705,7 @@ decl_stmt|,
 modifier|*
 name|mergev
 index|[
-literal|12
+literal|11
 index|]
 decl_stmt|;
 name|char
@@ -2563,26 +2743,18 @@ expr_stmt|;
 comment|/* buildrevision() may use 1 and 2 */
 name|cov
 index|[
-literal|0
-index|]
-operator|=
-name|nil
-expr_stmt|;
-comment|/* cov[1] setup below */
-name|cov
-index|[
-literal|2
+literal|1
 index|]
 operator|=
 name|CO
 expr_stmt|;
-comment|/* cov[3] setup below */
+comment|/* cov[2] setup below */
 name|p
 operator|=
 operator|&
 name|cov
 index|[
-literal|4
+literal|3
 index|]
 expr_stmt|;
 if|if
@@ -2614,6 +2786,16 @@ name|p
 operator|++
 operator|=
 name|versionarg
+expr_stmt|;
+if|if
+condition|(
+name|zonearg
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+name|zonearg
 expr_stmt|;
 operator|*
 name|p
@@ -2625,42 +2807,28 @@ operator|*
 name|p
 operator|++
 operator|=
-name|RCSfilename
+name|RCSname
 expr_stmt|;
 operator|*
 name|p
 operator|=
-name|nil
-expr_stmt|;
-name|mergev
-index|[
 literal|0
-index|]
-operator|=
-name|nil
 expr_stmt|;
 name|mergev
 index|[
 literal|1
 index|]
 operator|=
-name|nil
+name|MERGE
 expr_stmt|;
 name|mergev
 index|[
 literal|2
 index|]
 operator|=
-name|MERGE
-expr_stmt|;
 name|mergev
 index|[
-literal|3
-index|]
-operator|=
-name|mergev
-index|[
-literal|5
+literal|4
 index|]
 operator|=
 literal|"-L"
@@ -2770,14 +2938,7 @@ argument_list|)
 expr_stmt|;
 name|cov
 index|[
-literal|1
-index|]
-operator|=
-name|rev2
-expr_stmt|;
-name|cov
-index|[
-literal|3
+literal|2
 index|]
 operator|=
 name|commarg
@@ -2788,6 +2949,11 @@ if|if
 condition|(
 name|runv
 argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|rev2
+argument_list|,
 name|cov
 argument_list|)
 condition|)
@@ -2829,14 +2995,7 @@ argument_list|)
 expr_stmt|;
 name|cov
 index|[
-literal|1
-index|]
-operator|=
-name|rev3
-expr_stmt|;
-name|cov
-index|[
-literal|3
+literal|2
 index|]
 operator|=
 name|commarg
@@ -2847,6 +3006,11 @@ if|if
 condition|(
 name|runv
 argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|rev3
+argument_list|,
 name|cov
 argument_list|)
 condition|)
@@ -2860,7 +3024,7 @@ argument_list|)
 expr_stmt|;
 name|mergev
 index|[
-literal|4
+literal|3
 index|]
 operator|=
 name|subs
@@ -2869,7 +3033,7 @@ name|string
 expr_stmt|;
 name|mergev
 index|[
-literal|6
+literal|5
 index|]
 operator|=
 name|joinlist
@@ -2884,7 +3048,7 @@ operator|=
 operator|&
 name|mergev
 index|[
-literal|7
+literal|6
 index|]
 expr_stmt|;
 if|if
@@ -2934,12 +3098,21 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
 name|runv
 argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|,
 name|mergev
 argument_list|)
 condition|)

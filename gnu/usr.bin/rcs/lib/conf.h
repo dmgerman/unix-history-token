@@ -4,7 +4,7 @@ comment|/* RCS compile-time configuration */
 end_comment
 
 begin_comment
-comment|/* $Id: conf.sh,v 5.14 1991/11/20 18:21:10 eggert Exp $ */
+comment|/* $Id: conf.sh,v 5.25 1995/06/16 06:19:24 eggert Exp $ */
 end_comment
 
 begin_comment
@@ -26,11 +26,19 @@ comment|/* how to exit from main() */
 end_comment
 
 begin_comment
+comment|/* #define _POSIX_C_SOURCE 2147483647L */
+end_comment
+
+begin_comment
+comment|/* if strict C + Posix 1003.1b-1993 or later */
+end_comment
+
+begin_comment
 comment|/* #define _POSIX_SOURCE */
 end_comment
 
 begin_comment
-comment|/* Define this if Posix + strict Standard C.  */
+comment|/* if strict C + Posix 1003.1-1990 */
 end_comment
 
 begin_include
@@ -85,11 +93,23 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_comment
+comment|/* #include<mach/mach.h> */
+end_comment
+
+begin_comment
+comment|/* #include<net/errno.h> */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<pwd.h>
 end_include
+
+begin_comment
+comment|/* #include<siginfo.h> */
+end_comment
 
 begin_include
 include|#
@@ -121,6 +141,10 @@ directive|include
 file|<sys/wait.h>
 end_include
 
+begin_comment
+comment|/* #include<ucontext.h> */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -138,18 +162,7 @@ comment|/* #include<vfork.h> */
 end_comment
 
 begin_comment
-comment|/* Define the following symbols to be 1 or 0.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|has_sys_dir_h
-value|1
-end_define
-
-begin_comment
-comment|/* Does #include<sys/dir.h> work?  */
+comment|/* Define boolean symbols to be 0 (false, the default), or 1 (true).  */
 end_comment
 
 begin_define
@@ -163,6 +176,14 @@ begin_comment
 comment|/* Does #include<sys/param.h> work?  */
 end_comment
 
+begin_comment
+comment|/* extern int errno; */
+end_comment
+
+begin_comment
+comment|/* Uncomment if<errno.h> doesn't declare errno.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -174,168 +195,16 @@ begin_comment
 comment|/* Does readlink() work?  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|readlink_isreg_errno
+value|EINVAL
+end_define
+
 begin_comment
-comment|/* #undef NAME_MAX */
+comment|/* errno after readlink on regular file */
 end_comment
-
-begin_comment
-comment|/* Uncomment this if NAME_MAX is broken.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NAME_MAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_NAME_MAX
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|has_sys_dir_h
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NAME_MAX
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXNAMLEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXNAMLEN
-value|14
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NAME_MAX
-value|MAXNAMLEN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PATH_MAX
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_PATH_MAX
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|has_sys_param_h
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|included_sys_param_h
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PATH_MAX
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPATHLEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXPATHLEN
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|PATH_MAX
-value|(MAXPATHLEN-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -353,9 +222,6 @@ begin_if
 if|#
 directive|if
 name|has_sys_param_h
-operator|&&
-operator|!
-name|included_sys_param_h
 end_if
 
 begin_include
@@ -397,18 +263,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Comment out the keyword definitions below if the keywords work.  */
-end_comment
-
-begin_comment
-comment|/* #define const */
-end_comment
-
-begin_comment
-comment|/* #define volatile */
-end_comment
-
-begin_comment
 comment|/* Comment out the typedefs below if the types are already declared.  */
 end_comment
 
@@ -421,15 +275,16 @@ comment|/* typedef int mode_t; */
 end_comment
 
 begin_comment
+comment|/* typedef long off_t; */
+end_comment
+
+begin_comment
 comment|/* typedef int pid_t; */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|sig_atomic_t
-typedef|;
-end_typedef
+begin_comment
+comment|/* typedef int sig_atomic_t; */
+end_comment
 
 begin_comment
 comment|/* typedef unsigned size_t; */
@@ -448,7 +303,19 @@ comment|/* typedef int uid_t; */
 end_comment
 
 begin_comment
-comment|/* Define the following symbols to be 1 or 0.  */
+comment|/* Comment out the keyword definitions below if the keywords work.  */
+end_comment
+
+begin_comment
+comment|/* #define const */
+end_comment
+
+begin_comment
+comment|/* #define volatile */
+end_comment
+
+begin_comment
+comment|/* Define boolean symbols to be 0 (false, the default), or 1 (true).  */
 end_comment
 
 begin_define
@@ -473,12 +340,9 @@ begin_comment
 comment|/* Does<stdarg.h> work?  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|has_varargs
-value|0
-end_define
+begin_comment
+comment|/* #define has_varargs ? */
+end_comment
 
 begin_comment
 comment|/* Does<varargs.h> work?  */
@@ -493,6 +357,159 @@ end_define
 
 begin_comment
 comment|/* How many args does va_start() take?  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|O_BINARY
+end_if
+
+begin_comment
+comment|/* Text and binary i/o behave differently.  */
+end_comment
+
+begin_comment
+comment|/* This is incompatible with Posix and Unix.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOPEN_RB
+value|"rb"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_R_WORK
+value|(Expand==BINARY_EXPAND ? "r" : "rb")
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_WB
+value|"wb"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_W_WORK
+value|(Expand==BINARY_EXPAND ? "w" : "wb")
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_WPLUS_WORK
+value|(Expand==BINARY_EXPAND ? "w+" : "w+b")
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPEN_O_BINARY
+value|O_BINARY
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* 	* Text and binary i/o behave the same. 	* Omit "b", since some nonstandard hosts reject it. 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOPEN_RB
+value|"r"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_R_WORK
+value|"r"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_WB
+value|"w"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_W_WORK
+value|"w"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOPEN_WPLUS_WORK
+value|"w+"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPEN_O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* This may need changing on non-Unix systems (notably DOS).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPEN_CREAT_READONLY
+value|(S_IRUSR|S_IRGRP|S_IROTH)
+end_define
+
+begin_comment
+comment|/* lock file mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPEN_O_LOCK
+value|0
+end_define
+
+begin_comment
+comment|/* extra open flags for creating lock file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPEN_O_WRONLY
+value|O_WRONLY
+end_define
+
+begin_comment
+comment|/* main open flag for creating a lock file */
+end_comment
+
+begin_comment
+comment|/* Define or comment out the following symbols as needed.  */
 end_comment
 
 begin_if
@@ -661,155 +678,23 @@ end_endif
 begin_define
 define|#
 directive|define
-name|text_equals_binary_stdio
-value|1
-end_define
-
-begin_comment
-comment|/* Does stdio treat text like binary?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|text_work_stdio
+name|bad_chmod_close
 value|0
 end_define
 
 begin_comment
-comment|/* Text i/o for working file, binary for RCS file?  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|text_equals_binary_stdio
-end_if
-
-begin_comment
-comment|/* Text and binary i/o behave the same, or binary i/o does not work.  */
+comment|/* Can chmod() close file descriptors?  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FOPEN_R
-value|"r"
+name|bad_creat0
+value|0
 end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_W
-value|"w"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_WPLUS
-value|"w+"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
-comment|/* Text and binary i/o behave differently.  */
-end_comment
-
-begin_comment
-comment|/* This is incompatible with Posix and Unix.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FOPEN_R
-value|"rb"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_W
-value|"wb"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_WPLUS
-value|"w+b"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|text_work_stdio
-end_if
-
-begin_define
-define|#
-directive|define
-name|FOPEN_R_WORK
-value|"r"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_W_WORK
-value|"w"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_WPLUS_WORK
-value|"w+"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FOPEN_R_WORK
-value|FOPEN_R
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_W_WORK
-value|FOPEN_W
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_WPLUS_WORK
-value|FOPEN_WPLUS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define or comment out the following symbols as needed.  */
+comment|/* Do writes fail after creat(f,0)?  */
 end_comment
 
 begin_define
@@ -820,7 +705,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Does fopen(f,FOPEN_WPLUS) fail to truncate f?  */
+comment|/* Does fopen(f,"w+") fail to truncate f?  */
 end_comment
 
 begin_define
@@ -837,6 +722,46 @@ end_comment
 begin_define
 define|#
 directive|define
+name|has_attribute_noreturn
+value|1
+end_define
+
+begin_comment
+comment|/* Does __attribute__((noreturn)) work?  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|has_attribute_noreturn
+end_if
+
+begin_define
+define|#
+directive|define
+name|exiting
+value|__attribute__((noreturn))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|exiting
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|has_dirent
 value|1
 end_define
@@ -848,8 +773,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|has_fchmod
+name|void_closedir
 value|0
+end_define
+
+begin_comment
+comment|/* Does closedir() yield void?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_fchmod
+value|1
 end_define
 
 begin_comment
@@ -859,8 +795,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|has_fputs
+name|has_fflush_input
 value|0
+end_define
+
+begin_comment
+comment|/* Does fflush() work on input files?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_fputs
+value|1
 end_define
 
 begin_comment
@@ -903,17 +850,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|has_link
-value|1
-end_define
-
-begin_comment
-comment|/* Does link() work?  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|has_memcmp
 value|1
 end_define
@@ -947,6 +883,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|has_map_fd
+value|0
+end_define
+
+begin_comment
+comment|/* Does map_fd() work?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_mmap
+value|1
+end_define
+
+begin_comment
+comment|/* Does mmap() work on regular files?  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|has_madvise
 value|0
 end_define
@@ -958,12 +916,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|has_mmap
-value|0
+name|mmap_signal
+value|SIGBUS
 end_define
 
 begin_comment
-comment|/* Does mmap() work on regular files?  */
+comment|/* signal received if you reference nonexistent part of mmapped file */
 end_comment
 
 begin_define
@@ -1002,6 +960,25 @@ end_comment
 begin_define
 define|#
 directive|define
+name|bad_NFS_rename
+value|0
+end_define
+
+begin_comment
+comment|/* Can rename(A,B) falsely report success?  */
+end_comment
+
+begin_comment
+comment|/* typedef int void; */
+end_comment
+
+begin_comment
+comment|/* Some ancient compilers need this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VOID
 value|(void)
 end_define
@@ -1014,11 +991,22 @@ begin_define
 define|#
 directive|define
 name|has_seteuid
+value|1
+end_define
+
+begin_comment
+comment|/* Does seteuid() work?  See ../INSTALL.RCS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_setreuid
 value|0
 end_define
 
 begin_comment
-comment|/* Does seteuid() work?  See README.  */
+comment|/* Does setreuid() work?  See ../INSTALL.RCS.  */
 end_comment
 
 begin_define
@@ -1035,23 +1023,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|has_sigaction
+value|1
+end_define
+
+begin_comment
+comment|/* Does struct sigaction work?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_sa_sigaction
+value|0
+end_define
+
+begin_comment
+comment|/* Does struct sigaction have sa_sigaction?  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|has_signal
 value|1
 end_define
 
 begin_comment
 comment|/* Does signal() work?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|signal_args
-value|P((int))
-end_define
-
-begin_comment
-comment|/* arguments of signal handlers */
 end_comment
 
 begin_define
@@ -1076,17 +1075,6 @@ begin_comment
 comment|/* Must a signal handler reinvoke signal()?  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|has_sigaction
-value|1
-end_define
-
-begin_comment
-comment|/* Does struct sigaction work?  */
-end_comment
-
 begin_comment
 comment|/* #define has_sigblock ? */
 end_comment
@@ -1103,20 +1091,9 @@ begin_comment
 comment|/* Yield mask for signal number.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|has_sys_siglist
-value|0
-end_define
-
-begin_comment
-comment|/* Does sys_siglist[] work?  */
-end_comment
-
 begin_typedef
 typedef|typedef
-name|ssize_t
+name|size_t
 name|fread_type
 typedef|;
 end_typedef
@@ -1170,6 +1147,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|needs_getabsname
+value|0
+end_define
+
+begin_comment
+comment|/* Must we define getabsname?  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|has_mktemp
 value|1
 end_define
@@ -1187,6 +1175,44 @@ end_define
 
 begin_comment
 comment|/* Might NFS be used?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_psiginfo
+value|0
+end_define
+
+begin_comment
+comment|/* Does psiginfo() work?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|has_psignal
+value|1
+end_define
+
+begin_comment
+comment|/* Does psignal() work?  */
+end_comment
+
+begin_comment
+comment|/* #define has_si_errno ? */
+end_comment
+
+begin_comment
+comment|/* Does siginfo_t have si_errno?  */
+end_comment
+
+begin_comment
+comment|/* #define has_sys_siglist ? */
+end_comment
+
+begin_comment
+comment|/* Does sys_siglist[] work?  */
 end_comment
 
 begin_comment
@@ -1220,7 +1246,7 @@ begin_define
 define|#
 directive|define
 name|has_vfork
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1252,23 +1278,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|has_wait
+name|has_waitpid
 value|1
 end_define
 
 begin_comment
-comment|/* Does wait() work?  */
+comment|/* Does waitpid() work?  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|has_waitpid
+name|bad_wait_if_SIGCHLD_ignored
 value|0
 end_define
 
 begin_comment
-comment|/* Does waitpid() work?  */
+comment|/* Does ignoring SIGCHLD break wait()?  */
 end_comment
 
 begin_define
@@ -1285,6 +1311,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|has_printf_dot
+value|1
+end_define
+
+begin_comment
+comment|/* Does "%.2d" print leading 0?  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|has_vfprintf
 value|1
 end_define
@@ -1292,6 +1329,102 @@ end_define
 begin_comment
 comment|/* Does vfprintf() work?  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|has_attribute_format_printf
+value|1
+end_define
+
+begin_comment
+comment|/* Does __attribute__((format(printf,N,N+1))) work?  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|has_attribute_format_printf
+end_if
+
+begin_define
+define|#
+directive|define
+name|printf_string
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|__attribute__((format(printf, m, n)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|printf_string
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|has_attribute_format_printf
+operator|&&
+name|has_attribute_noreturn
+end_if
+
+begin_comment
+comment|/* Work around a bug in GCC 2.5.x.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|printf_string_exiting
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|__attribute__((format(printf, m, n), noreturn))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|printf_string_exiting
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|printf_string(m, n) exiting
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* #define has__doprintf ? */
@@ -1321,34 +1454,69 @@ begin_define
 define|#
 directive|define
 name|large_memory
-value|0
+value|1
 end_define
 
 begin_comment
 comment|/* Can main memory hold entire RCS files?  */
 end_comment
 
-begin_comment
-comment|/* #undef ULONG_MAX */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LONG_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LONG_MAX
+value|2147483647L
+end_define
 
 begin_comment
-comment|/* Uncomment this if ULONG_MAX is broken (e.g.< 0).  */
+comment|/* long maximum */
 end_comment
 
-begin_comment
-comment|/* struct utimbuf { time_t actime, modtime; }; */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Uncomment this if needed.  */
+comment|/* Do struct stat s and t describe the same file?  Answer d if unknown.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|same_file
+parameter_list|(
+name|s
+parameter_list|,
+name|t
+parameter_list|,
+name|d
+parameter_list|)
+value|((s).st_ino==(t).st_ino&& (s).st_dev==(t).st_dev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|has_utimbuf
+value|1
+end_define
+
+begin_comment
+comment|/* Does struct utimbuf work?  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CO
-value|"/usr/bin/co"
+value|"/usr/local/bin/co"
 end_define
 
 begin_comment
@@ -1364,17 +1532,6 @@ end_define
 
 begin_comment
 comment|/* Are version 2 files supported?  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DATEFORM
-value|"%.2d.%.2d.%.2d.%.2d.%.2d.%.2d"
-end_define
-
-begin_comment
-comment|/* e.g. 01.01.01.01.01.01 */
 end_comment
 
 begin_define
@@ -1413,8 +1570,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIFF_FLAGS
-value|, "-an"
+name|DIFFFLAGS
+value|"-an"
 end_define
 
 begin_comment
@@ -1429,7 +1586,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Does diff -L work? */
+comment|/* Does diff -L work?  */
 end_comment
 
 begin_define
@@ -1480,7 +1637,7 @@ begin_define
 define|#
 directive|define
 name|MERGE
-value|"/usr/bin/merge"
+value|"/usr/local/bin/merge"
 end_define
 
 begin_comment
@@ -1506,7 +1663,7 @@ value|'/'
 end_define
 
 begin_comment
-comment|/* principal pathname separator */
+comment|/* principal filename separator */
 end_comment
 
 begin_define
@@ -1517,7 +1674,7 @@ value|'/'
 end_define
 
 begin_comment
-comment|/* `case SLASHes:' labels all pathname separators */
+comment|/* `case SLASHes:' labels all filename separators */
 end_comment
 
 begin_define
@@ -1531,7 +1688,7 @@ value|((c) == SLASH)
 end_define
 
 begin_comment
-comment|/* Is arg a pathname separator?  */
+comment|/* Is arg a filename separator?  */
 end_comment
 
 begin_define
@@ -1562,6 +1719,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SLASHSLASH_is_SLASH
+value|1
+end_define
+
+begin_comment
+comment|/* Are // and / the same directory?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALL_ABSOLUTE
+value|1
+end_define
+
+begin_comment
+comment|/* Do all subprograms satisfy ROOTPATH?  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DIFF_ABSOLUTE
 value|1
 end_define
@@ -1573,19 +1752,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALL_ABSOLUTE
-value|1
-end_define
-
-begin_comment
-comment|/* Are all subprograms absolute pathnames?  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SENDMAIL
-value|"/usr/bin/mail"
+value|"/usr/sbin/sendmail"
 end_define
 
 begin_comment
@@ -1607,137 +1775,42 @@ begin_comment
 comment|/* Adjust the following declarations as needed.  */
 end_comment
 
+begin_comment
+comment|/* The rest is for the benefit of non-standard, traditional hosts.  */
+end_comment
+
+begin_comment
+comment|/* Don't bother to declare functions that in traditional hosts do not appear, */
+end_comment
+
+begin_comment
+comment|/* or are declared in .h files, or return int or void.  */
+end_comment
+
+begin_comment
+comment|/* traditional BSD */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|__GNUC__
+name|has_sys_siglist
 operator|&&
 operator|!
-name|__STRICT_ANSI__
-end_if
-
-begin_define
-define|#
-directive|define
-name|exiting
-value|volatile
-end_define
-
-begin_comment
-comment|/* GCC extension: function cannot return */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|exiting
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|has_ftruncate
+name|defined
+argument_list|(
+name|sys_siglist
+argument_list|)
 end_if
 
 begin_decl_stmt
-name|int
-name|ftruncate
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|off_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*<sys/mman.h> */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|has_madvise
-end_if
-
-begin_decl_stmt
-name|int
-name|madvise
-name|P
-argument_list|(
-operator|(
-name|caddr_t
-operator|,
-name|size_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|has_mmap
-end_if
-
-begin_decl_stmt
-name|caddr_t
-name|mmap
-name|P
-argument_list|(
-operator|(
-name|caddr_t
-operator|,
-name|size_t
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|off_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|munmap
-name|P
-argument_list|(
-operator|(
-name|caddr_t
-operator|,
-name|size_t
-operator|)
-argument_list|)
+specifier|extern
+name|char
+specifier|const
+modifier|*
+specifier|const
+name|sys_siglist
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1751,92 +1824,8 @@ comment|/* Posix (ISO/IEC 9945-1: 1990 / IEEE Std 1003.1-1990) */
 end_comment
 
 begin_comment
-comment|/* These definitions are for the benefit of non-Posix hosts, and */
-end_comment
-
-begin_comment
-comment|/* Posix hosts that have Standard C compilers but traditional include files.  */
-end_comment
-
-begin_comment
-comment|/* Unfortunately, mixed-up hosts are all too common.  */
-end_comment
-
-begin_comment
 comment|/*<fcntl.h> */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|F_DUPFD
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|fcntl
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|dup2
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|O_BINARY
-end_ifndef
-
-begin_comment
-comment|/* some non-Posix hosts need O_BINARY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_BINARY
-value|0
-end_define
-
-begin_comment
-comment|/* no effect on Posix */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1898,22 +1887,6 @@ name|O_TRUNC
 value|02000
 end_define
 
-begin_decl_stmt
-name|int
-name|creat
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|mode_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -1938,278 +1911,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*<pwd.h> */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|has_getpwuid
-end_if
-
-begin_decl_stmt
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-name|P
-argument_list|(
-operator|(
-name|uid_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*<signal.h> */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|has_sigaction
-end_if
-
-begin_decl_stmt
-name|int
-name|sigaction
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|sigaction
-specifier|const
-operator|*
-operator|,
-expr|struct
-name|sigaction
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigaddset
-name|P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigemptyset
-name|P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|has_sigblock
-end_if
-
-begin_comment
-comment|/* BSD */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sigblock
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigmask
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigsetmask
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*<stdio.h> */
-end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|fdopen
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fileno
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*<sys/stat.h> */
 end_comment
-
-begin_decl_stmt
-name|int
-name|chmod
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|mode_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fstat
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|stat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|stat
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-expr|struct
-name|stat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|mode_t
-name|umask
-name|P
-argument_list|(
-operator|(
-name|mode_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|has_fchmod
-end_if
-
-begin_decl_stmt
-name|int
-name|fchmod
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|mode_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -2394,30 +2097,6 @@ begin_comment
 comment|/*<sys/wait.h> */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|has_wait
-end_if
-
-begin_decl_stmt
-name|pid_t
-name|wait
-name|P
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2462,7 +2141,59 @@ name|WIFEXITED
 parameter_list|(
 name|stat_val
 parameter_list|)
-value|(!((stat_val)& 255))
+value|(((stat_val)&  0377) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WTERMSIG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WTERMSIG
+parameter_list|(
+name|stat_val
+parameter_list|)
+value|((stat_val)& 0177)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WIFSIGNALED
+end_undef
+
+begin_comment
+comment|/* Avoid 4.3BSD incompatibility with Posix.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIFSIGNALED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WIFSIGNALED
+parameter_list|(
+name|stat_val
+parameter_list|)
+value|((unsigned)(stat_val) - 1<  0377)
 end_define
 
 begin_endif
@@ -2482,150 +2213,6 @@ name|P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|close
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|isatty
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|link
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|open
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|int
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|unlink
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_filbuf
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* keeps lint quiet in traditional C */
-end_comment
-
-begin_decl_stmt
-name|int
-name|_flsbuf
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* keeps lint quiet in traditional C */
-end_comment
-
-begin_decl_stmt
-name|long
-name|pathconf
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ssize_t
-name|write
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|void
-specifier|const
-operator|*
-operator|,
-name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2667,11 +2254,7 @@ begin_if
 if|#
 directive|if
 name|has_fork
-end_if
-
-begin_if
-if|#
-directive|if
+operator|&&
 operator|!
 name|has_vfork
 end_if
@@ -2688,27 +2271,6 @@ directive|define
 name|vfork
 value|fork
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|pid_t
-name|vfork
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vfork is nonstandard but faster */
-end_comment
 
 begin_endif
 endif|#
@@ -2767,54 +2329,8 @@ end_endif
 begin_if
 if|#
 directive|if
-name|has_getuid
-end_if
-
-begin_decl_stmt
-name|uid_t
-name|getuid
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|has_readlink
-end_if
-
-begin_comment
-comment|/* 	ssize_t readlink P((char const*,char*,size_t));  */
-end_comment
-
-begin_comment
-comment|/* BSD; not standard yet */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|has_setuid
-end_if
-
-begin_if
-if|#
-directive|if
+operator|&&
 operator|!
 name|has_seteuid
 end_if
@@ -2837,61 +2353,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|int
-name|seteuid
-name|P
-argument_list|(
-operator|(
-name|uid_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uid_t
-name|geteuid
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
 name|has_spawn
 end_if
-
-begin_decl_stmt
-name|int
-name|spawnv
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-operator|*
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -2918,27 +2384,6 @@ name|spawn_RCS
 value|spawnvp
 end_define
 
-begin_decl_stmt
-name|int
-name|spawnvp
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-operator|*
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -2948,25 +2393,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_decl_stmt
-name|int
-name|execv
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-operator|*
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -2993,25 +2419,6 @@ name|exec_RCS
 value|execvp
 end_define
 
-begin_decl_stmt
-name|int
-name|execvp
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-operator|*
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -3026,357 +2433,38 @@ begin_comment
 comment|/* utime.h */
 end_comment
 
-begin_decl_stmt
-name|int
-name|utime
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-expr|struct
+begin_if
+if|#
+directive|if
+operator|!
+name|has_utimbuf
+end_if
+
+begin_struct
+struct|struct
 name|utimbuf
-specifier|const
-operator|*
-operator|)
-argument_list|)
+block|{
+name|time_t
+name|actime
+decl_stmt|,
+name|modtime
 decl_stmt|;
-end_decl_stmt
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Standard C library */
 end_comment
 
 begin_comment
-comment|/* These definitions are for the benefit of hosts that have */
-end_comment
-
-begin_comment
-comment|/* traditional C include files, possibly with Standard C compilers.  */
-end_comment
-
-begin_comment
-comment|/* Unfortunately, mixed-up hosts are all too common.  */
-end_comment
-
-begin_comment
-comment|/*<errno.h> */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*<limits.h> */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ULONG_MAX
-end_ifndef
-
-begin_comment
-comment|/* This does not work in #ifs, but it's good enough for us.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ULONG_MAX
-value|((unsigned long)-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*<signal.h> */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|has_signal
-end_if
-
-begin_macro
-name|signal_type
-argument_list|(
-argument|*signal P((int,signal_type(*)signal_args))
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|signal_args
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*<stdio.h> */
 end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|fopen
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fread_type
-name|fread
-name|P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|freadarg_type
-operator|,
-name|freadarg_type
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fread_type
-name|fwrite
-name|P
-argument_list|(
-operator|(
-name|void
-specifier|const
-operator|*
-operator|,
-name|freadarg_type
-operator|,
-name|freadarg_type
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fclose
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|feof
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ferror
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fflush
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fprintf
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fputs
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fseek
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|,
-name|long
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|printf
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rename
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sprintf
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* long ftell P((FILE*)); */
-end_comment
-
-begin_decl_stmt
-name|void
-name|clearerr
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|perror
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3411,6 +2499,24 @@ define|#
 directive|define
 name|SEEK_SET
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEEK_CUR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SEEK_CUR
+value|1
 end_define
 
 begin_endif
@@ -3466,103 +2572,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|has_vfprintf
-end_if
-
-begin_decl_stmt
-name|int
-name|vfprintf
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|has__doprintf
-end_if
-
-begin_decl_stmt
-name|void
-name|_doprintf
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Minix */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|void
-name|_doprnt
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|va_list
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* BSD */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*<stdlib.h> */
 end_comment
@@ -3583,7 +2592,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|_exit
 name|P
@@ -3592,11 +2600,11 @@ operator|(
 name|int
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|exit
 name|P
@@ -3605,6 +2613,7 @@ operator|(
 name|int
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
@@ -3629,18 +2638,6 @@ operator|(
 name|malloc_type
 operator|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|free
-name|P
-argument_list|(
-operator|(
-name|malloc_type
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3676,35 +2673,6 @@ directive|define
 name|EXIT_SUCCESS
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|has_fork
-operator|&&
-operator|!
-name|has_spawn
-end_if
-
-begin_decl_stmt
-name|int
-name|system
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -3762,58 +2730,6 @@ specifier|const
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|memcmp
-name|P
-argument_list|(
-operator|(
-name|void
-specifier|const
-operator|*
-operator|,
-name|void
-specifier|const
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|strcmp
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|size_t
-name|strlen
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
