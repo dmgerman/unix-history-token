@@ -97,7 +97,7 @@ name|bswapw
 parameter_list|(
 name|x
 parameter_list|)
-value|__asm__("xchgb %%al,%%ah":"=a" (x):"0" ((short)x))
+value|__asm__("xchgb %%al,%%ah":"+a" ((short)(x)))
 end_define
 
 begin_define
