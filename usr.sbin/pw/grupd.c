@@ -533,8 +533,6 @@ decl_stmt|;
 name|ENDGRENT
 argument_list|()
 expr_stmt|;
-name|l
-operator|=
 name|snprintf
 argument_list|(
 name|pfx

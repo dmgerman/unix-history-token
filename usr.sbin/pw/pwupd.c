@@ -743,6 +743,17 @@ argument_list|,
 name|PWF_PASSWD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|==
+operator|-
+literal|1
+condition|)
+name|l
+operator|=
+literal|0
+expr_stmt|;
 name|rc
 operator|=
 name|fileupdate

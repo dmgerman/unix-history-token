@@ -1748,6 +1748,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|dst
@@ -1756,8 +1761,7 @@ name|rbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 case|case
@@ -2284,6 +2288,11 @@ argument_list|,
 literal|"500 could not translate from PASV\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -2292,8 +2301,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -2741,6 +2749,14 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -2781,6 +2797,14 @@ name|sin6_port
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -3043,6 +3067,11 @@ argument_list|,
 literal|"500 could not translate from EPSV\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -3051,8 +3080,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -3392,6 +3420,14 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -3835,6 +3871,11 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -3843,8 +3884,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4007,6 +4047,11 @@ argument_list|,
 literal|"501 illegal parameter to LPRT\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4015,8 +4060,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4168,6 +4212,11 @@ argument_list|,
 literal|"500 could not translate to PORT\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4176,8 +4225,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4483,6 +4531,14 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -4594,6 +4650,11 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4602,8 +4663,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4658,6 +4718,11 @@ argument_list|,
 literal|"501 illegal parameter to EPRT\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4666,8 +4731,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4778,6 +4842,11 @@ argument_list|,
 literal|"501 unsupported address family to EPRT\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4786,8 +4855,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4855,6 +4923,11 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4863,8 +4936,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4891,6 +4963,11 @@ argument_list|,
 name|hostp
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -4899,8 +4976,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -4995,6 +5071,11 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -5003,8 +5084,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -5023,6 +5103,14 @@ argument_list|,
 literal|"PASV\r\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -5108,6 +5196,14 @@ argument_list|,
 literal|"PASV\r\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -5184,6 +5280,11 @@ argument_list|,
 literal|"200 EPSV ALL command successful.\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -5192,8 +5293,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 ifdef|#
@@ -5332,6 +5432,11 @@ argument_list|,
 literal|"501 illegal parameter to PORT\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -5340,8 +5445,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -5520,6 +5624,11 @@ argument_list|,
 literal|"500 could not translate to EPRT\r\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -5528,8 +5637,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 block|}
@@ -5791,6 +5899,14 @@ argument_list|,
 name|serv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -5880,6 +5996,14 @@ argument_list|,
 literal|"EPSV\r\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|dst
@@ -5945,6 +6069,11 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+return|return
+name|n
+operator|>
+literal|0
+condition|?
 name|write
 argument_list|(
 name|src
@@ -5953,8 +6082,7 @@ name|sbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
+else|:
 name|n
 return|;
 endif|#
@@ -6046,6 +6174,14 @@ argument_list|,
 literal|"425 Cannot open data connetion\r\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+name|n
+operator|=
 name|write
 argument_list|(
 name|src
@@ -6086,6 +6222,7 @@ name|state
 operator|=
 name|NONE
 expr_stmt|;
+return|return
 name|write
 argument_list|(
 name|dst
@@ -6094,9 +6231,6 @@ name|rbuf
 argument_list|,
 name|n
 argument_list|)
-expr_stmt|;
-return|return
-name|n
 return|;
 block|}
 name|bad

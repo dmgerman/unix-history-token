@@ -694,6 +694,11 @@ expr_stmt|;
 if|if
 condition|(
 name|add_count
+operator|==
+operator|-
+literal|1
+operator|||
+name|add_count
 operator|>
 name|maxargs
 operator|-
@@ -805,6 +810,11 @@ expr_stmt|;
 if|if
 condition|(
 name|add_count
+operator|==
+operator|-
+literal|1
+operator|||
+name|add_count
 operator|>
 name|maxargs
 operator|-
@@ -852,6 +862,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|add_count
+operator|==
+operator|-
+literal|1
+operator|||
 name|add_count
 operator|>
 name|maxargs
