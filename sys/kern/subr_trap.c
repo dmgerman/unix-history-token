@@ -323,7 +323,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * DO special thread processing, e.g. upcall tweaking and such 	 */
+comment|/* 	 * Do special thread processing, e.g. upcall tweaking and such. 	 */
 if|if
 condition|(
 name|p
