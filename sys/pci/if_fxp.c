@@ -4549,6 +4549,10 @@ name|fxp_cb_tx
 modifier|*
 name|txp
 decl_stmt|;
+name|FXP_SPLVAR
+argument_list|(
+argument|s
+argument_list|)
 if|#
 directive|if
 operator|!
@@ -5909,6 +5913,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|FXP_SPLVAR
+argument_list|(
+argument|s
+argument_list|)
 if|#
 directive|if
 operator|!
