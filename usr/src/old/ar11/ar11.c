@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ar11.c	4.1 (Berkeley) %G%"
+literal|"@(#)ar11.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2116,6 +2116,8 @@ condition|)
 name|cp
 operator|++
 expr_stmt|;
+name|ar_size
+operator|=
 name|x
 operator|.
 name|w1
