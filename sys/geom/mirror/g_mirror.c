@@ -13516,6 +13516,13 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|pp
 operator|=
 name|sc
