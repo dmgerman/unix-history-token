@@ -13740,7 +13740,7 @@ name|com
 operator|->
 name|c_ccs
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|com
 operator|->
@@ -14220,7 +14220,7 @@ index|]
 operator|->
 name|c_ccs
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 return|return
@@ -14453,7 +14453,7 @@ name|com
 operator|->
 name|c_ccs
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -15265,7 +15265,7 @@ if|if
 condition|(
 name|ccs
 operator|==
-name|NULL
+literal|0
 condition|)
 name|RAY_PANIC
 argument_list|(
