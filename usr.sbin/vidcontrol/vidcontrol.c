@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vidcontrol.c,v 1.23 1998/09/24 01:36:36 gpalmer Exp $"
+literal|"$Id: vidcontrol.c,v 1.24 1998/10/01 11:40:22 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2152,7 +2152,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|video_adapter
+name|video_adapter_info
 name|ad
 decl_stmt|;
 name|ad
@@ -2183,7 +2183,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"adapter %d:\n"
+literal|"fb%d:\n"
 argument_list|,
 name|ad
 operator|.
@@ -2192,7 +2192,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    type:%s%s (%d), flags:0x%08x, CRTC:0x%x\n"
+literal|"    %.*s%d, type:%s%s (%d), flags:0x%x\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|ad
+operator|.
+name|va_name
+argument_list|)
+argument_list|,
+name|ad
+operator|.
+name|va_name
+argument_list|,
+name|ad
+operator|.
+name|va_unit
 argument_list|,
 operator|(
 name|ad
@@ -2220,10 +2238,6 @@ argument_list|,
 name|ad
 operator|.
 name|va_flags
-argument_list|,
-name|ad
-operator|.
-name|va_crtc_addr
 argument_list|)
 expr_stmt|;
 name|printf
