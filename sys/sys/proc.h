@@ -317,7 +317,9 @@ decl_stmt|;
 comment|/* Length. */
 name|u_char
 name|ar_args
-index|[]
+index|[
+literal|1
+index|]
 decl_stmt|;
 comment|/* Arguments. */
 block|}
@@ -619,7 +621,7 @@ block|,
 name|TDS_RUNQ
 block|,
 name|TDS_RUNNING
-block|, 	}
+block|}
 name|td_state
 enum|;
 name|register_t
