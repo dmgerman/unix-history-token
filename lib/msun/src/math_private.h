@@ -454,13 +454,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|__ieee754_rem
-value|rem
-end_define
-
-begin_define
-define|#
-directive|define
 name|__ieee754_scalb
 value|scalb
 end_define
@@ -643,13 +636,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|__ieee754_rem
-value|rem
-end_define
-
-begin_define
-define|#
-directive|define
 name|__ieee754_scalbf
 value|scalbf
 end_define
@@ -657,6 +643,18 @@ end_define
 begin_comment
 comment|/* fdlibm kernel function */
 end_comment
+
+begin_function_decl
+name|int
+name|__ieee754_rem_pio2
+parameter_list|(
+name|double
+parameter_list|,
+name|double
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|double
@@ -721,6 +719,18 @@ end_function_decl
 begin_comment
 comment|/* float versions of fdlibm kernel functions */
 end_comment
+
+begin_function_decl
+name|int
+name|__ieee754_rem_pio2f
+parameter_list|(
+name|float
+parameter_list|,
+name|float
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|float
