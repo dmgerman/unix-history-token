@@ -1015,7 +1015,7 @@ name|IO_ICU1
 argument_list|,
 name|OCW3_SEL
 operator||
-name|OCW3_RIS
+name|OCW3_RR
 argument_list|)
 expr_stmt|;
 comment|/* default to IRR on read */
@@ -1087,7 +1087,7 @@ name|IO_ICU2
 argument_list|,
 name|OCW3_SEL
 operator||
-name|OCW3_RIS
+name|OCW3_RR
 argument_list|)
 expr_stmt|;
 comment|/* default to IRR on read */
@@ -1172,6 +1172,8 @@ name|IO_ICU1
 argument_list|,
 name|OCW3_SEL
 operator||
+name|OCW3_RR
+operator||
 name|OCW3_RIS
 argument_list|)
 expr_stmt|;
@@ -1221,7 +1223,7 @@ name|IO_ICU2
 argument_list|,
 name|OCW3_SEL
 operator||
-name|OCW3_RIS
+name|OCW3_RR
 argument_list|)
 expr_stmt|;
 comment|/* reselect IIR */
