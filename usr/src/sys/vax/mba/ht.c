@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.14	81/03/11	*/
+comment|/*	ht.c	4.15	81/03/11	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TM03/TU?? tape driver  *  * TODO:  *	test error handling  *	test ioctl's  *	see how many rewind interrups we get if we kick when not at BOT  *	check rle error on block tape code  */
+comment|/*  * TM03/TU?? tape driver  *  * TODO:  *	cleanup messages on errors  *	test ioctl's  *	see how many rewind interrups we get if we kick when not at BOT  *	fixup rle error on block tape code  */
 end_comment
 
 begin_include
@@ -364,6 +364,24 @@ begin_comment
 comment|/* last unit start was a rewind */
 end_comment
 
+begin_decl_stmt
+name|char
+name|hter_bits
+index|[]
+init|=
+name|HTER_BITS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|htds_bits
+index|[]
+init|=
+name|HTDS_BITS
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -561,6 +579,10 @@ operator|->
 name|sc_dens
 expr_stmt|;
 name|dens
+operator|=
+name|sc
+operator|->
+name|sc_dens
 operator|=
 operator|(
 operator|(
@@ -1953,7 +1975,7 @@ name|noprint
 goto|;
 name|printf
 argument_list|(
-literal|"tu%d: hard error bn%d mbsr=%b er=%b\n"
+literal|"tu%d: hard error bn%d mbsr=%b er=%b ds=%b\n"
 argument_list|,
 name|TUUNIT
 argument_list|(
@@ -1970,14 +1992,17 @@ name|mbsr
 argument_list|,
 name|mbsr_bits
 argument_list|,
-name|MASKREG
-argument_list|(
-name|htaddr
+name|sc
 operator|->
-name|hter
-argument_list|)
+name|sc_erreg
 argument_list|,
-name|HTER_BITS
+name|hter_bits
+argument_list|,
+name|sc
+operator|->
+name|sc_dsreg
+argument_list|,
+name|htds_bits
 argument_list|)
 expr_stmt|;
 name|noprint
@@ -2346,7 +2371,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tu%d: hard error bn%d er=%b\n"
+literal|"tu%d: hard error bn%d er=%b ds=%b\n"
 argument_list|,
 name|TUUNIT
 argument_list|(
@@ -2363,7 +2388,13 @@ name|sc
 operator|->
 name|sc_erreg
 argument_list|,
-name|HTER_BITS
+name|hter_bits
+argument_list|,
+name|sc
+operator|->
+name|sc_dsreg
+argument_list|,
+name|htds_bits
 argument_list|)
 expr_stmt|;
 name|bp
