@@ -168,7 +168,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This function is called each time the module is loaded or unloaded.  * Since we are a miscellaneous module, we have to provide whatever  * code is necessary to patch ourselves into the area we are being  * loaded to change.  *  * For the system call table, we duplicate the code in the kern_lkm.c  * file for patching into the system call table.  We can tell what  * has been allocated, etc. by virtue of the fact that we know the  * criteria used by the system call loader interface.  We still  * kick out the copyright to the console here (to give an example).  *  * The stat information is basically common to all modules, so there  * is no real issue involved with stat; we will leave it lkm_nullcmd(),  * cince we don't have to do anything about it.  */
+comment|/*  * This function is called each time the module is loaded or unloaded.  * Since we are a miscellaneous module, we have to provide whatever  * code is necessary to patch ourselves into the area we are being  * loaded to change.  *  * For the system call table, we duplicate the code in the kern_lkm.c  * file for patching into the system call table.  We can tell what  * has been allocated, etc. by virtue of the fact that we know the  * criteria used by the system call loader interface.  We still  * kick out the copyright to the console here (to give an example).  *  * The stat information is basically common to all modules, so there  * is no real issue involved with stat; we will leave it lkm_nullcmd(),  * since we don't have to do anything about it.  */
 end_comment
 
 begin_function
