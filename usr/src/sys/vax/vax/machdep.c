@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.4	%H%	*/
+comment|/*	machdep.c	3.5	%H%	*/
 end_comment
 
 begin_include
@@ -522,7 +522,7 @@ operator|++
 operator|=
 name|n
 operator|==
-name|SIGINS
+name|SIGILL
 condition|?
 name|u
 operator|.
@@ -651,7 +651,7 @@ name|usp
 argument_list|,
 name|n
 operator|==
-name|SIGINS
+name|SIGILL
 condition|?
 name|u
 operator|.
@@ -743,7 +743,7 @@ name|u
 operator|.
 name|u_procp
 argument_list|,
-name|SIGKIL
+name|SIGKILL
 argument_list|)
 expr_stmt|;
 block|}
