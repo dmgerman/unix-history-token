@@ -1328,7 +1328,7 @@ name|ipir
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0xd #PAL_ipir" 		: "=r" (a0) 		: "0" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0xd #PAL_ipir" 		: "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1380,7 +1380,7 @@ name|mces
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x11 #PAL_wrmces" 		: "=r" (a0) 		: "0" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x11 #PAL_wrmces" 		: "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1406,7 +1406,7 @@ name|fen
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x2b #PAL_wrfen" 		: "=r" (a0) 		: "0" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x2b #PAL_wrfen" 		: "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1432,7 +1432,7 @@ name|vptptr
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x2d #PAL_wrvptptr" 		: "=r" (a0) 		: "0" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x2d #PAL_wrvptptr" 		: "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1466,7 +1466,7 @@ argument_list|)
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x30 #PAL_OSF1_swpctx" 		: "=r" (v0), "=r" (a0) 		: "1" (a0) 		: "$1", "$22", "$23", "$24", "$25", "memory");
+asm|( 		"call_pal 0x30 #PAL_OSF1_swpctx" 		: "=r" (v0), "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25", "memory");
 return|return
 name|v0
 return|;
@@ -1495,7 +1495,7 @@ name|sysvalue
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x31 #PAL_wrval" 		: "=r" (a0) 		: "0" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x31 #PAL_wrval" 		: "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1560,7 +1560,7 @@ name|va
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x33 #PAL_OSF1_tbi" 		: "=r" (a0), "=r" (a1) 		: "0" (a0), "1" (a1) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x33 #PAL_OSF1_tbi" 		: "+r" (a0), "+r" (a1) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1603,7 +1603,7 @@ name|which
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x34 #PAL_OSF1_wrent" 		: "=r" (a0), "=r" (a1) 		: "0" (a0), "1" (a1) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x34 #PAL_OSF1_wrent" 		: "+r" (a0), "+r" (a1) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1637,7 +1637,7 @@ argument_list|)
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x35 #PAL_OSF1_swpipl" 		: "=r" (v0), "=r" (a0) 		: "1" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x35 #PAL_OSF1_swpipl" 		: "=r" (v0), "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 return|return
 name|v0
 return|;
@@ -1692,7 +1692,7 @@ name|usp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x38 #PAL_wrusp" 		: "=r" (a0) 		: "0" (a0) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x38 #PAL_wrusp" 		: "+r" (a0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 block|}
 end_function
 
@@ -1739,7 +1739,7 @@ name|arg1
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		"call_pal 0x39 #PAL_OSF1_wrperfmon" 		: "=r" (a0), "=r" (a1), "=r" (v0) 		: "0" (a0), "1" (a1) 		: "$1", "$22", "$23", "$24", "$25");
+asm|( 		"call_pal 0x39 #PAL_OSF1_wrperfmon" 		: "+r" (a0), "+r" (a1), "=r" (v0) 		: 		: "$1", "$22", "$23", "$24", "$25");
 return|return
 name|v0
 return|;

@@ -221,9 +221,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldl_l %0, %2\n\t"
+literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
-literal|"bic %0, %3, %0\n\t"
+literal|"bic %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -242,18 +242,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -291,9 +285,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldl_l %0, %2\n\t"
+literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
-literal|"addl %0, %3, %0\n\t"
+literal|"addl %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -312,18 +306,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -361,9 +349,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldl_l %0, %2\n\t"
+literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
-literal|"subl %0, %3, %0\n\t"
+literal|"subl %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -382,18 +370,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -432,7 +414,7 @@ name|__GNUC__
 asm|__asm __volatile (
 literal|"wmb\n"
 comment|/* ensure pending writes have drained */
-literal|"1:\tldl_l %0,%3\n\t"
+literal|"1:\tldl_l %0,%2\n\t"
 comment|/* load current value, asserting lock */
 literal|"ldiq %1,0\n\t"
 comment|/* value to store */
@@ -457,17 +439,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|addr
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|addr
-operator|)
 operator|:
 literal|"memory"
 block|)
@@ -507,9 +484,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldq_l %0, %2\n\t"
+literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
-literal|"bis %0, %3, %0\n\t"
+literal|"bis %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -528,18 +505,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -577,9 +548,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldq_l %0, %2\n\t"
+literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
-literal|"bic %0, %3, %0\n\t"
+literal|"bic %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -598,18 +569,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -647,9 +612,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldq_l %0, %2\n\t"
+literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
-literal|"addq %0, %3, %0\n\t"
+literal|"addq %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -668,18 +633,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -717,9 +676,9 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldq_l %0, %2\n\t"
+literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
-literal|"subq %0, %3, %0\n\t"
+literal|"subq %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
@@ -738,18 +697,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
 literal|"r"
 operator|(
 name|v
@@ -788,7 +741,7 @@ name|__GNUC__
 asm|__asm __volatile (
 literal|"wmb\n"
 comment|/* ensure pending writes have drained */
-literal|"1:\tldq_l %0,%3\n\t"
+literal|"1:\tldq_l %0,%2\n\t"
 comment|/* load current value, asserting lock */
 literal|"ldiq %1,0\n\t"
 comment|/* value to store */
@@ -813,17 +766,12 @@ operator|(
 name|temp
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|addr
 operator|)
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|addr
-operator|)
 operator|:
 literal|"memory"
 block|)
@@ -1177,7 +1125,7 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldl_l %0, %4\n\t"
+literal|"1:\tldl_l %0, %1\n\t"
 comment|/* load old value */
 literal|"cmpeq %0, %2, %0\n\t"
 comment|/* compare */
@@ -1204,7 +1152,7 @@ operator|(
 name|ret
 operator|)
 block|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
@@ -1224,12 +1172,6 @@ block|,
 literal|"r"
 operator|(
 name|newval
-operator|)
-block|,
-literal|"m"
-operator|(
-operator|*
-name|p
 operator|)
 operator|:
 literal|"memory"
@@ -1278,7 +1220,7 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tldq_l %0, %4\n\t"
+literal|"1:\tldq_l %0, %1\n\t"
 comment|/* load old value */
 literal|"cmpeq %0, %2, %0\n\t"
 comment|/* compare */
@@ -1305,7 +1247,7 @@ operator|(
 name|ret
 operator|)
 operator|,
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
@@ -1319,12 +1261,6 @@ operator|,
 literal|"r"
 operator|(
 name|newval
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|p
 operator|)
 operator|:
 literal|"memory"
