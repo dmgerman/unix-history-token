@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.17 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.18 %G%  */
 end_comment
 
 begin_define
@@ -97,27 +97,8 @@ comment|/* number of location ctrs */
 end_comment
 
 begin_comment
-comment|/*  *	Sizes for character buffers.  *	what			size #define name	comments  *  *	source file reads	ASINBUFSIZ		integral of BUFSIZ  *	string assembly		NCPString		large for .stabs  *	name assembly		NCPName	  *	string save		STRPOOLDALLOP	  *  *  *	-source file reads should be integral of BUFSIZ for efficient reads  *	-string saving is a simple first fit  */
+comment|/*  *	Sizes for character buffers.  *	what			size #define name	comments  *  *	name assembly		NCPName	  *	name save		STRPOOLDALLOP	  *  *	-name saving is a simple first fit  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASINBUFSIZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASINBUFSIZ
-value|4096
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|not ASINBUFSIZ
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -136,25 +117,6 @@ begin_endif
 endif|#
 directive|endif
 endif|not STRPOOLDALLOP
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NCPString
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NCPString
-value|4080
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|not NCPString
 end_endif
 
 begin_define
@@ -196,19 +158,9 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
-operator|(
-name|STRPOOLDALLOP
-operator|<
-name|NCPString
-operator|)
-operator|||
-operator|(
 name|STRPOOLDALLOP
 operator|<
 name|NCPName
-operator|)
-operator|)
 end_if
 
 begin_decl_stmt
