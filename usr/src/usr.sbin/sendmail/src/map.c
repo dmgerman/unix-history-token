@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.47 (Berkeley) %G%"
+literal|"@(#)map.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7424,20 +7424,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|map
-operator|->
-name|map_coldelim
-operator|==
-literal|'\0'
-condition|)
-name|map
-operator|->
-name|map_coldelim
-operator|=
-literal|':'
-expr_stmt|;
-if|if
-condition|(
 name|tTd
 argument_list|(
 literal|38
@@ -7448,11 +7434,30 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"text_map_open(%s): delimiter = %c\n"
+literal|"text_map_open(%s): delimiter = "
 argument_list|,
 name|map
 operator|->
 name|map_file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|map
+operator|->
+name|map_coldelim
+operator|==
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|"(white space)\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%c\n"
 argument_list|,
 name|map
 operator|->
