@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.4 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,9 +109,9 @@ name|state
 name|_res
 init|=
 block|{
-literal|90
+literal|10
 block|,
-literal|2
+literal|4
 block|,
 name|RES_RECURSE
 operator||
