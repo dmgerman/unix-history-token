@@ -35,6 +35,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|resource
+modifier|*
+name|isa_alloc_intrs
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|u_long
+name|start
+parameter_list|,
+name|u_long
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|isa_release_intr
 parameter_list|(
