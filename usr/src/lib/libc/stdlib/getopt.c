@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.12 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -92,35 +104,30 @@ name|EMSG
 value|""
 end_define
 
-begin_macro
+begin_function
+name|int
 name|getopt
-argument_list|(
-argument|nargc
-argument_list|,
-argument|nargv
-argument_list|,
-argument|ostr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nargc
+parameter_list|,
+name|nargv
+parameter_list|,
+name|ostr
+parameter_list|)
 name|int
 name|nargc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|nargv
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|ostr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -139,14 +146,6 @@ comment|/* option letter list index */
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -443,7 +442,7 @@ operator|)
 return|;
 comment|/* dump back option letter */
 block|}
-end_block
+end_function
 
 end_unit
 

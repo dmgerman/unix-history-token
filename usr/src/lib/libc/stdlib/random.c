@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	5.7 (Berkeley) %G%"
+literal|"@(#)random.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_comment
@@ -451,20 +457,15 @@ begin_comment
 comment|/*  * srandom:  * Initialize the random number generator based on the given seed.  If the  * type is the trivial no-state-information type, just remember the seed.  * Otherwise, initializes state[] based on the given "seed" via a linear  * congruential generator.  Then, the pointers are set to known locations  * that are exactly rand_sep places apart.  Lastly, it cycles the state  * information a given number of times to get rid of any initial dependencies  * introduced by the L.C.R.N.G.  * Note that the initialization of randtbl[] for default usage relies on  * values produced by this routine.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|srandom
-argument_list|(
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|x
+parameter_list|)
 name|unsigned
 name|x
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -472,10 +473,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|long
-name|random
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|rand_type
@@ -566,12 +563,15 @@ condition|;
 name|i
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|random
 argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * initstate:  * Initialize the state information in the given array of n bytes for  * future random number generation.  Based on the number of bytes we  * are given, and the break values for the different R.N.G.'s, we choose  * the best (largest) one we can and set things up for it.  srandom() is  * then called to initialize the state information.  * Note that on return from srandom(), we set state[-1] to be the type  * multiplexed with the current value of the rear pointer; this is so  * successive calls to initstate() won't lose this information and will  * be able to restart with setstate().  * Note: the first thing we do is save the current state, if any, just like  * setstate() so that it doesn't matter when initstate is called.  * Returns a pointer to the old state.  */
