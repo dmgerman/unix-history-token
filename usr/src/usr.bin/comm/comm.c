@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comm.c	5.2 (Berkeley) %G%"
+literal|"@(#)comm.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -68,11 +74,10 @@ begin_define
 define|#
 directive|define
 name|MAXLINELEN
-value|(2048 + 1)
+value|(LINE_MAX + 1)
 end_define
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|tabs
@@ -100,25 +105,10 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp1
-decl_stmt|,
-modifier|*
-name|fp2
-decl_stmt|,
-modifier|*
-name|file
-argument_list|()
-decl_stmt|;
 specifier|register
 name|int
 name|comp
@@ -151,6 +141,17 @@ name|flag2
 decl_stmt|,
 name|flag3
 decl_stmt|;
+name|FILE
+modifier|*
+name|fp1
+decl_stmt|,
+modifier|*
+name|fp2
+decl_stmt|,
+modifier|*
+name|file
+argument_list|()
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -165,6 +166,10 @@ name|line2
 index|[
 name|MAXLINELEN
 index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
 decl_stmt|;
 name|flag1
 operator|=
