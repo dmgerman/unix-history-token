@@ -912,11 +912,26 @@ name|nd_defrouter
 modifier|*
 name|dr
 decl_stmt|;
+comment|/* 	 * We only accept RAs only when 	 * the system-wide variable allows the acceptance, and 	 * per-interface variable allows RAs on the receiving interface. 	 */
 if|if
 condition|(
 name|ip6_accept_rtadv
 operator|==
 literal|0
+condition|)
+goto|goto
+name|freeit
+goto|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ndi
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
+operator|)
 condition|)
 goto|goto
 name|freeit

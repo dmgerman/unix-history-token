@@ -803,11 +803,16 @@ name|receivedra
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Note that the default value of ip6_accept_rtadv is 0, which means 	 * we won't accept RAs by default even if we set ND6_IFF_ACCEPT_RTADV 	 * here. 	 */
 name|ND
 operator|.
 name|flags
 operator|=
+operator|(
 name|ND6_IFF_PERFORMNUD
+operator||
+name|ND6_IFF_ACCEPT_RTADV
+operator|)
 expr_stmt|;
 name|nd6_setmtu
 argument_list|(

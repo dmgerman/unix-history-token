@@ -238,6 +238,13 @@ name|ND6_IFF_PERFORMNUD
 value|0x1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND6_IFF_ACCEPT_RTADV
+value|0x2
+end_define
+
 begin_struct
 struct|struct
 name|in6_nbrinfo
