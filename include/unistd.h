@@ -3018,8 +3018,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SWAB_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SWAB_DECLARED
+end_define
+
+begin_function_decl
+name|void
+name|swab
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|__restrict
+parameter_list|,
+name|void
+modifier|*
+name|__restrict
+parameter_list|,
+name|ssize_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* void	 swab(const void * __restrict, void * __restrict, ssize_t); */
+comment|/* _SWAB_DECLARED */
 end_comment
 
 begin_function_decl
