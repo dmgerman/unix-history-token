@@ -1286,11 +1286,9 @@ operator|:
 literal|1
 operator|,
 comment|/* SBus or PCI */
-name|isp_dogactive
 operator|:
 literal|1
 operator|,
-comment|/* watchdog running */
 name|isp_dblev
 operator|:
 literal|8
