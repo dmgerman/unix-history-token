@@ -280,15 +280,6 @@ name|cpu_class
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|init_AMD_Elan_sc520
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
