@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)saio.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|F_READ
-value|0x1
+value|0x0001
 end_define
 
 begin_comment
@@ -192,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|F_WRITE
-value|0x2
+value|0x0002
 end_define
 
 begin_comment
@@ -203,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|F_ALLOC
-value|0x4
+value|0x0004
 end_define
 
 begin_comment
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|F_FILE
-value|0x8
+value|0x0008
 end_define
 
 begin_comment
@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|F_NBSF
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -236,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|F_ECCLM
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -247,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|F_SSI
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -258,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|F_SEVRE
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
@@ -330,10 +330,6 @@ directive|define
 name|F_TYPEMASK
 value|0xff00
 end_define
-
-begin_comment
-comment|/*  * Request codes. Must be the same as F_XXX above  */
-end_comment
 
 begin_define
 define|#
