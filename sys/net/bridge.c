@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Luigi Rizzo  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2001 Luigi Rizzo  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -524,6 +524,7 @@ if|if
 condition|(
 name|clear_used
 condition|)
+block|{
 name|ifp2sc
 index|[
 name|ifp
@@ -538,9 +539,26 @@ operator|(
 name|IFF_USED
 operator|)
 expr_stmt|;
+name|bdg_stats
+operator|.
+name|s
+index|[
+name|ifp
+operator|->
+name|if_index
+index|]
+operator|.
+name|name
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-literal|">> now %s%d promisc ON if_flags 0x%x bdg_flags 0x%x\n"
+literal|">> now %s%d promisc OFF if_flags 0x%x bdg_flags 0x%x\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1081,10 +1099,16 @@ name|if_index
 index|]
 operator|.
 name|name
-operator|+
-name|l
 argument_list|,
-literal|":%d"
+literal|"%s%d:%d"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
 argument_list|,
 name|cluster
 argument_list|)
@@ -1098,6 +1122,14 @@ argument_list|)
 break|break ;
 block|}
 block|}
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+break|break ;
 block|}
 block|}
 end_function
@@ -2833,7 +2865,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * Need to make a copy (and for good measure, make sure that 	     * the header is contiguous). The original is still in *m0 	     */
+comment|/* 	     * Need to make a copy. The original is still in *m0. 	     * Make sure that, in the copy, the first mbuf contains 	     * both the ethernet and the ip header. The reason is, 	     * some code up in the stack treats the IP header as rw so 	     * we do not want to share it into a cluster. 	     */
 name|int
 name|needed
 init|=
@@ -2841,6 +2873,8 @@ name|min
 argument_list|(
 name|MHLEN
 argument_list|,
+literal|14
+operator|+
 name|max_protohdr
 argument_list|)
 decl_stmt|;
@@ -2886,15 +2920,6 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-if|if
-condition|(
-name|m
-operator|->
-name|m_len
-operator|<
-name|needed
-operator|&&
-operator|(
 name|m
 operator|=
 name|m_pullup
@@ -2903,7 +2928,10 @@ name|m
 argument_list|,
 name|needed
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 operator|==
 name|NULL
 condition|)
@@ -3198,6 +3226,8 @@ name|min
 argument_list|(
 name|MHLEN
 argument_list|,
+literal|14
+operator|+
 name|max_protohdr
 argument_list|)
 decl_stmt|;
@@ -3215,18 +3245,6 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|*
-name|m0
-operator|)
-operator|->
-name|m_len
-operator|<
-name|needed
-operator|&&
-operator|(
 operator|*
 name|m0
 operator|=
@@ -3237,14 +3255,18 @@ name|m0
 argument_list|,
 name|needed
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|m0
 operator|==
 name|NULL
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"-- bdg: pullup failed.\n"
+literal|"-- bdg: pullup(2) failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3287,7 +3309,7 @@ block|}
 else|else
 name|m
 operator|=
-name|m_dup
+name|m_copypacket
 argument_list|(
 operator|*
 name|m0
@@ -3295,7 +3317,6 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
-comment|/* XXX m_copypacket should work */
 if|if
 condition|(
 name|m
@@ -3305,7 +3326,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bdg_forward: sorry, m_dup failed!\n"
+literal|"bdg_forward: sorry, m_copypacket failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
