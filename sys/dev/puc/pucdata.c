@@ -3763,7 +3763,7 @@ block|,
 comment|/* 	 * Boards with an Oxford Semiconductor chip. 	 * 	 * Oxford Semiconductor provides documentation for their chip at: 	 *<URL:http://www.oxsemi.com/products/uarts/index.html> 	 * 	 * As sold by Kouwell<URL:http://www.kouwell.com/>. 	 * I/O Flex PCI I/O Card Model-223 with 4 serial and 1 parallel ports. 	 */
 comment|/* Oxford Semiconductor OX16PCI954 PCI UARTs */
 block|{
-literal|"Qxford Semiconductor OX16PCI954 UARTs"
+literal|"Oxford Semiconductor OX16PCI954 UARTs"
 block|,
 block|{
 literal|0x1415
@@ -3830,7 +3830,7 @@ block|, 	}
 block|,
 comment|/* Oxford Semiconductor OX16PCI954 PCI Parallel port */
 block|{
-literal|"Qxford Semiconductor OX16PCI954 Parallel port"
+literal|"Oxford Semiconductor OX16PCI954 Parallel port"
 block|,
 block|{
 literal|0x1415
