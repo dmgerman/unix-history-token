@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: show.c,v 1.10 1997/02/22 16:09:43 peter Exp $"
+literal|"$Id: show.c,v 1.11 1997/10/08 07:47:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,23 @@ condition|?
 literal|"@exec %s\n"
 else|:
 literal|"\tEXEC '%s'\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_UNEXEC
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@unexec %s\n"
+else|:
+literal|"\tUNEXEC '%s'\n"
 argument_list|,
 name|p
 operator|->
