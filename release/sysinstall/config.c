@@ -2336,6 +2336,94 @@ name|self
 condition|)
 name|msgConfirm
 argument_list|(
+literal|"Extreme security settings have been selected.\n\n"
+literal|"This means that all \"popular\" network services and\n"
+literal|"mechanisms like inetd(8) have been DISABLED by default.\n\n"
+literal|"PLEASE NOTE that this still does not save you from having\n"
+literal|"to properly secure your system in other ways or exercise\n"
+literal|"due diligence in your administration, this simply picks\n"
+literal|"a more secure set of out-of-box defaults to start with.\n\n"
+literal|"To change any of these settings later, edit /etc/rc.conf"
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|configSecurityHigh
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|variable_set2
+argument_list|(
+literal|"inetd_enable"
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"sendmail_enable"
+argument_list|,
+literal|"YES"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"sshd_enable"
+argument_list|,
+literal|"YES"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"portmap_enable"
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"nfs_server_enable"
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|self
+condition|)
+name|msgConfirm
+argument_list|(
 literal|"High security settings have been selected.\n\n"
 literal|"This means that most \"popular\" network services and\n"
 literal|"mechanisms like inetd(8) have been DISABLED by default.\n\n"

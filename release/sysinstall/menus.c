@@ -9974,6 +9974,16 @@ block|,
 block|{
 literal|"High"
 block|,
+literal|"Fairly safe security settings."
+block|,
+name|NULL
+block|,
+name|configSecurityHigh
+block|}
+block|,
+block|{
+literal|"Extreme"
+block|,
 literal|"Very restrictive security settings."
 block|,
 name|NULL
