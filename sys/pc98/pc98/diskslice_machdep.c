@@ -1902,7 +1902,7 @@ comment|/* IBM-PC HDD */
 name|bp
 operator|->
 name|b_flags
-operator|=
+operator||=
 name|B_INVAL
 operator||
 name|B_AGE
@@ -1910,13 +1910,6 @@ expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ssp
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
