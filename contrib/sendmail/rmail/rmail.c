@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -26,10 +26,6 @@ argument_list|,
 literal|"@(#)$Id: rmail.c,v 8.61 2001/09/18 21:45:29 gshapiro Exp $"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
 
 begin_comment
 comment|/*  * RMAIL -- UUCP mail server.  *  * This program reads the>From ... remote from ... lines that UUCP is so  * fond of and turns them into something reasonable.  It then execs sendmail  * with various options built from these lines.  *  * The expected syntax is:  *  *<user> := [-a-z0-9]+  *<date> := ctime format  *<site> := [-a-z0-9!]+  *<blank line> := "^\n$"  *<from> := "From"<space><user><space><date>  *		  [<space> "remote from"<space><site>]  *<forward> := ">"<from>  *	    msg :=<from><forward>*<blank-line><body>  *  * The output of rmail(8) compresses the<forward> lines into a single  * from path.  *  * The err(3) routine is included here deliberately to make this code  * a bit more portable.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1993 Eric P. Allman.  All rights reserved.  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1993 Eric P. Allman.  All rights reserved.  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -26,10 +26,6 @@ argument_list|,
 literal|"@(#)$Id: smrsh.c,v 8.58 2002/05/25 02:41:31 ca Exp $"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
 
 begin_comment
 comment|/* **  SMRSH -- sendmail restricted shell ** **	This is a patch to get around the prog mailer bugs in most **	versions of sendmail. ** **	Use this in place of /bin/sh in the "prog" mailer definition **	in your sendmail.cf file.  You then create CMDDIR (owned by **	root, mode 755) and put links to any programs you want **	available to prog mailers in that directory.  This should **	include things like "vacation" and "procmail", but not "sed" **	or "sh". ** **	Leading pathnames are stripped from program names so that **	existing .forward files that reference things like **	"/usr/bin/vacation" will continue to work. ** **	The following characters are completely illegal: **<>  ^&  `  (  ) \n \r **	The following characters are sometimes illegal: **		|& **	This is more restrictive than strictly necessary. ** **	To use this, add FEATURE(`smrsh') to your .mc file. ** **	This can be used on any version of sendmail. ** **	In loving memory of RTM.  11/02/93. */
