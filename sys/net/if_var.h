@@ -1377,7 +1377,7 @@ parameter_list|(
 name|ifa
 parameter_list|)
 define|\
-value|do {					\ 		IFA_LOCK(ifa);			\ 		if ((ifa)->ifa_refcnt == 0) {	\ 			IFA_DESTROY(ifa);	\ 			free(ifa, M_IFADDR);	\ 		} else {			\ 			--(ifa)->ifa_refcnt;	\ 			IFA_UNLOCK(ifa);	\ 		}				\ 	} while (0)
+value|do {						\ 		IFA_LOCK(ifa);				\ 		KASSERT((ifa)->ifa_refcnt> 0,		\ 		    ("ifa %p !(ifa_refcnt> 0)", ifa));	\ 		if (--(ifa)->ifa_refcnt == 0) {		\ 			IFA_DESTROY(ifa);		\ 			free(ifa, M_IFADDR);		\ 		} else 					\ 			IFA_UNLOCK(ifa);		\ 	} while (0)
 end_define
 
 begin_define
@@ -1388,7 +1388,7 @@ parameter_list|(
 name|ifa
 parameter_list|)
 define|\
-value|do {					\ 		IFA_LOCK(ifa);			\ 		++(ifa)->ifa_refcnt;		\ 		IFA_UNLOCK(ifa);		\ 	} while (0)
+value|do {						\ 		IFA_LOCK(ifa);				\ 		++(ifa)->ifa_refcnt;			\ 		IFA_UNLOCK(ifa);			\ 	} while (0)
 end_define
 
 begin_struct
