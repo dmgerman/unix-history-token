@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printval.c 1.4 %G%"
+literal|"@(#)printval.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,9 +247,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|pop
+name|popsmall
 argument_list|(
-name|BOOLEAN
+name|s
 argument_list|)
 operator|==
 name|TRUE
