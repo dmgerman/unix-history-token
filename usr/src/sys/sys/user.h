@@ -1,36 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.16	82/08/24	*/
+comment|/*	user.h	4.17	82/09/04	*/
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../h/pcb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/dmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/vtimes.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -47,13 +18,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vtimes.h>
+file|<time.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<resource.h>
+end_include
 
 begin_comment
 comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
@@ -74,48 +46,6 @@ name|struct
 name|pcb
 name|u_pcb
 decl_stmt|;
-name|int
-name|u_arg
-index|[
-literal|5
-index|]
-decl_stmt|;
-comment|/* arguments to current system call */
-name|label_t
-name|u_qsav
-decl_stmt|;
-comment|/* for non-local gotos on interrupts */
-name|char
-name|u_segflg
-decl_stmt|;
-comment|/* 0:user D; 1:system; 2:user I */
-name|char
-name|u_error
-decl_stmt|;
-comment|/* return error code */
-name|short
-name|u_uid
-decl_stmt|;
-comment|/* effective user id */
-name|short
-name|u_gid
-decl_stmt|;
-comment|/* effective group id */
-name|int
-name|u_groups
-index|[
-name|NGROUPS
-index|]
-decl_stmt|;
-comment|/* groups, 0 terminated */
-name|short
-name|u_ruid
-decl_stmt|;
-comment|/* real user id */
-name|short
-name|u_rgid
-decl_stmt|;
-comment|/* real group id */
 name|struct
 name|proc
 modifier|*
@@ -124,9 +54,38 @@ decl_stmt|;
 comment|/* pointer to proc structure */
 name|int
 modifier|*
+name|u_ar0
+decl_stmt|;
+comment|/* address of users saved R0 */
+name|char
+name|u_comm
+index|[
+name|MAXNAMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* syscall parameters, results and catches */
+name|int
+name|u_arg
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* arguments to current system call */
+name|int
+modifier|*
 name|u_ap
 decl_stmt|;
 comment|/* pointer to arglist */
+name|label_t
+name|u_qsav
+decl_stmt|;
+comment|/* for non-local gotos on interrupts */
+name|char
+name|u_error
+decl_stmt|;
+comment|/* return error code */
 union|union
 block|{
 comment|/* syscall return values */
@@ -158,46 +117,108 @@ decl_stmt|;
 block|}
 name|u_r
 union|;
-name|caddr_t
-name|u_base
+name|char
+name|u_eosys
 decl_stmt|;
-comment|/* base address for IO */
-name|unsigned
+comment|/* special action on end of syscall */
+comment|/* 1.1 - processes and protection */
+name|short
+name|u_uid
+decl_stmt|;
+comment|/* effective user id */
+name|short
+name|u_gid
+decl_stmt|;
+comment|/* effective group id */
 name|int
-name|u_count
+name|u_groups
+index|[
+name|NGROUPS
+index|]
 decl_stmt|;
-comment|/* bytes remaining for IO */
-name|off_t
-name|u_offset
+comment|/* groups, 0 terminated */
+name|short
+name|u_ruid
 decl_stmt|;
-comment|/* offset in file for IO */
+comment|/* real user id */
+name|short
+name|u_rgid
+decl_stmt|;
+comment|/* real group id */
+comment|/* 1.2 - memory management */
+name|size_t
+name|u_tsize
+decl_stmt|;
+comment|/* text size (clicks) */
+name|size_t
+name|u_dsize
+decl_stmt|;
+comment|/* data size (clicks) */
+name|size_t
+name|u_ssize
+decl_stmt|;
+comment|/* stack size (clicks) */
 name|struct
-name|inode
-modifier|*
-name|u_cdir
+name|dmap
+name|u_dmap
 decl_stmt|;
-comment|/* current directory */
+comment|/* disk map for data segment */
 name|struct
-name|inode
-modifier|*
-name|u_rdir
+name|dmap
+name|u_smap
 decl_stmt|;
-comment|/* root directory of current process */
+comment|/* disk map for stack segment */
+name|struct
+name|dmap
+name|u_cdmap
+decl_stmt|,
+name|u_csmap
+decl_stmt|;
+comment|/* shadows of u_dmap, u_smap, for 					   use of parent during fork */
+name|label_t
+name|u_ssav
+decl_stmt|;
+comment|/* label variable for swapping */
+name|size_t
+name|u_odsize
+decl_stmt|,
+name|u_ossize
+decl_stmt|;
+comment|/* for (clumsy) expansion swaps */
+name|time_t
+name|u_outime
+decl_stmt|;
+comment|/* user time at last sample */
+comment|/* 1.3 - signal management */
+name|int
+function_decl|(
+modifier|*
+name|u_signal
+index|[
+name|NSIG
+index|]
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* disposition of signals */
+name|int
+name|u_sigmask
+index|[
+name|NSIG
+index|]
+decl_stmt|;
+comment|/* signals to be blocked */
+name|int
+name|u_code
+decl_stmt|;
+comment|/* ``code'' to trap */
 name|caddr_t
-name|u_dirp
+name|u_sigstack
 decl_stmt|;
-comment|/* pathname pointer */
-name|struct
-name|direct
-name|u_dent
-decl_stmt|;
-comment|/* current directory entry */
-name|struct
-name|inode
-modifier|*
-name|u_pdir
-decl_stmt|;
-comment|/* inode of parent directory of dirp */
+comment|/* 0 means no sigstack */
+comment|/* on SIGILL code passes compatibility mode fault address  */
+comment|/* on SIGFPE code passes more specific kind of floating point fault */
+comment|/* 1.4 - descriptor management */
 name|struct
 name|file
 modifier|*
@@ -229,64 +250,18 @@ directive|define
 name|WRLOCK
 value|04
 comment|/* write lock present */
-name|label_t
-name|u_ssav
-decl_stmt|;
-comment|/* label variable for swapping */
-name|int
-function_decl|(
+name|struct
+name|inode
 modifier|*
-name|u_signal
-index|[
-name|NSIG
-index|]
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* disposition of signals */
-name|int
-name|u_code
+name|u_cdir
 decl_stmt|;
-comment|/* ``code'' to trap */
-comment|/* on SIGILL code passes compatibility mode fault address  */
-comment|/* on SIGFPE code passes more specific kind of floating point fault */
-name|int
+comment|/* current directory */
+name|struct
+name|inode
 modifier|*
-name|u_ar0
+name|u_rdir
 decl_stmt|;
-comment|/* address of users saved R0 */
-struct|struct
-name|uprof
-block|{
-comment|/* profile arguments */
-name|short
-modifier|*
-name|pr_base
-decl_stmt|;
-comment|/* buffer base */
-name|unsigned
-name|pr_size
-decl_stmt|;
-comment|/* buffer size */
-name|unsigned
-name|pr_off
-decl_stmt|;
-comment|/* pc offset */
-name|unsigned
-name|pr_scale
-decl_stmt|;
-comment|/* pc scaling */
-block|}
-name|u_prof
-struct|;
-name|char
-name|u_eosys
-decl_stmt|;
-comment|/* special action on end of syscall */
-name|char
-name|u_sep
-decl_stmt|;
-comment|/* flag for I and D separation */
+comment|/* root directory of current process */
 name|struct
 name|tty
 modifier|*
@@ -297,6 +272,70 @@ name|dev_t
 name|u_ttyd
 decl_stmt|;
 comment|/* controlling tty dev */
+name|short
+name|u_cmask
+decl_stmt|;
+comment|/* mask for file creation */
+comment|/* 1.5 - timing and statistics */
+name|struct
+name|rusage
+name|u_ru
+decl_stmt|;
+comment|/* stats for this proc */
+name|struct
+name|rusage
+name|u_cru
+decl_stmt|;
+comment|/* sum of stats for reaped children */
+name|struct
+name|itimerval
+name|u_timer
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|time_t
+name|u_start
+decl_stmt|;
+name|short
+name|u_acflag
+decl_stmt|;
+comment|/* 1.6 - resource controls */
+name|struct
+name|rlimit
+name|u_rlimit
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|struct
+name|quota
+modifier|*
+name|u_quota
+decl_stmt|;
+comment|/* user's quota structure */
+name|int
+name|u_qflags
+decl_stmt|;
+comment|/* per process quota flags */
+comment|/* BEGIN TRASH */
+name|char
+name|u_segflg
+decl_stmt|;
+comment|/* 0:user D; 1:system; 2:user I */
+name|caddr_t
+name|u_base
+decl_stmt|;
+comment|/* base address for IO */
+name|unsigned
+name|int
+name|u_count
+decl_stmt|;
+comment|/* bytes remaining for IO */
+name|off_t
+name|u_offset
+decl_stmt|;
+comment|/* offset in file for IO */
 union|union
 block|{
 struct|struct
@@ -377,111 +416,22 @@ define|#
 directive|define
 name|ux_relflg
 value|Ux_A.Ux_relflg
-name|char
-name|u_comm
-index|[
-name|MAXNAMLEN
-operator|+
-literal|1
-index|]
+name|caddr_t
+name|u_dirp
 decl_stmt|;
-name|time_t
-name|u_start
-decl_stmt|;
-name|char
-name|u_acflag
-decl_stmt|;
-name|short
-name|u_fpflag
-decl_stmt|;
-comment|/* unused now, will be later */
-name|short
-name|u_cmask
-decl_stmt|;
-comment|/* mask for file creation */
-name|size_t
-name|u_tsize
-decl_stmt|;
-comment|/* text size (clicks) */
-name|size_t
-name|u_dsize
-decl_stmt|;
-comment|/* data size (clicks) */
-name|size_t
-name|u_ssize
-decl_stmt|;
-comment|/* stack size (clicks) */
+comment|/* pathname pointer */
 name|struct
-name|vtimes
-name|u_vm
+name|direct
+name|u_dent
 decl_stmt|;
-comment|/* stats for this proc */
+comment|/* current directory entry */
 name|struct
-name|vtimes
-name|u_cvm
-decl_stmt|;
-comment|/* sum of stats for reaped children */
-name|struct
-name|dmap
-name|u_dmap
-decl_stmt|;
-comment|/* disk map for data segment */
-name|struct
-name|dmap
-name|u_smap
-decl_stmt|;
-comment|/* disk map for stack segment */
-name|struct
-name|dmap
-name|u_cdmap
-decl_stmt|,
-name|u_csmap
-decl_stmt|;
-comment|/* shadows of u_dmap, u_smap, for 					   use of parent during fork */
-name|time_t
-name|u_outime
-decl_stmt|;
-comment|/* user time at last sample */
-name|size_t
-name|u_odsize
-decl_stmt|,
-name|u_ossize
-decl_stmt|;
-comment|/* for (clumsy) expansion swaps */
-name|int
-name|u_limit
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* see<sys/limit.h> */
-ifdef|#
-directive|ifdef
-name|notdef
-name|unsigned
-name|u_vsave
-decl_stmt|;
-comment|/* saved previous fault page number */
-endif|#
-directive|endif
-name|struct
-name|quota
+name|inode
 modifier|*
-name|u_quota
+name|u_pdir
 decl_stmt|;
-comment|/* user's quota structure */
-name|int
-name|u_qflags
-decl_stmt|;
-comment|/* per process quota flags */
-name|int
-name|u_stack
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* 					 * kernel stack per user 					 * extends from u + UPAGES*512 					 * backward not to reach here 					 */
-comment|/* SHOULD INSTEAD GROW STACK BACKWARDS ABOVE u. TOWARDS A VIRTUAL HOLE */
+comment|/* inode of parent directory of dirp */
+comment|/* END TRASH */
 block|}
 struct|;
 end_struct
