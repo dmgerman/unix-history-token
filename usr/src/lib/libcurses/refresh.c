@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	8.4 (Berkeley) %G%"
+literal|"@(#)refresh.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,22 +1196,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-specifier|register
-name|int
-name|nlsp
-decl_stmt|,
-name|clsp
-decl_stmt|;
-comment|/* Last space in lines. */
-specifier|register
-name|int
-name|wx
-decl_stmt|,
-name|lch
-decl_stmt|,
-name|y
-decl_stmt|;
-specifier|register
 name|__LDATA
 modifier|*
 name|nsp
@@ -1227,6 +1211,19 @@ name|cep
 decl_stmt|;
 name|u_int
 name|force
+decl_stmt|;
+name|int
+name|clsp
+decl_stmt|,
+name|nlsp
+decl_stmt|;
+comment|/* Last space in lines. */
+name|int
+name|lch
+decl_stmt|,
+name|wx
+decl_stmt|,
+name|y
 decl_stmt|;
 name|char
 modifier|*
@@ -1642,8 +1639,8 @@ condition|(
 operator|!
 name|curwin
 condition|)
-name|csp
 operator|++
+name|csp
 expr_stmt|;
 operator|++
 name|wx
@@ -1927,19 +1924,19 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Enter/exit standout mode as appropriate. */
+comment|/* 			 * Enter/exit standout mode as appropriate. 			 * XXX 			 * Should use UC if SO/SE not available. 			 */
 if|if
 condition|(
-name|SO
-operator|&&
-operator|(
 name|nsp
 operator|->
 name|attr
 operator|&
 name|__STANDOUT
-operator|)
-operator|!=
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 operator|(
 name|curscr
 operator|->
@@ -1947,15 +1944,14 @@ name|flags
 operator|&
 name|__WSTANDOUT
 operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|nsp
-operator|->
-name|attr
-operator|&
-name|__STANDOUT
+operator|&&
+name|SO
+operator|!=
+name|NULL
+operator|&&
+name|SE
+operator|!=
+name|NULL
 condition|)
 block|{
 name|tputs
@@ -1974,7 +1970,20 @@ operator||=
 name|__WSTANDOUT
 expr_stmt|;
 block|}
-else|else
+block|}
+elseif|else
+if|if
+condition|(
+name|curscr
+operator|->
+name|flags
+operator|&
+name|__WSTANDOUT
+operator|&&
+name|SE
+operator|!=
+name|NULL
+condition|)
 block|{
 name|tputs
 argument_list|(
@@ -1992,7 +2001,6 @@ operator|&=
 operator|~
 name|__WSTANDOUT
 expr_stmt|;
-block|}
 block|}
 name|wx
 operator|++
