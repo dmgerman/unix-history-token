@@ -225,18 +225,6 @@ name|urandom_dev
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Buffer used by uiomove(9) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|random_buf
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -393,7 +381,7 @@ name|slowoverthresh
 argument_list|,
 literal|2
 argument_list|,
-literal|"Slow pool over-threshhold reseed count"
+literal|"Slow pool over-threshhold reseed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -424,6 +412,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|;
+name|void
+modifier|*
+name|random_buf
 decl_stmt|;
 name|c
 operator|=
@@ -522,6 +514,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|;
+name|void
+modifier|*
+name|random_buf
 decl_stmt|;
 name|random_buf
 operator|=
