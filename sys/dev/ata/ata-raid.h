@@ -221,6 +221,12 @@ name|disk
 name|disk
 decl_stmt|;
 comment|/* disklabel/slice stuff */
+name|struct
+name|proc
+modifier|*
+name|pid
+decl_stmt|;
+comment|/* rebuilder process id */
 name|dev_t
 name|dev
 decl_stmt|;
