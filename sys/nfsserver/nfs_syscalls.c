@@ -2216,9 +2216,6 @@ block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-name|NET_LOCK_GIANT
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|nfsrv_send
@@ -2233,9 +2230,6 @@ name|nd_nam2
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|NET_UNLOCK_GIANT
-argument_list|()
 expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
