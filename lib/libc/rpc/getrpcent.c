@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: getrpcent.c,v 1.6 1996/12/30 14:42:31 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

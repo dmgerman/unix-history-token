@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: pmap_prot.c,v 1.2 1995/05/30 05:41:25 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
