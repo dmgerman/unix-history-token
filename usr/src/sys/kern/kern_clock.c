@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_clock.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"syscontext.h"
 end_include
 
 begin_include
@@ -1587,16 +1587,33 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|profil
-argument_list|()
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
 
-begin_block
-block|{
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
 specifier|register
 struct|struct
-name|a
+name|args
 block|{
 name|short
 modifier|*
@@ -1614,16 +1631,18 @@ decl_stmt|;
 block|}
 modifier|*
 name|uap
-init|=
-operator|(
-expr|struct
-name|a
-operator|*
-operator|)
-name|u
-operator|.
-name|u_ap
 struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|uprof
@@ -1666,6 +1685,11 @@ operator|=
 name|uap
 operator|->
 name|pcscale
+expr_stmt|;
+name|RETURN
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block
