@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_trap.c	7.2	86/11/20	*/
+comment|/*	kdb_trap.c	7.3	86/11/20	*/
 end_comment
 
 begin_comment
@@ -67,12 +67,16 @@ name|MAXPOS
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Kdb trap handler; entered on all fatal  * and/or debugger related traps or faults.  */
+end_comment
+
 begin_macro
 name|kdb
 argument_list|(
 argument|type
 argument_list|,
-argument|sp
+argument|code
 argument_list|,
 argument|curproc
 argument_list|)
@@ -82,8 +86,7 @@ begin_decl_stmt
 name|int
 name|type
 decl_stmt|,
-modifier|*
-name|sp
+name|code
 decl_stmt|;
 end_decl_stmt
 
@@ -97,14 +100,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|userpc
-operator|=
-name|dot
-operator|=
-name|pcb
-operator|.
-name|pcb_pc
-expr_stmt|;
 name|var
 index|[
 name|varchk
@@ -113,10 +108,45 @@ literal|'t'
 argument_list|)
 index|]
 operator|=
+name|type
+expr_stmt|;
+name|var
+index|[
+name|varchk
+argument_list|(
+literal|'c'
+argument_list|)
+index|]
+operator|=
+name|code
+expr_stmt|;
+name|var
+index|[
+name|varchk
+argument_list|(
+literal|'p'
+argument_list|)
+index|]
+operator|=
 operator|(
 name|int
 operator|)
-name|sp
+name|curproc
+expr_stmt|;
+name|printtrap
+argument_list|(
+name|type
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|userpc
+operator|=
+name|dot
+operator|=
+name|pcb
+operator|.
+name|pcb_pc
 expr_stmt|;
 switch|switch
 condition|(

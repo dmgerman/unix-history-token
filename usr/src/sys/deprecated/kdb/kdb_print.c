@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_print.c	7.2	86/11/20	*/
+comment|/*	kdb_print.c	7.3	86/11/20	*/
 end_comment
 
 begin_include
@@ -330,6 +330,18 @@ name|stack
 decl_stmt|,
 name|ntramp
 decl_stmt|;
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|allproc
+decl_stmt|;
 if|if
 condition|(
 name|cntflg
@@ -493,6 +505,58 @@ case|:
 case|case
 literal|'?'
 case|:
+if|if
+condition|(
+name|p
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+name|var
+index|[
+name|varchk
+argument_list|(
+literal|'p'
+argument_list|)
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"pid = %d\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"in idle loop\n"
+argument_list|)
+expr_stmt|;
+name|printtrap
+argument_list|(
+name|var
+index|[
+name|varchk
+argument_list|(
+literal|'t'
+argument_list|)
+index|]
+argument_list|,
+name|var
+index|[
+name|varchk
+argument_list|(
+literal|'c'
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* fall thru... */
 case|case
 literal|'r'
 case|:
@@ -987,19 +1051,6 @@ break|break;
 case|case
 literal|'l'
 case|:
-block|{
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|allproc
-decl_stmt|;
 for|for
 control|(
 name|p
@@ -1091,7 +1142,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-block|}
 default|default:
 name|error
 argument_list|(
