@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.8 2000/03/08 08:53:36 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.15 2000/03/21 14:39:36 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  *  * Card configuration  * ==================  *  * This card is unu
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  *  * shutdown  * ifp->if_hdr length  * _reset - check where needed  * apm  * faster TX routine  * more translations  * infrastructure mode - maybe need some of the old stuff for checking?  * differeniate between parameters set in attach and init  * spinning in ray_issue_cmd  * fix the XXX code in start_join_done  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * ray_update_params_done needs work  * do an rx level and antenna cache, the antenna can be used to set c_antenna  *   for tx  * callout handles need rationalising. can probably remove timerh and  *   use ccs_timerh for download and sj_timerh  */
+comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  *  * shutdown  * _reset - check where needed  * apm  * resume  * faster TX routine  * more translations  * infrastructure mode - maybe need some of the old stuff for checking?  * differeniate between parameters set in attach and init  * spinning in ray_issue_cmd  * fix the XXX code in start_join_done  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG  * ray_update_params_done needs work  * callout handles need rationalising. can probably remove timerh and  *   use ccs_timerh for download and sj_timerh  */
 end_comment
 
 begin_define
@@ -226,8 +226,10 @@ parameter_list|(
 name|p
 parameter_list|,
 name|l
+parameter_list|,
+name|lev
 parameter_list|)
-value|do { if (RAY_DEBUG> 10) {		\     u_int8_t *i;						\     for (i = p; i< (u_int8_t *)(p+l); i += 8)			\     	printf("  0x%08lx %8D\n",				\ 		(unsigned long)i, (unsigned char *)i, " ");	\ } } while (0)
+value|do { if (RAY_DEBUG> lev) {	\     u_int8_t *i;						\     for (i = p; i< (u_int8_t *)(p+l); i += 8)			\     	printf("  0x%08lx %8D\n",				\ 		(unsigned long)i, (unsigned char *)i, " ");	\ } } while (0)
 end_define
 
 begin_define
@@ -267,6 +269,8 @@ parameter_list|(
 name|p
 parameter_list|,
 name|l
+parameter_list|,
+name|lev
 parameter_list|)
 end_define
 
@@ -559,6 +563,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
 end_include
 
 begin_include
@@ -960,6 +970,14 @@ name|u_int8_t
 name|sc_rxnoise
 decl_stmt|;
 comment|/* Average receiver level	*/
+name|struct
+name|ray_siglev
+name|sc_siglevs
+index|[
+name|RAY_NSIGLEVRECS
+index|]
+decl_stmt|;
+comment|/* Antenna/levels	*/
 name|struct
 name|ray_param_req
 type|\
@@ -1699,6 +1717,32 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|ray_rx_update_cache
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ray_softc
+operator|*
+name|sc
+operator|,
+name|u_int8_t
+operator|*
+name|src
+operator|,
+name|u_int8_t
+name|siglev
+operator|,
+name|u_int8_t
+name|antenna
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|ray_set_pending
 name|__P
 argument_list|(
@@ -1764,6 +1808,26 @@ expr|struct
 name|ray_softc
 operator|*
 name|sc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int8_t
+name|ray_start_best_antenna
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ray_softc
+operator|*
+name|sc
+operator|,
+name|u_int8_t
+operator|*
+name|dst
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2541,37 +2605,6 @@ define|#
 directive|define
 name|RAY_START_TIMEOUT
 value|(hz / 2)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|RAY_SIMPLE_TX
-end_if
-
-begin_define
-define|#
-directive|define
-name|RAY_IFQ_MAXLEN
-value|(2)
-end_define
-
-begin_else
-else|#
-directive|else
-else|if RAY_DECENT_TX
-end_else
-
-begin_define
-define|#
-directive|define
-name|RAY_IFQ_MAXLEN
-value|(RAY_CCS_TX_LAST+1)
 end_define
 
 begin_endif
@@ -3961,28 +3994,22 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX
 name|ifp
 operator|->
-name|if_hdr
+name|if_hdrlen
 operator|=
-operator|...
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_header
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
 expr_stmt|;
-name|make
-name|this
-name|big
-name|enough
-name|to
-name|hold
-name|the
-literal|.11
-name|and
-literal|.3
-name|headers
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_baudrate
@@ -4026,7 +4053,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-name|RAY_IFQ_MAXLEN
+name|IFQ_MAXLEN
 expr_stmt|;
 comment|/*      * If this logical interface has already been attached,      * don't attach it again or chaos will ensue.      */
 name|sprintf
@@ -5518,6 +5545,43 @@ name|error
 expr_stmt|;
 break|break;
 case|case
+name|SIOCGRAYSIGLEV
+case|:
+name|RAY_DPRINTFN
+argument_list|(
+literal|30
+argument_list|,
+operator|(
+literal|"ray%d: ioctl called for GRAYSIGLEV\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|copyout
+argument_list|(
+name|sc
+operator|->
+name|sc_siglevs
+argument_list|,
+name|ifr
+operator|->
+name|ifr_data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_siglevs
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SIOCGIFFLAGS
 case|:
 name|RAY_DPRINTFN
@@ -5671,13 +5735,11 @@ specifier|static
 name|void
 name|ray_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
@@ -6038,20 +6100,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|SRAM_WRITE_FIELD_1
-argument_list|(
-name|sc
-argument_list|,
-name|ccs
-argument_list|,
-name|ray_cmd_tx
-argument_list|,
-name|c_antenna
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|bufp
 operator|+=
 sizeof|sizeof
@@ -6087,6 +6135,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pktlen
@@ -6240,17 +6299,6 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m0
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -6438,11 +6486,6 @@ argument_list|,
 literal|"ray_start"
 argument_list|)
 expr_stmt|;
-name|m_free
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
 comment|/*      * Fill in a few loose ends and kick the card to send the packet      */
 if|if
 condition|(
@@ -6490,6 +6533,26 @@ argument_list|,
 name|pktlen
 argument_list|)
 expr_stmt|;
+name|SRAM_WRITE_FIELD_1
+argument_list|(
+name|sc
+argument_list|,
+name|ccs
+argument_list|,
+name|ray_cmd_tx
+argument_list|,
+name|c_antenna
+argument_list|,
+name|ray_start_best_antenna
+argument_list|(
+name|sc
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|SRAM_WRITE_1
 argument_list|(
 name|sc
@@ -6513,6 +6576,11 @@ expr_stmt|;
 name|RAY_ECF_START_CMD
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|m_free
+argument_list|(
+name|m0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6708,50 +6776,33 @@ name|calling
 endif|#
 directive|endif
 endif|XXX_NETBSDTX
+comment|/******************************************************************************  * XXX NOT KNF FROM HERE UP  ******************************************************************************/
 comment|/*  * TX completion routine.  *  * Clear ccs and network flags.  */
 specifier|static
 name|void
 name|ray_start_done
 argument_list|(
-argument|sc
+argument|struct ray_softc *sc
 argument_list|,
-argument|ccs
+argument|size_t ccs
 argument_list|,
-argument|status
+argument|u_int8_t status
 argument_list|)
-expr|struct
-name|ray_softc
+block|{ 	struct
+name|ifnet
 operator|*
-name|sc
+name|ifp
+block|;
+name|char
+operator|*
+name|status_string
+index|[]
+operator|=
+name|RAY_CCS_STATUS_STRINGS
 expr_stmt|;
 end_if
 
-begin_decl_stmt
-name|size_t
-name|ccs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int8_t
-name|status
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|char
-modifier|*
-name|status_string
-index|[]
-init|=
-name|RAY_CCS_STATUS_STRINGS
-decl_stmt|;
+begin_expr_stmt
 name|RAY_DPRINTFN
 argument_list|(
 literal|5
@@ -6765,11 +6816,17 @@ name|unit
 operator|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|RAY_MAP_CM
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ifp
 operator|=
 operator|&
@@ -6779,6 +6836,9 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|status
@@ -6806,6 +6866,9 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|RAY_CCS_FREE
 argument_list|(
 name|sc
@@ -6813,12 +6876,18 @@ argument_list|,
 name|ccs
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ifp
@@ -6834,25 +6903,22 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
-return|return;
-block|}
-end_block
+end_if
 
 begin_comment
+unit|}
 comment|/*  * Start timeout routine.  *  * Used when card was busy but we needed to send a packet.  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|void
 name|ray_start_timo
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ray_softc
@@ -6934,7 +7000,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6947,25 +7012,19 @@ specifier|static
 name|size_t
 name|ray_start_wrhdr
 parameter_list|(
-name|sc
-parameter_list|,
-name|eh
-parameter_list|,
-name|bufp
-parameter_list|)
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ether_header
 modifier|*
 name|eh
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|bufp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ieee80211_header
@@ -7186,6 +7245,162 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Determine best antenna to use from rx level and antenna cache  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int8_t
+name|ray_start_best_antenna
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|dst
+parameter_list|)
+block|{
+name|struct
+name|ray_siglev
+modifier|*
+name|sl
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|u_int8_t
+name|antenna
+decl_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"ray%d: ray_start_best_antenna\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_version
+operator|==
+name|RAY_ECFS_BUILD_4
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* try to find host */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|RAY_NSIGLEVRECS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sl
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_siglevs
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|sl
+operator|->
+name|rsl_host
+argument_list|,
+name|dst
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|found
+goto|;
+block|}
+comment|/* not found, return default setting */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|found
+label|:
+comment|/* This is a simple thresholding scheme which takes the mean 	 * of the best antenna history. This is okay but as it is a 	 * filter, it adds a bit of lag in situations where the 	 * best antenna swaps from one side to the other slowly. Don't know 	 * how likely this is given the horrible fading though. 	 */
+name|antenna
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|RAY_NANTENNA
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|antenna
+operator|+=
+name|sl
+operator|->
+name|rsl_antennas
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|antenna
+operator|>
+operator|(
+name|RAY_NANTENNA
+operator|>>
+literal|1
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * receive a packet from the card  */
 end_comment
 
@@ -7194,18 +7409,14 @@ specifier|static
 name|void
 name|ray_rx
 parameter_list|(
-name|sc
-parameter_list|,
-name|rcs
-parameter_list|)
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|rcs
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ieee80211_header
@@ -7250,6 +7461,11 @@ name|src
 decl_stmt|;
 name|u_int8_t
 name|fc
+decl_stmt|;
+name|u_int8_t
+name|siglev
+decl_stmt|,
+name|antenna
 decl_stmt|;
 name|u_int
 name|first
@@ -7308,7 +7524,7 @@ name|readlen
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Get first part of packet and the length. Do some sanity checks      * and get a mbuf.      */
+comment|/* 	 * Get first part of packet and the length. Do some sanity checks 	 * and get a mbuf. 	 */
 name|first
 operator|=
 name|RAY_CCS_INDEX
@@ -7327,6 +7543,32 @@ argument_list|,
 name|ray_cmd_rx
 argument_list|,
 name|c_pktlen
+argument_list|)
+expr_stmt|;
+name|siglev
+operator|=
+name|SRAM_READ_FIELD_1
+argument_list|(
+name|sc
+argument_list|,
+name|rcs
+argument_list|,
+name|ray_cmd_rx
+argument_list|,
+name|c_siglev
+argument_list|)
+expr_stmt|;
+name|antenna
+operator|=
+name|SRAM_READ_FIELD_1
+argument_list|(
+name|sc
+argument_list|,
+name|rcs
+argument_list|,
+name|ray_cmd_rx
+argument_list|,
+name|c_antenna
 argument_list|)
 expr_stmt|;
 if|if
@@ -7499,7 +7741,7 @@ name|u_int8_t
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*      * Walk the fragment chain to build the complete packet.      *      * The use of two index variables removes a race with the      * hardware. If one index were used the clearing of the CCS would      * happen before reading the next pointer and the hardware can get in.      * Not my idea but verbatim from the NetBSD driver.      */
+comment|/* 	 * Walk the fragment chain to build the complete packet. 	 * 	 * The use of two index variables removes a race with the 	 * hardware. If one index were used the clearing of the CCS would 	 * happen before reading the next pointer and the hardware can get in. 	 * Not my idea but verbatim from the NetBSD driver. 	 */
 name|i
 operator|=
 name|ni
@@ -7750,7 +7992,7 @@ expr_stmt|;
 block|}
 name|skip_read
 label|:
-comment|/*      * Walk the chain again to free the rcss.      */
+comment|/* 	 * Walk the chain again to free the rcss. 	 */
 name|i
 operator|=
 name|ni
@@ -7816,7 +8058,7 @@ argument_list|,
 literal|"ray_rx"
 argument_list|)
 expr_stmt|;
-comment|/*      * Check the 802.11 packet type and obtain the .11 src addresses.      *      * XXX CTL and MGT packets will have separate functions, DATA with here      *      * XXX This needs some work for INFRA mode      */
+comment|/* 	 * Check the 802.11 packet type and obtain the .11 src addresses. 	 * 	 * XXX CTL and MGT packets will have separate functions, DATA with here 	 * 	 * XXX This needs some work for INFRA mode 	 */
 name|header
 operator|=
 name|mtod
@@ -7978,6 +8220,12 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|src
+operator|=
+name|header
+operator|->
+name|i_addr2
+expr_stmt|;
 switch|switch
 condition|(
 name|fc
@@ -7988,12 +8236,6 @@ block|{
 case|case
 name|IEEE80211_FC1_STA_TO_STA
 case|:
-name|src
-operator|=
-name|header
-operator|->
-name|i_addr2
-expr_stmt|;
 name|RAY_DPRINTFN
 argument_list|(
 literal|50
@@ -8020,15 +8262,13 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"ray%d: ray_rx packet from sta %6D to ap %6D\n"
+literal|"ray%d: ray_rx packet from sta to ap %6D %6D\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
-name|header
-operator|->
-name|i_addr2
+name|src
 operator|,
 literal|":"
 operator|,
@@ -8065,9 +8305,7 @@ name|sc
 operator|->
 name|unit
 operator|,
-name|header
-operator|->
-name|i_addr3
+name|src
 operator|,
 literal|":"
 operator|)
@@ -8092,15 +8330,13 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"ray%d: ray_rx saw packet between aps %6D %6D\n"
+literal|"ray%d: ray_rx packet between aps %6D %6D\n"
 operator|,
 name|sc
 operator|->
 name|unit
 operator|,
-name|header
-operator|->
-name|i_addr1
+name|src
 operator|,
 literal|":"
 operator|,
@@ -8124,6 +8360,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 default|default:
+name|src
+operator|=
+name|NULL
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ray%d: ray_rx packet type unknown fc1 0x%x - why?\n"
@@ -8147,7 +8387,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * Translation - capability as described earlier      *      * Each case must remove the 802.11 header and leave an 802.3      * header in the mbuf copy addresses as needed.      */
+comment|/* 	 * Translation - capability as described earlier 	 * 	 * Each case must remove the 802.11 header and leave an 802.3 	 * header in the mbuf copy addresses as needed. 	 */
 switch|switch
 condition|(
 name|sc
@@ -8197,11 +8437,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * Finally, do a bit of house keeping before sending the packet      * up the stack.      */
+comment|/* 	 * Finally, do a bit of house keeping before sending the packet 	 * up the stack. 	 */
 name|ifp
 operator|->
 name|if_ipackets
 operator|++
+expr_stmt|;
+name|ray_rx_update_cache
+argument_list|(
+name|sc
+argument_list|,
+name|src
+argument_list|,
+name|siglev
+argument_list|,
+name|antenna
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -8321,8 +8572,292 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * XXX NOT KNF FROM HERE UP  ******************************************************************************/
+comment|/*  * Update rx level and antenna cache  */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_rx_update_cache
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|src
+parameter_list|,
+name|u_int8_t
+name|siglev
+parameter_list|,
+name|u_int8_t
+name|antenna
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|mini
+decl_stmt|;
+name|struct
+name|timeval
+name|mint
+decl_stmt|;
+name|struct
+name|ray_siglev
+modifier|*
+name|sl
+decl_stmt|;
+name|RAY_DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"ray%d: ray_rx_update_cache\n"
+operator|,
+name|sc
+operator|->
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|RAY_MAP_CM
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* try to find host */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|RAY_NSIGLEVRECS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sl
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_siglevs
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|sl
+operator|->
+name|rsl_host
+argument_list|,
+name|src
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|found
+goto|;
+block|}
+comment|/* not found, find oldest slot */
+name|mini
+operator|=
+literal|0
+expr_stmt|;
+name|mint
+operator|.
+name|tv_sec
+operator|=
+name|LONG_MAX
+expr_stmt|;
+name|mint
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|RAY_NSIGLEVRECS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sl
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_siglevs
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|timevalcmp
+argument_list|(
+operator|&
+name|sl
+operator|->
+name|rsl_time
+argument_list|,
+operator|&
+name|mint
+argument_list|,
+operator|<
+argument_list|)
+condition|)
+block|{
+name|mini
+operator|=
+name|i
+expr_stmt|;
+name|mint
+operator|=
+name|sl
+operator|->
+name|rsl_time
+expr_stmt|;
+block|}
+block|}
+name|sl
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_siglevs
+index|[
+name|mini
+index|]
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sl
+operator|->
+name|rsl_siglevs
+argument_list|,
+name|RAY_NSIGLEV
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sl
+operator|->
+name|rsl_antennas
+argument_list|,
+name|RAY_NANTENNA
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|src
+argument_list|,
+name|sl
+operator|->
+name|rsl_host
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+name|found
+label|:
+name|microtime
+argument_list|(
+operator|&
+name|sl
+operator|->
+name|rsl_time
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|sl
+operator|->
+name|rsl_siglevs
+argument_list|,
+operator|&
+name|sl
+operator|->
+name|rsl_siglevs
+index|[
+literal|1
+index|]
+argument_list|,
+name|RAY_NSIGLEV
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|sl
+operator|->
+name|rsl_siglevs
+index|[
+literal|0
+index|]
+operator|=
+name|siglev
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_version
+operator|!=
+name|RAY_ECFS_BUILD_4
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|sl
+operator|->
+name|rsl_antennas
+argument_list|,
+operator|&
+name|sl
+operator|->
+name|rsl_antennas
+index|[
+literal|1
+index|]
+argument_list|,
+name|RAY_NANTENNA
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|sl
+operator|->
+name|rsl_antennas
+index|[
+literal|0
+index|]
+operator|=
+name|antenna
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * an update params command has completed lookup which command and  * the status  *  * XXX this isn't finished yet, we need to grok the command used  */
@@ -11932,10 +12467,6 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * XXX NOT KNF FROM HERE DOWN						      *  ******************************************************************************/
-end_comment
-
-begin_comment
 comment|/*  * Subcommand functions that use the SCP_UPDATESUBCMD command  * (and are serialized with respect to other update sub commands  */
 end_comment
 
@@ -11948,13 +12479,11 @@ specifier|static
 name|void
 name|ray_download_params
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ray_mib_4
@@ -12013,7 +12542,7 @@ name|v
 parameter_list|)
 define|\
 value|do { (p)[0] = ((v>> 8)& 0xff); (p)[1] = (v& 0xff); } while(0)
-comment|/*       * Firmware version 4 defaults - see if_raymib.h for details       */
+comment|/* 	  * Firmware version 4 defaults - see if_raymib.h for details 	  */
 name|MIB4
 argument_list|(
 name|mib_net_type
@@ -12353,7 +12882,7 @@ argument_list|)
 operator|=
 name|RAY_MIB_TEST_MAX_CHAN_DEFAULT
 expr_stmt|;
-comment|/*       * Firmware version 5 defaults - see if_raymib.h for details       */
+comment|/* 	  * Firmware version 5 defaults - see if_raymib.h for details 	  */
 name|MIB5
 argument_list|(
 name|mib_net_type
@@ -12753,7 +13282,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ray%d: ray_download_params something is already happening\n"
+literal|"ray%d: ray_download_params device busy\n"
 argument_list|,
 name|sc
 operator|->
@@ -12852,13 +13381,11 @@ specifier|static
 name|void
 name|ray_download_done
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|ray_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|RAY_DPRINTFN
 argument_list|(
@@ -12885,7 +13412,7 @@ argument_list|,
 name|SCP_UPD_STARTUP
 argument_list|)
 expr_stmt|;
-comment|/*       * Fake the current network parameter settings so start_join_net      * will not bother updating them to the card (we would need to      * zero these anyway, so we might as well copy).      */
+comment|/*  	 * Fake the current network parameter settings so start_join_net 	 * will not bother updating them to the card (we would need to 	 * zero these anyway, so we might as well copy). 	 */
 name|sc
 operator|->
 name|sc_c
@@ -13309,12 +13836,10 @@ specifier|static
 name|void
 name|ray_start_join_timo
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ray_softc
@@ -13361,6 +13886,10 @@ end_endif
 
 begin_comment
 comment|/* RAY_NEED_STARTJOIN_TIMO */
+end_comment
+
+begin_comment
+comment|/******************************************************************************  * XXX NOT KNF FROM HERE DOWN						      *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -14533,7 +15062,6 @@ name|RAY_MIB_SSID
 case|:
 if|if
 condition|(
-operator|!
 name|bcmp
 argument_list|(
 name|sc
@@ -14548,6 +15076,8 @@ name|r_data
 argument_list|,
 name|IEEE80211_NWID_LEN
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
