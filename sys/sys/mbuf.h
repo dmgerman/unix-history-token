@@ -337,6 +337,7 @@ name|u_int
 name|ext_size
 decl_stmt|;
 comment|/* size of buffer, for ext_free */
+specifier|volatile
 name|u_int
 modifier|*
 name|ref_cnt
