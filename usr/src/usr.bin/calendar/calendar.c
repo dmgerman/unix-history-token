@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)calendar.c	4.3 (Berkeley) 82/06/28"
+literal|"@(#)calendar.c	4.4 (Berkeley) 83/07/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,7 +16,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_define
