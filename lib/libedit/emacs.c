@@ -92,9 +92,6 @@ name|lastchar
 condition|)
 block|{
 comment|/* if I'm at the end */
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 name|el
@@ -111,8 +108,6 @@ name|buffer
 condition|)
 block|{
 comment|/* and the beginning */
-endif|#
-directive|endif
 name|term_overwrite
 argument_list|(
 name|el
@@ -129,33 +124,19 @@ expr_stmt|;
 return|return
 name|CC_EOF
 return|;
-ifdef|#
-directive|ifdef
-name|notyet
 block|}
 else|else
 block|{
-name|re_goto_bottom
+comment|/* Here we could list completions, but it is an error right now */
+name|term_beep
 argument_list|(
 name|el
 argument_list|)
 expr_stmt|;
-operator|*
-name|el
-operator|->
-name|el_line
-operator|.
-name|lastchar
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* just in case */
 return|return
-name|CC_LIST_CHOICES
+name|CC_ERROR
 return|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
