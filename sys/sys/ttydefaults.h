@@ -47,6 +47,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TTYDEF_LFLAG_ECHO
+value|(TTYDEF_LFLAG | ECHO | ECHOE | ECHOKE | ECHOCTL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TTYDEF_CFLAG
 value|(CREAD | CS8 | HUPCL)
 end_define

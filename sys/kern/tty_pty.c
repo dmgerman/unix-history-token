@@ -831,7 +831,7 @@ name|tp
 operator|->
 name|t_lflag
 operator|=
-name|TTYDEF_LFLAG
+name|TTYDEF_LFLAG_ECHO
 expr_stmt|;
 name|tp
 operator|->

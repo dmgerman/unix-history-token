@@ -17025,15 +17025,7 @@ name|t_init_in
 operator|.
 name|c_lflag
 operator|=
-name|TTYDEF_LFLAG
-operator||
-name|ECHO
-operator||
-name|ECHOE
-operator||
-name|ECHOKE
-operator||
-name|ECHOCTL
+name|TTYDEF_LFLAG_ECHO
 expr_stmt|;
 name|tp
 operator|->
