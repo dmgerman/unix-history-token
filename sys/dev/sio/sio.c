@@ -3364,7 +3364,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sio%d: port may not be enabled in BIOS\n"
+literal|"sio%d: port may not be enabled\n"
 argument_list|,
 name|device_get_unit
 argument_list|(
