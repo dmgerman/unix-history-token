@@ -143,7 +143,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|"nfs.h"
 end_include
 
 begin_include
