@@ -542,6 +542,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|int
+name|my_strcasecmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__stdcall
 specifier|static
 name|void
