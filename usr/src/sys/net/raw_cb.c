@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)raw_cb.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)raw_cb.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -317,6 +317,23 @@ name|rp
 operator|->
 name|rcb_socket
 decl_stmt|;
+if|if
+condition|(
+name|rp
+operator|->
+name|rcb_route
+operator|.
+name|ro_rt
+condition|)
+name|rtfree
+argument_list|(
+name|rp
+operator|->
+name|rcb_route
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -455,9 +472,17 @@ operator|->
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BBNNET
+argument_list|)
 case|case
 name|AF_IMPLINK
 case|:
