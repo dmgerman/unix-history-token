@@ -1961,7 +1961,12 @@ name|tcp
 operator|->
 name|attr_mask
 operator|&=
-name|BG_CHANGED
+operator|~
+operator|(
+name|FG_CHANGED
+operator||
+name|BOLD_ATTR
+operator|)
 expr_stmt|;
 name|tcp
 operator|->
@@ -2048,11 +2053,7 @@ operator|->
 name|attr_mask
 operator|&=
 operator|~
-operator|(
 name|BG_CHANGED
-operator||
-name|REVERSE_ATTR
-operator|)
 expr_stmt|;
 name|tcp
 operator|->
