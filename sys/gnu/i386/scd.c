@@ -1258,15 +1258,7 @@ operator|>
 literal|20
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"scd%d: Too many attentions: %d\n"
-argument_list|,
-name|unit
-argument_list|,
-name|loop_count
-argument_list|)
-expr_stmt|;
+comment|/* printf("scd%d: Too many attentions: %d\n", unit, loop_count); */
 name|loop_count
 operator|=
 literal|0
