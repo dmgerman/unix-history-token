@@ -1117,6 +1117,23 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"GEOM_VINUM: plex sync %s -> %s started\n"
+argument_list|,
+name|sync
+operator|->
+name|from
+operator|->
+name|name
+argument_list|,
+name|sync
+operator|->
+name|to
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1361,9 +1378,17 @@ name|GV_PLEX_SYNCING
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"gvinum: plex '%s': sync finished\n"
+literal|"GEOM_VINUM: plex sync %s -> %s finished\n"
 argument_list|,
-name|p
+name|sync
+operator|->
+name|from
+operator|->
+name|name
+argument_list|,
+name|sync
+operator|->
+name|to
 operator|->
 name|name
 argument_list|)
