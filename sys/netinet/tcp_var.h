@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.3 (Berkeley) 4/10/94  * $Id: tcp_var.h,v 1.2 1994/08/02 07:49:17 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.3 (Berkeley) 4/10/94  * $Id: tcp_var.h,v 1.3 1994/08/21 05:27:39 paul Exp $  */
 end_comment
 
 begin_ifndef
@@ -65,6 +65,10 @@ name|u_short
 name|t_maxseg
 decl_stmt|;
 comment|/* maximum segment size */
+name|u_short
+name|t_maxopd
+decl_stmt|;
+comment|/* mss plus options */
 name|char
 name|t_force
 decl_stmt|;
@@ -122,6 +126,36 @@ directive|define
 name|TF_SACK_PERMIT
 value|0x0200
 comment|/* other side said I could SACK */
+ifdef|#
+directive|ifdef
+name|TTCP
+define|#
+directive|define
+name|TF_NEEDSYN
+value|0x0400
+comment|/* send SYN (implicit state) */
+define|#
+directive|define
+name|TF_NEEDFIN
+value|0x0800
+comment|/* send FIN (implicit state) */
+define|#
+directive|define
+name|TF_NOPUSH
+value|0x1000
+comment|/* don't push */
+define|#
+directive|define
+name|TF_REQ_CC
+value|0x2000
+comment|/* have/will request CC */
+define|#
+directive|define
+name|TF_RCVD_CC
+value|0x4000
+comment|/* a CC was received in SYN */
+endif|#
+directive|endif
 name|struct
 name|tcpiphdr
 modifier|*
@@ -278,6 +312,25 @@ comment|/* when last updated */
 name|tcp_seq
 name|last_ack_sent
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TTCP
+comment|/* RFC 1644 variables */
+name|tcp_cc
+name|cc_send
+decl_stmt|;
+comment|/* send connection count */
+name|tcp_cc
+name|cc_recv
+decl_stmt|;
+comment|/* receive connection count */
+name|u_long
+name|t_duration
+decl_stmt|;
+comment|/* connection duration */
+endif|#
+directive|endif
+comment|/* TTCP */
 comment|/* TUBA stuff */
 name|caddr_t
 name|t_tuba_pcb
@@ -286,6 +339,127 @@ comment|/* next level down pcb for TCP over z */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TTCP
+end_ifdef
+
+begin_comment
+comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tcpopt
+block|{
+name|u_long
+name|to_flag
+decl_stmt|;
+comment|/* which options are present */
+define|#
+directive|define
+name|TOF_TS
+value|0x0001
+comment|/* timestamp */
+define|#
+directive|define
+name|TOF_CC
+value|0x0002
+comment|/* CC and CCnew are exclusive */
+define|#
+directive|define
+name|TOF_CCNEW
+value|0x0004
+define|#
+directive|define
+name|TOF_CCECHO
+value|0x0008
+name|u_long
+name|to_tsval
+decl_stmt|;
+name|u_long
+name|to_tsecr
+decl_stmt|;
+name|tcp_cc
+name|to_cc
+decl_stmt|;
+comment|/* holds CC or CCnew */
+name|tcp_cc
+name|to_ccecho
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The TAO cache entry which is stored in the protocol family specific  * portion of the route metrics.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rmxp_tao
+block|{
+name|tcp_cc
+name|tao_cc
+decl_stmt|;
+comment|/* latest CC in valid SYN */
+name|tcp_cc
+name|tao_ccsent
+decl_stmt|;
+comment|/* latest CC sent to peer */
+name|u_short
+name|tao_mssopt
+decl_stmt|;
+comment|/* peer's cached MSS */
+ifdef|#
+directive|ifdef
+name|notyet
+name|u_short
+name|tao_flags
+decl_stmt|;
+comment|/* cache status flags */
+define|#
+directive|define
+name|TAOF_DONT
+value|0x0001
+comment|/* peer doesn't understand rfc1644 */
+define|#
+directive|define
+name|TAOF_OK
+value|0x0002
+comment|/* peer does understand rfc1644 */
+define|#
+directive|define
+name|TAOF_UNDEF
+value|0
+comment|/* we don't know yet */
+endif|#
+directive|endif
+comment|/* notyet */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|rmx_taop
+parameter_list|(
+name|r
+parameter_list|)
+value|((struct rmxp_tao *)&(r).rmx_pspec)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TTCP */
+end_comment
 
 begin_define
 define|#
@@ -352,7 +526,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* multiplier for rttvar; 2 bits */
+comment|/* shift for rttvar; 2 bits */
 end_comment
 
 begin_comment
@@ -595,6 +769,57 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Names for TCP sysctl objects  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_DO_RFC1323
+value|1
+end_define
+
+begin_comment
+comment|/* use RFC-1323 extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_DO_RFC1644
+value|2
+end_define
+
+begin_comment
+comment|/* use RFC-1644 extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MSSDFLT
+value|3
+end_define
+
+begin_comment
+comment|/* MSS default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MAXID
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "do_rfc1323", CTLTYPE_INT }, \ 	{ "do_rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ }
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -677,6 +902,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TTCP
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|tcp_connect
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tcpcb
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|void
 name|tcp_ctlinput
@@ -756,6 +1010,44 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TTCP
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|tcp_dooptions
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tcpcb
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|tcpiphdr
+operator|*
+operator|,
+expr|struct
+name|tcpopt
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|void
 name|tcp_dooptions
@@ -788,6 +1080,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|void
 name|tcp_drain
@@ -811,6 +1108,33 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TTCP
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|rmxp_tao
+modifier|*
+name|tcp_gettaocache
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
@@ -841,7 +1165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|tcp_mss
 name|__P
 argument_list|(
@@ -850,7 +1174,21 @@ expr|struct
 name|tcpcb
 operator|*
 operator|,
-name|u_int
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_mssopt
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tcpcb
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -991,6 +1329,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|rtentry
+modifier|*
+name|tcp_rtlookup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|tcp_setpersist
 name|__P
@@ -1011,6 +1365,32 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_sysctl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
