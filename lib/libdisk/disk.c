@@ -2718,6 +2718,9 @@ name|MAX_NO_DISKS
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|error
 operator|=
 name|sysctlbyname
@@ -2821,6 +2824,8 @@ argument_list|(
 literal|"kern.disks sysctl not available"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|k
 operator|=
 literal|0
