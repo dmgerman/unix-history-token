@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_osfp.c,v 1.3 2003/08/27 18:23:36 frantzen Exp $ */
+comment|/*	$OpenBSD: pf_osfp.c,v 1.9 2004/01/04 20:08:42 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -191,6 +191,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -274,7 +280,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<sys/stdarg.h>
 end_include
 
 begin_define
