@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.7 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.8 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"monitor.h"
+file|"gmcrt0.h"
 end_include
 
 begin_comment
@@ -87,6 +87,13 @@ define|#
 directive|define
 name|GMONNAME
 value|"gmon.out"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GMONSUM
+value|"gmon.sum"
 end_define
 
 begin_comment
@@ -530,6 +537,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* discovered call graph, too */
+end_comment
+
+begin_decl_stmt
+name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sum multiple gmon.out files */
 end_comment
 
 begin_decl_stmt
