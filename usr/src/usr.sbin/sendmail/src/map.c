@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.56 (Berkeley) %G%"
+literal|"@(#)map.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2533,6 +2533,10 @@ name|bufsiz
 init|=
 literal|0
 decl_stmt|;
+specifier|auto
+name|int
+name|xstat
+decl_stmt|;
 name|datum
 name|old
 decl_stmt|;
@@ -2549,6 +2553,9 @@ operator|.
 name|dptr
 argument_list|,
 name|NULL
+argument_list|,
+operator|&
+name|xstat
 argument_list|)
 expr_stmt|;
 if|if
