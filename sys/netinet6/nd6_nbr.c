@@ -3762,7 +3762,9 @@ argument_list|,
 name|dad_list
 argument_list|)
 expr_stmt|;
-comment|/* XXXJRT This is probably a purely debugging message. */
+ifdef|#
+directive|ifdef
+name|ND6_DEBUG
 name|printf
 argument_list|(
 literal|"%s: starting DAD for %s\n"
@@ -3785,6 +3787,8 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Send NS packet for DAD, ip6_dad_count times. 	 * Note that we must delay the first transmission, if this is the 	 * first packet to be sent from the interface after interface 	 * (re)initialization. 	 */
 name|dp
 operator|->
@@ -4281,7 +4285,9 @@ operator|&=
 operator|~
 name|IN6_IFF_TENTATIVE
 expr_stmt|;
-comment|/* XXXJRT This is probably a purely debugging message */
+ifdef|#
+directive|ifdef
+name|ND6_DEBUG
 name|printf
 argument_list|(
 literal|"%s: DAD complete for %s - no duplicates "
@@ -4305,6 +4311,8 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
