@@ -150,6 +150,7 @@ name|fd1
 decl_stmt|,
 name|fd2
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file1
