@@ -55,6 +55,13 @@ name|vm_pageout_deficit
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_pageout_page_count
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Swap out requests  */
 end_comment

@@ -315,13 +315,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|vm_pageout_page_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|long
 name|object_collapses
