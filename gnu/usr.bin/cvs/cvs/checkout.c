@@ -717,6 +717,23 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+if|if
+condition|(
+operator|!
+name|K_flag
+operator|&&
+name|freebsd
+condition|)
+name|K_flag
+operator|=
+literal|"-KeAuthor,Date,Header,Id,Locker,Log,RCSfile,Revision,Source,State -KiFreeBSD"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_DEVELOPER */
 if|if
 condition|(
 name|shorten

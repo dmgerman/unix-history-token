@@ -184,6 +184,39 @@ case|:
 comment|/* everything normal */
 comment|/* 	     * The checkin succeeded, so now check the new file back out and 	     * see if it matches exactly with the one we checked in. If it 	     * does, just move the original user file back, thus preserving 	     * the modes; otherwise, we have no recourse but to leave the 	     * newly checkout file as the user file and remove the old 	     * original user file. 	     */
 comment|/* XXX - make sure -k options are used on the co; and tag/date? */
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+name|run_setup
+argument_list|(
+literal|"%s%s -q %s%s %s"
+argument_list|,
+name|Rcsbin
+argument_list|,
+name|RCS_CO
+argument_list|,
+name|rev
+condition|?
+literal|"-r"
+else|:
+literal|""
+argument_list|,
+name|rev
+condition|?
+name|rev
+else|:
+literal|""
+argument_list|,
+name|freebsd
+condition|?
+literal|"-KeAuthor,Date,Header,Id,Locker,Log,"
+literal|"RCSfile,Revision,Source,State -KiFreeBSD"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|run_setup
 argument_list|(
 literal|"%s%s -q %s%s"
@@ -205,6 +238,9 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_DEVELOPER */
 name|run_arg
 argument_list|(
 name|rcs

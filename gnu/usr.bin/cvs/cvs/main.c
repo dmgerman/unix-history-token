@@ -494,6 +494,29 @@ begin_comment
 comment|/* __STDC__ */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|freebsd
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use the FreeBSD -K flags!! */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|cmd
@@ -735,6 +758,13 @@ literal|"        -e editor    Use 'editor' for editing log information\n"
 block|,
 literal|"        -d CVS_root  Overrides $CVSROOT as the root of the CVS tree\n"
 block|,
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+literal|"        -x           Do NOT use the FreeBSD -K default flags\n"
+block|,
+endif|#
+directive|endif
 literal|"\n"
 block|,
 literal|"    and where 'command' is:\n"
@@ -988,6 +1018,29 @@ name|optind
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|gnu_getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"Qqrwtnlvb:e:d:Hx"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+else|#
+directive|else
 while|while
 condition|(
 operator|(
@@ -1006,6 +1059,9 @@ operator|!=
 operator|-
 literal|1
 condition|)
+endif|#
+directive|endif
+comment|/* FREEBSD_DEVELOPER */
 block|{
 switch|switch
 condition|(
@@ -1171,6 +1227,20 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+case|case
+literal|'x'
+case|:
+name|freebsd
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* FREEBSD_DEVELOPER */
 case|case
 literal|'?'
 case|:
