@@ -2276,10 +2276,6 @@ name|putb
 operator|=
 name|pcic_putb_io
 expr_stmt|;
-name|sc
-operator|->
-name|bst
-operator|=
 name|sp
 operator|->
 name|bst
@@ -2291,10 +2287,6 @@ operator|->
 name|iores
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|bsh
-operator|=
 name|sp
 operator|->
 name|bsh
@@ -2407,10 +2399,6 @@ name|offset
 operator|=
 name|CB_EXCA_OFFSET
 expr_stmt|;
-name|sc
-operator|->
-name|bst
-operator|=
 name|sp
 operator|->
 name|bst
@@ -2422,10 +2410,6 @@ operator|->
 name|memres
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|bsh
-operator|=
 name|sp
 operator|->
 name|bsh

@@ -188,14 +188,6 @@ name|device_t
 name|dev
 decl_stmt|;
 comment|/* Our device */
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-comment|/* Bus tag for our regs */
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
-comment|/* Bus handle for our regs */
 name|void
 function_decl|(
 modifier|*
