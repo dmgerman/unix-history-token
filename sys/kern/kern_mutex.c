@@ -3292,6 +3292,12 @@ name|order_list
 index|[]
 init|=
 block|{
+literal|"uidinfo hash"
+block|,
+literal|"uidinfo struct"
+block|,
+name|NULL
+block|,
 name|NULL
 block|}
 decl_stmt|;
