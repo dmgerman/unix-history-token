@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.12	81/02/15	*/
+comment|/*	machdep.c	4.13	81/02/16	*/
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.12) 81/02/15 12:18:16 \n"
+literal|"VM/UNIX (Berkeley Version 4.13) 81/02/16 20:50:04 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +401,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-literal|60
+name|HZ
 argument_list|)
 expr_stmt|;
 comment|/* it will pick its own intvl */
