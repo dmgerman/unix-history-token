@@ -446,119 +446,119 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MPC601
+name|PVR_MPC601
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC603
+name|PVR_MPC603
 value|0x0003
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC604
+name|PVR_MPC604
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC602
+name|PVR_MPC602
 value|0x0005
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC603e
+name|PVR_MPC603e
 value|0x0006
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC603ev
+name|PVR_MPC603ev
 value|0x0007
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC750
+name|PVR_MPC750
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC604ev
+name|PVR_MPC604ev
 value|0x0009
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC7400
+name|PVR_MPC7400
 value|0x000c
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC620
+name|PVR_MPC620
 value|0x0014
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC860
+name|PVR_MPC860
 value|0x0050
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC8240
+name|PVR_MPC8240
 value|0x0081
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC7450
+name|PVR_MPC7450
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC7455
+name|PVR_MPC7455
 value|0x8001
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPC7410
+name|PVR_MPC7410
 value|0x800c
 end_define
 
 begin_define
 define|#
 directive|define
-name|IBM405GP
+name|PVR_IBM405GP
 value|0x4011
 end_define
 
 begin_define
 define|#
 directive|define
-name|IBM405L
+name|PVR_IBM405L
 value|0x4161
 end_define
 
