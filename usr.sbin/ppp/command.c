@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.91 1997/11/08 00:28:06 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.92 1997/11/09 06:22:39 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -2377,7 +2377,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2390,12 +2390,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|!
 name|VarTerm
 condition|)
-return|return
-literal|0
-return|;
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -2411,7 +2407,7 @@ name|VarRetryTimeout
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2555,7 +2551,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2611,7 +2607,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2624,12 +2620,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|!
 name|VarTerm
 condition|)
-return|return
-literal|0
-return|;
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -2642,7 +2634,7 @@ name|VarLocalVersion
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2655,12 +2647,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|!
 name|VarTerm
 condition|)
-return|return
-literal|0
-return|;
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -2671,7 +2659,7 @@ name|VarMRU
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2684,12 +2672,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|!
 name|VarTerm
 condition|)
-return|return
-literal|0
-return|;
 if|if
 condition|(
 name|VarPrefMTU
@@ -2712,7 +2696,7 @@ literal|" Preferred MTU: unspecified\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2725,12 +2709,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|!
 name|VarTerm
 condition|)
-return|return
-literal|0
-return|;
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -2743,7 +2723,7 @@ name|VarReconnectTries
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2855,7 +2835,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -2874,12 +2854,9 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|!
 name|VarTerm
 condition|)
-return|return
-literal|0
-return|;
+block|{
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -2947,8 +2924,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
