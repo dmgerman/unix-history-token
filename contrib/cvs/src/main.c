@@ -3,10 +3,20 @@ begin_comment
 comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS source distribution.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"cvs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"prepend_args.h"
 end_include
 
 begin_ifdef
@@ -1764,6 +1774,20 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|prepend_default_options
+argument_list|(
+name|getenv
+argument_list|(
+literal|"CVS_OPTIONS"
+argument_list|)
+argument_list|,
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
 comment|/* Set this to 0 to force getopt initialization.  getopt() sets        this to 1 internally.  */
 name|optind
 operator|=
