@@ -1008,7 +1008,7 @@ specifier|static
 name|int
 name|hifn_maxbatch
 init|=
-literal|1
+literal|5
 decl_stmt|;
 end_decl_stmt
 
