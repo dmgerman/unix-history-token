@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sccs.c	5.2 (Berkeley) %G%"
+literal|"@(#)sccs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,7 @@ file|<pwd.h>
 end_include
 
 begin_comment
-comment|/* **  SCCS.C -- human-oriented front end to the SCCS system. ** **	Without trying to add any functionality to speak of, this **	program tries to make SCCS a little more accessible to human **	types.  The main thing it does is automatically put the **	string "SCCS/s." on the front of names.  Also, it has a **	couple of things that are designed to shorten frequent **	combinations, e.g., "delget" which expands to a "delta" **	and a "get". ** **	This program can also function as a setuid front end. **	To do this, you should copy the source, renaming it to **	whatever you want, e.g., "syssccs".  Change any defaults **	in the program (e.g., syssccs might default -d to **	"/usr/src/sys").  Then recompile and put the result **	as setuid to whomever you want.  In this mode, sccs **	knows to not run setuid for certain programs in order **	to preserve security, and so forth. ** **	Usage: **		sccs [flags] command [args] ** **	Flags: **		-d<dir><dir> represents a directory to search **				out of.  It should be a full pathname **				for general usage.  E.g., if<dir> is **				"/usr/src/sys", then a reference to the **				file "dev/bio.c" becomes a reference to **				"/usr/src/sys/dev/bio.c". **		-p<path>	prepends<path> to the final component **				of the pathname.  By default, this is **				"SCCS".  For example, in the -d example **				above, the path then gets modified to **				"/usr/src/sys/dev/SCCS/s.bio.c".  In **				more common usage (without the -d flag), **				"prog.c" would get modified to **				"SCCS/s.prog.c".  In both cases, the **				"s." gets automatically prepended. **		-r		run as the real user. ** **	Commands: **		admin, **		get, **		delta, **		rmdel, **		chghist, **		etc.		Straight out of SCCS; only difference **				is that pathnames get modified as **				described above. **		edit		Macro for "get -e". **		unedit		Removes a file being edited, knowing **				about p-files, etc. **		delget		Macro for "delta" followed by "get". **		deledit		Macro for "delta" followed by "get -e". **		info		Tell what files being edited. **		clean		Remove all files that can be **				regenerated from SCCS files. **		check		Like info, but return exit status, for **				use in makefiles. **		fix		Remove a top delta& reedit, but save **				the previous changes in that delta. ** **	Compilation Flags: **		UIDUSER -- determine who the user is by looking at the **			uid rather than the login name -- for machines **			where SCCS gets the user in this way. **		SCCSDIR -- if defined, forces the -d flag to take on **			this value.  This is so that the setuid **			aspects of this program cannot be abused. **			This flag also disables the -p flag. **		SCCSPATH -- the default for the -p flag. **		MYNAME -- the title this program should print when it **			gives error messages. ** **	Compilation Instructions: **		cc -O -n -s sccs.c **		The flags listed above can be -D defined to simplify **			recompilation for variant versions. ** **	Author: **		Eric Allman, UCB/INGRES **		Copyright 1980 Regents of the University of California */
+comment|/* **  SCCS.C -- human-oriented front end to the SCCS system. ** **	Without trying to add any functionality to speak of, this **	program tries to make SCCS a little more accessible to human **	types.  The main thing it does is automatically put the **	string "SCCS/s." on the front of names.  Also, it has a **	couple of things that are designed to shorten frequent **	combinations, e.g., "delget" which expands to a "delta" **	and a "get". ** **	This program can also function as a setuid front end. **	To do this, you should copy the source, renaming it to **	whatever you want, e.g., "syssccs".  Change any defaults **	in the program (e.g., syssccs might default -d to **	"/usr/src/sys").  Then recompile and put the result **	as setuid to whomever you want.  In this mode, sccs **	knows to not run setuid for certain programs in order **	to preserve security, and so forth. ** **	Usage: **		sccs [flags] command [args] ** **	Flags: **		-d<dir><dir> represents a directory to search **				out of.  It should be a full pathname **				for general usage.  E.g., if<dir> is **				"/usr/src/sys", then a reference to the **				file "dev/bio.c" becomes a reference to **				"/usr/src/sys/dev/bio.c". **		-p<path>	prepends<path> to the final component **				of the pathname.  By default, this is **				"SCCS".  For example, in the -d example **				above, the path then gets modified to **				"/usr/src/sys/dev/SCCS/s.bio.c".  In **				more common usage (without the -d flag), **				"prog.c" would get modified to **				"SCCS/s.prog.c".  In both cases, the **				"s." gets automatically prepended. **		-r		run as the real user. ** **	Commands: **		admin, **		get, **		delta, **		rmdel, **		cdc, **		etc.		Straight out of SCCS; only difference **				is that pathnames get modified as **				described above. **		enter		Front end doing "sccs admin -i<name><name>" **		create		Macro for "enter" followed by "get". **		edit		Macro for "get -e". **		unedit		Removes a file being edited, knowing **				about p-files, etc. **		delget		Macro for "delta" followed by "get". **		deledit		Macro for "delta" followed by "get -e". **		branch		Macro for "get -b -e", followed by "delta **				-s -n", followd by "get -e -t -g". **		diffs		"diff" the specified version of files **				and the checked-out version. **		print		Macro for "prs -e" followed by "get -p -m". **		tell		List what files are being edited. **		info		Print information about files being edited. **		clean		Remove all files that can be **				regenerated from SCCS files. **		check		Like info, but return exit status, for **				use in makefiles. **		fix		Remove a top delta& reedit, but save **				the previous changes in that delta. ** **	Compilation Flags: **		UIDUSER -- determine who the user is by looking at the **			uid rather than the login name -- for machines **			where SCCS gets the user in this way. **		SCCSDIR -- if defined, forces the -d flag to take on **			this value.  This is so that the setuid **			aspects of this program cannot be abused. **			This flag also disables the -p flag. **		SCCSPATH -- the default for the -p flag. **		MYNAME -- the title this program should print when it **			gives error messages. ** **	Compilation Instructions: **		cc -O -n -s sccs.c **		The flags listed above can be -D defined to simplify **			recompilation for variant versions. ** **	Author: **		Eric Allman, UCB/INGRES **		Copyright 1980 Regents of the University of California */
 end_comment
 
 begin_escape
@@ -442,7 +442,7 @@ argument_list|(
 name|admin
 argument_list|)
 block|,
-literal|"chghist"
+literal|"cdc"
 block|,
 name|PROG
 block|,
@@ -688,7 +688,7 @@ name|CMACRO
 block|,
 literal|0
 block|,
-literal|"prt -e/get -p -m -s"
+literal|"prs -e/get -p -m -s"
 block|,
 literal|"branch"
 block|,
@@ -896,6 +896,15 @@ endif|#
 directive|endif
 endif|V6
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_siglist
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1967,6 +1976,13 @@ case|:
 comment|/* fix a delta */
 if|if
 condition|(
+name|ap
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+operator|||
 name|strncmp
 argument_list|(
 name|ap
@@ -2699,10 +2715,37 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|int
+name|wpid
+decl_stmt|;
 specifier|auto
 name|int
 name|st
 decl_stmt|;
+specifier|register
+name|int
+name|sigcode
+decl_stmt|;
+specifier|register
+name|int
+name|coredumped
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|sigmsg
+decl_stmt|;
+specifier|auto
+name|char
+name|sigmsgbuf
+index|[
+literal|10
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* "Signal 127" + terminating '\0' */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2809,15 +2852,31 @@ operator|>
 literal|0
 condition|)
 block|{
+while|while
+condition|(
+operator|(
+name|wpid
+operator|=
 name|wait
 argument_list|(
 operator|&
 name|st
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|wpid
+operator|!=
+name|i
+condition|)
+empty_stmt|;
 if|if
 condition|(
 operator|(
+name|sigcode
+operator|=
 name|st
 operator|&
 literal|0377
@@ -2835,6 +2894,84 @@ operator|)
 operator|&
 literal|0377
 expr_stmt|;
+else|else
+block|{
+name|coredumped
+operator|=
+name|sigcode
+operator|&
+literal|0200
+expr_stmt|;
+name|sigcode
+operator|&=
+literal|0177
+expr_stmt|;
+if|if
+condition|(
+name|sigcode
+operator|!=
+name|SIGINT
+operator|&&
+name|sigcode
+operator|!=
+name|SIGPIPE
+condition|)
+block|{
+if|if
+condition|(
+name|sigcode
+operator|<
+name|NSIG
+condition|)
+name|sigmsg
+operator|=
+name|sys_siglist
+index|[
+name|sigcode
+index|]
+expr_stmt|;
+else|else
+block|{
+name|sprintf
+argument_list|(
+name|sigmsgbuf
+argument_list|,
+literal|"Signal %d"
+argument_list|,
+name|sigcode
+argument_list|)
+expr_stmt|;
+name|sigmsg
+operator|=
+name|sigmsgbuf
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"sccs: %s: %s%s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|sigmsg
+argument_list|,
+name|coredumped
+condition|?
+literal|" - core dumped"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
+name|st
+operator|=
+name|EX_SOFTWARE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|OutFile
