@@ -27,6 +27,12 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_iovec.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1667,40 +1673,6 @@ directive|define
 name|SOMAXCONN
 value|128
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_STRUCT_IOVEC_DECLARED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_STRUCT_IOVEC_DECLARED
-end_define
-
-begin_struct
-struct|struct
-name|iovec
-block|{
-name|void
-modifier|*
-name|iov_base
-decl_stmt|;
-comment|/* Base address. */
-name|size_t
-name|iov_len
-decl_stmt|;
-comment|/* Length. */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Message header for recvmsg and sendmsg calls.  * Used value-result for recvmsg, value only for sendmsg.  */
