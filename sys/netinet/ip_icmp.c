@@ -2782,6 +2782,21 @@ condition|)
 goto|goto
 name|match
 goto|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"icmp_reflect: NULL rcvif"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2845,21 +2860,6 @@ name|match
 goto|;
 block|}
 block|}
-name|KASSERT
-argument_list|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"icmp_reflect: NULL rcvif"
-operator|)
-argument_list|)
-expr_stmt|;
 name|icmpdst
 operator|.
 name|sin_addr
