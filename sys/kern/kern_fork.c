@@ -2571,6 +2571,19 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * Setup the sched_lock state so that we can release it. 	 */
+name|sched_lock
+operator|.
+name|mtx_lock
+operator|=
+name|curproc
+expr_stmt|;
+name|sched_lock
+operator|.
+name|mtx_recurse
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -2613,6 +2626,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * cpu_set_fork_handler intercepts this function call to          * have this call a non-return function to stay in kernel mode.          * initproc has its own fork handler, but it does return.          */
+name|KASSERT
+argument_list|(
+name|callout
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL callout in fork_exit"
+operator|)
+argument_list|)
+expr_stmt|;
 name|callout
 argument_list|(
 name|arg

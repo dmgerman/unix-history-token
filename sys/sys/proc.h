@@ -412,16 +412,10 @@ name|int
 name|p_intr_nesting_level
 decl_stmt|;
 comment|/* (k) Interrupt recursion. */
-name|char
+name|int
 name|p_stat
 decl_stmt|;
 comment|/* (j) S* process status. */
-name|char
-name|p_pad1
-index|[
-literal|3
-index|]
-decl_stmt|;
 name|pid_t
 name|p_pid
 decl_stmt|;
@@ -575,15 +569,15 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
-name|char
-name|p_lock
-decl_stmt|;
-comment|/* (c) Process lock (prevent swap) count. */
 name|struct
 name|mtx
 name|p_mtx
 decl_stmt|;
 comment|/* (k) Lock for this struct. */
+name|char
+name|p_lock
+decl_stmt|;
+comment|/* (c) Process lock (prevent swap) count. */
 name|u_char
 name|p_oncpu
 decl_stmt|;
@@ -828,6 +822,17 @@ directive|define
 name|p_pgid
 value|p_pgrp->pg_id
 end_define
+
+begin_define
+define|#
+directive|define
+name|NOCPU
+value|0xff
+end_define
+
+begin_comment
+comment|/* For p_oncpu when we aren't on a CPU. */
+end_comment
 
 begin_comment
 comment|/* Status values (p_stat). */

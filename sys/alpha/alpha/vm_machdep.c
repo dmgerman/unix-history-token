@@ -607,15 +607,6 @@ operator|)
 name|switch_trampoline
 expr_stmt|;
 comment|/* ra: assembly magic */
-comment|/* 		 * Clear the saved recursion count for sched_lock 		 * since the child needs only one count which is 		 * released in switch_trampoline. 		 */
-name|up
-operator|->
-name|u_pcb
-operator|.
-name|pcb_schednest
-operator|=
-literal|0
-expr_stmt|;
 block|}
 block|}
 end_block

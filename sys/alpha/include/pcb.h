@@ -75,10 +75,6 @@ name|long
 name|pcb_accessaddr
 decl_stmt|;
 comment|/* for [fs]uswintr	[SW] */
-name|u_int32_t
-name|pcb_schednest
-decl_stmt|;
-comment|/* state of sched_lock  [SW] */
 block|}
 struct|;
 end_struct

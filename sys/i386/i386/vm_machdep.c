@@ -705,12 +705,6 @@ operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/* 	 * pcb2->pcb_ldt:	duplicated below, if necessary. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above (always 0 here?). 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 */
-name|pcb2
-operator|->
-name|pcb_schednest
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * XXX don't copy the i/o pages.  this should probably be fixed. 	 */
 name|pcb2
 operator|->

@@ -109,9 +109,6 @@ name|pcb_onfault
 decl_stmt|;
 comment|/* copyin/out fault recovery */
 name|int
-name|pcb_schednest
-decl_stmt|;
-name|int
 name|pcb_gs
 decl_stmt|;
 name|struct
