@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slave.c,v 1.4 1997/10/29 07:32:29 charnier Exp $"
+literal|"$Id: slave.c,v 1.5 1997/10/31 12:33:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,9 @@ name|timeval
 name|ntime
 decl_stmt|,
 name|wait
+decl_stmt|;
+name|time_t
+name|tsp_time_sec
 decl_stmt|;
 name|struct
 name|tsp
@@ -1214,6 +1217,14 @@ name|date
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|tsp_time_sec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_sec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1224,11 +1235,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
+name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1626,6 +1633,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|tsp_time_sec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_sec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1636,11 +1651,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
+name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1689,6 +1700,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|tsp_time_sec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_sec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1699,11 +1718,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_sec
+name|tsp_time_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
