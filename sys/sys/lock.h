@@ -463,6 +463,54 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * In the LOCK_DEBUG case, use the filename and line numbers for debugging  * operations.  Otherwise, use default values to avoid the unneeded bloat.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCK_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCK_FILE
+value|__FILE__
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_LINE
+value|__LINE__
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOCK_FILE
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_LINE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Macros for KTR_LOCK tracing.  *  * opname  - name of this operation (LOCK/UNLOCK/SLOCK, etc.)  * lo      - struct lock_object * for this lock  * flags   - flags passed to the lock operation  * recurse - this locks recursion level (or 0 if class is not recursable)  * result  - result of a try lock operation  * file    - file name  * line    - line number  */
 end_comment
 

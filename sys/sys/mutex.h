@@ -263,7 +263,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp __FILE__  *	 and __LINE__. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
+comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp LOCK_FILE  *	 and LOCK_LINE. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
 end_comment
 
 begin_function_decl
@@ -822,7 +822,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_mtx_lock_flags((m), (opts), __FILE__, __LINE__)
+value|_mtx_lock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -835,7 +835,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_mtx_unlock_flags((m), (opts), __FILE__, __LINE__)
+value|_mtx_unlock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -848,7 +848,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_mtx_lock_spin_flags((m), (opts), __FILE__, __LINE__)
+value|_mtx_lock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -861,7 +861,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_mtx_unlock_spin_flags((m), (opts), __FILE__, __LINE__)
+value|_mtx_unlock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_else
@@ -879,7 +879,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_lock_flags((m), (opts), __FILE__, __LINE__)
+value|__mtx_lock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -892,7 +892,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_unlock_flags((m), (opts), __FILE__, __LINE__)
+value|__mtx_unlock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -905,7 +905,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_lock_spin_flags((m), (opts), __FILE__, __LINE__)
+value|__mtx_lock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -918,7 +918,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|__mtx_unlock_spin_flags((m), (opts), __FILE__, __LINE__)
+value|__mtx_unlock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_endif
@@ -1000,7 +1000,7 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_mtx_trylock((m), (opts), __FILE__, __LINE__)
+value|_mtx_trylock((m), (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1166,7 +1166,7 @@ parameter_list|,
 name|what
 parameter_list|)
 define|\
-value|_mtx_assert((m), (what), __FILE__, __LINE__)
+value|_mtx_assert((m), (what), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define

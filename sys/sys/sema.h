@@ -193,7 +193,7 @@ name|sema_post
 parameter_list|(
 name|sema
 parameter_list|)
-value|_sema_post((sema), __FILE__, __LINE__)
+value|_sema_post((sema), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -203,7 +203,7 @@ name|sema_wait
 parameter_list|(
 name|sema
 parameter_list|)
-value|_sema_wait((sema), __FILE__, __LINE__)
+value|_sema_wait((sema), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -216,7 +216,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_sema_timedwait((sema), (timo), __FILE__, __LINE__)
+value|_sema_timedwait((sema), (timo), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -226,7 +226,7 @@ name|sema_trywait
 parameter_list|(
 name|sema
 parameter_list|)
-value|_sema_trywait((sema), __FILE__, __LINE__)
+value|_sema_trywait((sema), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_endif

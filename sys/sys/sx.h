@@ -291,7 +291,7 @@ name|sx_slock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_slock((sx), __FILE__, __LINE__)
+value|_sx_slock((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -301,7 +301,7 @@ name|sx_xlock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_xlock((sx), __FILE__, __LINE__)
+value|_sx_xlock((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -311,7 +311,7 @@ name|sx_try_slock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_try_slock((sx), __FILE__, __LINE__)
+value|_sx_try_slock((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -321,7 +321,7 @@ name|sx_try_xlock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_try_xlock((sx), __FILE__, __LINE__)
+value|_sx_try_xlock((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -331,7 +331,7 @@ name|sx_sunlock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_sunlock((sx), __FILE__, __LINE__)
+value|_sx_sunlock((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -341,7 +341,7 @@ name|sx_xunlock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_xunlock((sx), __FILE__, __LINE__)
+value|_sx_xunlock((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -351,7 +351,7 @@ name|sx_try_upgrade
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_try_upgrade((sx), __FILE__, __LINE__)
+value|_sx_try_upgrade((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -361,7 +361,7 @@ name|sx_downgrade
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_downgrade((sx), __FILE__, __LINE__)
+value|_sx_downgrade((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_ifdef
@@ -455,7 +455,7 @@ name|SX_ASSERT_LOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|_SX_ASSERT_LOCKED((sx), __FILE__, __LINE__)
+value|_SX_ASSERT_LOCKED((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -465,7 +465,7 @@ name|SX_ASSERT_SLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|_SX_ASSERT_SLOCKED((sx), __FILE__, __LINE__)
+value|_SX_ASSERT_SLOCKED((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_comment
@@ -493,7 +493,7 @@ name|SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|_SX_ASSERT_XLOCKED((sx), __FILE__, __LINE__)
+value|_SX_ASSERT_XLOCKED((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_else
