@@ -91,15 +91,9 @@ name|b_actf
 operator|=
 name|bp
 expr_stmt|;
-name|dp
-operator|->
-name|b_actl
-operator|=
-name|bp
-expr_stmt|;
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 operator|=
 name|NULL
 expr_stmt|;
@@ -121,7 +115,7 @@ while|while
 condition|(
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 condition|)
 block|{
 comment|/* 			 * Check for an ``inversion'' in the 			 * normally ascending cylinder numbers, 			 * indicating the start of the second request list. 			 */
@@ -129,7 +123,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_cylin
 operator|<
@@ -149,7 +143,7 @@ name|b_cylin
 operator|<
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_cylin
 condition|)
@@ -164,7 +158,7 @@ name|b_cylin
 operator|==
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_cylin
 operator|&&
@@ -174,7 +168,7 @@ name|b_blkno
 operator|<
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_blkno
 condition|)
@@ -185,14 +179,14 @@ name|ap
 operator|=
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 block|}
 do|while
 condition|(
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 condition|)
 do|;
 goto|goto
@@ -204,7 +198,7 @@ name|ap
 operator|=
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 block|}
 comment|/* 		 * No inversions... we will go after the last, and 		 * be the first request in the second request list. 		 */
@@ -217,7 +211,7 @@ while|while
 condition|(
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 condition|)
 block|{
 comment|/* 		 * We want to go after the current request 		 * if there is an inversion after it (i.e. it is 		 * the end of the first request list), or if 		 * the next request is a larger cylinder than our request. 		 */
@@ -225,7 +219,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_cylin
 operator|<
@@ -239,7 +233,7 @@ name|b_cylin
 operator|<
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_cylin
 operator|||
@@ -250,7 +244,7 @@ name|b_cylin
 operator|==
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_cylin
 operator|&&
@@ -260,7 +254,7 @@ name|b_blkno
 operator|<
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 operator|->
 name|b_blkno
 operator|)
@@ -272,7 +266,7 @@ name|ap
 operator|=
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 block|}
 comment|/* 	 * Neither a second list nor a larger 	 * request... we go at the end of the first list, 	 * which is the same as the end of the whole schebang. 	 */
@@ -280,29 +274,15 @@ name|insert
 label|:
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 operator|=
 name|ap
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 name|ap
 operator|->
-name|av_forw
-operator|=
-name|bp
-expr_stmt|;
-if|if
-condition|(
-name|ap
-operator|==
-name|dp
-operator|->
-name|b_actl
-condition|)
-name|dp
-operator|->
-name|b_actl
+name|b_actf
 operator|=
 name|bp
 expr_stmt|;

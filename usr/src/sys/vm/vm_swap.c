@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -262,7 +262,7 @@ block|}
 comment|/* 	 * Now set up swap buffer headers. 	 */
 name|bswlist
 operator|.
-name|av_forw
+name|b_actf
 operator|=
 name|sp
 expr_stmt|;
@@ -287,7 +287,7 @@ control|)
 block|{
 name|sp
 operator|->
-name|av_forw
+name|b_actf
 operator|=
 name|sp
 operator|+
@@ -320,7 +320,7 @@ name|p_ucred
 expr_stmt|;
 name|sp
 operator|->
-name|av_forw
+name|b_actf
 operator|=
 name|NULL
 expr_stmt|;
