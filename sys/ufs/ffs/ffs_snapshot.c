@@ -8450,7 +8450,7 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"%s %d lbn %lld from inum %d\n"
+literal|"%s %d lbn %jd from inum %d\n"
 argument_list|,
 literal|"Grabonremove: snapino"
 argument_list|,
@@ -8687,7 +8687,7 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d lbn %lld %s %d size %ld to blkno %lld\n"
+literal|"%s%d lbn %jd %s %d size %ld to blkno %jd\n"
 argument_list|,
 literal|"Copyonremove: snapino "
 argument_list|,
@@ -9817,7 +9817,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Copyonwrite: snapino %d lbn %lld for "
+literal|"Copyonwrite: snapino %d lbn %jd for "
 argument_list|,
 name|ip
 operator|->
@@ -9859,7 +9859,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" lblkno %lld to blkno %lld\n"
+literal|" lblkno %jd to blkno %jd\n"
 argument_list|,
 operator|(
 name|intmax_t

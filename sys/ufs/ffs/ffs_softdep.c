@@ -6849,7 +6849,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s %lld != new %lld || old size %ld != new %ld"
+literal|"%s %jd != new %jd || old size %ld != new %ld"
 argument_list|,
 literal|"allocdirect_merge: old blkno"
 argument_list|,
@@ -15380,7 +15380,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: direct pointer #%lld mismatch %d != %lld"
+literal|"%s: direct pointer #%jd mismatch %d != %jd"
 argument_list|,
 literal|"softdep_write_inodeblock"
 argument_list|,
@@ -15441,7 +15441,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: indirect pointer #%lld mismatch %d != %lld"
+literal|"%s: indirect pointer #%jd mismatch %d != %jd"
 argument_list|,
 literal|"softdep_write_inodeblock"
 argument_list|,
@@ -16159,7 +16159,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: direct pointer #%lld mismatch %lld != %lld"
+literal|"%s: direct pointer #%jd mismatch %jd != %jd"
 argument_list|,
 literal|"softdep_write_inodeblock"
 argument_list|,
@@ -16223,7 +16223,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s indirect pointer #%lld mismatch %lld != %lld"
+literal|"%s indirect pointer #%jd mismatch %jd != %jd"
 argument_list|,
 literal|"softdep_write_inodeblock:"
 argument_list|,
@@ -18017,7 +18017,7 @@ name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s %s #%lld mismatch %d != %lld"
+literal|"%s %s #%jd mismatch %d != %jd"
 argument_list|,
 literal|"handle_written_inodeblock:"
 argument_list|,
@@ -18088,7 +18088,7 @@ name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: %s #%lld allocated as %d"
+literal|"%s: %s #%jd allocated as %d"
 argument_list|,
 literal|"handle_written_inodeblock"
 argument_list|,
@@ -18168,7 +18168,7 @@ name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: %s #%lld %s %lld != %lld"
+literal|"%s: %s #%jd %s %jd != %jd"
 argument_list|,
 literal|"handle_written_inodeblock"
 argument_list|,
@@ -18244,7 +18244,7 @@ name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: %s #%lld allocated as %lld"
+literal|"%s: %s #%jd allocated as %jd"
 argument_list|,
 literal|"handle_written_inodeblock"
 argument_list|,

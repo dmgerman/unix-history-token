@@ -1030,7 +1030,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = %s, bsize = %ld, bprev = %lld, fs = %s\n"
+literal|"dev = %s, bsize = %ld, bprev = %jd, fs = %s\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -9250,7 +9250,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bad block %lld, ino %lu\n"
+literal|"bad block %jd, ino %lu\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -9416,7 +9416,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"dev = %s, block = %lld, fs = %s\n"
+literal|"dev = %s, block = %jd, fs = %s\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -9563,7 +9563,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = %s, block = %lld, fs = %s\n"
+literal|"dev = %s, block = %jd, fs = %s\n"
 argument_list|,
 name|devtoname
 argument_list|(

@@ -967,7 +967,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tstart %llu, end %llu overlap start %llu, end %llu\n"
+literal|"\tstart %jd, end %jd overlap start %jd, end %jd\n"
 argument_list|,
 operator|(
 name|intmax_t

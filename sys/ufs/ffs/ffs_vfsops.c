@@ -669,7 +669,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s: blocks %lld files %d\n"
+literal|"%s: %s: blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -1867,7 +1867,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: reload pending error: blocks %lld files %d\n"
+literal|"%s: reload pending error: blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -2993,7 +2993,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: lost blocks %lld files %d\n"
+literal|"%s: lost blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -3042,7 +3042,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: mount pending error: blocks %lld files %d\n"
+literal|"%s: mount pending error: blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -4600,7 +4600,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: unmount pending error: blocks %lld files %d\n"
+literal|"%s: unmount pending error: blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
