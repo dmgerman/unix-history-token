@@ -1371,15 +1371,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow override of whether methods execute in parallel or not.  * Default to serial behavior as this fixes some AE_ALREADY_EXISTS errors  * and matches the MS interpreter.  */
+comment|/*  * Allow override of whether methods execute in parallel or not.  * Enable this for serial behavior, which fixes "AE_ALREADY_EXISTS"  * errors for AML that really can't handle parallel method execution.  * It is off by default since this breaks recursive methods and  * some IBMs use such code.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|acpi_serialize_methods
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,13 +1393,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Allow override of whether to support the _OSI method. */
+comment|/*  * Allow override of whether to support the _OSI method.  This allows us  * to claim compatibility with various MS OSs without changing the value  * we report for _OS.  This is enabled by default since it fixes some  * problems with interrupt routing although it can be disabled if it  * causes problems.  See the definition of "AcpiGbl_ValidOsiStrings" for  * a list of systems we claim.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|acpi_osi_method
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
