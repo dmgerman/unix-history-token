@@ -3268,7 +3268,7 @@ return|return
 name|error
 return|;
 return|return
-name|atapi_wait_ready
+name|atapi_wait_dsc
 argument_list|(
 name|stp
 operator|->
@@ -3601,7 +3601,7 @@ return|return
 name|error
 return|;
 return|return
-name|atapi_wait_ready
+name|atapi_wait_dsc
 argument_list|(
 name|stp
 operator|->
@@ -3826,7 +3826,7 @@ return|return
 literal|0
 return|;
 return|return
-name|atapi_wait_ready
+name|atapi_wait_dsc
 argument_list|(
 name|stp
 operator|->
@@ -3925,7 +3925,7 @@ return|return
 name|error
 return|;
 return|return
-name|atapi_wait_ready
+name|atapi_wait_dsc
 argument_list|(
 name|stp
 operator|->

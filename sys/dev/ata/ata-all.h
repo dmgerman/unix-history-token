@@ -714,6 +714,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_ALTSTAT
+value|0x00
+end_define
+
+begin_comment
+comment|/* alternate status register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_ALTOFFSET
 value|0x206
 end_define
@@ -731,17 +742,6 @@ end_define
 
 begin_comment
 comment|/* do for PCCARD devices */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_ALTIOSIZE
-value|0x01
-end_define
-
-begin_comment
-comment|/* alternate registers size */
 end_comment
 
 begin_define
@@ -805,6 +805,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_ALTIOSIZE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_BMIOSIZE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_OP_FINISHED
 value|0x00
 end_define
@@ -841,13 +855,6 @@ end_define
 begin_comment
 comment|/* busmaster DMA related defines */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_BM_OFFSET1
-value|0x08
-end_define
 
 begin_define
 define|#
@@ -945,13 +952,6 @@ define|#
 directive|define
 name|ATA_BMDTP_PORT
 value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_BMIOSIZE
-value|0x20
 end_define
 
 begin_comment
@@ -1535,18 +1535,6 @@ name|ih
 decl_stmt|;
 comment|/* interrupt handle */
 name|u_int32_t
-name|ioaddr
-decl_stmt|;
-comment|/* physical port addr */
-name|u_int32_t
-name|altioaddr
-decl_stmt|;
-comment|/* physical alt port addr */
-name|u_int32_t
-name|bmaddr
-decl_stmt|;
-comment|/* physical bus master port */
-name|u_int32_t
 name|chiptype
 decl_stmt|;
 comment|/* pciid of controller chip */
@@ -2066,6 +2054,158 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ATA_INB
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|bus_space_read_1(rman_get_bustag((res)), \ 			 rman_get_bushandle((res)), (offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_INW
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|bus_space_read_2(rman_get_bustag((res)), \ 			 rman_get_bushandle((res)), (offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_INL
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|bus_space_read_4(rman_get_bustag((res)), \ 			 rman_get_bushandle((res)), (offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_INSW
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_read_multi_2(rman_get_bustag((res)), \ 			       rman_get_bushandle((res)), \ 			       (offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_INSL
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_read_multi_4(rman_get_bustag((res)), \ 			       rman_get_bushandle((res)), \ 			       (offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTB
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_1(rman_get_bustag((res)), \ 			  rman_get_bushandle((res)), (offset), (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTW
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_2(rman_get_bustag((res)), \ 			  rman_get_bushandle((res)), (offset), (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTL
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_4(rman_get_bustag((res)), \ 			  rman_get_bushandle((res)), (offset), (value))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTSW
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_write_multi_2(rman_get_bustag((res)), \ 				rman_get_bushandle((res)), \ 				(offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_OUTSL
+parameter_list|(
+name|res
+parameter_list|,
+name|offset
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|bus_space_write_multi_4(rman_get_bustag((res)), \ 				rman_get_bushandle((res)), \ 				(offset), (addr), (count))
+end_define
 
 end_unit
 

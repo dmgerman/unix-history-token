@@ -7469,6 +7469,17 @@ name|ATPR_F_READ
 else|:
 literal|0
 argument_list|,
+operator|(
+name|ccb
+index|[
+literal|0
+index|]
+operator|==
+name|ATAPI_WRITE_BIG
+operator|)
+condition|?
+literal|60
+else|:
 literal|30
 argument_list|,
 name|acd_done

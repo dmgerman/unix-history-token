@@ -1258,7 +1258,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|atapi_wait_ready
+name|atapi_wait_dsc
 parameter_list|(
 name|struct
 name|atapi_softc
