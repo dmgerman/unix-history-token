@@ -2122,7 +2122,9 @@ name|devvp
 expr_stmt|;
 name|devvp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|=
 name|mp
 expr_stmt|;
@@ -2441,7 +2443,9 @@ name|out
 label|:
 name|devvp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|=
 name|NULL
 expr_stmt|;
@@ -2610,7 +2614,9 @@ name|isomp
 operator|->
 name|im_devvp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|=
 name|NULL
 expr_stmt|;

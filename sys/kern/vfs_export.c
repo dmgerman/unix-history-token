@@ -5484,7 +5484,9 @@ if|if
 condition|(
 name|newvp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|!=
 name|NULL
 condition|)
@@ -9751,7 +9753,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|!=
 name|NULL
 condition|)

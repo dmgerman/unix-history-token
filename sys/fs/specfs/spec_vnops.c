@@ -941,7 +941,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|!=
 name|NULL
 operator|&&
@@ -949,7 +951,9 @@ operator|!
 operator|(
 name|vp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|->
 name|mnt_flag
 operator|&
@@ -968,11 +972,10 @@ name|securelevel
 operator|>=
 literal|1
 operator|&&
+name|vfs_mountedon
+argument_list|(
 name|vp
-operator|->
-name|v_specmountpoint
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2117,7 +2120,9 @@ name|mp
 operator|=
 name|vp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|)
 operator|!=
 name|NULL
@@ -2925,7 +2930,7 @@ argument_list|(
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Round up physical size for real devices.  We cannot round using 	 * v_mount's block size data because v_mount has nothing to do with 	 * the device.  i.e. it's usually '/dev'.  We need the physical block 	 * size for the device itself. 	 * 	 * We can't use v_specmountpoint because it only exists when the 	 * block device is mounted.  However, we can use v_rdev. 	 */
+comment|/* 	 * Round up physical size for real devices.  We cannot round using 	 * v_mount's block size data because v_mount has nothing to do with 	 * the device.  i.e. it's usually '/dev'.  We need the physical block 	 * size for the device itself. 	 * 	 * We can't use v_rdev->si_mountpoint because it only exists when the 	 * block device is mounted.  However, we can use v_rdev. 	 */
 if|if
 condition|(
 name|vn_isdisk

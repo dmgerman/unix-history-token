@@ -221,17 +221,6 @@ value|__si_u.__si_disk.__sid_bsize_best
 end_define
 
 begin_comment
-comment|/*  * Exported shorthand  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|v_specmountpoint
-value|v_rdev->si_mountpoint
-end_define
-
-begin_comment
 comment|/*  * Special device management  */
 end_comment
 

@@ -3656,7 +3656,9 @@ name|MNT_LOCAL
 expr_stmt|;
 name|devvp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|=
 name|mp
 expr_stmt|;
@@ -3821,7 +3823,9 @@ name|pmp
 operator|->
 name|pm_devvp
 operator|->
-name|v_specmountpoint
+name|v_rdev
+operator|->
+name|si_mountpoint
 operator|=
 name|NULL
 expr_stmt|;
