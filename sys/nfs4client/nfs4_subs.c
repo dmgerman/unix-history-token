@@ -3430,9 +3430,10 @@ decl_stmt|,
 modifier|*
 name|bmvalp
 decl_stmt|,
-name|siz
-decl_stmt|,
 name|len
+decl_stmt|;
+name|size_t
+name|siz
 decl_stmt|;
 name|tl
 operator|=
