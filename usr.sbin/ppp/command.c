@@ -249,7 +249,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"alias_cmd.h"
+file|"nat_cmd.h"
 end_include
 
 begin_endif
