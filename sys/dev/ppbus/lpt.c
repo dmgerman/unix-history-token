@@ -1225,17 +1225,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lpt_data
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Now, try to detect the printer. 	 */
 if|if
 condition|(

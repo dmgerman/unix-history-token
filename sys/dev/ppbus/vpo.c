@@ -341,17 +341,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|vpo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vpo_data
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* vpo dependent initialisation */
 name|vpo
 operator|->

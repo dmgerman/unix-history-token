@@ -496,17 +496,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|ppi
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ppi_data
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

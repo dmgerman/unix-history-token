@@ -663,17 +663,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|lp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lp_data
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* retrieve the ppbus irq */
 name|BUS_READ_IVAR
 argument_list|(
