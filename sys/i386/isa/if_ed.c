@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.29 1994/01/25 22:52:06 ats Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.30 1994/01/31 07:34:20 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1082,6 +1082,24 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8003E"
+expr_stmt|;
+name|memsize
+operator|=
+literal|8192
+expr_stmt|;
+name|isa16bit
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|ED_TYPE_WD8003W
+case|:
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"WD8003W"
 expr_stmt|;
 name|memsize
 operator|=
