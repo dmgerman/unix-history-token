@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.40 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ ifdef|#
 directive|ifdef
 name|NAMED_BIND
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
