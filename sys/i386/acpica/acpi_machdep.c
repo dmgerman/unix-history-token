@@ -107,7 +107,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/apm/apm.h>
+file|<i386/bios/apm.h>
 end_include
 
 begin_decl_stmt

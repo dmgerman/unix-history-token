@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/mca_machdep.h>
+file|<i386/bios/mca_machdep.h>
 end_include
 
 begin_comment
