@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tc.c,v 1.2 1999/04/16 21:21:40 peter Exp $ */
+comment|/* $Id: tc.c,v 1.3 1999/05/08 21:58:49 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1174,7 +1174,7 @@ name|tc_intrnull
 condition|)
 name|panic
 argument_list|(
-literal|"tc_3000_300_intr_establish: cookie %d twice"
+literal|"tc_3000_300_intr_establish: cookie %ld twice"
 argument_list|,
 name|dev
 argument_list|)
@@ -1289,7 +1289,7 @@ name|tc_intrnull
 condition|)
 name|panic
 argument_list|(
-literal|"tc_3000_300_intr_disestablish: cookie %d bad intr"
+literal|"tc_3000_300_intr_disestablish: cookie %ld bad intr"
 argument_list|,
 name|dev
 argument_list|)
@@ -1825,7 +1825,7 @@ name|tc_intrnull
 condition|)
 name|panic
 argument_list|(
-literal|"tc_3000_500_intr_establish: cookie %d twice"
+literal|"tc_3000_500_intr_establish: cookie %ld twice"
 argument_list|,
 name|dev
 argument_list|)
@@ -1917,7 +1917,7 @@ name|tc_intrnull
 condition|)
 name|panic
 argument_list|(
-literal|"tc_3000_500_intr_disestablish: cookie %d bad intr"
+literal|"tc_3000_500_intr_disestablish: cookie %ld bad intr"
 argument_list|,
 name|dev
 argument_list|)
@@ -2375,17 +2375,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|device_t
-name|parent
-init|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|vm_offset_t
-name|regs
-decl_stmt|;
 name|tc_addr_t
 name|tcaddr
 decl_stmt|;
@@ -2394,11 +2383,6 @@ name|struct
 name|tc_builtin
 modifier|*
 name|builtin
-decl_stmt|;
-name|struct
-name|tc_slotdesc
-modifier|*
-name|slot
 decl_stmt|;
 name|struct
 name|tc_attach_args
