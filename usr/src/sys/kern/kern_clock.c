@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.29	81/12/12	*/
+comment|/*	kern_clock.c	4.30	81/12/19	*/
 end_comment
 
 begin_include
@@ -580,10 +580,10 @@ operator|++
 name|lbolt
 expr_stmt|;
 comment|/* 	 * Time moves on for protocols. 	 */
-operator|++
+operator|--
 name|protoslow
 expr_stmt|;
-operator|++
+operator|--
 name|protofast
 expr_stmt|;
 if|#
@@ -923,25 +923,37 @@ comment|/* 	 * Run network slow and fast timeouts. 	 */
 if|if
 condition|(
 name|protofast
-operator|>=
+operator|<=
+literal|0
+condition|)
+block|{
+name|protofast
+operator|=
 name|hz
 operator|/
 name|PR_FASTHZ
-condition|)
+expr_stmt|;
 name|pffasttimo
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|protofast
-operator|>=
+name|protoslow
+operator|<=
+literal|0
+condition|)
+block|{
+name|protoslow
+operator|=
 name|hz
 operator|/
 name|PR_SLOWHZ
-condition|)
+expr_stmt|;
 name|pfslowtimo
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* 	 * Lightning bolt every second: 	 *	sleep timeouts 	 *	process priority recomputation 	 *	process %cpu averaging 	 *	virtual memory metering 	 *	kick swapper if processes want in 	 */
 if|if
 condition|(
