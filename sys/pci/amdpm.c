@@ -181,6 +181,20 @@ name|AMDPM_DEVICEID_AMD756PM
 value|0x740b
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDPM_DEVICEID_AMD766PM
+value|0x7413
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMDPM_DEVICEID_AMD768PM
+value|0x7443
+end_define
+
 begin_comment
 comment|/* nVidia nForce chipset */
 end_comment
@@ -543,6 +557,16 @@ block|{
 name|u_long
 name|base
 decl_stmt|;
+name|u_int16_t
+name|did
+decl_stmt|;
+name|did
+operator|=
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -555,12 +579,23 @@ name|AMDPM_VENDORID_AMD
 operator|)
 operator|&&
 operator|(
-name|pci_get_device
-argument_list|(
-name|dev
-argument_list|)
+operator|(
+name|did
 operator|==
 name|AMDPM_DEVICEID_AMD756PM
+operator|)
+operator|||
+operator|(
+name|did
+operator|==
+name|AMDPM_DEVICEID_AMD766PM
+operator|)
+operator|||
+operator|(
+name|did
+operator|==
+name|AMDPM_DEVICEID_AMD768PM
+operator|)
 operator|)
 condition|)
 block|{
@@ -568,7 +603,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AMD 756 Power Management Controller"
+literal|"AMD 756/766/768 Power Management Controller"
 argument_list|)
 expr_stmt|;
 comment|/*  	       * We have to do this, since the BIOS won't give us the 	       * resource info (not mine, anyway). 	       */
