@@ -828,14 +828,22 @@ name|reg
 operator||=
 name|PCR_FLINK100
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * Mystery bits which are supposedly `reserved', 		 * but we seem to need to set them when the PHY 		 * is connected to some interfaces! 		 */
-block|reg |= 0x0100 | 0x0400;
-endif|#
-directive|endif
-comment|/* 		PHY_WRITE(sc, MII_NSPHY_PCR, reg); */
+comment|/* 		 * Mystery bits which are supposedly `reserved', 		 * but we seem to need to set them when the PHY 		 * is connected to some interfaces: 		 * 		 * 0x0400 is needed for fxp 		 *        (Intel EtherExpress Pro 10+/100B, 82557 chip) 		 *        (nsphy with a DP83840 chip) 		 * 0x0100 may be needed for some other card 		 */
+name|reg
+operator||=
+literal|0x0100
+operator||
+literal|0x0400
+expr_stmt|;
+name|PHY_WRITE
+argument_list|(
+name|sc
+argument_list|,
+name|MII_NSPHY_PCR
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|IFM_SUBTYPE
