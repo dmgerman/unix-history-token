@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* %G%P%$%97.1i%$%P$G%;%s%9%G!<%? */
+comment|/* %G%P%$%98.1i%$%P$G%;%s%9%G!<%? */
 end_comment
 
 begin_comment
