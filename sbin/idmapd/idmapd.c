@@ -12,7 +12,7 @@ comment|/*  * copyright (c) 2003  * the regents of the university of michigan  *
 end_comment
 
 begin_comment
-comment|/* XXX ignores the domain of recieved names. */
+comment|/* XXX ignores the domain of received names. */
 end_comment
 
 begin_include
@@ -138,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|DOMAIN
-value|"@citi.umich.edu"
+value|"@FreeBSD.org"
 end_define
 
 begin_define
