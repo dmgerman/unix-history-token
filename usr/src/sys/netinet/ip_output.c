@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.21	81/12/09	*/
+comment|/*	ip_output.c	1.22	81/12/11	*/
 end_comment
 
 begin_include
@@ -134,6 +134,9 @@ condition|(
 name|opt
 condition|)
 comment|/* XXX */
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|opt
