@@ -5073,6 +5073,11 @@ name|bd_bif
 operator|->
 name|bif_hdrlen
 decl_stmt|;
+name|int
+name|do_wakeup
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Figure out how many bytes to move.  If the packet is 	 * greater or equal to the snapshot length, transfer that 	 * much.  Otherwise, transfer the whole packet (unless 	 * we hit the buffer size limit). 	 */
 name|totlen
 operator|=
@@ -5143,10 +5148,9 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|bpf_wakeup
-argument_list|(
-name|d
-argument_list|)
+name|do_wakeup
+operator|=
+literal|1
 expr_stmt|;
 name|curlen
 operator|=
@@ -5167,10 +5171,9 @@ operator|==
 name|BPF_TIMED_OUT
 condition|)
 comment|/* 		 * Immediate mode is set, or the read timeout has 		 * already expired during a select call.  A packet 		 * arrived, so the reader should be woken up. 		 */
-name|bpf_wakeup
-argument_list|(
-name|d
-argument_list|)
+name|do_wakeup
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 	 * Append the bpf header. 	 */
 name|hp
@@ -5242,6 +5245,15 @@ operator|=
 name|curlen
 operator|+
 name|totlen
+expr_stmt|;
+if|if
+condition|(
+name|do_wakeup
+condition|)
+name|bpf_wakeup
+argument_list|(
+name|d
+argument_list|)
 expr_stmt|;
 block|}
 end_block
