@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_backspace[] = "@(#)backspace.c	1.5";  *  * Backspace records  */
+comment|/* char id_backspace[] = "@(#)backspace.c	1.6";  *  * Backspace records  */
 end_comment
 
 begin_include
@@ -217,9 +217,12 @@ argument_list|(
 name|b
 argument_list|,
 name|errflag
+argument_list|,
+name|bksp
 argument_list|)
 operator|)
 condition|)
+comment|/* sets 'reading' */
 return|return
 operator|(
 name|n
@@ -368,26 +371,6 @@ name|OK
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|b
-operator|->
-name|uwrt
-operator|&&
-operator|!
-name|nowreading
-argument_list|(
-name|b
-argument_list|)
-condition|)
-name|err
-argument_list|(
-argument|errflag
-argument_list|,
-argument|errno
-argument_list|,
-argument|bksp
-argument_list|)
 while|while
 condition|(
 name|last_char

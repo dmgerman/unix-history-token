@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_endfile[] = "@(#)endfile.c	1.6";  *  * endfile  */
+comment|/* char id_endfile[] = "@(#)endfile.c	1.7";  *  * endfile  */
 end_comment
 
 begin_include
@@ -127,6 +127,8 @@ argument_list|(
 name|b
 argument_list|,
 name|errflag
+argument_list|,
+name|endf
 argument_list|)
 operator|)
 return|;
@@ -139,6 +141,8 @@ argument_list|(
 argument|b
 argument_list|,
 argument|flag
+argument_list|,
+argument|str
 argument_list|)
 end_macro
 
@@ -152,6 +156,13 @@ end_decl_stmt
 begin_decl_stmt
 name|ioflag
 name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|str
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +234,27 @@ argument|flag
 argument_list|,
 argument|errno
 argument_list|,
-argument|endf
+argument|str
+argument_list|)
+if|if
+condition|(
+name|b
+operator|->
+name|uwrt
+operator|&&
+operator|!
+name|nowreading
+argument_list|(
+name|b
+argument_list|)
+condition|)
+name|err
+argument_list|(
+argument|flag
+argument_list|,
+argument|errno
+argument_list|,
+argument|str
 argument_list|)
 return|return
 operator|(

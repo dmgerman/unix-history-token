@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_close[] = "@(#)close.c	1.5";  *  * close.c  -  f77 file close, flush, exit routines  */
+comment|/* char id_close[] = "@(#)close.c	1.6";  *  * close.c  -  f77 file close, flush, exit routines  */
 end_comment
 
 begin_include
@@ -16,6 +16,16 @@ name|FROM_OPEN
 index|[]
 init|=
 literal|"\2"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|clse
+index|[]
+init|=
+literal|"close"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +89,7 @@ name|errflag
 argument_list|,
 name|F_ERUNIT
 argument_list|,
-literal|"close"
+name|clse
 argument_list|)
 expr_stmt|;
 if|if
@@ -135,7 +145,7 @@ name|errflag
 argument_list|,
 name|F_ERNOPEN
 argument_list|,
-literal|"close"
+name|clse
 argument_list|)
 expr_stmt|;
 if|if
@@ -212,6 +222,8 @@ argument_list|(
 name|b
 argument_list|,
 name|errflag
+argument_list|,
+name|clse
 argument_list|)
 operator|)
 condition|)

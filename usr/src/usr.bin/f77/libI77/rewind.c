@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rewind[] = "@(#)rewind.c	1.2";  *  * rewind.c  -  f77 file rewind  */
+comment|/* char id_rewind[] = "@(#)rewind.c	1.3";  *  * rewind.c  -  f77 file rewind  */
 end_comment
 
 begin_include
@@ -8,6 +8,16 @@ include|#
 directive|include
 file|"fio.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rwnd
+index|[]
+init|=
+literal|"rewind"
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|f_rew
@@ -70,7 +80,7 @@ argument|errflag
 argument_list|,
 argument|F_ERUNIT
 argument_list|,
-literal|"rewind"
+argument|rwnd
 argument_list|)
 name|b
 operator|=
@@ -111,7 +121,7 @@ argument|errflag
 argument_list|,
 argument|n
 argument_list|,
-literal|"rewind"
+argument|rwnd
 argument_list|)
 name|lfname
 operator|=
@@ -132,7 +142,7 @@ argument|errflag
 argument_list|,
 argument|F_ERNOBKSP
 argument_list|,
-literal|"rewind"
+argument|rwnd
 argument_list|)
 name|b
 operator|->
@@ -155,6 +165,8 @@ argument_list|(
 name|b
 argument_list|,
 name|errflag
+argument_list|,
+name|rwnd
 argument_list|)
 condition|)
 return|return
