@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -983,6 +983,16 @@ name|ReorderQueue
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* arrange to get this signal again */
+name|setevent
+argument_list|(
+name|QueueIntvl
+argument_list|,
+name|reordersig
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1019,17 +1029,17 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	**  Arrange to get this signal again. 	*/
+else|else
 name|setevent
 argument_list|(
 name|QueueIntvl
 argument_list|,
 name|reordersig
 argument_list|,
-name|parent
+name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1821,14 +1831,14 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"dowork, pid=%d, id=%s"
-argument_list|,
-name|getpid
-argument_list|()
+literal|"%s: dowork, pid=%d"
 argument_list|,
 name|CurEnv
 operator|->
 name|e_id
+argument_list|,
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1869,6 +1879,29 @@ literal|0
 condition|)
 block|{
 comment|/* being processed by another queuer */
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|4
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: locked"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 name|exit
 argument_list|(
 name|EX_OK
