@@ -3536,11 +3536,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|BFE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->bfe_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BFE_LOCK
 parameter_list|(
-name|scp
+name|_sc
 parameter_list|)
-value|mtx_lock(&sc->bfe_mtx)
+value|mtx_lock(&(_sc)->bfe_mtx)
 end_define
 
 begin_define
@@ -3548,9 +3558,9 @@ define|#
 directive|define
 name|BFE_UNLOCK
 parameter_list|(
-name|scp
+name|_sc
 parameter_list|)
-value|mtx_unlock(&sc->bfe_mtx)
+value|mtx_unlock(&(_sc)->bfe_mtx)
 end_define
 
 begin_define
