@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_hdlc.h - software-HDLC header file  *	--------------------------------------  *  *	$Id: i4b_hdlc.h,v 1.5 2000/08/28 07:41:19 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Thu Oct 26 08:29:06 2000]  *  *	NOTE:  *	- October 19th: made minor changes to HDLC_ENCODE macro  *	  Please conform "ihfc/i4b_ihfc_drv.c" (ihfc_hdlc_Bwrite)  *	  for correct usage! (-hp)  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_hdlc.h - software-HDLC header file  *	--------------------------------------  *  *	$Id: i4b_hdlc.h,v 1.5 2000/08/28 07:41:19 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Wed Jul 19 09:41:13 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -544,7 +544,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	HDLC bit table  *	==============	  *  *	bits[0..3]:	A value which tells how many set bits there are at the  *		   	beginning of the byte.  *  *	bits[4..7]:	Special bytes like 0x7e, 0x7d, 0xfd ... are flagged here  *			NOTE: Special bytes also means 'abort' bytes (7 or more  *			      continious set bits)  *  *	bits[8..11]:	A copy of bits[0..3] but only incremented by one.  *		     	NOTE: 0x7e has value '8' instead of '0'. Internal reasons.  *  *	bits[12..15]: 	A value which tells how many set bits there are at the  *		      	end of the byte.  *			NOTE: 0xff has both '8' incoming and '8' outgoing bits.  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	HDLC bit table  *	==============	  *  *	bits[0..3]:	A value which tells how many set bits there are at the  *		   	beginning of the byte.  *  *	bits[4..7]:	Special bytes like 0x7e, 0x7d, 0xfd ... are flagged here  *			NOTE: Special bytes also means 'abort' bytes (7 or more  *			      continuous set bits)  *  *	bits[8..11]:	A copy of bits[0..3] but only incremented by one.  *		     	NOTE: 0x7e has value '8' instead of '0'. Internal reasons.  *  *	bits[12..15]: 	A value which tells how many set bits there are at the  *		      	end of the byte.  *			NOTE: 0xff has both '8' incoming and '8' outgoing bits.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -1072,7 +1072,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	HDLC_DECODE  *	===========  *  *	u_char:  flag, blevel  *	u_short: crc, ib, tmp, tmp2, len  *  *	next: 'continue' or 'goto xxx'  *  *	cfr: complet frame  *	nfr: new frame  *	     NOTE: must setup 'len' and 'dst', so that 'dst' may be written  *		   at most 'len' times.  *  *	rab: abort  *	rdd: read data (read byte is stored in 'tmp2')  *	rdo: overflow  *  *	d: dummy  *  *	NOTE: setting flag to '0' and len to '0' => recover from rdu  *	NOTE: bits[8 .. ] of tmp2 may be used to store custom data/flags  *	NOTE: these variables have to be 'suspended' / 'resumed' somehow:  *		flag, blevel, crc, ib, tmp, len  *	NOTE: zero is default value for all variables.  *	NOTE: each time 'dst' is written, 'len' is decremented by one.  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	HDLC_DECODE  *	===========  *  *	u_char:  flag, blevel  *	u_short: crc, ib, tmp, tmp2, len  *  *	next: 'continue' or 'goto xxx'  *  *	cfr: complete frame  *	nfr: new frame  *	     NOTE: must setup 'len' and 'dst', so that 'dst' may be written  *		   at most 'len' times.  *  *	rab: abort  *	rdd: read data (read byte is stored in 'tmp2')  *	rdo: overflow  *  *	d: dummy  *  *	NOTE: setting flag to '0' and len to '0' => recover from rdu  *	NOTE: bits[8 .. ] of tmp2 may be used to store custom data/flags  *	NOTE: these variables have to be 'suspended' / 'resumed' somehow:  *		flag, blevel, crc, ib, tmp, len  *	NOTE: zero is default value for all variables.  *	NOTE: each time 'dst' is written, 'len' is decreased by one.  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -1144,7 +1144,7 @@ comment|/*------ end of HDLC_DECODE --------------------------------------------
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	HDLC_ENCODE  *	===========  *  *	u_char:  flag, src  *	u_short: tmp2, blevel, ib, crc, len  *	u_int:   tmp  *  *	gfr: get new frame, free old, and exit if no frame	  *	     NOTE: must setup 'len' and 'src', so that 'src' can be read  *		   'len' times.  *  *	wrd: write data (output = (u_char)tmp)  *  *	d: dummy  *  *	NOTE: setting flag to '-1' and len to '0' => abort byte will be sent  *	NOTE: these variables have to be 'suspended' / 'resumed' somehow:  *		flag, blevel, crc, ib, tmp, len  *	NOTE: zero is default value for all variables.  *	NOTE: each time 'src' is read, 'len' is decremented by one.  *	NOTE: gfr must setup 'len'.  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	HDLC_ENCODE  *	===========  *  *	u_char:  flag, src  *	u_short: tmp2, blevel, ib, crc, len  *	u_int:   tmp  *  *	gfr: This is the place where you free the last [mbuf] chain, and get  *	     the next one. If a mbuf is available the code should setup 'len'  *	     and 'src' so that 'src' may be read 'len' times. If no mbuf is  *	     available leave 'len' and 'src' untouched.  *  *	wrd: write data (output = (u_char)tmp)  *  *	d: dummy  *  *	NOTE: setting flag to '-2' and len to '0' => abort bytes will be sent  *	NOTE: these variables have to be 'suspended' / 'resumed' somehow:  *		flag, blevel, crc, ib, tmp, len  *	NOTE: zero is default value for all variables.  *	NOTE: each time 'src' is read, 'len' is decreased by one.  *	NOTE: neither cmd's should exit through 'goto' or 'break' statements.  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -1175,7 +1175,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\ 										\
-value|if (blevel>= 0x800) { blevel -= 0x800; goto j4##d; }			\ 										\ 	if (!len--)								\ 	{									\ 		len++;								\ 										\ 		switch(++flag)							\ 		{ case 0:
+value|if (blevel>= 0x800) { blevel -= 0x800; goto j4##d; }			\ 										\ 	if (!len--)								\ 	{									\ 		len++;								\ 										\ 		switch(++flag)							\ 		{ default:
 comment|/* abort */
 value|\ 			tmp  = blevel = 0;
 comment|/* zero is default */
@@ -1183,20 +1183,18 @@ value|\ 			tmp2 = 0xff;						\ 			goto j3##d;						\ 		  case 1:
 comment|/* 1st time FS */
 value|\ 		  case 2:
 comment|/* 2nd time FS */
-value|\ 			tmp2 = 0x7e;						\ 			goto j3##d;						\ 		  case 3:
-comment|/* get new frame  */
-value|\ 			gfrcmd;							\ 			if (!len--)						\ 			{							\ 				len++;						\ 				flag--;
+value|\ 			tmp2 = 0x7e;						\ 			goto j3##d;						\ 		  case 3:							\ 			gfrcmd;
+comment|/* get new frame */
+value|\ 			if (!len--)						\ 			{							\ 				len++;						\ 				flag--;
 comment|/* don't proceed */
 value|\ 				tmp2 = 0x7e;					\ 				goto j3##d;
 comment|/* final FS */
 value|\ 			}							\ 			else							\ 			{							\ 				crc = -1;					\ 				ib  = 0;					\ 				goto j1##d;
 comment|/* first byte */
-value|\ 			}							\ 		  case 4:
+value|\ 			}							\ 		  case 4:							\ 			crc ^= -1;						\ 			tmp2 = (u_char)crc;					\ 			goto j2##d;
 comment|/* CRC (lsb's) */
-value|\ 			crc  ^= -1;						\ 			tmp2  = (u_char)crc;					\ 			crc>>= 8;						\ 			goto j2##d;						\ 		  case 5:
+value|\ 		  case 5:							\ 			tmp2  = (u_char)(crc>> 8);				\ 			flag  = 1;						\ 			goto j2##d;
 comment|/* CRC (msb's) */
-value|\ 			tmp2  = (u_char)crc;					\ 			flag  = 1;						\ 			goto j2##d;
-comment|/* CRC stuff */
 value|\ 		}								\ 	}									\  	else									\   	{ j1##d	:								\ 		tmp2 = (u_char)src;						\ 		crc =(HDLC_FCS_TAB[(u_char)(crc ^ tmp2)] ^ (u_char)(crc>> 8));	\ 	  j2##d:								\ 										\ 		ib>>= 12;							\ 		ib  += HDLC_BIT_TAB[(u_char)tmp2];				\ 										\ 		if ((u_char)ib>= 5)
 comment|/* stuffing */
 value|\ 		{								\ 			blevel&= ~0xff;					\ 										\ 			if (ib& 0xc0)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ihfc_pnp.c - common hfc ISA PnP-bus interface  *	-------------------------------------------------  *  *	- Everything which has got anything to to with "PnP" bus setup has  *	  been put here.  *  *  *      last edit-date: [Wed Jul 19 09:41:07 2000]  *  *      $Id: i4b_ihfc_pnp.c,v 1.9 2000/09/19 13:50:36 hm Exp $  *  * $FreeBSD$  *       *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ihfc_pnp.c - common hfc ISA PnP-bus interface  *	-------------------------------------------------  *  *	- Everything which has got anything to to with "PnP" bus setup has  *	  been put here, except the chip spesific "PnP" setup.  *  *  *      last edit-date: [Wed Jul 19 09:41:07 2000]  *  *      $Id: i4b_ihfc_pnp.c,v 1.9 2000/09/19 13:50:36 hm Exp $  *  * $FreeBSD$  *       *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -235,7 +235,7 @@ literal|2
 block|,
 literal|0x200
 block|,
-literal|0xd
+literal|0x2d
 block|}
 block|,
 block|{
@@ -249,7 +249,7 @@ literal|0
 block|,
 literal|0x000
 block|,
-literal|0xf
+literal|0x0f
 block|}
 block|,
 block|{
@@ -263,7 +263,7 @@ literal|1
 block|,
 literal|0x300
 block|,
-literal|0xe
+literal|0x0e
 block|}
 block|,
 block|{
@@ -451,6 +451,19 @@ name|unit
 index|]
 decl_stmt|;
 comment|/* softc	  */
+name|u_char
+name|flag
+init|=
+literal|0
+decl_stmt|;
+comment|/* flag		  */
+name|void
+modifier|*
+name|dummy
+init|=
+literal|0
+decl_stmt|;
+comment|/* a dummy	  */
 name|HFC_VAR
 expr_stmt|;
 if|if
@@ -508,6 +521,10 @@ operator|==
 name|vid
 condition|)
 block|{
+name|flag
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 name|sc
@@ -518,7 +535,7 @@ name|ihfc_sc_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* reset data structure */
+comment|/* reset data structure.* 								 * Zero is default for  * 								 * most, so calling the * 								 * int. handler now will* 								 * not be a problem.    */
 name|S_IOBASE
 index|[
 literal|0
@@ -673,6 +690,37 @@ literal|0xf
 index|]
 expr_stmt|;
 block|}
+comment|/* setup interrupt routine now to avvoid stray	* 				 * interrupts.					*/
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|S_IRQ
+argument_list|,
+name|INTR_TYPE_NET
+argument_list|,
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|HFC_INTR
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|dummy
+argument_list|)
+expr_stmt|;
+name|flag
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -707,7 +755,7 @@ name|ihfc_pnp_detach
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|flag
 argument_list|)
 expr_stmt|;
 block|}
@@ -777,6 +825,19 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* iobases to try */
+name|u_char
+name|flag
+init|=
+literal|0
+decl_stmt|;
+comment|/* flag		  */
+name|void
+modifier|*
+name|dummy
+init|=
+literal|0
+decl_stmt|;
+comment|/* a dummy	  */
 name|HFC_VAR
 expr_stmt|;
 name|bzero
@@ -878,6 +939,10 @@ name|iobase
 operator|++
 expr_stmt|;
 block|}
+name|flag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -946,6 +1011,37 @@ operator|*
 name|iobase
 expr_stmt|;
 comment|/* set internal iobase	*/
+comment|/* setup interrupt routine now to avvoid stray	* 		 * interrupts.					*/
+name|bus_setup_intr
+argument_list|(
+name|dev
+argument_list|,
+name|S_IRQ
+argument_list|,
+name|INTR_TYPE_NET
+argument_list|,
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|HFC_INTR
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|dummy
+argument_list|)
+expr_stmt|;
+name|flag
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -976,7 +1072,7 @@ name|ihfc_pnp_detach
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|flag
 argument_list|)
 expr_stmt|;
 if|if
@@ -1041,13 +1137,6 @@ name|unit
 index|]
 decl_stmt|;
 comment|/* softc	*/
-name|void
-modifier|*
-name|dummy
-init|=
-literal|0
-decl_stmt|;
-comment|/* a dummy	*/
 name|HFC_VAR
 expr_stmt|;
 name|HFC_BEG
@@ -1106,32 +1195,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Init B2 - Channel */
-name|bus_setup_intr
-argument_list|(
-name|dev
-argument_list|,
-name|S_IRQ
-argument_list|,
-name|INTR_TYPE_NET
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|HFC_INTR
-argument_list|,
-name|sc
-argument_list|,
-operator|&
-name|dummy
-argument_list|)
-expr_stmt|;
 name|HFC_END
 expr_stmt|;
 return|return
