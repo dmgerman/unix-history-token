@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	5.8 (Berkeley) %G%"
+literal|"@(#)lgamma.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,6 +26,10 @@ end_endif
 
 begin_comment
 comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * Coded by Peter McIlroy, Nov 1992;  *  * The financial support of UUNET Communications Services is greatfully  * acknowledged.  */
 end_comment
 
 begin_include
@@ -47,8 +51,15 @@ file|"mathimpl.h"
 end_include
 
 begin_comment
-comment|/* Log gamma function.  * Error:  x> 0 error< 1.3ulp.  *	   x> 4, error< 1ulp.  *	   x> 9, error< .6ulp.  * 	   x< 0, all bets are off.  * Method:  *	x> 6:  *		Use the asymptotic expansion (Stirling's Formula)  *	0< x< 6:  *		Use gamma(x+1) = x*gamma(x)  *		Use rational approximation in  *		the range 1.2, 2.5  *	x< 0:  *		Use the reflection formula,  *		G(1-x)G(x) = PI/sin(PI*x)  * Special values:  *	non-positive integer	returns +Inf.  *	NaN			returns NaN */
+comment|/* Log gamma function.  * Error:  x> 0 error< 1.3ulp.  *	   x> 4, error< 1ulp.  *	   x> 9, error< .6ulp.  * 	   x< 0, all bets are off. (When G(x) ~ 1, log(G(x)) ~ 0)  * Method:  *	x> 6:  *		Use the asymptotic expansion (Stirling's Formula)  *	0< x< 6:  *		Use gamma(x+1) = x*gamma(x) for argument reduction.  *		Use rational approximation in  *		the range 1.2, 2.5  *		Two approximations are used, one centered at the  *		minimum to ensure monotonicity; one centered at 2  *		to maintain small relative error.  *	x< 0:  *		Use the reflection formula,  *		G(1-x)G(x) = PI/sin(PI*x)  * Special values:  *	non-positive integer	returns +Inf.  *	NaN			returns NaN */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|endian
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -64,6 +75,13 @@ name|tahoe
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|_IEEE
+value|0
+end_define
+
 begin_comment
 comment|/* double and float have same size exponent field */
 end_comment
@@ -75,30 +93,13 @@ name|TRUNC
 parameter_list|(
 name|x
 parameter_list|)
-value|(double) (float) (x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IEEE
-value|0
+value|x = (double) (float) (x)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|TRUNC
-parameter_list|(
-name|x
-parameter_list|)
-value|*(((int *)&x) + 1)&= 0xf8000000
-end_define
 
 begin_define
 define|#
@@ -110,11 +111,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRUNC
+parameter_list|(
+name|x
+parameter_list|)
+value|*(((int *)&x) + endian)&= 0xf8000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|infnan
 parameter_list|(
 name|x
 parameter_list|)
-value|(zero/zero)
+value|0.0
 end_define
 
 begin_endif
@@ -180,13 +191,6 @@ name|int
 name|signgam
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|lns2pi
-value|.418938533204672741780329736405
-end_define
 
 begin_define
 define|#
@@ -427,57 +431,64 @@ end_comment
 begin_define
 define|#
 directive|define
+name|lns2pi
+value|.418938533204672741780329736405
+end_define
+
+begin_define
+define|#
+directive|define
 name|pb0
-value|.0833333333333333148296162562474
+value|8.33333333333333148296162562474e-02
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb1
-value|-.00277777777774548123579378966497
+value|-2.77777777774548123579378966497e-03
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb2
-value|.000793650778754435631476282786423
+value|7.93650778754435631476282786423e-04
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb3
-value|-.000595235082566672847950717262222
+value|-5.95235082566672847950717262222e-04
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb4
-value|.000841428560346653702135821806252
+value|8.41428560346653702135821806252e-04
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb5
-value|-.00189773526463879200348872089421
+value|-1.89773526463879200348872089421e-03
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb6
-value|.00569394463439411649408050664078
+value|5.69394463439411649408050664078e-03
 end_define
 
 begin_define
 define|#
 directive|define
 name|pb7
-value|-.0144705562421428915453880392761
+value|-1.44705562421428915453880392761e-02
 end_define
 
 begin_function
@@ -494,6 +505,24 @@ decl_stmt|;
 name|signgam
 operator|=
 literal|1
+expr_stmt|;
+name|endian
+operator|=
+operator|(
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|one
+operator|)
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1535,24 +1564,6 @@ block|}
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|lpi_hi
-value|1.1447298858494001638
-end_define
-
-begin_define
-define|#
-directive|define
-name|lpi_lo
-value|.0000000000000000102659511627078262
-end_define
-
-begin_comment
-comment|/* Error: within 3.5 ulp for x< 171.  For large x, see lgamma. */
-end_comment
-
 begin_function
 specifier|static
 name|double
@@ -1562,6 +1573,9 @@ name|double
 name|x
 parameter_list|)
 block|{
+name|int
+name|xi
+decl_stmt|;
 name|double
 name|y
 decl_stmt|,
@@ -1575,6 +1589,82 @@ name|zero
 init|=
 literal|0.0
 decl_stmt|;
+specifier|extern
+name|double
+name|gamma
+parameter_list|()
+function_decl|;
+comment|/* avoid destructive cancellation as much as possible */
+if|if
+condition|(
+name|x
+operator|>
+operator|-
+literal|170
+condition|)
+block|{
+name|xi
+operator|=
+name|x
+expr_stmt|;
+if|if
+condition|(
+name|xi
+operator|==
+name|x
+condition|)
+if|if
+condition|(
+name|_IEEE
+condition|)
+return|return
+operator|(
+name|one
+operator|/
+name|zero
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|infnan
+argument_list|(
+name|ERANGE
+argument_list|)
+operator|)
+return|;
+name|y
+operator|=
+name|gamma
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|y
+operator|<
+literal|0
+condition|)
+name|y
+operator|=
+operator|-
+name|y
+operator|,
+name|signgam
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|(
+name|log
+argument_list|(
+name|y
+argument_list|)
+operator|)
+return|;
+block|}
 name|z
 operator|=
 name|floor
@@ -1682,14 +1772,15 @@ argument_list|)
 expr_stmt|;
 name|z
 operator|=
-operator|-
 name|log
 argument_list|(
+name|M_PI
+operator|/
+operator|(
 name|z
 operator|*
 name|x
-operator|/
-name|M_PI
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1701,7 +1792,7 @@ operator|+
 name|RIGHT
 condition|)
 name|y
-operator|-=
+operator|=
 name|large_lgam
 argument_list|(
 name|x
@@ -1710,7 +1801,6 @@ expr_stmt|;
 else|else
 name|y
 operator|=
-operator|-
 name|small_lgam
 argument_list|(
 name|x
@@ -1718,9 +1808,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|y
-operator|+
 name|z
+operator|-
+name|y
 operator|)
 return|;
 block|}
