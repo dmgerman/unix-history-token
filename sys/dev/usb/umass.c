@@ -10481,15 +10481,9 @@ name|ccg
 operator|->
 name|cylinders
 operator|=
-operator|(
 name|ccg
 operator|->
 name|volume_size
-operator|+
-name|secs_per_cylinder
-operator|-
-literal|1
-operator|)
 operator|/
 name|secs_per_cylinder
 expr_stmt|;
