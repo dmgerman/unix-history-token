@@ -1226,12 +1226,11 @@ end_struct
 
 begin_function_decl
 name|__BEGIN_DECLS
-name|unsigned
-name|int
-name|if_nametoindex
+name|void
+name|if_freenameindex
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|if_nameindex
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1263,11 +1262,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|if_freenameindex
+name|unsigned
+name|int
+name|if_nametoindex
 parameter_list|(
-name|struct
-name|if_nameindex
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
