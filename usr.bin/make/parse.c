@@ -4449,6 +4449,23 @@ literal|0
 operator|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|cc
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* 		 * Couldn't read all of the child's output -- tell the user 		 * but still use whatever we read.  Null output isn't an 		 * error unless there was an error reading it. 		 */
+name|Parse_Error
+argument_list|(
+name|PARSE_WARNING
+argument_list|,
+literal|"Couldn't read shell's output"
+argument_list|)
+expr_stmt|;
+block|}
 name|res
 operator|=
 operator|(
@@ -4470,22 +4487,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cc
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * Couldn't read the child's output -- tell the user and 		 * set the variable to null 		 */
-name|Parse_Error
-argument_list|(
-name|PARSE_WARNING
-argument_list|,
-literal|"Couldn't read shell's output"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
