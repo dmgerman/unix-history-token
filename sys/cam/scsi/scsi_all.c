@@ -12643,7 +12643,7 @@ block|{
 name|u_int8_t
 name|cdb_len
 decl_stmt|;
-comment|/* 	 * Use the smallest possible command to perform the operation 	 * as some legacy hardware does not support the 10 byte 	 * commands.  If any of the lower 5 bits in byte2 is set, we have 	 * to go with a larger command. 	 * 	 */
+comment|/* 	 * Use the smallest possible command to perform the operation 	 * as some legacy hardware does not support the 10 byte commands. 	 * If any of the bits in byte2 is set, we have to go with a larger 	 * command. 	 */
 if|if
 condition|(
 operator|(
@@ -12673,11 +12673,7 @@ name|block_count
 operator|)
 operator|&&
 operator|(
-operator|(
 name|byte2
-operator|&
-literal|0xe0
-operator|)
 operator|==
 literal|0
 operator|)
