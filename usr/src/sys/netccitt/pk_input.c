@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_input.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2772,6 +2772,10 @@ index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|dnicname
 argument_list|,
 literal|"%d"
@@ -2868,7 +2872,7 @@ if|if
 condition|(
 name|m
 operator|=
-name|m_copym
+name|m_copy
 argument_list|(
 name|m
 argument_list|,
