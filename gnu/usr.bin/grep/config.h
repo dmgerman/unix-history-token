@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.4d"
+value|"2.4.2"
 end_define
 
 begin_comment
@@ -235,9 +235,12 @@ begin_comment
 comment|/* Define if you have the btowc function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_BTOWC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_BTOWC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the dcgettext function.  */
@@ -416,9 +419,12 @@ begin_comment
 comment|/* Define if you have the wctype function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCTYPE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<argz.h> header file.  */
@@ -571,17 +577,23 @@ begin_comment
 comment|/* Define if you have the<wchar.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCHAR_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCHAR_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<wctype.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCTYPE_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the i library (-li).  */
