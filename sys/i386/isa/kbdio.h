@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.h,v 1.1.2.2 1996/12/04 16:11:45 phk Exp $  */
+comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.h,v 1.1.2.3 1997/01/15 12:03:41 sos Exp $  */
 end_comment
 
 begin_ifndef
@@ -59,7 +59,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* data port, read/write  					   also used as keyboard command 					   and mouse command port */
+comment|/* data port, read/write  					 * also used as keyboard command 					 * and mouse command port  					 */
 end_comment
 
 begin_else
@@ -97,7 +97,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* data port, read/write  					   also used as keyboard command 					   and mouse command port */
+comment|/* data port, read/write  					 * also used as keyboard command 					 * and mouse command port  					 */
 end_comment
 
 begin_endif
@@ -349,7 +349,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|KBDC_SET_SCAN_CODESET
+name|KBDC_SET_SCANCODE_SET
 value|0x00f0
 end_define
 
@@ -462,78 +462,52 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSMD_RESOLUTION_25
+name|PSMD_RES_LOW
 value|0
 end_define
 
 begin_comment
-comment|/* 25ppi */
+comment|/* typically 25ppi */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSMD_RESOLUTION_50
+name|PSMD_RES_MEDIUM_LOW
 value|1
 end_define
 
 begin_comment
-comment|/* 50ppi */
+comment|/* typically 50ppi */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSMD_RESOLUTION_100
+name|PSMD_RES_MEDIUM_HIGH
 value|2
 end_define
 
 begin_comment
-comment|/* 100ppi (default after reset) */
+comment|/* typically 100ppi (default) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSMD_RESOLUTION_200
+name|PSMD_RES_HIGH
 value|3
 end_define
 
 begin_comment
-comment|/* 200ppi */
-end_comment
-
-begin_comment
-comment|/* FIXME: I don't know if it's possible to go beyond 200ppi.            The values below are of my wild guess. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSMD_RESOLUTION_400
-value|4
-end_define
-
-begin_comment
-comment|/* 400ppi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSMD_RESOLUTION_800
-value|5
-end_define
-
-begin_comment
-comment|/* 800ppi */
+comment|/* typically 200ppi */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PSMD_MAX_RESOLUTION
-value|PSMD_RESOLUTION_800
+value|PSMD_RES_HIGH
 end_define
 
 begin_comment
@@ -739,144 +713,6 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_comment
-comment|/* driver specific options: the following options may be set by    `options' statements in the kernel configuration file. */
-end_comment
-
-begin_comment
-comment|/* retry count */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KBD_MAXRETRY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KBD_MAXRETRY
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* timing parameters */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KBD_RESETDELAY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KBD_RESETDELAY
-value|200
-end_define
-
-begin_comment
-comment|/* wait 200msec after kbd/mouse reset */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KBD_MAXWAIT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KBD_MAXWAIT
-value|5
-end_define
-
-begin_comment
-comment|/* wait 5 times at most after reset */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* I/O recovery time */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KBDC_DELAYTIME
-value|37
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDD_DELAYTIME
-value|37
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KBDC_DELAYTIME
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDD_DELAYTIME
-value|7
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* debugging */
-end_comment
-
-begin_comment
-comment|/* #define KBDIO_DEBUG			   produces debugging output */
-end_comment
-
-begin_comment
-comment|/* end of driver specific options */
-end_comment
-
-begin_comment
-comment|/* misc */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -887,7 +723,7 @@ begin_define
 define|#
 directive|define
 name|TRUE
-value|(-1)
+value|1
 end_define
 
 begin_endif
@@ -914,12 +750,23 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* types/structures */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|caddr_t
+name|KBDC
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* function prototypes */
 end_comment
 
 begin_decl_stmt
-name|int
-name|wait_while_controller_busy
+name|KBDC
+name|kbdc_open
 name|__P
 argument_list|(
 operator|(
@@ -932,12 +779,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|wait_for_data
+name|kbdc_lock
 name|__P
 argument_list|(
 operator|(
+name|KBDC
+name|kbdc
+operator|,
 name|int
-name|port
+name|lock
 operator|)
 argument_list|)
 decl_stmt|;
@@ -945,25 +795,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|wait_for_kbd_data
+name|kbdc_data_ready
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|wait_for_aux_data
-name|__P
-argument_list|(
-operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -975,8 +812,8 @@ name|write_controller_command
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -991,8 +828,8 @@ name|write_controller_data
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1007,8 +844,8 @@ name|write_kbd_command
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1023,8 +860,8 @@ name|write_aux_command
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1039,8 +876,8 @@ name|send_kbd_command
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1055,8 +892,8 @@ name|send_aux_command
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1071,8 +908,8 @@ name|send_kbd_command_and_data
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1090,8 +927,8 @@ name|send_aux_command_and_data
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|c
@@ -1109,8 +946,8 @@ name|read_controller_data
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1122,8 +959,8 @@ name|read_kbd_data
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1135,8 +972,8 @@ name|read_kbd_data_no_wait
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1148,8 +985,21 @@ name|read_aux_data
 name|__P
 argument_list|(
 operator|(
+name|KBDC
+name|kbdc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|port
+name|read_aux_data_no_wait
+name|__P
+argument_list|(
+operator|(
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1161,8 +1011,8 @@ name|empty_kbd_buffer
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|t
@@ -1177,8 +1027,8 @@ name|empty_aux_buffer
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|t
@@ -1193,8 +1043,8 @@ name|empty_both_buffers
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|t
@@ -1209,8 +1059,8 @@ name|reset_kbd
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1222,8 +1072,8 @@ name|reset_aux_dev
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1235,8 +1085,8 @@ name|test_controller
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1248,8 +1098,8 @@ name|test_kbd_port
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1261,8 +1111,50 @@ name|test_aux_port
 name|__P
 argument_list|(
 operator|(
+name|KBDC
+name|kbdc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|port
+name|kbdc_get_device_mask
+name|__P
+argument_list|(
+operator|(
+name|KBDC
+name|kbdc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|kbdc_set_device_mask
+name|__P
+argument_list|(
+operator|(
+name|KBDC
+name|kbdc
+operator|,
+name|int
+name|mask
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|get_controller_command_byte
+name|__P
+argument_list|(
+operator|(
+name|KBDC
+name|kbdc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1274,8 +1166,8 @@ name|set_controller_command_byte
 name|__P
 argument_list|(
 operator|(
-name|int
-name|port
+name|KBDC
+name|kbdc
 operator|,
 name|int
 name|command
