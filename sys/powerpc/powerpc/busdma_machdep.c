@@ -117,6 +117,12 @@ directive|include
 file|<machine/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
 begin_struct
 struct|struct
 name|bus_dma_tag
@@ -2029,7 +2035,25 @@ parameter_list|,
 name|bus_dmasync_op_t
 name|op
 parameter_list|)
-block|{}
+block|{
+if|if
+condition|(
+operator|(
+name|op
+operator|==
+name|BUS_DMASYNC_PREREAD
+operator|)
+operator|||
+operator|(
+name|op
+operator|==
+name|BUS_DMASYNC_PREWRITE
+operator|)
+condition|)
+name|powerpc_mb
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 end_unit
