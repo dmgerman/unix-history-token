@@ -2848,6 +2848,8 @@ name|DMAADDR
 argument_list|(
 name|dma
 argument_list|,
+name|offset
+operator|+
 name|curlen
 operator|-
 literal|1
