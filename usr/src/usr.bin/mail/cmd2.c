@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	1.3 %G%"
+literal|"@(#)cmd2.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1428,6 +1428,8 @@ operator|->
 name|m_flag
 operator||=
 name|MDELETED
+operator||
+name|MTOUCH
 expr_stmt|;
 name|mp
 operator|->
@@ -1438,6 +1440,8 @@ operator|(
 name|MPRESERVE
 operator||
 name|MSAVED
+operator||
+name|MBOX
 operator|)
 expr_stmt|;
 name|last
