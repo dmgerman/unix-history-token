@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -105,7 +105,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * mount flags.  * M_MLOCK lock the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
+comment|/*  * Mount flags.  */
 end_comment
 
 begin_define
@@ -133,30 +133,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_MLOCK
-value|0x04
-end_define
-
-begin_comment
-comment|/* lock so that subtree is stable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_MWAIT
-value|0x08
-end_define
-
-begin_comment
-comment|/* someone is waiting for lock */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_NOEXEC
-value|0x10
+value|0x04
 end_define
 
 begin_comment
@@ -167,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|M_NOSUID
-value|0x20
+value|0x08
 end_define
 
 begin_comment
@@ -178,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|M_NODEV
-value|0x40
+value|0x10
 end_define
 
 begin_comment
@@ -212,28 +190,30 @@ comment|/* exported read only */
 end_comment
 
 begin_comment
-comment|/*  * Set/clear the M_MLOCK  */
+comment|/*  * filesystem control flags.  *  * M_MLOCK lock the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VFSLOCK
-parameter_list|(
-name|mp
-parameter_list|)
-value|{ \ 	while ((mp)->m_flag& M_MLOCK) { \ 		(mp)->m_flag |= M_MWAIT; \ 		(void) sleep((caddr_t)(mp), PVFS); \ 	} \ 	(mp)->m_flag |= M_MLOCK; \ }
+name|M_MLOCK
+value|0x1000
 end_define
+
+begin_comment
+comment|/* lock so that subtree is stable */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|VFSUNLOCK
-parameter_list|(
-name|mp
-parameter_list|)
-value|{ \ 	(mp)->m_flag&= ~M_MLOCK; \ 	if ((mp)->m_flag&M_MWAIT) { \ 		(mp)->m_flag&= ~M_MWAIT; \ 		wakeup((caddr_t)(mp)); \ 	} \ }
+name|M_MWAIT
+value|0x2000
 end_define
+
+begin_comment
+comment|/* someone is waiting for lock */
+end_comment
 
 begin_comment
 comment|/*  * Operations supported on mounted file system.  */
@@ -250,6 +230,15 @@ name|vfs_mount
 function_decl|)
 parameter_list|(
 comment|/* mp, path, data, ndp */
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|vfs_start
+function_decl|)
+parameter_list|(
+comment|/* mp, flags */
 parameter_list|)
 function_decl|;
 name|int
@@ -330,6 +319,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|VFS_START
+parameter_list|(
+name|MP
+parameter_list|,
+name|FLAGS
+parameter_list|)
+value|(*(MP)->m_op->vfs_start)(MP, FLAGS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_UNMOUNT
 parameter_list|(
 name|MP
@@ -348,7 +349,7 @@ name|MP
 parameter_list|,
 name|VPP
 parameter_list|)
-value|(*(MP)->m_op->vfs_root)(MP,VPP)
+value|(*(MP)->m_op->vfs_root)(MP, VPP)
 end_define
 
 begin_define
@@ -441,7 +442,7 @@ begin_define
 define|#
 directive|define
 name|MNAMELEN
-value|32
+value|90
 end_define
 
 begin_comment
@@ -495,7 +496,7 @@ comment|/* file system id */
 name|long
 name|f_spare
 index|[
-literal|6
+literal|9
 index|]
 decl_stmt|;
 comment|/* spare for later */
@@ -545,15 +546,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MOUNT_PC
+name|MOUNT_MFS
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
+name|MOUNT_PC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOUNT_MAXTYPE
-value|3
+value|4
 end_define
 
 begin_comment
@@ -600,6 +608,40 @@ name|fhandle
 name|fhandle_t
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MFS
+end_ifdef
+
+begin_comment
+comment|/*  * Arguments to mount MFS  */
+end_comment
+
+begin_struct
+struct|struct
+name|mfs_args
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|caddr_t
+name|base
+decl_stmt|;
+name|u_long
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+endif|MFS
+end_endif
 
 begin_ifdef
 ifdef|#
