@@ -143,12 +143,6 @@ directive|include
 file|"ipsend.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ipf.h"
-end_include
-
 begin_if
 if|#
 directive|if
