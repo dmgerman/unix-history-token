@@ -8467,8 +8467,12 @@ index|[]
 init|=
 block|{
 operator|-
+literal|1
+operator|*
 name|PAGE_SIZE
 block|,
+literal|1
+operator|*
 name|PAGE_SIZE
 block|,
 operator|-
@@ -8488,6 +8492,7 @@ block|,
 literal|3
 operator|*
 name|PAGE_SIZE
+block|,
 operator|-
 literal|4
 operator|*
