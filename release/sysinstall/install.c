@@ -2910,6 +2910,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|int
+name|kstat
+decl_stmt|;
 comment|/* All of this is done only as init, just to be safe */
 if|if
 condition|(
@@ -2989,6 +2996,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|kstat
+operator|=
 name|kget
 argument_list|(
 literal|"/boot/kernel.conf"
@@ -3002,19 +3011,7 @@ literal|"to it.  See the debug screen (ALT-F2) for details."
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|file_readable
-argument_list|(
-literal|"/boot/kernel.conf"
-argument_list|)
-condition|)
-block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -3038,6 +3035,11 @@ argument_list|,
 literal|"# -- sysinstall generated deltas -- #\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|kstat
+condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -3062,8 +3064,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 endif|#
 directive|endif
