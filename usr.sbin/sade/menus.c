@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.51 1996/04/23 01:29:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.52 1996/04/25 17:31:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1891,227 +1891,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|int
-name|whichMedia
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|mediaDevice
-condition|)
-return|return
-name|FALSE
-return|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"1 CDROM"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_CDROM
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"2 DOS"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_DOS
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"3 File System"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_UFS
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"4 Floppy"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_FLOPPY
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"5 FTP"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_FTP
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|variable_get
-argument_list|(
-name|VAR_FTP_STATE
-argument_list|)
-argument_list|,
-literal|"active"
-argument_list|)
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"6 FTP Passive"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_FTP
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|variable_get
-argument_list|(
-name|VAR_FTP_STATE
-argument_list|)
-argument_list|,
-literal|"passive"
-argument_list|)
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"7 NFS"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_NFS
-condition|)
-return|return
-name|TRUE
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"8 Tape"
-argument_list|)
-operator|&&
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_TAPE
-condition|)
-return|return
-name|TRUE
-return|;
-return|return
-name|FALSE
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/* The media selection menu */
 end_comment
@@ -2121,7 +1900,7 @@ name|DMenu
 name|MenuMedia
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -2139,7 +1918,7 @@ literal|"1 CDROM"
 block|,
 literal|"Install from a FreeBSD CDROM"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetCDROM
 block|}
@@ -2149,7 +1928,7 @@ literal|"2 DOS"
 block|,
 literal|"Install from a DOS partition"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetDOS
 block|}
@@ -2159,7 +1938,7 @@ literal|"3 File System"
 block|,
 literal|"Install from an existing filesystem"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetUFS
 block|}
@@ -2169,7 +1948,7 @@ literal|"4 Floppy"
 block|,
 literal|"Install from a floppy disk set"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetFloppy
 block|}
@@ -2179,7 +1958,7 @@ literal|"5 FTP"
 block|,
 literal|"Install from an FTP server"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetFTPActive
 block|}
@@ -2189,7 +1968,7 @@ literal|"6 FTP Passive"
 block|,
 literal|"Install from an FTP server through a firewall"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetFTPPassive
 block|}
@@ -2199,7 +1978,7 @@ literal|"7 NFS"
 block|,
 literal|"Install over NFS"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetNFS
 block|}
@@ -2209,7 +1988,7 @@ literal|"8 Tape"
 block|,
 literal|"Install from SCSI or QIC tape"
 block|,
-name|whichMedia
+name|NULL
 block|,
 name|mediaSetTape
 block|}
@@ -5119,7 +4898,7 @@ name|DMenu
 name|MenuNTP
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
