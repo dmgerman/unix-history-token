@@ -209,8 +209,10 @@ literal|"unable to allocate inode block"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|disk
@@ -330,7 +332,9 @@ operator|=
 name|dp1
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 case|case
 literal|2
@@ -367,7 +371,9 @@ operator|=
 name|dp2
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 break|break;
@@ -380,8 +386,10 @@ literal|"unknown UFS filesystem type"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function

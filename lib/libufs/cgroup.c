@@ -106,6 +106,7 @@ name|disk
 parameter_list|)
 block|{
 return|return
+operator|(
 name|cgread1
 argument_list|(
 name|disk
@@ -115,6 +116,7 @@ operator|->
 name|d_ccg
 operator|++
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -157,7 +159,9 @@ name|fs_ncg
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|ccg
@@ -219,8 +223,10 @@ literal|"unable to read cylinder group"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|disk
@@ -230,7 +236,9 @@ operator|=
 name|c
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
