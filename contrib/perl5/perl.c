@@ -10351,6 +10351,32 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|SITEARCH_EXP
+argument|incpush(SITEARCH_EXP, FALSE);
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SITELIB_EXP
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+argument|incpush(SITELIB_EXP, TRUE);
+else|#
+directive|else
+argument|incpush(SITELIB_EXP, FALSE);
+endif|#
+directive|endif
+endif|#
+directive|endif
+argument|if (!PL_tainting) 	incpush(
+literal|"."
+argument|, FALSE);
+ifdef|#
+directive|ifdef
 name|ARCHLIB_EXP
 argument|incpush(ARCHLIB_EXP, FALSE);
 endif|#
@@ -10376,32 +10402,7 @@ directive|else
 argument|incpush(PRIVLIB_EXP, FALSE);
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|SITEARCH_EXP
-argument|incpush(SITEARCH_EXP, FALSE);
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SITELIB_EXP
-if|#
-directive|if
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-argument|incpush(SITELIB_EXP, TRUE);
-else|#
-directive|else
-argument|incpush(SITELIB_EXP, FALSE);
-endif|#
-directive|endif
-endif|#
-directive|endif
-argument|if (!PL_tainting) 	incpush(
-literal|"."
-argument|, FALSE); }
+argument|}
 if|#
 directive|if
 name|defined
