@@ -911,6 +911,32 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"initpbuf with bufobj"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"initpbuf with vp"
+operator|)
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_rcred
@@ -1336,6 +1362,32 @@ operator|=
 name|NOCRED
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"relpbuf with vp"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"relpbuf with bufobj"
+operator|)
+argument_list|)
+expr_stmt|;
 name|BUF_UNLOCK
 argument_list|(
 name|bp
@@ -1435,6 +1487,19 @@ name|NULL
 argument_list|,
 operator|(
 literal|"pbgetvp: not free"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"pbgetvp: not free (bufobj)"
 operator|)
 argument_list|)
 expr_stmt|;
