@@ -21,6 +21,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,7 +59,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|__uint32_t
 name|gid_t
 typedef|;
 end_typedef
