@@ -20,8 +20,22 @@ name|_SYS_ACL_H
 end_define
 
 begin_comment
-comment|/*  * POSIX.1e ACL types and related constants  */
+comment|/*  * POSIX.1e ACL types and related constants.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX1E_ACL_ACCESS_EXTATTR_NAME
+value|"$posix1e.acl_access"
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSIX1E_ACL_DEFAULT_EXTATTR_NAME
+value|"$posix1e.acl_default"
+end_define
 
 begin_define
 define|#
@@ -116,7 +130,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Possible valid values for a_tag of acl_entry_t  */
+comment|/*  * Possible valid values for a_tag of acl_entry_t.  */
 end_comment
 
 begin_define
@@ -169,7 +183,7 @@ value|ACL_OTHER
 end_define
 
 begin_comment
-comment|/*  * Possible valid values a_type_t arguments  */
+comment|/*  * Possible valid values a_type_t arguments.  */
 end_comment
 
 begin_define
@@ -215,7 +229,7 @@ value|0x00000005
 end_define
 
 begin_comment
-comment|/*  * Possible flags in a_perm field  */
+comment|/*  * Possible flags in a_perm field.  */
 end_comment
 
 begin_define
@@ -267,7 +281,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Storage for ACLs and support structures  */
+comment|/*  * Storage for ACLs and support structures.  */
 end_comment
 
 begin_ifdef
@@ -299,7 +313,7 @@ comment|/* !_KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Syscall interface -- use the library calls instead as the syscalls  * have strict acl entry ordering requirements  */
+comment|/*  * Syscall interface -- use the library calls instead as the syscalls  * have strict acl entry ordering requirements.  */
 end_comment
 
 begin_function_decl
@@ -447,7 +461,7 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
-comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * _np calls are local extensions that reflect an environment capable of  * opening file descriptors of directories, and allowing additional  * ACL type for different file systems (i.e., AFS)  */
+comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * _np calls are local extensions that reflect an environment capable of  * opening file descriptors of directories, and allowing additional  * ACL type for different file systems (i.e., AFS).  */
 name|__BEGIN_DECLS
 name|int
 name|acl_delete_fd_np
