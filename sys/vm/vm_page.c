@@ -5229,12 +5229,6 @@ name|PG_BUSY
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_wakeup
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/*unbusy the page */
 block|}
 end_function
 
