@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: linux_genassym.c,v 1.4 1997/02/22 09:38:21 peter Exp $ */
+comment|/* $Id: linux_genassym.c,v 1.5 1997/07/20 16:05:56 bde Exp $ */
 end_comment
 
 begin_include
@@ -22,7 +22,6 @@ file|<i386/linux/linux.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
 name|int
 decl|main
 name|__P
