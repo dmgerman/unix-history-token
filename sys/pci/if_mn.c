@@ -1864,6 +1864,17 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+name|NG_RESPOND_MSG
+argument_list|(
+name|i
+argument_list|,
+name|node
+argument_list|,
+name|item
+argument_list|,
+name|resp
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|msg
