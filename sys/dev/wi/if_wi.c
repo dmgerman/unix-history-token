@@ -12020,11 +12020,6 @@ name|wi_use_wep
 condition|)
 block|{
 comment|/* Do host encryption. */
-name|printf
-argument_list|(
-literal|"XXX: host encrypt not implemented for 802.3\n"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
