@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infcodes.c -- process literals and length/distance pairs  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* infcodes.c -- process literals and length/distance pairs  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_include
@@ -71,15 +71,8 @@ name|bits
 value|word.what.Bits
 end_define
 
-begin_comment
-comment|/* inflate codes private state */
-end_comment
-
-begin_struct
-struct|struct
-name|inflate_codes_state
-block|{
-comment|/* mode */
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 comment|/* waiting for "i:"=input, "o:"=output, "x:"=nothing */
@@ -113,8 +106,22 @@ comment|/* x: got eob and all data flushed */
 name|BADCODE
 block|}
 comment|/* x: got error */
+name|inflate_codes_mode
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* inflate codes private state */
+end_comment
+
+begin_struct
+struct|struct
+name|inflate_codes_state
+block|{
+comment|/* mode */
+name|inflate_codes_mode
 name|mode
-enum|;
+decl_stmt|;
 comment|/* current inflate_codes mode */
 comment|/* mode dependent information */
 name|uInt
@@ -1244,6 +1251,15 @@ name|Z_STREAM_ERROR
 expr_stmt|;
 name|LEAVE
 block|}
+ifdef|#
+directive|ifdef
+name|NEED_DUMMY_RETURN
+return|return
+name|Z_STREAM_ERROR
+return|;
+comment|/* Some dumb compilers complain without this */
+endif|#
+directive|endif
 block|}
 end_function
 
