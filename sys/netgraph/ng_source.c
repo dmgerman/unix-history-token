@@ -579,6 +579,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|ng_source_set_autosrc
+parameter_list|(
+name|sc_p
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Node constructor  */
 end_comment
