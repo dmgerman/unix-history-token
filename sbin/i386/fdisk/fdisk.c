@@ -2273,7 +2273,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tbeg: cyl %d/ sector %d/ head %d;\n\tend: cyl %d/ sector %d/ head %d\n"
+literal|"\tbeg: cyl %d/ head %d/ sector %d;\n\tend: cyl %d/ head %d/ sector %d\n"
 argument_list|,
 name|DPCYL
 argument_list|(
@@ -2286,16 +2286,16 @@ operator|->
 name|dp_ssect
 argument_list|)
 argument_list|,
+name|partp
+operator|->
+name|dp_shd
+argument_list|,
 name|DPSECT
 argument_list|(
 name|partp
 operator|->
 name|dp_ssect
 argument_list|)
-argument_list|,
-name|partp
-operator|->
-name|dp_shd
 argument_list|,
 name|DPCYL
 argument_list|(
@@ -2308,16 +2308,16 @@ operator|->
 name|dp_esect
 argument_list|)
 argument_list|,
+name|partp
+operator|->
+name|dp_ehd
+argument_list|,
 name|DPSECT
 argument_list|(
 name|partp
 operator|->
 name|dp_esect
 argument_list|)
-argument_list|,
-name|partp
-operator|->
-name|dp_ehd
 argument_list|)
 expr_stmt|;
 block|}
