@@ -21,6 +21,12 @@ directive|include
 file|<getarg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
@@ -28,6 +34,11 @@ literal|"$Id: compile_et.c,v 1.12 1999/04/01 09:13:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
