@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)dir.c	3.1 (Berkeley) %G%"
+literal|"@(#)dir.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -695,6 +695,8 @@ condition|(
 name|dofix
 argument_list|(
 name|idesc
+argument_list|,
+literal|"DIRECTORY CORRUPTED"
 argument_list|)
 condition|)
 name|dirty
@@ -852,6 +854,8 @@ condition|(
 name|dofix
 argument_list|(
 name|idesc
+argument_list|,
+literal|"DIRECTORY CORRUPTED"
 argument_list|)
 condition|)
 name|dirty
@@ -1124,6 +1128,9 @@ argument_list|(
 literal|"%s=%s\n"
 argument_list|,
 name|DIRCT
+argument_list|(
+name|dp
+argument_list|)
 condition|?
 literal|"DIR"
 else|:
@@ -1240,6 +1247,9 @@ name|lfname
 else|:
 operator|(
 name|DIRCT
+argument_list|(
+name|dp
+argument_list|)
 condition|?
 literal|"DIR"
 else|:
@@ -1286,8 +1296,10 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|preendie
-argument_list|()
+name|pfatal
+argument_list|(
+literal|"LINK COUNT INCREASING"
+argument_list|)
 expr_stmt|;
 block|}
 name|printf
@@ -1634,6 +1646,9 @@ return|;
 name|lostdir
 operator|=
 name|DIRCT
+argument_list|(
+name|dp
+argument_list|)
 expr_stmt|;
 name|pwarn
 argument_list|(
@@ -1730,7 +1745,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|srchname
+name|idesc
+operator|.
+name|id_name
 operator|=
 name|lfname
 expr_stmt|;
@@ -1816,6 +1833,9 @@ name|NULL
 operator|||
 operator|!
 name|DIRCT
+argument_list|(
+name|dp
+argument_list|)
 operator|||
 name|statemap
 index|[

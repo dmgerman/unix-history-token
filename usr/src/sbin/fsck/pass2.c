@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass2.c	3.1 (Berkeley) %G%"
+literal|"@(#)pass2.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1235,6 +1235,9 @@ name|d_ino
 index|]
 operator|=
 name|DIRCT
+argument_list|(
+name|dp
+argument_list|)
 condition|?
 name|DSTATE
 else|:

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass3.c	3.1 (Berkeley) %G%"
+literal|"@(#)pass3.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,7 +142,9 @@ name|id_func
 operator|=
 name|findino
 expr_stmt|;
-name|srchname
+name|idesc
+operator|.
+name|id_name
 operator|=
 literal|".."
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fsck.h	3.1 (Berkeley) %G% */
+comment|/* @(#)fsck.h	3.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -83,27 +83,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|MAXNINDIR
-value|(MAXBSIZE / sizeof (daddr_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXINOPB
-value|(MAXBSIZE / sizeof (struct dinode))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPERB
-value|(MAXBSIZE / sizeof(short))
-end_define
-
-begin_define
-define|#
-directive|define
 name|USTATE
 value|0
 end_define
@@ -165,21 +144,52 @@ begin_define
 define|#
 directive|define
 name|ALLOC
-value|((dp->di_mode& IFMT) != 0)
+parameter_list|(
+name|dip
+parameter_list|)
+value|(((dip)->di_mode& IFMT) != 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIRCT
-value|((dp->di_mode& IFMT) == IFDIR)
+parameter_list|(
+name|dip
+parameter_list|)
+value|(((dip)->di_mode& IFMT) == IFDIR)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPECIAL
-value|((dp->di_mode& IFMT) == IFBLK || (dp->di_mode& IFMT) == IFCHR)
+parameter_list|(
+name|dip
+parameter_list|)
+define|\
+value|(((dip)->di_mode& IFMT) == IFBLK || ((dip)->di_mode& IFMT) == IFCHR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXNINDIR
+value|(MAXBSIZE / sizeof (daddr_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXINOPB
+value|(MAXBSIZE / sizeof (struct dinode))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPERB
+value|(MAXBSIZE / sizeof(short))
 end_define
 
 begin_struct
@@ -384,14 +394,28 @@ begin_comment
 comment|/* file descriptors for filesys */
 end_comment
 
+begin_enum
+enum|enum
+name|fixstate
+block|{
+name|DONTKNOW
+block|,
+name|NOFIX
+block|,
+name|FIX
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|inodesc
 block|{
-name|char
-name|id_type
+name|enum
+name|fixstate
+name|id_fix
 decl_stmt|;
-comment|/* type of descriptor, DATA or ADDR */
+comment|/* policy on fixing errors */
 name|int
 function_decl|(
 modifier|*
@@ -432,18 +456,16 @@ name|DIRECT
 modifier|*
 name|id_dirp
 decl_stmt|;
-comment|/* for data nodes, ptr to current entry */
-enum|enum
-block|{
-name|DONTKNOW
-block|,
-name|NOFIX
-block|,
-name|FIX
-block|}
-name|id_fix
-enum|;
-comment|/* policy on fixing errors */
+comment|/* for DATA nodes, ptr to current entry */
+name|char
+modifier|*
+name|id_name
+decl_stmt|;
+comment|/* for DATA nodes, name to find or enter */
+name|char
+name|id_type
+decl_stmt|;
+comment|/* type of descriptor, DATA or ADDR */
 block|}
 struct|;
 end_struct
@@ -590,16 +612,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|rplyflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* any questions asked? */
-end_comment
-
-begin_decl_stmt
-name|char
 name|hotroot
 decl_stmt|;
 end_decl_stmt
@@ -664,17 +676,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
-name|srchname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name being searched for in dir */
-end_comment
-
-begin_decl_stmt
-name|char
 name|pathname
 index|[
 name|BUFSIZ
@@ -705,11 +706,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|lfname
+name|daddr_t
+name|fmax
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of blocks in the volume */
+end_comment
 
 begin_decl_stmt
 name|ino_t
@@ -738,7 +742,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lost& found directory */
+comment|/* lost& found directory inode number */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|lfname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lost& found directory name */
 end_comment
 
 begin_decl_stmt
@@ -812,16 +827,6 @@ name|daddr_t
 name|n_bad
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|fmax
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of blocks in the volume */
-end_comment
 
 begin_decl_stmt
 name|daddr_t
