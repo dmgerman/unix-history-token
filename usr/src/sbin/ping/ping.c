@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	5.3 (Berkeley) %G%"
+literal|"@(#)ping.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,8 +1941,8 @@ name|icp
 operator|->
 name|icmp_seq
 operator|=
-operator|++
 name|ntransmitted
+operator|++
 expr_stmt|;
 name|icp
 operator|->
