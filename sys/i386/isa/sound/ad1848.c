@@ -51,12 +51,24 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|CONFIG_CS4232
 argument_list|)
 end_if
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isa_driver
+name|cssdriver
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|extern

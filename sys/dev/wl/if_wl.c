@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.11 1998/02/20 13:11:47 bde Exp $ */
+comment|/* $Id: if_wl.c,v 1.12 1998/06/07 17:10:38 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -390,19 +390,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|wlintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* no, not static */
-end_comment
 
 begin_decl_stmt
 name|struct
