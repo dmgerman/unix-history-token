@@ -1208,9 +1208,6 @@ name|scp
 operator|->
 name|devinfo
 expr_stmt|;
-name|MIDI_DROP_GIANT_NOSWITCH
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1237,9 +1234,6 @@ name|midi_intr
 argument_list|(
 name|devinfo
 argument_list|)
-expr_stmt|;
-name|MIDI_PICKUP_GIANT
-argument_list|()
 expr_stmt|;
 block|}
 end_function
