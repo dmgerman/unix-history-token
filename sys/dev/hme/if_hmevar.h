@@ -10,14 +10,14 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Number of receive and transmit descriptors. For each receive descriptor,  * an mbuf cluster is allocated and set up to receive a packet, and a dma map  * is created. Therefore, this number should not be too high to not waste  * memory.  * TX descriptors have less static cost (a dma map is allocated which could  * cause bounce buffers to be reserved; other that that, the only required  * memory is sizeof(struct hme_txdesc)).  * Both must be a multiple of 16, and<= 128.  */
+comment|/*  * Number of receive and transmit descriptors. For each receive descriptor,  * an mbuf cluster is allocated and set up to receive a packet, and a dma map  * is created. Therefore, this number should not be too high to not waste  * memory.  * TX descriptors have less static cost (a dma map is allocated which could  * cause bounce buffers to be reserved; other that that, the only required  * memory is sizeof(struct hme_txdesc)).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HME_NRXDESC
-value|32
+value|128
 end_define
 
 begin_define
