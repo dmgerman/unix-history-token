@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: misc.c,v 1.4 1997/10/01 06:30:01 charnier Exp $"
+literal|"$Id: misc.c,v 1.5 1998/06/05 14:43:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,9 @@ block|,
 name|NEEDVALUE
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|MD5
 block|{
 literal|"md5digest"
 block|,
@@ -175,6 +178,8 @@ block|,
 name|NEEDVALUE
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"mode"
 block|,
@@ -199,6 +204,32 @@ block|,
 literal|0
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|RMD160
+block|{
+literal|"ripemd160digest"
+block|,
+name|F_RMD160
+block|,
+name|NEEDVALUE
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SHA1
+block|{
+literal|"sha1digest"
+block|,
+name|F_SHA1
+block|,
+name|NEEDVALUE
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"size"
 block|,

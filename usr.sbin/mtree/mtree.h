@@ -73,6 +73,16 @@ decl_stmt|;
 comment|/* MD5 digest */
 name|char
 modifier|*
+name|sha1digest
+decl_stmt|;
+comment|/* SHA-1 digest */
+name|char
+modifier|*
+name|rmd160digest
+decl_stmt|;
+comment|/* RIPEMD160 digest */
+name|char
+modifier|*
 name|slink
 decl_stmt|;
 comment|/* symbolic link reference */
@@ -182,6 +192,16 @@ name|F_NOCHANGE
 value|0x10000
 comment|/* If owner/mode "wrong", do */
 comment|/* not change */
+define|#
+directive|define
+name|F_SHA1
+value|0x20000
+comment|/* SHA-1 digest */
+define|#
+directive|define
+name|F_RMD160
+value|0x40000
+comment|/* RIPEMD160 digest */
 name|u_int
 name|flags
 decl_stmt|;
