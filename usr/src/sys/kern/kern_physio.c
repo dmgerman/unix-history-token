@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -444,36 +444,15 @@ name|b_addr
 operator|=
 name|addr
 expr_stmt|;
-while|while
-condition|(
-name|nbytes
-operator|>
-literal|0
-condition|)
-block|{
-name|bp
-operator|->
-name|b_blkno
-operator|=
-name|dblkno
-expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|vp
-operator|->
-name|v_rdev
-expr_stmt|;
 if|if
 condition|(
 name|bp
 operator|->
 name|b_vp
 condition|)
-name|brelvp
+name|panic
 argument_list|(
-name|bp
+literal|"swap: active vp"
 argument_list|)
 expr_stmt|;
 name|VREF
@@ -486,6 +465,27 @@ operator|->
 name|b_vp
 operator|=
 name|vp
+expr_stmt|;
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|vp
+operator|->
+name|v_rdev
+expr_stmt|;
+while|while
+condition|(
+name|nbytes
+operator|>
+literal|0
+condition|)
+block|{
+name|bp
+operator|->
+name|b_blkno
+operator|=
+name|dblkno
 expr_stmt|;
 name|bp
 operator|->
@@ -658,6 +658,11 @@ name|B_UAREA
 operator||
 name|B_DIRTY
 operator|)
+expr_stmt|;
+name|brelvp
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 name|freeswbuf
 argument_list|(
