@@ -193,7 +193,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|,
 name|uma_ctor
