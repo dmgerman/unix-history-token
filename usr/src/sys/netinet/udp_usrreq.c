@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)udp_usrreq.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)udp_usrreq.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1656,19 +1656,14 @@ break|break;
 case|case
 name|PRU_ABORT
 case|:
-name|in_pcbdetach
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|sofree
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|in_pcbdetach
+argument_list|(
+name|inp
 argument_list|)
 expr_stmt|;
 break|break;
