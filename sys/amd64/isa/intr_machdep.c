@@ -885,7 +885,11 @@ operator|&&
 name|mca_bus_nmi
 argument_list|()
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 if|if
