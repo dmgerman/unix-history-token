@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.18 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,18 +437,6 @@ condition|)
 goto|goto
 name|enter
 goto|;
-comment|/* name encountered as function, not yet defined */
-if|if
-condition|(
-name|stp
-operator|==
-name|UNDEF
-operator|||
-name|stp
-operator|==
-name|FARG
-condition|)
-block|{
 if|if
 condition|(
 name|blevel
@@ -531,10 +519,19 @@ name|TYPEDEF
 case|:
 empty_stmt|;
 block|}
+if|if
+condition|(
+name|stp
+operator|==
+name|UNDEF
+operator|||
+name|stp
+operator|==
+name|FARG
+condition|)
 goto|goto
 name|enter
 goto|;
-block|}
 if|if
 condition|(
 name|type
@@ -1202,9 +1199,6 @@ operator|&
 name|SNONUNIQ
 condition|)
 block|{
-name|int
-name|k
-decl_stmt|;
 name|cname
 operator|=
 name|p
@@ -1226,16 +1220,16 @@ directive|ifndef
 name|FLEXNAMES
 for|for
 control|(
-name|k
+name|temp
 operator|=
 literal|1
 init|;
-name|k
+name|temp
 operator|<=
 name|NCHNAM
 condition|;
 operator|++
-name|k
+name|temp
 control|)
 block|{
 if|if
@@ -1565,6 +1559,9 @@ operator|&
 name|FIELD
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|falloc
 argument_list|(
 name|p
@@ -1594,6 +1591,9 @@ block|{
 case|case
 name|AUTO
 case|:
+operator|(
+name|void
+operator|)
 name|oalloc
 argument_list|(
 name|p
@@ -1654,6 +1654,9 @@ operator|==
 name|LABEL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|locctr
 argument_list|(
 name|PROG
@@ -1697,6 +1700,9 @@ case|:
 case|case
 name|MOS
 case|:
+operator|(
+name|void
+operator|)
 name|oalloc
 argument_list|(
 name|p
@@ -2019,6 +2025,9 @@ name|swp
 operator|=
 name|swtab
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|locctr
 argument_list|(
 name|DATA
@@ -2203,6 +2212,9 @@ block|}
 name|cendarg
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|locctr
 argument_list|(
 name|PROG
@@ -2710,7 +2722,7 @@ name|high
 operator|,
 name|low
 expr_stmt|;
-comment|/* paramstack contains: 		paramstack[ oparam ] = previous instruct 		paramstack[ oparam+1 ] = previous class 		paramstk[ oparam+2 ] = previous strucoff 		paramstk[ oparam+3 ] = structure name  		paramstk[ oparam+4, ... ]  = member stab indices  		*/
+comment|/* paramstk contains: 		paramstk[ oparam ] = previous instruct 		paramstk[ oparam+1 ] = previous class 		paramstk[ oparam+2 ] = previous strucoff 		paramstk[ oparam+3 ] = structure name  		paramstk[ oparam+4, ... ]  = member stab indices  		*/
 if|if
 condition|(
 operator|(
@@ -3594,7 +3606,7 @@ endif|#
 directive|endif
 argument|p =&stab[curid];  	iclass = p->sclass; 	if( curclass == EXTERN || curclass == FORTRAN ) iclass = EXTERN; 	switch( iclass ){  	case UNAME: 	case EXTERN: 		return; 	case AUTO: 	case REGISTER: 		break; 	case EXTDEF: 	case STATIC: 		ilocctr = ISARY(p->stype)?ADATA:DATA; 		if( nerrors ==
 literal|0
-argument|){ 			locctr( ilocctr ); 			defalign( talign( p->stype, p->sizoff ) ); 			defnam( p ); 			}  		}  	inoff =
+argument|){ 			(void) locctr( ilocctr ); 			defalign( talign( p->stype, p->sizoff ) ); 			defnam( p ); 			}  		}  	inoff =
 literal|0
 argument|; 	ibseen =
 literal|0
@@ -3685,7 +3697,7 @@ argument|; 		lxstr(
 literal|0
 argument|);
 comment|/* get the contents */
-argument|locctr( blevel==
+argument|(void) locctr( blevel==
 literal|0
 argument|?ilocctr:temp ); 		p = buildtree( STRING, NIL, NIL ); 		p->tn.rval = -l; 		return(p); 		} 	}  putbyte( v ){
 comment|/* simulate byte v appearing in a list of integer values */
@@ -3952,7 +3964,7 @@ argument|; 			} 		}
 ifdef|#
 directive|ifdef
 name|LCOMM
-comment|/* hack so stab will come at as LCSYM rather than STSYM */
+comment|/* hack so stab will come out as LCSYM rather than STSYM */
 argument|if (class == STATIC) { 		extern int stabLCSYM; 		stabLCSYM =
 literal|1
 argument|; 	}
@@ -4145,9 +4157,7 @@ argument|} 	}  struct symtab * mknonuniq(idindex) int *idindex; {
 comment|/* locate a symbol table entry for */
 comment|/* an occurrence of a nonunique structure member name */
 comment|/* or field */
-argument|register i; 	register struct symtab * sp; 	char *p
-argument_list|,
-argument|*q;  	sp =& stab[ i= *idindex ];
+argument|register i; 	register struct symtab * sp; 	char *q;  	sp =& stab[ i= *idindex ];
 comment|/* position search at old entry */
 argument|while( sp->stype != TNULL ){
 comment|/* locate unused entry */
@@ -4157,7 +4167,7 @@ argument|i =
 literal|0
 argument|; 			sp = stab; 			} 		else ++sp; 		if( i == *idindex ) cerror(
 literal|"Symbol table full"
-argument|); 		} 	sp->sflags = SNONUNIQ | SMOS; 	p = sp->sname; 	q = stab[*idindex].sname;
+argument|); 		} 	sp->sflags = SNONUNIQ | SMOS; 	q = stab[*idindex].sname;
 comment|/* old entry name */
 ifdef|#
 directive|ifdef
@@ -4177,9 +4187,9 @@ argument|*idindex = i;
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|for( i=
+argument|{ 		char *p = sp->sname; 		for( i=
 literal|1
-argument|; i<=NCHNAM; ++i ){
+argument|; i<=NCHNAM; ++i )
 comment|/* copy name */
 argument|if( *p++ = *q
 comment|/* assign */
@@ -4192,9 +4202,14 @@ argument|register char *p
 argument_list|,
 argument|*q; 	int i
 argument_list|,
-argument|j
-argument_list|,
-argument|ii; 	register struct symtab *sp;
+argument|ii;
+ifndef|#
+directive|ifndef
+name|FLEXNAMES
+argument|int j;
+endif|#
+directive|endif
+argument|register struct symtab *sp;
 comment|/* compute initial hash index */
 ifndef|#
 directive|ifndef
@@ -4313,9 +4328,9 @@ argument|;  	temp = lineno; 	aobeg();
 comment|/* step 1: remove entries */
 argument|while( chaintop-
 literal|1
-argument|> lev ){ 		register int type;  		p = schain[--chaintop]; 		schain[chaintop] =
+argument|> lev ){ 		p = schain[--chaintop]; 		schain[chaintop] =
 literal|0
-argument|; 		for( ; p; p = q ){ 			q = p->snext; 			type = p->stype; 			if( p->stype == TNULL || p->slevel<= lev ) 				cerror(
+argument|; 		for( ; p; p = q ){ 			q = p->snext; 			if( p->stype == TNULL || p->slevel<= lev ) 				cerror(
 literal|"schain botch"
 argument|); 			lineno = p->suse<
 literal|0
@@ -4388,15 +4403,13 @@ literal|"	%d hidden in %d\n"
 argument|, p-stab, q-stab );
 endif|#
 directive|endif
-argument|return( idname = q-stab ); 	}  unhide( p ) register struct symtab *p; { 	register struct symtab *q; 	register s
-argument_list|,
-argument|j;  	s = p->sflags& (SMOS|STAG); 	q = p;  	for(;;){  		if( q == stab ) q =&stab[SYMTSZ-
+argument|return( idname = q-stab ); 	}  unhide( p ) register struct symtab *p; { 	register struct symtab *q; 	register s;  	s = p->sflags& (SMOS|STAG); 	q = p;  	for(;;){  		if( q == stab ) q =&stab[SYMTSZ-
 literal|1
 argument|]; 		else --q;  		if( q == p ) break;  		if( (q->sflags&(SMOS|STAG)) == s ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|for( j =
+argument|register j; 			for( j =
 literal|0
 argument|; j<NCHNAM; ++j ) if( p->sname[j] != q->sname[j] ) break; 			if( j == NCHNAM ){
 comment|/* found the name */
