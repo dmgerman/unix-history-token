@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	6.2	83/09/29	*/
+comment|/*	ubareg.h	6.3	84/02/15	*/
 end_comment
 
 begin_comment
@@ -889,7 +889,7 @@ begin_define
 define|#
 directive|define
 name|NUBA750
-value|1
+value|2
 end_define
 
 begin_define
@@ -898,59 +898,6 @@ directive|define
 name|NUBA730
 value|1
 end_define
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXNUBA
-value|4
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|VAX750
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXNUBA
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXNUBA
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Symbolic addresses of UNIBUS memory for UBAs.  */
