@@ -505,7 +505,7 @@ block|}
 comment|/* 	 * XXX we should call SAL_FREQ_BASE_INTERVAL_TIMER here. 	 */
 name|cycles_per_sec
 operator|=
-literal|700000000
+literal|70000000
 expr_stmt|;
 name|ia64_set_itm
 argument_list|(
