@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -283,7 +283,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getpagesize
+name|ogetpagesize
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -360,14 +360,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gethostname
+name|ogethostname
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|sethostname
+name|osethostname
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -696,14 +696,14 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gethostid
+name|ogethostid
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|sethostid
+name|osethostid
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1097,7 +1097,7 @@ block|,
 comment|/*  63 = unused */
 literal|0
 block|,
-name|getpagesize
+name|ogetpagesize
 block|,
 comment|/*  64 = getpagesize */
 literal|0
@@ -1212,12 +1212,12 @@ block|,
 comment|/*  86 = getitimer */
 literal|2
 block|,
-name|gethostname
+name|ogethostname
 block|,
 comment|/*  87 = gethostname */
 literal|2
 block|,
-name|sethostname
+name|osethostname
 block|,
 comment|/*  88 = sethostname */
 literal|0
@@ -1487,12 +1487,12 @@ block|,
 comment|/* 141 = getpeername */
 literal|2
 block|,
-name|gethostid
+name|ogethostid
 block|,
 comment|/* 142 = gethostid */
 literal|2
 block|,
-name|sethostid
+name|osethostid
 block|,
 comment|/* 143 = sethostid */
 literal|2
