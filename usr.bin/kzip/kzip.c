@@ -1,7 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Copyright (C) 1993  Hannu Savolainen  * Ported to 386bsd by Serge Vakulenko  * based on tools/build.c by Linus Torvalds  * $Id: kzip.c,v 1.8 1997/03/29 04:30:19 imp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Copyright (C) 1993  Hannu Savolainen  * Ported to 386bsd by Serge Vakulenko  * based on tools/build.c by Linus Torvalds  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -75,21 +107,16 @@ comment|/* This is the limit because a kzip'ed kernel loads at 3Mb and 	 * ends 
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|Usage
-parameter_list|(
-name|char
-modifier|*
-name|prog
-parameter_list|)
+name|usage
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\n\t%s [-v] [ -l loadaddr] kernel\n"
-argument_list|,
-name|prog
+literal|"usage: kzip [-v] [ -l loadaddr] kernel\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -167,8 +194,6 @@ name|forceaddr
 init|=
 literal|0
 decl_stmt|,
-name|addr
-decl_stmt|,
 name|entry
 decl_stmt|;
 name|char
@@ -237,20 +262,13 @@ name|forceaddr
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Invalid load address!\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"invalid load address"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'v'
@@ -260,15 +278,9 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|Usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-break|break;
 block|}
 block|}
 if|if
@@ -281,13 +293,8 @@ operator|)
 operator|!=
 literal|1
 condition|)
-name|Usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|argc
 operator|-=
@@ -348,7 +355,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 name|kernname
 argument_list|)
@@ -382,21 +389,16 @@ argument_list|(
 name|hdr
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|size
 operator|=
 name|hdr
@@ -472,7 +474,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 name|obj
 argument_list|)
@@ -736,7 +738,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork()"
 argument_list|)
@@ -878,7 +880,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"waitpid(Pextract)"
 argument_list|)
@@ -892,11 +894,9 @@ condition|(
 name|status
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"extract returned %x\n"
+literal|"extract returned %x"
 argument_list|,
 name|status
 argument_list|)
@@ -934,11 +934,9 @@ condition|(
 name|status
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"gzip returned %x\n"
+literal|"gzip returned %x"
 argument_list|,
 name|status
 argument_list|)
@@ -962,7 +960,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"waitpid(Ppiggy)"
 argument_list|)
@@ -976,11 +974,9 @@ condition|(
 name|status
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"piggyback returned %x\n"
+literal|"piggyback returned %x"
 argument_list|,
 name|status
 argument_list|)
@@ -1013,7 +1009,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"cannot get size of compressed data"
 argument_list|)
@@ -1069,7 +1065,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork()"
 argument_list|)
@@ -1132,7 +1128,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"waitpid(Pld)"
 argument_list|)
@@ -1146,11 +1142,9 @@ condition|(
 name|status
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ld returned %x\n"
+literal|"ld returned %x"
 argument_list|,
 name|status
 argument_list|)
@@ -1180,7 +1174,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 name|obj
 argument_list|)
@@ -1215,7 +1209,7 @@ name|hdr
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 name|obj
 argument_list|)
@@ -1319,18 +1313,13 @@ argument_list|(
 name|hdr
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|hdr
@@ -1339,22 +1328,15 @@ name|a_magic
 operator|!=
 name|ZMAGIC
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"Bad magic in file %s, probably not a kernel\n"
+literal|"bad magic in file %s, probably not a kernel"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|lseek
@@ -1371,18 +1353,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|sz
 operator|=
 name|N_SYMOFF
@@ -1450,22 +1427,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Unexpected EOF\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unexpected EOF"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1626,18 +1600,13 @@ name|n
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"stdin"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -1647,20 +1616,13 @@ argument_list|(
 name|image
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Input too large\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"input too large"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 *      Output object header 	 */
 name|memset
 argument_list|(
