@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastcomm.c	5.6 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,6 +316,11 @@ name|fd
 argument_list|,
 operator|&
 name|sb
+argument_list|)
+expr_stmt|;
+name|setpassent
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -921,10 +926,6 @@ name|uid_t
 name|uid
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|_pw_stayopen
-decl_stmt|;
 specifier|static
 struct|struct
 name|ncache
@@ -958,10 +959,6 @@ name|ncache
 modifier|*
 name|cp
 decl_stmt|;
-name|_pw_stayopen
-operator|=
-literal|1
-expr_stmt|;
 name|cp
 operator|=
 name|c_uid
