@@ -127,6 +127,11 @@ comment|/* Error-Message */
 ifndef|#
 directive|ifndef
 name|NOINET6
+name|uint8_t
+modifier|*
+name|ipv6prefix
+decl_stmt|;
+comment|/* FRAMED IPv6 Prefix */
 name|struct
 name|sticky_route
 modifier|*
