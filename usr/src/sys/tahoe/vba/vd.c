@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.9	86/07/16	*/
+comment|/*	vd.c	1.10	86/10/28	*/
 end_comment
 
 begin_include
@@ -231,6 +231,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WRITE_PROTECT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|b_cylin
 value|b_resid
 end_define
@@ -376,7 +383,7 @@ name|int_expected
 range|:
 literal|1
 decl_stmt|;
-comment|/* expect an interupt */
+comment|/* expect an interrupt */
 name|u_int
 name|ctlr_started
 range|:
@@ -645,6 +652,10 @@ name|addr
 operator|->
 name|cdr_ccf
 operator|=
+name|CCF_SEN
+operator||
+name|CCF_DER
+operator||
 name|CCF_STS
 operator||
 name|XMD_32BIT
@@ -1226,7 +1237,7 @@ operator|>=
 name|nvddrv
 condition|)
 block|{
-comment|/* 		 * If reached here, a drive which is not defined in the  		 * 'vdst' tables is connected. Cannot set it's type. 		 */
+comment|/* 		 * If reached here, a drive which is not defined in the  		 * 'vdst' tables is connected. Cannot set its type. 		 */
 name|printf
 argument_list|(
 literal|"dk%d: unknown drive type\n"
@@ -1435,7 +1446,7 @@ operator|=
 operator|(
 name|char
 operator|)
-literal|4
+literal|5
 expr_stmt|;
 name|ci
 operator|->
@@ -1470,6 +1481,18 @@ name|type
 index|]
 operator|.
 name|nslip
+expr_stmt|;
+name|ci
+operator|->
+name|ctlr_dcb
+operator|.
+name|trail
+operator|.
+name|rstrail
+operator|.
+name|recovery
+operator|=
+literal|0x18f
 expr_stmt|;
 block|}
 else|else
@@ -1721,6 +1744,9 @@ operator|.
 name|ctlr_started
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"DELAY(5500000)..."
@@ -1731,6 +1757,8 @@ argument_list|(
 literal|5500000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|done
 goto|;
@@ -1773,19 +1801,9 @@ operator|!
 name|error
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"DELAY(%d)..."
-argument_list|,
-operator|(
-name|slave
-operator|*
-literal|5500000
-operator|)
-operator|+
-literal|62000000
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|DELAY
 argument_list|(
 operator|(
@@ -1797,6 +1815,8 @@ operator|+
 literal|62000000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|done
 label|:
@@ -2244,7 +2264,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"dk%d: %s\n"
+literal|"dk%d: %s<ntrak %d, ncyl %d, nsec %d>\n"
 argument_list|,
 name|vi
 operator|->
@@ -2253,6 +2273,24 @@ argument_list|,
 name|fs
 operator|->
 name|type_name
+argument_list|,
+name|ui
+operator|->
+name|info
+operator|.
+name|ntrak
+argument_list|,
+name|ui
+operator|->
+name|info
+operator|.
+name|ncyl
+argument_list|,
+name|ui
+operator|->
+name|info
+operator|.
+name|nsec
 argument_list|)
 expr_stmt|;
 comment|/* 	 * (60 / rpm) / (number of sectors per track * (bytes per sector / 2)) 	 */
@@ -3668,13 +3706,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vd%d: lost interupt, status %x"
+literal|"vd%d: lost interrupt, status %b"
 argument_list|,
 name|ctlr
 argument_list|,
 name|dcb
 operator|->
 name|operrsta
+argument_list|,
+name|ERRBITS
 argument_list|)
 expr_stmt|;
 if|if
@@ -4083,6 +4123,9 @@ break|break;
 case|case
 name|HARD_DATA_ERROR
 case|:
+case|case
+name|WRITE_PROTECT
+case|:
 name|vdhard_error
 argument_list|(
 name|ci
@@ -4333,14 +4376,25 @@ name|dcb
 operator|->
 name|operrsta
 operator|&
+name|WPTERR
+condition|)
+return|return
+operator|(
+name|WRITE_PROTECT
+operator|)
+return|;
+if|if
+condition|(
+name|dcb
+operator|->
+name|operrsta
+operator|&
 operator|(
 name|HCRCERR
 operator||
 name|HCMPERR
 operator||
 name|UCDATERR
-operator||
-name|WPTERR
 operator||
 name|DSEEKERR
 operator||
@@ -4477,13 +4531,30 @@ operator|.
 name|type_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dcb
+operator|->
+name|operrsta
+operator|&
+name|WPTERR
+condition|)
 name|printf
 argument_list|(
-literal|"status %x"
+literal|"write protected"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"status %b"
 argument_list|,
 name|dcb
 operator|->
 name|operrsta
+argument_list|,
+name|ERRBITS
 argument_list|)
 expr_stmt|;
 if|if
@@ -4503,6 +4574,7 @@ operator|->
 name|err_code
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -4569,13 +4641,7 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d%c: soft error sn%d status %x"
-argument_list|,
-name|ui
-operator|->
-name|info
-operator|.
-name|type_name
+literal|"dk%d%c: soft error sn%d status %b"
 argument_list|,
 name|minor
 argument_list|(
@@ -4606,6 +4672,8 @@ argument_list|,
 name|dcb
 operator|->
 name|operrsta
+argument_list|,
+name|ERRBITS
 argument_list|)
 expr_stmt|;
 if|if
@@ -5487,13 +5555,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vd%d: hard error, status %x\n"
+literal|"dk%d: hard error, status=%b\n"
 argument_list|,
 name|unit
 argument_list|,
 name|dcb
 operator|->
 name|operrsta
+argument_list|,
+name|ERRBITS
 argument_list|)
 expr_stmt|;
 return|return

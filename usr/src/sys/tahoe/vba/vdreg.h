@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.5	86/08/12	*/
+comment|/*	vdreg.h	1.6	86/10/28	*/
 end_comment
 
 begin_comment
@@ -2135,7 +2135,7 @@ literal|3600
 block|,
 literal|30240
 block|,
-literal|"xsd"
+literal|"CDC xsd"
 block|,
 literal|"515 Mb Control Data Winchester drive"
 block|,
@@ -2180,56 +2180,56 @@ block|,
 literal|30528
 block|}
 block|,
-comment|/* xsd0a cyl   0 - 52 */
+comment|/* a cyl   0 - 52 */
 block|{
 literal|30528
 block|,
 literal|30528
 block|}
 block|,
-comment|/* xsd0b cyl  53 - 105 */
+comment|/* b cyl  53 - 105 */
 block|{
 literal|61056
 block|,
 literal|345600
 block|}
 block|,
-comment|/* xsd0c cyl 106 - 705 */
+comment|/* c cyl 106 - 705 */
 block|{
 literal|118656
 block|,
 literal|288000
 block|}
 block|,
-comment|/* xsd0d cyl 206 - 705 */
+comment|/* d cyl 206 - 705 */
 block|{
 literal|176256
 block|,
 literal|230400
 block|}
 block|,
-comment|/* xsd0e cyl 306 - 705 */
+comment|/* e cyl 306 - 705 */
 block|{
 literal|233856
 block|,
 literal|172800
 block|}
 block|,
-comment|/* xsd0f cyl 406 - 705 */
+comment|/* f cyl 406 - 705 */
 block|{
 literal|291456
 block|,
 literal|115200
 block|}
 block|,
-comment|/* xsd0g cyl 506 - 705 */
+comment|/* g cyl 506 - 705 */
 block|{
 literal|349056
 block|,
 literal|57600
 block|}
 block|}
-comment|/* xsd0h cyl 606 - 705 */
+comment|/* h cyl 606 - 705 */
 block|}
 block|,
 block|{
@@ -2247,7 +2247,7 @@ literal|3961
 block|,
 literal|27720
 block|,
-literal|"egl"
+literal|"eagle"
 block|,
 literal|"474 Mb Fujitsu Eagle drive"
 block|,
@@ -2359,7 +2359,7 @@ literal|3600
 block|,
 literal|40960
 block|,
-literal|"fuj"
+literal|"fuji 360"
 block|,
 comment|/* 360 Mb Fujitsu */
 literal|"360 Mb Fujitsu Winchester drive"
@@ -2472,7 +2472,7 @@ literal|3600
 block|,
 literal|20160
 block|,
-literal|"xfd"
+literal|"CDC xfd"
 block|,
 comment|/* 340 Mb FSD */
 literal|"340 Mb Control Data Winchester drive"
@@ -2513,7 +2513,8 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|MICKEY
+name|cci1
+name|.21
 block|{
 block|{
 literal|0
@@ -2521,43 +2522,56 @@ block|,
 literal|20352
 block|}
 block|,
-comment|/* xfd0a cyl   0-52 */
+comment|/* a cyl   0 - 52 */
 block|{
 literal|20352
 block|,
 literal|20352
 block|}
 block|,
-comment|/* xfd0b cyl  53-105 */
+comment|/* b cyl  53 - 105 */
 block|{
 literal|40704
 block|,
 literal|230400
 block|}
 block|,
-comment|/* xfd0c cyl 106-705 */
+comment|/* c cyl 106 - 705 */
 block|{
-literal|271104
+literal|79104
 block|,
-literal|1920
+literal|192000
 block|}
 block|,
-comment|/* xfd0d cyl 706-710 */
+comment|/* d cyl 206 - 705 */
 block|{
-literal|0
+literal|117504
 block|,
-literal|271104
+literal|153600
 block|}
 block|,
-comment|/* xfd0e cyl   0-705 */
+comment|/* e cyl 306 - 705 */
 block|{
-literal|0
+literal|155904
 block|,
-literal|273024
+literal|115200
+block|}
+block|,
+comment|/* f cyl 406 - 705 */
+block|{
+literal|194304
+block|,
+literal|76800
+block|}
+block|,
+comment|/* g cyl 506 - 705 */
+block|{
+literal|232704
+block|,
+literal|38400
 block|}
 block|}
-block|,
-comment|/* xfd0f cyl   0-710 */
+comment|/* h cyl 606 - 705 */
 else|#
 directive|else
 block|{
@@ -2567,56 +2581,56 @@ block|,
 literal|20352
 block|}
 block|,
-comment|/* xfd0a cyl   0 - 52 */
+comment|/* a cyl   0 - 52 */
 block|{
 literal|20352
 block|,
 literal|20352
 block|}
 block|,
-comment|/* xfd0b cyl  53 - 105 */
+comment|/* b cyl  53 - 105 */
 block|{
 literal|40704
 block|,
 literal|230400
 block|}
 block|,
-comment|/* xfd0c cyl 106 - 705 */
+comment|/* c cyl 106 - 705 */
 block|{
-literal|79104
+literal|0
 block|,
-literal|192000
+literal|40704
 block|}
 block|,
-comment|/* xfd0d cyl 206 - 705 */
+comment|/* d cyl 709 - 710 (a& b) */
 block|{
-literal|117504
+literal|0
 block|,
-literal|153600
+literal|271104
 block|}
 block|,
-comment|/* xfd0e cyl 306 - 705 */
+comment|/* e cyl   0 - 705 */
+block|{
+literal|20352
+block|,
+literal|250752
+block|}
+block|,
+comment|/* f cyl  53 - 705 (b& c) */
+block|{
+literal|40704
+block|,
+literal|115200
+block|}
+block|,
+comment|/* g cyl 106 - 405 (1/2 of c) */
 block|{
 literal|155904
 block|,
 literal|115200
 block|}
-block|,
-comment|/* xfd0f cyl 406 - 705 */
-block|{
-literal|194304
-block|,
-literal|76800
 block|}
-block|,
-comment|/* xfd0g cyl 506 - 705 */
-block|{
-literal|232704
-block|,
-literal|38400
-block|}
-block|}
-comment|/* xfd0h cyl 606 - 705 */
+comment|/* h cyl 406 - 705 (1/2 of c) */
 endif|#
 directive|endif
 block|}
@@ -2636,10 +2650,10 @@ literal|3600
 block|,
 literal|20160
 block|,
-literal|"smd"
+literal|"9766"
 block|,
 comment|/* 300 Mb SMD */
-literal|"300 Mb Control Data removable media drive"
+literal|"300 Mb Control Data 9766 removable media drive"
 block|,
 block|{
 literal|0x0d9b366c
@@ -2682,56 +2696,56 @@ block|,
 literal|20064
 block|}
 block|,
-comment|/* smd0a cyl   0-65 */
+comment|/* a cyl   0-65 */
 block|{
 literal|20064
 block|,
 literal|13680
 block|}
 block|,
-comment|/* smd0b cyl  66-110 */
+comment|/* b cyl  66-110 */
 block|{
 literal|33744
 block|,
 literal|214928
 block|}
 block|,
-comment|/* smd0c cyl 111-817 */
+comment|/* c cyl 111-817 */
 block|{
 literal|69616
 block|,
 literal|179056
 block|}
 block|,
-comment|/* smd0d cyl 229 - 817 */
+comment|/* d cyl 229 - 817 */
 block|{
 literal|105488
 block|,
 literal|143184
 block|}
 block|,
-comment|/* smd0e cyl 347 - 817 */
+comment|/* e cyl 347 - 817 */
 block|{
 literal|141360
 block|,
 literal|107312
 block|}
 block|,
-comment|/* smd0f cyl 465 - 817 */
+comment|/* f cyl 465 - 817 */
 block|{
 literal|177232
 block|,
 literal|71440
 block|}
 block|,
-comment|/* smd0g cyl 583 - 817 */
+comment|/* g cyl 583 - 817 */
 block|{
 literal|213104
 block|,
 literal|35568
 block|}
 block|}
-comment|/* smd0h cyl 701 - 817 */
+comment|/* h cyl 701 - 817 */
 block|}
 block|,
 block|{
@@ -2749,7 +2763,7 @@ literal|3600
 block|,
 literal|20160
 block|,
-literal|"fsd"
+literal|"CDC fsd"
 block|,
 comment|/* 160 Mb FSD */
 literal|"160 Mb Control Data Winchester drive"
@@ -2795,56 +2809,56 @@ block|,
 literal|9600
 block|}
 block|,
-comment|/* fsd0a cyl   0 -  59 */
+comment|/* a cyl   0 -  59 */
 block|{
 literal|9600
 block|,
 literal|12000
 block|}
 block|,
-comment|/* fsd0b cyl  60 - 134 */
+comment|/* b cyl  60 - 134 */
 block|{
 literal|21600
 block|,
 literal|109280
 block|}
 block|,
-comment|/* fsd0c cyl 135 - 817 */
+comment|/* c cyl 135 - 817 */
 block|{
 literal|39840
 block|,
 literal|91040
 block|}
 block|,
-comment|/* fsd0d cyl 249 - 817 */
+comment|/* d cyl 249 - 817 */
 block|{
 literal|58080
 block|,
 literal|72800
 block|}
 block|,
-comment|/* fsd0e cyl 363 - 817 */
+comment|/* e cyl 363 - 817 */
 block|{
 literal|76320
 block|,
 literal|54560
 block|}
 block|,
-comment|/* fsd0f cyl 477 - 817 */
+comment|/* f cyl 477 - 817 */
 block|{
 literal|94560
 block|,
 literal|36320
 block|}
 block|,
-comment|/* fsd0g cyl 591 - 817 */
+comment|/* g cyl 591 - 817 */
 block|{
 literal|112800
 block|,
 literal|18080
 block|}
 block|}
-comment|/* fsd0h cyl 705 - 817 */
+comment|/* h cyl 705 - 817 */
 block|}
 block|}
 decl_stmt|;
