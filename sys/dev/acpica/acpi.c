@@ -5428,7 +5428,6 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
-block|}
 name|AcpiOsFree
 argument_list|(
 name|buf
@@ -5436,6 +5435,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
