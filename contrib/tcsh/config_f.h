@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.25 2002/03/08 17:36:45 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/config_f.h,v 3.26 2004/03/21 16:48:14 christos Exp $ */
 end_comment
 
 begin_comment
@@ -137,21 +137,21 @@ begin_comment
 comment|/*  * KANJI	Ignore meta-next, and the ISO character set. Should  *		be used with SHORT_STRINGS  *  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|KANJI
-end_undef
+end_define
 
 begin_comment
 comment|/*  * DSPMBYTE	add variable "dspmbyte" and display multi-byte string at  *		only output, when "dspmbyte" is set. Should be used with  *		KANJI  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|DSPMBYTE
-end_undef
+end_define
 
 begin_comment
 comment|/*  * MBYTEDEBUG	when "dspmbyte" is changed, set multi-byte checktable to  *		variable "mbytemap".  *		(use for multi-byte table check)  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/gethost.c,v 1.8 2002/03/08 17:36:46 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/gethost.c,v 1.9 2002/12/04 12:30:55 christos Exp $ */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: gethost.c,v 1.8 2002/03/08 17:36:46 christos Exp $"
+literal|"$Id: gethost.c,v 1.9 2002/12/04 12:30:55 christos Exp $"
 argument_list|)
 end_macro
 
@@ -547,6 +547,7 @@ name|char
 modifier|*
 name|pname
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
