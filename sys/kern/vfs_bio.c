@@ -10007,8 +10007,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_WAIT
-expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -10020,6 +10018,8 @@ name|bp
 operator|->
 name|b_npages
 argument_list|)
+expr_stmt|;
+name|VM_WAIT
 expr_stmt|;
 block|}
 else|else
@@ -13118,7 +13118,7 @@ argument_list|,
 operator|(
 name|to
 operator|-
-name|from
+name|pg
 operator|)
 operator|>>
 name|PAGE_SHIFT
