@@ -1946,7 +1946,11 @@ name|fs
 operator|->
 name|fs_flags
 operator|&
+operator|(
 name|FS_UNCLEAN
+operator||
+name|FS_NEEDSFSCK
+operator|)
 operator|)
 operator|==
 literal|0

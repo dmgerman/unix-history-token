@@ -770,7 +770,7 @@ comment|/* minimize disk fragmentation */
 end_comment
 
 begin_comment
-comment|/*  * Filesystem flags.  */
+comment|/*  * Filesystem flags.  *  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  */
 end_comment
 
 begin_define
@@ -793,6 +793,17 @@ end_define
 
 begin_comment
 comment|/* filesystem using soft dependencies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_NEEDSFSCK
+value|0x04
+end_define
+
+begin_comment
+comment|/* filesystem needs sync fsck before mount */
 end_comment
 
 begin_comment
