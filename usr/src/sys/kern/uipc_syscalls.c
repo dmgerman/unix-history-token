@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.23	82/08/14	*/
+comment|/*	uipc_syscalls.c	4.24	82/08/22	*/
 end_comment
 
 begin_include
@@ -104,6 +104,10 @@ name|ssocreate
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###21 [lint] ssocreate defined( sys_socket.c(21) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -112,6 +116,10 @@ begin_macro
 name|ssobind
 argument_list|()
 end_macro
+
+begin_comment
+comment|/*###26 [lint] ssobind defined( sys_socket.c(26) ), but never used%%%*/
+end_comment
 
 begin_block
 block|{  }
@@ -122,6 +130,10 @@ name|ssolisten
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###31 [lint] ssolisten defined( sys_socket.c(31) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -130,6 +142,10 @@ begin_macro
 name|ssoaccept
 argument_list|()
 end_macro
+
+begin_comment
+comment|/*###36 [lint] ssoaccept defined( sys_socket.c(36) ), but never used%%%*/
+end_comment
 
 begin_block
 block|{  }
@@ -140,6 +156,10 @@ name|ssoconnect
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###41 [lint] ssoconnect defined( sys_socket.c(41) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -148,6 +168,10 @@ begin_macro
 name|ssocreatepair
 argument_list|()
 end_macro
+
+begin_comment
+comment|/*###46 [lint] ssocreatepair defined( sys_socket.c(46) ), but never used%%%*/
+end_comment
 
 begin_block
 block|{  }
@@ -158,6 +182,10 @@ name|ssosendto
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###51 [lint] ssosendto defined( sys_socket.c(51) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -166,6 +194,10 @@ begin_macro
 name|ssosend
 argument_list|()
 end_macro
+
+begin_comment
+comment|/*###56 [lint] ssosend defined( sys_socket.c(56) ), but never used%%%*/
+end_comment
 
 begin_block
 block|{  }
@@ -176,6 +208,10 @@ name|ssorecvfrom
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###61 [lint] ssorecvfrom defined( sys_socket.c(61) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -184,6 +220,10 @@ begin_macro
 name|ssorecv
 argument_list|()
 end_macro
+
+begin_comment
+comment|/*###66 [lint] ssorecv defined( sys_socket.c(66) ), but never used%%%*/
+end_comment
 
 begin_block
 block|{  }
@@ -194,6 +234,10 @@ name|ssosendm
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###71 [lint] ssosendm defined( sys_socket.c(71) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -203,6 +247,10 @@ name|ssorecvm
 argument_list|()
 end_macro
 
+begin_comment
+comment|/*###76 [lint] ssorecvm defined( sys_socket.c(76) ), but never used%%%*/
+end_comment
+
 begin_block
 block|{  }
 end_block
@@ -211,6 +259,10 @@ begin_macro
 name|ssoshutdown
 argument_list|()
 end_macro
+
+begin_comment
+comment|/*###81 [lint] ssoshutdown defined( sys_socket.c(81) ), but never used%%%*/
+end_comment
 
 begin_block
 block|{  }
@@ -1467,6 +1519,14 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
+name|struct
+name|uio
+name|auio
+decl_stmt|;
+name|struct
+name|iovec
+name|aiov
+decl_stmt|;
 name|fp
 operator|=
 name|getf
@@ -1500,28 +1560,56 @@ name|ENOTSOCK
 expr_stmt|;
 return|return;
 block|}
-name|u
+name|auio
 operator|.
-name|u_base
+name|uio_iov
+operator|=
+operator|&
+name|aiov
+expr_stmt|;
+name|auio
+operator|.
+name|uio_iovcnt
+operator|=
+literal|1
+expr_stmt|;
+name|aiov
+operator|.
+name|iov_base
 operator|=
 name|uap
 operator|->
 name|cbuf
 expr_stmt|;
-name|u
+name|aiov
 operator|.
-name|u_count
+name|iov_len
 operator|=
 name|uap
 operator|->
 name|count
 expr_stmt|;
-name|u
+name|auio
 operator|.
-name|u_segflg
+name|uio_resid
+operator|=
+name|uap
+operator|->
+name|count
+expr_stmt|;
+name|auio
+operator|.
+name|uio_segflg
 operator|=
 literal|0
 expr_stmt|;
+name|auio
+operator|.
+name|uio_offset
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|useracc
@@ -1591,6 +1679,9 @@ operator|&
 name|sa
 else|:
 literal|0
+argument_list|,
+operator|&
+name|auio
 argument_list|)
 expr_stmt|;
 name|u
@@ -1603,9 +1694,9 @@ name|uap
 operator|->
 name|count
 operator|-
-name|u
+name|auio
 operator|.
-name|u_count
+name|uio_resid
 expr_stmt|;
 block|}
 end_block
@@ -1874,9 +1965,9 @@ name|uap
 operator|->
 name|count
 operator|-
-name|u
+name|auio
 operator|.
-name|u_count
+name|uio_resid
 expr_stmt|;
 block|}
 end_block
