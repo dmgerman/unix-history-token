@@ -576,39 +576,6 @@ name|td_frame
 operator|=
 name|tf
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-comment|/* see the comment in ast() */
-if|if
-condition|(
-name|td
-operator|->
-name|td_ucred
-operator|!=
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"trap(): thread got a ucred while in userspace"
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred
-operator|=
-name|td
-operator|->
-name|td_ucred_cache
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred_cache
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|td
@@ -1549,35 +1516,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* see the comment in ast() */
-if|if
-condition|(
-name|td
-operator|->
-name|td_ucred_cache
-condition|)
-name|panic
+name|cred_free_thread
 argument_list|(
-literal|"trap:thread already has cached ucred"
+name|td
 argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred_cache
-operator|=
-name|td
-operator|->
-name|td_ucred
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred
-operator|=
-name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
 name|out
 label|:
 name|CTR1
@@ -2211,38 +2156,6 @@ name|td_frame
 operator|=
 name|tf
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-comment|/* see the comment in ast() */
-if|if
-condition|(
-name|td
-operator|->
-name|td_ucred
-condition|)
-name|panic
-argument_list|(
-literal|"syscall:thread got a cred while userspace"
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred
-operator|=
-name|td
-operator|->
-name|td_ucred_cache
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred_cache
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|td
@@ -2859,35 +2772,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* see the comment in ast() */
-if|if
-condition|(
-name|td
-operator|->
-name|td_ucred_cache
-condition|)
-name|panic
+name|cred_free_thread
 argument_list|(
-literal|"syscall:thread already has cached ucred"
+name|td
 argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred_cache
-operator|=
-name|td
-operator|->
-name|td_ucred
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred
-operator|=
-name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
 ifdef|#
 directive|ifdef
 name|WITNESS
