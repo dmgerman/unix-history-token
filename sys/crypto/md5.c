@@ -925,10 +925,6 @@ condition|)
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|md5_paddat
 argument_list|,
 operator|(
@@ -961,10 +957,6 @@ block|{
 comment|/* including gap == 8 */
 name|bcopy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|md5_paddat
 argument_list|,
 operator|(
@@ -995,10 +987,6 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|(
 name|md5_paddat
 operator|+
