@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.10 (Berkeley) %G%"
+literal|"@(#)command.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -845,7 +845,7 @@ literal|" line %d"
 argument_list|,
 name|currline
 argument_list|(
-name|TOP
+name|BOTTOM
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -862,7 +862,7 @@ name|pos
 operator|=
 name|position
 argument_list|(
-name|TOP
+name|BOTTOM
 argument_list|)
 operator|)
 operator|!=
@@ -906,7 +906,9 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" pct %ld%%"
+literal|"/%ld pct %ld%%"
+argument_list|,
+name|len
 argument_list|,
 operator|(
 operator|(
