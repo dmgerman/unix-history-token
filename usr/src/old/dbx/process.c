@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.11 %G%"
+literal|"@(#)process.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|"tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eval.h"
 end_include
 
 begin_include
@@ -133,6 +139,13 @@ name|Process
 name|process
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DEFSIG
+value|-1
+end_define
 
 begin_include
 include|#
@@ -1117,7 +1130,9 @@ operator|=
 name|false
 expr_stmt|;
 name|cont
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1412,7 +1427,12 @@ name|signo
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|not
+name|runfirst
+condition|)
 block|{
 name|error
 argument_list|(
@@ -1569,7 +1589,7 @@ argument_list|)
 expr_stmt|;
 name|resume
 argument_list|(
-literal|0
+name|DEFSIG
 argument_list|)
 expr_stmt|;
 name|unsetbp
@@ -1749,6 +1769,9 @@ condition|(
 name|curline
 operator|>
 literal|0
+name|and
+name|not
+name|useInstLoc
 condition|)
 block|{
 name|printsrcpos
@@ -1757,6 +1780,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|useInstLoc
+operator|=
+name|false
+expr_stmt|;
+name|curline
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"at 0x%x"
@@ -1871,7 +1902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * These routines are used to access the debuggee process from  * outside this module.  *  * They invoke "pio" which eventually leads to a call to "ptrace".  * The system generates an I/O error when a ptrace fails, we assume  * during a read/write to the process that such an error is due to  * a misguided address and ignore it.  */
+comment|/*  * These routines are used to access the debuggee process from  * outside this module.  *  * They invoke "pio" which eventually leads to a call to "ptrace".  * The system generates an I/O error when a ptrace fails.  During reads  * these are ignored, during writes they are reported as an error, and  * for anything else they cause a fatal error.  */
 end_comment
 
 begin_function_decl
@@ -1889,12 +1920,15 @@ name|badaddr
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|private
-name|rwerr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|read_err
+argument_list|()
+decl_stmt|,
+name|write_err
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Read from the process' instruction area.  */
@@ -1931,7 +1965,7 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-name|rwerr
+name|read_err
 argument_list|)
 expr_stmt|;
 name|badaddr
@@ -2027,7 +2061,7 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-name|rwerr
+name|write_err
 argument_list|)
 expr_stmt|;
 name|badaddr
@@ -2094,7 +2128,7 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-name|rwerr
+name|read_err
 argument_list|)
 expr_stmt|;
 name|badaddr
@@ -2190,7 +2224,7 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-name|rwerr
+name|write_err
 argument_list|)
 expr_stmt|;
 name|badaddr
@@ -2223,15 +2257,30 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Error handler.  */
+comment|/*  * Trap for errors in reading or writing to a process.  * The current approach is to "ignore" read errors and complain  * bitterly about write errors.  */
 end_comment
 
 begin_function
 name|private
-name|rwerr
+name|read_err
 parameter_list|()
 block|{
-comment|/*      * Current response is to ignore the error and let the result      * (-1) ripple back up to the process.      *     error("bad read/write process address 0x%x", badaddr);      */
+comment|/*      * Ignore.      */
+block|}
+end_function
+
+begin_function
+name|private
+name|write_err
+parameter_list|()
+block|{
+name|error
+argument_list|(
+literal|"can't write to process (address 0x%x)"
+argument_list|,
+name|badaddr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2240,7 +2289,7 @@ comment|/*  * Ptrace interface.  */
 end_comment
 
 begin_comment
-comment|/*  * This magic macro enables us to look at the process' registers  * in its user structure.  Very gross.  */
+comment|/*  * This magic macro enables us to look at the process' registers  * in its user structure.  */
 end_comment
 
 begin_define
@@ -2927,7 +2976,7 @@ name|setinfo
 argument_list|(
 name|p
 argument_list|,
-literal|0
+name|DEFSIG
 argument_list|)
 expr_stmt|;
 name|sigs_off
@@ -3271,6 +3320,12 @@ name|status
 operator|=
 name|FINISHED
 expr_stmt|;
+name|p
+operator|->
+name|pid
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3417,11 +3472,28 @@ name|r
 decl_stmt|;
 if|if
 condition|(
+name|signo
+operator|==
+name|DEFSIG
+condition|)
+block|{
+if|if
+condition|(
 name|istraced
 argument_list|(
 name|p
 argument_list|)
 condition|)
+block|{
+name|p
+operator|->
+name|signo
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+else|else
 block|{
 name|p
 operator|->
