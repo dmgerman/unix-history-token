@@ -5354,10 +5354,11 @@ name|seminfo
 operator|.
 name|semmni
 condition|)
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
+operator|)
+return|;
 comment|/* Allocate memory for sem_ops */
 if|if
 condition|(
@@ -6485,13 +6486,6 @@ name|sops
 operator|!=
 name|small_sops
 condition|)
-name|free
-argument_list|(
-name|sops
-argument_list|,
-name|M_SEM
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|sops
