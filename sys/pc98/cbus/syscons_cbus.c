@@ -521,6 +521,7 @@ block|{
 name|int
 name|disabled
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|at
