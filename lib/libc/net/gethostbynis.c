@@ -156,6 +156,13 @@ name|MAXADDRS
 value|35
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -300,6 +307,10 @@ name|errno
 operator|=
 name|EAFNOSUPPORT
 expr_stmt|;
+name|h_errno
+operator|=
+name|NETDB_INTERNAL
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -322,6 +333,11 @@ operator|&
 name|domain
 argument_list|)
 condition|)
+block|{
+name|h_errno
+operator|=
+name|NETDB_INTERNAL
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -332,6 +348,7 @@ operator|)
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|yp_match
@@ -354,6 +371,11 @@ operator|&
 name|resultlen
 argument_list|)
 condition|)
+block|{
+name|h_errno
+operator|=
+name|HOST_NOT_FOUND
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -364,6 +386,7 @@ operator|)
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* avoid potential memory leak */
 name|bcopy
 argument_list|(
