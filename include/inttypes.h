@@ -102,10 +102,6 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX: The following functions are missing the restrict type qualifier. */
-end_comment
-
 begin_function_decl
 name|intmax_t
 name|strtoimax
@@ -113,10 +109,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+name|__restrict
 parameter_list|,
 name|int
 parameter_list|)
@@ -130,15 +128,21 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
 modifier|*
 modifier|*
+name|__restrict
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX: The following functions are missing the restrict type qualifier. */
+end_comment
 
 begin_function_decl
 name|intmax_t

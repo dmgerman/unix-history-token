@@ -6296,6 +6296,7 @@ argument_list|)
 name|CONST
 name|char
 modifier|*
+name|__restrict
 name|s00
 decl_stmt|;
 end_decl_stmt
@@ -6304,6 +6305,7 @@ begin_decl_stmt
 name|char
 modifier|*
 modifier|*
+name|__restrict
 name|se
 decl_stmt|;
 end_decl_stmt
@@ -6318,11 +6320,13 @@ operator|(
 name|CONST
 name|char
 operator|*
+name|__restrict
 name|s00
 operator|,
 name|char
 operator|*
 operator|*
+name|__restrict
 name|se
 operator|)
 endif|#
