@@ -494,7 +494,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No resources alloated.\n"
+literal|"No resources allocated.\n"
 argument_list|)
 expr_stmt|;
 return|return
