@@ -123,7 +123,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* these lengths are data link layer length - 2*ARC_ADDR_LEN */
+comment|/* these lengths are data link layer length - 2 * ARC_ADDR_LEN */
 end_comment
 
 begin_define
@@ -152,6 +152,13 @@ define|#
 directive|define
 name|ARC_MAX_LEN
 value|508
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARC_MAX_DATA
+value|504
 end_define
 
 begin_comment
@@ -421,20 +428,6 @@ name|ifnet
 operator|*
 operator|,
 name|u_int8_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|arc_sprintf
-name|__P
-argument_list|(
-operator|(
-name|u_int8_t
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -29,11 +29,9 @@ begin_comment
 comment|/**/
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|CM_DEBUG
-end_undef
+begin_comment
+comment|/* #define CM_DEBUG */
+end_comment
 
 begin_include
 include|#
@@ -1258,7 +1256,7 @@ directive|endif
 block|}
 name|printf
 argument_list|(
-literal|"%s%d: link addr 0x%02x(%d)\n"
+literal|"%s%d: link addr 0x%02x (%d)\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3723,6 +3721,9 @@ condition|)
 block|{
 case|case
 name|SIOCSIFADDR
+case|:
+case|case
+name|SIOCGIFADDR
 case|:
 case|case
 name|SIOCADDMULTI
