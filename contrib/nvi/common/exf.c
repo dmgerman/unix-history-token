@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  */
 end_comment
 
 begin_include
@@ -15,14 +15,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)exf.c	10.49 (Berkeley) 10/10/96";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)exf.c	10.49 (Berkeley) 10/10/96"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -675,7 +687,7 @@ argument_list|(
 name|tname
 argument_list|)
 argument_list|,
-literal|"%s/vi.XXXXXX"
+literal|"%s/vi.XXXXXXXXXX"
 argument_list|,
 name|O_STR
 argument_list|(
