@@ -610,6 +610,12 @@ name|pf_cachequeue
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|__inline
@@ -626,6 +632,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|static
+name|int
+name|pf_frag_compare
+parameter_list|(
+name|struct
+name|pf_fragment
+modifier|*
+parameter_list|,
+name|struct
+name|pf_fragment
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|RB_HEAD

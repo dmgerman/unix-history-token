@@ -6918,6 +6918,8 @@ name|rup
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|ret
 init|=

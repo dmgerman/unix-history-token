@@ -1339,6 +1339,10 @@ name|PFR_FLAG_DUMMY
 operator|)
 condition|)
 block|{
+name|s
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1456,6 +1460,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
@@ -1986,6 +1992,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xdel
 init|=
@@ -2409,6 +2417,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
@@ -3671,6 +3681,8 @@ name|int
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4039,6 +4051,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xzero
 init|=
@@ -6691,6 +6705,8 @@ name|p
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xdel
 init|=
@@ -6901,6 +6917,8 @@ decl_stmt|,
 name|rv
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
@@ -7444,6 +7462,8 @@ name|int
 name|i
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xdel
 init|=
@@ -7855,6 +7875,8 @@ name|workq
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|n
 decl_stmt|,
@@ -8012,6 +8034,15 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|PFR_FLAG_ATOMIC
+operator|)
+condition|)
 name|splx
 argument_list|(
 name|s
@@ -8143,6 +8174,8 @@ name|int
 name|i
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xzero
 init|=
@@ -8392,6 +8425,8 @@ name|int
 name|i
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xchange
 init|=
@@ -9785,6 +9820,8 @@ name|rs
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|xadd
 init|=
