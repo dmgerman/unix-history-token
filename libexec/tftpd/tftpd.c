@@ -2202,7 +2202,8 @@ decl_stmt|,
 name|n
 decl_stmt|;
 specifier|volatile
-name|int
+name|unsigned
+name|short
 name|block
 decl_stmt|;
 name|signal
@@ -2552,7 +2553,8 @@ decl_stmt|,
 name|size
 decl_stmt|;
 specifier|volatile
-name|int
+name|unsigned
+name|short
 name|block
 decl_stmt|;
 name|signal
