@@ -171,6 +171,20 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|double
+name|__double_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|double
+name|__float_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__int32_t
 name|__intfptr_t
 typedef|;
