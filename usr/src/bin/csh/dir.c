@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dir.c	5.2 (Berkeley) %G%"
+literal|"@(#)dir.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -898,20 +898,15 @@ goto|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-operator|(
 name|dp
 operator|=
 name|value
 argument_list|(
 name|cp
 argument_list|)
-operator|)
-index|[
-literal|0
-index|]
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|dp
 index|[
@@ -926,6 +921,7 @@ literal|0
 index|]
 operator|==
 literal|'.'
+operator|)
 operator|&&
 name|chdir
 argument_list|(
@@ -933,7 +929,6 @@ name|dp
 argument_list|)
 operator|>=
 literal|0
-operator|)
 condition|)
 block|{
 name|xfree
