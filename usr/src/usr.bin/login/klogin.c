@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.9 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,24 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -103,39 +121,34 @@ begin_comment
 comment|/*  * Attempt to log the user in using Kerberos authentication  *  * return 0 on success (will be logged in)  *	  1 if Kerberos failed (try local password in login)  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|klogin
-argument_list|(
-argument|pw
-argument_list|,
-argument|instance
-argument_list|,
-argument|localhost
-argument_list|,
-argument|password
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pw
+parameter_list|,
+name|instance
+parameter_list|,
+name|localhost
+parameter_list|,
+name|password
+parameter_list|)
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|instance
 decl_stmt|,
-modifier|*
+decl|*
 name|localhost
 decl_stmt|,
 modifier|*
 name|password
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
