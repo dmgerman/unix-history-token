@@ -155,6 +155,25 @@ name|allow_anonymous
 decl_stmt|;
 end_decl_stmt
 
+begin_enum
+enum|enum
+block|{
+name|TRPOLICY_ALWAYS_CHECK
+block|,
+name|TRPOLICY_ALLOW_PER_PRINCIPAL
+block|,
+name|TRPOLICY_ALWAYS_HONOUR_REQUEST
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|trpolicy
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
