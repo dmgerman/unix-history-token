@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1998 Doug Rabson<dfr@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1998 Doug Rabson<dfr@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: srmdisk.c,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -168,6 +168,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|bd_print
+parameter_list|(
+name|int
+name|verbose
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|open_disk
@@ -236,6 +247,8 @@ block|,
 name|bd_close
 block|,
 name|noioctl
+block|,
+name|bd_print
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -369,6 +382,73 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Print information about disks  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bd_print
+parameter_list|(
+name|int
+name|verbose
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+name|line
+index|[
+literal|80
+index|]
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nbdinfo
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"    disk%d:   SRM drive %s"
+argument_list|,
+name|i
+argument_list|,
+name|bdinfo
+index|[
+name|i
+index|]
+operator|.
+name|bd_name
+argument_list|)
+expr_stmt|;
+name|pager_output
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+comment|/* XXX more detail? */
+name|pager_output
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
