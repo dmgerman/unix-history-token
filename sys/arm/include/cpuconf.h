@@ -317,6 +317,12 @@ directive|if
 name|ARM_NARCH
 operator|==
 literal|0
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_KLD_MODULE
+argument_list|)
 end_if
 
 begin_error
@@ -555,6 +561,12 @@ directive|if
 name|ARM_NMMUS
 operator|==
 literal|0
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
 end_if
 
 begin_error
