@@ -2038,7 +2038,11 @@ literal|0x5c
 condition|?
 literal|0xfc
 else|:
+operator|(
 name|c
+operator|&
+literal|0xff
+operator|)
 operator|)
 expr_stmt|;
 operator|*
