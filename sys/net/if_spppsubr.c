@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.16 1997/02/22 09:41:09 peter Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.17 1997/03/24 11:33:16 bde Exp $  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
 
 begin_include
 include|#
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -196,44 +196,6 @@ include|#
 directive|include
 file|<net/if_sppp.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|print
-parameter_list|(
-name|s
-parameter_list|)
-value|printf s
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|print
-parameter_list|(
-name|s
-parameter_list|)
-value|{
-comment|/*void*/
-value|}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1026,6 +988,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sppp_lcp_type_name
@@ -1038,6 +1001,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sppp_ipcp_type_name
@@ -1249,8 +1213,10 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: input packet is too small, %d bytes\n"
 argument_list|,
 name|ifp
@@ -1320,9 +1286,12 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: invalid input packet<0x%x 0x%x 0x%x>\n"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: invalid input packet "
+literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1382,9 +1351,12 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: PPP packet in Cisco mode<0x%x 0x%x 0x%x>\n"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: PPP packet in Cisco mode "
+literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1470,9 +1442,12 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: invalid input protocol<0x%x 0x%x 0x%x>\n"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: invalid input protocol "
+literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1714,9 +1689,12 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: Cisco packet in PPP mode<0x%x 0x%x 0x%x>\n"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: Cisco packet in PPP mode "
+literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1896,8 +1874,10 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: protocol queue overflow\n"
 argument_list|,
 name|ifp
@@ -2178,8 +2158,10 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: no memory for transmit header\n"
 argument_list|,
 name|ifp
@@ -2928,6 +2910,7 @@ comment|/*  * Send keepalive packets, every 10 seconds.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_keepalive
 parameter_list|(
@@ -3211,6 +3194,7 @@ comment|/*  * Handle incoming PPP Link Control Protocol packets.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_lcp_input
 parameter_list|(
@@ -3248,6 +3232,14 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+decl_stmt|,
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
 decl_stmt|;
 name|u_char
 modifier|*
@@ -3270,14 +3262,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: invalid lcp packet length: %d bytes\n"
 argument_list|,
 name|ifp
@@ -3306,17 +3296,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
 block|{
+specifier|const
 name|char
+modifier|*
 name|state
 init|=
-literal|'?'
+literal|"unknown"
 decl_stmt|;
 switch|switch
 condition|(
@@ -3332,7 +3320,7 @@ name|LCP_STATE_CLOSED
 case|:
 name|state
 operator|=
-literal|'C'
+literal|"closed"
 expr_stmt|;
 break|break;
 case|case
@@ -3340,7 +3328,7 @@ name|LCP_STATE_ACK_RCVD
 case|:
 name|state
 operator|=
-literal|'R'
+literal|"ack-rcvd"
 expr_stmt|;
 break|break;
 case|case
@@ -3348,7 +3336,7 @@ name|LCP_STATE_ACK_SENT
 case|:
 name|state
 operator|=
-literal|'S'
+literal|"ack-sent"
 expr_stmt|;
 break|break;
 case|case
@@ -3356,13 +3344,15 @@ name|LCP_STATE_OPENED
 case|:
 name|state
 operator|=
-literal|'O'
+literal|"opened"
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: lcp input(%c): %d bytes<%s id=%xh len=%xh"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: lcp input(%s): %d bytes<%s id=0x%x len=0x%x"
 argument_list|,
 name|ifp
 operator|->
@@ -3418,7 +3408,7 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|addlog
 argument_list|(
 literal|">\n"
 argument_list|)
@@ -3453,6 +3443,23 @@ condition|)
 block|{
 default|default:
 comment|/* Unknown packet type -- send Code-Reject packet. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: sending lcp code rej\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
@@ -3488,15 +3495,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
-literal|"%s%d: invalid lcp configure request packet length: %d bytes\n"
+literal|"%s%d: invalid lcp configure request "
+literal|"packet length: %d bytes\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3511,6 +3515,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|rmagic
+operator|=
+literal|0xd00ddeed
+expr_stmt|;
+comment|/* in case LCP fails */
 if|if
 condition|(
 name|len
@@ -3602,15 +3611,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+block|{
+name|addlog
 argument_list|(
-literal|"%s%d: conf req: magic glitch\n"
+literal|"%s%d: conf req: magic glitch, "
+literal|"sending config nak\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3621,6 +3628,7 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
+block|}
 operator|++
 name|sp
 operator|->
@@ -3753,6 +3761,23 @@ block|}
 break|break;
 block|}
 comment|/* Send Configure-Ack packet. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: sending configure ack\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|pp_loopcnt
@@ -3872,7 +3897,36 @@ name|lcp
 operator|.
 name|confid
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: lcp id mismatch 0x%x != 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|ident
+argument_list|,
+name|sp
+operator|->
+name|lcp
+operator|.
+name|confid
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|UNTIMO
 argument_list|(
 name|sp
@@ -3981,7 +4035,36 @@ name|lcp
 operator|.
 name|confid
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: lcp id mismatch 0x%x != 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|ident
+argument_list|,
+name|sp
+operator|->
+name|lcp
+operator|.
+name|confid
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|p
 operator|=
 operator|(
@@ -4063,13 +4146,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
 literal|"%s%d: conf nak: magic glitch\n"
 argument_list|,
@@ -4137,6 +4216,23 @@ name|IPCP_STATE_CLOSED
 expr_stmt|;
 block|}
 comment|/* The link will be renegotiated after timeout, 		 * to avoid endless req-nack loop. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: sleeping due to nak\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|UNTIMO
 argument_list|(
 name|sp
@@ -4165,13 +4261,59 @@ name|lcp
 operator|.
 name|confid
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: lcp id mismatch 0x%x != 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|ident
+argument_list|,
+name|sp
+operator|->
+name|lcp
+operator|.
+name|confid
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|UNTIMO
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
 comment|/* Initiate renegotiation. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: reopening lcp\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|sppp_lcp_open
 argument_list|(
 name|sp
@@ -4216,6 +4358,23 @@ name|sp
 argument_list|)
 expr_stmt|;
 comment|/* Send Terminate-Ack packet. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: sending terminate-ack\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
@@ -4266,6 +4425,27 @@ case|:
 case|case
 name|LCP_PROTO_REJ
 case|:
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: ignoring lcp code 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
 comment|/* Ignore for now. */
 break|break;
 case|case
@@ -4286,7 +4466,26 @@ name|state
 operator|!=
 name|LCP_STATE_OPENED
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: lcp echo req but lcp close\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|len
@@ -4296,15 +4495,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
-literal|"%s%d: invalid lcp echo request packet length: %d bytes\n"
+literal|"%s%d: invalid lcp echo request "
+literal|"packet length: %d bytes\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4419,6 +4615,23 @@ operator|.
 name|magic
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: got lcp echo req, sending echo rep\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
@@ -4466,15 +4679,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
-literal|"%s%d: invalid lcp echo reply packet length: %d bytes\n"
+literal|"%s%d: invalid lcp echo reply "
+literal|"packet length: %d bytes\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4489,6 +4699,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: got lcp echo rep\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ntohl
@@ -4562,6 +4789,15 @@ name|sp
 operator|->
 name|pp_if
 decl_stmt|;
+name|int
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -4575,14 +4811,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: invalid cisco packet length: %d bytes\n"
 argument_list|,
 name|ifp
@@ -4615,15 +4849,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: cisco input: %d bytes<%lxh %lxh %lxh %xh %xh-%xh>\n"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: cisco input: %d bytes "
+literal|"<0x%lx 0x%lx 0x%lx 0x%x 0x%x-0x%x>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4680,13 +4913,9 @@ block|{
 default|default:
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
 literal|"%s%d: unknown cisco packet type: 0x%lx\n"
 argument_list|,
@@ -4905,13 +5134,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
 literal|"%s%d: unknown address for cisco request\n"
 argument_list|,
@@ -5029,6 +5254,15 @@ operator|&
 name|sp
 operator|->
 name|pp_if
+decl_stmt|;
+name|int
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
 decl_stmt|;
 if|if
 condition|(
@@ -5175,15 +5409,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: %s output<%s id=%xh len=%xh"
 argument_list|,
 name|ifp
@@ -5251,7 +5483,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|addlog
 argument_list|(
 literal|">\n"
 argument_list|)
@@ -5392,6 +5624,15 @@ name|tv_sec
 operator|)
 operator|*
 literal|1000
+decl_stmt|;
+name|int
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
 decl_stmt|;
 name|MGETHDR
 argument_list|(
@@ -5539,15 +5780,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: cisco output:<%lxh %lxh %lxh %xh %xh-%xh>\n"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: cisco output:<0x%lx 0x%lx 0x%lx 0x%x 0x%x-0x%x>\n"
 argument_list|,
 name|ifp
 operator|->
@@ -5717,7 +5956,7 @@ block|{
 default|default:
 return|return
 operator|(
-name|EINVAL
+name|ENOTTY
 operator|)
 return|;
 case|case
@@ -6035,8 +6274,26 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sp
+operator|->
+name|pp_if
+decl_stmt|;
 name|int
 name|rlen
+decl_stmt|,
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
 decl_stmt|;
 name|len
 operator|-=
@@ -6065,6 +6322,23 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: lcp parse opts: "
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 operator|(
@@ -6119,6 +6393,15 @@ case|:
 comment|/* Magic number -- extract. */
 if|if
 condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|" magicnum: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|len
 operator|>=
 literal|6
@@ -6166,13 +6449,43 @@ index|[
 literal|5
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"0x%x"
+argument_list|,
+operator|*
+name|magic
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"invalid"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LCP_OPT_ASYNC_MAP
 case|:
 comment|/* Async control character map -- check to be zero. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|" asyncmap: "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -6210,15 +6523,56 @@ index|[
 literal|5
 index|]
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"empty (ack)"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"non-empty (rej)"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LCP_OPT_MRU
 case|:
 comment|/* Maximum receive unit -- always OK. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|" mru (ignored)"
+argument_list|)
+expr_stmt|;
 continue|continue;
 default|default:
 comment|/* Others not supported. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|" unknown 0x%x"
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* Add the option to rejected list. */
@@ -6253,13 +6607,23 @@ if|if
 condition|(
 name|rlen
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|", send lcp configure nak\n"
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
 argument_list|,
 name|PPP_LCP
 argument_list|,
-name|LCP_CONF_REJ
+name|LCP_CONF_NAK
 argument_list|,
 name|h
 operator|->
@@ -6268,6 +6632,17 @@ argument_list|,
 name|rlen
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -6326,7 +6701,16 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+decl_stmt|,
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
 decl_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|len
@@ -6334,7 +6718,6 @@ operator|<
 literal|4
 condition|)
 block|{
-comment|/* if (ifp->if_flags& IFF_DEBUG) */
 name|printf
 argument_list|(
 literal|"%s%d: invalid ipcp packet length: %d bytes\n"
@@ -6365,16 +6748,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"%s%d: ipcp input: %d bytes<%s id=%xh len=%xh"
+name|LOG_DEBUG
+argument_list|,
+literal|"%s%d: ipcp input: %d bytes<%s id=0x%x len=0x%x"
 argument_list|,
 name|ifp
 operator|->
@@ -6428,7 +6809,7 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|addlog
 argument_list|(
 literal|">\n"
 argument_list|)
@@ -6463,6 +6844,27 @@ condition|)
 block|{
 default|default:
 comment|/* Unknown packet type -- send Code-Reject packet. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: ipcp unknown type 0x%x, sending code rej\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
@@ -6494,15 +6896,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
-name|printf
+name|addlog
 argument_list|(
-literal|"%s%d: invalid ipcp configure request packet length: %d bytes\n"
+literal|"%s%d: invalid ipcp configure "
+literal|"request packet length: %d bytes\n"
 argument_list|,
 name|ifp
 operator|->
@@ -6524,6 +6923,25 @@ operator|>
 literal|4
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: rejecting ipcp conf req len=%d\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
@@ -6580,6 +6998,23 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: sending ipcp conf ack\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 comment|/* Send Configure-Ack packet. */
 name|sppp_cp_send
 argument_list|(
@@ -6643,7 +7078,36 @@ name|ipcp
 operator|.
 name|confid
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: ipcp id mismatch 0x%x != 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|ident
+argument_list|,
+name|sp
+operator|->
+name|ipcp
+operator|.
+name|confid
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|UNTIMO
 argument_list|(
 name|sp
@@ -6709,7 +7173,65 @@ name|ipcp
 operator|.
 name|confid
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: ipcp id mismatch 0x%x != 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|h
+operator|->
+name|ident
+argument_list|,
+name|sp
+operator|->
+name|ipcp
+operator|.
+name|confid
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: got ipcp conf %s, reopening ipcp\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+operator|(
+name|h
+operator|->
+name|type
+operator|==
+name|IPCP_CONF_NAK
+condition|?
+literal|"nak"
+else|:
+literal|"rej"
+operator|)
+argument_list|)
+expr_stmt|;
 name|UNTIMO
 argument_list|(
 name|sp
@@ -6745,6 +7267,23 @@ case|case
 name|IPCP_TERM_REQ
 case|:
 comment|/* Send Terminate-Ack packet. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: got ipcp term req\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 name|sppp_cp_send
 argument_list|(
 name|sp
@@ -6782,10 +7321,44 @@ case|case
 name|IPCP_TERM_ACK
 case|:
 comment|/* Ignore for now. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: ignoring ipcp term ack\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 case|case
 name|IPCP_CODE_REJ
 case|:
 comment|/* Ignore for now. */
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|"%s%d: ignoring ipcp code rej\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -7177,6 +7750,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sppp_lcp_type_name
@@ -7189,7 +7763,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|8
+literal|12
 index|]
 decl_stmt|;
 switch|switch
@@ -7290,7 +7864,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%xh"
+literal|"0x%x"
 argument_list|,
 name|type
 argument_list|)
@@ -7305,6 +7879,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sppp_ipcp_type_name
@@ -7317,7 +7892,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|8
+literal|12
 index|]
 decl_stmt|;
 switch|switch
@@ -7386,7 +7961,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%xh"
+literal|"0x%x"
 argument_list|,
 name|type
 argument_list|)
@@ -7412,7 +7987,7 @@ name|u_short
 name|len
 parameter_list|)
 block|{
-name|printf
+name|addlog
 argument_list|(
 literal|" %x"
 argument_list|,
@@ -7428,7 +8003,7 @@ name|len
 operator|>
 literal|0
 condition|)
-name|printf
+name|addlog
 argument_list|(
 literal|"-%x"
 argument_list|,
