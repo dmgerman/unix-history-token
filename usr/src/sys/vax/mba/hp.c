@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.33	81/03/17	*/
+comment|/*	hp.c	4.34	81/03/22	*/
 end_comment
 
 begin_decl_stmt
@@ -1935,6 +1935,12 @@ name|HP_RELEASE
 operator||
 name|HP_GO
 expr_stmt|;
+name|hpaddr
+operator|->
+name|hpof
+operator|=
+name|HPOF_FMT22
+expr_stmt|;
 if|if
 condition|(
 name|mi
@@ -2542,22 +2548,17 @@ name|st
 operator|->
 name|ntrak
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|rp
 operator|->
 name|hpof
 operator|&
-name|SSEI
+name|HPOF_SSEI
 condition|)
 name|sn
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 name|rp
 operator|->
 name|hpdc
