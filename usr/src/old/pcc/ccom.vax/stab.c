@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.3 (Berkeley) %G%"
+literal|"@(#)stab.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,15 +126,24 @@ end_define
 
 begin_typedef
 typedef|typedef
-enum|enum
-block|{
-name|false
-block|,
-name|true
-block|}
+name|int
 name|Boolean
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|false
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|true
+value|1
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1240,6 +1249,27 @@ argument_list|(
 name|nil
 argument_list|)
 expr_stmt|;
+name|t
+operator|=
+name|builtintype
+argument_list|(
+name|FARG
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t.stabs\t\"???:t%d=%d"
+argument_list|,
+name|t
+argument_list|,
+name|t_int
+argument_list|)
+expr_stmt|;
+name|geninfo
+argument_list|(
+name|nil
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2047,7 +2077,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\",0x%x,0,%d,_%s\n"
+literal|"\",0x%x,0,%d,0\n"
 argument_list|,
 name|N_GSYM
 argument_list|,
@@ -2055,10 +2085,6 @@ name|bsize
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
-name|p
-operator|->
-name|sname
 argument_list|)
 expr_stmt|;
 block|}
