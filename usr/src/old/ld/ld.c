@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.5 %G%"
+literal|"@(#)ld.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1886,6 +1886,18 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
+name|long
+name|size
+decl_stmt|;
+name|char
+name|c
+init|=
+literal|0
+decl_stmt|;
 name|bflush
 argument_list|()
 expr_stmt|;
@@ -1911,6 +1923,57 @@ argument_list|,
 name|ofilemode
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We have to insure that the last block of the data segment 	 * is allocated a full BLKSIZE block. If the underlying 	 * file system allocates frags that are smaller than BLKSIZE, 	 * a full zero filled BLKSIZE block needs to be allocated so  	 * that when it is demand paged, the paged in block will be  	 * appropriately filled with zeros. 	 */
+name|fstat
+argument_list|(
+name|biofd
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+expr_stmt|;
+name|size
+operator|=
+name|round
+argument_list|(
+name|stbuf
+operator|.
+name|st_size
+argument_list|,
+name|BLKSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|stbuf
+operator|.
+name|st_size
+condition|)
+block|{
+name|lseek
+argument_list|(
+name|biofd
+argument_list|,
+name|size
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|biofd
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|delarg
