@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<strings.h>
 end_include
 
@@ -204,7 +210,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s attach dest -l filename\n"
+literal|"\t%s attach dest [-l lockfile]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -222,7 +228,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s init dest [-i] [-f filename] -l filename\n"
+literal|"\t%s init /dev/dest [-i] [-f filename] [-L lockfile]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -231,7 +237,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s setkey dest [-n key] -l filename\n"
+literal|"\t%s setkey dest [-n key] [-l lockfile] [-L lockfile]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -240,7 +246,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s destroy dest [-n key] -l filename\n"
+literal|"\t%s destroy dest [-n key] [-l lockfile] [-L lockfile]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -3527,7 +3533,6 @@ name|char
 modifier|*
 name|f_opt
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|dest
@@ -3541,9 +3546,10 @@ name|ch
 decl_stmt|,
 name|dfd
 decl_stmt|,
-name|nkey
-decl_stmt|,
 name|doopen
+decl_stmt|;
+name|u_int
+name|nkey
 decl_stmt|;
 name|int
 name|i
@@ -3551,6 +3557,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|q
+decl_stmt|,
+name|buf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 name|struct
 name|g_bde_key
@@ -3751,10 +3762,13 @@ operator|++
 expr_stmt|;
 name|dest
 operator|=
+name|strdup
+argument_list|(
 name|argv
 index|[
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
 name|argc
 operator|--
@@ -3938,11 +3952,87 @@ name|dfd
 operator|<
 literal|0
 condition|)
+block|{
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+name|dest
+argument_list|)
+expr_stmt|;
+name|dfd
+operator|=
+name|open
+argument_list|(
+name|buf
+argument_list|,
+name|O_RDWR
+operator||
+name|O_CREAT
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|dfd
+operator|<
+literal|0
+condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
 name|dest
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|memcmp
+argument_list|(
+name|dest
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+argument_list|)
+condition|)
+name|strcpy
+argument_list|(
+name|dest
+argument_list|,
+name|dest
+operator|+
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|dest
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+name|usage
+argument_list|(
+literal|"\"dest\" argument must be geom-name\n"
 argument_list|)
 expr_stmt|;
 block|}
