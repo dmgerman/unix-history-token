@@ -288,6 +288,17 @@ begin_comment
 comment|/* No SIGCHLD when children stop. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PS_CLDSIGIGN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* The SIGCHLD handler is SIG_IGN. */
+end_comment
+
 begin_comment
 comment|/*  * pargs, used to hold a copy of the command line, if it had a sane length.  */
 end_comment

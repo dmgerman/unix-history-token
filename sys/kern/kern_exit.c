@@ -1379,7 +1379,7 @@ argument_list|,
 name|NOTE_EXIT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
+comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, or if the handler is set to SIG_IGN, notify process 	 * 1 instead (and hope it will handle this situation). 	 */
 if|if
 condition|(
 name|p
@@ -1390,7 +1390,11 @@ name|p_procsig
 operator|->
 name|ps_flag
 operator|&
+operator|(
 name|PS_NOCLDWAIT
+operator||
+name|PS_CLDSIGIGN
+operator|)
 condition|)
 block|{
 name|struct
