@@ -655,9 +655,9 @@ operator|->
 name|flags
 operator|&
 name|DEVSTAT_NO_ORDERED_TAGS
+operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 name|tag_type
 operator|!=
