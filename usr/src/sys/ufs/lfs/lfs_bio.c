@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -71,6 +71,16 @@ end_include
 
 begin_comment
 comment|/*  * LFS block write function.  *  * XXX  * No write cost accounting is done.  * This is almost certainly wrong for synchronous operations and NFS.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lfs_allclean_wakeup
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Cleaner wakeup address. */
 end_comment
 
 begin_decl_stmt
@@ -200,6 +210,12 @@ expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|lfs_allclean_wakeup
 argument_list|)
 expr_stmt|;
 return|return
