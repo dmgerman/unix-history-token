@@ -980,17 +980,21 @@ name|flags
 operator|&
 name|IS_NEGATIVE
 condition|)
+block|{
 name|PRINT
 argument_list|(
 literal|'('
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|PRINT
 argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
