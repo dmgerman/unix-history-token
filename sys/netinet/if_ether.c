@@ -2953,6 +2953,7 @@ goto|goto
 name|drop
 goto|;
 block|}
+comment|/* 	 * Warn if another host is using the same IP address, but only if the 	 * IP address isn't 0.0.0.0, which is used for DHCP only, in which 	 * case we suppress the warning to avoid false positive complaints of 	 * potential misconfiguration. 	 */
 if|if
 condition|(
 name|isaddr
@@ -2962,6 +2963,12 @@ operator|==
 name|myaddr
 operator|.
 name|s_addr
+operator|&&
+name|myaddr
+operator|.
+name|s_addr
+operator|!=
+literal|0
 condition|)
 block|{
 name|log
