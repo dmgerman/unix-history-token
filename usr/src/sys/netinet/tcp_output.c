@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.39	82/06/08	*/
+comment|/*	tcp_output.c	4.40	82/06/11	*/
 end_comment
 
 begin_include
@@ -1572,7 +1572,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Advance snd_nxt over sequence space of this segment 		 */
+comment|/* 		 * Advance snd_nxt over sequence space of this segment. 		 */
 if|if
 condition|(
 name|flags
@@ -1696,12 +1696,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|tcp_setpersist
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 end_if
 
 begin_comment
@@ -1711,11 +1705,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|tp
-operator|->
-name|t_inpcb
-operator|->
-name|inp_socket
+name|so
 operator|->
 name|so_options
 operator|&
@@ -1795,6 +1785,17 @@ name|tp
 operator|->
 name|t_ipopt
 argument_list|,
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DONTROUTE
+operator|)
+condition|?
+operator|&
+name|routetoif
+else|:
 operator|&
 name|tp
 operator|->
