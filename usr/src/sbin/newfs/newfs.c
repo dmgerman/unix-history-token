@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.2 %G%"
+literal|"@(#)newfs.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,42 +667,42 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-s sectors/track\n"
+literal|"\t-s sectors/track\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-b block-size\n"
+literal|"\t-b block-size\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-f frag-size\n"
+literal|"\t-f frag-size\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-t tracks/cylinder\n"
+literal|"\t-t tracks/cylinder\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-c cylinders/group\n"
+literal|"\t-c cylinders/group\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-S sector-size\n"
+literal|"\t-S sector-size\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -741,18 +741,25 @@ operator|!=
 literal|'/'
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|special
+operator|==
+literal|'r'
+condition|)
+name|special
+operator|++
+expr_stmt|;
 name|special
 operator|=
 name|sprintf
 argument_list|(
 name|device
 argument_list|,
-literal|"/dev/%s"
+literal|"/dev/r%s"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|special
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1286,6 +1293,18 @@ literal|"%s: can't figure out disk type from name"
 argument_list|,
 name|special
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'r'
+condition|)
+name|cp
+operator|++
 expr_stmt|;
 name|type
 index|[
