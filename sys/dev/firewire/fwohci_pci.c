@@ -70,6 +70,29 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_comment
+comment|/* for DELAY() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -1374,18 +1397,29 @@ name|EIO
 return|;
 block|}
 comment|/* XXX 	 * Clear the bus reset event flag to start transactions even when 	 * interrupt is disabled during the boot process. 	 */
+name|DELAY
+argument_list|(
+literal|250
+argument_list|)
+expr_stmt|;
+comment|/* 2 cycles */
 name|s
 operator|=
 name|splfw
 argument_list|()
 expr_stmt|;
-name|fwohci_intr
+name|fwohci_poll
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
 name|sc
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1651,6 +1685,15 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|fwohci_softc_t
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -1675,7 +1718,13 @@ condition|)
 return|return
 name|err
 return|;
-comment|/* fwohci_stop(dev); */
+name|fwohci_stop
+argument_list|(
+name|sc
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1710,6 +1759,13 @@ name|pci_get_powerstate
 argument_list|(
 name|dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|pci_set_powerstate
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 name|fwohci_pci_init
