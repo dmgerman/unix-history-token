@@ -417,7 +417,9 @@ name|ia64_init
 name|__P
 argument_list|(
 operator|(
-name|void
+name|u_int64_t
+operator|,
+name|u_int64_t
 operator|)
 argument_list|)
 decl_stmt|;
