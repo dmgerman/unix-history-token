@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.h 4.4 82/04/24 */
+comment|/* ip_icmp.h 4.5 82/04/25 */
 end_comment
 
 begin_comment
@@ -171,7 +171,7 @@ name|ICMP_ADVLEN
 parameter_list|(
 name|p
 parameter_list|)
-value|(8 + ((p)->icmp_ip.ip_len<< 2) + 8)
+value|(8 + ((p)->icmp_ip.ip_hl<< 2) + 8)
 end_define
 
 begin_comment

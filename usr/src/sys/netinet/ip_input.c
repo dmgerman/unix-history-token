@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.41	82/04/24	*/
+comment|/*	ip_input.c	1.42	82/04/25	*/
 end_comment
 
 begin_include
@@ -2705,9 +2705,8 @@ block|}
 end_block
 
 begin_decl_stmt
-specifier|static
 name|u_char
-name|ctlerrmap
+name|inetctlerrmap
 index|[]
 init|=
 block|{
@@ -2791,7 +2790,6 @@ name|in_addr
 modifier|*
 name|sin
 decl_stmt|;
-specifier|extern
 name|int
 name|tcp_abort
 argument_list|()
@@ -2819,7 +2817,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|ctlerrmap
+name|inetctlerrmap
 index|[
 name|cmd
 index|]
@@ -2892,7 +2890,7 @@ name|tcb
 argument_list|,
 name|sin
 argument_list|,
-name|ctlerrmap
+name|inetctlerrmap
 index|[
 name|cmd
 index|]
@@ -2907,7 +2905,7 @@ name|udb
 argument_list|,
 name|sin
 argument_list|,
-name|ctlerrmap
+name|inetctlerrmap
 index|[
 name|cmd
 index|]

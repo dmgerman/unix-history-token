@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.14	82/04/24	*/
+comment|/*	ip_icmp.c	4.15	82/04/25	*/
 end_comment
 
 begin_include
@@ -67,6 +67,14 @@ begin_comment
 comment|/*  * ICMP routines: error generation, receive packet processing, and  * routines to turnaround packets back to the originator, and  * host table maintenance routines.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|icmpprintfs
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Generate an error packet of type error  * in response to bad packet ip.  */
 end_comment
@@ -131,14 +139,27 @@ argument_list|(
 name|ICMP_ERROR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|icmpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"icmp_error(%x, %d, %d)\n"
+argument_list|,
+name|oip
+argument_list|,
+name|type
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make sure that the old IP packet had 8 bytes of data to return; 	 * if not, don't bother.  Also don't EVER error if the old 	 * packet protocol was ICMP. 	 */
 if|if
 condition|(
 name|oip
 operator|->
 name|ip_len
-operator|-
-name|oiplen
 operator|<
 literal|8
 operator|||
@@ -255,6 +276,40 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
+name|nip
+operator|=
+operator|&
+name|icp
+operator|->
+name|icmp_ip
+expr_stmt|;
+name|nip
+operator|->
+name|ip_len
+operator|+=
+name|oiplen
+expr_stmt|;
+if|#
+directive|if
+name|vax
+operator|||
+name|pdp11
+name|nip
+operator|->
+name|ip_len
+operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|nip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Now, copy old ip header in front of icmp 	 * message.  This allows us to reuse any source 	 * routing info present. 	 */
 name|m
 operator|->
@@ -481,6 +536,12 @@ operator|<<
 literal|2
 decl_stmt|,
 name|i
+decl_stmt|,
+argument_list|(
+operator|*
+name|ctlfunc
+argument_list|)
+argument_list|()
 decl_stmt|;
 specifier|extern
 name|u_char
@@ -493,6 +554,21 @@ name|ICMP_INPUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Locate icmp structure in mbuf, and check 	 * that not corrupted and of at least minimum length. 	 */
+if|if
+condition|(
+name|icmpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"icmp_input from %x, len %d\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_src
+argument_list|,
+name|icmplen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|icmplen
@@ -562,6 +638,23 @@ name|free
 goto|;
 block|}
 comment|/* 	 * Message type specific processing. 	 */
+if|if
+condition|(
+name|icmpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"icmp_input, type %d code %d\n"
+argument_list|,
+name|icp
+operator|->
+name|icmp_type
+argument_list|,
+name|icp
+operator|->
+name|icmp_code
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|i
@@ -587,6 +680,28 @@ case|case
 name|ICMP_SOURCEQUENCH
 case|:
 comment|/* 		 * Problem with previous datagram; advise 		 * higher level routines. 		 */
+if|#
+directive|if
+name|vax
+operator|||
+name|pdp11
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|icmplen
@@ -603,21 +718,44 @@ condition|)
 goto|goto
 name|free
 goto|;
-operator|(
-operator|*
+if|if
+condition|(
+name|icmpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"deliver to protocol %d\n"
+argument_list|,
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctlfunc
+operator|=
 name|protosw
 index|[
 name|ip_protox
 index|[
-name|ip
+name|icp
 operator|->
+name|icmp_ip
+operator|.
 name|ip_p
 index|]
 index|]
 operator|.
 name|pr_ctlinput
-operator|)
-operator|(
+condition|)
+call|(
+modifier|*
+name|ctlfunc
+call|)
+argument_list|(
 name|icmpmap
 index|[
 name|i
@@ -626,12 +764,12 @@ operator|+
 name|icp
 operator|->
 name|icmp_code
-operator|,
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
 name|icp
-operator|)
+argument_list|)
 expr_stmt|;
 goto|goto
 name|free
@@ -956,6 +1094,23 @@ operator|->
 name|m_len
 operator|+=
 name|hlen
+expr_stmt|;
+if|if
+condition|(
+name|icmpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"icmp_send dst %x src %x\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+name|ip
+operator|->
+name|ip_src
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.15	82/04/24	*/
+comment|/*	raw_usrreq.c	4.16	82/04/25	*/
 end_comment
 
 begin_include
@@ -660,6 +660,17 @@ argument_list|(
 name|RAW_CTLINPUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|<
+literal|0
+operator|||
+name|cmd
+operator|>
+name|PRC_NCMDS
+condition|)
+return|return;
 block|}
 end_block
 
