@@ -15,6 +15,18 @@ name|cmdargs
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rt_msghdr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -248,6 +260,27 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|route_ParseHdr
+parameter_list|(
+name|struct
+name|rt_msghdr
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+type|[
+function_decl|RTAX_MAX]
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

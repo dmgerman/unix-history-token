@@ -581,6 +581,16 @@ name|PARSE_NOHASH
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ROUNDUP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) ? (1 + (((x) - 1) | (sizeof(long) - 1))) : sizeof(long))
+end_define
+
 begin_function_decl
 specifier|extern
 name|void

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include
