@@ -7982,10 +7982,6 @@ name|ISP_LOGERR
 argument_list|,
 literal|"What's this? 0x%x at %d in file %s"
 argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
 name|error
 argument_list|,
 name|__LINE__
@@ -8772,10 +8768,6 @@ name|ISP_LOGDEBUG0
 argument_list|,
 literal|"%d.%d set %s period 0x%x offset 0x%x flags 0x%x"
 argument_list|,
-name|isp
-operator|->
-name|isp_name
-argument_list|,
 name|bus
 argument_list|,
 name|tgt
@@ -9193,10 +9185,6 @@ argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
 literal|"%d.%d get %s period 0x%x offset 0x%x flags 0x%x"
-argument_list|,
-name|isp
-operator|->
-name|isp_name
 argument_list|,
 name|bus
 argument_list|,
