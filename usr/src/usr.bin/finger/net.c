@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)net.c	5.5 (Berkeley) %G%"
+literal|"@(#)net.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -64,21 +88,28 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_macro
-name|netfinger
-argument_list|(
-argument|name
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|"finger.h"
+end_include
+
+begin_function
+name|void
+name|netfinger
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -127,15 +158,7 @@ index|]
 decl_stmt|,
 modifier|*
 name|host
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
 decl_stmt|;
-name|u_long
-name|inet_addr
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -552,7 +575,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

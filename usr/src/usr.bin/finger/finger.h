@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)finger.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)finger.h	5.6 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
 
 begin_comment
 comment|/*  * All unique persons are linked in a list headed by "head" and linkd  * by the "next" field, as well as kept in a hash table.  */
@@ -184,81 +172,11 @@ begin_comment
 comment|/* hash code mask */
 end_comment
 
-begin_decl_stmt
-name|PERSON
-modifier|*
-name|htab
-index|[
-name|HSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the buckets */
-end_comment
-
-begin_decl_stmt
-name|PERSON
-modifier|*
-name|phead
-decl_stmt|,
-modifier|*
-name|ptail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the linked list of all people */
-end_comment
-
-begin_decl_stmt
-name|int
-name|entries
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of people */
-end_comment
-
-begin_decl_stmt
-name|PERSON
-modifier|*
-name|enter_person
-argument_list|()
-decl_stmt|,
-modifier|*
-name|find_person
-argument_list|()
-decl_stmt|,
-modifier|*
-name|palloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|WHERE
-modifier|*
-name|walloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|tbuf
-index|[
-literal|1024
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temp buffer for anybody */
-end_comment
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 end_unit
 
