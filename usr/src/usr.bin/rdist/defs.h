@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.10	84/02/09	*/
+comment|/*	defs.h	4.11	84/02/24	*/
 end_comment
 
 begin_include
@@ -584,18 +584,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* host name of master copy */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|rhost
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* host name of remote being updated */
 end_comment
 
 begin_decl_stmt
