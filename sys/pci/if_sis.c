@@ -8247,7 +8247,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Page 78 of the DP83815 data sheet (september 2002 version) 	 * recommends the following register settings "for optimum 	 * performance." for rev 15C.  The driver from NS also sets 	 * the PHY_CR register for later versions. 	 */
+comment|/* 	 * Short Cable Receive Errors (MP21.E) 	 * also: Page 78 of the DP83815 data sheet (september 2002 version) 	 * recommends the following register settings "for optimum 	 * performance." for rev 15C.  The driver from NS also sets 	 * the PHY_CR register for later versions. 	 */
 if|if
 condition|(
 name|sc
@@ -8255,6 +8255,12 @@ operator|->
 name|sis_type
 operator|==
 name|SIS_TYPE_83815
+operator|&&
+name|sc
+operator|->
+name|sis_srr
+operator|<=
+name|NS_SRR_15D
 condition|)
 block|{
 name|CSR_WRITE_4
@@ -8266,7 +8272,6 @@ argument_list|,
 literal|0x0001
 argument_list|)
 expr_stmt|;
-comment|/* DC speed = 01 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8622,12 +8627,6 @@ name|sis_type
 operator|==
 name|SIS_TYPE_83815
 operator|&&
-name|sc
-operator|->
-name|sis_srr
-operator|<
-name|NS_SRR_16A
-operator|&&
 name|IFM_SUBTYPE
 argument_list|(
 name|mii
@@ -8641,7 +8640,7 @@ block|{
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* 		 * Some DP83815s experience problems when used with short 		 * (< 30m/100ft) Ethernet cables in 100BaseTX mode.  This 		 * sequence adjusts the DSP's signal attenuation to fix the 		 * problem. 		 */
+comment|/* 		 * Short Cable Receive Errors (MP21.E)  		 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8659,26 +8658,23 @@ name|sc
 argument_list|,
 name|NS_PHY_DSPCFG
 argument_list|)
+operator|&
+literal|0xfff
 expr_stmt|;
-comment|/* Allow coefficient to be read */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|NS_PHY_DSPCFG
 argument_list|,
-operator|(
 name|reg
-operator|&
-literal|0xfff
-operator|)
 operator||
 literal|0x1000
 argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100
+literal|100000
 argument_list|)
 expr_stmt|;
 name|reg
@@ -8689,6 +8685,8 @@ name|sc
 argument_list|,
 name|NS_PHY_TDATA
 argument_list|)
+operator|&
+literal|0xff
 expr_stmt|;
 if|if
 condition|(
@@ -8731,13 +8729,23 @@ argument_list|,
 literal|0x00e8
 argument_list|)
 expr_stmt|;
-comment|/* Adjust coefficient and prevent change */
+name|reg
+operator|=
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|NS_PHY_DSPCFG
+argument_list|)
+expr_stmt|;
 name|SIS_SETBIT
 argument_list|(
 name|sc
 argument_list|,
 name|NS_PHY_DSPCFG
 argument_list|,
+name|reg
+operator||
 literal|0x20
 argument_list|)
 expr_stmt|;
