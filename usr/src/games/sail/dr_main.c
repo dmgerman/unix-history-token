@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_main.c	2.3 85/04/25"
+literal|"@(#)dr_main.c	2.3 85/04/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,11 @@ name|nat
 index|[
 name|NNATION
 index|]
+decl_stmt|;
+name|int
+name|value
+init|=
+literal|0
 decl_stmt|;
 operator|(
 name|void
@@ -357,20 +362,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sync_close
-argument_list|(
+name|value
+operator|=
 literal|1
-argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
+if|if
+condition|(
 name|next
 argument_list|()
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+break|break;
 name|unfoul
 argument_list|()
 expr_stmt|;
@@ -409,18 +414,21 @@ operator|<
 literal|0
 condition|)
 block|{
+name|value
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|sync_close
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+return|return
+name|value
+return|;
 block|}
 end_block
 

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.13 85/04/25"
+literal|"@(#)dr_1.c	2.14 85/04/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -2648,16 +2648,10 @@ name|bestship
 argument_list|)
 expr_stmt|;
 block|}
-name|sync_close
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|Write
 argument_list|(
@@ -2686,10 +2680,8 @@ operator|%
 literal|7
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|die
 argument_list|()
 operator|>=
@@ -2699,6 +2691,7 @@ name|windchange
 operator|||
 operator|!
 name|windspeed
+operator|)
 condition|)
 block|{
 switch|switch
@@ -2826,7 +2819,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+return|return
+literal|0
+return|;
 block|}
 end_block
 
