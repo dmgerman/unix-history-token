@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.6	84/02/15	*/
+comment|/*	autoconf.c	6.6	84/02/16	*/
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ name|struct
 name|uba_hd
 name|uba_hd
 index|[
-name|MAXNUBA
+name|NUBA
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -586,6 +586,7 @@ argument_list|(
 literal|"%d mba's"
 argument_list|,
 name|nummba
+operator|++
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -631,20 +632,48 @@ argument_list|,
 name|nexnum
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VAX_750
 if|if
 condition|(
 name|numuba
 operator|>=
-literal|4
+literal|2
+operator|&&
+name|cpu
+operator|==
+name|VAX_750
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"5 uba's"
+literal|"More than 2 UBA's"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|unsupp
+goto|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|numuba
+operator|>=
+name|NUBA
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%d uba's"
+argument_list|,
+name|numuba
+operator|++
+argument_list|)
+expr_stmt|;
+goto|goto
+name|unconfig
 goto|;
 block|}
 if|#
@@ -1048,6 +1077,26 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+if|if
+condition|(
+name|nummba
+operator|>
+name|NMBA
+condition|)
+name|nummba
+operator|=
+name|NMBA
+expr_stmt|;
+if|if
+condition|(
+name|numuba
+operator|>
+name|NUBA
+condition|)
+name|numuba
+operator|=
+name|NUBA
+expr_stmt|;
 block|}
 end_block
 
@@ -2091,27 +2140,6 @@ operator|=
 name|UNI1vec
 expr_stmt|;
 else|else
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX_750
-argument_list|)
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_750
-condition|)
-name|printf
-argument_list|(
-literal|"More than 2 UBA's not supported\n"
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
 name|uhp
 operator|->
 name|uh_vec
@@ -2129,7 +2157,6 @@ argument_list|(
 literal|512
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 for|for
