@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.38 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,15 @@ literal|64
 block|}
 block|,
 comment|/* MACHINE_LUNA68K */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|64
+block|}
+block|,
+comment|/* MACHINE_NEWS3400 */
 block|}
 struct|;
 end_struct

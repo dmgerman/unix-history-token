@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,6 +393,13 @@ case|case
 name|MACHINE_PMAX
 case|:
 name|pmax_ioconf
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MACHINE_NEWS3400
+case|:
+name|news_ioconf
 argument_list|()
 expr_stmt|;
 break|break;
