@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso.h	7.4 (Berkeley) %G% */
+comment|/*	@(#)iso.h	7.5 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -544,13 +544,48 @@ begin_comment
 comment|/* user utilities definitions from the iso library */
 end_comment
 
-begin_function_decl
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|struct
+name|iso_addr
+modifier|*
+name|iso_addr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|iso_ntoa
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|iso_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* THESE DON'T EXIST YET */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -565,11 +600,18 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_define
 define|#
