@@ -1958,6 +1958,20 @@ operator|->
 name|wled_set
 expr_stmt|;
 break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"acpi_asus_led: invalid LED type %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|led
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|acpi_SetInteger
 argument_list|(
