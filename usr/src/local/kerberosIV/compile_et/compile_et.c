@@ -105,15 +105,6 @@ begin_comment
 comment|/* C library */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|int
