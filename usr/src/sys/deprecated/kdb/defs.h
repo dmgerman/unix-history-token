@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	7.1	86/11/20	*/
+comment|/*	defs.h	7.2	86/11/20	*/
 end_comment
 
 begin_comment
@@ -171,6 +171,24 @@ name|BKPTEXEC
 value|2
 end_define
 
+begin_comment
+comment|/*  * setexit/reset tokens..  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERROR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXT
+value|6
+end_define
+
 begin_define
 define|#
 directive|define
@@ -183,20 +201,6 @@ define|#
 directive|define
 name|CONTIN
 value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXCOM
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXARG
-value|32
 end_define
 
 begin_define
@@ -232,20 +236,6 @@ define|#
 directive|define
 name|QUOTE
 value|0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
 end_define
 
 begin_define
@@ -339,6 +329,10 @@ decl_stmt|;
 name|short
 name|flag
 decl_stmt|;
+define|#
+directive|define
+name|MAXCOM
+value|64
 name|char
 name|comm
 index|[
