@@ -1794,8 +1794,8 @@ name|ithread_schedule
 argument_list|(
 name|ithd
 argument_list|,
-operator|!
-name|cold
+literal|0
+comment|/* !cold */
 argument_list|)
 expr_stmt|;
 name|KASSERT
