@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.33 1999/02/15 14:15:28 bde Exp $"
+literal|"$Id: vmstat.c,v 1.34 1999/05/10 00:33:32 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2234,14 +2234,6 @@ operator|.
 name|t_sw
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|pgtok
-undef|#
-directive|undef
-name|pgtok
-endif|#
-directive|endif
 define|#
 directive|define
 name|pgtok
@@ -4357,9 +4349,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|kmsp
-decl_stmt|,
-modifier|*
-name|first_kmsp
 decl_stmt|;
 name|char
 modifier|*
@@ -4407,10 +4396,6 @@ argument_list|(
 name|kmsp
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|first_kmsp
-operator|=
-name|kmsp
 expr_stmt|;
 for|for
 control|(
@@ -4557,29 +4542,18 @@ index|]
 operator|.
 name|ks_next
 expr_stmt|;
-if|if
-condition|(
-name|kmsp
-operator|==
-name|first_kmsp
-condition|)
-break|break;
 block|}
 if|if
 condition|(
 name|kmsp
 operator|!=
 name|NULL
-operator|&&
-name|nkms
-operator|>=
-name|MAX_KMSTATS
 condition|)
 name|warnx
 argument_list|(
-literal|"Truncated to the first %d types."
+literal|"truncated to the first %d memory types"
 argument_list|,
-name|MAX_KMSTATS
+name|nkms
 argument_list|)
 expr_stmt|;
 operator|(
