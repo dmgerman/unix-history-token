@@ -95,6 +95,9 @@ argument_list|)
 name|tap_next
 expr_stmt|;
 comment|/* next device in chain      */
+name|dev_t
+name|tap_dev
+decl_stmt|;
 block|}
 struct|;
 end_struct

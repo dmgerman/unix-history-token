@@ -113,6 +113,11 @@ directive|define
 name|SI_CANDELETE
 value|0x0100
 comment|/* can do BIO_DELETE */
+define|#
+directive|define
+name|SI_CLONELIST
+value|0x0200
+comment|/* on a clone list */
 name|struct
 name|timespec
 name|si_atime
@@ -128,6 +133,12 @@ decl_stmt|;
 name|udev_t
 name|si_udev
 decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|cdev
+argument_list|)
+name|si_clone
+expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|cdev
@@ -379,6 +390,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|knote
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|clonedevs
 struct_decl|;
 end_struct_decl
 
@@ -886,6 +903,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|D_PSEUDO
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* make_dev() can return NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|D_NOGIANT
 value|0x00400000
 end_define
@@ -1163,6 +1191,59 @@ parameter_list|)
 define|\
 value|static moduledata_t name##_mod = {					\     #name,								\     evh,								\     arg									\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
+
+begin_function_decl
+name|void
+name|clone_cleanup
+parameter_list|(
+name|struct
+name|clonedevs
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CLONE_UNITMASK
+value|0xfffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLONE_FLAG0
+value|(CLONE_UNITMASK + 1)
+end_define
+
+begin_function_decl
+name|int
+name|clone_create
+parameter_list|(
+name|struct
+name|clonedevs
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|cdevsw
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+name|unit
+parameter_list|,
+name|dev_t
+modifier|*
+name|dev
+parameter_list|,
+name|u_int
+name|extra
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
