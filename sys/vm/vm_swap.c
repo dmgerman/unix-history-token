@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_swap.h"
 end_include
 
@@ -107,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1098,6 +1110,28 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_swapon
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
 name|error
 operator|=
 name|VOP_OPEN

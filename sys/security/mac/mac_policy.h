@@ -3162,6 +3162,28 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|mpo_check_vnode_swapon
+function_decl|)
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|label
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|mpo_check_vnode_write
 function_decl|)
 parameter_list|(
@@ -3478,6 +3500,8 @@ block|,
 name|MAC_CHECK_VNODE_SETUTIMES
 block|,
 name|MAC_CHECK_VNODE_STAT
+block|,
+name|MAC_CHECK_VNODE_SWAPON
 block|,
 name|MAC_CHECK_VNODE_WRITE
 block|, }
