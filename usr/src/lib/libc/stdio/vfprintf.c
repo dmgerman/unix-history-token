@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.24 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,10 +702,9 @@ goto|;
 case|case
 literal|'L'
 case|:
-comment|/* 			 * C doesn't have a long double; use long for now. 			 * flags |= LONGDBL; 			 */
 name|flags
 operator||=
-name|LONGINT
+name|LONGDBL
 expr_stmt|;
 goto|goto
 name|rflag
@@ -896,10 +895,6 @@ literal|'n'
 case|:
 if|if
 condition|(
-name|flags
-operator|&
-name|LONGDBL
-operator|||
 name|flags
 operator|&
 name|LONGINT
