@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.165 1998/07/04 20:45:31 julian Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.166 1998/07/08 01:04:27 julian Exp $  */
 end_comment
 
 begin_comment
@@ -11145,6 +11145,9 @@ name|bp
 operator|->
 name|b_proc
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|bp
 operator|->
 name|b_flags
@@ -11244,16 +11247,26 @@ index|]
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"(0x%x, 0x%x, 0x%x)"
+literal|"(%p, 0x%lx, 0x%lx)"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 operator|->
 name|object
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|m
 operator|->
 name|pindex
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
