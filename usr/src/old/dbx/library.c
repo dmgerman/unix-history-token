@@ -3,9 +3,15 @@ begin_comment
 comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)library.c 1.1 9/2/82"; */
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)library.c 1.2 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * General purpose routines.  */
