@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtboot.c	4.1	83/02/16	*/
+comment|/*	mtboot.c	4.2	83/06/19	*/
 end_comment
 
 begin_comment
@@ -283,12 +283,6 @@ name|MT_done
 operator|,
 literal|1
 comment|/* proper completion code */
-operator|.
-name|set
-name|MT_atn
-operator|,
-literal|0
-comment|/* attention bit for drive 0 */
 comment|/* local stack variables */
 operator|.
 name|set
@@ -724,11 +718,7 @@ argument_list|)
 operator|,
 name|r2
 comment|/* check attention bits */
-name|bbc
-name|$MT_atn
-operator|,
-name|r2
-operator|,
+name|beql
 literal|1b
 comment|/* loop if attention not yet set */
 name|movl
