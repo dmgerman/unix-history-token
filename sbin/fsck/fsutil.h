@@ -232,6 +232,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|statfs
+modifier|*
+name|getmntpt
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|hotroot
 name|__P
@@ -291,21 +307,35 @@ begin_define
 define|#
 directive|define
 name|CHECK_PREEN
-value|1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHECK_VERBOSE
-value|2
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|CHECK_DEBUG
-value|4
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_BACKGRD
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_BACKGRD
+value|0x0010
 end_define
 
 begin_struct_decl
@@ -322,11 +352,10 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|void
+name|int
+argument_list|(
 operator|*
-call|(
-modifier|*
-call|)
+argument_list|)
 argument_list|(
 expr|struct
 name|fstab
@@ -350,7 +379,7 @@ specifier|const
 name|char
 operator|*
 argument_list|,
-name|void
+name|char
 operator|*
 argument_list|,
 name|pid_t
