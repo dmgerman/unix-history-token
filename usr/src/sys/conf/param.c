@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.15	82/11/13	*/
+comment|/*	param.c	4.16	82/11/15	*/
 end_comment
 
 begin_include
@@ -202,7 +202,7 @@ name|ncallout
 init|=
 literal|16
 operator|+
-name|MAXUSERS
+name|NPROC
 decl_stmt|;
 end_decl_stmt
 
