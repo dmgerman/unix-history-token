@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	1.11	83/05/18	*/
+comment|/*	config.h	1.12	83/05/18	*/
 end_comment
 
 begin_comment
@@ -34,10 +34,14 @@ modifier|*
 name|f_fn
 decl_stmt|;
 comment|/* the name */
-name|int
+name|short
 name|f_type
 decl_stmt|;
 comment|/* see below */
+name|short
+name|f_special
+decl_stmt|;
+comment|/* requires special make rule */
 name|char
 modifier|*
 name|f_needs
