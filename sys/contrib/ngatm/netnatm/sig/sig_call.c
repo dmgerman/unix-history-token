@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/atm/sig/sig_call.c,v 1.61 2003/10/16 13:35:44 hbb Exp $  *  * Call instance handling  *  * Note:  *	In all functions that handle messages from the user or from  *	the SAAL, commit memory allocation always at the begin of the  *	function. If allocation fails, ignore saal messages and  *	respond with an error to user messages.  */
+comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/netnatm/sig/sig_call.c,v 1.64 2004/07/08 08:22:19 brandt Exp $  *  * Call instance handling  *  * Note:  *	In all functions that handle messages from the user or from  *	the SAAL, commit memory allocation always at the begin of the  *	function. If allocation fails, ignore saal messages and  *	respond with an error to user messages.  */
 end_comment
 
 begin_include
@@ -695,7 +695,7 @@ parameter_list|,
 name|u_int
 name|mine
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -929,7 +929,7 @@ name|uni
 modifier|*
 name|uni
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -938,7 +938,7 @@ name|call
 modifier|*
 name|c
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|old
 init|=
 name|uni
@@ -1295,7 +1295,7 @@ name|party
 modifier|*
 name|p
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|old
 init|=
 name|c
@@ -2446,7 +2446,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|enum
@@ -4338,7 +4338,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|enum
@@ -4500,7 +4500,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|enum
@@ -4706,7 +4706,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|enum
@@ -4877,6 +4877,7 @@ operator|==
 name|CALL_LEAF
 condition|)
 block|{
+comment|/* XXX don't mandate if only one party */
 name|uniapi_call_error
 argument_list|(
 name|c
@@ -5045,7 +5046,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|enum
@@ -6510,7 +6511,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -7893,7 +7894,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -8027,7 +8028,7 @@ name|uni_msg
 modifier|*
 name|m
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|enum
@@ -10139,7 +10140,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -12687,7 +12688,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -12943,7 +12944,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -13099,7 +13100,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -13255,7 +13256,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -13411,7 +13412,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -13545,7 +13546,7 @@ name|uni_msg
 modifier|*
 name|msg
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 block|{
@@ -13661,7 +13662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ADD PARTY in U7/U8/U10  *  * Q.2971:Call-Control-U 14/39  U7  * Q.2971:Call-Control-U 15/39  U8  * Q.2971:Call-Control-U 21/39  U10  * Q.2971:Call-Control-N 8/39   N4  * Q.2971:Call-Control-N 21/39  N10  *  * Body already decoded  */
+comment|/*  * ADD PARTY in U7/U8/U10  *  * Q.2971:Call-Control-U 14/39  U7  * Q.2971:Call-Control-U 15/39  U8  * Q.2971:Call-Control-U 21/39  U10  * Q.2971:Call-Control-N 8/39   N4  * Q.2971:Call-Control-N 21/39  N10  *  * Body already decoded  * XXX check EPREF flag  */
 end_comment
 
 begin_function
@@ -14135,6 +14136,72 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|IE_ISGOOD
+argument_list|(
+name|u
+operator|->
+name|u
+operator|.
+name|add_party
+operator|.
+name|epref
+argument_list|)
+operator|&&
+name|p
+operator|==
+name|NULL
+operator|&&
+name|u
+operator|->
+name|u
+operator|.
+name|add_party
+operator|.
+name|epref
+operator|.
+name|flag
+condition|)
+block|{
+name|IE_SETERROR
+argument_list|(
+name|u
+operator|->
+name|u
+operator|.
+name|add_party
+operator|.
+name|epref
+argument_list|)
+expr_stmt|;
+name|UNI_SAVE_IERR
+argument_list|(
+operator|&
+name|c
+operator|->
+name|uni
+operator|->
+name|cx
+argument_list|,
+name|UNI_IE_EPREF
+argument_list|,
+name|u
+operator|->
+name|u
+operator|.
+name|add_party
+operator|.
+name|epref
+operator|.
+name|h
+operator|.
+name|act
+argument_list|,
+name|UNI_IERR_BAD
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -16878,7 +16945,7 @@ name|enum
 name|call_sig
 name|sig
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|struct
@@ -19098,7 +19165,7 @@ name|c
 operator|->
 name|cstate
 operator|==
-name|CALLST_N1
+name|CALLST_N3
 condition|)
 block|{
 comment|/* Q.2971:Call-Control-N 38/39 (N1) */

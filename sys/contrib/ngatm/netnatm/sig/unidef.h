@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/atm/sig/unidef.h,v 1.6 2003/09/19 12:03:34 hbb Exp $  *  * UNI public definitions.  */
+comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/netnatm/sig/unidef.h,v 1.9 2004/07/08 08:22:24 brandt Exp $  *  * UNI public definitions.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,34 @@ define|#
 directive|define
 name|_ATM_SIG_UNIDEF_H_
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Debug facilities  */
@@ -257,79 +285,79 @@ begin_struct
 struct|struct
 name|uni_config
 block|{
-name|u_int32_t
+name|uint32_t
 name|proto
 decl_stmt|;
 comment|/* which protocol */
-name|u_int32_t
+name|uint32_t
 name|popt
 decl_stmt|;
 comment|/* protocol option */
-name|u_int32_t
+name|uint32_t
 name|option
 decl_stmt|;
 comment|/* other options */
-name|u_int32_t
+name|uint32_t
 name|timer301
 decl_stmt|;
 comment|/* T301 */
-name|u_int32_t
+name|uint32_t
 name|timer303
 decl_stmt|;
 comment|/* T303 */
-name|u_int32_t
+name|uint32_t
 name|init303
 decl_stmt|;
 comment|/* T303 retransmission count */
-name|u_int32_t
+name|uint32_t
 name|timer308
 decl_stmt|;
 comment|/* T308 */
-name|u_int32_t
+name|uint32_t
 name|init308
 decl_stmt|;
 comment|/* T308 retransmission count */
-name|u_int32_t
+name|uint32_t
 name|timer309
 decl_stmt|;
 comment|/* T309 */
-name|u_int32_t
+name|uint32_t
 name|timer310
 decl_stmt|;
 comment|/* T310 */
-name|u_int32_t
+name|uint32_t
 name|timer313
 decl_stmt|;
 comment|/* T313 */
-name|u_int32_t
+name|uint32_t
 name|timer316
 decl_stmt|;
 comment|/* T316 */
-name|u_int32_t
+name|uint32_t
 name|init316
 decl_stmt|;
 comment|/* T316 retransmission count */
-name|u_int32_t
+name|uint32_t
 name|timer317
 decl_stmt|;
 comment|/* T317 */
-name|u_int32_t
+name|uint32_t
 name|timer322
 decl_stmt|;
 comment|/* T322 */
-name|u_int32_t
+name|uint32_t
 name|init322
 decl_stmt|;
 comment|/* T322 retransmission count */
-name|u_int32_t
+name|uint32_t
 name|timer397
 decl_stmt|;
 comment|/* T397 */
-name|u_int32_t
+name|uint32_t
 name|timer398
 decl_stmt|;
 comment|/* T398 */
-name|u_int32_t
+name|uint32_t
 name|timer399
 decl_stmt|;
 comment|/* T399 */
@@ -670,10 +698,10 @@ begin_struct
 struct|struct
 name|uniapi_error
 block|{
-name|u_int32_t
+name|uint32_t
 name|reason
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|state
 decl_stmt|;
 block|}
@@ -840,11 +868,11 @@ begin_struct
 struct|struct
 name|uniapi_reset_error_indication
 block|{
-name|u_int32_t
+name|uint32_t
 name|source
 decl_stmt|;
 comment|/* 0 - start, 1 - response */
-name|u_int32_t
+name|uint32_t
 name|reason
 decl_stmt|;
 block|}
