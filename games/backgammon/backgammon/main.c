@@ -424,6 +424,22 @@ name|long
 name|t
 decl_stmt|;
 comment|/* time for random num generator */
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/*Drop the privilege.*/
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|uid
+argument_list|,
+name|uid
+argument_list|)
+expr_stmt|;
 comment|/* initialization */
 name|bflag
 operator|=

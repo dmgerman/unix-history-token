@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -226,6 +238,22 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/*Drop the privilege.*/
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|uid
+argument_list|,
+name|uid
+argument_list|)
+expr_stmt|;
 name|acnt
 operator|=
 literal|1
