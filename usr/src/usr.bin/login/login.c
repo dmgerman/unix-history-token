@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.29 (Berkeley) 83/06/10"
+literal|"@(#)login.c	4.30 (Berkeley) 83/06/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,14 +406,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ttychars
+name|tchars
 name|tc
 init|=
 block|{
-name|CERASE
-block|,
-name|CKILL
-block|,
 name|CINTR
 block|,
 name|CQUIT
@@ -422,10 +418,19 @@ name|CSTART
 block|,
 name|CSTOP
 block|,
-name|CEOF
+name|CEOT
 block|,
 name|CBRK
-block|,
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ltchars
+name|ltc
+init|=
+block|{
 name|CSUSP
 block|,
 name|CDSUSP
@@ -687,7 +692,6 @@ operator|&
 name|zero
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|ioctl
 argument_list|(
 literal|0
@@ -727,7 +731,6 @@ operator|&
 name|ttyb
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 comment|/* 	 * If talking to an rlogin process, 	 * propagate the terminal type and 	 * baud rate across the network. 	 */
 if|if
 condition|(
@@ -745,21 +748,30 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSETP
+name|TIOCSLTC
 argument_list|,
 operator|&
-name|ttyb
+name|ltc
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCCSET
+name|TIOCSETC
 argument_list|,
 operator|&
 name|tc
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSETP
+argument_list|,
+operator|&
+name|ttyb
 argument_list|)
 expr_stmt|;
 for|for
