@@ -1190,6 +1190,13 @@ name|flagp
 operator|=
 name|fmode
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vn_open_cred"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
