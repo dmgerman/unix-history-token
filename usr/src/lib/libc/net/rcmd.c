@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	4.7 %G%"
+literal|"@(#)rcmd.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1096,29 +1096,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-end_block
-
-begin_macro
-name|socketaddr
-argument_list|(
-argument|x
-argument_list|,
-argument|y
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|syscall
-argument_list|(
-literal|103
-argument_list|,
-name|x
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
