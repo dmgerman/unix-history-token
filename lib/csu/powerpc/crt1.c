@@ -32,6 +32,18 @@ directive|include
 file|"crtbrand.c"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|Struct_Obj_Entry
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ps_strings
+struct_decl|;
+end_struct_decl
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -154,7 +166,8 @@ operator|*
 operator|*
 operator|,
 specifier|const
-name|Obj_Entry
+expr|struct
+name|Struct_Obj_Entry
 operator|*
 operator|,
 name|void
@@ -190,6 +203,14 @@ modifier|*
 name|__progname
 init|=
 literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ps_strings
+modifier|*
+name|__ps_strings
 decl_stmt|;
 end_decl_stmt
 
@@ -229,7 +250,8 @@ end_function_decl
 
 begin_decl_stmt
 specifier|const
-name|Obj_Entry
+name|struct
+name|Struct_Obj_Entry
 modifier|*
 name|obj
 decl_stmt|;
@@ -402,7 +424,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|env
+name|envp
 argument_list|)
 argument_list|)
 expr_stmt|;
