@@ -858,10 +858,14 @@ name|xmalloc
 argument_list|(
 name|result_size
 operator|=
+operator|(
 name|strlen
 argument_list|(
 name|string
 argument_list|)
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Scan through STRING expanding tildes as we come to them. */

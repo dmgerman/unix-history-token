@@ -1326,6 +1326,7 @@ comment|/* Non-zero if we called this function from _rl_dispatch().  It's presen
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rl_dispatching
 decl_stmt|;
