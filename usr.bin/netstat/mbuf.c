@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.11 1998/05/15 20:19:18 wollman Exp $"
+literal|"$Id: mbuf.c,v 1.12 1998/07/06 21:01:26 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,10 +321,10 @@ literal|3
 index|]
 decl_stmt|,
 name|nmbclusters
-decl_stmt|,
-name|nmbclen
 decl_stmt|;
 name|size_t
+name|nmbclen
+decl_stmt|,
 name|mbstatlen
 decl_stmt|;
 name|name
