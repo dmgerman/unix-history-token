@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.173 1998/08/28 20:07:13 luoqi Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.174 1998/09/04 08:06:55 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -2549,6 +2549,8 @@ operator||
 name|B_INVAL
 operator||
 name|B_ERROR
+operator||
+name|B_FREEBUF
 operator|)
 operator|)
 operator|||
@@ -2613,6 +2615,8 @@ operator|(
 name|B_DELWRI
 operator||
 name|B_CACHE
+operator||
+name|B_FREEBUF
 operator|)
 expr_stmt|;
 if|if
@@ -8626,6 +8630,27 @@ name|B_DONE
 expr_stmt|;
 if|if
 condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_FREEBUF
+condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|bp
 operator|->
@@ -11158,11 +11183,7 @@ name|bp
 operator|->
 name|b_flags
 argument_list|,
-literal|"\20\40bounce\37cluster\36vmio\35ram\34ordered"
-literal|"\33paging\32xxx\31writeinprog\30wanted\27relbuf\26avail3"
-literal|"\25read\24raw\23phys\22clusterok\21malloc\20nocache"
-literal|"\17locked\16inval\15avail2\14error\13eintr\12done\11avail1"
-literal|"\10delwri\7call\6cache\5busy\4bad\3async\2needcommit\1age"
+name|PRINT_BUF_FLAGS
 argument_list|)
 expr_stmt|;
 name|db_printf
