@@ -337,7 +337,8 @@ if|if
 condition|(
 name|error
 condition|)
-break|break;
+continue|continue;
+comment|/* don't give up */
 block|}
 block|}
 return|return
