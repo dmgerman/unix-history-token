@@ -1820,11 +1820,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -1849,6 +1844,14 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFIREWALL
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
 name|struct
 name|ether_header
 modifier|*
@@ -1865,6 +1868,8 @@ operator|*
 argument_list|)
 decl_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 if|if
 condition|(
 name|dst
