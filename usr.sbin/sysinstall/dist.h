@@ -60,13 +60,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_HELP
+name|DIST_DOC
 value|0x0040
 end_define
-
-begin_comment
-comment|/* Not yet used; reserved */
-end_comment
 
 begin_define
 define|#
@@ -133,7 +129,7 @@ define|#
 directive|define
 name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
 end_define
 
 begin_define
@@ -141,7 +137,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
 end_define
 
 begin_comment
