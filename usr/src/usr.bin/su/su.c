@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.25 (Berkeley) %G%"
+literal|"@(#)su.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,6 +609,33 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ruid
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+operator|!
+name|use_kerberos
+operator|||
+name|kerberos
+argument_list|(
+name|username
+argument_list|,
+name|user
+argument_list|,
+name|pwd
+operator|->
+name|pw_uid
+argument_list|)
+condition|)
+endif|#
+directive|endif
+block|{
 comment|/* only allow those in group zero to su to root. */
 if|if
 condition|(
@@ -681,32 +708,6 @@ argument_list|)
 condition|)
 break|break;
 block|}
-if|if
-condition|(
-name|ruid
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|KERBEROS
-if|if
-condition|(
-operator|!
-name|use_kerberos
-operator|||
-name|kerberos
-argument_list|(
-name|username
-argument_list|,
-name|user
-argument_list|,
-name|pwd
-operator|->
-name|pw_uid
-argument_list|)
-condition|)
-endif|#
-directive|endif
 comment|/* if target requires a password, verify it */
 if|if
 condition|(
@@ -770,6 +771,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1409,23 +1411,11 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"su: couldn't get local realm.\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|koktologin
@@ -1488,6 +1478,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|krb_set_tkt_string
+argument_list|(
+name|krbtkfile
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set real as well as effective ID to 0 for the moment, 	 * to make the kerberos library do the right thing. 	 */
 if|if
 condition|(
@@ -1510,14 +1508,6 @@ literal|1
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|krbtkfile
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Little trick here -- if we are su'ing to root, 	 * we need to get a ticket for "xxx.root", where xxx represents 	 * the name of the person su'ing.  Otherwise (non-root case), 	 * we need to get a ticket for "yyy.", where yyy represents 	 * the name of the person being su'd to, and the instance is null 	 * 	 * We should have a way to set the ticket lifetime, 	 * with a system default for root. 	 */
 name|kerno
 operator|=
@@ -1606,8 +1596,10 @@ block|}
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"su: unable to su: %s\n"
 argument_list|,
 name|krb_err_txt
@@ -1622,7 +1614,7 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: BAD Kerberos SU: %s to %s%s: %s"
+literal|"BAD Kerberos SU: %s to %s%s: %s"
 argument_list|,
 name|username
 argument_list|,
@@ -1708,7 +1700,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"su: hostname"
+literal|"su: gethostname"
 argument_list|)
 expr_stmt|;
 name|dest_tkt
@@ -1776,9 +1768,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"Warning: tgt not verified.\n"
+name|stderr
+argument_list|,
+literal|"Warning: TGT not verified.\n"
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -1787,7 +1781,7 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: %s to %s%s, TGT not verified"
+literal|"%s to %s%s, TGT not verified (%s); %s.%s not registered?"
 argument_list|,
 name|username
 argument_list|,
@@ -1795,6 +1789,15 @@ name|user
 argument_list|,
 name|ontty
 argument_list|()
+argument_list|,
+name|krb_err_txt
+index|[
+name|kerno
+index|]
+argument_list|,
+literal|"rcmd"
+argument_list|,
+name|savehost
 argument_list|)
 expr_stmt|;
 block|}
@@ -1809,8 +1812,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to use TGT: %s\n"
 argument_list|,
 name|krb_err_txt
@@ -1825,7 +1830,7 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: failed su: %s to %s%s: %s"
+literal|"failed su: %s to %s%s: %s"
 argument_list|,
 name|username
 argument_list|,
@@ -1867,8 +1872,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"su: can't get addr of %s\n"
 argument_list|,
 name|hostname
@@ -1938,8 +1945,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"su: unable to verify rcmd ticket: %s\n"
 argument_list|,
 name|krb_err_txt
@@ -1954,14 +1963,14 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: failed su: %s to %s%s: %s"
+literal|"failed su: %s to %s%s: %s"
 argument_list|,
 name|username
 argument_list|,
+name|user
+argument_list|,
 name|ontty
 argument_list|()
-argument_list|,
-name|user
 argument_list|,
 name|krb_err_txt
 index|[
