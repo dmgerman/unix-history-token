@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: cpu.h,v 1.1 1998/01/10 10:13:14 jb Exp $ */
+comment|/* $Id: cpu.h,v 1.2 1998/06/10 10:54:45 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -150,7 +150,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|u_int64_t
+name|u_int32_t
 name|astpending
 decl_stmt|;
 end_decl_stmt
@@ -160,7 +160,7 @@ comment|/* need to trap before returning to user mode */
 end_comment
 
 begin_decl_stmt
-name|u_int64_t
+name|u_int32_t
 name|want_resched
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.3 1998/06/10 10:55:15 dfr Exp $ */
+comment|/* $Id: param.h,v 1.4 1998/06/14 13:45:13 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -563,12 +563,6 @@ name|x
 parameter_list|)
 value|((unsigned long)(x)<< PAGE_SHIFT)
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/intr.h>
-end_include
 
 begin_ifdef
 ifdef|#

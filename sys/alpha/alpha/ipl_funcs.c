@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.2 1998/06/11 11:51:26 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.3 1998/07/05 12:08:59 dfr Exp $  */
 end_comment
 
 begin_include
@@ -47,9 +47,13 @@ end_comment
 begin_decl_stmt
 name|unsigned
 name|int
-name|netisr
+name|net_imask
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_macro
 name|void
@@ -71,40 +75,68 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|u_int64_t
-name|ipending
+name|u_int32_t
+name|netisr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|cpl
+name|u_int32_t
+name|ipending
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|getcpl
+parameter_list|()
+value|(alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)
+end_define
+
+begin_function_decl
+specifier|static
+name|void
+name|swi_tty
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|swi_net
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|atomic_setbit
 parameter_list|(
-name|u_int64_t
+name|u_int32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int64_t
+name|u_int32_t
 name|bit
 parameter_list|)
 block|{
-name|u_int64_t
+name|u_int32_t
 name|temp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	"1:\tldq_l %0,%2\n\t"
+asm|( 	"1:\tldl_l %0,%2\n\t"
 comment|/* load current mask value, asserting lock */
 asm|"or %3,%0,%0\n\t"
 comment|/* add our bits */
-asm|"stq_c %0,%1\n\t"
+asm|"stl_c %0,%1\n\t"
 comment|/* attempt to store */
 asm|"beq %0,2f\n\t"
 comment|/* if the store failed, spin */
@@ -120,15 +152,15 @@ end_function
 
 begin_function
 specifier|static
-name|u_int64_t
+name|u_int32_t
 name|atomic_readandclear
 parameter_list|(
-name|u_int64_t
+name|u_int32_t
 modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_int64_t
+name|u_int32_t
 name|v
 decl_stmt|,
 name|temp
@@ -137,11 +169,11 @@ asm|__asm__
 specifier|__volatile__
 asm|( 	"wmb\n"
 comment|/* ensure pending writes have drained */
-asm|"1:\tldq_l %0,%3\n\t"
+asm|"1:\tldl_l %0,%3\n\t"
 comment|/* load current value, asserting lock */
 asm|"ldiq %1,0\n\t"
 comment|/* value to store */
-asm|"stq_c %1,%2\n\t"
+asm|"stl_c %1,%2\n\t"
 comment|/* attempt to store */
 asm|"beq %1,2f\n\t"
 comment|/* if the store failed, spin */
@@ -159,26 +191,116 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|swi_tty
+parameter_list|()
+block|{
+comment|/* XXX no users yet */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|swi_net
+parameter_list|()
+block|{
+name|u_int32_t
+name|bits
+init|=
+name|atomic_readandclear
+argument_list|(
+operator|&
+name|netisr
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|32
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|bits
+operator|&
+literal|1
+condition|)
+name|netisrs
+index|[
+name|i
+index|]
+operator|(
+operator|)
+expr_stmt|;
+name|bits
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
 name|void
 name|do_sir
 parameter_list|()
 block|{
-name|u_int64_t
+name|u_int32_t
 name|pend
-init|=
+decl_stmt|;
+name|splsoft
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|pend
+operator|=
 name|atomic_readandclear
 argument_list|(
 operator|&
 name|ipending
 argument_list|)
-decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*      * Later - no users of these yet.      */
-block|if (pend& (1<< SWI_TTY)) 	swi_tty();     if (pend& (1<< SWI_NET)) 	swi_net();
-endif|#
-directive|endif
+condition|)
+block|{
+if|if
+condition|(
+name|pend
+operator|&
+operator|(
+literal|1
+operator|<<
+name|SWI_TTY
+operator|)
+condition|)
+name|swi_tty
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pend
+operator|&
+operator|(
+literal|1
+operator|<<
+name|SWI_NET
+operator|)
+condition|)
+name|swi_net
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pend
@@ -192,6 +314,7 @@ condition|)
 name|softclock
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -271,8 +394,8 @@ name|name
 parameter_list|,
 name|pri
 parameter_list|)
-define|\ 							\
-value|int name(void)						\ {							\     int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\     cpl = ALPHA_PSL_IPL_##pri;				\     return s;						\ }
+define|\ 						\
+value|int name(void)					\ {						\     int s;					\     s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\     return s;					\ }
 end_define
 
 begin_macro
@@ -293,6 +416,15 @@ argument|SOFT
 argument_list|)
 end_macro
 
+begin_macro
+name|SPLDOWN
+argument_list|(
+argument|splsoft
+argument_list|,
+argument|SOFT
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -303,7 +435,7 @@ parameter_list|,
 name|pri
 parameter_list|)
 define|\ 							\
-value|int name(void)						\ {							\     if (ALPHA_PSL_IPL_##pri> cpl) {			\ 	int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\ 	cpl = ALPHA_PSL_IPL_##pri;			\ 	return s;					\     } else						\ 	return cpl;					\ }
+value|int name(void)						\ {							\     int cpl = getcpl();					\     if (ALPHA_PSL_IPL_##pri> cpl) {			\ 	int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\ 	return s;					\     } else						\ 	return cpl;					\ }
 end_define
 
 begin_macro
@@ -383,15 +515,18 @@ name|void
 name|spl0
 parameter_list|()
 block|{
-comment|/* XXX soft interrupts here */
+if|if
+condition|(
+name|ipending
+condition|)
+name|do_sir
+argument_list|()
+expr_stmt|;
+comment|/* lowers ipl to SOFT */
 name|alpha_pal_swpipl
 argument_list|(
 name|ALPHA_PSL_IPL_0
 argument_list|)
-expr_stmt|;
-name|cpl
-operator|=
-name|ALPHA_PSL_IPL_0
 expr_stmt|;
 block|}
 end_function
@@ -408,17 +543,11 @@ if|if
 condition|(
 name|s
 condition|)
-block|{
 name|alpha_pal_swpipl
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|cpl
-operator|=
-name|s
-expr_stmt|;
-block|}
 else|else
 name|spl0
 argument_list|()
