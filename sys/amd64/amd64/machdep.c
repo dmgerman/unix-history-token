@@ -10078,7 +10078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set machine context.  *  * However, we don't set any but the user modifyable flags, and  * we we won't touch the cs selector.  */
+comment|/*  * Set machine context.  *  * However, we don't set any but the user modifiable flags, and we won't  * touch the cs selector.  */
 end_comment
 
 begin_function
@@ -10102,10 +10102,9 @@ modifier|*
 name|tp
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|;
-name|int
 name|eflags
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|tp
 operator|=
@@ -10330,6 +10329,7 @@ name|_MC_FPOWNED_NONE
 expr_stmt|;
 else|#
 directive|else
+comment|/* DEV_NPX */
 name|union
 name|savefpu
 modifier|*
@@ -10500,6 +10500,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* !DEV_NPX */
 block|}
 end_function
 
@@ -10537,7 +10538,6 @@ operator|(
 literal|0
 operator|)
 return|;
-elseif|else
 if|if
 condition|(
 name|mcp
@@ -10671,13 +10671,11 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Don't bother putting things back where they were in the 		 * misaligned case, since we know that the caller won't use 		 * them again. 		 */
 block|}
 else|else
 block|{
-comment|/* 		 * There's no valid FPU state to restore, so use the 		 * saved state in the PCB only of the process has used 		 * the FPU since. 		 */
+comment|/* 		 * There is no valid FPU state in *mcp, so use the saved 		 * state in the PCB if there is one.  XXX the test for 		 * whether there is one seems to be quite broken.  We 		 * forcibly drop the state in sendsig(). 		 */
 if|if
 condition|(
 operator|(
@@ -10704,6 +10702,8 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 operator|!
