@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.23 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
