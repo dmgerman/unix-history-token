@@ -516,6 +516,11 @@ operator|++
 operator|=
 literal|'/'
 expr_stmt|;
+operator|*
+name|bup
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* 		 * If it's a mount point, have to stat each element because 		 * the inode number in the directory is for the entry in the 		 * parent directory, not the inode number of the mounted file. 		 */
 name|save_errno
 operator|=
