@@ -306,10 +306,25 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* single PML4 entry */
+comment|/*      * This is kinda brutal, but every single 1GB VM memory segment points to      * the same first 1GB of physical memory.  But it is more than adequate.      */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|512
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* Each slot of the level 4 pages points to the same level 3 page */
 name|PT4
 index|[
-literal|0
+name|i
 index|]
 operator|=
 operator|(
@@ -329,7 +344,7 @@ argument_list|)
 expr_stmt|;
 name|PT4
 index|[
-literal|0
+name|i
 index|]
 operator||=
 name|PG_V
@@ -338,10 +353,10 @@ name|PG_RW
 operator||
 name|PG_U
 expr_stmt|;
-comment|/* Direct map 1GB at address zero */
+comment|/* Each slot of the level 3 pages points to the same level 2 page */
 name|PT3
 index|[
-literal|0
+name|i
 index|]
 operator|=
 operator|(
@@ -361,7 +376,7 @@ argument_list|)
 expr_stmt|;
 name|PT3
 index|[
-literal|0
+name|i
 index|]
 operator||=
 name|PG_V
@@ -370,53 +385,7 @@ name|PG_RW
 operator||
 name|PG_U
 expr_stmt|;
-comment|/* Direct map 1GB at KERNBASE (hardcoded for now) */
-name|PT3
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|p3_entry_t
-operator|)
-name|VTOP
-argument_list|(
-operator|(
-name|uintptr_t
-operator|)
-operator|&
-name|PT2
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|PT3
-index|[
-literal|1
-index|]
-operator||=
-name|PG_V
-operator||
-name|PG_RW
-operator||
-name|PG_U
-expr_stmt|;
-comment|/* 512 PG_PS (2MB) page mappings for 1GB of direct mapping */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|512
-condition|;
-name|i
-operator|++
-control|)
-block|{
+comment|/* The level 2 page slots are mapped with 2MB pages for 1GB. */
 name|PT2
 index|[
 name|i
