@@ -51,12 +51,6 @@ directive|define
 name|FSTYPENAMES
 end_define
 
-begin_define
-define|#
-directive|define
-name|DKTYPENAMES
-end_define
-
 begin_include
 include|#
 directive|include
