@@ -2377,7 +2377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the card.  Ideally, we'd do a lot of this via interrupts.  * However, many PC Cards will deassert the ready signal.  This means  * that they are asserting an interrupt.  This makes it hard to   * do anything but a busy wait here.  One could argue that these  * such cards are broken, or that the bridge that allows this sort  * of interrupt through isn't quite what you'd want (and may be a standards  * violation).  However, such arguing would leave a huge class of pc cards  * and bridges out of reach for   */
+comment|/*  * Reset the card.  Ideally, we'd do a lot of this via interrupts.  * However, many PC Cards will deassert the ready signal.  This means  * that they are asserting an interrupt.  This makes it hard to   * do anything but a busy wait here.  One could argue that these  * such cards are broken, or that the bridge that allows this sort  * of interrupt through isn't quite what you'd want (and may be a standards  * violation).  However, such arguing would leave a huge class of pc cards  * and bridges out of reach for use in the system.  *  * Maybe I should reevaluate the above based on the power bug I fixed  * in OLDCARD.  */
 end_comment
 
 begin_function
