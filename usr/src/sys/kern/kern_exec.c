@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.53 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -396,6 +396,10 @@ directive|endif
 name|struct
 name|nameidata
 name|nd
+decl_stmt|;
+name|struct
+name|ps_strings
+name|ps
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1772,10 +1776,15 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * XXX the following is excessively bogus 	 * 	 * Compute initial process stack size and location of argc 	 * and character strings.  `nc' is currently just the number 	 * of characters of arg and env strings. 	 * 	 * nc = size of signal code + 4 bytes of NULL pointer + nc, 	 *	rounded to nearest integer; 	 * ucp = USRSTACK - nc;		[user characters pointer] 	 * apsize = padding (if any) + 	 *	4 bytes of NULL pointer + 	 *	ne 4-byte pointers to env strings + 	 *	4 bytes of NULL pointer + 	 *	(na-ne) 4-byte pointers to arg strings + 	 *	4 bytes of argc; 	 * (this is the same as nc + (na+3)*4) 	 * ap = ucp - apsize;	[user address of argc] 	 * ssize = ssize + nc + machine-dependent space; 	 */
+comment|/* 	 * XXX the following is excessively bogus 	 * 	 * Compute initial process stack size and location of argc 	 * and character strings.  `nc' is currently just the number 	 * of characters of arg and env strings. 	 * 	 * nc = size of ps_strings structure + 	 *	size of signal code + 	 *	4 bytes of NULL pointer + 	 *	nc, 	 * rounded to nearest integer; 	 * ucp = USRSTACK - nc;		[user characters pointer] 	 * apsize = padding (if any) + 	 *	4 bytes of NULL pointer + 	 *	ne 4-byte pointers to env strings + 	 *	4 bytes of NULL pointer + 	 *	(na-ne) 4-byte pointers to arg strings + 	 *	4 bytes of argc; 	 * (this is the same as nc + (na+3)*4) 	 * ap = ucp - apsize;	[user address of argc] 	 * ssize = ssize + nc + machine-dependent space; 	 */
 name|nc
 operator|=
 operator|(
+sizeof|sizeof
+argument_list|(
+name|ps
+argument_list|)
+operator|+
 name|szsigcode
 operator|+
 literal|4
@@ -1986,6 +1995,26 @@ name|cc
 operator|=
 name|NCARGS
 expr_stmt|;
+name|ps
+operator|.
+name|ps_argvstr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ucp
+expr_stmt|;
+comment|/* first argv string */
+name|ps
+operator|.
+name|ps_nargvstr
+operator|=
+name|na
+operator|-
+name|ne
+expr_stmt|;
+comment|/* argc */
 for|for
 control|(
 init|;
@@ -2019,6 +2048,22 @@ expr_stmt|;
 name|ap
 operator|+=
 name|NBPW
+expr_stmt|;
+name|ps
+operator|.
+name|ps_envstr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ucp
+expr_stmt|;
+name|ps
+operator|.
+name|ps_nenvstr
+operator|=
+name|ne
 expr_stmt|;
 block|}
 if|if
@@ -2111,6 +2156,28 @@ operator|)
 name|ap
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|copyout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ps
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|PS_STRINGS
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ps
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|execsigs
@@ -2254,14 +2321,12 @@ name|caddr_t
 operator|)
 name|sigcode
 argument_list|,
-call|(
+operator|(
 name|caddr_t
-call|)
-argument_list|(
-name|USRSTACK
+operator|)
+name|PS_STRINGS
 operator|-
 name|szsigcode
-argument_list|)
 argument_list|,
 name|szsigcode
 argument_list|)
