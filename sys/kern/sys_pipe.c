@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.28 1997/04/09 16:53:39 bde Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.29 1997/08/05 00:01:26 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -707,7 +707,6 @@ argument_list|(
 name|pipe_zone
 argument_list|)
 expr_stmt|;
-comment|/* 	rpipe = malloc( sizeof (*rpipe), M_TEMP, M_WAITOK); */
 name|pipeinit
 argument_list|(
 name|rpipe
@@ -719,7 +718,6 @@ name|pipe_state
 operator||=
 name|PIPE_DIRECTOK
 expr_stmt|;
-comment|/* 	wpipe = malloc( sizeof (*wpipe), M_TEMP, M_WAITOK); */
 name|wpipe
 operator|=
 name|zalloc
@@ -4859,7 +4857,6 @@ argument_list|,
 name|cpipe
 argument_list|)
 expr_stmt|;
-comment|/* 		free(cpipe, M_TEMP); */
 block|}
 block|}
 end_function
