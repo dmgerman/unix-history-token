@@ -297,6 +297,16 @@ block|,
 block|{
 literal|0x1260
 block|,
+literal|0x3872
+block|,
+name|WI_BUS_PCI_NATIVE
+block|,
+literal|"Intersil Prism3"
+block|}
+block|,
+block|{
+literal|0x1260
+block|,
 literal|0x3873
 block|,
 name|WI_BUS_PCI_NATIVE
