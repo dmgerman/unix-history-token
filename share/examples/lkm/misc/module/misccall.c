@@ -26,7 +26,35 @@ file|<sys/systm.h>
 end_include
 
 begin_comment
-comment|/*  * This is the actual code for system call...  it can be static because  * we've externed it up above... the only plae it needs to be referenced  * is the sysent we are interested in.  *  * To write your own system call using this as a template, you could strip  * out this code and use the rest as a prototype module, changing only the  * function names and the number of arguments to the call in the module  * specific "sysent".  *  * You would have to use the "-R" option of "ld" to ensure a linkable file  * if you were to do this, since you would need to combine multiple ".o"  * files into a single ".o" file for use by "modload".  */
+comment|/* XXX this should be in a header. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|misccall
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|void
+operator|*
+name|uap
+operator|,
+name|int
+name|retval
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * This is the actual code for the system call... it can't be static because  * it is exported to another part of the module... the only place it needs  * to be referenced is the sysent we are interested in.  *  * To write your own system call using this as a template, you could strip  * out this code and use the rest as a prototype module, changing only the  * function names and the number of arguments to the call in the module  * specific "sysent".  *  * You would have to use the "-R" option of "ld" to ensure a linkable file  * if you were to do this, since you would need to combine multiple ".o"  * files into a single ".o" file for use by "modload".  */
 end_comment
 
 begin_function
@@ -56,12 +84,17 @@ block|{
 comment|/* 	 * Our new system call simply prints a message; it takes no 	 * arguments. 	 */
 name|printf
 argument_list|(
-literal|"\nI am a loaded system call using the miscellaneous\n"
+literal|"\nI am a loaded system call.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"module loader interface and a kernel printf!\n"
+literal|"I was loaded using the miscellaneous module loader interface.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"I don't do anything except call the kernel's printf().\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -77,10 +110,6 @@ return|;
 comment|/* success (or error code from errno.h)*/
 block|}
 end_function
-
-begin_comment
-comment|/*  * EOF -- This file has not been truncated.  */
-end_comment
 
 end_unit
 
