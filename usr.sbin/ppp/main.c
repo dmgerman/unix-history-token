@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.107 1997/12/13 02:37:27 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.108 1997/12/17 21:21:47 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -3336,6 +3336,27 @@ block|}
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|IN_SIZE
+value|sizeof(struct sockaddr_in)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UN_SIZE
+value|sizeof(struct sockaddr_in)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDRSZ
+value|(IN_SIZE> UN_SIZE ? IN_SIZE : UN_SIZE)
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -3362,8 +3383,34 @@ name|wfd
 decl_stmt|,
 name|nfds
 decl_stmt|;
+name|char
+name|hisaddr
+index|[
+name|ADDRSZ
+index|]
+decl_stmt|;
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+init|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|hisaddr
+decl_stmt|;
 name|struct
 name|sockaddr_in
+modifier|*
+name|sin
+init|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 name|hisaddr
 decl_stmt|;
 name|struct
@@ -3376,10 +3423,7 @@ decl_stmt|;
 name|int
 name|ssize
 init|=
-sizeof|sizeof
-argument_list|(
-name|hisaddr
-argument_list|)
+name|ADDRSZ
 decl_stmt|;
 specifier|const
 name|u_char
@@ -4319,26 +4363,13 @@ name|rfds
 argument_list|)
 condition|)
 block|{
-name|LogPrintf
-argument_list|(
-name|LogPHASE
-argument_list|,
-literal|"connected to client.\n"
-argument_list|)
-expr_stmt|;
 name|wfd
 operator|=
 name|accept
 argument_list|(
 name|server
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|hisaddr
+name|sa
 argument_list|,
 operator|&
 name|ssize
@@ -4365,6 +4396,98 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+switch|switch
+condition|(
+name|sa
+operator|->
+name|sa_family
+condition|)
+block|{
+case|case
+name|AF_LOCAL
+case|:
+name|LogPrintf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Connected to local client.\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AF_INET
+case|:
+if|if
+condition|(
+name|sin
+operator|->
+name|sin_port
+operator|<
+literal|1024
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"Rejected client connection from %s:%u"
+literal|"(invalid port number) !\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|sin
+operator|->
+name|sin_port
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|wfd
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|LogPrintf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Connected to client from %s:%u\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|sin
+operator|->
+name|sin_port
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|write
+argument_list|(
+name|wfd
+argument_list|,
+literal|"Unrecognised access !\n"
+argument_list|,
+literal|22
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|wfd
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|netfd
@@ -4376,9 +4499,9 @@ name|write
 argument_list|(
 name|wfd
 argument_list|,
-literal|"already in use.\n"
+literal|"Connection already in use.\n"
 argument_list|,
-literal|16
+literal|27
 argument_list|)
 expr_stmt|;
 name|close
@@ -4388,7 +4511,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-else|else
 name|netfd
 operator|=
 name|wfd
