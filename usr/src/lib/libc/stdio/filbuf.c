@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)filbuf.c	4.9 (Berkeley) %G% */
+comment|/* @(#)filbuf.c	4.10 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -50,13 +50,12 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-specifier|static
+specifier|extern
 name|char
-name|smallbuf
-index|[
-name|_NFILE
-index|]
-decl_stmt|;
+modifier|*
+name|_smallbuf
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|iop
@@ -129,14 +128,10 @@ name|iop
 operator|->
 name|_base
 operator|=
-operator|&
-name|smallbuf
-index|[
-name|fileno
+name|_smallbuf
 argument_list|(
 name|iop
 argument_list|)
-index|]
 expr_stmt|;
 goto|goto
 name|tryagain
@@ -340,8 +335,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EOF
 operator|)
 return|;
 block|}

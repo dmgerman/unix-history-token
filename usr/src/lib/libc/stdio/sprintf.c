@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)sprintf.c	4.1 (Berkeley) %G% */
+comment|/* @(#)sprintf.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -31,8 +31,7 @@ end_function
 
 begin_block
 block|{
-name|struct
-name|_iobuf
+name|FILE
 name|_strbuf
 decl_stmt|;
 name|_strbuf

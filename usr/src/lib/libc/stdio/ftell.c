@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)ftell.c	4.2 (Berkeley) %G% */
+comment|/* @(#)ftell.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -26,11 +26,13 @@ name|ftell
 parameter_list|(
 name|iop
 parameter_list|)
+specifier|register
 name|FILE
 modifier|*
 name|iop
 decl_stmt|;
 block|{
+specifier|register
 name|long
 name|tres
 decl_stmt|;

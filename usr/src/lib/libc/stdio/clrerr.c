@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)clrerr.c	4.1 (Berkeley) %G% */
+comment|/* @(#)clrerr.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -9,14 +9,19 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|clearerr
+end_undef
+
 begin_expr_stmt
 name|clearerr
 argument_list|(
 name|iop
 argument_list|)
 specifier|register
-expr|struct
-name|_iobuf
+name|FILE
 operator|*
 name|iop
 expr_stmt|;

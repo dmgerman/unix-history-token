@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fgets.c	4.1 (Berkeley) %G% */
+comment|/* @(#)fgets.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -57,8 +57,8 @@ argument_list|(
 name|iop
 argument_list|)
 operator|)
-operator|>=
-literal|0
+operator|!=
+name|EOF
 condition|)
 block|{
 operator|*
@@ -78,8 +78,8 @@ block|}
 if|if
 condition|(
 name|c
-operator|<
-literal|0
+operator|==
+name|EOF
 operator|&&
 name|cs
 operator|==

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)gets.c	4.1 (Berkeley) %G% */
+comment|/* @(#)gets.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -45,8 +45,8 @@ operator|!=
 literal|'\n'
 operator|&&
 name|c
-operator|>=
-literal|0
+operator|!=
+name|EOF
 condition|)
 operator|*
 name|cs
@@ -57,8 +57,8 @@ expr_stmt|;
 if|if
 condition|(
 name|c
-operator|<
-literal|0
+operator|==
+name|EOF
 operator|&&
 name|cs
 operator|==

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fprintf.c	4.3 (Berkeley) %G% */
+comment|/* @(#)fprintf.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -9,23 +9,21 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
+begin_expr_stmt
 name|fprintf
 argument_list|(
-argument|iop
-argument_list|,
-argument|fmt
-argument_list|,
-argument|args
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
 name|iop
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|fmt
+argument_list|,
+name|args
+argument_list|)
+specifier|register
+name|FILE
+operator|*
+name|iop
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char

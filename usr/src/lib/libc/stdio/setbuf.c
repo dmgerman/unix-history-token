@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)setbuf.c	4.2 (Berkeley) %G% */
+comment|/* @(#)setbuf.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -17,8 +17,7 @@ argument_list|,
 name|buf
 argument_list|)
 specifier|register
-expr|struct
-name|_iobuf
+name|FILE
 operator|*
 name|iop
 expr_stmt|;

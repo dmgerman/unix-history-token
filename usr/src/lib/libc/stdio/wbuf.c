@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)wbuf.c	4.8 (Berkeley) %G% */
+comment|/* @(#)wbuf.c	4.9 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -462,8 +462,7 @@ argument_list|(
 name|iop
 argument_list|)
 specifier|register
-expr|struct
-name|_iobuf
+name|FILE
 operator|*
 name|iop
 expr_stmt|;
@@ -584,58 +583,13 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * Flush buffers on exit  */
-end_comment
-
-begin_macro
-name|_cleanup
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|_iobuf
-modifier|*
-name|iop
-decl_stmt|;
-specifier|extern
-name|struct
-name|_iobuf
-modifier|*
-name|_lastbuf
-decl_stmt|;
-for|for
-control|(
-name|iop
-operator|=
-name|_iob
-init|;
-name|iop
-operator|<
-name|_lastbuf
-condition|;
-name|iop
-operator|++
-control|)
-name|fclose
-argument_list|(
-name|iop
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_expr_stmt
 name|fclose
 argument_list|(
 name|iop
 argument_list|)
 specifier|register
-expr|struct
-name|_iobuf
+name|FILE
 operator|*
 name|iop
 expr_stmt|;

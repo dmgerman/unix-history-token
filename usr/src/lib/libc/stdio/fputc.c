@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fputc.c	4.1 (Berkeley) %G% */
+comment|/* @(#)fputc.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -9,21 +9,19 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
+begin_expr_stmt
 name|fputc
 argument_list|(
-argument|c
+name|c
 argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
 name|fp
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+name|FILE
+operator|*
+name|fp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
