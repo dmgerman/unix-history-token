@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -88,18 +88,23 @@ value|0x004
 comment|/* directory */
 define|#
 directive|define
-name|F_FILE
+name|F_FIFO
 value|0x008
+comment|/* fifo */
+define|#
+directive|define
+name|F_FILE
+value|0x010
 comment|/* regular file */
 define|#
 directive|define
 name|F_LINK
-value|0x010
+value|0x020
 comment|/* symbolic link */
 define|#
 directive|define
 name|F_SOCK
-value|0x020
+value|0x040
 comment|/* socket */
 name|u_short
 name|type

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.9 (Berkeley) %G%"
+literal|"@(#)spec.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -860,6 +860,22 @@ operator|->
 name|type
 operator|=
 name|F_FILE
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|val
+argument_list|,
+literal|"fifo"
+argument_list|)
+condition|)
+name|ip
+operator|->
+name|type
+operator|=
+name|F_FIFO
 expr_stmt|;
 break|break;
 case|case

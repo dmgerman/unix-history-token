@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.5 (Berkeley) %G%"
+literal|"@(#)compare.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,25 @@ if|if
 condition|(
 operator|!
 name|S_ISDIR
+argument_list|(
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+goto|goto
+name|typeerr
+goto|;
+break|break;
+case|case
+name|F_FIFO
+case|:
+if|if
+condition|(
+operator|!
+name|S_ISFIFO
 argument_list|(
 name|p
 operator|->
@@ -806,6 +825,14 @@ case|:
 return|return
 operator|(
 literal|"dir"
+operator|)
+return|;
+case|case
+name|F_FIFO
+case|:
+return|return
+operator|(
+literal|"fifo"
 operator|)
 return|;
 case|case
