@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_hypotf.c,v 1.1.1.1 1994/08/19 09:39:55 jkh Exp $"
+literal|"$Id: e_hypotf.c,v 1.2 1995/05/30 05:48:17 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,18 +246,18 @@ return|return
 name|w
 return|;
 block|}
-comment|/* scale a and b by 2**-60 */
+comment|/* scale a and b by 2**-68 */
 name|ha
 operator|-=
-literal|0x5d800000
+literal|0x22000000
 expr_stmt|;
 name|hb
 operator|-=
-literal|0x5d800000
+literal|0x22000000
 expr_stmt|;
 name|k
 operator|+=
-literal|60
+literal|68
 expr_stmt|;
 name|SET_FLOAT_WORD
 argument_list|(
@@ -303,7 +303,7 @@ name|SET_FLOAT_WORD
 argument_list|(
 name|t1
 argument_list|,
-literal|0x3f000000
+literal|0x7e800000
 argument_list|)
 expr_stmt|;
 comment|/* t1=2^126 */
@@ -322,20 +322,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* scale a and b by 2^60 */
+comment|/* scale a and b by 2^68 */
 name|ha
 operator|+=
-literal|0x5d800000
+literal|0x22000000
 expr_stmt|;
-comment|/* a *= 2^60 */
+comment|/* a *= 2^68 */
 name|hb
 operator|+=
-literal|0x5d800000
+literal|0x22000000
 expr_stmt|;
-comment|/* b *= 2^60 */
+comment|/* b *= 2^68 */
 name|k
 operator|-=
-literal|60
+literal|68
 expr_stmt|;
 name|SET_FLOAT_WORD
 argument_list|(
