@@ -103,13 +103,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_DEVDB
-value|"/var/run/dev.db"
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_DEVNULL
 value|"/dev/null"
 end_define
