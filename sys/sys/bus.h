@@ -40,6 +40,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * State of the device.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|device_state
+block|{
+name|DS_NOTPRESENT
+block|,
+comment|/* not probed or probe failed */
+name|DS_ALIVE
+block|,
+comment|/* probe succeeded */
+name|DS_ATTACHED
+block|,
+comment|/* attach method called */
+name|DS_BUSY
+comment|/* device is open */
+block|}
+name|device_state_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Device information exported to userspace.  */
 end_comment
 
@@ -59,18 +84,47 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+comment|/* Name of device in tree. */
 name|char
 name|dv_desc
 index|[
 literal|32
 index|]
 decl_stmt|;
+comment|/* Driver description */
 name|char
 name|dv_drivername
 index|[
 literal|32
 index|]
 decl_stmt|;
+comment|/* Driver name */
+name|char
+name|dv_pnpinfo
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Plug and play info */
+name|char
+name|dv_location
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Where is the device? */
+name|uint32_t
+name|dv_devflags
+decl_stmt|;
+comment|/* API Flags for device */
+name|uint16_t
+name|dv_flags
+decl_stmt|;
+comment|/* flags for dev date */
+name|device_state_t
+name|dv_state
+decl_stmt|;
+comment|/* State of attachment */
 comment|/* XXX more driver info? */
 block|}
 struct|;
@@ -227,27 +281,6 @@ comment|/* driver private data */
 block|}
 struct|;
 end_struct
-
-begin_typedef
-typedef|typedef
-enum|enum
-name|device_state
-block|{
-name|DS_NOTPRESENT
-block|,
-comment|/* not probed or probe failed */
-name|DS_ALIVE
-block|,
-comment|/* probe succeeded */
-name|DS_ATTACHED
-block|,
-comment|/* attach method called */
-name|DS_BUSY
-comment|/* device is open */
-block|}
-name|device_state_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * Definitions for drivers which need to keep simple lists of resources  * for their child devices.  */
