@@ -322,6 +322,26 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|tzname
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|char
