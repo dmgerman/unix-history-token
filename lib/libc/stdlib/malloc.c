@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.32 1997/08/31 05:59:39 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.33 1997/12/15 02:12:42 jb Exp $  *  */
 end_comment
 
 begin_comment
@@ -1034,7 +1034,7 @@ parameter_list|(
 name|size
 parameter_list|)
 define|\
-value|mmap((caddr_t)0, (size), PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, \ 	    MMAP_FD, 0);
+value|mmap(0, (size), PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, \ 	    MMAP_FD, 0);
 end_define
 
 begin_comment
@@ -1256,7 +1256,8 @@ end_comment
 
 begin_function
 specifier|static
-name|caddr_t
+name|void
+modifier|*
 name|map_pages
 parameter_list|(
 name|int
@@ -1480,9 +1481,6 @@ expr_stmt|;
 comment|/* Now free the old stuff */
 name|munmap
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|old
 argument_list|,
 name|oldlen
