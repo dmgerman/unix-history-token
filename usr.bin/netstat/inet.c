@@ -2091,6 +2091,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_badrst
+argument_list|,
+literal|"\t%lu Ignored RSTs in the window%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_connects
 argument_list|,
 literal|"\t%lu connection%s established (including accepts)\n"
