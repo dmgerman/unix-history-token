@@ -2145,7 +2145,7 @@ operator|==
 name|pagenum
 condition|)
 goto|goto
-name|bad
+name|overlap
 goto|;
 if|if
 condition|(
@@ -2156,7 +2156,7 @@ operator|==
 name|VM86_PMAPSIZE
 condition|)
 goto|goto
-name|bad
+name|full
 goto|;
 comment|/* XXX grow map? */
 if|if
@@ -2230,11 +2230,18 @@ operator|(
 name|kva
 operator|)
 return|;
-name|bad
+name|overlap
 label|:
 name|panic
 argument_list|(
-literal|"vm86_addpage: not enough room, or overlap"
+literal|"vm86_addpage: overlap"
+argument_list|)
+expr_stmt|;
+name|full
+label|:
+name|panic
+argument_list|(
+literal|"vm86_addpage: not enough room"
 argument_list|)
 expr_stmt|;
 block|}
