@@ -8,7 +8,7 @@ comment|/*  Copyright 1988, 1989 by the Massachusetts Institute of Technology  P
 end_comment
 
 begin_comment
-comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  *  *      $Source: /home/ncvs/src/usr.sbin/newsyslog/newsyslog.c,v $  *      $Author: jkh $  */
+comment|/*  *      newsyslog - roll over selected logs at the appropriate time,  *              keeping the a specified number of backup files around.  */
 end_comment
 
 begin_ifndef
@@ -19,11 +19,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.7.2.1 1997/02/22 07:34:11 jkh Exp $"
+literal|"$Id: newsyslog.c,v 1.7.2.2 1997/08/29 05:15:27 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,6 +138,42 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -155,43 +192,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -338,17 +339,6 @@ comment|/* Linked list pointer */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* contains argv[0] */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -689,22 +679,13 @@ operator|&&
 name|geteuid
 argument_list|()
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: must have root privs\n"
-argument_list|,
-name|progname
+literal|"must have root privs"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|p
 operator|=
 name|q
@@ -1071,13 +1052,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|timenow
 operator|=
 name|time
@@ -1264,9 +1238,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s<-nrv><-f config-file>\n"
-argument_list|,
-name|progname
+literal|"usage: newsyslog [-nrv] [-f config-file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1586,7 +1558,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Error in config file; unknown user:\n%s"
+literal|"error in config file; unknown user:\n%s"
 argument_list|,
 name|errline
 argument_list|)
@@ -1657,7 +1629,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Error in config file; unknown group:\n%s"
+literal|"error in config file; unknown group:\n%s"
 argument_list|,
 name|errline
 argument_list|)
@@ -1747,7 +1719,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Error in config file; bad permissions:\n%s"
+literal|"error in config file; bad permissions:\n%s"
 argument_list|,
 name|errline
 argument_list|)
@@ -1798,7 +1770,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Error in config file; bad number:\n%s"
+literal|"error in config file; bad number:\n%s"
 argument_list|,
 name|errline
 argument_list|)
@@ -2001,7 +1973,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Illegal flag in config file -- %c"
+literal|"illegal flag in config file -- %c"
 argument_list|,
 operator|*
 name|q
@@ -2082,7 +2054,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Missing field in config file:\n%s"
+literal|"missing field in config file:\n%s"
 argument_list|,
 name|errline
 argument_list|)
