@@ -6120,6 +6120,7 @@ name|printed
 operator|++
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|CAM_CMD_TIMEOUT
 case|:
@@ -6150,6 +6151,7 @@ name|printed
 operator|++
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|CAM_UNEXP_BUSFREE
 case|:
@@ -6180,6 +6182,7 @@ name|printed
 operator|++
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|CAM_UNCOR_PARITY
 case|:
@@ -6210,6 +6213,7 @@ name|printed
 operator|++
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|CAM_DATA_RUN_ERR
 case|:
