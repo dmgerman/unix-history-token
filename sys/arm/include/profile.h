@@ -15,14 +15,8 @@ directive|define
 name|_MACHINE_PROFILE_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_comment
-comment|/*  * Config generates something to tell the compiler to align functions on 16  * byte boundaries.  A strict alignment is good for keeping the tables small.  */
+comment|/*  * Config generates something to tell the compiler to align functions on 32   * byte boundaries.  A strict alignment is good for keeping the tables small.  */
 end_comment
 
 begin_define
@@ -32,10 +26,6 @@ name|FUNCTION_ALIGNMENT
 value|16
 end_define
 
-begin_comment
-comment|/*  * The kernel uses assembler stubs instead of unportable inlines.  * This is mainly to save a little time when profiling is not enabled,  * which is the usual case for the kernel.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -43,133 +33,51 @@ name|_MCOUNT_DECL
 value|void mcount
 end_define
 
+begin_typedef
+typedef|typedef
+name|u_long
+name|fptrdiff_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Cannot implement mcount in C as GCC will trash the ip register when it  * pushes a trapframe. Pity we cannot insert assembly before the function  * prologue.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PLTSYM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PLTSYM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MCOUNT
+define|\
+value|__asm__(".text");						\ 	__asm__(".align	0");						\ 	__asm__(".type	_mcount ,%function");				\ 	__asm__(".global	_mcount");				\ 	__asm__("_mcount:");						\
+comment|/*								\ 	 * Preserve registers that are trashed during mcount		\ 	 */
+value|\ 	__asm__("stmfd	sp!, {r0-r3, ip, lr}");				\
+comment|/*								\ 	 * find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * frompcindex = pc pushed by call into self.			\ 	 */
+value|\ 	__asm__("mov	r0, ip");					\
+comment|/*								\ 	 * selfpc = pc pushed by mcount call				\ 	 */
+value|\ 	__asm__("mov	r1, lr");					\
+comment|/*								\ 	 * Call the real mcount code					\ 	 */
+value|\ 	__asm__("bl	mcount");					\
+comment|/*								\ 	 * Restore registers that were trashed during mcount		\ 	 */
+value|\ 	__asm__("ldmfd	sp!, {r0-r3, lr, pc}");
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GUPROF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_DECL
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_ENTER
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_EXIT
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_DECL
-parameter_list|(
-name|s
-parameter_list|)
-value|u_long s;
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mcount_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_ENTER
-parameter_list|(
-name|s
-parameter_list|)
-value|{ s = intr_disable(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1)) \
-comment|/* nothing */
-value|; }
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_EXIT
-parameter_list|(
-name|s
-parameter_list|)
-value|{ atomic_store_rel_int(&mcount_lock, 0); \ 			  intr_restore(s); }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_ENTER
-parameter_list|(
-name|s
-parameter_list|)
-value|{ s = read_eflags(); disable_intr(); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT_EXIT
-parameter_list|(
-name|s
-parameter_list|)
-value|(write_eflags(s))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GUPROF */
-end_comment
 
 begin_function_decl
 name|void
@@ -229,68 +137,65 @@ define|\
 value|((pc>= (uintfptr_t)btrap&& pc< (uintfptr_t)eintr) ?	\ 	    ((pc>= (uintfptr_t)bintr) ? (uintfptr_t)bintr :	\ 		(uintfptr_t)btrap) : ~0U)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_ALIGNMENT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|_MCOUNT_DECL
-value|static __inline void _mcount
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCOUNT
-end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|uintfptr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * An unsigned integral type that can hold non-negative difference between  * function pointers.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int
-name|fptrdiff_t
-typedef|;
-end_typedef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_DECL
+parameter_list|(
+name|s
+parameter_list|)
+value|register_t s;
+end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/asm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_comment
+comment|/*  * splhigh() and splx() are heavyweight, and call mcount().  Therefore  * we disabled interrupts (IRQ, but not FIQ) directly on the CPU.  *  * We're lucky that the CPSR and 's' both happen to be 'int's.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_ENTER
+parameter_list|(
+name|s
+parameter_list|)
+value|{s = intr_disable(); }
+end_define
+
+begin_comment
+comment|/* kill IRQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_EXIT
+parameter_list|(
+name|s
+parameter_list|)
+value|{intr_restore(s); }
+end_define
+
+begin_comment
+comment|/* restore old value */
+end_comment
 
 begin_function_decl
 name|void
@@ -310,31 +215,12 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !_KERNEL */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_decl_stmt
-name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
-name|__GNUC__
-name|void
-name|mcount
-argument_list|(
-name|void
-argument_list|)
-asm|__asm(".mcount");
-endif|#
-directive|endif
-name|__END_DECLS
-end_decl_stmt
+begin_typedef
+typedef|typedef
+name|u_int
+name|uintfptr_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
