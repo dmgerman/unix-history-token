@@ -1109,6 +1109,7 @@ name|M_NOWAIT
 argument_list|)
 operator|)
 condition|)
+block|{
 name|ata_prtdev
 argument_list|(
 name|atadev
@@ -1176,9 +1177,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_else
 else|else
 block|{
 name|acd_make_dev
@@ -1210,40 +1208,32 @@ name|DEVSTAT_PRIORITY_CD
 argument_list|)
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 name|acd_describe
 argument_list|(
 name|cdp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|atadev
 operator|->
 name|driver
 operator|=
 name|cdp
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|1
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|acddetach
-argument_list|(
-argument|struct ata_device *atadev
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+parameter_list|)
 block|{
 name|struct
 name|acd_softc
@@ -1612,7 +1602,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
