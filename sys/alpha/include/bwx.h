@@ -235,6 +235,57 @@ asm|("stl %1,%0" : "=m"(*(u_int32_t*)va) : "r"(r));
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * A kernel object for accessing memory-like spaces (port and  * memory spaces) using BWX instructions.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bwx_space
+block|{
+name|struct
+name|alpha_busspace_ops
+modifier|*
+name|ops
+decl_stmt|;
+name|u_int64_t
+name|base
+decl_stmt|;
+comment|/* base address of space */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|bwx_init_space
+parameter_list|(
+name|struct
+name|bwx_space
+modifier|*
+name|bwx
+parameter_list|,
+name|u_int64_t
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -241,10 +241,6 @@ name|nummaps
 decl_stmt|;
 comment|/* actual number of PCI maps used */
 name|u_int8_t
-name|hose
-decl_stmt|;
-comment|/* hose which bus is attached to */
-name|u_int8_t
 name|bus
 decl_stmt|;
 comment|/* config space bus address */
@@ -741,8 +737,6 @@ block|,
 name|PCI_IVAR_SECONDARYBUS
 block|,
 name|PCI_IVAR_SUBORDINATEBUS
-block|,
-name|PCI_IVAR_HOSE
 block|, }
 enum|;
 end_enum
@@ -942,17 +936,6 @@ argument|u_int8_t
 argument_list|)
 end_macro
 
-begin_macro
-name|PCI_ACCESSOR
-argument_list|(
-argument|hose
-argument_list|,
-argument|HOSE
-argument_list|,
-argument|u_int32_t
-argument_list|)
-end_macro
-
 begin_function
 specifier|static
 name|__inline
@@ -1037,8 +1020,8 @@ begin_enum
 enum|enum
 name|pcib_device_ivars
 block|{
-name|PCIB_IVAR_HOSE
-block|, }
+name|PCIB_IVAR_BUS
+block|}
 enum|;
 end_enum
 
@@ -1060,9 +1043,9 @@ end_define
 begin_macro
 name|PCIB_ACCESSOR
 argument_list|(
-argument|hose
+argument|bus
 argument_list|,
-argument|HOSE
+argument|BUS
 argument_list|,
 argument|u_int32_t
 argument_list|)

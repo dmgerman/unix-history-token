@@ -26252,7 +26252,7 @@ operator|.
 name|ds_addr
 operator|=
 operator|(
-name|bus_addr_t
+name|intptr_t
 operator|)
 name|csio
 operator|->

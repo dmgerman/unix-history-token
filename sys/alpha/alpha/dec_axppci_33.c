@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -877,9 +883,7 @@ return|return;
 block|}
 name|pirqreg
 operator|=
-name|chipset
-operator|.
-name|cfgreadl
+name|lca_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -890,6 +894,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|SIO_PCIREG_PIRQ_RTCTRL
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 if|#

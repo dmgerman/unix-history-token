@@ -804,9 +804,7 @@ block|}
 comment|/* 	 *  Read the SIO IRQ routing register to determine where the 	 *  interrupt will actually be routed.  Thank you, NetBSD. 	 */
 name|pirqreg
 operator|=
-name|chipset
-operator|.
-name|cfgreadl
+name|apecs_pcib_read_config
 argument_list|(
 literal|0
 argument_list|,
@@ -817,6 +815,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|SIO_PCIREG_PIRQ_RTCTRL
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|pirqline

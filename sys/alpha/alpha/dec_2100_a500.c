@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -206,13 +212,6 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|t2_csr_base
 decl_stmt|;
 end_decl_stmt
 

@@ -1063,7 +1063,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 operator|*
 name|secpp
@@ -1090,7 +1090,7 @@ expr_stmt|;
 name|secval
 operator|=
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 operator|*
 name|secpp
@@ -1292,6 +1292,9 @@ operator|(
 name|u_char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|uc
 expr_stmt|;
 block|}
@@ -1428,6 +1431,9 @@ operator|=
 operator|(
 name|u_char
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|uc
 expr_stmt|;

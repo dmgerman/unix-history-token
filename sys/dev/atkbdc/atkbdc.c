@@ -668,7 +668,7 @@ name|__alpha__
 argument_list|)
 name|tag
 operator|=
-name|ALPHA_BUS_SPACE_IO
+name|busspace_isa_io
 expr_stmt|;
 endif|#
 directive|endif

@@ -860,7 +860,7 @@ argument_list|(
 name|child
 argument_list|)
 argument_list|,
-literal|"mcpcia"
+literal|"pcib"
 argument_list|,
 literal|6
 argument_list|)
@@ -929,7 +929,7 @@ argument_list|(
 name|child
 argument_list|)
 argument_list|,
-literal|"mcpcia"
+literal|"pcib"
 argument_list|,
 literal|6
 argument_list|)
@@ -1047,7 +1047,7 @@ name|MCBUS_TYPE_PCI
 case|:
 name|dn
 operator|=
-literal|"mcpcia"
+literal|"pcib"
 expr_stmt|;
 name|ds
 operator|=

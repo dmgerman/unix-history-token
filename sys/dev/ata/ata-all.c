@@ -2388,7 +2388,7 @@ name|int
 name|unit
 init|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|device_get_ivars
 argument_list|(
