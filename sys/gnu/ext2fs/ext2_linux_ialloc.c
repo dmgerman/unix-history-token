@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  modified for Lites 1.1  *  *  Aug 1995, Godmar Back (gback@cs.utah.edu)  *  University of Utah, Department of Computer Science  *  * $FreeBSD$  */
+comment|/*-  *  modified for Lites 1.1  *  *  Aug 1995, Godmar Back (gback@cs.utah.edu)  *  University of Utah, Department of Computer Science  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  linux/fs/ext2/ialloc.c  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  BSD ufs-inspired inode and directory allocation by   *  Stephen Tweedie (sct@dcs.ed.ac.uk), 1993  */
+comment|/*-  *  linux/fs/ext2/ialloc.c  *  * Copyright (C) 1992, 1993, 1994, 1995  * Remy Card (card@masi.ibp.fr)  * Laboratoire MASI - Institut Blaise Pascal  * Universite Pierre et Marie Curie (Paris VI)  *  *  BSD ufs-inspired inode and directory allocation by   *  Stephen Tweedie (sct@dcs.ed.ac.uk), 1993  */
 end_comment
 
 begin_comment
