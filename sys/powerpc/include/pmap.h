@@ -208,6 +208,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|pmap_kextract(((vm_offset_t)(va)))
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
