@@ -2355,27 +2355,6 @@ expr_stmt|;
 comment|/* use bootp to get nfs_diskless filled in */
 endif|#
 directive|endif
-comment|/* 	 * XXX time must be non-zero when we init the interface or else 	 * the arp code will wedge... 	 */
-while|while
-condition|(
-name|time_second
-operator|==
-literal|0
-condition|)
-name|tsleep
-argument_list|(
-operator|&
-name|time_second
-argument_list|,
-name|PZERO
-operator|+
-literal|8
-argument_list|,
-literal|"arpkludge"
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nfs_diskless_valid

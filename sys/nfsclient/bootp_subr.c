@@ -8427,27 +8427,6 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Wait until arp entries can be handled. 	 */
-while|while
-condition|(
-name|time_second
-operator|==
-literal|0
-condition|)
-name|tsleep
-argument_list|(
-operator|&
-name|time_second
-argument_list|,
-name|PZERO
-operator|+
-literal|8
-argument_list|,
-literal|"arpkludge"
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
 name|gctx
 operator|=
 name|malloc
