@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.11 1999/01/26 02:49:51 julian Exp $ */
+comment|/* $Id: trap.c,v 1.12 1999/04/19 14:14:12 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1927,8 +1927,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|numsys
 decl_stmt|;
 name|u_int64_t
 name|opc

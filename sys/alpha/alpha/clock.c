@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: clock.c,v 1.5 1998/11/08 19:26:23 phk Exp $ */
+comment|/* $Id: clock.c,v 1.6 1999/02/16 20:34:56 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -209,13 +209,6 @@ begin_decl_stmt
 specifier|static
 name|timecounter_get_t
 name|alpha_get_timecount
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|timecounter_pps_t
-name|alpha_poll_pps
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.37 1999/04/13 15:42:34 simokawa Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.38 1999/04/19 14:14:11 peter Exp $  */
 end_comment
 
 begin_comment
@@ -3945,10 +3945,6 @@ name|phys_avail_cnt
 operator|-
 literal|2
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* shrink so that it'll fit in the last segment */
 if|if
 condition|(
@@ -7234,8 +7230,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ptrace_set_bpt
@@ -7252,6 +7246,10 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -7279,8 +7277,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ptrace_set_bpt
@@ -7297,6 +7293,10 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|ptrace_clear_bpt
@@ -7484,18 +7484,15 @@ name|long
 name|data
 parameter_list|)
 block|{
-name|struct
-name|trapframe
-name|frame_copy
-decl_stmt|;
 name|vm_offset_t
 name|min
 decl_stmt|;
-name|struct
-name|trapframe
-modifier|*
-name|tp
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct trapframe frame_copy; 	struct trapframe *tp;
+endif|#
+directive|endif
 comment|/* 	 * Privileged kernel state is scattered all over the user area. 	 * Only allow write access to parts of regs and to fpregs. 	 */
 name|min
 operator|=
@@ -7539,18 +7536,10 @@ name|int
 argument_list|)
 condition|)
 block|{
-name|tp
-operator|=
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_tf
-expr_stmt|;
 if|#
 directive|if
 literal|0
-block|frame_copy = *tp; 		*(int *)((char *)&frame_copy + (off - min)) = data; 		if (!EFLAGS_SECURE(frame_copy.tf_eflags, tp->tf_eflags) || 		    !CS_SECURE(frame_copy.tf_cs)) 			return (EINVAL);
+block|tp = p->p_md.md_tf; 		frame_copy = *tp; 		*(int *)((char *)&frame_copy + (off - min)) = data; 		if (!EFLAGS_SECURE(frame_copy.tf_eflags, tp->tf_eflags) || 		    !CS_SECURE(frame_copy.tf_cs)) 			return (EINVAL);
 endif|#
 directive|endif
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.17 1999/04/07 03:34:32 msmith Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.18 1999/04/21 10:51:04 dt Exp $  */
 end_comment
 
 begin_comment
@@ -235,20 +235,11 @@ end_endif
 begin_if
 if|#
 directive|if
-literal|1
+literal|0
 end_if
 
-begin_function
-specifier|static
-name|void
-name|pmap_break
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 begin_comment
+unit|static void pmap_break(void) { }
 comment|/* #define PMAP_DEBUG_VA(va) if ((va) == 0x120058000) pmap_break(); else */
 end_comment
 
@@ -789,9 +780,6 @@ specifier|static
 name|pt_entry_t
 modifier|*
 name|CMAP2
-decl_stmt|,
-modifier|*
-name|ptmmap
 decl_stmt|;
 end_decl_stmt
 
@@ -994,23 +982,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean_t
-name|pmap_testbit
-name|__P
-argument_list|(
-operator|(
-name|vm_offset_t
-name|pa
-operator|,
-name|int
-name|bit
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|pmap_insert_entry
 name|__P
@@ -1116,17 +1087,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|vm_offset_t
-name|pmap_kmem_choose
-parameter_list|(
-name|vm_offset_t
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -3814,9 +3774,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 while|while
 condition|(
 name|vm_page_sleep_busy
@@ -3844,9 +3801,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
-decl_stmt|;
-name|int
-name|level
 decl_stmt|;
 comment|/* 		 * unmap the page table page 		 */
 if|if
@@ -4334,8 +4288,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * allocate the page directory page 	 */
-name|retry
-label|:
 name|lev1pg
 operator|=
 name|vm_page_grab
@@ -4530,9 +4482,6 @@ name|vm_page_t
 name|p
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
@@ -4846,8 +4795,6 @@ modifier|*
 name|pte
 decl_stmt|;
 name|vm_offset_t
-name|pteva
-decl_stmt|,
 name|ptepa
 decl_stmt|;
 name|vm_page_t
@@ -4998,13 +4945,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|int
-name|l2ptepindex
-init|=
-name|NUSERLEV3MAPS
-operator|+
-name|l1index
-decl_stmt|;
 name|vm_page_t
 name|l2page
 init|=
@@ -5150,9 +5090,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|lev2pte
-decl_stmt|;
-name|vm_offset_t
-name|ptepa
 decl_stmt|;
 name|vm_page_t
 name|m
@@ -7020,7 +6957,7 @@ name|pa
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_remove_all: pv_table for %x is inconsistent"
+literal|"pmap_remove_all: pv_table for %lx is inconsistent"
 argument_list|,
 name|pa
 argument_list|)
@@ -7165,11 +7102,6 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-name|vm_offset_t
-name|pdnxt
-decl_stmt|,
-name|ptpaddr
-decl_stmt|;
 name|int
 name|newprot
 decl_stmt|;
@@ -7244,9 +7176,6 @@ operator|<
 name|eva
 condition|)
 block|{
-name|pt_entry_t
-name|pbits
-decl_stmt|;
 comment|/* 		 * If level 1 pte is invalid, skip this segment 		 */
 name|pte
 operator|=
@@ -9628,170 +9557,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * pmap_testbit tests bits in pte's  * note that the testbit/changebit routines are inline,  * and a lot of things compile-time evaluate.  */
-end_comment
-
-begin_function
-specifier|static
-name|boolean_t
-name|pmap_testbit
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|,
-name|int
-name|bit
-parameter_list|)
-block|{
-specifier|register
-name|pv_entry_t
-name|pv
-decl_stmt|;
-name|pv_table_t
-modifier|*
-name|ppv
-decl_stmt|;
-name|pt_entry_t
-modifier|*
-name|pte
-decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|pmap_is_managed
-argument_list|(
-name|pa
-argument_list|)
-condition|)
-return|return
-name|FALSE
-return|;
-name|ppv
-operator|=
-name|pa_to_pvh
-argument_list|(
-name|pa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ppv
-operator|->
-name|pv_list
-argument_list|)
-operator|==
-name|NULL
-condition|)
-return|return
-name|FALSE
-return|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|pv
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ppv
-operator|->
-name|pv_list
-argument_list|)
-init|;
-name|pv
-condition|;
-name|pv
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|pv
-argument_list|,
-name|pv_list
-argument_list|)
-control|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PMAP_DIAGNOSTIC
-argument_list|)
-if|if
-condition|(
-operator|!
-name|pv
-operator|->
-name|pv_pmap
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Null pmap (tb) at va: 0x%lx\n"
-argument_list|,
-name|pv
-operator|->
-name|pv_va
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-endif|#
-directive|endif
-name|pte
-operator|=
-name|pmap_lev3pte
-argument_list|(
-name|pv
-operator|->
-name|pv_pmap
-argument_list|,
-name|pv
-operator|->
-name|pv_va
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|pte
-operator|&
-name|bit
-condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-block|}
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: interrupt.c,v 1.8 1998/11/28 09:55:15 dfr Exp $ */
+comment|/* $Id: interrupt.c,v 1.9 1999/01/10 12:35:38 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1348,11 +1348,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|cntp
 operator|=
 name|i
 operator|->
 name|cntp
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 operator|*

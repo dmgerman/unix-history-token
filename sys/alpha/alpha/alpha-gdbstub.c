@@ -727,12 +727,16 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|ch
 operator|=
 name|buffer
 index|[
 name|count
 index|]
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|putDebugChar

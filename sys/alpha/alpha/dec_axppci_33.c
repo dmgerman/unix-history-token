@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dec_axppci_33.c,v 1.1 1998/08/10 07:53:58 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -466,11 +466,6 @@ name|ctb
 modifier|*
 name|ctb
 decl_stmt|;
-name|struct
-name|lca_config
-modifier|*
-name|lcp
-decl_stmt|;
 name|lca_init
 argument_list|()
 expr_stmt|;
@@ -592,11 +587,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"consinit: unknown console type %d\n"
-argument_list|,
-name|ctb
-operator|->
-name|ctb_term_type
+literal|"consinit: unknown console type"
 argument_list|)
 expr_stmt|;
 block|}
