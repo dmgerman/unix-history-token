@@ -239,7 +239,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:np:rs:UuxX:"
+literal|"cdef:iK:k:np:rs:SUuxX:"
 argument_list|)
 operator|)
 operator|!=
@@ -447,6 +447,18 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+case|case
+literal|'S'
+case|:
+name|ftsoptions
+operator|^=
+name|FTS_LOGICAL
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_PHYSICAL
+expr_stmt|;
+break|break;
 case|case
 literal|'U'
 case|:
