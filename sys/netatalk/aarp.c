@@ -229,8 +229,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|__FreeBSD__
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_decl_stmt
 specifier|static
