@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 
@@ -25,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
 end_include
 
 begin_include
@@ -61,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_async.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_bpf.h>
 end_include
 
 begin_include
