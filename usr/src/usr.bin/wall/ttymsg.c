@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttymsg.c	5.7 (Berkeley) %G%"
+literal|"@(#)ttymsg.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,7 +541,7 @@ name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|FNDELAY
+name|O_NONBLOCK
 argument_list|,
 operator|&
 name|off

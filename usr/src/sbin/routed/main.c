@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.22 (Berkeley) %G%"
+literal|"@(#)main.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1570,7 +1570,7 @@ name|sock
 argument_list|,
 name|F_SETFL
 argument_list|,
-name|FNDELAY
+name|O_NONBLOCK
 argument_list|)
 operator|==
 operator|-
@@ -1580,7 +1580,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fcntl FNDELAY: %m\n"
+literal|"fcntl O_NONBLOCK: %m\n"
 argument_list|)
 expr_stmt|;
 return|return
