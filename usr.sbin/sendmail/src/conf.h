@@ -4276,12 +4276,6 @@ begin_comment
 comment|/* 2.2.2-release and later */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<login_cap.h>
-end_include
-
 begin_define
 define|#
 directive|define
