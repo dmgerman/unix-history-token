@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_main.c,v 1.6.2.3 1997/11/18 07:52:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,14 +324,6 @@ modifier|*
 name|yp_dir
 init|=
 name|_PATH_YP
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|debug
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
