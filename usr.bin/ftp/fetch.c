@@ -337,6 +337,9 @@ modifier|*
 name|ep
 decl_stmt|,
 modifier|*
+name|http_buffer
+decl_stmt|,
+modifier|*
 name|portnum
 decl_stmt|,
 modifier|*
@@ -1228,6 +1231,7 @@ condition|(
 operator|!
 name|proxy
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Requesting %s\n"
@@ -1235,7 +1239,23 @@ argument_list|,
 name|origline
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+name|asprintf
+argument_list|(
+operator|&
+name|http_buffer
+argument_list|,
+literal|"GET /%s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n"
+argument_list|,
+name|path
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"Requesting %s (via %s)\n"
@@ -1247,38 +1267,22 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|snprintf
+name|asprintf
 argument_list|(
-name|buf
+operator|&
+name|http_buffer
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"GET %s%s HTTP/1.0\r\n\r\n"
-argument_list|,
-name|proxy
-condition|?
-literal|""
-else|:
-literal|"/"
+literal|"GET %s HTTP/1.0\r\n\r\n"
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|len
 operator|<
 literal|0
-operator|||
-name|len
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
 condition|)
 block|{
 name|warnx
@@ -1296,7 +1300,7 @@ name|write
 argument_list|(
 name|s
 argument_list|,
-name|buf
+name|http_buffer
 argument_list|,
 name|len
 argument_list|)
@@ -1309,10 +1313,20 @@ argument_list|(
 literal|"Writing HTTP request"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|http_buffer
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup_url_get
 goto|;
 block|}
+name|free
+argument_list|(
+name|http_buffer
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|buf
