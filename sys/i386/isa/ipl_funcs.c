@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.19 1999/05/09 23:29:56 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.20 1999/05/09 23:40:29 peter Exp $  */
 end_comment
 
 begin_include
@@ -34,14 +34,8 @@ file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_comment
-comment|/*  * The volatile bitmap variables must be set atomically.  This normally  * involves using a machine-dependent bit-set or `or' instruction.  */
+comment|/*  * The volatile bitmap variables must be set atomically.  This normally  * involves using a machine-dependent bit-set or `or' instruction.  *  * Note: setbits uses a locked or, making simple cases MP safe.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
 
 begin_define
 define|#
@@ -58,38 +52,11 @@ define|\
 value|void name(void)					\ {						\ 	setbits(var, bits);			\ }
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !SMP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DO_SETBITS
-parameter_list|(
-name|name
-parameter_list|,
-name|var
-parameter_list|,
-name|bits
-parameter_list|)
-define|\
-value|void name(void)					\ {						\ 	IFCPL_LOCK();				\ 	setbits(var, bits);			\ 	IFCPL_UNLOCK();				\ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !SMP */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
 
 begin_macro
 name|DO_SETBITS
@@ -101,6 +68,52 @@ argument_list|,
 argument|loadandclear(&idelayed)
 argument_list|)
 end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SMP */
+end_comment
+
+begin_function
+name|void
+name|setdelayed
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|IFCPL_LOCK
+argument_list|()
+expr_stmt|;
+name|setbits
+argument_list|(
+operator|&
+name|ipending
+argument_list|,
+name|loadandclear
+argument_list|(
+operator|&
+name|idelayed
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|IFCPL_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SMP */
+end_comment
 
 begin_macro
 name|DO_SETBITS
@@ -234,12 +247,6 @@ argument|SWI_VM_PENDING
 argument_list|)
 end_macro
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_function
 name|unsigned
 name|softclockpending
@@ -256,6 +263,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
 
 begin_define
 define|#
@@ -559,36 +572,6 @@ end_endif
 begin_comment
 comment|/* SPL_DEBUG_POSTCODE */
 end_comment
-
-begin_function
-name|unsigned
-name|softclockpending
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|unsigned
-name|x
-decl_stmt|;
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-name|x
-operator|=
-name|ipending
-operator|&
-name|SWI_CLOCK_PENDING
-expr_stmt|;
-name|IFCPL_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|x
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * This version has to check for bsp_apic_ready,  * as calling simple_lock() (ie ss_lock) before then deadlocks the system.  * A sample count of GENSPL calls before bsp_apic_ready was set: 2193  */
