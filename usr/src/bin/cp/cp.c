@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.20 (Berkeley) %G%"
+literal|"@(#)cp.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2139,6 +2139,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|char
+name|path
+index|[
+literal|100
+index|]
+decl_stmt|;
 name|fs
 operator|->
 name|st_mode
@@ -2186,13 +2192,32 @@ argument_list|,
 name|tv
 argument_list|)
 condition|)
-name|error
+block|{
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
+name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+argument_list|,
+literal|"utimes: %s"
+argument_list|,
 name|to
 operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
+name|error
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Changing the ownership probably won't succeed, unless we're root 	 * or POSIX_CHOWN_RESTRICTED is not set.  Set uid/gid before setting 	 * the mode; current BSD behavior is to remove all setuid bits on 	 * chown.  If chown fails, lose setuid/setgid bits. 	 */
 if|if
 condition|(
@@ -2233,13 +2258,32 @@ name|errno
 operator|!=
 name|EPERM
 condition|)
-name|error
+block|{
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
+name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+argument_list|,
+literal|"chown: %s"
+argument_list|,
 name|to
 operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
+name|error
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
 name|fs
 operator|->
 name|st_mode
@@ -2276,13 +2320,32 @@ operator|->
 name|st_mode
 argument_list|)
 condition|)
-name|error
+block|{
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
+name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+argument_list|,
+literal|"chown: %s"
+argument_list|,
 name|to
 operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
+name|error
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
