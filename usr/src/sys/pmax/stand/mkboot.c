@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkboot.c	7.5 (Berkeley) %G%"
+literal|"@(#)mkboot.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +271,7 @@ comment|/* 	 * Check for exec header and skip to code segment. 	 */
 if|if
 condition|(
 operator|!
-name|DecHeader
+name|GetHeader
 argument_list|(
 name|ifd
 argument_list|,
@@ -564,11 +564,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * DecHeader -  *  *	Check if the header is a DEC (COFF) file.  *  * Results:  *	Return true if all went ok.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * GetHeader -  *  *	Check if the header is an a.out file.  *  * Results:  *	Return true if all went ok.  *  * Side effects:  *	bootFID is left ready to read the text& data sections.  *	length is set to the size of the text + data sections.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_macro
-name|DecHeader
+name|GetHeader
 argument_list|(
 argument|bootFID
 argument_list|,
@@ -685,14 +685,6 @@ argument_list|)
 operator|||
 name|aout
 operator|.
-name|ex_fhdr
-operator|.
-name|magic
-operator|!=
-name|COFF_MAGIC
-operator|||
-name|aout
-operator|.
 name|a_magic
 operator|!=
 name|OMAGIC
@@ -705,9 +697,7 @@ name|loadAddr
 operator|=
 name|aout
 operator|.
-name|ex_aout
-operator|.
-name|codeStart
+name|a_entry
 expr_stmt|;
 operator|*
 name|execAddr
@@ -755,7 +745,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"Input file is COFF format\n"
+literal|"Input file is a.out format\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -372,7 +372,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* read the COFF header */
+comment|/* read the exec header */
 name|i
 operator|=
 name|read
@@ -514,9 +514,7 @@ operator|*
 operator|)
 name|aout
 operator|.
-name|ex_aout
-operator|.
-name|codeStart
+name|a_entry
 argument_list|,
 name|i
 argument_list|)
