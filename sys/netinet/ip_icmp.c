@@ -638,7 +638,18 @@ operator|.
 name|icps_error
 operator|++
 expr_stmt|;
-comment|/* 	 * Don't send error if not the first fragment of message. 	 * Don't error if the old packet protocol was ICMP 	 * error message, only known informational types. 	 */
+comment|/* 	 * Don't send error if the original packet was encrypted. 	 * Don't send error if not the first fragment of message. 	 * Don't error if the old packet protocol was ICMP 	 * error message, only known informational types. 	 */
+if|if
+condition|(
+name|n
+operator|->
+name|m_flags
+operator|&
+name|M_DECRYPTED
+condition|)
+goto|goto
+name|freeit
+goto|;
 if|if
 condition|(
 name|oip
