@@ -3,6 +3,15 @@ begin_comment
 comment|/* STARTUP PROCEDURE FOR UNIX FORTRAN PROGRAMS */
 end_comment
 
+begin_decl_stmt
+name|char
+name|id_libF77
+index|[]
+init|=
+literal|"@(#)main.c	2.2"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -13,6 +22,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../libI77/fiodefs.h"
 end_include
 
 begin_decl_stmt
@@ -66,6 +81,19 @@ name|sigindie
 argument_list|()
 decl_stmt|,
 name|sigtdie
+argument_list|()
+decl_stmt|;
+name|int
+name|sigildie
+argument_list|()
+decl_stmt|,
+name|sigedie
+argument_list|()
+decl_stmt|,
+name|sigbdie
+argument_list|()
+decl_stmt|,
+name|sigsdie
 argument_list|()
 decl_stmt|;
 name|long
@@ -159,6 +187,86 @@ argument_list|,
 name|sigf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sigf
+operator|=
+name|signal
+argument_list|(
+name|SIGILL
+argument_list|,
+name|sigildie
+argument_list|)
+operator|!=
+name|SIG_DFL
+condition|)
+name|signal
+argument_list|(
+name|SIGILL
+argument_list|,
+name|sigf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigf
+operator|=
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|sigedie
+argument_list|)
+operator|!=
+name|SIG_DFL
+condition|)
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|sigf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigf
+operator|=
+name|signal
+argument_list|(
+name|SIGBUS
+argument_list|,
+name|sigbdie
+argument_list|)
+operator|!=
+name|SIG_DFL
+condition|)
+name|signal
+argument_list|(
+name|SIGBUS
+argument_list|,
+name|sigf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigf
+operator|=
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|sigsdie
+argument_list|)
+operator|!=
+name|SIG_DFL
+condition|)
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|sigf
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|pdp11
@@ -239,11 +347,55 @@ literal|0
 argument_list|)
 block|; }
 specifier|static
+name|sigildie
+argument_list|()
+block|{
+name|sigdie
+argument_list|(
+literal|"Illegal instruction"
+argument_list|,
+literal|1
+argument_list|)
+block|; }
+specifier|static
+name|sigedie
+argument_list|()
+block|{
+name|sigdie
+argument_list|(
+literal|"EMT trap"
+argument_list|,
+literal|1
+argument_list|)
+block|; }
+specifier|static
+name|sigbdie
+argument_list|()
+block|{
+name|sigdie
+argument_list|(
+literal|"Bus error"
+argument_list|,
+literal|1
+argument_list|)
+block|; }
+specifier|static
+name|sigsdie
+argument_list|()
+block|{
+name|sigdie
+argument_list|(
+literal|"Segmentation violation"
+argument_list|,
+literal|1
+argument_list|)
+block|; }
+specifier|static
 name|sigdie
 argument_list|(
 name|s
 argument_list|,
-name|kill
+name|core
 argument_list|)
 specifier|register
 name|char
@@ -254,31 +406,41 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|kill
+name|core
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-comment|/* print error message, then clear buffers */
+specifier|extern
+name|unit
+name|units
+index|[]
+decl_stmt|;
+comment|/* clear buffers, then print error message */
+name|f_exit
+argument_list|()
+expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|units
+index|[
+name|STDERR
+index|]
+operator|.
+name|ufd
 argument_list|,
 literal|"%s\n"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|f_exit
-argument_list|()
-expr_stmt|;
 name|_cleanup
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|kill
+name|core
 condition|)
 block|{
 comment|/* now get a core */
