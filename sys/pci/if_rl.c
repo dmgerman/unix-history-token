@@ -2366,7 +2366,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 comment|/* 		 * Allow the rlphy driver to read the media status 		 * register. If we have a link partner which does not 		 * support NWAY, this is the register which will tell 		 * us the results of parallel detection. 		 */
 case|case
 name|RL_MEDIASTAT
@@ -2390,7 +2389,6 @@ operator|(
 name|rval
 operator|)
 return|;
-break|break;
 default|default:
 name|printf
 argument_list|(
