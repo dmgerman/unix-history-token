@@ -1116,7 +1116,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|if (logging> 1) { \ 		if (cnt == (off_t)-1) \ 		    syslog(LOG_INFO,"%s %s%s", cmd, \ 			*(file) == '/' ? "" : curdir(), file); \ 		else \ 		    syslog(LOG_INFO, "%s %s%s = %jd bytes", \ 			cmd, (*(file) == '/') ? "" : curdir(), file, \ 			(intmax_t)cnt); \ 	}
+value|if (logging> 1) { \ 		if (cnt == -1) \ 		    syslog(LOG_INFO,"%s %s%s", cmd, \ 			*(file) == '/' ? "" : curdir(), file); \ 		else \ 		    syslog(LOG_INFO, "%s %s%s = %jd bytes", \ 			cmd, (*(file) == '/') ? "" : curdir(), file, \ 			(intmax_t)cnt); \ 	}
 end_define
 
 begin_ifdef
@@ -8553,9 +8553,6 @@ name|fseeko
 argument_list|(
 name|fout
 argument_list|,
-operator|(
-name|off_t
-operator|)
 literal|0
 argument_list|,
 name|SEEK_CUR
@@ -8612,9 +8609,6 @@ name|dataconn
 argument_list|(
 name|name
 argument_list|,
-operator|(
-name|off_t
-operator|)
 operator|-
 literal|1
 argument_list|,
@@ -9116,9 +9110,6 @@ if|if
 condition|(
 name|size
 operator|!=
-operator|(
-name|off_t
-operator|)
 operator|-
 literal|1
 condition|)
@@ -12771,9 +12762,6 @@ if|if
 condition|(
 name|file_size
 operator|!=
-operator|(
-name|off_t
-operator|)
 operator|-
 literal|1
 condition|)
@@ -14694,9 +14682,6 @@ name|dataconn
 argument_list|(
 literal|"file list"
 argument_list|,
-operator|(
-name|off_t
-operator|)
 operator|-
 literal|1
 argument_list|,
@@ -14911,9 +14896,6 @@ name|dataconn
 argument_list|(
 literal|"file list"
 argument_list|,
-operator|(
-name|off_t
-operator|)
 operator|-
 literal|1
 argument_list|,
