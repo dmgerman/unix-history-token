@@ -42,11 +42,13 @@ value|int		pc_inside_intr;					\ 	u_int32_t	pc_next_asn;
 comment|/* next ASN to alloc */
 value|\ 	u_int32_t	pc_current_asngen;
 comment|/* ASN rollover check */
-value|\ 	struct pmap	*pc_curpmap
+value|\ 	struct pmap	*pc_curpmap;
+comment|/* current pmap */
+value|\ 	struct thread	*pc_fputhread
 end_define
 
 begin_comment
-comment|/* current pmap */
+comment|/* current user of the fpu */
 end_comment
 
 begin_define

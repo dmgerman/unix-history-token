@@ -90,6 +90,11 @@ block|}
 name|pcb_fpu
 struct|;
 comment|/* Floating point processor */
+name|unsigned
+name|int
+name|pcb_fpcpu
+decl_stmt|;
+comment|/* which CPU had our FPU 							stuff. */
 block|}
 struct|;
 end_struct
