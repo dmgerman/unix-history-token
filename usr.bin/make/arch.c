@@ -1186,7 +1186,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	* We use the ARMAG string to make sure this is an archive we 	* can handle... 	*/
+comment|/* 	 * We use the ARMAG string to make sure this is an archive we 	 * can handle... 	 */
 if|if
 condition|(
 operator|(
@@ -1229,7 +1229,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	* Because of space constraints and similar things, files are archived 	* using their final path components, not the entire thing, so we need 	* to point 'member' to the final component, if there is one, to make 	* the comparisons easier... 	*/
+comment|/* 	 * Because of space constraints and similar things, files are archived 	 * using their final path components, not the entire thing, so we need 	 * to point 'member' to the final component, if there is one, to make 	 * the comparisons easier... 	 */
 name|cp
 operator|=
 name|strrchr
@@ -1658,7 +1658,7 @@ name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	* We've looked everywhere, but the member is not to be found. Close the 	* archive and return NULL -- an error. 	*/
+comment|/* 	 * We've looked everywhere, but the member is not to be found. Close the 	 * archive and return NULL -- an error. 	 */
 name|fclose
 argument_list|(
 name|arch
@@ -1783,7 +1783,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 		* This is a table of archive names, so we build one for 		* ourselves 		*/
+comment|/* 		 * This is a table of archive names, so we build one for 		 * ourselves 		 */
 name|ar
 operator|->
 name|fnametab
@@ -2147,7 +2147,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* Current member name while hashing */
-comment|/* 	* Because of space constraints and similar things, files are archived 	* using their final path components, not the entire thing, so we need 	* to point 'member' to the final component, if there is one, to make 	* the comparisons easier... 	*/
+comment|/* 	 * Because of space constraints and similar things, files are archived 	 * using their final path components, not the entire thing, so we need 	 * to point 'member' to the final component, if there is one, to make 	 * the comparisons easier... 	 */
 name|cp
 operator|=
 name|strrchr
@@ -2344,7 +2344,7 @@ name|sarh
 operator|)
 return|;
 block|}
-comment|/* 	* We don't have this archive on the list yet, so we want to find out 	* everything that's in it and cache it so we can get at it quickly. 	*/
+comment|/* 	 * We don't have this archive on the list yet, so we want to find out 	 * everything that's in it and cache it so we can get at it quickly. 	 */
 name|arch
 operator|=
 name|fopen
