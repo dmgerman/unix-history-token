@@ -202,7 +202,7 @@ name|_pthread_guard_default
 condition|)
 block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
-name|DEAD_LIST_LOCK
+name|STACK_LOCK
 expr_stmt|;
 if|if
 condition|(
@@ -235,14 +235,14 @@ name|stackaddr
 expr_stmt|;
 block|}
 comment|/* Unlock the garbage collector mutex. */
-name|DEAD_LIST_UNLOCK
+name|STACK_UNLOCK
 expr_stmt|;
 block|}
 comment|/* 	 * The user specified a non-default stack and/or guard size, so try to 	 * allocate a stack from the non-default size stack cache, using the 	 * rounded up stack size (stack_size) in the search: 	 */
 else|else
 block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
-name|DEAD_LIST_LOCK
+name|STACK_LOCK
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -285,7 +285,7 @@ break|break;
 block|}
 block|}
 comment|/* Unlock the garbage collector mutex. */
-name|DEAD_LIST_UNLOCK
+name|STACK_UNLOCK
 expr_stmt|;
 block|}
 comment|/* Check if a stack was not allocated from a stack cache: */

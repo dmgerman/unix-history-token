@@ -1277,6 +1277,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|SCLASS
+name|spinlock_t
+name|stack_lock
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|_SPINLOCK_INITIALIZER
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|STACK_LOCK
+value|_SPINLOCK(&stack_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|STACK_UNLOCK
+value|_SPINUNLOCK(&stack_lock);
+end_define
+
 begin_comment
 comment|/* List of all threads: */
 end_comment

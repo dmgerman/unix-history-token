@@ -457,8 +457,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX - We really need to decouple from this lock */
-name|DEAD_LIST_LOCK
+name|STACK_LOCK
 expr_stmt|;
 name|_thread_stack_free
 argument_list|(
@@ -475,7 +474,7 @@ operator|->
 name|guardsize_attr
 argument_list|)
 expr_stmt|;
-name|DEAD_LIST_UNLOCK
+name|STACK_UNLOCK
 expr_stmt|;
 block|}
 name|free

@@ -237,6 +237,8 @@ name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Check if the stack was not specified by 			 * the caller to pthread_create() and has not 			 * been destroyed yet:  			 */
+name|STACK_LOCK
+expr_stmt|;
 if|if
 condition|(
 name|pthread
@@ -280,6 +282,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|STACK_UNLOCK
+expr_stmt|;
 comment|/* 			 * If the thread has not been detached, leave 			 * it on the dead thread list. 			 */
 if|if
 condition|(
