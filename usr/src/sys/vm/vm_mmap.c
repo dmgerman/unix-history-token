@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -740,6 +740,29 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MAP_FIXED
+operator|)
+operator|&&
+operator|(
+name|addr
+operator|+
+name|size
+operator|>
+name|VM_MAXUSER_ADDRESS
+operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 * XXX if no hint provided for a non-fixed mapping place it after 	 * the end of the largest possible heap. 	 * 	 * There should really be a pmap call to determine a reasonable 	 * location. 	 */
 if|if
 condition|(
