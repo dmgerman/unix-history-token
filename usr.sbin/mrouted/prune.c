@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.6 1995/06/13 18:04:57 wollman Exp $  */
 end_comment
 
 begin_include
@@ -5699,6 +5699,13 @@ operator|=
 operator|*
 name|p
 operator|++
+expr_stmt|;
+name|prun_tmr
+operator|=
+name|ntohl
+argument_list|(
+name|prun_tmr
+argument_list|)
 expr_stmt|;
 name|log
 argument_list|(
