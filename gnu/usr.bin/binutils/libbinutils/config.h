@@ -584,7 +584,7 @@ comment|/* Configured target name. */
 end_comment
 
 begin_comment
-comment|/* #define TARGET "alpha-unknown-freebsdelf5.0" */
+comment|/* #define TARGET "alpha-unknown-freebsd4" */
 end_comment
 
 end_unit

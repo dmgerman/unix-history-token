@@ -680,7 +680,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"i386-unknown-freebsdelf5.0"
+value|"i386-unknown-freebsd4"
 end_define
 
 begin_comment
@@ -691,7 +691,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"i386-unknown-freebsdelf5.0"
+value|"i386-unknown-freebsd4"
 end_define
 
 begin_comment
@@ -724,7 +724,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_OS
-value|"freebsdelf5.0"
+value|"freebsd4"
 end_define
 
 begin_comment
