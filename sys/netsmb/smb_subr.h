@@ -292,51 +292,6 @@ parameter_list|)
 value|do { if (p) smb_strfree(p); } while(0)
 end_define
 
-begin_comment
-comment|/*  * The simple try/catch/finally interface.  * With GCC it is possible to allow more than one try/finally block per  * function, but we'll avoid it to maintain portability.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|itry
-value|{						\ 				__label__ _finlab, _catchlab;		\ 				int _tval;				\  #define icatch(var)							\ 				goto _finlab;				\ 				(void)&&_catchlab;			\ 				_catchlab:				\ 				var = _tval;
-end_define
-
-begin_define
-define|#
-directive|define
-name|ifinally
-value|(void)&&_finlab;			\ 				_finlab:
-end_define
-
-begin_define
-define|#
-directive|define
-name|iendtry
-value|}
-end_define
-
-begin_define
-define|#
-directive|define
-name|inocatch
-define|\
-value|goto _finlab;				\ 				(void)&&_catchlab;			\ 				_catchlab:				\  #define ithrow(t)	do {						\ 				if ((_tval = (int)(t)) != 0)		\ 					goto _catchlab;			\ 			} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ierror
-parameter_list|(
-name|t
-parameter_list|,
-name|e
-parameter_list|)
-value|do {						\ 				if (t) {				\ 					_tval = e;			\ 					goto _catchlab;			\ 				}					\ 			} while (0)
-end_define
-
 begin_typedef
 typedef|typedef
 name|u_int16_t
