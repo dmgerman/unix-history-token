@@ -2566,6 +2566,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* We're done talking to the NIC for now; halt it. */
+name|ndis_halt_nic
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2635,6 +2641,13 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_UP
+expr_stmt|;
 if|if
 condition|(
 name|device_is_attached
@@ -2666,13 +2679,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|ifp
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_UP
-expr_stmt|;
 name|NDIS_UNLOCK
 argument_list|(
 name|sc
@@ -3371,7 +3377,6 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
-comment|/*NDIS_LOCK(sc);*/
 name|ifp
 operator|=
 operator|&
@@ -3381,7 +3386,18 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* 	if (!(ifp->if_flags& IFF_UP)) { 		NDIS_UNLOCK(sc); 		return; 	} */
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|)
+return|return;
 name|ndis_isr
 argument_list|(
 name|sc
@@ -3419,7 +3435,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/*NDIS_UNLOCK(sc);*/
 return|return;
 block|}
 end_function
