@@ -4286,7 +4286,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Search for any mbufs that are not a multiple of 4 bytes 	 * long or with m_data not longword aligned. These could 	 * cause pointer alignment problems, so copy them to well 	 * aligned mbufs. 	 */
+else|else
+block|{
+comment|/* 		 * Search for any mbufs that are not a multiple of 4 bytes 		 * long or with m_data not longword aligned. These could 		 * cause pointer alignment problems, so copy them to well 		 * aligned mbufs. 		 */
 name|rpcclnt_realign
 argument_list|(
 name|mp
@@ -4296,6 +4298,7 @@ operator|*
 name|RPCX_UNSIGNED
 argument_list|)
 expr_stmt|;
+block|}
 name|RPC_RETURN
 argument_list|(
 name|error
@@ -6927,11 +6930,6 @@ name|slptimeo
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|task
-condition|)
-block|{
 name|p
 operator|=
 name|task
@@ -6951,12 +6949,6 @@ condition|)
 name|slpflag
 operator|=
 name|PCATCH
-expr_stmt|;
-block|}
-else|else
-name|p
-operator|=
-name|NULL
 expr_stmt|;
 while|while
 condition|(
