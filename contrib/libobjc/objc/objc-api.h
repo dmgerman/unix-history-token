@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective-C Runtime API.    Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective-C Runtime API.    Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -276,6 +276,13 @@ define|#
 directive|define
 name|_C_STRUCT_E
 value|'}'
+end_define
+
+begin_define
+define|#
+directive|define
+name|_C_VECTOR
+value|'!'
 end_define
 
 begin_comment
@@ -796,7 +803,7 @@ name|objc_protocol_list
 modifier|*
 name|next
 decl_stmt|;
-name|int
+name|size_t
 name|count
 decl_stmt|;
 name|Protocol
@@ -1345,6 +1352,23 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* **  Hook for method forwarding. This makes it easy to substitute a **  library, such as ffcall, that implements closures, thereby avoiding **  gcc's __builtin_apply problems. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|IMP
+function_decl|(
+modifier|*
+name|__objc_msg_forward
+function_decl|)
+parameter_list|(
+name|SEL
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2122,13 +2146,20 @@ name|object
 parameter_list|)
 block|{
 return|return
-name|CLS_ISCLASS
-argument_list|(
 operator|(
-name|Class
-operator|)
+operator|(
 name|object
+operator|!=
+name|nil
+operator|)
+operator|&&
+name|CLS_ISMETA
+argument_list|(
+name|object
+operator|->
+name|class_pointer
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2145,6 +2176,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|object
 operator|!=
 name|nil
@@ -2156,6 +2188,7 @@ name|object
 operator|->
 name|class_pointer
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2171,13 +2204,25 @@ name|object
 parameter_list|)
 block|{
 return|return
-name|CLS_ISMETA
-argument_list|(
 operator|(
-name|Class
+operator|(
+name|object
+operator|!=
+name|nil
 operator|)
+operator|&&
+operator|!
+name|object_is_instance
+argument_list|(
 name|object
 argument_list|)
+operator|&&
+operator|!
+name|object_is_class
+argument_list|(
+name|object
+argument_list|)
+operator|)
 return|;
 block|}
 end_function

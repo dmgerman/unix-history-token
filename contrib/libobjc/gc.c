@@ -1206,7 +1206,22 @@ argument_list|,
 literal|"}"
 argument_list|)
 expr_stmt|;
-comment|//  printf ("type description for '%s' is %s\n", class->name, class_structure_type);
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"type description for '%s' is %s\n"
+argument_list|,
+name|class
+operator|->
+name|name
+argument_list|,
+name|class_structure_type
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|__objc_gc_type_description_from_type
 argument_list|(
 name|mask
@@ -1219,10 +1234,6 @@ argument_list|(
 name|class_structure_type
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|DEBUG
-value|1
 ifdef|#
 directive|ifdef
 name|DEBUG

@@ -722,7 +722,7 @@ return|;
 comment|/* If we already own the lock then increment depth */
 name|thread_id
 operator|=
-name|objc_thread_id
+name|__objc_thread_id
 argument_list|()
 expr_stmt|;
 if|if
@@ -803,7 +803,7 @@ return|;
 comment|/* If we already own the lock then increment depth */
 name|thread_id
 operator|=
-name|objc_thread_id
+name|__objc_thread_id
 argument_list|()
 expr_stmt|;
 if|if
@@ -884,7 +884,7 @@ return|;
 comment|/* If another thread owns the lock then abort */
 name|thread_id
 operator|=
-name|objc_thread_id
+name|__objc_thread_id
 argument_list|()
 expr_stmt|;
 if|if
@@ -1098,7 +1098,7 @@ return|;
 comment|/* Make sure we are owner of mutex */
 name|thread_id
 operator|=
-name|objc_thread_id
+name|__objc_thread_id
 argument_list|()
 expr_stmt|;
 if|if
@@ -1228,6 +1228,64 @@ argument_list|(
 name|condition
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Make the objc thread system aware that a thread which is managed    (started, stopped) by external code could access objc facilities    from now on.  This is used when you are interfacing with some    external non-objc-based environment/system - you must call    objc_thread_add() before an alien thread makes any calls to    Objective-C.  Do not cause the _objc_became_multi_threaded hook to    be executed. */
+end_comment
+
+begin_function
+name|void
+name|objc_thread_add
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
+name|__objc_is_multi_threaded
+operator|=
+literal|1
+expr_stmt|;
+name|__objc_runtime_threads_alive
+operator|++
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Make the objc thread system aware that a thread managed (started,    stopped) by some external code will no longer access objc and thus    can be forgotten by the objc thread system.  Call    objc_thread_remove() when your alien thread is done with making    calls to Objective-C. */
+end_comment
+
+begin_function
+name|void
+name|objc_thread_remove
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
+name|__objc_runtime_threads_alive
+operator|--
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

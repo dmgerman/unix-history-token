@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime class related functions    Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup and Dennis Glatting.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime class related functions    Copyright (C) 1993, 1995, 1996, 1997, 2001 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup and Dennis Glatting.     Lock-free class table code designed and written from scratch by    Nicola Pero, 2001.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* As a special exception, if you link this library with files compiled with    GCC to produce an executable, this does not cause the resulting executable    to be covered by the GNU General Public License. This exception does not    however invalidate any other reasons why the executable file might be    covered by the GNU General Public License.  */
+end_comment
+
+begin_comment
+comment|/*   The code in this file critically affects class method invocation   speed.  This long preamble comment explains why, and the issues   involved.       One of the traditional weaknesses of the GNU Objective-C runtime is   that class method invocations are slow.  The reason is that when you   write      array = [NSArray new];      this gets basically compiled into the equivalent of       array = [(objc_get_class ("NSArray")) new];      objc_get_class returns the class pointer corresponding to the string   `NSArray'; and because of the lookup, the operation is more   complicated and slow than a simple instance method invocation.        Most high performance Objective-C code (using the GNU Objc runtime)   I had the opportunity to read (or write) work around this problem by   caching the class pointer:      Class arrayClass = [NSArray class];      ... later on ...      array = [arrayClass new];   array = [arrayClass new];   array = [arrayClass new];      In this case, you always perform a class lookup (the first one), but   then all the [arrayClass new] methods run exactly as fast as an   instance method invocation.  It helps if you have many class method   invocations to the same class.        The long-term solution to this problem would be to modify the   compiler to output tables of class pointers corresponding to all the   class method invocations, and to add code to the runtime to update   these tables - that should in the end allow class method invocations   to perform precisely as fast as instance method invocations, because   no class lookup would be involved.  I think the Apple Objective-C   runtime uses this technique.  Doing this involves synchronized   modifications in the runtime and in the compiler.        As a first medicine to the problem, I [NP] have redesigned and   rewritten the way the runtime is performing class lookup.  This   doesn't give as much speed as the other (definitive) approach, but   at least a class method invocation now takes approximately 4.5 times   an instance method invocation on my machine (it would take approx 12   times before the rewriting), which is a lot better.      One of the main reason the new class lookup is so faster is because   I implemented it in a way that can safely run multithreaded without   using locks - a so-called `lock-free' data structure.  The atomic   operation is pointer assignment.  The reason why in this problem   lock-free data structures work so well is that you never remove   classes from the table - and the difficult thing with lock-free data   structures is freeing data when is removed from the structures.  */
 end_comment
 
 begin_include
@@ -23,25 +27,728 @@ directive|include
 file|"sarray.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<objc/objc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<objc/objc-api.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<objc/thr.h>
+end_include
+
 begin_comment
-comment|/* The table of classname->class.  Used for objc_lookup_class and friends */
+comment|/* We use a table which maps a class name to the corresponding class  * pointer.  The first part of this file defines this table, and  * functions to do basic operations on the table.  The second part of  * the file implements some higher level Objective-C functionality for  * classes by using the functions provided in the first part to manage  * the table. */
 end_comment
+
+begin_comment
+comment|/**  ** Class Table Internals  **/
+end_comment
+
+begin_comment
+comment|/* A node holding a class */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|class_node
+block|{
+name|struct
+name|class_node
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Pointer to next entry on the list.                                    NULL indicates end of list. */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* The class name string */
+name|int
+name|length
+decl_stmt|;
+comment|/* The class name string length */
+name|Class
+name|pointer
+decl_stmt|;
+comment|/* The Class pointer */
+block|}
+typedef|*
+name|class_node_ptr
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* A table containing classes is a class_node_ptr (pointing to the    first entry in the table - if it is NULL, then the table is    empty). */
+end_comment
+
+begin_comment
+comment|/* We have 1024 tables.  Each table contains all class names which    have the same hash (which is a number between 0 and 1023).  To look    up a class_name, we compute its hash, and get the corresponding    table.  Once we have the table, we simply compare strings directly    till we find the one which we want (using the length first).  The    number of tables is quite big on purpose (a normal big application    has less than 1000 classes), so that you shouldn't normally get any    collisions, and get away with a single comparison (which we can't    avoid since we need to know that you have got the right thing).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASS_TABLE_SIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLASS_TABLE_MASK
+value|1023
+end_define
 
 begin_decl_stmt
 specifier|static
-name|cache_ptr
-name|__objc_class_hash
-init|=
-literal|0
+name|class_node_ptr
+name|class_table_array
+index|[
+name|CLASS_TABLE_SIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* !T:MUTEX */
+comment|/* The table writing mutex - we lock on writing to avoid conflicts    between different writers, but we read without locks.  That is    possible because we assume pointer assignment to be an atomic    operation.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|objc_mutex_t
+name|__class_table_lock
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CLASS_TABLE_HASH is how we compute the hash of a class name.  It is    a macro - *not* a function - arguments *are* modified directly.       INDEX should be a variable holding an int;    HASH should be a variable holding an int;    CLASS_NAME should be a variable holding a (char *) to the class_name.       After the macro is executed, INDEX contains the length of the    string, and HASH the computed hash of the string; CLASS_NAME is    untouched.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASS_TABLE_HASH
+parameter_list|(
+name|INDEX
+parameter_list|,
+name|HASH
+parameter_list|,
+name|CLASS_NAME
+parameter_list|)
+define|\
+value|HASH = 0;                                                  \   for (INDEX = 0; CLASS_NAME[INDEX] != '\0'; INDEX++)        \     {                                                        \       HASH = (HASH<< 4) ^ (HASH>> 28) ^ CLASS_NAME[INDEX]; \     }                                                        \                                                              \   HASH = (HASH ^ (HASH>> 10) ^ (HASH>> 20))& CLASS_TABLE_MASK;
+end_define
+
+begin_comment
+comment|/* Setup the table.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|class_table_setup
+parameter_list|()
+block|{
+comment|/* Start - nothing in the table.  */
+name|memset
+argument_list|(
+name|class_table_array
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|class_node_ptr
+argument_list|)
+operator|*
+name|CLASS_TABLE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* The table writing mutex.  */
+name|__class_table_lock
+operator|=
+name|objc_mutex_allocate
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Insert a class in the table (used when a new class is registered).  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|class_table_insert
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|class_name
+parameter_list|,
+name|Class
+name|class_pointer
+parameter_list|)
+block|{
+name|int
+name|hash
+decl_stmt|,
+name|length
+decl_stmt|;
+name|class_node_ptr
+name|new_node
+decl_stmt|;
+comment|/* Find out the class name's hash and length.  */
+name|CLASS_TABLE_HASH
+argument_list|(
+name|length
+argument_list|,
+name|hash
+argument_list|,
+name|class_name
+argument_list|)
+expr_stmt|;
+comment|/* Prepare the new node holding the class.  */
+name|new_node
+operator|=
+name|objc_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|class_node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|new_node
+operator|->
+name|name
+operator|=
+name|class_name
+expr_stmt|;
+name|new_node
+operator|->
+name|length
+operator|=
+name|length
+expr_stmt|;
+name|new_node
+operator|->
+name|pointer
+operator|=
+name|class_pointer
+expr_stmt|;
+comment|/* Lock the table for modifications.  */
+name|objc_mutex_lock
+argument_list|(
+name|__class_table_lock
+argument_list|)
+expr_stmt|;
+comment|/* Insert the new node in the table at the beginning of the table at      class_table_array[hash].  */
+name|new_node
+operator|->
+name|next
+operator|=
+name|class_table_array
+index|[
+name|hash
+index|]
+expr_stmt|;
+name|class_table_array
+index|[
+name|hash
+index|]
+operator|=
+name|new_node
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__class_table_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Replace a class in the table (used only by poseAs:).  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|class_table_replace
+parameter_list|(
+name|Class
+name|old_class_pointer
+parameter_list|,
+name|Class
+name|new_class_pointer
+parameter_list|)
+block|{
+name|int
+name|hash
+decl_stmt|;
+name|class_node_ptr
+name|node
+decl_stmt|;
+name|objc_mutex_lock
+argument_list|(
+name|__class_table_lock
+argument_list|)
+expr_stmt|;
+name|hash
+operator|=
+literal|0
+expr_stmt|;
+name|node
+operator|=
+name|class_table_array
+index|[
+name|hash
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|hash
+operator|<
+name|CLASS_TABLE_SIZE
+condition|)
+block|{
+if|if
+condition|(
+name|node
+operator|==
+name|NULL
+condition|)
+block|{
+name|hash
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|hash
+operator|<
+name|CLASS_TABLE_SIZE
+condition|)
+block|{
+name|node
+operator|=
+name|class_table_array
+index|[
+name|hash
+index|]
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|Class
+name|class1
+init|=
+name|node
+operator|->
+name|pointer
+decl_stmt|;
+if|if
+condition|(
+name|class1
+operator|==
+name|old_class_pointer
+condition|)
+block|{
+name|node
+operator|->
+name|pointer
+operator|=
+name|new_class_pointer
+expr_stmt|;
+block|}
+name|node
+operator|=
+name|node
+operator|->
+name|next
+expr_stmt|;
+block|}
+block|}
+name|objc_mutex_unlock
+argument_list|(
+name|__class_table_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Get a class from the table.  This does not need mutex protection.    Currently, this function is called each time you call a static    method, this is why it must be very fast.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|Class
+name|class_table_get_safe
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|class_name
+parameter_list|)
+block|{
+name|class_node_ptr
+name|node
+decl_stmt|;
+name|int
+name|length
+decl_stmt|,
+name|hash
+decl_stmt|;
+comment|/* Compute length and hash.  */
+name|CLASS_TABLE_HASH
+argument_list|(
+name|length
+argument_list|,
+name|hash
+argument_list|,
+name|class_name
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|class_table_array
+index|[
+name|hash
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|node
+operator|!=
+name|NULL
+condition|)
+block|{
+do|do
+block|{
+if|if
+condition|(
+name|node
+operator|->
+name|length
+operator|==
+name|length
+condition|)
+block|{
+comment|/* Compare the class names.  */
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|length
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|node
+operator|->
+name|name
+operator|)
+index|[
+name|i
+index|]
+operator|!=
+name|class_name
+index|[
+name|i
+index|]
+condition|)
+block|{
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|length
+condition|)
+block|{
+comment|/* They are equal!  */
+return|return
+name|node
+operator|->
+name|pointer
+return|;
+block|}
+block|}
+block|}
+do|while
+condition|(
+operator|(
+name|node
+operator|=
+name|node
+operator|->
+name|next
+operator|)
+operator|!=
+name|NULL
+condition|)
+do|;
+block|}
+return|return
+name|Nil
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Enumerate over the class table.  */
+end_comment
+
+begin_struct
+struct|struct
+name|class_table_enumerator
+block|{
+name|int
+name|hash
+decl_stmt|;
+name|class_node_ptr
+name|node
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+specifier|static
+name|Class
+name|class_table_next
+parameter_list|(
+name|struct
+name|class_table_enumerator
+modifier|*
+modifier|*
+name|e
+parameter_list|)
+block|{
+name|struct
+name|class_table_enumerator
+modifier|*
+name|enumerator
+init|=
+operator|*
+name|e
+decl_stmt|;
+name|class_node_ptr
+name|next
+decl_stmt|;
+if|if
+condition|(
+name|enumerator
+operator|==
+name|NULL
+condition|)
+block|{
+operator|*
+name|e
+operator|=
+name|objc_malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|class_table_enumerator
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|enumerator
+operator|=
+operator|*
+name|e
+expr_stmt|;
+name|enumerator
+operator|->
+name|hash
+operator|=
+literal|0
+expr_stmt|;
+name|enumerator
+operator|->
+name|node
+operator|=
+name|NULL
+expr_stmt|;
+name|next
+operator|=
+name|class_table_array
+index|[
+name|enumerator
+operator|->
+name|hash
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|next
+operator|=
+name|enumerator
+operator|->
+name|node
+operator|->
+name|next
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|next
+operator|!=
+name|NULL
+condition|)
+block|{
+name|enumerator
+operator|->
+name|node
+operator|=
+name|next
+expr_stmt|;
+return|return
+name|enumerator
+operator|->
+name|node
+operator|->
+name|pointer
+return|;
+block|}
+else|else
+block|{
+name|enumerator
+operator|->
+name|hash
+operator|++
+expr_stmt|;
+while|while
+condition|(
+name|enumerator
+operator|->
+name|hash
+operator|<
+name|CLASS_TABLE_SIZE
+condition|)
+block|{
+name|next
+operator|=
+name|class_table_array
+index|[
+name|enumerator
+operator|->
+name|hash
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|next
+operator|!=
+name|NULL
+condition|)
+block|{
+name|enumerator
+operator|->
+name|node
+operator|=
+name|next
+expr_stmt|;
+return|return
+name|enumerator
+operator|->
+name|node
+operator|->
+name|pointer
+return|;
+block|}
+name|enumerator
+operator|->
+name|hash
+operator|++
+expr_stmt|;
+block|}
+comment|/* Ok - table finished - done.  */
+name|objc_free
+argument_list|(
+name|enumerator
+argument_list|)
+expr_stmt|;
+return|return
+name|Nil
+return|;
+block|}
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* DEBUGGING FUNCTIONS */
 end_comment
 
 begin_comment
-comment|/* This is a hook which is called by objc_get_class and     objc_lookup_class if the runtime is not able to find the class.    This may e.g. try to load in the class using dynamic loading */
+comment|/* Debugging function - print the class table.  */
+end_comment
+
+begin_comment
+unit|void class_table_print () {   int i;      for (i = 0; i< CLASS_TABLE_SIZE; i++)     {       class_node_ptr node;              printf ("%d:\n", i);       node = class_table_array[i];              while (node != NULL)         {           printf ("\t%s\n", node->name);           node = node->next;         }     } }
+comment|/* Debugging function - print an histogram of number of classes in    function of hash key values.  Useful to evaluate the hash function    in real cases.  */
+end_comment
+
+begin_endif
+unit|void class_table_print_histogram () {   int i, j;   int counter = 0;      for (i = 0; i< CLASS_TABLE_SIZE; i++)     {       class_node_ptr node;              node = class_table_array[i];              while (node != NULL)         {           counter++;           node = node->next;         }       if (((i + 1) % 50) == 0)         {           printf ("%4d:", i + 1);           for (j = 0; j< counter; j++)             {               printf ("X");             }           printf ("\n");           counter = 0;         }     }   printf ("%4d:", i + 1);   for (j = 0; j< counter; j++)     {       printf ("X");     }   printf ("\n"); }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUGGING FUNCTIONS */
+end_comment
+
+begin_comment
+comment|/**  ** Objective-C runtime functions  **/
+end_comment
+
+begin_comment
+comment|/* From now on, the only access to the class table data structure    should be via the class_table_* functions.  */
+end_comment
+
+begin_comment
+comment|/* This is a hook which is called by objc_get_class and    objc_lookup_class if the runtime is not able to find the class.      This may e.g. try to load in the class using dynamic loading.  */
 end_comment
 
 begin_function_decl
@@ -66,7 +773,7 @@ comment|/* !T:SAFE */
 end_comment
 
 begin_comment
-comment|/* True when class links has been resolved */
+comment|/* True when class links has been resolved.  */
 end_comment
 
 begin_decl_stmt
@@ -81,26 +788,15 @@ begin_comment
 comment|/* !T:UNUSED */
 end_comment
 
-begin_comment
-comment|/* Initial number of buckets size of class hash table. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLASS_HASH_SIZE
-value|32
-end_define
-
 begin_function
 name|void
 name|__objc_init_class_tables
 parameter_list|()
 block|{
-comment|/* Allocate the class hash table */
+comment|/* Allocate the class hash table.  */
 if|if
 condition|(
-name|__objc_class_hash
+name|__class_table_lock
 condition|)
 return|return;
 name|objc_mutex_lock
@@ -108,22 +804,8 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-name|__objc_class_hash
-operator|=
-name|hash_new
-argument_list|(
-name|CLASS_HASH_SIZE
-argument_list|,
-operator|(
-name|hash_func_type
-operator|)
-name|hash_string
-argument_list|,
-operator|(
-name|compare_func_type
-operator|)
-name|compare_strings
-argument_list|)
+name|class_table_setup
+argument_list|()
 expr_stmt|;
 name|objc_mutex_unlock
 argument_list|(
@@ -134,7 +816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function adds a class to the class hash table, and assigns the     class a number, unless it's already known */
+comment|/* This function adds a class to the class hash table, and assigns the    class a number, unless it's already known.  */
 end_comment
 
 begin_function
@@ -153,13 +835,13 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-comment|/* make sure the table is there */
+comment|/* Make sure the table is there.  */
 name|assert
 argument_list|(
-name|__objc_class_hash
+name|__class_table_lock
 argument_list|)
 expr_stmt|;
-comment|/* make sure it's not a meta class */
+comment|/* Make sure it's not a meta class.  */
 name|assert
 argument_list|(
 name|CLS_ISCLASS
@@ -171,10 +853,8 @@ expr_stmt|;
 comment|/* Check to see if the class is already in the hash table.  */
 name|h_class
 operator|=
-name|hash_value_for_key
+name|class_table_get_safe
 argument_list|(
-name|__objc_class_hash
-argument_list|,
 name|class
 operator|->
 name|name
@@ -213,11 +893,8 @@ expr_stmt|;
 operator|++
 name|class_number
 expr_stmt|;
-name|hash_add
+name|class_table_insert
 argument_list|(
-operator|&
-name|__objc_class_hash
-argument_list|,
 name|class
 operator|->
 name|name
@@ -235,7 +912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the class object for the class named NAME.  If NAME does not    identify a known class, the hook _objc_lookup_class is called.  If    this fails, nil is returned */
+comment|/* Get the class object for the class named NAME.  If NAME does not    identify a known class, the hook _objc_lookup_class is called.  If    this fails, nil is returned.  */
 end_comment
 
 begin_function
@@ -251,29 +928,11 @@ block|{
 name|Class
 name|class
 decl_stmt|;
-name|objc_mutex_lock
-argument_list|(
-name|__objc_runtime_mutex
-argument_list|)
-expr_stmt|;
-comment|/* Make sure the class hash table exists.  */
-name|assert
-argument_list|(
-name|__objc_class_hash
-argument_list|)
-expr_stmt|;
 name|class
 operator|=
-name|hash_value_for_key
+name|class_table_get_safe
 argument_list|(
-name|__objc_class_hash
-argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|objc_mutex_unlock
-argument_list|(
-name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -304,7 +963,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the class object for the class named NAME.  If NAME does not    identify a known class, the hook _objc_lookup_class is called.  If    this fails,  an error message is issued and the system aborts */
+comment|/* Get the class object for the class named NAME.  If NAME does not    identify a known class, the hook _objc_lookup_class is called.  If    this fails, an error message is issued and the system aborts.  */
 end_comment
 
 begin_function
@@ -320,29 +979,11 @@ block|{
 name|Class
 name|class
 decl_stmt|;
-name|objc_mutex_lock
-argument_list|(
-name|__objc_runtime_mutex
-argument_list|)
-expr_stmt|;
-comment|/* Make sure the class hash table exists.  */
-name|assert
-argument_list|(
-name|__objc_class_hash
-argument_list|)
-expr_stmt|;
 name|class
 operator|=
-name|hash_value_for_key
+name|class_table_get_safe
 argument_list|(
-name|__objc_class_hash
-argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|objc_mutex_unlock
-argument_list|(
-name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -425,31 +1066,28 @@ modifier|*
 name|enum_state
 parameter_list|)
 block|{
+name|Class
+name|class
+decl_stmt|;
 name|objc_mutex_lock
 argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-comment|/* make sure the table is there */
+comment|/* Make sure the table is there.  */
 name|assert
 argument_list|(
-name|__objc_class_hash
+name|__class_table_lock
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-name|node_ptr
-operator|*
-operator|)
-name|enum_state
+name|class
 operator|=
-name|hash_next
+name|class_table_next
 argument_list|(
-name|__objc_class_hash
-argument_list|,
-operator|*
 operator|(
-name|node_ptr
+expr|struct
+name|class_table_enumerator
+operator|*
 operator|*
 operator|)
 name|enum_state
@@ -460,38 +1098,14 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-operator|(
-name|node_ptr
-operator|*
-operator|)
-name|enum_state
-condition|)
 return|return
-operator|(
-operator|*
-operator|(
-name|node_ptr
-operator|*
-operator|)
-name|enum_state
-operator|)
-operator|->
-name|value
-return|;
-return|return
-operator|(
-name|Class
-operator|)
-literal|0
+name|class
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Resolve super/subclass links for all classes.  The only thing we     can be sure of is that the class_pointer for class objects point     to the right meta class objects */
+comment|/* Resolve super/subclass links for all classes.  The only thing we    can be sure of is that the class_pointer for class objects point to    the right meta class objects.  */
 end_comment
 
 begin_function
@@ -499,8 +1113,12 @@ name|void
 name|__objc_resolve_class_links
 parameter_list|()
 block|{
-name|node_ptr
-name|node
+name|struct
+name|class_table_enumerator
+modifier|*
+name|es
+init|=
+name|NULL
 decl_stmt|;
 name|Class
 name|object_class
@@ -509,6 +1127,9 @@ name|objc_get_class
 argument_list|(
 literal|"Object"
 argument_list|)
+decl_stmt|;
+name|Class
+name|class1
 decl_stmt|;
 name|assert
 argument_list|(
@@ -520,37 +1141,20 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-comment|/* Assign subclass links */
-for|for
-control|(
-name|node
-operator|=
-name|hash_next
-argument_list|(
-name|__objc_class_hash
-argument_list|,
-name|NULL
-argument_list|)
-init|;
-name|node
-condition|;
-name|node
-operator|=
-name|hash_next
-argument_list|(
-name|__objc_class_hash
-argument_list|,
-name|node
-argument_list|)
-control|)
-block|{
-name|Class
+comment|/* Assign subclass links.  */
+while|while
+condition|(
+operator|(
 name|class1
-init|=
-name|node
-operator|->
-name|value
-decl_stmt|;
+operator|=
+name|class_table_next
+argument_list|(
+operator|&
+name|es
+argument_list|)
+operator|)
+condition|)
+block|{
 comment|/* Make sure we have what we think we have.  */
 name|assert
 argument_list|(
@@ -570,7 +1174,7 @@ name|class_pointer
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* The class_pointer of all meta classes point to Object's meta class. */
+comment|/* The class_pointer of all meta classes point to Object's meta          class.  */
 name|class1
 operator|->
 name|class_pointer
@@ -639,7 +1243,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* assign subclass links for superclass */
+comment|/* Assign subclass links for superclass.  */
 name|class1
 operator|->
 name|sibling_class
@@ -654,7 +1258,7 @@ name|subclass_list
 operator|=
 name|class1
 expr_stmt|;
-comment|/* Assign subclass links for meta class of superclass */
+comment|/* Assign subclass links for meta class of superclass.  */
 if|if
 condition|(
 name|a_super_class
@@ -687,8 +1291,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* a root class, make its meta object */
-comment|/* be a subclass of Object */
+comment|/* A root class, make its meta object be a subclass of                   Object.  */
 block|{
 name|class1
 operator|->
@@ -711,37 +1314,24 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Assign superclass links */
-for|for
-control|(
-name|node
+comment|/* Assign superclass links.  */
+name|es
 operator|=
-name|hash_next
-argument_list|(
-name|__objc_class_hash
-argument_list|,
 name|NULL
-argument_list|)
-init|;
-name|node
-condition|;
-name|node
-operator|=
-name|hash_next
-argument_list|(
-name|__objc_class_hash
-argument_list|,
-name|node
-argument_list|)
-control|)
-block|{
-name|Class
+expr_stmt|;
+while|while
+condition|(
+operator|(
 name|class1
-init|=
-name|node
-operator|->
-name|value
-decl_stmt|;
+operator|=
+name|class_table_next
+argument_list|(
+operator|&
+name|es
+argument_list|)
+operator|)
+condition|)
+block|{
 name|Class
 name|sub_class
 decl_stmt|;
@@ -816,12 +1406,6 @@ name|Class
 name|super_class
 parameter_list|)
 block|{
-name|node_ptr
-name|node
-decl_stmt|;
-name|Class
-name|class1
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -833,7 +1417,7 @@ condition|)
 name|__objc_resolve_class_links
 argument_list|()
 expr_stmt|;
-comment|/* preconditions */
+comment|/* Preconditions */
 name|assert
 argument_list|(
 name|impostor
@@ -892,7 +1476,7 @@ operator|->
 name|subclass_list
 operator|)
 decl_stmt|;
-comment|/* move subclasses of super_class to impostor */
+comment|/* Move subclasses of super_class to impostor.  */
 while|while
 condition|(
 operator|*
@@ -923,7 +1507,7 @@ init|=
 operator|*
 name|subclass
 decl_stmt|;
-comment|/* classes */
+comment|/* Classes */
 name|sub
 operator|->
 name|sibling_class
@@ -944,7 +1528,7 @@ name|subclass_list
 operator|=
 name|sub
 expr_stmt|;
-comment|/* It will happen that SUB is not a class object if it is  	       the top of the meta class hierarchy chain.  (root 	       meta-class objects inherit their class object)  If that is 	       the case... don't mess with the meta-meta class. */
+comment|/* It will happen that SUB is not a class object if it is                the top of the meta class hierarchy chain (root                meta-class objects inherit their class object).  If                that is the case... don't mess with the meta-meta                class.  */
 if|if
 condition|(
 name|CLS_ISCLASS
@@ -953,7 +1537,7 @@ name|sub
 argument_list|)
 condition|)
 block|{
-comment|/* meta classes */
+comment|/* Meta classes */
 name|CLASSOF
 argument_list|(
 name|sub
@@ -1000,7 +1584,7 @@ operator|=
 name|nextSub
 expr_stmt|;
 block|}
-comment|/* set subclasses of superclass to be impostor only */
+comment|/* Set subclasses of superclass to be impostor only.  */
 name|super_class
 operator|->
 name|subclass_list
@@ -1019,7 +1603,7 @@ argument_list|(
 name|impostor
 argument_list|)
 expr_stmt|;
-comment|/* set impostor to have no sibling classes */
+comment|/* Set impostor to have no sibling classes.  */
 name|impostor
 operator|->
 name|sibling_class
@@ -1036,7 +1620,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* check relationship of impostor and super_class is kept. */
+comment|/* Check relationship of impostor and super_class is kept.  */
 name|assert
 argument_list|(
 name|impostor
@@ -1061,66 +1645,25 @@ name|super_class
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* This is how to update the lookup table. Regardless of      what the keys of the hashtable is, change all values that are      superclass into impostor. */
+comment|/* This is how to update the lookup table.  Regardless of what the      keys of the hashtable is, change all values that are superclass      into impostor.  */
 name|objc_mutex_lock
 argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|node
-operator|=
-name|hash_next
+name|class_table_replace
 argument_list|(
-name|__objc_class_hash
-argument_list|,
-name|NULL
-argument_list|)
-init|;
-name|node
-condition|;
-name|node
-operator|=
-name|hash_next
-argument_list|(
-name|__objc_class_hash
-argument_list|,
-name|node
-argument_list|)
-control|)
-block|{
-name|class1
-operator|=
-operator|(
-name|Class
-operator|)
-name|node
-operator|->
-name|value
-expr_stmt|;
-if|if
-condition|(
-name|class1
-operator|==
 name|super_class
-condition|)
-block|{
-name|node
-operator|->
-name|value
-operator|=
+argument_list|,
 name|impostor
+argument_list|)
 expr_stmt|;
-comment|/* change hash table value */
-block|}
-block|}
 name|objc_mutex_unlock
 argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
-comment|/* next, we update the dispatch tables... */
+comment|/* Next, we update the dispatch tables...  */
 name|__objc_update_dispatch_table_for_class
 argument_list|(
 name|CLASSOF

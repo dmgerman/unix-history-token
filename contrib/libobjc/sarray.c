@@ -135,35 +135,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_function_decl
-specifier|const
-name|void
-modifier|*
-name|memcpy
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* This function removes any structures left over from free operations    that were not safe in a multi-threaded environment. */
 end_comment
