@@ -108,6 +108,7 @@ name|recover
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|)
 block|{
 comment|/* TODO */
