@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: traverse.c,v 1.7 1998/06/15 06:58:12 charnier Exp $"
+literal|"$Id: traverse.c,v 1.8 1998/10/27 04:01:08 dima Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2112,6 +2112,7 @@ name|bp
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|j
@@ -2148,6 +2149,7 @@ operator|*
 name|TP_BSIZE
 argument_list|)
 expr_stmt|;
+block|}
 name|spcl
 operator|.
 name|c_type
