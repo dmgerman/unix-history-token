@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.5 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.6 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -952,6 +952,22 @@ name|int
 name|error
 decl_stmt|;
 comment|/* first check the process still exists */
+switch|switch
+condition|(
+name|pfs
+operator|->
+name|pfs_type
+condition|)
+block|{
+case|case
+name|Proot
+case|:
+name|procp
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
 name|procp
 operator|=
 name|PFIND
@@ -972,6 +988,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 name|error
 operator|=
 literal|0
@@ -1031,6 +1048,66 @@ name|va_size
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * If the process has exercised some setuid or setgid 	 * privilege, then rip away read/write permission so 	 * that only root can gain access. 	 */
+switch|switch
+condition|(
+name|pfs
+operator|->
+name|pfs_type
+condition|)
+block|{
+case|case
+name|Pregs
+case|:
+case|case
+name|Pfpregs
+case|:
+case|case
+name|Pmem
+case|:
+if|if
+condition|(
+name|procp
+operator|->
+name|p_flag
+operator|&
+name|P_SUGID
+condition|)
+name|vap
+operator|->
+name|va_mode
+operator|&=
+operator|~
+operator|(
+operator|(
+name|VREAD
+operator||
+name|VWRITE
+operator|)
+operator||
+operator|(
+operator|(
+name|VREAD
+operator||
+name|VWRITE
+operator|)
+operator|>>
+literal|3
+operator|)
+operator||
+operator|(
+operator|(
+name|VREAD
+operator||
+name|VWRITE
+operator|)
+operator|>>
+literal|6
+operator|)
+operator|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* 	 * Make all times be current TOD. 	 * It would be possible to get the process start 	 * time from the p_stat structure, but there's 	 * no "file creation" time stamp anyway, and the 	 * p_stat structure is not addressible if u. gets 	 * swapped out for that process. 	 */
 name|microtime
 argument_list|(
