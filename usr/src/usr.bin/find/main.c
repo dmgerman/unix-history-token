@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:rsx"
+literal|"df:rsXx"
 argument_list|)
 operator|)
 operator|!=
@@ -169,6 +169,14 @@ expr_stmt|;
 name|ftsoptions
 operator||=
 name|FTS_LOGICAL
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|isxargs
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

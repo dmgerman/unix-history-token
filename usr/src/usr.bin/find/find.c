@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.36 (Berkeley) %G%"
+literal|"@(#)find.c	4.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* can do -exec/ok on relative path */
+end_comment
+
+begin_decl_stmt
+name|int
+name|isxargs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't permit xargs delimiting chars */
 end_comment
 
 begin_function
@@ -678,6 +688,40 @@ operator|->
 name|fts_path
 argument_list|,
 name|errno
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+define|#
+directive|define
+name|BADCH
+value|" \t\n\\'\""
+if|if
+condition|(
+name|isxargs
+operator|&&
+name|strpbrk
+argument_list|(
+name|entry
+operator|->
+name|fts_path
+argument_list|,
+name|BADCH
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"find: illegal path: %s\n"
+argument_list|,
+name|entry
+operator|->
+name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
