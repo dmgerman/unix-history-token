@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.2 (Berkeley) %G%"
+literal|"@(#)more.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7225,6 +7225,26 @@ argument_list|,
 operator|&
 name|clearptr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|chBS
+operator|=
+name|tgetstr
+argument_list|(
+literal|"bc"
+argument_list|,
+operator|&
+name|clearptr
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|chBS
+operator|=
+literal|"\b"
 expr_stmt|;
 block|}
 if|if
