@@ -2341,6 +2341,10 @@ block|}
 block|}
 name|XFree
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|children
 argument_list|)
 expr_stmt|;
