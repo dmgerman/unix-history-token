@@ -1853,8 +1853,6 @@ name|printf
 argument_list|(
 literal|"\tinet %s "
 argument_list|,
-name|name
-argument_list|,
 name|inet_ntoa
 argument_list|(
 name|sin
