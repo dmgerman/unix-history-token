@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.17	%G%	*/
+comment|/*	dz.c	4.18	%G%	*/
 end_comment
 
 begin_include
@@ -30,6 +30,12 @@ end_define
 begin_comment
 comment|/*  *  DZ-11 Driver  *  * This driver mimics dh.c; see it for explanation of common code.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"bk.h"
+end_include
 
 begin_include
 include|#
@@ -1471,6 +1477,11 @@ name|ODDP
 operator|)
 condition|)
 continue|continue;
+if|#
+directive|if
+name|NBK
+operator|>
+literal|0
 if|if
 condition|(
 name|tp
@@ -1493,6 +1504,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 operator|(
 operator|*
 name|linesw

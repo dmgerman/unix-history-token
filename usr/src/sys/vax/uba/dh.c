@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.24	81/02/26	*/
+comment|/*	dh.c	4.25	81/02/26	*/
 end_comment
 
 begin_include
@@ -30,6 +30,12 @@ end_define
 begin_comment
 comment|/*  * DH-11/DM-11 driver  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"bk.h"
+end_include
 
 begin_include
 include|#
@@ -2002,6 +2008,11 @@ name|tun
 operator|.
 name|t_intrc
 expr_stmt|;
+if|#
+directive|if
+name|NBK
+operator|>
+literal|0
 if|if
 condition|(
 name|tp
@@ -2024,6 +2035,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 operator|(
 operator|*
 name|linesw
