@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)catman.c	4.5 (Berkeley) %G%"
+literal|"@(#)catman.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,7 +272,7 @@ literal|2
 condition|)
 name|sections
 operator|=
-literal|"12345678"
+literal|"12345678ln"
 expr_stmt|;
 else|else
 block|{
@@ -603,6 +603,12 @@ operator|*
 operator|++
 name|tsp
 argument_list|)
+operator|&&
+operator|*
+name|tsp
+operator|!=
+operator|*
+name|sp
 condition|)
 continue|continue;
 if|if
