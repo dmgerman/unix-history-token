@@ -4774,6 +4774,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|save_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|properties_free
 argument_list|(
 name|dist_attr
