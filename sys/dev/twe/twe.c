@@ -1323,7 +1323,7 @@ operator|<
 literal|0
 operator|||
 name|unit
-operator|>
+operator|>=
 name|TWE_MAX_UNITS
 condition|)
 return|return
