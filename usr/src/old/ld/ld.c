@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.5 (Berkeley) %G%"
+literal|"@(#)ld.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3351,11 +3351,26 @@ name|a_data
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* load2() adds a symbol for the file name */
+if|if
+condition|(
+operator|!
+name|libflg
+condition|)
+name|ssize
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|cursym
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|error
 argument_list|(
 literal|1
