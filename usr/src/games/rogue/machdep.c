@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.7 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1027,7 +1027,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* md_lock():  *  * This function is intended to give the user exclusive access to the score  * file.  It does so by "creat"ing a lock file, which can only be created  * if it does not already exist.  The file is deleted when score file  * processing is finished.  The lock file should be located in the same  * directory as the score file.  These full path names should be defined for  * any particular site in rogue.h.  The constants _PATH_SCOREFILE and  * _PATH_LOCKFILE define these file names.  *  * When the parameter 'l' is non-zero (true), a lock is requested.  Otherwise  * the lock is released by removing the lock file.  */
+comment|/* md_lock():  *  * This function is intended to give the user exclusive access to the score  * file.  It does so by flock'ing the score file.  The full path name of the  * score file should be defined for any particular site in rogue.h.  The  * constants _PATH_SCOREFILE defines this file name.  *  * When the parameter 'l' is non-zero (true), a lock is requested.  Otherwise  * the lock is released.  */
 end_comment
 
 begin_macro
@@ -1045,20 +1045,43 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|int
+name|fd
+decl_stmt|;
 name|short
 name|tries
-decl_stmt|;
-name|char
-modifier|*
-name|lock_file
-init|=
-name|_PATH_LOCKFILE
 decl_stmt|;
 if|if
 condition|(
 name|l
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|_PATH_SCOREFILE
+argument_list|,
+name|O_RDONLY
+argument_list|)
+operator|)
+operator|<
+literal|1
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"cannot lock score file"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|tries
@@ -1072,69 +1095,38 @@ condition|;
 name|tries
 operator|++
 control|)
-block|{
 if|if
 condition|(
-name|md_get_file_id
+operator|!
+name|flock
 argument_list|(
-name|lock_file
+name|fd
+argument_list|,
+name|LOCK_EX
+operator||
+name|LOCK_NB
 argument_list|)
-operator|==
-operator|-
-literal|1
 condition|)
-block|{
-if|if
-condition|(
-name|creat
-argument_list|(
-name|lock_file
-argument_list|,
-literal|0444
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-break|break;
-block|}
-else|else
-block|{
-name|message
-argument_list|(
-literal|"cannot lock score file"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|message
-argument_list|(
-literal|"waiting to lock score file"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
+return|return;
 block|}
 else|else
 block|{
 operator|(
 name|void
 operator|)
-name|unlink
+name|flock
 argument_list|(
-name|lock_file
+name|fd
+argument_list|,
+name|LOCK_NB
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 block|}
