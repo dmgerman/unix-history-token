@@ -132,14 +132,90 @@ directive|include
 file|<netgraph/ng_socket.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netgraph/ng_socketvar.h>
-end_include
-
 begin_comment
 comment|/*  * It's Ascii-art time!  *   +-------------+   +-------------+  *   |socket  (ctl)|   |socket (data)|  *   +-------------+   +-------------+  *          ^                 ^  *          |                 |  *          v                 v  *    +-----------+     +-----------+  *    |pcb   (ctl)|     |pcb  (data)|  *    +-----------+     +-----------+  *          ^                 ^  *          |                 |  *          v                 v  *      +--------------------------+  *      |   Socket type private    |  *      |       data               |  *      +--------------------------+  *                   ^  *                   |  *                   v  *           +----------------+  *           | struct ng_node |  *           +----------------+  */
+end_comment
+
+begin_comment
+comment|/* Netgraph protocol control block for each socket */
+end_comment
+
+begin_struct
+struct|struct
+name|ngpcb
+block|{
+name|struct
+name|socket
+modifier|*
+name|ng_socket
+decl_stmt|;
+comment|/* the socket */
+name|struct
+name|ngsock
+modifier|*
+name|sockdata
+decl_stmt|;
+comment|/* netgraph info */
+name|LIST_ENTRY
+argument_list|(
+argument|ngpcb
+argument_list|)
+name|socks
+expr_stmt|;
+comment|/* linked list of sockets */
+name|int
+name|type
+decl_stmt|;
+comment|/* NG_CONTROL or NG_DATA */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Per-node private data */
+end_comment
+
+begin_struct
+struct|struct
+name|ngsock
+block|{
+name|struct
+name|ng_node
+modifier|*
+name|node
+decl_stmt|;
+comment|/* the associated netgraph node */
+name|struct
+name|ngpcb
+modifier|*
+name|datasock
+decl_stmt|;
+comment|/* optional data socket */
+name|struct
+name|ngpcb
+modifier|*
+name|ctlsock
+decl_stmt|;
+comment|/* optional control socket */
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NGS_FLAG_NOLINGER
+value|1
+end_define
+
+begin_comment
+comment|/* close with last hook */
 end_comment
 
 begin_comment
@@ -178,6 +254,13 @@ begin_decl_stmt
 specifier|static
 name|ng_rcvdata_t
 name|ngs_rcvdata
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ng_disconnect_t
+name|ngs_disconnect
 decl_stmt|;
 end_decl_stmt
 
@@ -375,8 +458,8 @@ name|ngs_rcvdata
 block|,
 name|ngs_rcvdata
 block|,
-name|NULL
-block|, }
+name|ngs_disconnect
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3002,7 +3085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Incoming messages get passed up to the control socket.  */
+comment|/*  * Incoming messages get passed up to the control socket.  * Unless they are for us specifically (socket_type)  */
 end_comment
 
 begin_function
@@ -3076,6 +3159,68 @@ expr_stmt|;
 return|return
 operator|(
 name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|typecookie
+operator|==
+name|NGM_SOCKET_COOKIE
+condition|)
+block|{
+switch|switch
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+condition|)
+block|{
+case|case
+name|NGM_SOCK_CMD_NOLINGER
+case|:
+name|sockdata
+operator|->
+name|flags
+operator||=
+name|NGS_FLAG_NOLINGER
+expr_stmt|;
+break|break;
+case|case
+name|NGM_SOCK_CMD_LINGER
+case|:
+name|sockdata
+operator|->
+name|flags
+operator|&=
+operator|~
+name|NGS_FLAG_NOLINGER
+expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* unknown command */
+block|}
+comment|/* Free the message and return */
+name|FREE
+argument_list|(
+name|msg
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -3398,6 +3543,68 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Dook disconnection  *  * For this type, removal of the last link destroys the node  * if the NOLINGER flag is set.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|ngs_disconnect
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+block|{
+name|struct
+name|ngsock
+modifier|*
+specifier|const
+name|sockdata
+init|=
+name|hook
+operator|->
+name|node
+operator|->
+name|private
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|sockdata
+operator|->
+name|flags
+operator|&
+name|NGS_FLAG_NOLINGER
+operator|)
+operator|&&
+operator|(
+name|hook
+operator|->
+name|node
+operator|->
+name|numhooks
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|ng_rmnode
+argument_list|(
+name|hook
+operator|->
+name|node
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

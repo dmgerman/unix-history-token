@@ -53,6 +53,24 @@ value|2
 end_define
 
 begin_comment
+comment|/* Commands */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_SOCK_CMD_NOLINGER
+init|=
+literal|1
+block|,
+comment|/* close the soket on with last hook */
+name|NGM_SOCK_CMD_LINGER
+comment|/* Keep socket even if 0 hooks */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/* Netgraph version of struct sockaddr */
 end_comment
 
