@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.101 1996/09/18 15:57:41 dyson Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.102 1996/09/20 02:26:35 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -408,12 +408,8 @@ begin_define
 define|#
 directive|define
 name|BUF_MAXUSE
-value|8
+value|16
 end_define
-
-begin_comment
-comment|/* #define NO_B_MALLOC */
-end_comment
 
 begin_comment
 comment|/*  * Initialize buffer headers and related structures.  */
@@ -1833,7 +1829,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_WANTED
+operator||
+name|B_AGE
+operator|)
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -3777,6 +3777,29 @@ literal|0
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"getnewbuf: busy buffer on free list\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * We are fairly aggressive about freeing VMIO buffers, but since 	 * the buffering is intact without buffer headers, there is not 	 * much loss.  We gain by maintaining non-VMIOed metadata in buffers. 	 */
 if|if
 condition|(
@@ -3965,11 +3988,20 @@ name|b_flags
 operator|&
 name|B_VMIO
 condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_ASYNC
+expr_stmt|;
 name|vfs_vmio_release
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bp
@@ -5798,6 +5830,25 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+if|if
+condition|(
+name|m
+operator|==
+name|bogus_page
+condition|)
+name|panic
+argument_list|(
+literal|"allocbuf: bogus page found"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|=
 name|splvm
@@ -6001,14 +6052,14 @@ name|b_lblkno
 operator|*
 name|bsize
 expr_stmt|;
-name|doretry
-label|:
 name|curbpnpages
 operator|=
 name|bp
 operator|->
 name|b_npages
 expr_stmt|;
+name|doretry
+label|:
 name|bp
 operator|->
 name|b_flags
