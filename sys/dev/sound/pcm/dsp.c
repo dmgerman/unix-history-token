@@ -707,7 +707,8 @@ name|ref
 index|[
 name|chan
 index|]
-operator|--
+operator|=
+literal|0
 expr_stmt|;
 if|#
 directive|if
@@ -2377,6 +2378,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
+name|arg_i
+operator|!=
+name|AFMT_QUERY
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|wrch
 condition|)
 name|ret
@@ -2427,6 +2438,7 @@ name|AFMT_STEREO
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|arg_i
 operator|=
