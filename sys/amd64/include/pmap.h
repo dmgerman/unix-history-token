@@ -852,35 +852,6 @@ name|pv_entry_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|PV_ENTRY_NULL
-value|((pv_entry_t) 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PV_CI
-value|0x01
-end_define
-
-begin_comment
-comment|/* all entries must be cache inhibited */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PV_PTPAGE
-value|0x02
-end_define
-
-begin_comment
-comment|/* entry maps a page table page */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1055,17 +1026,6 @@ argument_list|)
 name|__pure2
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|vm_page_t
-name|pmap_use_pt
-parameter_list|(
-name|pmap_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
