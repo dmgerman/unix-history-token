@@ -577,7 +577,7 @@ name|Elf_Dyn
 modifier|*
 name|dp
 decl_stmt|;
-name|Elf_Off
+name|Elf_Hashelt
 name|hashhdr
 index|[
 literal|2
@@ -706,7 +706,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|Elf_Off
+name|Elf_Hashelt
 argument_list|)
 argument_list|,
 operator|(

@@ -65,21 +65,21 @@ modifier|*
 name|ef_dyn
 decl_stmt|;
 comment|/* Symbol table etc. */
-name|Elf_Off
+name|Elf_Hashelt
 name|ef_nbuckets
 decl_stmt|;
-name|Elf_Off
+name|Elf_Hashelt
 name|ef_nchains
 decl_stmt|;
-name|Elf_Off
+name|Elf_Hashelt
 modifier|*
 name|ef_buckets
 decl_stmt|;
-name|Elf_Off
+name|Elf_Hashelt
 modifier|*
 name|ef_chains
 decl_stmt|;
-name|Elf_Off
+name|Elf_Hashelt
 modifier|*
 name|ef_hashtab
 decl_stmt|;
