@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	4.10 (Berkeley) %G%"
+literal|"@(#)tables.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,7 +947,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"deleting route to interface %s (timed out)"
+literal|"changing route from interface %s (timed out)"
 argument_list|,
 name|rt
 operator|->
@@ -963,8 +963,16 @@ name|metric
 condition|)
 name|rt
 operator|->
-name|rt_state
+name|rt_flags
 operator||=
+name|RTF_GATEWAY
+expr_stmt|;
+else|else
+name|rt
+operator|->
+name|rt_flags
+operator|&=
+operator|~
 name|RTF_GATEWAY
 expr_stmt|;
 name|rt
