@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * FUNCTION:		iso_init  *  * PURPOSE:			initialize the iso address family  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	1) zeros the maptab table.  *					2) initializes the routing table.  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_init  *  * PURPOSE:			initialize the iso address family  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	1) initializes the routing table.  *  *  * NOTES:			  */
 end_comment
 
 begin_decl_stmt
@@ -206,7 +206,7 @@ argument_list|(
 operator|&
 name|iso_rnhead
 argument_list|,
-literal|40
+literal|48
 argument_list|,
 name|AF_ISO
 argument_list|)
@@ -2772,6 +2772,31 @@ operator|->
 name|ia_ifa
 operator|.
 name|ifa_netmask
+argument_list|)
+expr_stmt|;
+name|ia
+operator|->
+name|ia_dstaddr
+operator|.
+name|siso_nlen
+operator|=
+name|min
+argument_list|(
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_nlen
+argument_list|,
+operator|(
+name|ia
+operator|->
+name|ia_sockmask
+operator|.
+name|siso_len
+operator|-
+literal|6
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
