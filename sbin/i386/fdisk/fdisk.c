@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fdisk.c,v 1.23 1998/07/06 06:44:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1621,7 +1621,7 @@ block|,
 block|{
 literal|0x82
 block|,
-literal|"Linux swap"
+literal|"Linux swap or Solaris x86"
 block|}
 block|,
 block|{
