@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.4 1994/10/20 19:30:56 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.5 1994/10/21 02:14:54 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -222,6 +222,11 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dialog_active
+condition|)
+block|{
 name|dialog_msgbox
 argument_list|(
 literal|"Fatal"
@@ -235,13 +240,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Fatal -- %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|end_dialog
-argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
