@@ -363,9 +363,7 @@ case|:
 if|if
 condition|(
 operator|(
-name|s
-operator|->
-name|lastch
+name|ch
 operator|=
 name|s
 operator|->
@@ -396,6 +394,12 @@ argument_list|)
 operator|)
 return|;
 block|}
+name|s
+operator|->
+name|lastch
+operator|=
+name|ch
+expr_stmt|;
 return|return
 operator|(
 literal|1
