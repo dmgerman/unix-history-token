@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.16 1998/12/14 08:34:55 dillon Exp $ */
+comment|/* $Id: sem.h,v 1.17 1998/12/14 21:01:47 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -598,6 +598,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Due to the way semaphore memory is allocated, we have to ensure that  * SEMUSZ is properly aligned.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -605,7 +609,7 @@ name|SEM_ALIGN
 parameter_list|(
 name|bytes
 parameter_list|)
-value|(((bytes) + 15)& ~15)
+value|(((bytes) + (sizeof(long) - 1))& ~(sizeof(long) - 1))
 end_define
 
 begin_comment
