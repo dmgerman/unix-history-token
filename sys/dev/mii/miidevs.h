@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.17 2002/03/22 06:38:52 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.18 2002/04/07 20:55:49 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -127,6 +127,17 @@ end_define
 
 begin_comment
 comment|/* Quality Semiconductor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_REALTEK
+value|0x000020
+end_define
+
+begin_comment
+comment|/* RealTek Semicondctor */
 end_comment
 
 begin_define
@@ -711,6 +722,24 @@ define|#
 directive|define
 name|MII_STR_QUALSEMI_QS6612
 value|"QS6612 10/100 media interface"
+end_define
+
+begin_comment
+comment|/* RealTek Semiconductor PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_REALTEK_RTL8201L
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_REALTEK_RTL8201L
+value|"RTL8201L 10/100 media interface"
 end_define
 
 begin_comment
