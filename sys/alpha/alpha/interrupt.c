@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: interrupt.c,v 1.2 1998/06/10 20:13:32 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpuconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bwx.h>
 end_include
 
 begin_if
@@ -717,6 +723,31 @@ argument_list|(
 name|u_int8_t
 argument_list|)
 case|:
+if|if
+condition|(
+name|alpha_implver
+argument_list|()
+operator|==
+name|ALPHA_IMPLVER_EV5
+operator|&&
+name|alpha_amask
+argument_list|(
+name|ALPHA_AMASK_BWX
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|rcpt
+operator|=
+name|ldbu
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
+else|else
 name|rcpt
 operator|=
 operator|*
@@ -734,6 +765,31 @@ argument_list|(
 name|u_int16_t
 argument_list|)
 case|:
+if|if
+condition|(
+name|alpha_implver
+argument_list|()
+operator|==
+name|ALPHA_IMPLVER_EV5
+operator|&&
+name|alpha_amask
+argument_list|(
+name|ALPHA_AMASK_BWX
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|rcpt
+operator|=
+name|ldwu
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
+else|else
 name|rcpt
 operator|=
 operator|*
