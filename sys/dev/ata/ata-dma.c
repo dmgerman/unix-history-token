@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
 end_include
 
@@ -75,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pci/pcireg.h>
 end_include
 
 begin_endif

@@ -87,12 +87,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pci/pcivar.h>
-end_include
-
 begin_if
 if|#
 directive|if
