@@ -4807,7 +4807,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"ccd%d: error %d on component %d block %d "
+literal|"ccd%d: error %d on component %d block %jd "
 literal|"(ccd block %jd)%s\n"
 argument_list|,
 name|unit
@@ -4821,7 +4821,7 @@ operator|->
 name|cb_comp
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|cbp
 operator|->
