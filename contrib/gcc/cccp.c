@@ -22140,6 +22140,9 @@ decl_stmt|,
 modifier|*
 name|dir
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 if|if
 condition|(
 name|searchptr
@@ -22251,6 +22254,8 @@ return|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* Try to find a mapping file for the particular directory we are      looking in.  Thus #include<sys/types.h> will look up sys/types.h      in /usr/include/header.gcc and look up types.h in      /usr/include/sys/header.gcc.  */
 name|p
 operator|=
@@ -22423,6 +22428,9 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 for|for
 control|(
 name|map
@@ -22464,6 +22472,8 @@ argument_list|,
 literal|0666
 argument_list|)
 return|;
+endif|#
+directive|endif
 return|return
 name|open
 argument_list|(
