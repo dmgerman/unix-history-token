@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
+file|<machine/bootinfo.h>
 end_include
 
 begin_include

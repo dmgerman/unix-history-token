@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
+file|<sys/diskpc98.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/diskpc98.h>
+file|<machine/bootinfo.h>
 end_include
 
 begin_define
