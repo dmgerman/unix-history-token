@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.31	82/05/06	*/
+comment|/*	if_imp.c	4.32	82/05/14	*/
 end_comment
 
 begin_include
@@ -2435,7 +2435,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Put three 1822 NOOPs at the head of the output queue.   * Part of host-IMP initialization procedure.  * (Should return success/failure, but noone knows  * what to do with this, so why bother?)  */
+comment|/*  * Put three 1822 NOOPs at the head of the output queue.   * Part of host-IMP initialization procedure.  * (Should return success/failure, but noone knows  * what to do with this, so why bother?)  * This routine is always called at splimp, so we don't  * protect the call to IF_PREPEND.  */
 end_comment
 
 begin_expr_stmt
@@ -2557,11 +2557,6 @@ name|dl_mtype
 operator|=
 name|IMPTYPE_NOOP
 expr_stmt|;
-name|x
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|IF_PREPEND
 argument_list|(
 operator|&
@@ -2572,11 +2567,6 @@ operator|.
 name|if_snd
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|x
 argument_list|)
 expr_stmt|;
 block|}
