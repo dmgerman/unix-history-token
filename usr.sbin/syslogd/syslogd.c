@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.38 1998/07/06 20:28:08 bde Exp $"
+literal|"$Id: syslogd.c,v 1.39 1998/07/22 06:15:19 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4640,7 +4640,7 @@ name|f_prevhost
 argument_list|,
 name|iov
 index|[
-literal|4
+literal|5
 index|]
 operator|.
 name|iov_base
@@ -4673,7 +4673,7 @@ name|iov_base
 argument_list|,
 name|iov
 index|[
-literal|4
+literal|5
 index|]
 operator|.
 name|iov_base
