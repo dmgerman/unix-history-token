@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	5.3 (Berkeley) %G%"
+literal|"@(#)utils.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,7 +357,7 @@ name|st_size
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
+literal|0
 argument_list|,
 name|from_fd
 argument_list|,
