@@ -638,7 +638,7 @@ begin_struct
 struct|struct
 name|atm_pseudohdr
 block|{
-name|u_int8_t
+name|uint8_t
 name|atm_ph
 index|[
 literal|4
@@ -850,14 +850,14 @@ begin_struct
 struct|struct
 name|atmllc
 block|{
-name|u_int8_t
+name|uint8_t
 name|llchdr
 index|[
 literal|6
 index|]
 decl_stmt|;
 comment|/* aa.aa.03.00.00.00 */
-name|u_int8_t
+name|uint8_t
 name|type
 index|[
 literal|2
@@ -891,7 +891,7 @@ name|X
 parameter_list|,
 name|V
 parameter_list|)
-value|{ \ 	(X)->type[0] = ((V)>> 8)& 0xff; \ 	(X)->type[1] = ((V)& 0xff); \ }
+value|do {		\ 	(X)->type[0] = ((V)>> 8)& 0xff;	\ 	(X)->type[1] = ((V)& 0xff);		\     } while (0)
 end_define
 
 begin_ifdef
