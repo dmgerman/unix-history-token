@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -170,6 +170,7 @@ name|bfd
 operator|*
 name|abfd
 operator|,
+specifier|const
 name|char
 operator|*
 name|filename
@@ -552,6 +553,10 @@ operator|*
 operator|,
 expr|enum
 name|pos
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -857,7 +862,7 @@ name|fprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"\ Usage: %s [-]{dmpqrtx}[abcilosuvV] [member-name] archive-file file...\n\        %s -M [<mri-script]\n"
+literal|"\ Usage: %s [-]{dmpqrtx}[abcilosSuvV] [member-name] archive-file file...\n\        %s -M [<mri-script]\n"
 argument_list|,
 name|program_name
 argument_list|,
@@ -889,7 +894,7 @@ name|fprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"Report bugs to bug-gnu-utils@prep.ai.mit.edu\n"
+literal|"Report bugs to bug-gnu-utils@gnu.org\n"
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -1731,6 +1736,15 @@ literal|'s'
 case|:
 name|write_armap
 operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|write_armap
+operator|=
+operator|-
 literal|1
 expr_stmt|;
 break|break;
@@ -3362,6 +3376,8 @@ parameter_list|(
 name|contents
 parameter_list|,
 name|default_pos
+parameter_list|,
+name|default_posname
 parameter_list|)
 name|bfd
 modifier|*
@@ -3371,6 +3387,11 @@ decl_stmt|;
 name|enum
 name|pos
 name|default_pos
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|default_posname
 decl_stmt|;
 block|{
 name|bfd
@@ -3383,17 +3404,39 @@ decl_stmt|;
 name|enum
 name|pos
 name|realpos
-init|=
-operator|(
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|realposname
+decl_stmt|;
+if|if
+condition|(
 name|postype
 operator|==
 name|pos_default
-condition|?
+condition|)
+block|{
+name|realpos
+operator|=
 name|default_pos
-else|:
+expr_stmt|;
+name|realposname
+operator|=
+name|default_posname
+expr_stmt|;
+block|}
+else|else
+block|{
+name|realpos
+operator|=
 name|postype
-operator|)
-decl_stmt|;
+expr_stmt|;
+name|realposname
+operator|=
+name|posname
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|realpos
@@ -3439,7 +3482,6 @@ name|next
 control|)
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 operator|(
@@ -3449,8 +3491,10 @@ operator|)
 operator|->
 name|filename
 argument_list|,
-name|posname
+name|realposname
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -3785,6 +3829,8 @@ operator|->
 name|next
 argument_list|,
 name|pos_end
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|link
@@ -4057,14 +4103,6 @@ goto|goto
 name|next_file
 goto|;
 block|}
-comment|/* snip out this entry from the chain */
-operator|*
-name|current_ptr
-operator|=
-name|current
-operator|->
-name|next
-expr_stmt|;
 name|after_bfd
 operator|=
 name|get_pos_bfd
@@ -4074,7 +4112,11 @@ name|arch
 operator|->
 name|next
 argument_list|,
-name|pos_end
+name|pos_after
+argument_list|,
+name|current
+operator|->
+name|filename
 argument_list|)
 expr_stmt|;
 name|temp
@@ -4121,6 +4163,17 @@ name|next
 operator|=
 name|temp
 expr_stmt|;
+comment|/* snip out this entry from the chain */
+operator|*
+name|current_ptr
+operator|=
+operator|(
+operator|*
+name|current_ptr
+operator|)
+operator|->
+name|next
+expr_stmt|;
 if|if
 condition|(
 name|verbose
@@ -4165,6 +4218,8 @@ operator|->
 name|next
 argument_list|,
 name|pos_end
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|temp

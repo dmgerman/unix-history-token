@@ -136,23 +136,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|boolean
-name|elf_corefile_note
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|Elf_Internal_Phdr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_else
 else|#
 directive|else
@@ -224,6 +207,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|elf_corefile_note
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|Elf_Internal_Phdr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -403,7 +403,7 @@ name|newsect
 operator|->
 name|alignment_power
 operator|=
-literal|2
+name|LOG_FILE_ALIGN
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 1996    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -417,7 +417,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|(S_GET_NAME (s) 					\&& !S_IS_DEBUG (s) 					\&& (strchr (S_GET_NAME (s), '\001') != NULL		\        || strchr (S_GET_NAME (s), '\002') != NULL	\        || (S_LOCAL_NAME(s)&& !flag_keep_locals)))
+value|((S_GET_NAME (s) 					\&& !S_IS_DEBUG (s) 					\&& (strchr (S_GET_NAME (s), '\001') != NULL		\         || strchr (S_GET_NAME (s), '\002') != NULL	\         || (S_LOCAL_NAME(s)&& !flag_keep_locals)))	\    || (flag_strip_local_absolute			\&& ! S_IS_EXTERNAL(s)				\&& S_GET_SEGMENT (s) == absolute_section))
 end_define
 
 begin_comment

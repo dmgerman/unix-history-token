@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Header file for targets using CGEN: Cpu tools GENerator.  Copyright (C) 1996, 1997 Free Software Foundation, Inc.  This file is part of GDB, the GNU debugger, and the GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Header file for targets using CGEN: Cpu tools GENerator.  Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of GDB, the GNU debugger, and the GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,87 +14,6 @@ define|#
 directive|define
 name|CGEN_H
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CGEN_CAT3
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ALMOST_STDC
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CGEN_XCAT3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|a ## b ## c
-end_define
-
-begin_define
-define|#
-directive|define
-name|CGEN_CAT3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|CGEN_XCAT3 (a, b, c)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CGEN_CAT3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|a
-comment|/**/
-value|b
-comment|/**/
-value|c
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Prepend the cpu name, defined in cpu-opc.h, and _cgen_ to symbol S.    The lack of spaces in the arg list is important for non-stdc systems.    This file is included by<cpu>-opc.h.    It can be included independently of cpu-opc.h, in which case the cpu    dependent portions will be declared as "unknown_cgen_foo".  */
@@ -113,7 +32,7 @@ name|CGEN_SYM
 parameter_list|(
 name|s
 parameter_list|)
-value|CGEN_CAT3 (unknown,_cgen_,s)
+value|CONCAT3 (unknown,_cgen_,s)
 end_define
 
 begin_endif
@@ -230,7 +149,7 @@ typedef|typedef
 struct|struct
 block|{
 name|unsigned
-name|int
+name|char
 name|num_nonbools
 decl_stmt|;
 name|unsigned
@@ -261,7 +180,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|const struct { unsigned int num_nonbools; \ 	       unsigned int bool; \ 	       unsigned int nonbool[(n) ? (n) : 1]; }
+value|const struct { unsigned char num_nonbools; \ 	       unsigned int bool; \ 	       unsigned int nonbool[(n) ? (n) : 1]; }
 end_define
 
 begin_comment
@@ -276,6 +195,23 @@ parameter_list|(
 name|attr
 parameter_list|)
 value|(1<< (attr))
+end_define
+
+begin_comment
+comment|/* Return the value of boolean attribute ATTR in ATTRS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGEN_BOOL_ATTR
+parameter_list|(
+name|attrs
+parameter_list|,
+name|attr
+parameter_list|)
+define|\
+value|((CGEN_ATTR_MASK (attr)& (attrs)) != 0)
 end_define
 
 begin_comment
@@ -297,6 +233,51 @@ define|\
 value|((unsigned int) (attr)< (attr_table)->num_nonbools \  ? ((attr_table)->nonbool[attr]) \  : (((attr_table)->bool& (1<< (attr))) != 0))
 end_define
 
+begin_comment
+comment|/* Attribute name/value tables.    These are used to assist parsing of descriptions at runtime.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+block|}
+name|CGEN_ATTR_ENTRY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* For each domain (fld,operand,insn), list of attributes.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* NULL for boolean attributes.  */
+specifier|const
+name|CGEN_ATTR_ENTRY
+modifier|*
+name|vals
+decl_stmt|;
+block|}
+name|CGEN_ATTR_TABLE
+typedef|;
+end_typedef
+
 begin_escape
 end_escape
 
@@ -304,11 +285,13 @@ begin_comment
 comment|/* Parse result (also extraction result).     The result of parsing an insn is stored here.    To generate the actual insn, this is passed to the insert handler.    When printing an insn, the result of extraction is stored here.    To print the insn, this is passed to the print handler.     It is machine generated so we don't define it here,    but we do need a forward decl for the handler fns.     There is one member for each possible field in the insn.    The type depends on the field.    Also recorded here is the computed length of the insn for architectures    where it varies. */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
+begin_typedef
+typedef|typedef
+name|struct
 name|cgen_fields
-struct_decl|;
-end_struct_decl
+name|CGEN_FIELDS
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Total length of the insn, as recorded in the `fields' struct.  */
@@ -372,8 +355,7 @@ name|char
 operator|*
 operator|*
 operator|,
-expr|struct
-name|cgen_fields
+name|CGEN_FIELDS
 operator|*
 operator|)
 argument_list|)
@@ -410,8 +392,7 @@ expr|struct
 name|cgen_insn
 operator|*
 operator|,
-expr|struct
-name|cgen_fields
+name|CGEN_FIELDS
 operator|*
 operator|,
 name|bfd_vma
@@ -443,15 +424,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Insert handler.    The first argument is a pointer to a struct describing the insn being    parsed.    The second argument is a pointer to a cgen_fields struct    from which the values are fetched.    The third argument is a pointer to a buffer in which to place the insn.  */
+comment|/* Insert handler.    The first argument is a pointer to a struct describing the insn being    parsed.    The second argument is a pointer to a cgen_fields struct    from which the values are fetched.    The third argument is a pointer to a buffer in which to place the insn.    The result is an error message or NULL if success.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|void
-argument_list|(
-argument|cgen_insert_fn
-argument_list|)
+specifier|const
+name|char
+operator|*
+operator|(
+name|cgen_insert_fn
+operator|)
 name|PARAMS
 argument_list|(
 operator|(
@@ -460,8 +443,7 @@ expr|struct
 name|cgen_insn
 operator|*
 operator|,
-expr|struct
-name|cgen_fields
+name|CGEN_FIELDS
 operator|*
 operator|,
 name|cgen_insn_t
@@ -494,8 +476,7 @@ operator|*
 operator|,
 name|cgen_insn_t
 operator|,
-expr|struct
-name|cgen_fields
+name|CGEN_FIELDS
 operator|*
 operator|)
 argument_list|)
@@ -602,26 +583,8 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Base class of parser/printer.    (Don't read too much into the use of the phrase "base class").     Instructions and expressions all share this data in common.    It's a collection of the common elements needed to parse and print    each of them.  */
+comment|/* Base class of parser/printer.    (Don't read too much into the use of the phrase "base class".    It's a name I'm using to organize my thoughts.)     Instructions and expressions all share this data in common.    It's a collection of the common elements needed to parse, insert, extract,    and print each of them.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CGEN_MAX_INSN_ATTRS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CGEN_MAX_INSN_ATTRS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -638,13 +601,6 @@ name|extract
 decl_stmt|,
 name|print
 decl_stmt|;
-comment|/* Attributes.  */
-name|CGEN_ATTR_TYPE
-argument_list|(
-argument|CGEN_MAX_INSN_ATTRS
-argument_list|)
-name|attrs
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -653,91 +609,262 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Syntax table.     Each insn and subexpression has one of these.     The syntax "string" consists of characters (n> 0&& n< 128), and operand    values (n>= 128), and is terminated by 0.  Operand values are 128 + index    into the operand table.  The operand table doesn't exist in C, per se, as    the data is recorded in the parse/insert/extract/print switch statements.     ??? Whether we want to use yacc instead is unclear, but we do make an    effort to not make doing that difficult.  At least that's the intent. */
+comment|/* Assembler interface.     The interface to the assembler is intended to be clean in the sense that    libopcodes.a is a standalone entity and could be used with any assembler.    Not that one would necessarily want to do that but rather that it helps    keep a clean interface.  The interface will obviously be slanted towards    GAS, but at least it's a start.     Parsing is controlled by the assembler which calls    CGEN_SYM (assemble_insn).  If it can parse and build the entire insn    it doesn't call back to the assembler.  If it needs/wants to call back    to the assembler, (*cgen_parse_operand_fn) is called which can either     - return a number to be inserted in the insn    - return a "register" value to be inserted      (the register might not be a register per pe)    - queue the argument and return a marker saying the expression has been      queued (eg: a fix-up)    - return an error message indicating the expression wasn't recognizable     The result is an error message or NULL for success.    The parsed value is stored in the bfd_vma *.  */
 end_comment
 
-begin_struct
-struct|struct
-name|cgen_syntax
+begin_comment
+comment|/* Values for indicating what the caller wants.  */
+end_comment
+
+begin_enum
+enum|enum
+name|cgen_parse_operand_type
 block|{
-comment|/* Original syntax string, for debugging purposes.  */
-name|char
-modifier|*
-name|orig
-decl_stmt|;
-comment|/* Name of entry (that distinguishes it from all other entries).      This is used, for example, in simulator profiling results.  */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* not needed yet */
-comment|/* Format of this insn.      This doesn't closely follow the notion of instruction formats for more      complex instruction sets.  This is the value computed at runtime.  */
-block|enum cgen_fmt_type fmt;
-endif|#
-directive|endif
-comment|/* Mnemonic (or name if expression).  */
-name|char
-modifier|*
-name|mnemonic
-decl_stmt|;
-comment|/* Syntax string.  */
-comment|/* FIXME: If each insn's mnemonic is constant, do we want to record just      the arguments here?  */
-ifndef|#
-directive|ifndef
-name|CGEN_MAX_SYNTAX_BYTES
-define|#
-directive|define
-name|CGEN_MAX_SYNTAX_BYTES
-value|16
-endif|#
-directive|endif
-name|unsigned
-name|char
-name|syntax
-index|[
-name|CGEN_MAX_SYNTAX_BYTES
-index|]
-decl_stmt|;
-define|#
-directive|define
-name|CGEN_SYNTAX_CHAR_P
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)< 128)
-define|#
-directive|define
-name|CGEN_SYNTAX_CHAR
-parameter_list|(
-name|c
-parameter_list|)
-value|(c)
-define|#
-directive|define
-name|CGEN_SYNTAX_FIELD
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) - 128)
-comment|/* recognize insn if (op& mask) == value      For architectures with variable length insns, this is just a preliminary      test.  */
-comment|/* FIXME: Might want a selectable type (rather than always      unsigned long).  */
-name|unsigned
-name|long
-name|mask
-decl_stmt|,
-name|value
-decl_stmt|;
-comment|/* length, in bits      This is the size that `mask' and `value' have been calculated to.      Normally it is CGEN_BASE_INSN_BITSIZE.  On vliw architectures where      the base insn size may be larger than the size of an insn, this field is      less than CGEN_BASE_INSN_BITSIZE.      On architectures like the 386 and m68k the real size of the insn may      be computed while parsing.  */
-comment|/* FIXME: wip, of course */
-name|int
-name|length
-decl_stmt|;
+name|CGEN_PARSE_OPERAND_INIT
+block|,
+name|CGEN_PARSE_OPERAND_INTEGER
+block|,
+name|CGEN_PARSE_OPERAND_ADDRESS
 block|}
-struct|;
-end_struct
+enum|;
+end_enum
+
+begin_comment
+comment|/* Values for indicating what was parsed.    ??? Not too useful at present but in time.  */
+end_comment
+
+begin_enum
+enum|enum
+name|cgen_parse_operand_result
+block|{
+name|CGEN_PARSE_OPERAND_RESULT_NUMBER
+block|,
+name|CGEN_PARSE_OPERAND_RESULT_REGISTER
+block|,
+name|CGEN_PARSE_OPERAND_RESULT_QUEUED
+block|,
+name|CGEN_PARSE_OPERAND_RESULT_ERROR
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Don't require bfd.h unnecessarily.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_VERSION
+end_ifdef
+
+begin_extern
+extern|extern const char * (*cgen_parse_operand_fn
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|cgen_parse_operand_type
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+expr|enum
+name|cgen_parse_operand_result
+operator|*
+operator|,
+name|bfd_vma
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Called before trying to match a table entry with the insn.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|cgen_init_parse_operand
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Called from<cpu>-asm.c to initialize operand parsing.  */
+end_comment
+
+begin_comment
+comment|/* These are GAS specific.  They're not here as part of the interface,    but rather that we need to put them somewhere.  */
+end_comment
+
+begin_comment
+comment|/* Call this from md_assemble to initialize the assembler callback.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|cgen_asm_init_parse
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't require bfd.h unnecessarily.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_VERSION
+end_ifdef
+
+begin_comment
+comment|/* The result is an error message or NULL for success.    The parsed value is stored in the bfd_vma *.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|cgen_parse_operand
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|cgen_parse_operand_type
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+expr|enum
+name|cgen_parse_operand_result
+operator|*
+operator|,
+name|bfd_vma
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|void
+name|cgen_save_fixups
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cgen_restore_fixups
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cgen_swap_fixups
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Add a register to the assembler's hash table.    This makes lets GAS parse registers for us.    ??? This isn't currently used, but it could be in the future.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|cgen_asm_record_register
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* After CGEN_SYM (assemble_insn) is done, this is called to    output the insn and record any fixups.  The address of the    assembled instruction is returned in case it is needed by    the caller.  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cgen_asm_finish_insn
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|cgen_insn
+operator|*
+operator|,
+name|cgen_insn_t
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -770,6 +897,11 @@ typedef|typedef
 struct|struct
 name|cgen_hw_entry
 block|{
+comment|/* The type of this entry, one of `enum hw_type'.      This is an int and not the enum as the latter may not be declared yet.  */
+name|int
+name|type
+decl_stmt|;
+specifier|const
 name|struct
 name|cgen_hw_entry
 modifier|*
@@ -791,18 +923,8 @@ name|CGEN_HW_ENTRY
 typedef|;
 end_typedef
 
-begin_function_decl
-specifier|extern
-name|CGEN_HW_ENTRY
-modifier|*
-name|CGEN_SYM
-parameter_list|(
-name|hw_list
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
+specifier|const
 name|CGEN_HW_ENTRY
 modifier|*
 name|cgen_hw_lookup
@@ -816,24 +938,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CGEN_MAX_KEYWORD_ATTRS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CGEN_MAX_KEYWORD_ATTRS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* This struct is used to describe things like register names, etc.  */
@@ -853,11 +957,21 @@ comment|/* Value (as in register number).      The value cannot be -1 as that is
 name|int
 name|value
 decl_stmt|;
-comment|/* Attributes.  */
+comment|/* Attributes.      This should, but technically needn't, appear last.  It is a variable sized      array in that one architecture may have 1 nonbool attribute and another      may have more.  Having this last means the non-architecture specific code      needn't care.  */
+comment|/* ??? Moving this last should be done by treating keywords like insn lists      and moving the `next' fields into a CGEN_KEYWORD_LIST struct.  */
 comment|/* FIXME: Not used yet.  */
+ifndef|#
+directive|ifndef
+name|CGEN_KEYWORD_NBOOL_ATTRS
+define|#
+directive|define
+name|CGEN_KEYWORD_NBOOL_ATTRS
+value|1
+endif|#
+directive|endif
 name|CGEN_ATTR_TYPE
 argument_list|(
-argument|CGEN_MAX_KEYWORD_ATTRS
+argument|CGEN_KEYWORD_NBOOL_ATTRS
 argument_list|)
 name|attrs
 expr_stmt|;
@@ -888,8 +1002,7 @@ struct|struct
 name|cgen_keyword
 block|{
 comment|/* Pointer to initial [compiled in] values.  */
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|init_entries
 decl_stmt|;
@@ -899,15 +1012,13 @@ name|int
 name|num_init_entries
 decl_stmt|;
 comment|/* Hash table used for name lookup.  */
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 modifier|*
 name|name_hash_table
 decl_stmt|;
 comment|/* Hash table used for value lookup.  */
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 modifier|*
 name|value_hash_table
@@ -916,6 +1027,12 @@ comment|/* Number of entries in the hash_tables.  */
 name|unsigned
 name|int
 name|hash_table_size
+decl_stmt|;
+comment|/* Pointer to null keyword "" entry if present.  */
+specifier|const
+name|CGEN_KEYWORD_ENTRY
+modifier|*
+name|null_entry
 decl_stmt|;
 block|}
 name|CGEN_KEYWORD
@@ -929,12 +1046,10 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|cgen_keyword_search
 block|{
 comment|/* Table being searched.  */
 specifier|const
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|table
 decl_stmt|;
@@ -950,8 +1065,7 @@ name|int
 name|current_hash
 decl_stmt|;
 comment|/* Current element in current hash chain.  */
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|current_entry
 decl_stmt|;
@@ -966,15 +1080,13 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|cgen_keyword_lookup_name
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
 specifier|const
@@ -991,15 +1103,13 @@ end_comment
 
 begin_decl_stmt
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|cgen_keyword_lookup_value
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
 name|int
@@ -1018,12 +1128,10 @@ name|cgen_keyword_add
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 operator|)
 argument_list|)
@@ -1035,14 +1143,12 @@ comment|/* Keyword searching.    This can be used to retrieve every keyword, or 
 end_comment
 
 begin_decl_stmt
-name|struct
-name|cgen_keyword_search
+name|CGEN_KEYWORD_SEARCH
 name|cgen_keyword_search_init
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
 specifier|const
@@ -1055,15 +1161,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|cgen_keyword_search_next
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|cgen_keyword_search
+name|CGEN_KEYWORD_SEARCH
 operator|*
 operator|)
 argument_list|)
@@ -1091,8 +1195,7 @@ name|char
 operator|*
 operator|*
 operator|,
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
 name|long
@@ -1118,10 +1221,6 @@ operator|,
 name|int
 operator|,
 name|long
-operator|,
-name|long
-operator|,
-name|long
 operator|*
 operator|)
 argument_list|)
@@ -1142,12 +1241,6 @@ operator|*
 operator|*
 operator|,
 name|int
-operator|,
-name|unsigned
-name|long
-operator|,
-name|unsigned
-name|long
 operator|,
 name|unsigned
 name|long
@@ -1173,6 +1266,10 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+expr|enum
+name|cgen_parse_operand_result
+operator|*
 operator|,
 name|long
 operator|*
@@ -1224,51 +1321,123 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This struct defines each entry in the operand table.  */
+comment|/* Operand modes.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CGEN_MAX_OPERAND_ATTRS
-end_ifndef
+begin_comment
+comment|/* ??? This duplicates the values in arch.h.  Revisit.    These however need the CGEN_ prefix [as does everything in this file].  */
+end_comment
+
+begin_comment
+comment|/* ??? Targets may need to add their own modes so we may wish to move this    to<arch>-opc.h, or add a hook.  */
+end_comment
+
+begin_enum
+enum|enum
+name|cgen_mode
+block|{
+name|CGEN_MODE_VOID
+block|,
+comment|/* FIXME: rename simulator's VM to VOID */
+name|CGEN_MODE_BI
+block|,
+name|CGEN_MODE_QI
+block|,
+name|CGEN_MODE_HI
+block|,
+name|CGEN_MODE_SI
+block|,
+name|CGEN_MODE_DI
+block|,
+name|CGEN_MODE_UBI
+block|,
+name|CGEN_MODE_UQI
+block|,
+name|CGEN_MODE_UHI
+block|,
+name|CGEN_MODE_USI
+block|,
+name|CGEN_MODE_UDI
+block|,
+name|CGEN_MODE_SF
+block|,
+name|CGEN_MODE_DF
+block|,
+name|CGEN_MODE_XF
+block|,
+name|CGEN_MODE_TF
+block|,
+name|CGEN_MODE_MAX
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* FIXME: Until simulator is updated.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CGEN_MAX_OPERAND_ATTRS
-value|1
+name|CGEN_MODE_VM
+value|CGEN_MODE_VOID
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_escape
+end_escape
+
+begin_comment
+comment|/* This struct defines each entry in the operand table.  */
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|cgen_operand
 block|{
-comment|/* For debugging.  */
+comment|/* Name as it appears in the syntax string.  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Bit position (msb of first byte = bit 0).      May be unused for a modifier.  */
+comment|/* The hardware element associated with this operand.  */
+specifier|const
+name|CGEN_HW_ENTRY
+modifier|*
+name|hw
+decl_stmt|;
+comment|/* FIXME: We don't yet record ifield definitions, which we should.      When we do it might make sense to delete start/length (since they will      be duplicated in the ifield's definition) and replace them with a      pointer to the ifield entry.  Note that as more complicated situations      need to be handled, going more and more with an OOP paradigm will help      keep the complication under control.  Of course, this was the goal from      the start, but getting there in one step was too much too soon.  */
+comment|/* Bit position (msb of first byte = bit 0).      This is just a hint, and may be unused in more complex operands.      May be unused for a modifier.  */
 name|unsigned
 name|char
 name|start
 decl_stmt|;
-comment|/* The number of bits in the operand.      May be unused for a modifier.  */
+comment|/* The number of bits in the operand.      This is just a hint, and may be unused in more complex operands.      May be unused for a modifier.  */
 name|unsigned
 name|char
 name|length
 decl_stmt|;
-comment|/* Attributes.  */
+if|#
+directive|if
+literal|0
+comment|/* ??? Interesting idea but relocs tend to get too complicated, 	 and ABI dependent, for simple table lookups to work.  */
+comment|/* Ideally this would be the internal (external?) reloc type.  */
+block|int reloc_type;
+endif|#
+directive|endif
+comment|/* Attributes.      This should, but technically needn't, appear last.  It is a variable sized      array in that one architecture may have 1 nonbool attribute and another      may have more.  Having this last means the non-architecture specific code      needn't care, now or tomorrow.  */
+ifndef|#
+directive|ifndef
+name|CGEN_OPERAND_NBOOL_ATTRS
+define|#
+directive|define
+name|CGEN_OPERAND_NBOOL_ATTRS
+value|1
+endif|#
+directive|endif
 name|CGEN_ATTR_TYPE
 argument_list|(
-argument|CGEN_MAX_OPERAND_ATTRS
+argument|CGEN_OPERAND_NBOOL_ATTRS
 argument_list|)
 name|attrs
 expr_stmt|;
@@ -1279,14 +1448,6 @@ parameter_list|(
 name|operand
 parameter_list|)
 value|(&(operand)->attrs)
-if|#
-directive|if
-literal|0
-comment|/* ??? Interesting idea but relocs tend to get too complicated for 	 simple table lookups to work.  */
-comment|/* Ideally this would be the internal (external?) reloc type.  */
-block|int reloc_type;
-endif|#
-directive|endif
 block|}
 name|CGEN_OPERAND
 typedef|;
@@ -1365,6 +1526,287 @@ parameter_list|)
 value|(& CGEN_SYM (operand_table) [n])
 end_define
 
+begin_comment
+comment|/* Types of parse/insert/extract/print cover-fn handlers.  */
+end_comment
+
+begin_comment
+comment|/* FIXME: move opindex first to match caller.  */
+end_comment
+
+begin_comment
+comment|/* FIXME: also need types of insert/extract/print fns.  */
+end_comment
+
+begin_comment
+comment|/* FIXME: not currently used as type of 3rd arg varies.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|char
+operator|*
+operator|(
+name|CGEN_PARSE_OPERAND_FN
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|long
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Instruction operand instances.     For each instruction, a list of the hardware elements that are read and    written are recorded.  */
+end_comment
+
+begin_comment
+comment|/* The type of the instance.  */
+end_comment
+
+begin_enum
+enum|enum
+name|cgen_operand_instance_type
+block|{
+comment|/* End of table marker.  */
+name|CGEN_OPERAND_INSTANCE_END
+init|=
+literal|0
+block|,
+name|CGEN_OPERAND_INSTANCE_INPUT
+block|,
+name|CGEN_OPERAND_INSTANCE_OUTPUT
+block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* The type of this operand.  */
+name|enum
+name|cgen_operand_instance_type
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_OPERAND_INSTANCE_TYPE
+parameter_list|(
+name|opinst
+parameter_list|)
+value|((opinst)->type)
+comment|/* The hardware element referenced.  */
+specifier|const
+name|CGEN_HW_ENTRY
+modifier|*
+name|hw
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_OPERAND_INSTANCE_HW
+parameter_list|(
+name|opinst
+parameter_list|)
+value|((opinst)->hw)
+comment|/* The mode in which the operand is being used.  */
+name|enum
+name|cgen_mode
+name|mode
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_OPERAND_INSTANCE_MODE
+parameter_list|(
+name|opinst
+parameter_list|)
+value|((opinst)->mode)
+comment|/* The operand table entry or NULL if there is none (i.e. an explicit      hardware reference).  */
+specifier|const
+name|CGEN_OPERAND
+modifier|*
+name|operand
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_OPERAND_INSTANCE_OPERAND
+parameter_list|(
+name|opinst
+parameter_list|)
+value|((opinst)->operand)
+comment|/* If `operand' is NULL, the index (e.g. into array of registers).  */
+name|int
+name|index
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_OPERAND_INSTANCE_INDEX
+parameter_list|(
+name|opinst
+parameter_list|)
+value|((opinst)->index)
+block|}
+name|CGEN_OPERAND_INSTANCE
+typedef|;
+end_typedef
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Syntax string.     Each insn format and subexpression has one of these.     The syntax "string" consists of characters (n> 0&& n< 128), and operand    values (n>= 128), and is terminated by 0.  Operand values are 128 + index    into the operand table.  The operand table doesn't exist in C, per se, as    the data is recorded in the parse/insert/extract/print switch statements. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CGEN_MAX_SYNTAX_BYTES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CGEN_MAX_SYNTAX_BYTES
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|char
+name|syntax
+index|[
+name|CGEN_MAX_SYNTAX_BYTES
+index|]
+decl_stmt|;
+block|}
+name|CGEN_SYNTAX
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_STRING
+parameter_list|(
+name|syn
+parameter_list|)
+value|(syn->syntax)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_CHAR_P
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)< 128)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_FIELD
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) - 128)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_MAKE_FIELD
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) + 128)
+end_define
+
+begin_comment
+comment|/* ??? I can't currently think of any case where the mnemonic doesn't come    first [and if one ever doesn't building the hash tables will be tricky].    However, we treat mnemonics as just another operand of the instruction.    A value of 1 means "this is where the mnemonic appears".  1 isn't    special other than it's a non-printable ASCII char.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_MNEMONIC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_SYNTAX_MNEMONIC_P
+parameter_list|(
+name|ch
+parameter_list|)
+value|((ch) == CGEN_SYNTAX_MNEMONIC)
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Instruction formats.     Instructions are grouped by format.  Associated with an instruction is its    format.  Each opcode table entry contains a format table entry.    ??? There is usually very few formats compared with the number of insns,    so one can reduce the size of the opcode table by recording the format table    as a separate entity.  Given that we currently don't, format table entries    are also distinguished by their operands.  This increases the size of the    table, but reduces the number of tables.  It's all minutiae anyway so it    doesn't really matter [at this point in time].     ??? Support for variable length ISA's is wip.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Length that MASK and VALUE have been calculated to      [VALUE is recorded elsewhere].      Normally it is CGEN_BASE_INSN_BITSIZE.  On [V]LIW architectures where      the base insn size may be larger than the size of an insn, this field is      less than CGEN_BASE_INSN_BITSIZE.  */
+name|unsigned
+name|char
+name|mask_length
+decl_stmt|;
+comment|/* Total length of instruction, in bits.  */
+name|unsigned
+name|char
+name|length
+decl_stmt|;
+comment|/* Mask to apply to the first MASK_LENGTH bits.      Each insn's value is stored with the insn.      The first step in recognizing an insn for disassembly is      (opcode& mask) == value.  */
+name|unsigned
+name|int
+name|mask
+decl_stmt|;
+block|}
+name|CGEN_FORMAT
+typedef|;
+end_typedef
+
 begin_escape
 end_escape
 
@@ -1376,6 +1818,7 @@ begin_struct
 struct|struct
 name|cgen_insn
 block|{
+comment|/* ??? Further table size reductions can be had by moving this element      either to the format table or to a separate table of its own.  Not      sure this is desirable yet.  */
 name|struct
 name|cgen_base
 name|base
@@ -1388,15 +1831,36 @@ parameter_list|(
 name|insn
 parameter_list|)
 value|(&(insn)->base)
+comment|/* Name of entry (that distinguishes it from all other entries).      This is used, for example, in simulator profiling results.  */
+comment|/* ??? If mnemonics have operands, try to print full mnemonic.  */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
 define|#
 directive|define
-name|CGEN_INSN_ATTRS
+name|CGEN_INSN_NAME
 parameter_list|(
 name|insn
 parameter_list|)
-value|(&(insn)->base.attrs)
-name|struct
-name|cgen_syntax
+value|((insn)->name)
+comment|/* Mnemonic.  This is used when parsing and printing the insn.      In the case of insns that have operands on the mnemonics, this is      only the constant part.  E.g. for conditional execution of an `add' insn,      where the full mnemonic is addeq, addne, etc., this is only "add".  */
+specifier|const
+name|char
+modifier|*
+name|mnemonic
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_INSN_MNEMONIC
+parameter_list|(
+name|insn
+parameter_list|)
+value|((insn)->mnemonic)
+comment|/* Syntax string.  */
+specifier|const
+name|CGEN_SYNTAX
 name|syntax
 decl_stmt|;
 define|#
@@ -1405,30 +1869,82 @@ name|CGEN_INSN_SYNTAX
 parameter_list|(
 name|insn
 parameter_list|)
-value|(&(insn)->syntax)
+value|(& (insn)->syntax)
+comment|/* Format entry.  */
+specifier|const
+name|CGEN_FORMAT
+name|format
+decl_stmt|;
 define|#
 directive|define
-name|CGEN_INSN_FMT
+name|CGEN_INSN_MASK_BITSIZE
 parameter_list|(
 name|insn
 parameter_list|)
-value|((insn)->syntax.fmt)
+value|((insn)->format.mask_length)
 define|#
 directive|define
 name|CGEN_INSN_BITSIZE
 parameter_list|(
 name|insn
 parameter_list|)
-value|((insn)->syntax.length)
-block|}
-struct|;
-end_struct
-
-begin_comment
+value|((insn)->format.length)
+comment|/* Instruction opcode value.  */
+name|unsigned
+name|int
+name|value
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_INSN_VALUE
+parameter_list|(
+name|insn
+parameter_list|)
+value|((insn)->value)
+define|#
+directive|define
+name|CGEN_INSN_MASK
+parameter_list|(
+name|insn
+parameter_list|)
+value|((insn)->format.mask)
+comment|/* Pointer to NULL entry terminated table of operands used,      or NULL if none.  */
+specifier|const
+name|CGEN_OPERAND_INSTANCE
+modifier|*
+name|operands
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_INSN_OPERANDS
+parameter_list|(
+name|insn
+parameter_list|)
+value|((insn)->operands)
+comment|/* Attributes.      This must appear last.  It is a variable sized array in that one      architecture may have 1 nonbool attribute and another may have more.      Having this last means the non-architecture specific code needn't      care.  */
+ifndef|#
+directive|ifndef
+name|CGEN_INSN_NBOOL_ATTRS
+define|#
+directive|define
+name|CGEN_INSN_NBOOL_ATTRS
+value|1
+endif|#
+directive|endif
+name|CGEN_ATTR_TYPE
+argument_list|(
+argument|CGEN_INSN_NBOOL_ATTRS
+argument_list|)
+name|attrs
+expr_stmt|;
+define|#
+directive|define
+name|CGEN_INSN_ATTRS
+parameter_list|(
+name|insn
+parameter_list|)
+value|(&(insn)->attrs)
 comment|/* Return value of attribute ATTR in INSN.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CGEN_INSN_ATTR
@@ -1439,7 +1955,9 @@ name|attr
 parameter_list|)
 define|\
 value|CGEN_ATTR_VALUE (insn, CGEN_INSN_ATTRS (insn), attr)
-end_define
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Instruction lists.    This is used for adding new entries and for creating the hash lists.  */
@@ -1456,8 +1974,7 @@ modifier|*
 name|next
 decl_stmt|;
 specifier|const
-name|struct
-name|cgen_insn
+name|CGEN_INSN
 modifier|*
 name|insn
 decl_stmt|;
@@ -1473,14 +1990,17 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|cgen_insn_table
 block|{
 comment|/* Pointer to initial [compiled in] entries.  */
 specifier|const
-name|struct
-name|cgen_insn
+name|CGEN_INSN
 modifier|*
 name|init_entries
+decl_stmt|;
+comment|/* Size of an entry (since the attribute member is variable sized).  */
+name|unsigned
+name|int
+name|entry_size
 decl_stmt|;
 comment|/* Number of entries in `init_entries', including trailing NULL entry.  */
 name|unsigned
@@ -1488,8 +2008,7 @@ name|int
 name|num_init_entries
 decl_stmt|;
 comment|/* Values added at runtime.  */
-name|struct
-name|cgen_insn_list
+name|CGEN_INSN_LIST
 modifier|*
 name|new_entries
 decl_stmt|;
@@ -1589,6 +2108,7 @@ name|cgen_insn_count
 name|PARAMS
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1822,13 +2342,13 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|cgen_opcode_data
 block|{
+specifier|const
 name|CGEN_HW_ENTRY
 modifier|*
 name|hw_list
 decl_stmt|;
-comment|/*CGEN_OPERAND_TABLE *operand_table; - FIXME:wip */
+comment|/*CGEN_OPERAND_TABLE * operand_table; - FIXME:wip */
 name|CGEN_INSN_TABLE
 modifier|*
 name|insn_table
@@ -1890,7 +2410,29 @@ comment|/* Prototypes of major functions.  */
 end_comment
 
 begin_comment
-comment|/* Set the current cpu (+ mach number, endian, etc.).  *? void cgen_set_cpu PARAMS ((CGEN_OPCODE_DATA *, int, enum cgen_endian));  /* Initialize the assembler, disassembler.  */
+comment|/* Set the current cpu (+ mach number, endian, etc.).  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|cgen_set_cpu
+name|PARAMS
+argument_list|(
+operator|(
+name|CGEN_OPCODE_DATA
+operator|*
+operator|,
+name|int
+operator|,
+expr|enum
+name|cgen_endian
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Initialize the assembler, disassembler.  */
 end_comment
 
 begin_decl_stmt
@@ -2037,6 +2579,10 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/* FIXME: This prototype is wrong ifndef CGEN_INT_INSN.    Furthermore, ifdef CGEN_INT_INSN, the insn is created in    target byte order (in which case why use int's at all).    Perhaps replace cgen_insn_t * with char *?  */
+end_comment
+
 begin_function_decl
 specifier|const
 name|struct
@@ -2050,27 +2596,11 @@ function_decl|PARAMS
 parameter_list|(
 function_decl|(const char *
 operator|,
-function_decl|struct cgen_fields *
+function_decl|CGEN_FIELDS *
 operator|,
 function_decl|cgen_insn_t *
 operator|,
 function_decl|char **
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|int
-name|CGEN_SYM
-parameter_list|(
-name|insn_supported
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(const struct cgen_syntax *
 end_function_decl
 
 begin_empty_stmt
@@ -2089,7 +2619,7 @@ comment|/* old */
 end_comment
 
 begin_endif
-unit|int CGEN_SYM (opval_supported) PARAMS ((const struct cgen_opval *));
+unit|int CGEN_SYM (insn_supported) PARAMS ((const struct cgen_insn *)); int CGEN_SYM (opval_supported) PARAMS ((const struct cgen_opval *));
 endif|#
 directive|endif
 end_endif
@@ -2097,8 +2627,7 @@ end_endif
 begin_function_decl
 specifier|extern
 specifier|const
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 name|CGEN_SYM
 parameter_list|(
 name|operand_mach
@@ -2123,6 +2652,56 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|const
+name|CGEN_INSN
+modifier|*
+name|CGEN_SYM
+parameter_list|(
+name|get_insn_operands
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(const CGEN_INSN *
+operator|,
+function_decl|cgen_insn_t
+operator|,
+function_decl|int
+operator|,
+function_decl|int *
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|const
+name|CGEN_INSN
+modifier|*
+name|CGEN_SYM
+parameter_list|(
+name|lookup_insn
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(const CGEN_INSN *
+operator|,
+function_decl|cgen_insn_t
+operator|,
+function_decl|int
+operator|,
+function_decl|CGEN_FIELDS *
+operator|,
+function_decl|int
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|CGEN_INLINE
 name|void
 name|CGEN_SYM
@@ -2135,7 +2714,7 @@ function_decl|(int
 operator|,
 function_decl|const long *
 operator|,
-function_decl|struct cgen_fields *
+function_decl|CGEN_FIELDS *
 end_function_decl
 
 begin_empty_stmt
@@ -2154,7 +2733,7 @@ function_decl|PARAMS
 parameter_list|(
 function_decl|(int
 operator|,
-function_decl|const struct cgen_fields *
+function_decl|const CGEN_FIELDS *
 end_function_decl
 
 begin_empty_stmt
@@ -2163,7 +2742,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|CGEN_INLINE
 specifier|const
 name|char
 modifier|*
@@ -2177,7 +2755,7 @@ function_decl|(int
 operator|,
 function_decl|const char **
 operator|,
-function_decl|struct cgen_fields *
+function_decl|CGEN_FIELDS *
 end_function_decl
 
 begin_empty_stmt
@@ -2186,19 +2764,20 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|CGEN_INLINE
 specifier|const
 name|char
 modifier|*
 name|CGEN_SYM
 parameter_list|(
-name|validate_operand
+name|insert_operand
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
 function_decl|(int
 operator|,
-function_decl|const struct cgen_fields *
+function_decl|CGEN_FIELDS *
+operator|,
+function_decl|char *
 end_function_decl
 
 begin_empty_stmt
@@ -2265,230 +2844,6 @@ operator|(
 specifier|const
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Assembler interface.     The interface to the assembler is intended to be clean in the sense that    libopcodes.a is a standalone entity and could be used with any assembler.    Not that one would necessarily want to do that but rather that it helps    keep a clean interface.  The interface will obviously be slanted towards    GAS, but at least it's a start.     Parsing is controlled by the assembler which calls    CGEN_SYM (assemble_insn).  If it can parse and build the entire insn    it doesn't call back to the assembler.  If it needs/wants to call back    to the assembler, (*cgen_parse_operand_fn) is called which can either     - return a number to be inserted in the insn    - return a "register" value to be inserted      (the register might not be a register per pe)    - queue the argument and return a marker saying the expression has been      queued (eg: a fix-up)    - return an error message indicating the expression wasn't recognizable     The result is an error message or NULL for success.    The parsed value is stored in the bfd_vma *.  */
-end_comment
-
-begin_comment
-comment|/* Values for indicating what the caller wants.  */
-end_comment
-
-begin_enum
-enum|enum
-name|cgen_parse_operand_type
-block|{
-name|CGEN_PARSE_OPERAND_INIT
-block|,
-name|CGEN_PARSE_OPERAND_INTEGER
-block|,
-name|CGEN_PARSE_OPERAND_ADDRESS
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Values for indicating what was parsed.    ??? Not too useful at present but in time.  */
-end_comment
-
-begin_enum
-enum|enum
-name|cgen_parse_operand_result
-block|{
-name|CGEN_PARSE_OPERAND_RESULT_NUMBER
-block|,
-name|CGEN_PARSE_OPERAND_RESULT_REGISTER
-block|,
-name|CGEN_PARSE_OPERAND_RESULT_QUEUED
-block|,
-name|CGEN_PARSE_OPERAND_RESULT_ERROR
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Don't require bfd.h unnecessarily.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_VERSION
-end_ifdef
-
-begin_extern
-extern|extern const char * (*cgen_parse_operand_fn
-end_extern
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
-name|cgen_parse_operand_type
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|enum
-name|cgen_parse_operand_result
-operator|*
-operator|,
-name|bfd_vma
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Called before trying to match a table entry with the insn.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|cgen_init_parse_operand
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Called from<cpu>-asm.c to initialize operand parsing.  */
-end_comment
-
-begin_comment
-comment|/* These are GAS specific.  They're not here as part of the interface,    but rather that we need to put them somewhere.  */
-end_comment
-
-begin_comment
-comment|/* Call this from md_assemble to initialize the assembler callback.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|cgen_asm_init_parse
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Don't require bfd.h unnecessarily.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_VERSION
-end_ifdef
-
-begin_comment
-comment|/* The result is an error message or NULL for success.    The parsed value is stored in the bfd_vma *.  */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|cgen_parse_operand
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
-name|cgen_parse_operand_type
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|enum
-name|cgen_parse_operand_result
-operator|*
-operator|,
-name|bfd_vma
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Add a register to the assembler's hash table.    This makes lets GAS parse registers for us.    ??? This isn't currently used, but it could be in the future.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|cgen_asm_record_register
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* After CGEN_SYM (assemble_insn) is done, this is called to    output the insn and record any fixups.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|cgen_asm_finish_insn
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|cgen_insn
-operator|*
-operator|,
-name|cgen_insn_t
-operator|*
-operator|,
-name|unsigned
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -724,6 +724,9 @@ block|{
 name|bfd_vma
 name|segbase
 decl_stmt|;
+name|bfd_vma
+name|extbase
+decl_stmt|;
 name|asection
 modifier|*
 name|sec
@@ -772,6 +775,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|segbase
+operator|=
+literal|0
+expr_stmt|;
+name|extbase
 operator|=
 literal|0
 expr_stmt|;
@@ -1221,6 +1228,8 @@ name|sec
 operator|->
 name|_raw_size
 operator|==
+name|extbase
+operator|+
 name|segbase
 operator|+
 name|addr
@@ -1332,6 +1341,8 @@ name|sec
 operator|->
 name|vma
 operator|=
+name|extbase
+operator|+
 name|segbase
 operator|+
 name|addr
@@ -1340,6 +1351,8 @@ name|sec
 operator|->
 name|lma
 operator|=
+name|extbase
+operator|+
 name|segbase
 operator|+
 name|addr
@@ -1534,7 +1547,7 @@ goto|goto
 name|error_return
 goto|;
 block|}
-name|segbase
+name|extbase
 operator|=
 name|HEX4
 argument_list|(
@@ -2982,12 +2995,19 @@ block|{
 name|bfd_vma
 name|segbase
 decl_stmt|;
+name|bfd_vma
+name|extbase
+decl_stmt|;
 name|struct
 name|ihex_data_list
 modifier|*
 name|l
 decl_stmt|;
 name|segbase
+operator|=
+literal|0
+expr_stmt|;
+name|extbase
 operator|=
 literal|0
 expr_stmt|;
@@ -3072,6 +3092,8 @@ name|where
 operator|>
 name|segbase
 operator|+
+name|extbase
+operator|+
 literal|0xffff
 condition|)
 block|{
@@ -3089,6 +3111,14 @@ operator|<=
 literal|0xfffff
 condition|)
 block|{
+comment|/* The addresses should be sorted.  */
+name|BFD_ASSERT
+argument_list|(
+name|extbase
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|segbase
 operator|=
 name|where
@@ -3149,7 +3179,53 @@ return|;
 block|}
 else|else
 block|{
+comment|/* The extended address record and the extended                      linear address record are combined, at least by                      some readers.  We need an extended linear address                      record here, so if we've already written out an                      extended address record, zero it out to avoid                      confusion.  */
+if|if
+condition|(
 name|segbase
+operator|!=
+literal|0
+condition|)
+block|{
+name|addr
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|addr
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ihex_write_record
+argument_list|(
+name|abfd
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|2
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|segbase
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|extbase
 operator|=
 name|where
 operator|&
@@ -3159,7 +3235,7 @@ if|if
 condition|(
 name|where
 operator|>
-name|segbase
+name|extbase
 operator|+
 literal|0xffff
 condition|)
@@ -3210,7 +3286,7 @@ call|(
 name|bfd_byte
 call|)
 argument_list|(
-name|segbase
+name|extbase
 operator|>>
 literal|24
 argument_list|)
@@ -3226,7 +3302,7 @@ call|(
 name|bfd_byte
 call|)
 argument_list|(
-name|segbase
+name|extbase
 operator|>>
 literal|16
 argument_list|)
@@ -3265,7 +3341,11 @@ name|now
 argument_list|,
 name|where
 operator|-
+operator|(
+name|extbase
+operator|+
 name|segbase
+operator|)
 argument_list|,
 literal|0
 argument_list|,

@@ -279,13 +279,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|valueT
 name|resolve_symbol_value
 name|PARAMS
 argument_list|(
 operator|(
 name|symbolS
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

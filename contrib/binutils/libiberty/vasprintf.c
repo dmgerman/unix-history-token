@@ -277,7 +277,7 @@ condition|)
 operator|++
 name|p
 expr_stmt|;
-comment|/* Should be big enough for any format specifier except %s.  */
+comment|/* Should be big enough for any format specifier except %s and floats.  */
 name|total_width
 operator|+=
 literal|30
@@ -344,6 +344,11 @@ name|ap
 argument_list|,
 name|double
 argument_list|)
+expr_stmt|;
+comment|/* Since an ieee double can have an exponent of 307, we'll 		 make the buffer wide enough to cover the gross case. */
+name|total_width
+operator|+=
+literal|307
 expr_stmt|;
 break|break;
 case|case
@@ -447,9 +452,27 @@ name|char
 modifier|*
 name|format
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_BSD_VA_LIST_
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|_BSD_VA_LIST_
+name|args
+decl_stmt|;
+else|#
+directive|else
 name|va_list
 name|args
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 return|return
 name|int_vasprintf

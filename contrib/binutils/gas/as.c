@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.c - GAS main program.    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* as.c - GAS main program.    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -220,6 +220,19 @@ comment|/* Name of listing file.  */
 end_comment
 
 begin_comment
+comment|/* Type of debugging to generate.  */
+end_comment
+
+begin_decl_stmt
+name|enum
+name|debug_info_type
+name|debug_type
+init|=
+name|DEBUG_NONE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Maximum level of macro nesting.  */
 end_comment
 
@@ -271,11 +284,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* The default obstack chunk size.  If we set this to zero, the    obstack code will use whatever will fit in a 4096 byte block.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|chunksize
 init|=
-literal|5000
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -381,7 +398,7 @@ name|stderr
 argument_list|,
 literal|"GNU assembler version %s (%s)"
 argument_list|,
-name|GAS_VERSION
+name|VERSION
 argument_list|,
 name|TARGET_ALIAS
 argument_list|)
@@ -435,21 +452,28 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\ Options:\n\ -a[sub-option...]	turn on listings\n\   Sub-options [default hls]:\n\   c	omit false conditionals\n\   d	omit debugging directives\n\   h	include high-level source\n\   l	include assembly\n\   n	omit forms processing\n\   s	include symbols\n\   =file set listing file name (must be last sub-option)\n"
+literal|"\ Options:\n\ -a[sub-option...]	turn on listings\n\   Sub-options [default hls]:\n\   c	omit false conditionals\n\   d	omit debugging directives\n\   h	include high-level source\n\   l	include assembly\n\   m     include macro expansions\n\   n	omit forms processing\n\   s	include symbols\n\   =file set listing file name (must be last sub-option)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\ -D			produce assembler debugging messages\n\ --defsym SYM=VAL	define symbol SYM to given value\n\ -f			skip whitespace and comment preprocessing\n\ --help			show this message and exit\n\ -I DIR			add DIR to search list for .include directives\n\ -J			don't warn about signed overflow\n\ -K			warn when differences altered for long displacements\n\ -L			keep local symbols (starting with `L')\n"
+literal|"\ -D			produce assembler debugging messages\n\ --defsym SYM=VAL	define symbol SYM to given value\n\ -f			skip whitespace and comment preprocessing\n\ --gstabs		generate stabs debugging information\n\ --help			show this message and exit\n\ -I DIR			add DIR to search list for .include directives\n\ -J			don't warn about signed overflow\n\ -K			warn when differences altered for long displacements\n\ -L,--keep-locals	keep local symbols (e.g. starting with `L')\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\ -M,--mri		assemble in MRI compatibility mode\n\ -nocpp			ignored\n\ -o OBJFILE		name the object-file output OBJFILE (default a.out)\n\ -R			fold data section into text section\n\ --statistics		print various measured statistics from execution\n\ --version		print assembler version number and exit\n\ -W			suppress warnings\n\ --itbl INSTTBL		extend instruction set to include instructions\n\ 			matching the specifications defined in file INSTTBL\n\ -w			ignored\n\ -X			ignored\n\ -Z			generate object file even after errors\n"
+literal|"\ -M,--mri		assemble in MRI compatibility mode\n\ --MD FILE		write dependency information in FILE (default none)\n\ -nocpp			ignored\n\ -o OBJFILE		name the object-file output OBJFILE (default a.out)\n\ -R			fold data section into text section\n\ --statistics		print various measured statistics from execution\n\ --strip-local-absolute	strip local absolute symbols\n\ --traditional-format	Use same format as native assembler when possible\n\ --version		print assembler version number and exit\n\ -W			suppress warnings\n\ --itbl INSTTBL		extend instruction set to include instructions\n\ 			matching the specifications defined in file INSTTBL\n\ -w			ignored\n\ -X			ignored\n\ -Z			generate object file even after errors\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"\ --listing-lhs-width	set the width in words of the output data column of\n\ 			the listing\n\ --listing-lhs-width2	set the width in words of the continuation lines\n\ 			of the output data column; ignored if smaller than\n\ 			the width of the first line\n\ --listing-rhs-width	set the max width in characters of the lines from\n\ 			the source file\n\ --listing-cont-lines	set the maximum number of continuation lines used\n\ 			for the output data column of the listing\n"
 argument_list|)
 expr_stmt|;
 name|md_show_usage
@@ -461,7 +485,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\nReport bugs to bug-gnu-utils@prep.ai.mit.edu\n"
+literal|"\nReport bugs to bug-gnu-utils@gnu.org\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -984,6 +1008,8 @@ block|,
 comment|/* New option for extending instruction set (see also --itbl below) */
 literal|'t'
 block|,
+literal|':'
+block|,
 literal|'\0'
 block|}
 decl_stmt|;
@@ -1022,6 +1048,16 @@ block|,
 name|NULL
 block|,
 name|OPTION_HELP
+block|}
+block|,
+block|{
+literal|"keep-locals"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'L'
 block|}
 block|,
 block|{
@@ -1145,6 +1181,118 @@ block|,
 name|NULL
 block|,
 name|OPTION_INSTTBL
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_LISTING_LHS_WIDTH
+value|(OPTION_STD_BASE + 9)
+block|{
+literal|"listing-lhs-width"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_LISTING_LHS_WIDTH
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_LISTING_LHS_WIDTH2
+value|(OPTION_STD_BASE + 10)
+block|{
+literal|"listing-lhs-width"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_LISTING_LHS_WIDTH2
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_LISTING_RHS_WIDTH
+value|(OPTION_STD_BASE + 11)
+block|{
+literal|"listing-rhs-width"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_LISTING_RHS_WIDTH
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_LISTING_CONT_LINES
+value|(OPTION_STD_BASE + 12)
+block|{
+literal|"listing-cont-lines"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_LISTING_CONT_LINES
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_DEPFILE
+value|(OPTION_STD_BASE + 13)
+block|{
+literal|"MD"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_DEPFILE
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_GSTABS
+value|(OPTION_STD_BASE + 14)
+block|{
+literal|"gstabs"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_GSTABS
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_STRIP_LOCAL_ABSOLUTE
+value|(OPTION_STD_BASE + 15)
+block|{
+literal|"strip-local-absolute"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_STRIP_LOCAL_ABSOLUTE
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_TRADITIONAL_FORMAT
+value|(OPTION_STD_BASE + 16)
+block|{
+literal|"traditional-format"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_TRADITIONAL_FORMAT
 block|}
 block|}
 decl_stmt|;
@@ -1438,6 +1586,22 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_STRIP_LOCAL_ABSOLUTE
+case|:
+name|flag_strip_local_absolute
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_TRADITIONAL_FORMAT
+case|:
+name|flag_traditional_format
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_VERSION
 case|:
 comment|/* This output is intended to follow the GNU standards document.  */
@@ -1445,7 +1609,7 @@ name|printf
 argument_list|(
 literal|"GNU assembler %s\n"
 argument_list|,
-name|GAS_VERSION
+name|VERSION
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1686,6 +1850,20 @@ name|itbl_file_list
 modifier|*
 name|n
 decl_stmt|;
+if|if
+condition|(
+name|optarg
+operator|==
+name|NULL
+condition|)
+block|{
+name|as_warn
+argument_list|(
+literal|"No file name following -t option\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|n
 operator|=
 operator|(
@@ -1758,6 +1936,23 @@ block|}
 block|}
 break|break;
 case|case
+name|OPTION_DEPFILE
+case|:
+name|start_dependencies
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_GSTABS
+case|:
+name|debug_type
+operator|=
+name|DEBUG_STABS
+expr_stmt|;
+break|break;
+case|case
 literal|'J'
 case|:
 name|flag_signed_overflow_ok
@@ -1784,6 +1979,73 @@ case|:
 name|flag_keep_locals
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_LISTING_LHS_WIDTH
+case|:
+name|listing_lhs_width
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|listing_lhs_width_second
+operator|<
+name|listing_lhs_width
+condition|)
+name|listing_lhs_width_second
+operator|=
+name|listing_lhs_width
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_LISTING_LHS_WIDTH2
+case|:
+block|{
+name|int
+name|tmp
+init|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tmp
+operator|>
+name|listing_lhs_width
+condition|)
+name|listing_lhs_width_second
+operator|=
+name|tmp
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|OPTION_LISTING_RHS_WIDTH
+case|:
+name|listing_rhs_width
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_LISTING_CONT_LINES
+case|:
+name|listing_lhs_cont_lines
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1877,6 +2139,14 @@ case|:
 name|listing
 operator||=
 name|LISTING_LISTING
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|listing
+operator||=
+name|LISTING_MACEXP
 expr_stmt|;
 break|break;
 case|case
@@ -2380,6 +2650,24 @@ name|keep_it
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BFD_ASSEMBLER
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|BFD
+argument_list|)
+comment|/* This used to be done at the start of write_object_file in      write.c, but that caused problems when doing listings when      keep_it was zero.  This could probably be moved above md_end, but      I didn't want to risk the change.  */
+name|subsegs_finish
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|keep_it
@@ -2461,6 +2749,10 @@ name|xexit
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
+expr_stmt|;
+comment|/* Only generate dependency file if assembler was successful.  */
+name|print_dependencies
+argument_list|()
 expr_stmt|;
 name|xexit
 argument_list|(
@@ -2776,7 +3068,7 @@ name|text_section
 operator|=
 name|subseg_new
 argument_list|(
-literal|".text"
+name|TEXT_SECTION_NAME
 argument_list|,
 literal|0
 argument_list|)
@@ -2785,7 +3077,7 @@ name|data_section
 operator|=
 name|subseg_new
 argument_list|(
-literal|".data"
+name|DATA_SECTION_NAME
 argument_list|,
 literal|0
 argument_list|)
@@ -2794,7 +3086,7 @@ name|bss_section
 operator|=
 name|subseg_new
 argument_list|(
-literal|".bss"
+name|BSS_SECTION_NAME
 argument_list|,
 literal|0
 argument_list|)

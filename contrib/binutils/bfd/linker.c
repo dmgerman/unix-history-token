@@ -3819,7 +3819,8 @@ operator||=
 name|BSF_OLD_COMMON
 expr_stmt|;
 block|}
-comment|/* Store a back pointer from the symbol to the hash 		 table entry for the benefit of relaxation code until 		 it gets rewritten to not use asymbol structures. 		 Setting this is also used to check whether these 		 symbols were set up by the generic linker.  */
+block|}
+comment|/* Store a back pointer from the symbol to the hash 	     table entry for the benefit of relaxation code until 	     it gets rewritten to not use asymbol structures. 	     Setting this is also used to check whether these 	     symbols were set up by the generic linker.  */
 name|p
 operator|->
 name|udata
@@ -3831,7 +3832,6 @@ name|PTR
 operator|)
 name|h
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -4078,7 +4078,7 @@ name|CREF
 block|,
 name|BIG
 block|,
-name|CREF
+name|REFC
 block|,
 name|WARNC
 block|}

@@ -120,16 +120,25 @@ name|enum
 name|bfd_endian
 name|endian
 decl_stmt|;
-comment|/* The symbol at the start of the function being disassembled.  This      is not set reliably, but if it is not NULL, it is correct.  */
+comment|/* An array of pointers to symbols either at the location being disassembled      or at the start of the function being disassembled.  The array is sorted      so that the first symbol is intended to be the one used.  The others are      present for any misc. purposes.  This is not set reliably, but if it is      not NULL, it is correct.  */
 name|asymbol
 modifier|*
-name|symbol
+modifier|*
+name|symbols
+decl_stmt|;
+comment|/* Number of symbols in array.  */
+name|int
+name|num_symbols
 decl_stmt|;
 comment|/* For use by the disassembler.      The top 16 bits are reserved for public use (and are documented here).      The bottom 16 bits are for the internal use of the disassembler.  */
 name|unsigned
 name|long
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|INSN_HAS_RELOC
+value|0x80000000
 name|PTR
 name|private_data
 decl_stmt|;
@@ -183,6 +192,24 @@ comment|/* Function called to print ADDR.  */
 name|void
 argument_list|(
 argument|*print_address_func
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+name|addr
+operator|,
+expr|struct
+name|disassemble_info
+operator|*
+name|info
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Function called to determine if there is a symbol at the given ADDR.      If there is, the function returns 1, otherwise it returns 0.      This is used by ports which support an overlay manager where      the overlay number is held in the top part of an address.  In      some circumstances we want to include the overlay number in the      address, (normally because there is a symbol associated with      that address), but sometimes we want to mask out the overlay bits.  */
+name|int
+argument_list|(
+argument|* symbol_at_address_func
 argument_list|)
 name|PARAMS
 argument_list|(
@@ -449,6 +476,21 @@ name|bfd_vma
 operator|,
 name|disassemble_info
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|disassembler_ftype
+name|arc_get_disassembler
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -758,6 +800,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|print_insn_v850
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|print_insn_tic30
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Fetch the disassembler for a given BFD, if that support is available.  */
 end_comment
@@ -854,6 +928,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Always true.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|generic_symbol_at_address
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+expr|struct
+name|disassemble_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Macro to initialize a disassemble_info struct.  This should be called    by all applications creating such a struct.  */
 end_comment
 
@@ -888,7 +983,7 @@ parameter_list|,
 name|FPRINTF_FUNC
 parameter_list|)
 define|\
-value|(INFO).fprintf_func = (FPRINTF_FUNC), \   (INFO).stream = (STREAM), \   (INFO).symbol = NULL, \   (INFO).buffer = NULL, \   (INFO).buffer_vma = 0, \   (INFO).buffer_length = 0, \   (INFO).read_memory_func = buffer_read_memory, \   (INFO).memory_error_func = perror_memory, \   (INFO).print_address_func = generic_print_address, \   (INFO).flags = 0, \   (INFO).bytes_per_line = 0, \   (INFO).bytes_per_chunk = 0, \   (INFO).display_endian = BFD_ENDIAN_UNKNOWN, \   (INFO).insn_info_valid = 0
+value|(INFO).fprintf_func = (FPRINTF_FUNC), \   (INFO).stream = (STREAM), \   (INFO).symbols = NULL, \   (INFO).num_symbols = 0, \   (INFO).buffer = NULL, \   (INFO).buffer_vma = 0, \   (INFO).buffer_length = 0, \   (INFO).read_memory_func = buffer_read_memory, \   (INFO).memory_error_func = perror_memory, \   (INFO).print_address_func = generic_print_address, \   (INFO).symbol_at_address_func = generic_symbol_at_address, \   (INFO).flags = 0, \   (INFO).bytes_per_line = 0, \   (INFO).bytes_per_chunk = 0, \   (INFO).display_endian = BFD_ENDIAN_UNKNOWN, \   (INFO).insn_info_valid = 0
 end_define
 
 begin_endif

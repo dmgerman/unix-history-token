@@ -195,6 +195,10 @@ comment|/* If true, generate a cross reference report.  */
 name|boolean
 name|cref
 decl_stmt|;
+comment|/* If true (which is the default), warn about mismatched input      files.  */
+name|boolean
+name|warn_mismatch
+decl_stmt|;
 comment|/* Name of shared object whose symbol table should be filtered with      this shared object.  From the --filter option.  */
 name|char
 modifier|*

@@ -3580,7 +3580,7 @@ name|string_hash_entry
 modifier|*
 name|fh
 decl_stmt|;
-comment|/* We look up a string formed from the file name and the 	     number of symbols.  Sometimes an include file will 	     conditionally define a typedef or something based on the 	     order of include files.  Using the number of symbols as a 	     hash reduces the chance that we will merge symbol 	     information that should not be merged.  */
+comment|/* We look up a string formed from the file name and the 	     number of symbols and aux entries.  Sometimes an include 	     file will conditionally define a typedef or something 	     based on the order of include files.  Using the number of 	     symbols and aux entries as a hash reduces the chance that 	     we will merge symbol information that should not be 	     merged.  */
 name|name
 operator|=
 name|input_debug
@@ -3624,13 +3624,17 @@ name|sprintf
 argument_list|(
 name|lookup
 argument_list|,
-literal|"%s %lx"
+literal|"%s %lx %lx"
 argument_list|,
 name|name
 argument_list|,
 name|fdr
 operator|.
 name|csym
+argument_list|,
+name|fdr
+operator|.
+name|caux
 argument_list|)
 expr_stmt|;
 name|fh

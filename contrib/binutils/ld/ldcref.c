@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldcref.c -- output a cross reference table    Copyright (C) 1996 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>  This file is part of GLD, the Gnu Linker.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ldcref.c -- output a cross reference table    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>  This file is part of GLD, the Gnu Linker.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1026,9 +1026,14 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|csym_fill
 operator|-
 name|csyms
+argument_list|)
 operator|==
 name|cref_symcount
 argument_list|)
@@ -1321,7 +1326,7 @@ operator|++
 name|len
 expr_stmt|;
 block|}
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1383,7 +1388,7 @@ operator|++
 name|len
 expr_stmt|;
 block|}
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,

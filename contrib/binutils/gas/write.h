@@ -108,7 +108,7 @@ struct|struct
 name|fix
 block|{
 comment|/* These small fields are grouped together for compactness of      this structure, and efficiency of access on some architectures.  */
-comment|/* pc-relative offset adjust */
+comment|/* pc-relative offset adjust (only used by m68k) */
 name|char
 name|fx_pcrel_adjust
 decl_stmt|;
@@ -449,6 +449,19 @@ name|seg
 operator|,
 name|int
 name|align
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|subsegs_finish
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

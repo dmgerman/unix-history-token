@@ -406,7 +406,7 @@ parameter_list|,
 name|SRC
 parameter_list|)
 define|\
-value|do							\   {							\     S_SET_SIZE ((DEST), S_GET_SIZE (SRC));		\     S_SET_OTHER ((DEST), S_GET_OTHER (SRC));		\   }							\ while (0)
+value|do								\   {								\     if ((SRC)->sy_obj.size)					\       {								\ 	if ((DEST)->sy_obj.size == NULL)			\ 	  (DEST)->sy_obj.size =					\ 	    (expressionS *) xmalloc (sizeof (expressionS));	\ 	*(DEST)->sy_obj.size = *(SRC)->sy_obj.size;		\       }								\     else							\       {								\ 	if ((DEST)->sy_obj.size != NULL)			\ 	  free ((DEST)->sy_obj.size);				\ 	(DEST)->sy_obj.size = NULL;				\       }								\     S_SET_SIZE ((DEST), S_GET_SIZE (SRC));			\     S_SET_OTHER ((DEST), S_GET_OTHER (SRC));			\   }								\ while (0)
 end_define
 
 begin_comment

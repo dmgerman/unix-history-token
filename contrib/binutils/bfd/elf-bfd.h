@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end data structures for ELF files.    Copyright (C) 1992, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end data structures for ELF files.    Copyright (C) 1992, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -1174,6 +1174,10 @@ name|elf_size_info
 modifier|*
 name|s
 decl_stmt|;
+comment|/* offset of the _GLOBAL_OFFSET_TABLE_ symbol from the start of the      .got section */
+name|bfd_vma
+name|got_symbol_offset
+decl_stmt|;
 name|unsigned
 name|want_got_plt
 range|:
@@ -1188,6 +1192,16 @@ name|unsigned
 name|want_plt_sym
 range|:
 literal|1
+decl_stmt|;
+name|unsigned
+name|plt_not_loaded
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|plt_alignment
+range|:
+literal|4
 decl_stmt|;
 block|}
 struct|;
@@ -1380,6 +1394,7 @@ name|boolean
 name|hole_written_p
 decl_stmt|;
 comment|/* whether the hole has been initialized */
+name|unsigned
 name|int
 name|alignment
 decl_stmt|;
@@ -1587,6 +1602,12 @@ name|mips_elf_find_line
 modifier|*
 name|find_line_info
 decl_stmt|;
+comment|/* A place to stash dwarf2 info for this bfd. */
+name|struct
+name|dwarf2_debug
+modifier|*
+name|dwarf2_find_line_info
+decl_stmt|;
 comment|/* An array of stub sections indexed by symbol number, used by the      MIPS ELF linker.  FIXME: We should figure out some way to only      include this field for a MIPS ELF target.  */
 name|asection
 modifier|*
@@ -1598,10 +1619,12 @@ name|boolean
 name|flags_init
 decl_stmt|;
 comment|/* Number of symbol version definitions we are about to emit.  */
+name|unsigned
 name|int
 name|cverdefs
 decl_stmt|;
 comment|/* Number of symbol version references we are about to emit.  */
+name|unsigned
 name|int
 name|cverrefs
 decl_stmt|;
@@ -4141,6 +4164,20 @@ directive|define
 name|bfd_elf64_link_record_dynamic_symbol
 value|_bfd_elf_link_record_dynamic_symbol
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_elf_close_and_cleanup
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* MIPS ELF specific routines.  */

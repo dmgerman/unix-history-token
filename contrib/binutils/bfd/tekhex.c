@@ -3204,6 +3204,9 @@ name|data_struct
 modifier|*
 name|d
 decl_stmt|;
+name|tekhex_init
+argument_list|()
+expr_stmt|;
 name|bytes_written
 operator|=
 literal|0
@@ -3459,6 +3462,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* And the symbols */
+if|if
+condition|(
+name|abfd
+operator|->
+name|outsymbols
+condition|)
+block|{
 for|for
 control|(
 name|p
@@ -3645,6 +3655,7 @@ argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* And the terminator */

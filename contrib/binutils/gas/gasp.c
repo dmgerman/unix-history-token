@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gasp.c - Gnu assembler preprocessor main program.    Copyright (C) 1994, 95, 96, 1997 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GASP, the GNU Assembler Preprocessor.     GASP is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GASP is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GASP; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* gasp.c - Gnu assembler preprocessor main program.    Copyright (C) 1994, 95, 96, 97, 1998 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GASP, the GNU Assembler Preprocessor.     GASP is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GASP is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GASP; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -342,7 +342,7 @@ name|ISCOMMENTCHAR
 parameter_list|(
 name|x
 parameter_list|)
-value|(chartype[(unsigned)(x)]& COMMENTBIT)
+value|(chartype[(unsigned char)(x)]& COMMENTBIT)
 end_define
 
 begin_define
@@ -352,7 +352,7 @@ name|ISFIRSTCHAR
 parameter_list|(
 name|x
 parameter_list|)
-value|(chartype[(unsigned)(x)]& FIRSTBIT)
+value|(chartype[(unsigned char)(x)]& FIRSTBIT)
 end_define
 
 begin_define
@@ -362,7 +362,7 @@ name|ISNEXTCHAR
 parameter_list|(
 name|x
 parameter_list|)
-value|(chartype[(unsigned)(x)]& NEXTBIT)
+value|(chartype[(unsigned char)(x)]& NEXTBIT)
 end_define
 
 begin_define
@@ -372,7 +372,7 @@ name|ISSEP
 parameter_list|(
 name|x
 parameter_list|)
-value|(chartype[(unsigned)(x)]& SEPBIT)
+value|(chartype[(unsigned char)(x)]& SEPBIT)
 end_define
 
 begin_define
@@ -382,7 +382,7 @@ name|ISWHITE
 parameter_list|(
 name|x
 parameter_list|)
-value|(chartype[(unsigned)(x)]& WHITEBIT)
+value|(chartype[(unsigned char)(x)]& WHITEBIT)
 end_define
 
 begin_define
@@ -392,7 +392,7 @@ name|ISBASE
 parameter_list|(
 name|x
 parameter_list|)
-value|(chartype[(unsigned)(x)]& BASEBIT)
+value|(chartype[(unsigned char)(x)]& BASEBIT)
 end_define
 
 begin_decl_stmt
@@ -3201,6 +3201,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|string
 operator|->
 name|ptr
@@ -5595,6 +5599,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|in
 operator|->
 name|ptr
@@ -7999,6 +8007,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|in
 operator|->
 name|ptr
@@ -16832,7 +16844,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\nReport bugs to bug-gnu-utils@prep.ai.mit.edu\n"
+literal|"\nReport bugs to bug-gnu-utils@gnu.org\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -17022,6 +17034,12 @@ name|include_path
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|p
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
 name|sb_new
 argument_list|(
 operator|&

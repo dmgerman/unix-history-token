@@ -1233,6 +1233,45 @@ value|(0x90)
 end_define
 
 begin_comment
+comment|/* Storage classes for Thumb symbols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_THUMBEXT
+value|(128 + C_EXT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_THUMBSTAT
+value|(128 + C_STAT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_THUMBLABEL
+value|(128 + C_LABEL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_THUMBEXTFUNC
+value|(C_THUMBEXT  + 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_THUMBSTATFUNC
+value|(C_THUMBSTAT + 20)
+end_define
+
+begin_comment
 comment|/********************** SECTION HEADER **********************/
 end_comment
 
@@ -1963,7 +2002,8 @@ name|ISPTR
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& N_TMASK) == (DT_PTR<< N_BTSHFT))
+define|\
+value|(((unsigned long) (x)& N_TMASK) == ((unsigned long) DT_PTR<< N_BTSHFT))
 end_define
 
 begin_define
@@ -1973,7 +2013,8 @@ name|ISFCN
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& N_TMASK) == (DT_FCN<< N_BTSHFT))
+define|\
+value|(((unsigned long) (x)& N_TMASK) == ((unsigned long) DT_FCN<< N_BTSHFT))
 end_define
 
 begin_define
@@ -1983,7 +2024,8 @@ name|ISARY
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& N_TMASK) == (DT_ARY<< N_BTSHFT))
+define|\
+value|(((unsigned long) (x)& N_TMASK) == ((unsigned long) DT_ARY<< N_BTSHFT))
 end_define
 
 begin_define
@@ -1993,7 +2035,8 @@ name|ISTAG
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)==C_STRTAG||(x)==C_UNTAG||(x)==C_ENTAG)
+define|\
+value|((x) == C_STRTAG || (x) == C_UNTAG || (x) == C_ENTAG)
 end_define
 
 begin_define
@@ -2003,7 +2046,8 @@ name|DECREF
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x)>>N_TSHIFT)&~N_BTMASK)|((x)&N_BTMASK))
+define|\
+value|((((x)>> N_TSHIFT)& ~ N_BTMASK) | ((x)& N_BTMASK))
 end_define
 
 begin_union

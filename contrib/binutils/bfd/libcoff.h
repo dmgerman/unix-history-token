@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libcoff.h is a GENERATED file.  Don't change it; instead, ** change libcoff-in.h or coffcode.h.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libcoff.h is a GENERATED file.  Don't change it; instead, ** change libcoff-in.h or coffcode.h.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -276,6 +276,10 @@ decl_stmt|;
 comment|/* Used by coff_find_nearest_line.  */
 name|PTR
 name|line_info
+decl_stmt|;
+comment|/* Copy of some of the f_flags bits in the COFF filehdr structure,      used by ARM code.  */
+name|flagword
+name|flags
 decl_stmt|;
 block|}
 name|coff_data_type
@@ -1456,6 +1460,10 @@ comment|/* Used to indicate failure in traversal routine.  */
 name|boolean
 name|failed
 decl_stmt|;
+comment|/* If doing "task linking" set only during the time when we want the      global symbol writer to convert the storage class of defined global      symbols from global to static. */
+name|boolean
+name|global_to_static
+decl_stmt|;
 comment|/* Hash table for long symbol names.  */
 name|struct
 name|bfd_strtab_hash
@@ -1775,6 +1783,23 @@ begin_decl_stmt
 specifier|extern
 name|boolean
 name|_bfd_coff_write_global_sym
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|coff_link_hash_entry
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_coff_write_task_globals
 name|PARAMS
 argument_list|(
 operator|(
@@ -2958,6 +2983,37 @@ name|hashp
 operator|)
 argument_list|)
 expr_stmt|;
+name|boolean
+argument_list|(
+argument|*_bfd_coff_link_output_has_begun
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+expr_stmt|;
+name|boolean
+argument_list|(
+argument|*_bfd_coff_final_link_postscript
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+expr|struct
+name|coff_final_link_info
+operator|*
+name|pfinfo
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|bfd_coff_backend_data
 typedef|;
@@ -3590,6 +3646,30 @@ name|hashp
 parameter_list|)
 define|\
 value|((coff_backend_info (abfd)->_bfd_coff_link_add_one_symbol)\          (info, abfd, name, flags, section, value, string, cp, coll, hashp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_coff_link_output_has_begun
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((coff_backend_info (a)->_bfd_coff_link_output_has_begun) (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_coff_final_link_postscript
+parameter_list|(
+name|a
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((coff_backend_info (a)->_bfd_coff_final_link_postscript) (a,p))
 end_define
 
 end_unit

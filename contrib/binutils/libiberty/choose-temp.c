@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility to pick a temporary filename prefix.    Copyright (C) 1996 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Utility to pick a temporary filename prefix.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,11 +11,61 @@ begin_comment
 comment|/* This file lives in at least two places: libiberty and gcc.    Don't change one without the other.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IN_GCC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If we are in gcc, or we have a config.h, we assume that    HAVE_SYS_FILE_H tells us whether to include sys/file.h.  However,    libiberty does not have a config.h, and instead arranges to define    NO_SYS_FILE_H on the command line when there is no sys/file.h.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|IN_GCC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_CONFIG_H
+argument_list|)
+operator|)
+condition|?
+name|defined
+argument_list|(
+name|HAVE_SYS_FILE_H
+argument_list|)
+expr|:
+operator|!
+name|defined
+argument_list|(
 name|NO_SYS_FILE_H
-end_ifndef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -85,12 +135,6 @@ ifdef|#
 directive|ifdef
 name|IN_GCC
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"config.h"
-end_include
 
 begin_include
 include|#
@@ -178,7 +222,7 @@ comment|/* On MSDOS, write temp files in current dir    because there's no place
 end_comment
 
 begin_comment
-comment|/* ??? Although the current directory is tried as a last resort,    this is left in so that on MSDOS it is prefered to /tmp on the    off chance that someone requires this, since that was the previous    behaviour.  */
+comment|/* ??? Although the current directory is tried as a last resort,    this is left in so that on MSDOS it is preferred to /tmp on the    off chance that someone requires this, since that was the previous    behaviour.  */
 end_comment
 
 begin_ifdef
@@ -222,7 +266,7 @@ value|"ccXXXXXX"
 end_define
 
 begin_comment
-comment|/* Subroutine of choose_temp_base.    If BASE is non-NULL, returh it.    Otherwise it checks if DIR is a usable directory.    If success, DIR is returned.    Otherwise NULL is returned.  */
+comment|/* Subroutine of choose_temp_base.    If BASE is non-NULL, return it.    Otherwise it checks if DIR is a usable directory.    If success, DIR is returned.    Otherwise NULL is returned.  */
 end_comment
 
 begin_function
@@ -268,6 +312,8 @@ argument_list|,
 name|R_OK
 operator||
 name|W_OK
+operator||
+name|X_OK
 argument_list|)
 operator|==
 literal|0
@@ -445,15 +491,6 @@ argument_list|(
 name|base
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
 name|temp_filename
 operator|=
 name|xmalloc
@@ -483,6 +520,10 @@ directive|ifndef
 name|MPW
 if|if
 condition|(
+name|len
+operator|!=
+literal|0
+operator|&&
 name|temp_filename
 index|[
 name|len

@@ -75,7 +75,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|finfo
+name|lfinfo
 name|PARAMS
 argument_list|(
 operator|(
@@ -140,7 +140,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|finfo
+name|lfinfo
 parameter_list|()
 function_decl|;
 end_function_decl

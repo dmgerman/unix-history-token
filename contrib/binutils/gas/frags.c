@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.c - manage frags -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.c - manage frags -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -674,27 +674,16 @@ name|fr_opcode
 operator|=
 name|opcode
 expr_stmt|;
-comment|/* Default these to zero.  Only the ns32k uses these but they can't be      conditionally included in `struct frag'.  See as.h.  */
+ifdef|#
+directive|ifdef
+name|TC_FRAG_INIT
+name|TC_FRAG_INIT
+argument_list|(
 name|frag_now
-operator|->
-name|fr_targ
-operator|.
-name|ns32k
-operator|.
-name|pcrel_adjust
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
-name|frag_now
-operator|->
-name|fr_targ
-operator|.
-name|ns32k
-operator|.
-name|bsr
-operator|=
-literal|0
-expr_stmt|;
+endif|#
+directive|endif
 name|as_where
 argument_list|(
 operator|&
@@ -822,27 +811,16 @@ name|fr_opcode
 operator|=
 name|opcode
 expr_stmt|;
-comment|/* Default these to zero.  Only the ns32k uses these but they can't be      conditionally included in `struct frag'.  See as.h.  */
+ifdef|#
+directive|ifdef
+name|TC_FRAG_INIT
+name|TC_FRAG_INIT
+argument_list|(
 name|frag_now
-operator|->
-name|fr_targ
-operator|.
-name|ns32k
-operator|.
-name|pcrel_adjust
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
-name|frag_now
-operator|->
-name|fr_targ
-operator|.
-name|ns32k
-operator|.
-name|bsr
-operator|=
-literal|0
-expr_stmt|;
+endif|#
+directive|endif
 name|as_where
 argument_list|(
 operator|&
@@ -983,6 +961,9 @@ name|new_off
 operator|-
 name|abs_section_offset
 operator|<=
+operator|(
+name|addressT
+operator|)
 name|max
 condition|)
 name|abs_section_offset
@@ -1119,7 +1100,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|addressT
 name|frag_now_fix
 parameter_list|()
 block|{
@@ -1133,7 +1114,10 @@ return|return
 name|abs_section_offset
 return|;
 return|return
-operator|(
+call|(
+name|addressT
+call|)
+argument_list|(
 operator|(
 name|char
 operator|*
@@ -1149,7 +1133,7 @@ operator|-
 name|frag_now
 operator|->
 name|fr_literal
-operator|)
+argument_list|)
 return|;
 block|}
 end_function

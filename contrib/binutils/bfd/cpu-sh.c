@@ -21,13 +21,6 @@ directive|include
 file|"libbfd.h"
 end_include
 
-begin_function_decl
-name|int
-name|bfd_default_scan_num_mach
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|boolean
@@ -51,25 +44,13 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
-name|string
+name|info
+operator|->
+name|printable_name
 argument_list|,
-literal|"sh"
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
 name|string
-argument_list|,
-literal|"SH"
 argument_list|)
 operator|==
 literal|0
@@ -99,6 +80,141 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SH_NEXT
+value|&arch_info_struct[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH3_NEXT
+value|&arch_info_struct[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH3E_NEXT
+value|&arch_info_struct[2]
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH4_NEXT
+value|NULL
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_arch_info_type
+name|arch_info_struct
+index|[]
+init|=
+block|{
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_sh
+block|,
+name|bfd_mach_sh3
+block|,
+literal|"sh"
+block|,
+comment|/* arch_name  */
+literal|"sh3"
+block|,
+comment|/* printable name */
+literal|1
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|bfd_default_compatible
+block|,
+name|scan_mach
+block|,
+name|SH3_NEXT
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_sh
+block|,
+name|bfd_mach_sh3e
+block|,
+literal|"sh"
+block|,
+comment|/* arch_name  */
+literal|"sh3e"
+block|,
+comment|/* printable name */
+literal|1
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|bfd_default_compatible
+block|,
+name|scan_mach
+block|,
+name|SH3E_NEXT
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_sh
+block|,
+name|bfd_mach_sh4
+block|,
+literal|"sh"
+block|,
+comment|/* arch_name  */
+literal|"sh4"
+block|,
+comment|/* printable name */
+literal|1
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|bfd_default_compatible
+block|,
+name|scan_mach
+block|,
+name|SH4_NEXT
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|const
 name|bfd_arch_info_type
@@ -116,9 +232,8 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_sh
 block|,
-literal|0
+name|bfd_mach_sh
 block|,
-comment|/* only 1 machine */
 literal|"sh"
 block|,
 comment|/* arch_name  */
@@ -134,8 +249,8 @@ name|bfd_default_compatible
 block|,
 name|scan_mach
 block|,
-literal|0
-block|, }
+name|SH_NEXT
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -699,8 +699,6 @@ expr_stmt|;
 name|einfo
 argument_list|(
 literal|"Supported emulations: "
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
 name|ldemul_list_emulations

@@ -2812,9 +2812,12 @@ operator||
 name|SEC_LOAD
 operator||
 name|SEC_RELOC
+operator||
+name|SEC_CODE
+operator||
+name|SEC_DATA
 operator|)
 operator|,
-comment|/* section flags */
 name|MY_symbol_leading_char
 operator|,
 name|AR_PAD_CHAR

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 94, 95, 96, 1997    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -187,36 +187,6 @@ include|#
 directive|include
 file|"coff/sparc.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TE_LYNX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|"coff-sparc-lynx"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|"coff-sparc"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -447,7 +417,8 @@ begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|(shl ? "coff-shl" : "coff-sh")
+define|\
+value|(shl							\    ? (sh_small ? "coff-shl-small" : "coff-shl")		\    : (sh_small ? "coff-sh-small" : "coff-sh"))
 end_define
 
 begin_endif
@@ -496,6 +467,30 @@ define|#
 directive|define
 name|TARGET_FORMAT
 value|"coff-w65"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_TIC30
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"coff/tic30.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"coff-tic30"
 end_define
 
 begin_endif
@@ -1814,7 +1809,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|coff_frob_file
+name|coff_frob_file_after_relocs
 name|PARAMS
 argument_list|(
 operator|(
@@ -1857,9 +1852,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|obj_frob_file
+name|obj_frob_file_after_relocs
 parameter_list|()
-value|coff_frob_file ()
+value|coff_frob_file_after_relocs ()
 end_define
 
 begin_decl_stmt
@@ -2203,7 +2198,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|((s)->sy_symbol.ost_entry.n_scnum == C_REGISTER_SECTION \    || (S_LOCAL_NAME(s)&& ! flag_keep_locals&& ! S_IS_DEBUG (s)) \    || strchr (S_GET_NAME (s), '\001') != NULL \    || strchr (S_GET_NAME (s), '\002') != NULL)
+value|((s)->sy_symbol.ost_entry.n_scnum == C_REGISTER_SECTION \    || (S_LOCAL_NAME(s)&& ! flag_keep_locals&& ! S_IS_DEBUG (s)) \    || strchr (S_GET_NAME (s), '\001') != NULL \    || strchr (S_GET_NAME (s), '\002') != NULL \    || (flag_strip_local_absolute \&& !S_IS_EXTERNAL(s) \&& (s)->sy_symbol.ost_entry.n_scnum == C_ABS_SECTION))
 end_define
 
 begin_comment
@@ -4402,6 +4397,21 @@ end_endif
 begin_comment
 comment|/* not BFD_ASSEMBLER */
 end_comment
+
+begin_comment
+comment|/* In COFF, if a symbol is defined using .def/.val SYM/.endef, it's OK    to redefine the symbol later on.  This can happen if C symbols use    a prefix, and a symbol is defined both with and without the prefix,    as in start/_start/__start in gcc/libgcc1-test.c.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESOLVE_SYMBOL_REDEFINITION
+parameter_list|(
+name|sym
+parameter_list|)
+define|\
+value|(SF_GET_GET_SEGMENT (sym)				\  ? (sym->sy_frag = frag_now,				\     S_SET_VALUE (sym, frag_now_fix ()),			\     S_SET_SEGMENT (sym, now_seg),			\     0)							\  : 0)
+end_define
 
 begin_comment
 comment|/* Stabs in a coff file go into their own section.  */

@@ -60,8 +60,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|LISTING_MACEXP
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
 name|LISTING_DEFAULT
-value|(LISTING_LISTING | LISTING_HLL |  LISTING_SYMBOLS)
+value|(LISTING_LISTING | LISTING_HLL | LISTING_SYMBOLS)
 end_define
 
 begin_ifndef
@@ -75,7 +82,7 @@ define|#
 directive|define
 name|LISTING_NEWLINE
 parameter_list|()
-value|{ if (listing) listing_newline(input_line_pointer); }
+value|{ if (listing) listing_newline(NULL); }
 end_define
 
 begin_else
@@ -301,6 +308,34 @@ name|int
 name|x
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|listing_lhs_width
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|listing_lhs_width_second
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|listing_lhs_cont_lines
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|listing_rhs_width
 decl_stmt|;
 end_decl_stmt
 

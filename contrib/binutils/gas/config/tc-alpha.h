@@ -346,5 +346,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|DIFF_EXPR_OK
+end_define
+
+begin_comment
+comment|/* foo-. gets turned into PC relative relocs */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ELF_TC_SPECIAL_SECTIONS
+define|\
+value|{ ".sdata",   SHT_PROGBITS,   SHF_ALLOC + SHF_WRITE + SHF_ALPHA_GPREL  }, \   { ".sbss",    SHT_NOBITS,     SHF_ALLOC + SHF_WRITE + SHF_ALPHA_GPREL  },
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

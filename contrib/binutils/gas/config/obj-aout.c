@@ -2060,6 +2060,8 @@ comment|/* if pusing data into text */
 name|resolve_symbol_value
 argument_list|(
 name|symbolP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Skip symbols which were equated to undefined or common 	 symbols.  */

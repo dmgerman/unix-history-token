@@ -115,7 +115,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|obj_copy_symbol_attributes
+name|OBJ_COPY_SYMBOL_ATTRIBUTES
 value|(this_format->copy_symbol_attributes)
 end_define
 

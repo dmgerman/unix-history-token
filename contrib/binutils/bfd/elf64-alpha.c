@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -2070,9 +2070,10 @@ argument_list|)
 block|,
 comment|/* pcrel_offset */
 comment|/* Push a value on the reloc evaluation stack.  */
+comment|/* Not implemented -- it's dumb.  */
 name|HOWTO
 argument_list|(
-name|ALPHA_R_OP_PUSH
+name|R_ALPHA_OP_PUSH
 argument_list|,
 comment|/* type */
 literal|0
@@ -2113,9 +2114,10 @@ argument_list|)
 block|,
 comment|/* pcrel_offset */
 comment|/* Store the value from the stack at the given address.  Store it in      a bitfield of size r_size starting at bit position r_offset.  */
+comment|/* Not implemented -- it's dumb.  */
 name|HOWTO
 argument_list|(
-name|ALPHA_R_OP_STORE
+name|R_ALPHA_OP_STORE
 argument_list|,
 comment|/* type */
 literal|0
@@ -2156,9 +2158,10 @@ argument_list|)
 block|,
 comment|/* pcrel_offset */
 comment|/* Subtract the reloc address from the value on the top of the      relocation stack.  */
+comment|/* Not implemented -- it's dumb.  */
 name|HOWTO
 argument_list|(
-name|ALPHA_R_OP_PSUB
+name|R_ALPHA_OP_PSUB
 argument_list|,
 comment|/* type */
 literal|0
@@ -2199,9 +2202,10 @@ argument_list|)
 block|,
 comment|/* pcrel_offset */
 comment|/* Shift the value on the top of the relocation stack right by the      given value.  */
+comment|/* Not implemented -- it's dumb.  */
 name|HOWTO
 argument_list|(
-name|ALPHA_R_OP_PRSHIFT
+name|R_ALPHA_OP_PRSHIFT
 argument_list|,
 comment|/* type */
 literal|0
@@ -2241,7 +2245,353 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
+comment|/* Change the value of GP used by +r_addend until the next GPVALUE or the      end of the input bfd.  */
+comment|/* Not implemented -- it's dumb.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_GPVALUE
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"GPVALUE"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* The high 16 bits of the displacement from GP to the target.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_GPRELHIGH
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"GPRELHIGH"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* The low 16 bits of the displacement from GP to the target.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_GPRELLOW
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"GPRELLOW"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* A 16-bit displacement from the GP to the target.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_IMMED_GP_16
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"IMMED_GP_16"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* The high bits of a 32-bit displacement from the GP to the target; the      low bits are supplied in the subsequent R_ALPHA_IMMED_LO32 relocs.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_IMMED_GP_HI32
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"IMMED_GP_HI32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* The high bits of a 32-bit displacement to the starting address of the      current section (the relocation target is ignored); the low bits are       supplied in the subsequent R_ALPHA_IMMED_LO32 relocs.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_IMMED_SCN_HI32
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"IMMED_SCN_HI32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* The high bits of a 32-bit displacement from the previous br, bsr, jsr      or jmp insn (as tagged by a BRADDR or HINT reloc) to the target; the      low bits are supplied by subsequent R_ALPHA_IMMED_LO32 relocs.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_IMMED_BR_HI32
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"IMMED_BR_HI32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* The low 16 bits of a displacement calculated in a previous HI32 reloc.  */
+comment|/* XXX: Not implemented.  */
+name|HOWTO
+argument_list|(
+name|R_ALPHA_IMMED_LO32
+argument_list|,
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|0
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|elf64_alpha_reloc_bad
+argument_list|,
+comment|/* special_function */
+literal|"IMMED_LO32"
+argument_list|,
+comment|/* name */
+name|false
+argument_list|,
+comment|/* partial_inplace */
+literal|0
+argument_list|,
+comment|/* src_mask */
+literal|0
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
 comment|/* Misc ELF relocations. */
+comment|/* A dynamic relocation to copy the target into our .dynbss section.  */
+comment|/* Not generated, as all Alpha objects use PIC, so it is not needed.  It      is present because every other ELF has one, but should not be used      because .dynbss is an ugly thing.  */
 name|HOWTO
 argument_list|(
 name|R_ALPHA_COPY
@@ -2271,6 +2621,7 @@ argument_list|,
 name|true
 argument_list|)
 block|,
+comment|/* A dynamic relocation for a .got entry.  */
 name|HOWTO
 argument_list|(
 name|R_ALPHA_GLOB_DAT
@@ -2300,6 +2651,7 @@ argument_list|,
 name|true
 argument_list|)
 block|,
+comment|/* A dynamic relocation for a .plt entry.  */
 name|HOWTO
 argument_list|(
 name|R_ALPHA_JMP_SLOT
@@ -2329,6 +2681,7 @@ argument_list|,
 name|true
 argument_list|)
 block|,
+comment|/* A dynamic relocation to add the base of the DSO to a 64-bit field.  */
 name|HOWTO
 argument_list|(
 argument|R_ALPHA_RELATIVE
@@ -3237,34 +3590,26 @@ begin_define
 define|#
 directive|define
 name|PLT_ENTRY_WORD1
-value|0x279f0000
+value|0xc3800000
 end_define
 
 begin_comment
-comment|/* ldah $28, 0($31) */
+comment|/* br   $28, plt0   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PLT_ENTRY_WORD2
-value|0x239c0000
+value|0
 end_define
-
-begin_comment
-comment|/* lda  $28, 0($28) */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|PLT_ENTRY_WORD3
-value|0xc3e00000
+value|0
 end_define
-
-begin_comment
-comment|/* br   $31, plt0   */
-end_comment
 
 begin_define
 define|#
@@ -6486,6 +6831,47 @@ operator|->
 name|sh_info
 index|]
 expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|alpha_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 name|h
 operator|->
 name|root
@@ -7673,6 +8059,344 @@ block|}
 end_function
 
 begin_comment
+comment|/* Symbol versioning can create new symbols, and make our old symbols    indirect to the new ones.  Consolidate the got and reloc information    in these situations.  */
+end_comment
+
+begin_function
+specifier|static
+name|boolean
+name|elf64_alpha_merge_ind_symbols
+parameter_list|(
+name|hi
+parameter_list|,
+name|dummy
+parameter_list|)
+name|struct
+name|alpha_elf_link_hash_entry
+modifier|*
+name|hi
+decl_stmt|;
+name|PTR
+name|dummy
+decl_stmt|;
+block|{
+name|struct
+name|alpha_elf_link_hash_entry
+modifier|*
+name|hs
+decl_stmt|;
+if|if
+condition|(
+name|hi
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|!=
+name|bfd_link_hash_indirect
+condition|)
+return|return
+name|true
+return|;
+name|hs
+operator|=
+name|hi
+expr_stmt|;
+do|do
+block|{
+name|hs
+operator|=
+operator|(
+expr|struct
+name|alpha_elf_link_hash_entry
+operator|*
+operator|)
+name|hs
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|hs
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+condition|)
+do|;
+comment|/* Merge the flags.  Whee.  */
+name|hs
+operator|->
+name|flags
+operator||=
+name|hi
+operator|->
+name|flags
+expr_stmt|;
+comment|/* Merge the .got entries.  Cannibalize the old symbol's list in      doing so, since we don't need it anymore.  */
+if|if
+condition|(
+name|hs
+operator|->
+name|got_entries
+operator|==
+name|NULL
+condition|)
+name|hs
+operator|->
+name|got_entries
+operator|=
+name|hi
+operator|->
+name|got_entries
+expr_stmt|;
+else|else
+block|{
+name|struct
+name|alpha_elf_got_entry
+modifier|*
+name|gi
+decl_stmt|,
+modifier|*
+name|gs
+decl_stmt|,
+modifier|*
+name|gin
+decl_stmt|,
+modifier|*
+name|gsh
+decl_stmt|;
+name|gsh
+operator|=
+name|hs
+operator|->
+name|got_entries
+expr_stmt|;
+for|for
+control|(
+name|gi
+operator|=
+name|hi
+operator|->
+name|got_entries
+init|;
+name|gi
+condition|;
+name|gi
+operator|=
+name|gin
+control|)
+block|{
+name|gin
+operator|=
+name|gi
+operator|->
+name|next
+expr_stmt|;
+for|for
+control|(
+name|gs
+operator|=
+name|gsh
+init|;
+name|gs
+condition|;
+name|gs
+operator|=
+name|gs
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|gi
+operator|->
+name|gotobj
+operator|==
+name|gs
+operator|->
+name|gotobj
+operator|&&
+name|gi
+operator|->
+name|addend
+operator|==
+name|gs
+operator|->
+name|addend
+condition|)
+goto|goto
+name|got_found
+goto|;
+name|gi
+operator|->
+name|next
+operator|=
+name|hs
+operator|->
+name|got_entries
+expr_stmt|;
+name|hs
+operator|->
+name|got_entries
+operator|=
+name|gi
+expr_stmt|;
+name|got_found
+label|:
+empty_stmt|;
+block|}
+block|}
+name|hi
+operator|->
+name|got_entries
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* And similar for the reloc entries.  */
+if|if
+condition|(
+name|hs
+operator|->
+name|reloc_entries
+operator|==
+name|NULL
+condition|)
+name|hs
+operator|->
+name|reloc_entries
+operator|=
+name|hi
+operator|->
+name|reloc_entries
+expr_stmt|;
+else|else
+block|{
+name|struct
+name|alpha_elf_reloc_entry
+modifier|*
+name|ri
+decl_stmt|,
+modifier|*
+name|rs
+decl_stmt|,
+modifier|*
+name|rin
+decl_stmt|,
+modifier|*
+name|rsh
+decl_stmt|;
+name|rsh
+operator|=
+name|hs
+operator|->
+name|reloc_entries
+expr_stmt|;
+for|for
+control|(
+name|ri
+operator|=
+name|hi
+operator|->
+name|reloc_entries
+init|;
+name|ri
+condition|;
+name|ri
+operator|=
+name|rin
+control|)
+block|{
+name|rin
+operator|=
+name|ri
+operator|->
+name|next
+expr_stmt|;
+for|for
+control|(
+name|rs
+operator|=
+name|rsh
+init|;
+name|rs
+condition|;
+name|rs
+operator|=
+name|rs
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|ri
+operator|->
+name|rtype
+operator|==
+name|rs
+operator|->
+name|rtype
+condition|)
+block|{
+name|rs
+operator|->
+name|count
+operator|+=
+name|ri
+operator|->
+name|count
+expr_stmt|;
+goto|goto
+name|found_reloc
+goto|;
+block|}
+name|ri
+operator|->
+name|next
+operator|=
+name|hs
+operator|->
+name|reloc_entries
+expr_stmt|;
+name|hs
+operator|->
+name|reloc_entries
+operator|=
+name|ri
+expr_stmt|;
+name|found_reloc
+label|:
+empty_stmt|;
+block|}
+block|}
+name|hi
+operator|->
+name|reloc_entries
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Is it possible to merge two object file's .got tables?  */
 end_comment
 
@@ -7808,14 +8532,64 @@ decl_stmt|,
 modifier|*
 name|be
 decl_stmt|;
-for|for
-control|(
-name|be
+name|struct
+name|alpha_elf_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+name|h
 operator|=
 name|hashes
 index|[
 name|i
 index|]
+expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|alpha_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+for|for
+control|(
+name|be
+operator|=
+name|h
 operator|->
 name|got_entries
 init|;
@@ -7841,10 +8615,7 @@ for|for
 control|(
 name|ae
 operator|=
-name|hashes
-index|[
-name|i
-index|]
+name|h
 operator|->
 name|got_entries
 init|;
@@ -8114,13 +8885,63 @@ modifier|*
 modifier|*
 name|start
 decl_stmt|;
-name|start
+name|struct
+name|alpha_elf_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+name|h
 operator|=
-operator|&
 name|hashes
 index|[
 name|i
 index|]
+expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|alpha_elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+name|start
+operator|=
+operator|&
+name|h
 operator|->
 name|got_entries
 expr_stmt|;
@@ -8669,6 +9490,19 @@ condition|)
 return|return
 name|true
 return|;
+comment|/* First, take care of the indirect symbols created by versioning.  */
+name|alpha_elf_link_hash_traverse
+argument_list|(
+name|alpha_elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+argument_list|,
+name|elf64_alpha_merge_ind_symbols
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ngots
 operator|=
 literal|0
@@ -9082,7 +9916,7 @@ operator||=
 name|ELF_LINK_HASH_DEF_REGULAR
 expr_stmt|;
 block|}
-comment|/* If the symbol is dynamic, we'll need all the relocations in their      natural form.  */
+comment|/* If the symbol is dynamic, we'll need all the relocations in their      natural form.  If it has been forced local, we'll need the same       number of RELATIVE relocations.  */
 if|if
 condition|(
 name|alpha_elf_dynamic_symbol_p
@@ -9094,6 +9928,21 @@ name|root
 argument_list|,
 name|info
 argument_list|)
+operator|||
+operator|(
+name|info
+operator|->
+name|shared
+operator|&&
+name|h
+operator|->
+name|root
+operator|.
+name|dynindx
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|struct
@@ -9638,6 +10487,16 @@ operator|->
 name|flags
 operator|&
 name|SEC_READONLY
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|target
+operator|->
+name|flags
+operator|&
+name|SEC_ALLOC
 operator|)
 operator|!=
 literal|0
@@ -10919,6 +11778,13 @@ name|h
 operator|->
 name|got_entries
 expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|gotent
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|gotent
@@ -10969,7 +11835,94 @@ operator|->
 name|got_offset
 argument_list|)
 expr_stmt|;
-comment|/* The dynamic relocations for the .got entries are 		       done in finish_dynamic_symbol.  */
+comment|/* If the symbol has been forced local, output a 		       RELATIVE reloc, otherwise it will be handled in 		       finish_dynamic_symbol.  */
+if|if
+condition|(
+name|info
+operator|->
+name|shared
+operator|&&
+name|h
+operator|->
+name|root
+operator|.
+name|dynindx
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|Elf_Internal_Rela
+name|outrel
+decl_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|srelgot
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|outrel
+operator|.
+name|r_offset
+operator|=
+operator|(
+name|sgot
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|sgot
+operator|->
+name|output_offset
+operator|+
+name|gotent
+operator|->
+name|got_offset
+operator|)
+expr_stmt|;
+name|outrel
+operator|.
+name|r_info
+operator|=
+name|ELF64_R_INFO
+argument_list|(
+literal|0
+argument_list|,
+name|R_ALPHA_RELATIVE
+argument_list|)
+expr_stmt|;
+name|outrel
+operator|.
+name|r_addend
+operator|=
+literal|0
+expr_stmt|;
+name|bfd_elf64_swap_reloca_out
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|outrel
+argument_list|,
+operator|(
+operator|(
+name|Elf64_External_Rela
+operator|*
+operator|)
+name|srelgot
+operator|->
+name|contents
+operator|)
+operator|+
+name|srelgot
+operator|->
+name|reloc_count
+operator|++
+argument_list|)
+expr_stmt|;
+block|}
 name|gotent
 operator|->
 name|flags
@@ -11876,68 +12829,9 @@ name|insn2
 decl_stmt|,
 name|insn3
 decl_stmt|;
-name|long
-name|hi
-decl_stmt|,
-name|lo
-decl_stmt|;
-comment|/* decompose the reloc offset for the plt for ldah+lda */
-name|hi
-operator|=
-name|plt_index
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Elf64_External_Rela
-argument_list|)
-expr_stmt|;
-name|lo
-operator|=
-operator|(
-operator|(
-name|hi
-operator|&
-literal|0xffff
-operator|)
-operator|^
-literal|0x8000
-operator|)
-operator|-
-literal|0x8000
-expr_stmt|;
-name|hi
-operator|=
-operator|(
-name|hi
-operator|-
-name|lo
-operator|)
-operator|>>
-literal|16
-expr_stmt|;
 name|insn1
 operator|=
 name|PLT_ENTRY_WORD1
-operator||
-operator|(
-name|hi
-operator|&
-literal|0xffff
-operator|)
-expr_stmt|;
-name|insn2
-operator|=
-name|PLT_ENTRY_WORD2
-operator||
-operator|(
-name|lo
-operator|&
-literal|0xffff
-operator|)
-expr_stmt|;
-name|insn3
-operator|=
-name|PLT_ENTRY_WORD3
 operator||
 operator|(
 operator|(
@@ -11947,7 +12841,7 @@ name|h
 operator|->
 name|plt_offset
 operator|+
-literal|12
+literal|4
 operator|)
 operator|>>
 literal|2
@@ -11955,6 +12849,14 @@ operator|)
 operator|&
 literal|0x1fffff
 operator|)
+expr_stmt|;
+name|insn2
+operator|=
+name|PLT_ENTRY_WORD2
+expr_stmt|;
+name|insn3
+operator|=
+name|PLT_ENTRY_WORD3
 expr_stmt|;
 name|bfd_put_32
 argument_list|(
@@ -15797,7 +16699,7 @@ begin_define
 define|#
 directive|define
 name|ELF_MAXPAGESIZE
-value|0x100000
+value|0x10000
 end_define
 
 begin_define

@@ -487,6 +487,17 @@ value|17
 end_define
 
 begin_comment
+comment|/* Cygnus ARC ELF backend.  Written in the absence of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_ARC
+value|0x9040
+end_define
+
+begin_comment
 comment|/* Cygnus M32R ELF backend.  Written in the absence of an ABI.  */
 end_comment
 
@@ -517,6 +528,17 @@ define|#
 directive|define
 name|EM_CYGNUS_D10V
 value|0x7650
+end_define
+
+begin_comment
+comment|/* V850 backend magic number.  Written in the absense of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_V850
+value|0x9080
 end_define
 
 begin_comment

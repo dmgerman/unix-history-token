@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This module handles expression trees. Copyright (C) 1991, 1993, 1994, 1995, 1996 Free Software Foundation, Inc. Written by Steve Chamberlain of Cygnus Support (sac@cygnus.com).  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* This module handles expression trees. Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc. Written by Steve Chamberlain of Cygnus Support (sac@cygnus.com).  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -463,6 +463,12 @@ block|{
 name|QUAD
 block|,
 literal|"QUAD"
+block|}
+block|,
+block|{
+name|SQUAD
+block|,
+literal|"SQUAD"
 block|}
 block|,
 block|{
@@ -1745,15 +1751,12 @@ operator|==
 name|lang_allocating_phase_enum
 condition|)
 block|{
-name|lang_output_section_statement_type
+name|asection
 modifier|*
-name|os
+name|output_section
 decl_stmt|;
-name|os
+name|output_section
 operator|=
-operator|(
-name|lang_output_section_statement_lookup
-argument_list|(
 name|h
 operator|->
 name|u
@@ -1763,12 +1766,45 @@ operator|.
 name|section
 operator|->
 name|output_section
+expr_stmt|;
+if|if
+condition|(
+name|output_section
+operator|==
+name|NULL
+condition|)
+name|einfo
+argument_list|(
+literal|"%X%S: unresolvable symbol `%s' referenced in expression\n"
+argument_list|,
+name|tree
 operator|->
 name|name
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|lang_output_section_statement_type
+modifier|*
+name|os
+decl_stmt|;
+name|os
+operator|=
+operator|(
+name|lang_output_section_statement_lookup
+argument_list|(
+name|bfd_get_section_name
+argument_list|(
+name|output_bfd
+argument_list|,
+name|output_section
+argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* FIXME: Is this correct if this section is being 		       linked with -R?  */
+comment|/* FIXME: Is this correct if this section is 			   being linked with -R?  */
 name|result
 operator|=
 name|new_rel
@@ -1796,6 +1832,7 @@ argument_list|,
 name|os
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else

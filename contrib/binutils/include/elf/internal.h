@@ -55,11 +55,11 @@ name|bfd_vma
 name|e_entry
 decl_stmt|;
 comment|/* Entry point virtual address */
-name|bfd_signed_vma
+name|bfd_size_type
 name|e_phoff
 decl_stmt|;
 comment|/* Program header table file offset */
-name|bfd_signed_vma
+name|bfd_size_type
 name|e_shoff
 decl_stmt|;
 comment|/* Section header table file offset */
