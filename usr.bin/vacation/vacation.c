@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.8 1997/04/23 22:36:51 ache Exp $"
+literal|"$Id: vacation.c,v 1.9 1997/04/23 22:40:19 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2061,6 +2061,8 @@ argument_list|,
 literal|"-f"
 argument_list|,
 name|myname
+argument_list|,
+literal|"--"
 argument_list|,
 name|from
 argument_list|,
