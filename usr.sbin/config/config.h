@@ -73,46 +73,10 @@ name|char
 modifier|*
 name|f_needs
 decl_stmt|;
-comment|/* 	 * Random values: 	 *	swap space parameters for swap areas 	 *	root device, etc. for system specifications 	 */
-union|union
-block|{
-struct|struct
-block|{
-comment|/* when system specification */
 name|char
 modifier|*
-name|fus_rootdev
-decl_stmt|;
-block|}
-name|fus
-struct|;
-struct|struct
-block|{
-comment|/* when component dev specification */
-name|dev_t
-name|fup_compdev
-decl_stmt|;
-name|int
-name|fup_compinfo
-decl_stmt|;
-block|}
-name|fup
-struct|;
-block|}
-name|fun
-union|;
-define|#
-directive|define
 name|f_rootdev
-value|fun.fus.fus_rootdev
-define|#
-directive|define
-name|f_compdev
-value|fun.fup.fup_compdev
-define|#
-directive|define
-name|f_compinfo
-value|fun.fup.fup_compinfo
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -715,13 +679,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|confp
-decl_stmt|,
-modifier|*
-name|comp_list
-decl_stmt|,
-modifier|*
-modifier|*
-name|compp
 decl_stmt|;
 end_decl_stmt
 
