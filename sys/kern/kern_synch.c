@@ -2972,6 +2972,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_critnest
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"mi_switch: switch in a critical section"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Compute the amount of time during which the current 	 * process was running, and add that to its total so far. 	 */
 name|binuptime
 argument_list|(
