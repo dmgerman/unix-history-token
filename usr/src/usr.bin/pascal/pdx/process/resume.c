@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.1 %G%"
+literal|"@(#)resume.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -339,6 +339,10 @@ name|option
 argument_list|(
 literal|'r'
 argument_list|)
+operator|&&
+name|oldsigno
+operator|!=
+literal|0
 condition|)
 block|{
 name|p
