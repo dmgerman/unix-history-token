@@ -5791,7 +5791,7 @@ operator|&=
 operator|~
 name|SB_UPCALL
 expr_stmt|;
-name|SOCKBUF_LOCK
+name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
 name|l2so
@@ -5816,7 +5816,7 @@ operator|&=
 operator|~
 name|SB_UPCALL
 expr_stmt|;
-name|SOCKBUF_LOCK
+name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
 name|l2so
