@@ -651,7 +651,12 @@ name|InControl
 operator|=
 literal|0
 expr_stmt|;
-break|break;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Flush current input */
+continue|continue;
 block|}
 if|if
 condition|(
