@@ -2440,19 +2440,13 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Kick out MNT_ROOTFS early as it is legal internally */
-if|if
-condition|(
 name|uap
 operator|->
 name|flags
-operator|&
+operator|&=
+operator|~
 name|MNT_ROOTFS
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+expr_stmt|;
 name|fstype
 operator|=
 name|malloc
