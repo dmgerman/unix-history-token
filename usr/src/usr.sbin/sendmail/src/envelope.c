@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.13 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  NEWENVELOPE -- allocate a new envelope ** **	Supports inheritance. ** **	Parameters: **		e -- the new envelope to fill in. ** **	Returns: **		e. ** **	Side Effects: **		none. */
+comment|/* **  NEWENVELOPE -- allocate a new envelope ** **	Supports inheritance. ** **	Parameters: **		e -- the new envelope to fill in. **		parent -- the envelope to be the parent of e. ** **	Returns: **		e. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -74,18 +74,20 @@ modifier|*
 name|newenvelope
 parameter_list|(
 name|e
+parameter_list|,
+name|parent
 parameter_list|)
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-block|{
 specifier|register
 name|ENVELOPE
 modifier|*
 name|parent
 decl_stmt|;
+block|{
 extern|extern putheader(
 block|)
 operator|,
@@ -101,19 +103,12 @@ name|BlankEnvelope
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|parent
-operator|=
-name|CurEnv
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|if
 condition|(
 name|e
 operator|==
-name|CurEnv
+name|parent
 operator|&&
 name|e
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.12 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1399,7 +1399,9 @@ name|define
 argument_list|(
 literal|'g'
 argument_list|,
-literal|"\201f"
+name|e
+operator|->
+name|e_sender
 argument_list|,
 name|e
 argument_list|)
@@ -1411,7 +1413,9 @@ name|define
 argument_list|(
 literal|'<'
 argument_list|,
-literal|"\201f"
+name|e
+operator|->
+name|e_returnpath
 argument_list|,
 name|e
 argument_list|)
@@ -1425,6 +1429,8 @@ name|newenvelope
 argument_list|(
 operator|&
 name|errenvelope
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.25 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5950,12 +5950,6 @@ name|ENVELOPE
 modifier|*
 name|ee
 decl_stmt|;
-specifier|extern
-name|ENVELOPE
-modifier|*
-name|newenvelope
-parameter_list|()
-function_decl|;
 specifier|extern
 name|HDR
 modifier|*

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.25 (Berkeley) %G%"
+literal|"@(#)main.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2949,6 +2949,8 @@ name|newenvelope
 argument_list|(
 operator|&
 name|MainEnvelope
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3465,6 +3467,8 @@ name|void
 operator|)
 name|newenvelope
 argument_list|(
+name|CurEnv
+argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
