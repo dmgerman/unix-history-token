@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk0.c	5.5 (Berkeley) %G%"
+literal|"@(#)pk0.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2538,9 +2538,28 @@ operator|->
 name|p_rwindow
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"PK0: rc %d rw %d"
+argument_list|,
+name|rcheck
+argument_list|,
+name|pk
+operator|->
+name|p_rwindow
+argument_list|)
+expr_stmt|;
 name|logent
 argument_list|(
-literal|"PK0"
+name|buf
 argument_list|,
 literal|"pkclose rcheck != p_rwindow"
 argument_list|)
