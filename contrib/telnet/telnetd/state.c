@@ -494,7 +494,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|TS_DATA
 case|:
@@ -3913,7 +3913,7 @@ operator|=
 name|SB_GET
 argument_list|()
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 name|empty
 operator|=
@@ -4184,7 +4184,7 @@ operator|=
 name|SB_GET
 argument_list|()
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 operator|*
 name|cp
