@@ -105,13 +105,6 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
-name|c
-operator|<=
-name|UCHAR_MAX
-operator|&&
 name|isgraph
 argument_list|(
 name|c
