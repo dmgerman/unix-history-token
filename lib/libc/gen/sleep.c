@@ -133,6 +133,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * XXX 		 * Hack to work around itimerfix(9) gratuitously limiting 		 * the acceptable range for a struct timeval.tv_sec to 		 *<= 100000000. 		 */
+if|if
+condition|(
+name|seconds
+operator|>
+literal|100000000
+condition|)
+name|seconds
+operator|=
+literal|100000000
+expr_stmt|;
 name|time_to_sleep
 operator|.
 name|tv_sec
@@ -206,6 +217,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * XXX 		 * Hack to work around itimerfix(9) gratuitously limiting 		 * the acceptable range for a struct timeval.tv_sec to 		 *<= 100000000. 		 */
+if|if
+condition|(
+name|seconds
+operator|>
+literal|100000000
+condition|)
+name|seconds
+operator|=
+literal|100000000
+expr_stmt|;
 name|time_to_sleep
 operator|.
 name|tv_sec
