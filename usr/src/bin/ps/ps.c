@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.8 (Berkeley) %G%"
+literal|"@(#)ps.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vlimit.h>
 end_include
 
 begin_decl_stmt
@@ -286,6 +292,9 @@ name|a_ttyd
 decl_stmt|;
 name|time_t
 name|a_cpu
+decl_stmt|;
+name|size_t
+name|a_maxrss
 decl_stmt|;
 block|}
 struct|;
@@ -3620,6 +3629,14 @@ name|a_cpu
 operator|/=
 name|hz
 expr_stmt|;
+name|ap
+operator|->
+name|a_maxrss
+operator|=
+name|mproc
+operator|->
+name|p_maxrss
+expr_stmt|;
 if|if
 condition|(
 name|lflg
@@ -5437,7 +5454,7 @@ name|char
 modifier|*
 name|vhdr
 init|=
-literal|"  PID TT STAT  TIME SL RE PAGEIN SIZE  RSS  SRS TSIZ TRS %CPU %MEM"
+literal|"  PID TT STAT  TIME SL RE PAGEIN SIZE  RSS  LIM TSIZ TRS %CPU %MEM"
 decl_stmt|;
 end_decl_stmt
 
@@ -5513,8 +5530,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%3d%3d%7d%5d%5d%5d%5d%4d%5.1f%5.1f"
+literal|"%3d%3d%7d%5d%5d"
 argument_list|,
+name|ap
+operator|->
+name|a_slptime
+operator|>
+literal|99
+condition|?
+literal|99
+else|:
 name|ap
 operator|->
 name|a_slptime
@@ -5546,12 +5571,40 @@ operator|->
 name|a_rss
 operator|/
 literal|2
-argument_list|,
-name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
 operator|->
-name|v_swrss
+name|a_maxrss
+operator|==
+operator|(
+name|INFINITY
+operator|/
+name|NBPG
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"   oo"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%5d"
+argument_list|,
+name|ap
+operator|->
+name|a_maxrss
 operator|/
 literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%5d%4d%5.1f%5.1f"
 argument_list|,
 name|ap
 operator|->
@@ -5796,7 +5849,19 @@ name|a_flag
 operator|&
 name|SLOAD
 condition|?
+operator|(
+name|ap
+operator|->
+name|a_rss
+operator|>
+name|ap
+operator|->
+name|a_maxrss
+condition|?
+literal|'>'
+else|:
 literal|' '
+operator|)
 else|:
 literal|'W'
 expr_stmt|;
