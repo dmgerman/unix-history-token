@@ -814,6 +814,72 @@ begin_comment
 comment|/* String */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RAD_NAS_IPV6_ADDRESS
+value|95
+end_define
+
+begin_comment
+comment|/* IPv6 address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_FRAMED_INTERFACE_ID
+value|96
+end_define
+
+begin_comment
+comment|/* 8 octets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_FRAMED_IPV6_PREFIX
+value|97
+end_define
+
+begin_comment
+comment|/* Octets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_LOGIN_IPV6_HOST
+value|98
+end_define
+
+begin_comment
+comment|/* IPv6 address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_FRAMED_IPV6_ROUTE
+value|99
+end_define
+
+begin_comment
+comment|/* String */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_FRAMED_IPV6_POOL
+value|100
+end_define
+
+begin_comment
+comment|/* String */
+end_comment
+
 begin_comment
 comment|/* Accounting attribute types and values */
 end_comment
