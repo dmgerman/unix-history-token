@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	5.5 (Berkeley) %G%"
+literal|"@(#)scandir.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,14 +146,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|nitems
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp1
-decl_stmt|,
-modifier|*
-name|cp2
 decl_stmt|;
 name|struct
 name|stat
@@ -335,30 +327,23 @@ name|d
 operator|->
 name|d_namlen
 expr_stmt|;
-for|for
-control|(
-name|cp1
-operator|=
-name|p
-operator|->
-name|d_name
-operator|,
-name|cp2
-operator|=
+name|bcopy
+argument_list|(
 name|d
 operator|->
 name|d_name
-init|;
-operator|*
-name|cp1
-operator|++
-operator|=
-operator|*
-name|cp2
-operator|++
-condition|;
-control|)
-empty_stmt|;
+argument_list|,
+name|p
+operator|->
+name|d_name
+argument_list|,
+name|p
+operator|->
+name|d_namlen
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Check to make sure the array has space left and 		 * realloc the maximum size. 		 */
 if|if
 condition|(
