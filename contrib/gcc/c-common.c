@@ -4577,7 +4577,7 @@ literal|1
 block|,
 name|T_C
 block|,
-name|T_C
+name|NULL
 block|,
 name|NULL
 block|,
@@ -4599,7 +4599,7 @@ literal|1
 block|,
 name|T_C
 block|,
-name|T_C
+name|NULL
 block|,
 name|NULL
 block|,
@@ -4619,11 +4619,11 @@ literal|"rz"
 block|,
 literal|0
 block|,
+name|T_I
+block|,
 name|NULL
 block|,
-name|T_I
-block|,
-name|T_I
+name|NULL
 block|,
 name|T_L
 block|,
