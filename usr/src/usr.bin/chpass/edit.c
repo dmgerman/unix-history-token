@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.2 (Berkeley) %G%"
+literal|"@(#)edit.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,8 +157,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Some editors O_TRUNC the file when they write it out.  This 		 * can result in an empty file with a changed modified time if 		 * the file system is out of space. 		 */
 if|if
 condition|(
+name|end
+operator|.
+name|st_size
+operator|==
+literal|0
+operator|||
 name|begin
 operator|.
 name|st_mtime
@@ -180,10 +187,6 @@ argument_list|)
 expr_stmt|;
 name|pw_error
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|0
