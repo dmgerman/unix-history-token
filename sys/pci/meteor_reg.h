@@ -792,7 +792,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|i2c_write(mtr,  PCF8574_CTRL_I2C_ADDR, SAA7116_I2C_WRITE, 0, data), \ 	mtr->pcf_i2c[0] = data
+value|i2c_write(mtr,  PCF8574_CTRL_I2C_ADDR, SAA7116_I2C_WRITE, data, data), \ 	mtr->pcf_i2c[0] = data
 end_define
 
 begin_define
@@ -805,7 +805,7 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|i2c_write(mtr,  PCF8574_DATA_I2C_ADDR, SAA7116_I2C_WRITE, 0, data), \ 	mtr->pcf_i2c[1] = data
+value|i2c_write(mtr,  PCF8574_DATA_I2C_ADDR, SAA7116_I2C_WRITE, data, data), \ 	mtr->pcf_i2c[1] = data
 end_define
 
 begin_define
@@ -929,6 +929,18 @@ name|int
 name|signal
 decl_stmt|;
 comment|/* signal to send to process */
+define|#
+directive|define
+name|METEOR_SIG_MODE_MASK
+value|0xffff0000
+define|#
+directive|define
+name|METEOR_SIG_FIELD_MODE
+value|0x00010000
+define|#
+directive|define
+name|METEOR_SIG_FRAME_MODE
+value|0x00000000
 name|struct
 name|meteor_mem
 modifier|*
@@ -1077,7 +1089,7 @@ value|0x0000a000
 define|#
 directive|define
 name|METEOR_DEV_MASK
-value|0x2000f000
+value|0x0000f000
 define|#
 directive|define
 name|METEOR_RGB16
@@ -1138,6 +1150,10 @@ directive|define
 name|METEOR_RGB
 value|0x20000000
 comment|/* meteor rgb unit */
+define|#
+directive|define
+name|METEOR_FIELD_MODE
+value|0x80000000
 name|u_char
 name|saa7196_i2c
 index|[
