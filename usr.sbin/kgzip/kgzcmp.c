@@ -840,6 +840,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|ido
 operator|->
 name|fname
