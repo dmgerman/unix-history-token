@@ -4358,6 +4358,9 @@ decl_stmt|;
 name|vm_offset_t
 name|estart
 decl_stmt|;
+name|vm_offset_t
+name|eend
+decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
@@ -4737,6 +4740,12 @@ name|entry
 operator|->
 name|start
 expr_stmt|;
+name|eend
+operator|=
+name|entry
+operator|->
+name|end
+expr_stmt|;
 comment|/* First we need to allow map modifications */
 name|vm_map_set_recursive
 argument_list|(
@@ -4795,6 +4804,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+comment|/* 				 * At this point, the map is unlocked, and 				 * entry might no longer be valid.  Use copy 				 * of entry start value obtained while entry 				 * was valid. 				 */
 operator|(
 name|void
 operator|)
@@ -4804,9 +4814,7 @@ name|map
 argument_list|,
 name|start
 argument_list|,
-name|entry
-operator|->
-name|start
+name|estart
 argument_list|,
 name|TRUE
 argument_list|)
@@ -4853,6 +4861,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+comment|/*  					 * vm_fault_user_wire succeded, thus 					 * the area between start and eend 					 * is wired and has to be unwired 					 * here as part of the cleanup. 					 */
 operator|(
 name|void
 operator|)
@@ -4862,7 +4871,7 @@ name|map
 argument_list|,
 name|start
 argument_list|,
-name|estart
+name|eend
 argument_list|,
 name|TRUE
 argument_list|)
@@ -5569,6 +5578,52 @@ operator|(
 name|rv
 operator|)
 return|;
+block|}
+comment|/* 		 * An exclusive lock on the map is needed in order to call 		 * vm_map_simplify_entry().  If the current lock on the map 		 * is only a shared lock, an upgrade is needed. 		 */
+if|if
+condition|(
+name|vm_map_pmap
+argument_list|(
+name|map
+argument_list|)
+operator|!=
+name|kernel_pmap
+operator|&&
+name|vm_map_lock_upgrade
+argument_list|(
+name|map
+argument_list|)
+condition|)
+block|{
+name|vm_map_lock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vm_map_lookup_entry
+argument_list|(
+name|map
+argument_list|,
+name|start
+argument_list|,
+operator|&
+name|start_entry
+argument_list|)
+operator|==
+name|FALSE
+condition|)
+block|{
+name|vm_map_unlock
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
+return|return
+name|KERN_SUCCESS
+return|;
+block|}
 block|}
 name|vm_map_simplify_entry
 argument_list|(
