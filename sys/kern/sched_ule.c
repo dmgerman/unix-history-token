@@ -494,7 +494,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLP_RUN_MAX
-value|((hz * 30)<< 10)
+value|((hz * 2)<< 10)
 end_define
 
 begin_define
@@ -595,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_CPU_TIME
-value|60
+value|10
 end_define
 
 begin_define
