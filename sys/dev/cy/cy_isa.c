@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -156,12 +162,6 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_ifndef
@@ -6812,19 +6812,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|schedsofttty();
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"Fix the i386/isa/cy.c files call to schedsofttty()"
-argument_list|)
+name|schedsofttty
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
