@@ -177,11 +177,7 @@ name|buf
 operator|)
 return|;
 block|}
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
+else|else
 return|return
 operator|(
 name|pass
