@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.16 (Berkeley) %G%"
+literal|"@(#)route.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
