@@ -3758,17 +3758,29 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: netstat [-AaLlnW] [-f address_family] [-M core] [-N system]"
+literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
+literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat [-abdgilnrsS] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -i | -I interface [-abdnt] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat [-bdn] [-I interface] [-M core] [-N system] [-w wait]"
+literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -s [-s] [-z] [-f protocol_family | -p protocol] [-M core]"
+argument_list|,
+literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\n"
+literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -m [-M core] [-N system]"
 argument_list|,
-literal|"       netstat [-M core] [-N system] [-p protocol]"
+literal|"       netstat -r [-AanW] [-f address_family] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -rs [-s] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -g [-W] [-f address_family] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -gs [-s] [-f address_family] [-M core] [-N system]"
 argument_list|)
 expr_stmt|;
 name|exit
