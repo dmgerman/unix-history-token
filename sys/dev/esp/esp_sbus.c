@@ -1619,7 +1619,7 @@ name|sc_irqres
 argument_list|,
 name|INTR_TYPE_BIO
 operator||
-name|INTR_ENTROPY
+name|INTR_MPSAFE
 argument_list|,
 name|ncr53c9x_intr
 argument_list|,
