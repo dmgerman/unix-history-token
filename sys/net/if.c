@@ -6279,12 +6279,11 @@ argument_list|)
 expr_stmt|;
 name|ifa
 operator|=
-name|TAILQ_FIRST
+name|ifaddr_byindex
 argument_list|(
-operator|&
 name|ifp
 operator|->
-name|if_addrhead
+name|if_index
 argument_list|)
 expr_stmt|;
 name|IFA_LOCK

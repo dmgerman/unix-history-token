@@ -641,14 +641,13 @@ index|[
 name|RTAX_IFP
 index|]
 operator|=
-name|TAILQ_FIRST
+name|ifaddr_byindex
 argument_list|(
-operator|&
 name|newrt
 operator|->
 name|rt_ifp
 operator|->
-name|if_addrhead
+name|if_index
 argument_list|)
 operator|->
 name|ifa_addr
