@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1006,6 +1006,12 @@ label|:
 comment|/* 	 * Search a new directory. 	 * 	 * The cn_hash value is for use by vfs_cache. 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */
 name|cnp
 operator|->
+name|cn_consume
+operator|=
+literal|0
+expr_stmt|;
+name|cnp
+operator|->
 name|cn_hash
 operator|=
 literal|0
@@ -1525,6 +1531,47 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Take into account any additional components consumed by 	 * the underlying filesystem. 	 */
+if|if
+condition|(
+name|cnp
+operator|->
+name|cn_consume
+operator|>
+literal|0
+condition|)
+block|{
+name|cnp
+operator|->
+name|cn_nameptr
+operator|+=
+name|cnp
+operator|->
+name|cn_consume
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_next
+operator|+=
+name|cnp
+operator|->
+name|cn_consume
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_pathlen
+operator|-=
+name|cnp
+operator|->
+name|cn_consume
+expr_stmt|;
+name|cnp
+operator|->
+name|cn_consume
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|dp
 operator|=
 name|ndp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -121,6 +121,10 @@ name|u_long
 name|cn_hash
 decl_stmt|;
 comment|/* hash value of looked up name */
+name|long
+name|cn_consume
+decl_stmt|;
+comment|/* chars to consume in lookup() */
 block|}
 name|ni_cnd
 struct|;
