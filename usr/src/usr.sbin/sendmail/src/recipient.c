@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.29 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,9 +933,6 @@ operator|==
 name|NULL
 operator|&&
 operator|!
-name|QueueRun
-operator|&&
-operator|!
 name|ForceMail
 condition|)
 block|{
@@ -1295,9 +1292,6 @@ operator|->
 name|q_alias
 operator|==
 name|NULL
-operator|&&
-operator|!
-name|QueueRun
 operator|&&
 operator|!
 name|ForceMail
