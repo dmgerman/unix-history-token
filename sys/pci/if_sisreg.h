@@ -1535,7 +1535,7 @@ name|SIS_RXBYTES
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->sis_ctl& SIS_CMDSTS_BUFLEN)
+value|(((x)->sis_ctl& SIS_CMDSTS_BUFLEN) - ETHER_CRC_LEN)
 end_define
 
 begin_define
