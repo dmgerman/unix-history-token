@@ -733,6 +733,17 @@ begin_comment
 comment|/* track all closes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_MMAP_ANON
+value|0x100000
+end_define
+
+begin_comment
+comment|/* special treatment in vm_mmap.c */
+end_comment
+
 begin_comment
 comment|/*  * Character device switch table  */
 end_comment
