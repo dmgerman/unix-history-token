@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../tahoe/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../tahoe/cp.h"
 end_include
 
@@ -222,7 +228,7 @@ operator|!=
 name|NODEV
 condition|)
 goto|goto
-name|noswap
+name|doswap
 goto|;
 if|if
 condition|(
@@ -485,6 +491,8 @@ name|gc
 operator|->
 name|gc_root
 expr_stmt|;
+name|doswap
+label|:
 name|swdevt
 index|[
 literal|0
