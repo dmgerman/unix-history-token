@@ -203,7 +203,7 @@ struct|struct
 name|uts_runq
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|head
 decl_stmt|;
@@ -229,7 +229,7 @@ modifier|*
 name|runq
 decl_stmt|;
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|cur_thread
 decl_stmt|;
@@ -276,7 +276,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|aa
 decl_stmt|;
@@ -400,7 +400,7 @@ modifier|*
 name|q
 parameter_list|,
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 parameter_list|)
@@ -410,7 +410,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|runq_remove
 parameter_list|(
@@ -425,7 +425,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|runq_remove_nolock
 parameter_list|(
@@ -477,12 +477,12 @@ name|int
 name|uts_to_thread
 parameter_list|(
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tdp
 parameter_list|,
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 modifier|*
 name|curthreadp
@@ -810,7 +810,7 @@ name|data
 parameter_list|)
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|td
 decl_stmt|;
@@ -865,7 +865,7 @@ name|q
 parameter_list|)
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 decl_stmt|;
@@ -887,7 +887,7 @@ name|tm
 operator|=
 operator|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 operator|*
 operator|)
 name|calloc
@@ -897,7 +897,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1102,9 +1102,9 @@ block|{
 comment|/* 	 * Start KSE scheduling. 	 */
 name|pfmt
 argument_list|(
-literal|"kse_new() -> %d\n"
+literal|"kse_create() -> %d\n"
 argument_list|,
-name|kse_new
+name|kse_create
 argument_list|(
 operator|&
 name|data
@@ -1490,7 +1490,7 @@ modifier|*
 name|q
 parameter_list|,
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 parameter_list|)
@@ -1535,7 +1535,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|runq_remove
 parameter_list|(
@@ -1546,7 +1546,7 @@ name|q
 parameter_list|)
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 decl_stmt|;
@@ -1582,7 +1582,7 @@ end_function
 begin_function
 specifier|static
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|runq_remove_nolock
 parameter_list|(
@@ -1593,7 +1593,7 @@ name|q
 parameter_list|)
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|p
 decl_stmt|,
@@ -1690,7 +1690,7 @@ modifier|*
 name|prev_data
 decl_stmt|;
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 decl_stmt|,
@@ -1973,7 +1973,7 @@ literal|"\n-- uts_to_thread() failed --\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|kse_yield
+name|kse_release
 argument_list|()
 expr_stmt|;
 name|pstr
@@ -1996,7 +1996,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|thread_create
 parameter_list|(
@@ -2010,7 +2010,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 decl_stmt|;
@@ -2024,7 +2024,7 @@ name|tm
 operator|=
 operator|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 operator|*
 operator|)
 name|calloc
@@ -2034,7 +2034,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2118,12 +2118,12 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm
 decl_stmt|;
 name|struct
-name|thread_mailbox
+name|kse_thr_mailbox
 modifier|*
 name|tm2
 decl_stmt|;
