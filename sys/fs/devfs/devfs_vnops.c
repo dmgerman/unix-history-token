@@ -913,10 +913,10 @@ expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
+name|dev_ref
+argument_list|(
 name|dev
-operator|->
-name|si_refcount
-operator|++
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->
