@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.84 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.85 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1815,12 +1815,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
+name|SFS_TYPE
+value|SFS_MOUNT
 end_define
 
 begin_comment
-comment|/* has the statfs(2) syscall */
+comment|/* use<sys/mount.h> statfs() impl */
 end_comment
 
 begin_if
@@ -3539,17 +3539,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -3592,6 +3581,10 @@ directive|define
 name|SFS_TYPE
 value|SFS_MOUNT
 end_define
+
+begin_comment
+comment|/* use<sys/mount.h> statfs() impl */
+end_comment
 
 begin_ifndef
 ifndef|#
