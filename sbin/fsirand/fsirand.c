@@ -263,13 +263,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|srandomdev
-argument_list|()
-operator|<
-literal|0
-condition|)
 name|srandom
 argument_list|(
 name|time
