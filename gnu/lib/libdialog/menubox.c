@@ -2647,7 +2647,7 @@ condition|(
 name|status
 operator|&
 name|DITEM_RECREATE
-operator|||
+operator|&&
 operator|!
 operator|(
 name|status
