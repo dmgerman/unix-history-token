@@ -17,6 +17,13 @@ name|APM_NPMEV
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|APM_UNKNOWN
+value|0xff
+end_define
+
 begin_comment
 comment|/* static data */
 end_comment

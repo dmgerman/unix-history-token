@@ -3385,8 +3385,7 @@ name|aip
 operator|->
 name|ai_batteries
 operator|=
-operator|-
-literal|1
+literal|0xffffffff
 expr_stmt|;
 comment|/* Unknown */
 name|aip
@@ -3425,7 +3424,7 @@ name|r
 operator|.
 name|ecx
 operator|&
-literal|0xf
+literal|0xff
 expr_stmt|;
 block|}
 name|bzero
