@@ -1592,30 +1592,6 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Structure used to describe IP options.  * Used to store options internally, to pass them to a process,  * or to restore options retrieved earlier.  * The ip_dst is used for the first-hop gateway when using a source route  * (this gets put into the header proper).  */
-end_comment
-
-begin_struct
-struct|struct
-name|ip_opts
-block|{
-name|struct
-name|in_addr
-name|ip_dst
-decl_stmt|;
-comment|/* first hop, 0 w/o src rt */
-name|char
-name|ip_opts
-index|[
-literal|40
-index|]
-decl_stmt|;
-comment|/* actually variable in size */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IP level.  * First word of comment is data type; bool is stored in int.  */
 end_comment
 
