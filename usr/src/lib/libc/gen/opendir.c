@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	5.6 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_function_decl
@@ -107,6 +113,18 @@ name|NULL
 return|;
 if|if
 condition|(
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
 operator|(
 name|dirp
 operator|=
