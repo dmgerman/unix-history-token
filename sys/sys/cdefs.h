@@ -1262,6 +1262,8 @@ begin_if
 if|#
 directive|if
 name|_XOPEN_SOURCE
+operator|-
+literal|0
 operator|>=
 literal|600
 end_if
@@ -1290,6 +1292,8 @@ begin_elif
 elif|#
 directive|elif
 name|_XOPEN_SOURCE
+operator|-
+literal|0
 operator|>=
 literal|500
 end_elif
