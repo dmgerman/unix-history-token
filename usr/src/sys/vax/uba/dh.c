@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	6.7	85/03/12	*/
+comment|/*	dh.c	6.8	85/06/04	*/
 end_comment
 
 begin_include
@@ -4082,10 +4082,8 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_WOPEN
+name|TS_CARR_ON
 operator|)
-operator|==
-literal|0
 operator|&&
 operator|(
 name|tp
@@ -4111,6 +4109,15 @@ operator|)
 operator|)
 operator|==
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
 condition|)
 block|{
 name|gsignal
@@ -4154,6 +4161,7 @@ operator|&=
 operator|~
 name|TS_CARR_ON
 expr_stmt|;
+block|}
 block|}
 else|else
 name|tp
