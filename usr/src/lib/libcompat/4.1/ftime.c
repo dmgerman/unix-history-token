@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftime.c	5.3 (Berkeley) %G%"
+literal|"@(#)ftime.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,14 @@ name|struct
 name|timezone
 name|tz
 decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tm
+decl_stmt|;
+name|time_t
+name|zero
+decl_stmt|;
 if|if
 condition|(
 name|gettimeofday
@@ -137,6 +145,24 @@ name|tv_usec
 operator|/
 literal|1000
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|time
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* in the absence of anything better, use kernel's timezone */
 name|tp
 operator|->
 name|timezone
@@ -153,6 +179,59 @@ name|tz
 operator|.
 name|tz_dsttime
 expr_stmt|;
+block|}
+else|else
+block|{
+name|tp
+operator|->
+name|dstflag
+operator|=
+name|tm
+operator|->
+name|tm_isdst
+expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|->
+name|tm_isdst
+condition|)
+block|{
+comment|/* tm_gmtoff has an offset applied */
+name|zero
+operator|=
+literal|0
+expr_stmt|;
+comment|/* try 0 and hope for the best */
+name|tp
+operator|->
+name|timezone
+operator|=
+operator|-
+name|localtime
+argument_list|(
+operator|&
+name|zero
+argument_list|)
+operator|->
+name|tm_gmtoff
+operator|/
+literal|60
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|timezone
+operator|=
+operator|-
+name|tm
+operator|->
+name|tm_gmtoff
+operator|/
+literal|60
+expr_stmt|;
+block|}
 block|}
 end_block
 
