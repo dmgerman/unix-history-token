@@ -2443,6 +2443,9 @@ modifier|*
 modifier|*
 name|disks
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|error
 decl_stmt|;
@@ -2457,6 +2460,8 @@ modifier|*
 modifier|*
 name|dp
 decl_stmt|;
+endif|#
+directive|endif
 name|disks
 operator|=
 name|malloc
@@ -2489,6 +2494,9 @@ name|MAX_NO_DISKS
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|error
 operator|=
 name|sysctlbyname
@@ -2596,6 +2604,8 @@ argument_list|(
 literal|"kern.disks sysctl not available"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|k
 operator|=
 literal|0
