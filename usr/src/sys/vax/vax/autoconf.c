@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.47	83/05/18	*/
+comment|/*	autoconf.c	4.48	83/06/28	*/
 end_comment
 
 begin_comment
@@ -3282,6 +3282,10 @@ name|swdevt
 modifier|*
 name|swp
 decl_stmt|;
+specifier|register
+name|int
+name|nblks
+decl_stmt|;
 for|for
 control|(
 name|swp
@@ -3298,15 +3302,6 @@ control|)
 block|{
 if|if
 condition|(
-name|swp
-operator|->
-name|sw_nblks
-operator|!=
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
 name|bdevsw
 index|[
 name|major
@@ -3319,9 +3314,7 @@ index|]
 operator|.
 name|d_psize
 condition|)
-name|swp
-operator|->
-name|sw_nblks
+name|nblks
 operator|=
 operator|(
 operator|*
@@ -3348,14 +3341,20 @@ condition|(
 name|swp
 operator|->
 name|sw_nblks
-operator|<
+operator|==
 literal|0
+operator|||
+name|swp
+operator|->
+name|sw_nblks
+operator|>
+name|nblks
 condition|)
 name|swp
 operator|->
 name|sw_nblks
 operator|=
-literal|0
+name|nblks
 expr_stmt|;
 block|}
 if|if
