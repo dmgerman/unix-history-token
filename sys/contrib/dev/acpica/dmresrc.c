@@ -696,7 +696,7 @@ name|ByteData
 index|[
 name|ByteCount
 operator|-
-literal|2
+literal|1
 index|]
 operator|!=
 operator|(
