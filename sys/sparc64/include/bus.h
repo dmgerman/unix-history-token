@@ -22,6 +22,29 @@ end_define
 begin_include
 include|#
 directive|include
+file|"opt_bus.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUS_SPACE_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<machine/types.h>
 end_include
 
@@ -31,23 +54,11 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
-begin_comment
-comment|/*  * Debug hooks  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSDB_ACCESS
-value|0x01
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bus_space_debug
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<machine/upa.h>
+end_include
 
 begin_comment
 comment|/*  * UPA and SBUS spaces are non-cached and big endian  * (except for RAM and PROM)  *  * PCI spaces are non-cached and little endian  */
@@ -266,9 +277,9 @@ name|sparc64_bus_mem_map
 name|__P
 argument_list|(
 operator|(
-name|bus_type_t
+name|bus_space_tag_t
 operator|,
-name|bus_addr_t
+name|bus_space_handle_t
 operator|,
 name|bus_size_t
 operator|,
@@ -503,74 +514,40 @@ begin_comment
 comment|/* force write barrier */
 end_comment
 
-begin_comment
-comment|/*  *	u_intN_t bus_space_read_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset));  *  * Read a 1, 2, 4, or 8 byte quantity from bus space  * described by tag/handle/offset.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|BUS_SPACE_DEBUG
-end_ifndef
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|bus_space_read_1
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-define|\
-value|lduba_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type])
+name|KTR_BUS
+value|KTR_CT2
 end_define
 
 begin_define
 define|#
 directive|define
-name|bus_space_read_2
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-define|\
-value|lduha_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type])
+name|BUS_HANDLE_MIN
+value|UPA_MEMSTART
 end_define
 
 begin_define
 define|#
 directive|define
-name|bus_space_read_4
+name|__BUS_DEBUG_ACCESS
 parameter_list|(
-name|t
-parameter_list|,
 name|h
 parameter_list|,
 name|o
-parameter_list|)
-define|\
-value|lduwa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type])
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_read_8
-parameter_list|(
-name|t
 parameter_list|,
-name|h
+name|desc
 parameter_list|,
-name|o
+name|sz
 parameter_list|)
-define|\
-value|ldxa_nc((caddr_t)(h) + (o), bus_type_asi[(t)->type])
+value|do {				\ 	CTR4(KTR_BUS, "bus space: %s %d: handle %#lx, offset %#lx",	\ 	    (desc), (sz), (h), (o));					\ 	if ((h) + (o)< BUS_HANDLE_MIN)					\ 		panic("bus space access at %#lx out of range",		\ 		    (h) + (o));						\ } while (0)
 end_define
 
 begin_else
@@ -581,6 +558,30 @@ end_else
 begin_define
 define|#
 directive|define
+name|__BUS_DEBUG_ACCESS
+parameter_list|(
+name|h
+parameter_list|,
+name|o
+parameter_list|,
+name|desc
+parameter_list|,
+name|sz
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  *	u_intN_t bus_space_read_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset));  *  * Read a 1, 2, 4, or 8 byte quantity from bus space  * described by tag/handle/offset.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|bus_space_read_1
 parameter_list|(
 name|t
@@ -589,7 +590,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|({					\ 	unsigned char __bv =				      		\ 	    lduba_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr1(%llx + %llx, %x) -> %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], (unsigned int) __bv);		\ 	__bv; })
+value|({					\ 	__BUS_DEBUG_ACCESS((h), (o), "read", 1);			\ 	lduba_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ })
 end_define
 
 begin_define
@@ -603,7 +604,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|({					\ 	unsigned short __bv =				      		\ 	    lduha_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr2(%llx + %llx, %x) -> %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], (unsigned int)__bv);		\ 	__bv; })
+value|({					\ 	__BUS_DEBUG_ACCESS((h), (o), "read", 2);			\ 	lduha_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ })
 end_define
 
 begin_define
@@ -617,7 +618,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|({					\ 	unsigned int __bv =				      		\ 	    lduwa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr4(%llx + %llx, %x) -> %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], __bv);				\ 	__bv; })
+value|({					\ 	__BUS_DEBUG_ACCESS((h), (o), "read", 4);			\ 	lduwa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ })
 end_define
 
 begin_define
@@ -631,13 +632,8 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-value|({					\ 	u_int64_t __bv =				      		\ 	    ldxa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr8(%llx + %llx, %x) -> %llx\n", (u_int64_t)(h),	\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], __bv);				\ 	__bv; })
+value|({					\ 	__BUS_DEBUG_ACCESS((h), (o), "read", 8);			\ 	ldxa_nc((caddr_t)(h) + (o), bus_type_asi[(t)->type]);		\ })
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	void bus_space_read_multi_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset,  *	    u_intN_t *addr, size_t count));  *  * Read `count' 1, 2, 4, or 8 byte quantities from bus space  * described by tag/handle/offset and copy into buffer provided.  */
@@ -719,12 +715,6 @@ begin_comment
 comment|/*  *	void bus_space_write_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset,  *	    u_intN_t value));  *  * Write the 1, 2, 4, or 8 byte value `value' to bus space  * described by tag/handle/offset.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUS_SPACE_DEBUG
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -738,8 +728,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stba_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v))
+value|do {				\ 	__BUS_DEBUG_ACCESS((h), (o), "write", 1);			\ 	stba_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
 end_define
 
 begin_define
@@ -755,8 +744,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stha_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v))
+value|do {				\ 	__BUS_DEBUG_ACCESS((h), (o), "write", 2);			\ 	stha_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
 end_define
 
 begin_define
@@ -772,8 +760,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stwa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v))
+value|do {				\ 	__BUS_DEBUG_ACCESS((h), (o), "write", 4);			\ 	stwa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
 end_define
 
 begin_define
@@ -789,83 +776,8 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stxa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v))
+value|do {				\ 	__BUS_DEBUG_ACCESS((h), (o), "write", 8);			\ 	stxa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_1
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw1(%llx + %llx, %x)<- %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], (unsigned int) v);		\ 	stba_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_2
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw2(%llx + %llx, %x)<- %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], (unsigned int) v);		\ 	stha_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_4
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw4(%llx + %llx, %x)<- %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], (unsigned int) v);		\ 	stwa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_8
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {				\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw8(%llx + %llx, %x)<- %llx\n", (u_int64_t)(h),	\ 		(u_int64_t)(o),						\ 		bus_type_asi[(t)->type], (u_int64_t) v);		\ 	stxa_nc((caddr_t)((h) + (o)), bus_type_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	void bus_space_write_multi_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset,  *	    const u_intN_t *addr, size_t count));  *  * Write `count' 1, 2, 4, or 8 byte quantities from the buffer  * provided to bus space described by tag/handle/offset.  */
@@ -2414,12 +2326,6 @@ begin_comment
 comment|/*  *	u_intN_t bus_space_read_stream_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset));  *  * Read a 1, 2, 4, or 8 byte quantity from bus space  * described by tag/handle/offset.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUS_SPACE_DEBUG
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -2431,8 +2337,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-define|\
-value|lduba_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type])
+value|({				\ 	__BUS_DEBUG_ACCESS((h), (o), "read stream", 1);			\ 	lduba_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ })
 end_define
 
 begin_define
@@ -2446,8 +2351,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-define|\
-value|lduha_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type])
+value|({				\ 	__BUS_DEBUG_ACCESS((h), (o), "read stream", 2);			\ 	lduha_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ })
 end_define
 
 begin_define
@@ -2461,8 +2365,7 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-define|\
-value|lduwa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type])
+value|({				\ 	__BUS_DEBUG_ACCESS((h), (o), "read stream", 4);			\ 	lduwa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ })
 end_define
 
 begin_define
@@ -2476,75 +2379,8 @@ name|h
 parameter_list|,
 name|o
 parameter_list|)
-define|\
-value|ldxa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type])
+value|({				\ 	__BUS_DEBUG_ACCESS((h), (o), "read stream", 8);			\ 	ldxa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ })
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|bus_space_read_stream_1
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-value|({				\ 	unsigned char __bv =				      		\ 	    lduba_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr1(%llx + %llx, %x) -> %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], (unsigned int) __bv);	\ 	__bv; })
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_read_stream_2
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-value|({				\ 	unsigned short __bv =				      		\ 	    lduha_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr2(%llx + %llx, %x) -> %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], (unsigned int)__bv);		\ 	__bv; })
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_read_stream_4
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-value|({				\ 	unsigned int __bv =				      		\ 	    lduwa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr4(%llx + %llx, %x) -> %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], __bv);			\ 	__bv; })
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_read_stream_8
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-value|({				\ 	u_int64_t __bv =				      		\ 	    ldxa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type]);	\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsr8(%llx + %llx, %x) -> %llx\n", (u_int64_t)(h),	\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], __bv);			\ 	__bv; })
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	void bus_space_read_multi_stream_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset,  *	    u_intN_t *addr, size_t count));  *  * Read `count' 1, 2, 4, or 8 byte quantities from bus space  * described by tag/handle/offset and copy into buffer provided.  */
@@ -2626,12 +2462,6 @@ begin_comment
 comment|/*  *	void bus_space_write_stream_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset,  *	    u_intN_t value));  *  * Write the 1, 2, 4, or 8 byte value `value' to bus space  * described by tag/handle/offset.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUS_SPACE_DEBUG
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -2645,8 +2475,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stba_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v))
+value|do {			\ 	__BUS_DEBUG_ACCESS((h), (o), "write stream", 1);		\ 	stba_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
 end_define
 
 begin_define
@@ -2662,8 +2491,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stha_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v))
+value|do {			\ 	__BUS_DEBUG_ACCESS((h), (o), "write stream", 2);		\ 	stha_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
 end_define
 
 begin_define
@@ -2679,8 +2507,7 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stwa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v))
+value|do {			\ 	__BUS_DEBUG_ACCESS((h), (o), "write stream", 4);		\ 	stwa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
 end_define
 
 begin_define
@@ -2696,83 +2523,8 @@ name|o
 parameter_list|,
 name|v
 parameter_list|)
-define|\
-value|stxa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v))
+value|do {			\ 	__BUS_DEBUG_ACCESS((h), (o), "write stream", 8);		\ 	stxa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_stream_1
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {			\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw1(%llx + %llx, %x)<- %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], (unsigned int) v);		\ 	stba_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_stream_2
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {			\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw2(%llx + %llx, %x)<- %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], (unsigned int) v);		\ 	stha_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_stream_4
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|({				\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw4(%llx + %llx, %x)<- %x\n", (u_int64_t)(h),		\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], (unsigned int) v);		\ 	stwa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bus_space_write_stream_8
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|({				\ 	if (bus_space_debug& BSDB_ACCESS)				\ 	printf("bsw8(%llx + %llx, %x)<- %llx\n", (u_int64_t)(h),	\ 		(u_int64_t)(o),						\ 		bus_stream_asi[(t)->type], (u_int64_t) v);		\ 	stxa_nc((caddr_t)((h) + (o)), bus_stream_asi[(t)->type], (v));	\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	void bus_space_write_multi_stream_N __P((bus_space_tag_t tag,  *	    bus_space_handle_t bsh, bus_size_t offset,  *	    const u_intN_t *addr, size_t count));  *  * Write `count' 1, 2, 4, or 8 byte quantities from the buffer  * provided to bus space described by tag/handle/offset.  */
@@ -4317,18 +4069,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|BUS_SPACE_ALIGNED_POINTER
-parameter_list|(
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-value|ALIGNED_POINTER(p, t)
-end_define
-
 begin_comment
 comment|/* Back-compat functions for old ISA drivers */
 end_comment
@@ -4391,29 +4131,6 @@ parameter_list|)
 value|bus_space_read_4(isa_io_bt, isa_io_hdl, o)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|outb
-parameter_list|(
-name|o
-parameter_list|,
-name|v
-parameter_list|)
-value|do {							\ 	printf("outb used at %s:%d, address 0x%x -> 0x%lx\n",		\ 	    __func__, __LINE__, o, (unsigned long)isa_io_hdl + o);	\ 	bus_space_write_1(isa_io_bt, isa_io_hdl, o, v);			\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -4425,11 +4142,6 @@ name|v
 parameter_list|)
 value|bus_space_write_1(isa_io_bt, isa_io_hdl, o, v)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
