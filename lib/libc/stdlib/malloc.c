@@ -4578,6 +4578,10 @@ expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
+name|errno
+operator|=
+name|EDOFUS
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4648,6 +4652,15 @@ argument_list|(
 literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|r
+condition|)
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|(
 name|r
@@ -4688,6 +4701,10 @@ operator|--
 expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|EDOFUS
 expr_stmt|;
 return|return;
 block|}
@@ -4766,6 +4783,10 @@ operator|--
 expr_stmt|;
 name|THREAD_UNLOCK
 argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|EDOFUS
 expr_stmt|;
 return|return
 operator|(
@@ -4912,6 +4933,14 @@ name|wrterror
 argument_list|(
 literal|"out of memory\n"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|errno
+operator|=
+name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
