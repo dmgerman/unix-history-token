@@ -1512,25 +1512,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
-struct|struct
-name|tcp_ident_mapping
-block|{
-name|struct
-name|sockaddr_storage
-name|faddr
-decl_stmt|,
-name|laddr
-decl_stmt|;
-name|uid_t
-name|euid
-decl_stmt|,
-name|ruid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Names for TCP sysctl objects  */
 end_comment

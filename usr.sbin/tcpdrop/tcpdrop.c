@@ -114,9 +114,13 @@ decl_stmt|,
 modifier|*
 name|faddr
 decl_stmt|;
+comment|/* addrs[0] is a foreign socket, addrs[1] is a local one. */
 name|struct
-name|tcp_ident_mapping
-name|tir
+name|sockaddr_storage
+name|addrs
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|int
 name|mib
@@ -347,9 +351,10 @@ continue|continue;
 name|memcpy
 argument_list|(
 operator|&
-name|tir
-operator|.
-name|faddr
+name|addrs
+index|[
+literal|0
+index|]
 argument_list|,
 name|aif
 operator|->
@@ -363,9 +368,10 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
-name|tir
-operator|.
-name|laddr
+name|addrs
+index|[
+literal|1
+index|]
 argument_list|,
 name|ail
 operator|->
@@ -479,11 +485,11 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|tir
+name|addrs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|tir
+name|addrs
 argument_list|)
 argument_list|)
 operator|==
