@@ -9682,7 +9682,7 @@ expr_stmt|;
 else|else
 name|sk_intr_yukon
 argument_list|(
-name|sc_if0
+name|sc_if1
 argument_list|)
 expr_stmt|;
 block|}
