@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.14 (Berkeley) %G%"
+literal|"@(#)display.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -460,28 +460,28 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-name|f4byte_t
-name|f4
-decl_stmt|;
-name|f8byte_t
+name|double
 name|f8
 decl_stmt|;
-name|s2byte_t
+name|float
+name|f4
+decl_stmt|;
+name|int16_t
 name|s2
 decl_stmt|;
-name|s4byte_t
-name|s4
-decl_stmt|;
-name|s8byte_t
+name|int8_t
 name|s8
 decl_stmt|;
-name|u2byte_t
+name|int32_t
+name|s4
+decl_stmt|;
+name|u_int16_t
 name|u2
 decl_stmt|;
-name|u4byte_t
+name|u_int32_t
 name|u4
 decl_stmt|;
-name|u8byte_t
+name|u_int64_t
 name|u8
 decl_stmt|;
 switch|switch
