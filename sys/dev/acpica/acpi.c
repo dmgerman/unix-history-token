@@ -5294,6 +5294,33 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|status
+operator|=
+name|AcpiEnterSleepStatePrep
+argument_list|(
+name|ACPI_STATE_S5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"AcpiEnterSleepStatePrep failed - %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"Powering system off using ACPI\n"
@@ -5325,6 +5352,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Since this function may be called with locks held or in an unknown  * context, it cannot allocate memory, acquire locks, sleep, etc.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5351,33 +5382,6 @@ operator|!=
 literal|0
 condition|)
 return|return;
-name|status
-operator|=
-name|AcpiEnterSleepStatePrep
-argument_list|(
-name|ACPI_STATE_S5
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|status
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"AcpiEnterSleepStatePrep failed - %s\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|status
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|ACPI_DISABLE_IRQS
 argument_list|()
 expr_stmt|;
