@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.4 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3985,7 +3985,11 @@ argument|if( !ISFTN(type) ) uerror(
 literal|"fortran declaration must apply to function"
 argument|); 		else { 			type = DECREF(type); 			if( ISFTN(type) || ISARY(type) || ISPTR(type) ) { 				uerror(
 literal|"fortran function has wrong type"
-argument|); 				} 			} 	case STNAME: 	case UNAME: 	case ENAME: 	case EXTERN: 	case STATIC: 	case EXTDEF: 	case TYPEDEF: 	case USTATIC: 		return( class );  	default: 		cerror(
+argument|); 				} 			} 	case EXTERN: 	case STATIC: 	case EXTDEF: 	case TYPEDEF: 	case USTATIC: 		if( blevel ==
+literal|1
+argument|){ 			uerror(
+literal|"illegal class"
+argument|); 			return( PARAM ); 			} 	case STNAME: 	case UNAME: 	case ENAME: 		return( class );  	default: 		cerror(
 literal|"illegal class: %d"
 argument|, class );
 comment|/* NOTREACHED */
