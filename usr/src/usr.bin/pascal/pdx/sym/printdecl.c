@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printdecl.c	5.1 (Berkeley) %G%"
+literal|"@(#)printdecl.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,49 +25,65 @@ directive|endif
 endif|not lint
 end_endif
 
-begin_expr_stmt
-operator|*
-operator|*
-name|Print
-name|out
-name|the
-name|type
-name|of
-name|a
-name|symbol
-operator|.
-modifier|*
-expr|/
+begin_comment
+comment|/*  * Print out the type of a symbol.  */
+end_comment
+
+begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"sym.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"symtab.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"tree.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"btypes.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"classes.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"sym.rep"
+end_include
+
+begin_macro
 name|printdecl
 argument_list|(
 argument|s
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|SYM
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
