@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,38 @@ directive|define
 name|_SYS_MBUF_H_
 end_define
 
+begin_comment
+comment|/* XXX: These includes suck. Sorry! */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in sys/param.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  Additionally, it is possible  * to allocate a separate buffer externally and attach it to the mbuf in  * a way similar to that of mbuf clusters.  */
@@ -100,6 +127,30 @@ name|x
 parameter_list|)
 value|((struct mbuf *)((intptr_t)(x)& ~(MSIZE-1)))
 end_define
+
+begin_comment
+comment|/*  * Argument structure passed to UMA routines during mbuf and packet  * allocations.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mb_args
+block|{
+name|int
+name|flags
+decl_stmt|;
+comment|/* Flags for mbuf being allocated */
+name|int
+name|how
+decl_stmt|;
+comment|/* How to allocate: M_WAITOK or M_DONTWAIT */
+name|short
+name|type
+decl_stmt|;
+comment|/* Type of mbuf being allocated */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
@@ -630,6 +681,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT_PACKET
+value|3
+end_define
+
+begin_comment
+comment|/* came out of Packet zone */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXT_NET_DRV
 value|100
 end_define
@@ -1017,40 +1079,7 @@ comment|/* number of mbuf types for mbtypes[] */
 end_comment
 
 begin_comment
-comment|/*  * Mbuf and cluster allocation statistics PCPU structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mbpstat
-block|{
-name|u_long
-name|mb_mbfree
-decl_stmt|;
-name|u_long
-name|mb_mbbucks
-decl_stmt|;
-name|u_long
-name|mb_clfree
-decl_stmt|;
-name|u_long
-name|mb_clbucks
-decl_stmt|;
-name|long
-name|mb_mbtypes
-index|[
-name|MT_NTYPES
-index|]
-decl_stmt|;
-name|short
-name|mb_active
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * General mbuf allocator statistics structure.  * XXX: Modifications of these are not protected by any mutex locks nor by  * any atomic() manipulations.  As a result, we may occasionally lose  * a count or two.  Luckily, not all of these fields are modified at all  * and remain static, and those that are manipulated are only manipulated  * in failure situations, which do not occur (hopefully) very often.  */
+comment|/*  * General mbuf allocator statistics structure.  */
 end_comment
 
 begin_struct
@@ -1058,13 +1087,13 @@ struct|struct
 name|mbstat
 block|{
 name|u_long
-name|m_drops
+name|m_mbufs
 decl_stmt|;
-comment|/* times failed to allocate */
+comment|/* XXX */
 name|u_long
-name|m_wait
+name|m_mclusts
 decl_stmt|;
-comment|/* times succesfully returned from wait */
+comment|/* XXX */
 name|u_long
 name|m_drain
 decl_stmt|;
@@ -1097,15 +1126,7 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
-name|u_int
-name|m_mbperbuck
-decl_stmt|;
-comment|/* number of mbufs per "bucket" */
-name|u_int
-name|m_clperbuck
-decl_stmt|;
-comment|/* number of clusters per "bucket" */
-comment|/* Number of mbtypes (gives # elems in mbpstat's mb_mbtypes[] array: */
+comment|/* Number of mbtypes (gives # elems in mbtypes[] array: */
 name|short
 name|m_numtypes
 decl_stmt|;
@@ -1127,40 +1148,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Flags specifying how an allocation should be made.  * M_DONTWAIT means "don't block if nothing is available" whereas  * M_TRYWAIT means "block for mbuf_wait ticks at most if nothing is  * available."  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_DONTWAIT
-value|0x4
-end_define
-
-begin_comment
-comment|/* don't conflict with M_NOWAIT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_TRYWAIT
-value|0x8
-end_define
-
-begin_comment
-comment|/* or M_WAITOK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_WAIT
-value|M_TRYWAIT
-end_define
-
-begin_comment
-comment|/* XXX: deprecated */
+comment|/*  * Flags specifying how an allocation should be made.  *  * The flag to use is as follows:  * - M_DONTWAIT or M_NOWAIT from an interrupt handler to not block allocation.  * - M_WAIT or M_WAITOK or M_TRYWAIT from wherever it is safe to block.  *  * M_DONTWAIT/M_NOWAIT means that we will not block the thread explicitly  * and if we cannot allocate immediately we may return NULL,  * whereas M_WAIT/M_WAITOK/M_TRYWAIT means that if we cannot allocate  * resources we will block until they are available, and thus never  * return NULL.  *  * XXX Eventually just phase this out to use M_WAITOK/M_NOWAIT.  */
 end_comment
 
 begin_define
@@ -1170,7 +1158,28 @@ name|MBTOM
 parameter_list|(
 name|how
 parameter_list|)
-value|((how)& M_TRYWAIT ? M_WAITOK : M_NOWAIT)
+value|(how)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DONTWAIT
+value|M_NOWAIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TRYWAIT
+value|M_WAITOK
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_WAIT
+value|M_WAITOK
 end_define
 
 begin_ifdef
@@ -1214,6 +1223,508 @@ value|atomic_add_int((m)->m_ext.ref_cnt, 1)
 end_define
 
 begin_comment
+comment|/*  * Network buffer allocation API  *  * The rest of it is defined in kern/subr_mbuf.c  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_mbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_clust
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|zone_pack
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_get
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_gethdr
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_getcl
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|,
+argument|int flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_getclr
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_free
+argument_list|(
+expr|struct
+name|mbuf
+operator|*
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|m_clget
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|m_chtype
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|short
+name|new_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mb_free_ext
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_get
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|)
+block|{ 	struct
+name|mb_args
+name|args
+block|;
+name|args
+operator|.
+name|flags
+operator|=
+literal|0
+block|;
+name|args
+operator|.
+name|how
+operator|=
+name|how
+block|;
+name|args
+operator|.
+name|type
+operator|=
+name|type
+block|;
+return|return
+operator|(
+name|uma_zalloc_arg
+argument_list|(
+name|zone_mbuf
+argument_list|,
+operator|&
+name|args
+argument_list|,
+name|how
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/* XXX This should be depracated, very little use */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_getclr
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|)
+block|{ 	struct
+name|mbuf
+operator|*
+name|m
+block|; 	struct
+name|mb_args
+name|args
+block|;
+name|args
+operator|.
+name|flags
+operator|=
+literal|0
+block|;
+name|args
+operator|.
+name|how
+operator|=
+name|how
+block|;
+name|args
+operator|.
+name|type
+operator|=
+name|type
+block|;
+name|m
+operator|=
+name|uma_zalloc_arg
+argument_list|(
+name|zone_mbuf
+argument_list|,
+operator|&
+name|args
+argument_list|,
+name|how
+argument_list|)
+block|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+name|bzero
+argument_list|(
+name|m
+operator|->
+name|m_data
+argument_list|,
+name|MLEN
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|m
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|struct
+name|mbuf
+modifier|*
+name|m_gethdr
+parameter_list|(
+name|int
+name|how
+parameter_list|,
+name|short
+name|type
+parameter_list|)
+block|{
+name|struct
+name|mb_args
+name|args
+decl_stmt|;
+name|args
+operator|.
+name|flags
+operator|=
+name|M_PKTHDR
+expr_stmt|;
+name|args
+operator|.
+name|how
+operator|=
+name|how
+expr_stmt|;
+name|args
+operator|.
+name|type
+operator|=
+name|type
+expr_stmt|;
+return|return
+operator|(
+name|uma_zalloc_arg
+argument_list|(
+name|zone_mbuf
+argument_list|,
+operator|&
+name|args
+argument_list|,
+name|how
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_getcl
+argument_list|(
+argument|int how
+argument_list|,
+argument|short type
+argument_list|,
+argument|int flags
+argument_list|)
+block|{ 	struct
+name|mb_args
+name|args
+block|;
+name|args
+operator|.
+name|flags
+operator|=
+name|flags
+block|;
+name|args
+operator|.
+name|how
+operator|=
+name|how
+block|;
+name|args
+operator|.
+name|type
+operator|=
+name|type
+block|;
+return|return
+operator|(
+name|uma_zalloc_arg
+argument_list|(
+name|zone_pack
+argument_list|,
+operator|&
+name|args
+argument_list|,
+name|how
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_free
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{ 	struct
+name|mbuf
+operator|*
+name|n
+operator|=
+name|m
+operator|->
+name|m_next
+block|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_FREELIST
+block|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+condition|)
+name|mb_free_ext
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|else
+name|uma_zfree
+argument_list|(
+name|zone_mbuf
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|n
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|m_clget
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|how
+parameter_list|)
+block|{
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+operator|=
+name|NULL
+expr_stmt|;
+name|uma_zalloc_arg
+argument_list|(
+name|zone_clust
+argument_list|,
+name|m
+argument_list|,
+name|how
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_chtype
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|short
+name|new_type
+parameter_list|)
+block|{
+name|m
+operator|->
+name|m_type
+operator|=
+name|new_type
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * mbuf, cluster, and external object allocation macros  * (for compatibility purposes).  */
 end_comment
 
@@ -1231,18 +1742,6 @@ parameter_list|,
 name|from
 parameter_list|)
 value|m_move_pkthdr((to), (from))
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_getclr
-parameter_list|(
-name|how
-parameter_list|,
-name|type
-parameter_list|)
-value|m_get_clrd((how), (type))
 end_define
 
 begin_define
@@ -1306,20 +1805,6 @@ name|type
 parameter_list|)
 define|\
 value|m_extadd((m), (caddr_t)(buf), (size), (free), (args), (flags), (type))
-end_define
-
-begin_comment
-comment|/*  * MEXTFREE(m): disassociate (and possibly free) an external object from (m).  *  * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEXTFREE
-parameter_list|(
-name|m
-parameter_list|)
-value|do {						\ 	struct mbuf *_mb = (m);						\ 									\ 	MEXT_REM_REF(_mb);						\ 	if (atomic_cmpset_int(_mb->m_ext.ref_cnt, 0, 1))		\ 		_mext_free(_mb);					\ 	_mb->m_flags&= ~M_EXT;						\ } while (0)
 end_define
 
 begin_comment
@@ -1558,44 +2043,11 @@ begin_comment
 comment|/* Maximum number of clusters */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nmbcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Scale kmem_map for counter space */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nmbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Maximum number of mbufs */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|uio
 struct_decl|;
 end_struct_decl
-
-begin_function_decl
-name|void
-name|_mext_free
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1653,32 +2105,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|m_chtype
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|m_clget
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1910,92 +2336,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|m_free
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|m_freem
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|m_get
-parameter_list|(
-name|int
-parameter_list|,
-name|short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|m_get_clrd
-parameter_list|(
-name|int
-parameter_list|,
-name|short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|m_getcl
-parameter_list|(
-name|int
-parameter_list|,
-name|short
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|m_gethdr
-parameter_list|(
-name|int
-parameter_list|,
-name|short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|m_gethdr_clrd
-parameter_list|(
-name|int
-parameter_list|,
-name|short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2167,7 +2513,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  * Packets may have annotations attached by affixing a list  * of "packet tags" to the pkthdr structure.  Packet tags are  * dynamically allocated semi-opaque data structures that have  * a fixed header (struct m_tag) that specifies the size of the  * memory block and a<cookie,type> pair that identifies it.  * The cookie is a 32-bit unique unsigned value used to identify  * a module or ABI.  By convention this value is chose as the  * date+time that the module is created, expressed as the number of  * seconds since the epoch (e.g., using date -u +'%s').  The type value  * is an ABI/module-specific value that identifies a particular annotation  * and is private to the module.  For compatibility with systems  * like OpenBSD that define packet tags w/o an ABI/module cookie,  * the value PACKET_ABI_COMPAT is used to implement m_tag_get and  * m_tag_find compatibility shim functions and several tag types are  * defined below.  Users that do not require compatibility should use  * a private cookie value so that packet tag-related definitions  * can be maintained privately.  *  * Note that the packet tag returned by m_tag_alloc has the default  * memory alignment implemented by malloc.  To reference private data  * one can use a construct like:  *  *	struct m_tag *mtag = m_tag_alloc(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members  * of struct foo.  Otherwise it is necessary to embed struct m_tag within  * the private data structure to insure proper alignment; e.g.,  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_alloc(...);  *	struct m_tag *mtag =&p->tag;  */
+comment|/*-  * Network packets may have annotations attached by affixing a list  * of "packet tags" to the pkthdr structure.  Packet tags are  * dynamically allocated semi-opaque data structures that have  * a fixed header (struct m_tag) that specifies the size of the  * memory block and a<cookie,type> pair that identifies it.  * The cookie is a 32-bit unique unsigned value used to identify  * a module or ABI.  By convention this value is chose as the  * date+time that the module is created, expressed as the number of  * seconds since the epoch (e.g., using date -u +'%s').  The type value  * is an ABI/module-specific value that identifies a particular annotation  * and is private to the module.  For compatibility with systems  * like OpenBSD that define packet tags w/o an ABI/module cookie,  * the value PACKET_ABI_COMPAT is used to implement m_tag_get and  * m_tag_find compatibility shim functions and several tag types are  * defined below.  Users that do not require compatibility should use  * a private cookie value so that packet tag-related definitions  * can be maintained privately.  *  * Note that the packet tag returned by m_tag_alloc has the default  * memory alignment implemented by malloc.  To reference private data  * one can use a construct like:  *  *	struct m_tag *mtag = m_tag_alloc(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members  * of struct foo.  Otherwise it is necessary to embed struct m_tag within  * the private data structure to insure proper alignment; e.g.,  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_alloc(...);  *	struct m_tag *mtag =&p->tag;  */
 end_comment
 
 begin_comment

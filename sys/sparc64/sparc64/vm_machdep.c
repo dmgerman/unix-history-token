@@ -231,6 +231,24 @@ directive|include
 file|<machine/tstate.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NSFBUFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NSFBUFS
+value|(512 + maxusers * 16)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -1537,6 +1555,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|nsfbufs
+operator|=
+name|NSFBUFS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nsfbufs"
+argument_list|,
+operator|&
+name|nsfbufs
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

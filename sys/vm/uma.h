@@ -218,6 +218,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Create a secondary uma zone  *  * Arguments:  *	name  The text name of the zone for debugging and stats, this memory  *		should not be freed until the zone has been deallocated.  *	ctor  The constructor that is called when the object is allocated  *	dtor  The destructor that is called when the object is freed.  *	zinit  An initializer that sets up the initial state of the memory  *		as the object passes from the Keg's slab to the Zone's cache.  *	zfini  A discard function that undoes initialization done by init  *		as the object passes from the Zone's cache to the Keg's slab.  *  *		ctor/dtor/zinit/zfini may all be null, see notes above.  *		Note that the zinit and zfini specified here are NOT  *		exactly the same as the init/fini specified to uma_zcreate()  *		when creating a master zone.  These zinit/zfini are called  *		on the TRANSITION from keg to zone (and vice-versa). Once  *		these are set, the primary zone may alter its init/fini  *		(which are called when the object passes from VM to keg)  *		using uma_zone_set_init/fini()) as well as its own  *		zinit/zfini (unset by default for master zone) with  *		uma_zone_set_zinit/zfini() (note subtle 'z' prefix).  *  *	align A bitmask that corisponds to the requested alignment  *		eg 4 would be 0x3  *	flags A set of parameters that control the behavior of the zone  *  * Returns:  *	A pointer to a structure which is intended to be opaque to users of  *	the interface.  The value may be null if the wait flag is not set.  */
+end_comment
+
+begin_function_decl
+name|uma_zone_t
+name|uma_zsecond_create
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uma_ctor
+name|ctor
+parameter_list|,
+name|uma_dtor
+name|dtor
+parameter_list|,
+name|uma_init
+name|zinit
+parameter_list|,
+name|uma_fini
+name|zfini
+parameter_list|,
+name|uma_zone_t
+name|master
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Definitions for uma_zcreate flags  *  * These flags share space with UMA_ZFLAGs in uma_int.h.  Be careful not to  * overlap when adding new features.  0xf000 is in use by uma_int.h.  */
 end_comment
 
@@ -318,6 +348,39 @@ end_define
 
 begin_comment
 comment|/* 					 * Use a hash table instead of caching 					 * information in the vm_page. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_SECONDARY
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Zone is a Secondary Zone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_REFCNT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Allocate refcnts in slabs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_MAXBUCKET
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Use largest buckets */
 end_comment
 
 begin_comment
@@ -686,6 +749,66 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * The following two routines (uma_zone_set_init/fini)  * are used to set the backend init/fini pair which acts on an  * object as it becomes allocated and is placed in a slab within  * the specified zone's backing keg.  These should probably not  * be changed once allocations have already begun and only  * immediately upon zone creation.  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_set_init
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|uma_init
+name|uminit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uma_zone_set_fini
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|uma_fini
+name|fini
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * The following two routines (uma_zone_set_zinit/zfini) are  * used to set the zinit/zfini pair which acts on an object as  * it passes from the backing Keg's slab cache to the  * specified Zone's bucket cache.  These should probably not  * be changed once allocations have already begun and  * only immediately upon zone creation.  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_set_zinit
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|uma_init
+name|zinit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uma_zone_set_zfini
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|uma_fini
+name|zfini
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Replaces the standard page_alloc or obj_alloc functions for this zone  *  * Arguments:  *	zone   The zone whos back end allocator is being changed.  *	allocf A pointer to the allocation function  *  * Returns:  *	Nothing  *  * Discussion:  *	This could be used to implement pageable allocation, or perhaps  *	even DMA allocators if used in conjunction with the OFFPAGE  *	zone flag.  */
 end_comment
 
@@ -795,6 +918,25 @@ name|zone
 parameter_list|,
 name|int
 name|itemcnt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  * 	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  * 	A pointer to a u_int32_t reference counter.  */
+end_comment
+
+begin_function_decl
+name|u_int32_t
+modifier|*
+name|uma_find_refcnt
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|void
+modifier|*
+name|item
 parameter_list|)
 function_decl|;
 end_function_decl

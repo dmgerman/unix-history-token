@@ -1335,16 +1335,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show mbuf cache information */
-end_comment
-
-begin_decl_stmt
-name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt
@@ -1586,14 +1576,6 @@ case|case
 literal|'b'
 case|:
 name|bflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
-name|cflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2078,28 +2060,6 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cflag
-operator|&&
-operator|!
-name|mflag
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-c only valid with -m\n"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|mflag

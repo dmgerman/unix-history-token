@@ -45,17 +45,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|cflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show mbuf cache information */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt
