@@ -2143,7 +2143,7 @@ name|tf2gdb
 index|[
 name|i
 index|]
-operator|>
+operator|>=
 literal|0
 condition|)
 name|registers
@@ -2817,7 +2817,7 @@ name|gdb2tf
 index|[
 name|i
 index|]
-operator|>
+operator|>=
 literal|0
 condition|)
 name|raw_regs
