@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmdtab.c	5.2 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,18 @@ name|More
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|unread
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* , Header(); */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -469,6 +481,46 @@ block|,
 literal|"Page"
 block|,
 name|More
+block|,
+name|MSGLIST
+block|,
+literal|0
+block|,
+name|MMNDEL
+block|,
+literal|"unread"
+block|,
+name|unread
+block|,
+name|MSGLIST
+block|,
+literal|0
+block|,
+name|MMNDEL
+block|,
+literal|"Unread"
+block|,
+name|unread
+block|,
+name|MSGLIST
+block|,
+literal|0
+block|,
+name|MMNDEL
+block|,
+literal|"new"
+block|,
+name|unread
+block|,
+name|MSGLIST
+block|,
+literal|0
+block|,
+name|MMNDEL
+block|,
+literal|"New"
+block|,
+name|unread
 block|,
 name|MSGLIST
 block|,
@@ -962,6 +1014,7 @@ literal|0
 block|,
 literal|1000
 block|,
+comment|/*	"Header",	Header,		STRLIST,	0,	1000,	*/
 literal|"core"
 block|,
 name|core
