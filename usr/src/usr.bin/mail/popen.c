@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)popen.c	1.4 %G%"
+literal|"@(#)popen.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,24 @@ begin_endif
 endif|#
 directive|endif
 endif|VMUNIX
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGRETRO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|sigchild
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_function
