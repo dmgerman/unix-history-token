@@ -2359,12 +2359,12 @@ comment|/* check event number */
 if|if
 condition|(
 name|event
-operator|>
+operator|>=
 name|N_EVENTS
 condition|)
 name|panic
 argument_list|(
-literal|"i4b_l2fsm.c: event> N_EVENTS\n"
+literal|"i4b_l2fsm.c: event>= N_EVENTS\n"
 argument_list|)
 expr_stmt|;
 comment|/* get current state and check it */

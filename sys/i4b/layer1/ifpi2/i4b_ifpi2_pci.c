@@ -2029,13 +2029,13 @@ comment|/* probably not really required */
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|IFPI2_MAXUNIT
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ifpi2-%d: Error, unit> IFPI_MAXUNIT!\n"
+literal|"ifpi2-%d: Error, unit>= IFPI_MAXUNIT!\n"
 argument_list|,
 name|unit
 argument_list|)

@@ -2243,13 +2243,13 @@ comment|/* probably not really required */
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|IFPNP_MAXUNIT
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"avm_pnp%d: Error, unit> IFPNP_MAXUNIT!\n"
+literal|"avm_pnp%d: Error, unit>= IFPNP_MAXUNIT!\n"
 argument_list|,
 name|unit
 argument_list|)

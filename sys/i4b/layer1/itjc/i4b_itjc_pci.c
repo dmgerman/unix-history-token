@@ -5045,13 +5045,13 @@ comment|/* Probably not really required. */
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|ITJC_MAXUNIT
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"itjc%d: Error, unit> ITJC_MAXUNIT!\n"
+literal|"itjc%d: Error, unit>= ITJC_MAXUNIT!\n"
 argument_list|,
 name|unit
 argument_list|)
