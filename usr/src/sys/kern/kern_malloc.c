@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -84,6 +84,16 @@ name|struct
 name|kmemusage
 modifier|*
 name|kmemusage
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|memname
+index|[]
+init|=
+name|INITKMEMNAMES
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +283,7 @@ operator|++
 expr_stmt|;
 name|OUT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -283,6 +293,13 @@ argument_list|,
 name|PSWP
 operator|+
 literal|2
+argument_list|,
+name|memname
+index|[
+name|type
+index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|IN
@@ -416,7 +433,7 @@ operator|++
 expr_stmt|;
 name|OUT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -427,6 +444,13 @@ argument_list|,
 name|PSWP
 operator|+
 literal|2
+argument_list|,
+name|memname
+index|[
+name|type
+index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|IN
