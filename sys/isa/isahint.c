@@ -320,7 +320,7 @@ operator|==
 literal|0
 operator|&&
 name|start
-operator|>
+operator|>=
 literal|0
 condition|)
 name|bus_set_resource
