@@ -3195,16 +3195,12 @@ argument_list|,
 name|CB_SOCKET_STATE
 argument_list|)
 expr_stmt|;
-comment|/* If the card left, remove it from the system. */
+comment|/* Status changed while present; remove the card from the system. */
 if|if
 condition|(
-operator|(
-name|stat
-operator|&
-name|CB_SS_CD
-operator|)
-operator|!=
-literal|0
+name|sc
+operator|->
+name|cd_present
 condition|)
 block|{
 name|sc
@@ -3222,13 +3218,45 @@ argument_list|,
 name|card_removed
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+comment|/* Nothing to do if the debounced state is 'not present'. */
+if|if
+condition|(
+operator|(
+name|stat
+operator|&
+name|CB_SS_CD
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 name|sc
 operator|->
 name|cd_present
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+operator|&&
+operator|(
+name|stat
+operator|&
+name|CB_SS_BADVCC
+operator|)
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"BAD Vcc request\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3307,12 +3335,6 @@ decl_stmt|;
 name|u_int32_t
 name|event
 decl_stmt|;
-name|u_int32_t
-name|stat
-decl_stmt|;
-name|int
-name|present
-decl_stmt|;
 name|event
 operator|=
 name|bus_space_read_4
@@ -3335,21 +3357,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|stat
-operator|=
-name|bus_space_read_4
-argument_list|(
-name|sp
-operator|->
-name|bst
-argument_list|,
-name|sp
-operator|->
-name|bsh
-argument_list|,
-name|CB_SOCKET_STATE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -3360,30 +3367,21 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Event mask 0x%x stat 0x%x\n"
+literal|"Event mask 0x%x\n"
 argument_list|,
 name|event
-argument_list|,
-name|stat
 argument_list|)
 expr_stmt|;
-name|present
-operator|=
-operator|(
-name|stat
-operator|&
-name|CB_SS_CD
-operator|)
-operator|==
-literal|0
-expr_stmt|;
+comment|/* 		 * Treat all card-detect signal transitions the same way 		 * since we can't reliably tell if this is an insert or a 		 * remove event. Stop the card from getting interrupts and 		 * defer the insert/remove event until the CB_SOCKET_STATE 		 * signals have had time to settle. 		 */
 if|if
 condition|(
-name|present
+operator|(
+name|event
+operator|&
+name|CB_SE_CD
+operator|)
 operator|!=
-name|sc
-operator|->
-name|cd_present
+literal|0
 condition|)
 block|{
 if|if
@@ -3411,7 +3409,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Delay insert events to debounce noisy signals. */
 name|sc
 operator|->
 name|cd_pending
@@ -3433,12 +3430,6 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* if the card is gone, stop interrupts to it */
-if|if
-condition|(
-operator|!
-name|present
-condition|)
 name|sc
 operator|->
 name|func_intr
@@ -3446,27 +3437,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bootverbose
-operator|&&
-operator|(
-name|stat
-operator|&
-name|CB_SS_BADVCC
-operator|)
-operator|!=
-literal|0
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"BAD Vcc request\n"
-argument_list|)
-expr_stmt|;
 comment|/* Ack the interrupt */
 name|bus_space_write_4
 argument_list|(
