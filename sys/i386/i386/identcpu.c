@@ -317,7 +317,8 @@ name|I686_CPU
 argument_list|)
 if|if
 condition|(
-operator|!
+literal|0
+operator|==
 name|strcmp
 argument_list|(
 name|cpu_vendor
@@ -527,7 +528,8 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
+literal|0
+operator|==
 name|strcmp
 argument_list|(
 name|cpu_vendor
@@ -536,6 +538,8 @@ literal|"AuthenticAMD"
 argument_list|)
 condition|)
 block|{
+comment|// values taken from AMD Processor Recognition
+comment|// http://www.amd.com/html/products/pcd/techdocs/appnotes/20734c.pdf
 name|cpu_model
 index|[
 literal|0
@@ -554,11 +558,11 @@ switch|switch
 condition|(
 name|cpu_id
 operator|&
-literal|0xF0
+literal|0xFF0
 condition|)
 block|{
 case|case
-literal|0xE0
+literal|0x4E0
 case|:
 name|strcat
 argument_list|(
@@ -569,13 +573,46 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0xF0
+literal|0x4F0
 case|:
 name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
 literal|"Am5x86 Write-Back"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x500
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"K5 model 0"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x510
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"K5 model 1"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x560
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"K6"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -789,12 +826,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+literal|0
+operator|==
 name|strcmp
 argument_list|(
 name|cpu_vendor
 argument_list|,
 literal|"GenuineIntel"
+argument_list|)
+operator|||
+literal|0
+operator|==
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"AuthenticAMD"
 argument_list|)
 condition|)
 block|{
