@@ -999,13 +999,13 @@ if|if
 condition|(
 name|sc
 operator|->
-name|csc_intr
+name|csc_route
 operator|==
 name|pcic_iw_pci
 operator|||
 name|sc
 operator|->
-name|func_intr
+name|func_route
 operator|==
 name|pcic_iw_pci
 condition|)
