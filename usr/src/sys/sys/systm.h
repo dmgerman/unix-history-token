@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.23	82/06/07	*/
+comment|/*	systm.h	4.24	82/06/14	*/
 end_comment
 
 begin_comment
@@ -392,17 +392,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|char	*wmemall();
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|caddr_t
+name|wmemall
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|swblk_t
