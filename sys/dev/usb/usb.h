@@ -1697,14 +1697,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|UIPROTO_MASS_BULK
+name|UIPROTO_MASS_BBB
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|UIPROTO_MASS_BULK_P
+name|UIPROTO_MASS_BBB_P
 value|80
 end_define
 

@@ -2864,7 +2864,7 @@ endif|#
 directive|endif
 break|break;
 case|case
-name|UIPROTO_MASS_BULK
+name|UIPROTO_MASS_BBB
 case|:
 name|sc
 operator|->
@@ -2874,7 +2874,7 @@ name|PROTO_BBB
 expr_stmt|;
 break|break;
 case|case
-name|UIPROTO_MASS_BULK_P
+name|UIPROTO_MASS_BBB_P
 case|:
 name|sc
 operator|->
