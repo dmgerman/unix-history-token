@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	2.2 (Berkeley) %G%"
+literal|"@(#)timedc.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,27 @@ block|{
 name|printf
 argument_list|(
 literal|"?Invalid command\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|c
+operator|->
+name|c_priv
+operator|&&
+name|getuid
+argument_list|()
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"?Privileged command\n"
 argument_list|)
 expr_stmt|;
 name|exit
