@@ -6911,13 +6911,6 @@ name|ieee80211_status
 parameter_list|(
 name|int
 name|s
-parameter_list|,
-specifier|const
-name|struct
-name|rt_addrinfo
-modifier|*
-name|info
-name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -9616,7 +9609,7 @@ operator|=
 name|AF_UNSPEC
 block|,
 operator|.
-name|af_status
+name|af_other_status
 operator|=
 name|ieee80211_status
 block|, }

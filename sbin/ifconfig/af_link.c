@@ -56,6 +56,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_comment
+comment|/* for RTX_IFA */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -138,9 +148,18 @@ name|sockaddr_dl
 operator|*
 operator|)
 name|info
+operator|->
+name|rti_info
+index|[
+name|RTAX_IFA
+index|]
 decl_stmt|;
 if|if
 condition|(
+name|sdl
+operator|!=
+name|NULL
+operator|&&
 name|sdl
 operator|->
 name|sdl_alen

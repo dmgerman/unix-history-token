@@ -164,13 +164,6 @@ name|vlan_status
 parameter_list|(
 name|int
 name|s
-parameter_list|,
-specifier|const
-name|struct
-name|rt_addrinfo
-modifier|*
-name|info
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -740,7 +733,7 @@ operator|=
 name|AF_UNSPEC
 block|,
 operator|.
-name|af_status
+name|af_other_status
 operator|=
 name|vlan_status
 block|, }

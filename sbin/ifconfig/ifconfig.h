@@ -284,7 +284,7 @@ name|short
 name|af_af
 decl_stmt|;
 comment|/* AF_* */
-comment|/* print status method */
+comment|/* 	 * Status is handled one of two ways; if there is an 	 * address associated with the interface then the 	 * associated address family af_status method is invoked 	 * with the appropriate addressin info.  Otherwise, if 	 * all possible info is to be displayed and af_other_status 	 * is defined then it is invoked after all address status 	 * is presented. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -297,6 +297,15 @@ specifier|const
 name|struct
 name|rt_addrinfo
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|af_other_status
+function_decl|)
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 comment|/* parse address method */
