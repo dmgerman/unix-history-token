@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.33	83/05/21	*/
+comment|/*	param.h	4.34	83/06/02	*/
 end_comment
 
 begin_comment
@@ -223,11 +223,22 @@ begin_comment
 comment|/*  * Signals  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NSIG
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../h/signal.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -247,7 +258,8 @@ name|ISSIG
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->p_sig&& \ 	((p)->p_flag&STRC || ((p)->p_sig&~ (p)->p_ignsig))&& issig())
+define|\
+value|((p)->p_sig&& ((p)->p_flag&STRC || \ 	 ((p)->p_sig&~ ((p)->p_sigignore | (p)->p_sigmask))&& issig()))
 end_define
 
 begin_comment

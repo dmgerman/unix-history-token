@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.26	83/05/21	*/
+comment|/*	user.h	4.27	83/06/02	*/
 end_comment
 
 begin_ifdef
@@ -240,13 +240,17 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* disposition of signals */
-name|long
+name|int
 name|u_sigmask
 index|[
 name|NSIG
 index|]
 decl_stmt|;
 comment|/* signals to be blocked */
+name|int
+name|u_oldmask
+decl_stmt|;
+comment|/* saved mask from before sigpause */
 name|int
 name|u_code
 decl_stmt|;

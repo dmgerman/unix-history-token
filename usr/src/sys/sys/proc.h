@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.22	83/05/22	*/
+comment|/*	proc.h	4.23	83/06/02	*/
 end_comment
 
 begin_comment
@@ -58,23 +58,22 @@ comment|/* time since last block */
 name|char
 name|p_cursig
 decl_stmt|;
-name|long
+name|int
 name|p_sig
 decl_stmt|;
 comment|/* signals pending to this process */
-name|long
-name|p_siga0
+name|int
+name|p_sigmask
 decl_stmt|;
-comment|/* low bit of 2 bit signal action */
-name|long
-name|p_siga1
+comment|/* current signal mask */
+name|int
+name|p_sigignore
 decl_stmt|;
-comment|/* high bit of 2 bit signal action */
-define|#
-directive|define
-name|p_ignsig
-value|p_siga0
-comment|/* ignored signal mask */
+comment|/* signals being ignored */
+name|int
+name|p_sigcatch
+decl_stmt|;
+comment|/* signals being caught by user */
 name|int
 name|p_flag
 decl_stmt|;
@@ -511,8 +510,15 @@ begin_comment
 comment|/* another flag to prevent swap out */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SOMASK
+value|0x0000200
+end_define
+
 begin_comment
-comment|/* was SDLYU */
+comment|/* restore old mask after taking signal */
 end_comment
 
 begin_define
@@ -621,12 +627,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SNUSIG
+name|SOUSIG
 value|0x0100000
 end_define
 
 begin_comment
-comment|/* using new signal mechanism */
+comment|/* using old signal mechanism */
 end_comment
 
 begin_define
