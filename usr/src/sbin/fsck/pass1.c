@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.10 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,15 @@ end_decl_stmt
 begin_function_decl
 name|int
 name|pass1check
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|dinode
+modifier|*
+name|getnextinode
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -235,6 +244,9 @@ name|n_blks
 operator|=
 literal|0
 expr_stmt|;
+name|resetinodebuf
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|c
@@ -279,7 +291,7 @@ condition|)
 continue|continue;
 name|dp
 operator|=
-name|ginode
+name|getnextinode
 argument_list|(
 name|inumber
 argument_list|)
@@ -924,6 +936,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|freeinodebuf
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
