@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	1.1 83/03/17"
+literal|"@(#)pl_2.c	1.2 83/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -940,7 +940,8 @@ block|{
 specifier|register
 name|int
 name|n
-decl_stmt|,
+decl_stmt|;
+name|int
 name|crew
 index|[
 literal|3

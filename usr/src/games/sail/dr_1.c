@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	1.1 83/03/17"
+literal|"@(#)dr_1.c	1.2 83/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,16 +278,17 @@ name|k
 decl_stmt|,
 name|l
 decl_stmt|,
-name|crew
-index|[
-literal|3
-index|]
-decl_stmt|,
 name|men
 init|=
 literal|0
 decl_stmt|,
 name|captured
+decl_stmt|;
+name|int
+name|crew
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|struct
 name|shipspecs
@@ -3408,16 +3409,16 @@ name|uid
 decl_stmt|;
 name|signal
 argument_list|(
-name|SIGHUP
+literal|1
 argument_list|,
-name|SIG_IGN
+literal|1
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-name|SIGINT
+literal|2
 argument_list|,
-name|SIG_IGN
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*	uid = geteuid(); */

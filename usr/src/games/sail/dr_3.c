@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_3.c	1.2 83/05/19"
+literal|"@(#)dr_3.c	1.3 83/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,8 @@ decl_stmt|,
 name|ma
 decl_stmt|,
 name|closest
-decl_stmt|,
+decl_stmt|;
+name|int
 name|weakest
 index|[
 literal|5
