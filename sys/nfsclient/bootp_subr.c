@@ -1287,15 +1287,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|bootpc_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * In order to have multiple active interfaces with address 0.0.0.0  * and be able to send data to a selected interface, we perform  * some tricks:  *  *  - The 'broadcast' address is different for each interface.  *  *  - We temporarily add routing pointing 255.255.255.255 to the  *    selected interface broadcast address, thus the packet sent  *    goes to that interface.  */
 end_comment

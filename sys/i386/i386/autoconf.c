@@ -311,6 +311,12 @@ name|defined
 argument_list|(
 name|NFS_ROOT
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BOOTP_NFSROOT
+argument_list|)
 end_if
 
 begin_function_decl
@@ -650,27 +656,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BOOTP
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|bootpc_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Do legacy root filesystem discovery.  */
 end_comment
@@ -765,6 +750,12 @@ operator|&&
 name|defined
 argument_list|(
 name|NFS_ROOT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BOOTP_NFSROOT
 argument_list|)
 end_if
 

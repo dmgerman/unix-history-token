@@ -316,6 +316,15 @@ name|nfs_diskless_valid
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|bootpc_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
