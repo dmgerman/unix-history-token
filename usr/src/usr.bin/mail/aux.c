@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	2.9 %G%"
+literal|"@(#)aux.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2559,9 +2559,6 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|SENDMAIL
 if|if
 condition|(
 operator|(
@@ -2606,8 +2603,6 @@ operator|(
 name|cp
 operator|)
 return|;
-endif|#
-directive|endif
 name|ibuf
 operator|=
 name|setinput
