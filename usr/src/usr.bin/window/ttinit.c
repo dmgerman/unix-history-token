@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttinit.c	3.14 %G%"
+literal|"@(#)ttinit.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|tt_zentec
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|tt_generic
 parameter_list|()
 function_decl|;
@@ -108,6 +115,14 @@ block|,
 literal|6
 block|,
 name|tt_tvi925
+block|}
+block|,
+block|{
+literal|"zentec"
+block|,
+literal|6
+block|,
+name|tt_zentec
 block|}
 block|,
 block|{
