@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	8.1 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,12 +168,6 @@ begin_include
 include|#
 directive|include
 file|"tftpsubs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_define
