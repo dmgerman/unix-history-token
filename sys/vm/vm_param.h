@@ -43,6 +43,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_METER
+value|VM_TOTAL
+end_define
+
+begin_comment
+comment|/* deprecated, use VM_TOTAL */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VM_LOADAVG
 value|2
 end_define
