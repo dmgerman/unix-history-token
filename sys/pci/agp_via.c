@@ -303,6 +303,14 @@ operator|(
 literal|"VIA 8385 host to PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x31891106
+case|:
+return|return
+operator|(
+literal|"VIA 8377 (Apollo KT400/KT400A/KT600) host to PCI bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
@@ -427,6 +435,9 @@ condition|)
 block|{
 case|case
 literal|0x31881106
+case|:
+case|case
+literal|0x31891106
 case|:
 name|sc
 operator|->
