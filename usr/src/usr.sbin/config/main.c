@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,24 +397,11 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|symlink
-argument_list|(
-literal|"../sys"
-argument_list|,
-name|path
-argument_list|(
-literal|"sys"
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|xxx
 argument_list|,
-literal|"../%s"
+literal|"../../%s/include"
 argument_list|,
 name|machinename
 argument_list|)
@@ -639,6 +626,10 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+define|#
+directive|define
+name|CDIR
+value|"../../compile/"
 name|cp
 operator|=
 name|malloc
@@ -657,7 +648,10 @@ argument_list|(
 name|file
 argument_list|)
 operator|+
-literal|5
+sizeof|sizeof
+argument_list|(
+name|CDIR
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -668,7 +662,7 @@ name|strcpy
 argument_list|(
 name|cp
 argument_list|,
-literal|"../"
+name|CDIR
 argument_list|)
 expr_stmt|;
 operator|(

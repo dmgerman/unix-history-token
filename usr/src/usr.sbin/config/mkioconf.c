@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.15 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,28 +138,28 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"machine/pte.h\"\n"
+literal|"#include \"vax/include/pte.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/param.h\"\n"
+literal|"#include \"sys/param.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/buf.h\"\n"
+literal|"#include \"sys/buf.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/map.h\"\n"
+literal|"#include \"sys/map.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -173,14 +173,14 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../vaxmba/mbavar.h\"\n"
+literal|"#include \"vax/mba/mbavar.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../vaxuba/ubavar.h\"\n\n"
+literal|"#include \"vax/uba/ubavar.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1583,28 +1583,28 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/param.h\"\n"
+literal|"#include \"sys/param.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"machine/pte.h\"\n"
+literal|"#include \"tahoe/include/pte.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/buf.h\"\n"
+literal|"#include \"sys/buf.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/map.h\"\n"
+literal|"#include \"sys/map.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1618,7 +1618,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../tahoevba/vbavar.h\"\n"
+literal|"#include \"tahoe/vba/vbavar.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2643,28 +2643,28 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"machine/pte.h\"\n"
+literal|"#include \"hp300/include/pte.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/param.h\"\n"
+literal|"#include \"sys/param.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/buf.h\"\n"
+literal|"#include \"sys/buf.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sys/map.h\"\n"
+literal|"#include \"sys/map.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2678,7 +2678,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../hpdev/device.h\"\n\n"
+literal|"#include \"hp300/dev/device.h\"\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
