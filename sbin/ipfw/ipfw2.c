@@ -1501,7 +1501,7 @@ name|void
 modifier|*
 name|optval
 parameter_list|,
-name|socklen_t
+name|uintptr_t
 name|optlen
 parameter_list|)
 block|{
@@ -7817,7 +7817,7 @@ argument_list|,
 name|data
 argument_list|,
 operator|(
-name|socklen_t
+name|uintptr_t
 operator|)
 operator|&
 name|nbytes
@@ -8608,10 +8608,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|av
+name|ac
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|warnx
@@ -9003,7 +9002,7 @@ argument_list|,
 name|data
 argument_list|,
 operator|(
-name|socklen_t
+name|uintptr_t
 operator|)
 operator|&
 name|nbytes
@@ -10717,8 +10716,8 @@ literal|"not any never matches"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* else do nothing and skip this entry */
-continue|continue;
+comment|/* else do nothing and return */
+return|return;
 block|}
 comment|/* A single IP can be stored in an optimized format */
 if|if
@@ -17986,7 +17985,7 @@ argument_list|,
 name|rule
 argument_list|,
 operator|(
-name|socklen_t
+name|uintptr_t
 operator|)
 operator|&
 name|i
