@@ -84,8 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rune.h>
+file|<paths.h>
 end_include
+
+begin_comment
+comment|/* for _PATH_LOCALE */
+end_comment
 
 begin_include
 include|#
