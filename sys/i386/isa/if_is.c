@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.25 1994/08/08 13:33:16 davidg Exp $  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.26 1994/08/13 03:50:06 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -1208,7 +1208,7 @@ comment|/* 	 * XXX -- not sure this is right place to do this 	 * Allocate memor
 comment|/* 	 * XXX - hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
 define|#
 directive|define
-name|MAXMEM
+name|ISMAXMEM
 value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) \                  + sizeof(struct init_block) + 8)
 name|is
 operator|->
@@ -1221,7 +1221,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|MAXMEM
+name|ISMAXMEM
 argument_list|,
 name|M_TEMP
 argument_list|,
@@ -1244,7 +1244,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * XXX -- should take corrective action if not 	 * quadword alilgned, the 8 byte slew factor in MAXMEM 	 * allows for this. 	 */
+comment|/*  	 * XXX -- should take corrective action if not 	 * quadword alilgned, the 8 byte slew factor in ISMAXMEM 	 * allows for this. 	 */
 if|if
 condition|(
 operator|(
