@@ -318,6 +318,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|INP_INFO_LOCK_INIT
+argument_list|(
+operator|&
+name|divcbinfo
+argument_list|,
+literal|"div"
+argument_list|)
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&

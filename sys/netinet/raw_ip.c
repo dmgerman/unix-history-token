@@ -261,6 +261,14 @@ name|void
 name|rip_init
 parameter_list|()
 block|{
+name|INP_INFO_LOCK_INIT
+argument_list|(
+operator|&
+name|ripcbinfo
+argument_list|,
+literal|"rip"
+argument_list|)
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
