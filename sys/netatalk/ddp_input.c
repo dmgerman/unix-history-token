@@ -12,25 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/netisr.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -48,19 +48,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/intrq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/intrq.h>
+file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_include

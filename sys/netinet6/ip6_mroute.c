@@ -40,13 +40,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/callout.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -59,6 +71,18 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -82,25 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -112,19 +118,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/raw_cb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/raw_cb.h>
+file|<net/route.h>
 end_include
 
 begin_include

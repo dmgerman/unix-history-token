@@ -18,13 +18,23 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/aio.h>
 end_include
+
+begin_comment
+comment|/* for aio_swake proto */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
 end_include
 
 begin_include
@@ -52,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -65,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -88,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -106,7 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signalvar.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -118,17 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/aio.h>
-end_include
-
-begin_comment
-comment|/* for aio_swake proto */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
+file|<sys/systm.h>
 end_include
 
 begin_decl_stmt

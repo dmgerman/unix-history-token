@@ -24,6 +24,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -36,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|<sys/sx.h>
 end_include
 
 begin_comment

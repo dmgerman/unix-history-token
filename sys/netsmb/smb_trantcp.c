@@ -12,13 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/condvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -36,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -43,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -60,13 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -78,7 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/condvar.h>
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include

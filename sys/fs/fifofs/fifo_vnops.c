@@ -12,13 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/event.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/unistd.h>
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -48,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -60,6 +72,12 @@ end_include
 begin_comment
 comment|/* XXXKSE */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
 
 begin_include
 include|#
@@ -76,37 +94,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filio.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/poll.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include

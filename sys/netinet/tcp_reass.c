@@ -46,19 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -92,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -104,7 +104,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -138,7 +156,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -160,24 +190,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/icmp_var.h>
 end_include
 
 begin_comment
 comment|/* for ICMP_BANDLIM		*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_pcb.h>
-end_include
 
 begin_include
 include|#
@@ -206,7 +224,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/nd6.h>
+file|<netinet6/in6_pcb.h>
 end_include
 
 begin_include
@@ -218,7 +236,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_pcb.h>
+file|<netinet6/nd6.h>
 end_include
 
 begin_endif

@@ -28,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -46,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -58,13 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -82,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
+file|<net/route.h>
 end_include
 
 begin_include
@@ -112,24 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ip6_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ip6_mroute.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/icmp6.h>
 end_include
 
@@ -142,7 +142,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_mroute.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
@@ -154,7 +178,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6protosw.h>
+file|<netinet6/raw_ip6.h>
 end_include
 
 begin_ifdef
@@ -173,12 +197,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet6/raw_ip6.h>
-end_include
 
 begin_ifdef
 ifdef|#

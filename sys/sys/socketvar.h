@@ -28,25 +28,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
+file|<sys/_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
+file|<sys/_mutex.h>
 end_include
 
 begin_include

@@ -30,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -78,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -120,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_pcb.h>
 end_include
 
@@ -133,6 +145,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
 end_include
 
 begin_include

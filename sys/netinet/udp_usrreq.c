@@ -30,7 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/domain.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -48,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/domain.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -61,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -78,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -85,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/jail.h>
 end_include
 
 begin_include
@@ -126,6 +144,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
 end_include
 
@@ -149,13 +179,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet/ip_icmp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
+file|<netinet/icmp_var.h>
 end_include
 
 begin_include
@@ -180,18 +210,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/icmp_var.h>
-end_include
 
 begin_include
 include|#
