@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1088,11 +1088,6 @@ decl_stmt|,
 name|size
 decl_stmt|;
 name|int
-name|needclose
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|ronly
 decl_stmt|;
 specifier|extern
@@ -1127,10 +1122,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|needclose
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|VOP_IOCTL
@@ -2046,11 +2037,7 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_if
-if|if
-condition|(
-name|needclose
-condition|)
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -2071,7 +2058,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_if
 if|if
