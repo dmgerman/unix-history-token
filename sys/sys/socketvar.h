@@ -1569,23 +1569,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|socheckproc
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|socket
 modifier|*
