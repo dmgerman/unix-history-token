@@ -768,6 +768,42 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* lchown.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LCHOWN
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|lchown
+name|P_
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|path
+operator|,
+name|uid_t
+name|owner
+operator|,
+name|gid_t
+name|group
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* main.c */
 end_comment
 
