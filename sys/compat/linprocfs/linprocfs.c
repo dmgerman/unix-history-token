@@ -171,6 +171,52 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/alpha_cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpuconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ncpus
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __alpha__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -182,6 +228,15 @@ include|#
 directive|include
 file|<machine/md_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
 
 begin_include
 include|#
@@ -303,6 +358,10 @@ end_define
 
 begin_comment
 comment|/* pages to kbytes */
+end_comment
+
+begin_comment
+comment|/*  * Filler function for proc/meminfo  */
 end_comment
 
 begin_function
@@ -547,6 +606,257 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_comment
+comment|/*  * Filler function for proc/cpuinfo (Alpha version)  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|linprocfs_docpuinfo
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+block|{
+name|u_int64_t
+name|type
+decl_stmt|,
+name|major
+decl_stmt|;
+name|struct
+name|pcs
+modifier|*
+name|pcsp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|model
+decl_stmt|,
+modifier|*
+name|sysname
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|cpuname
+index|[]
+init|=
+block|{
+literal|"EV3"
+block|,
+literal|"EV4"
+block|,
+literal|"Simulate"
+block|,
+literal|"LCA4"
+block|,
+literal|"EV5"
+block|,
+literal|"EV45"
+block|,
+literal|"EV56"
+block|,
+literal|"EV6"
+block|,
+literal|"PCA56"
+block|,
+literal|"PCA57"
+block|,
+literal|"EV67"
+block|,
+literal|"EV68CB"
+block|,
+literal|"EV68AL"
+block|}
+decl_stmt|;
+name|pcsp
+operator|=
+name|LOCATE_PCS
+argument_list|(
+name|hwrpb
+argument_list|,
+name|hwrpb
+operator|->
+name|rpb_primary_cpu_id
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|pcsp
+operator|->
+name|pcs_proc_type
+expr_stmt|;
+name|major
+operator|=
+operator|(
+name|type
+operator|&
+name|PCS_PROC_MAJOR
+operator|)
+operator|>>
+name|PCS_PROC_MAJORSHIFT
+expr_stmt|;
+if|if
+condition|(
+name|major
+operator|<
+sizeof|sizeof
+argument_list|(
+name|cpuname
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+condition|)
+block|{
+name|model
+operator|=
+name|cpuname
+index|[
+name|major
+operator|-
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|model
+operator|=
+literal|"unknown"
+expr_stmt|;
+block|}
+name|sysname
+operator|=
+name|alpha_dsr_sysname
+argument_list|()
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"cpu\t\t\t: Alpha\n"
+literal|"cpu model\t\t: %s\n"
+literal|"cpu variation\t\t: %ld\n"
+literal|"cpu revision\t\t: %ld\n"
+literal|"cpu serial number\t: %s\n"
+literal|"system type\t\t: %s\n"
+literal|"system variation\t: %s\n"
+literal|"system revision\t\t: %ld\n"
+literal|"system serial number\t: %s\n"
+literal|"cycle frequency [Hz]\t: %lu\n"
+literal|"timer frequency [Hz]\t: %lu\n"
+literal|"page size [bytes]\t: %ld\n"
+literal|"phys. address bits\t: %ld\n"
+literal|"max. addr. space #\t: %ld\n"
+literal|"BogoMIPS\t\t: %lu.%02lu\n"
+literal|"kernel unaligned acc\t: %ld (pc=%lx,va=%lx)\n"
+literal|"user unaligned acc\t: %ld (pc=%lx,va=%lx)\n"
+literal|"platform string\t\t: %s\n"
+literal|"cpus detected\t\t: %d\n"
+argument_list|,
+name|model
+argument_list|,
+name|pcsp
+operator|->
+name|pcs_proc_var
+argument_list|,
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|hwrpb
+operator|->
+name|rpb_revision
+argument_list|,
+literal|" "
+argument_list|,
+literal|" "
+argument_list|,
+literal|"0"
+argument_list|,
+literal|0
+argument_list|,
+literal|" "
+argument_list|,
+name|hwrpb
+operator|->
+name|rpb_cc_freq
+argument_list|,
+name|hz
+argument_list|,
+name|hwrpb
+operator|->
+name|rpb_page_size
+argument_list|,
+name|hwrpb
+operator|->
+name|rpb_phys_addr_size
+argument_list|,
+name|hwrpb
+operator|->
+name|rpb_max_asn
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|sysname
+argument_list|,
+name|ncpus
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __alpha__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_comment
+comment|/*  * Filler function for proc/cpuinfo (i386 version)  */
+end_comment
 
 begin_function
 specifier|static
@@ -863,6 +1173,19 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
+
+begin_comment
+comment|/*  * Filler function for proc/stat  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -953,6 +1276,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Filler function for proc/uptime  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1014,6 +1341,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Filler function for proc/version  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1050,6 +1381,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Filler function for proc/loadavg  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1058,47 +1393,6 @@ parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
 block|{
-name|int
-name|lastpid
-decl_stmt|,
-name|ilen
-decl_stmt|;
-name|ilen
-operator|=
-sizeof|sizeof
-argument_list|(
-name|lastpid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kernel_sysctlbyname
-argument_list|(
-name|p
-argument_list|,
-literal|"kern.lastpid"
-argument_list|,
-operator|&
-name|lastpid
-argument_list|,
-operator|&
-name|ilen
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|lastpid
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* fake it */
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -1219,7 +1513,7 @@ comment|/* number of running tasks */
 name|nprocs
 argument_list|,
 comment|/* number of tasks */
-name|lastpid
+name|nextpid
 comment|/* the last pid */
 argument_list|)
 expr_stmt|;
@@ -1230,6 +1524,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Filler function for proc/pid/stat  */
+end_comment
 
 begin_function
 specifier|static
@@ -1741,6 +2039,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Filler function for proc/pid/status  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2214,6 +2516,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Filler function for proc/self  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2243,6 +2549,174 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Filler function for proc/pid/cmdline  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|linprocfs_doproccmdline
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+block|{
+name|struct
+name|ps_strings
+name|pstr
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+comment|/* 	 * If we are using the ps/cmdline caching, use that.  Otherwise 	 * revert back to the old way which only implements full cmdline 	 * for the currept process and just p->p_comm for all other 	 * processes. 	 * Note that if the argv is no longer available, we deliberately 	 * don't fall back on p->p_comm or return an error: the authentic 	 * Linux behaviour is to return zero-length in this case. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_args
+operator|&&
+operator|(
+name|ps_argsopen
+operator|||
+operator|!
+name|p_can
+argument_list|(
+name|curp
+argument_list|,
+name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+block|{
+name|sbuf_bcpy
+argument_list|(
+name|sb
+argument_list|,
+name|p
+operator|->
+name|p_args
+operator|->
+name|ar_args
+argument_list|,
+name|p
+operator|->
+name|p_args
+operator|->
+name|ar_length
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|p
+operator|!=
+name|curp
+condition|)
+block|{
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%.*s"
+argument_list|,
+name|MAXCOMLEN
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|copyin
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|PS_STRINGS
+argument_list|,
+operator|&
+name|pstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pstr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|pstr
+operator|.
+name|ps_nargvstr
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sbuf_copyin
+argument_list|(
+name|sb
+argument_list|,
+name|pstr
+operator|.
+name|ps_argvstr
+index|[
+name|i
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%c"
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Filler function for proc/pid/exe  */
+end_comment
 
 begin_function
 specifier|static
@@ -2302,6 +2776,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Filler function for proc/net/dev  */
+end_comment
 
 begin_function
 specifier|static
@@ -2433,6 +2911,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Filler function for proc/devices  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2504,6 +2986,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Filler function for proc/cmdline  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2553,7 +3039,21 @@ block|,
 name|PFS_PARENT
 block|,
 comment|/*	    name	flags uid  gid	mode  data */
-comment|/* PFS_FILE(   "cmdline",	0,    0,   0,	0444, procfs_doproccmdline), */
+name|PFS_FILE
+argument_list|(
+literal|"cmdline"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0444
+argument_list|,
+name|linprocfs_doproccmdline
+argument_list|)
+block|,
 name|PFS_SYMLINK
 argument_list|(
 literal|"exe"
