@@ -546,6 +546,11 @@ index|]
 operator|=
 name|SERVICE_NONE
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 name|service_done
 operator|=
