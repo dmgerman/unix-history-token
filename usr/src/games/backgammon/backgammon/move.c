@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.1 (Berkeley) %G%"
+literal|"@(#)move.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,8 +119,7 @@ name|BOARD
 modifier|*
 name|freeq
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -130,8 +129,7 @@ name|BOARD
 modifier|*
 name|checkq
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1201,8 +1199,7 @@ if|if
 condition|(
 name|p
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 comment|/* check if queue empty */
@@ -1216,8 +1213,7 @@ name|p
 operator|->
 name|b_next
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -1279,8 +1275,7 @@ name|p
 operator|->
 name|b_next
 operator|!=
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 comment|/* traverse queue */
@@ -1361,8 +1356,7 @@ name|new
 operator|->
 name|b_next
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 block|}
 end_block
@@ -1670,8 +1664,7 @@ if|if
 condition|(
 name|freeq
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|new
@@ -1707,8 +1700,7 @@ name|new
 operator|->
 name|b_next
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -1829,8 +1821,7 @@ do|while
 condition|(
 name|checkq
 operator|!=
-operator|-
-literal|1
+literal|0
 condition|)
 do|;
 name|bcopy
