@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.4  */
+comment|/*  *	This routine scrolls the window up a line.  *  * @(#)scroll.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -133,7 +133,7 @@ operator|==
 name|curscr
 condition|)
 block|{
-name|putchar
+name|_putchar
 argument_list|(
 literal|'\n'
 argument_list|)
