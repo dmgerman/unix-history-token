@@ -5708,7 +5708,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 	     * If we never did find the end character, return NULL 	     * right now, setting the length to be the distance to 	     * the end of the string, since that's what make does. 	     */
+comment|/* 		 * If we never did find the end character, return NULL 		 * right now, setting the length to be the distance to 		 * the end of the string, since that's what make does. 		 */
 operator|*
 name|freePtr
 operator|=
