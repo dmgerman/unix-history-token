@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_seq.c	5.7 (Berkeley) %G%"
+literal|"@(#)rec_seq.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,6 +234,8 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
+name|BTF_EOF
+operator||
 name|BTF_RINMEM
 argument_list|)
 operator|&&
@@ -295,6 +297,8 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
+name|BTF_EOF
+operator||
 name|BTF_RINMEM
 argument_list|)
 operator|&&
