@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.16 1994/03/16 05:54:08 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.17 1994/03/21 09:46:12 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -182,14 +182,14 @@ begin_define
 define|#
 directive|define
 name|LOWATER
-value|((1024*1024)/NBPG)
+value|((2048*1024)/NBPG)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_PAGEOUT_PAGE_COUNT
-value|6
+value|8
 end_define
 
 begin_decl_stmt
@@ -237,10 +237,15 @@ name|int
 name|vm_pageout_clean
 parameter_list|(
 name|m
+parameter_list|,
+name|sync
 parameter_list|)
 specifier|register
 name|vm_page_t
 name|m
+decl_stmt|;
+name|int
+name|sync
 decl_stmt|;
 block|{
 comment|/* 	 *	Clean the page and remove it from the 	 *	laundry. 	 * 	 *	We set the busy bit to cause 	 *	potential page faults on this page to 	 *	block. 	 * 	 *	And we set pageout-in-progress to keep 	 *	the object from disappearing during 	 *	pageout.  This guarantees that the 	 *	page won't move from the inactive 	 *	queue.  (However, any other page on 	 *	the inactive queue may move!) 	 */
@@ -318,8 +323,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|collapseagain
-label|:
 if|if
 condition|(
 operator|!
@@ -340,6 +343,12 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+operator|!
+name|sync
+condition|)
+block|{
 if|if
 condition|(
 name|object
@@ -388,6 +397,7 @@ block|{
 return|return
 literal|0
 return|;
+block|}
 block|}
 name|pageout_count
 operator|=
@@ -654,9 +664,13 @@ name|m
 argument_list|,
 operator|(
 operator|(
+name|sync
+operator|||
+operator|(
 name|object
 operator|==
 name|kernel_object
+operator|)
 operator|)
 condition|?
 name|TRUE
@@ -709,9 +723,13 @@ name|pageout_count
 argument_list|,
 operator|(
 operator|(
+name|sync
+operator|||
+operator|(
 name|object
 operator|==
 name|kernel_object
+operator|)
 operator|)
 condition|?
 name|TRUE
@@ -949,12 +967,12 @@ comment|/* 		 * if a page is active, not wired and is in the processes pmap, 		 
 end_comment
 
 begin_comment
-unit|if ((p->flags& (PG_ACTIVE|PG_BUSY)) == PG_ACTIVE&& 			p->wire_count == 0&& 			p->hold_count == 0&& 			pmap_page_exists(vm_map_pmap(map), VM_PAGE_TO_PHYS(p))) { 			if (!pmap_is_referenced(VM_PAGE_TO_PHYS(p))) { 				vm_page_deactivate(p); 				if ((p->flags& PG_CLEAN) == 0) { 					vm_pageout_clean(p); 				} 				++dcount; 				if (--count<= 0) { 					vm_page_unlock_queues(); 					s = splbio(); 					while (object->paging_in_progress) { 						tsleep((caddr_t) object,PVM,"vmfobw",0); 					} 					splx(s); 					return dcount; 				} 			} else { 				vm_pageout_deact_bump(p); 				pmap_clear_reference(VM_PAGE_TO_PHYS(p)); 				queue_remove(&object->memq, p, vm_page_t, listq); 				queue_enter(&object->memq, p, vm_page_t, listq); 				queue_remove(&vm_page_queue_active, p, vm_page_t, pageq); 				queue_enter(&vm_page_queue_active, p, vm_page_t, pageq); 			}
+unit|if ((p->flags& (PG_ACTIVE|PG_BUSY)) == PG_ACTIVE&& 			p->wire_count == 0&& 			p->hold_count == 0&& 			pmap_page_exists(vm_map_pmap(map), VM_PAGE_TO_PHYS(p))) { 			if (!pmap_is_referenced(VM_PAGE_TO_PHYS(p))) { 				vm_page_deactivate(p); 				if ((p->flags& PG_CLEAN) == 0) { 					vm_pageout_clean(p,0); 				} 				++dcount; 				if (--count<= 0) { 					vm_page_unlock_queues(); 					s = splbio(); 					while (object->paging_in_progress) { 						tsleep((caddr_t) object,PVM,"vmfobw",0); 					} 					splx(s); 					return dcount; 				} 			} else { 				vm_pageout_deact_bump(p); 				pmap_clear_reference(VM_PAGE_TO_PHYS(p)); 				queue_remove(&object->memq, p, vm_page_t, listq); 				queue_enter(&object->memq, p, vm_page_t, listq); 				queue_remove(&vm_page_queue_active, p, vm_page_t, pageq); 				queue_enter(&vm_page_queue_active, p, vm_page_t, pageq); 			}
 comment|/* 		 * if a page is inactive and has been modified, clean it now 		 */
 end_comment
 
 begin_endif
-unit|} else if ((p->flags& (PG_INACTIVE|PG_BUSY)) == PG_INACTIVE) { 			if ((p->flags& PG_CLEAN)&& 				pmap_is_modified(VM_PAGE_TO_PHYS(p))) 				p->flags&= ~PG_CLEAN;  			if ((p->flags& PG_CLEAN) == 0) 				vm_pageout_clean(p); 		}  		vm_page_unlock_queues(); 		p = next; 	} 	s = splbio(); 	while (object->paging_in_progress) { 		tsleep((caddr_t)object,PVM,"vmfobw",0); 	} 	splx(s); 	return dcount; }
+unit|} else if ((p->flags& (PG_INACTIVE|PG_BUSY)) == PG_INACTIVE) { 			if ((p->flags& PG_CLEAN)&& 				pmap_is_modified(VM_PAGE_TO_PHYS(p))) 				p->flags&= ~PG_CLEAN;  			if ((p->flags& PG_CLEAN) == 0) 				vm_pageout_clean(p,0); 		}  		vm_page_unlock_queues(); 		p = next; 	} 	s = splbio(); 	while (object->paging_in_progress) { 		tsleep((caddr_t)object,PVM,"vmfobw",0); 	} 	splx(s); 	return dcount; }
 endif|#
 directive|endif
 end_endif
@@ -2159,6 +2177,8 @@ operator|=
 name|vm_pageout_clean
 argument_list|(
 name|m
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -2579,22 +2599,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|page_shortage
-operator|>
-literal|0
-operator|||
-name|m
-operator|->
-name|deact
-operator|>=
-operator|(
-name|DEACT_MAX
-operator|/
-literal|2
-operator|)
-condition|)
+comment|/*			if (page_shortage> 0 || m->deact>= (DEACT_MAX/2)) */
 name|pmap_clear_reference
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -2674,15 +2679,23 @@ operator|||
 operator|!
 name|force_wakeup
 operator|||
+operator|(
 name|pages_freed
 operator|==
 literal|0
+operator|&&
+operator|(
+name|vm_page_free_count
+operator|<
+name|vm_page_free_min
+operator|)
 operator|)
 operator|&&
 operator|(
 name|vm_page_free_count
 operator|<=
 name|vm_page_free_reserved
+operator|)
 operator|)
 condition|)
 block|{
@@ -2824,6 +2837,13 @@ name|int
 name|flag
 parameter_list|)
 block|{
+name|int
+name|nextrun
+init|=
+name|hz
+operator|/
+literal|10
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2838,10 +2858,17 @@ operator|)
 operator|||
 operator|(
 name|vm_page_free_count
-operator|<
-name|vm_page_free_min
+operator|<=
+name|vm_page_free_reserved
 operator|)
 condition|)
+block|{
+name|nextrun
+operator|=
+name|hz
+operator|/
+literal|32
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -2851,6 +2878,7 @@ operator|&
 name|vm_pages_needed
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_pageout_req_do_stats
 operator|=
 literal|1
@@ -2865,7 +2893,7 @@ name|vm_pageout_timeout
 argument_list|,
 literal|0
 argument_list|,
-literal|10
+name|nextrun
 argument_list|)
 expr_stmt|;
 block|}
@@ -3063,12 +3091,6 @@ expr_stmt|;
 if|if
 condition|(
 name|force_wakeup
-operator|||
-operator|(
-name|vm_page_free_count
-operator|>=
-name|vm_page_free_min
-operator|)
 condition|)
 name|wakeup
 argument_list|(
