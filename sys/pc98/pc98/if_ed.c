@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.11.2.11 1998/01/03 05:53:04 kato Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.11.2.12 1998/01/04 09:54:13 kato Exp $  */
 end_comment
 
 begin_comment
@@ -1644,17 +1644,6 @@ operator|==
 name|ED_TYPE98_LPC
 condition|)
 block|{
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_LPC
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -1682,17 +1671,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Generic probe routine 	 * Allied Telesis CenterCom LA-98-T 	 */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_GENERIC
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -1781,17 +1759,6 @@ operator|==
 name|ED_TYPE98_SIC
 condition|)
 block|{
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_SIC
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -1832,17 +1799,6 @@ name|ED_TYPE98_BDN
 condition|)
 block|{
 comment|/* LD-BDN */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_BDN
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -1883,17 +1839,6 @@ name|ED_TYPE98_LGY
 condition|)
 block|{
 comment|/* LGY-98 */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_LGY
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -1934,17 +1879,6 @@ name|ED_TYPE98_ICM
 condition|)
 block|{
 comment|/* ICM */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_ICM
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -1985,17 +1919,6 @@ name|ED_TYPE98_EGY
 condition|)
 block|{
 comment|/* EGY-98 */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_EGY
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -2036,17 +1959,6 @@ name|ED_TYPE98_LA98
 condition|)
 block|{
 comment|/* LA-98 */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_LA98
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -2087,17 +1999,6 @@ name|ED_TYPE98_108
 condition|)
 block|{
 comment|/* PC-9801-108 */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_108
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -2138,17 +2039,6 @@ name|ED_TYPE98_CNET98EL
 condition|)
 block|{
 comment|/* C-NET(98)E/L */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_CNET98EL
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -2189,17 +2079,6 @@ name|ED_TYPE98_CNET98
 condition|)
 block|{
 comment|/* C-NET(98) */
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|type
-operator|=
-name|ED_TYPE98_CNET98
-expr_stmt|;
 name|nports98
 operator|=
 name|pc98_set_register
@@ -6502,6 +6381,21 @@ block|{
 name|int
 name|nports
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+operator|(
+name|void
+operator|)
+name|pc98_set_register
+argument_list|(
+name|isa_dev
+argument_list|,
+name|ED_TYPE98_GENERIC
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|nports
 operator|=
 name|ed_probe_WD80x3
@@ -10338,6 +10232,23 @@ expr|*
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+operator|(
+name|void
+operator|)
+name|pc98_set_register_unit
+argument_list|(
+name|sc
+argument_list|,
+name|ED_TYPE98_GENERIC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ed_probe_Novell_generic
