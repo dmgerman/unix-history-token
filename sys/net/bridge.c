@@ -2999,7 +2999,7 @@ name|EH_RESTORE
 parameter_list|(
 name|_m
 parameter_list|)
-value|do {						   \     M_PREPEND((_m), ETHER_HDR_LEN, M_DONTWAIT);			   	   \     if ((_m) == NULL) {							   \ 	bdg_dropped++;							   \ 	return NULL;							   \     }									   \     if (eh != mtod((_m), struct ether_header *))			   \ 	bcopy(&save_eh, mtod((_m), struct ether_header *), ETHER_HDR_LEN); \     else								   \ 	bdg_predict++;							   \ } while (0);
+value|do {						   \     if ((_m) == NULL) {							   \ 	bdg_dropped++;							   \ 	return NULL;							   \     }									   \     M_PREPEND((_m), ETHER_HDR_LEN, M_DONTWAIT);			   	   \     if (eh != mtod((_m), struct ether_header *))			   \ 	bcopy(&save_eh, mtod((_m), struct ether_header *), ETHER_HDR_LEN); \     else								   \ 	bdg_predict++;							   \ } while (0);
 name|struct
 name|ether_header
 modifier|*
