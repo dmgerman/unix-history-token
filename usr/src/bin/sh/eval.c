@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.3 (Berkeley) %G%"
+literal|"@(#)eval.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1062,6 +1062,26 @@ expr_stmt|;
 name|exitstatus
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+name|NNOT
+case|:
+name|evaltree
+argument_list|(
+name|n
+operator|->
+name|nnot
+operator|.
+name|com
+argument_list|,
+name|EV_TESTED
+argument_list|)
+expr_stmt|;
+name|exitstatus
+operator|=
+operator|!
+name|exitstatus
 expr_stmt|;
 break|break;
 case|case
