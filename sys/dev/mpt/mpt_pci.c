@@ -531,13 +531,11 @@ block|}
 else|else
 block|{
 comment|/* Context reply ; all went well */
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"context %u reply OK\n"
+literal|"context %u reply OK"
 argument_list|,
 name|reply
 argument_list|)
@@ -984,13 +982,11 @@ operator|->
 name|verbose
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"linking with peer (mpt%d)\n"
+literal|"linking with peer (mpt%d)"
 argument_list|,
 name|device_get_unit
 argument_list|(
@@ -1686,13 +1682,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_detach!\n"
+literal|"mpt_detach"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3001,7 +2995,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|val = pci_read_config(mpt->dev, offset, size);			\ 	if (mpt->pci_cfg.reg != val) {					\ 		device_printf(mpt->dev,					\ 		    "Restoring " #reg " to 0x%X from 0x%X\n",		\ 		    mpt->pci_cfg.reg, val);				\ 	}
+value|val = pci_read_config(mpt->dev, offset, size);			\ 	if (mpt->pci_cfg.reg != val) {					\ 		mpt_prt(mpt,						\ 		    "Restoring " #reg " to 0x%X from 0x%X\n",		\ 		    mpt->pci_cfg.reg, val);				\ 	}
 if|if
 condition|(
 name|mpt

@@ -60,7 +60,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|u_int32_t
 name|mpt_rd_db
 parameter_list|(
@@ -73,7 +73,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|u_int32_t
 name|mpt_rd_intr
 parameter_list|(
@@ -86,7 +86,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|u_int32_t
 name|mpt_rd_db
 parameter_list|(
@@ -108,7 +108,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|u_int32_t
 name|mpt_rd_intr
 parameter_list|(
@@ -296,13 +296,11 @@ operator|!=
 name|MPT_DB_STATE_RUNNING
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Device not running!\n"
+literal|"Device not running"
 argument_list|)
 expr_stmt|;
 name|mpt_print_db
@@ -417,13 +415,11 @@ operator|->
 name|verbose
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"soft reset\n"
+literal|"soft reset"
 argument_list|)
 expr_stmt|;
 block|}
@@ -441,13 +437,11 @@ operator|!=
 name|MPT_DB_STATE_RUNNING
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"soft reset failed: device not running\n"
+literal|"soft reset failed: device not running"
 argument_list|)
 expr_stmt|;
 return|return
@@ -466,13 +460,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"soft reset failed: doorbell wedged\n"
+literal|"soft reset failed: doorbell wedged"
 argument_list|)
 expr_stmt|;
 return|return
@@ -501,13 +493,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"soft reset failed: ack timeout\n"
+literal|"soft reset failed: ack timeout"
 argument_list|)
 expr_stmt|;
 return|return
@@ -527,13 +517,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"soft reset failed: device did not start running\n"
+literal|"soft reset failed: device did not start running"
 argument_list|)
 expr_stmt|;
 return|return
@@ -567,13 +555,11 @@ operator|->
 name|verbose
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"hard reset\n"
+literal|"hard reset"
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,13 +723,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to reset device\n"
+literal|"failed to reset device"
 argument_list|)
 expr_stmt|;
 block|}
@@ -969,33 +953,26 @@ name|req
 operator|->
 name|req_vbuf
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Send Request %d (0x%lx):\n"
+literal|"Send Request %d (0x%x):"
 argument_list|,
 name|req
 operator|->
 name|index
 argument_list|,
-operator|(
-name|long
-operator|)
 name|req
 operator|->
 name|req_pbuf
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"%08X %08X %08X %08X\n"
+literal|"%08x %08x %08x %08x"
 argument_list|,
 name|pReq
 index|[
@@ -1018,13 +995,11 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"%08X %08X %08X %08X\n"
+literal|"%08x %08x %08x %08x"
 argument_list|,
 name|pReq
 index|[
@@ -1047,13 +1022,11 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"%08X %08X %08X %08X\n"
+literal|"%08x %08x %08x %08x"
 argument_list|,
 name|pReq
 index|[
@@ -1076,13 +1049,11 @@ literal|11
 index|]
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"%08X %08X %08X %08X\n"
+literal|"%08x %08x %08x %08x"
 argument_list|,
 name|pReq
 index|[
@@ -1270,13 +1241,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"handshake aborted due to invalid doorbell state\n"
+literal|"handshake aborted due to invalid doorbell state"
 argument_list|)
 expr_stmt|;
 name|mpt_print_db
@@ -1360,13 +1329,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_send_handshake_cmd timeout1!\n"
+literal|"mpt_send_handshake_cmd timeout1"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1393,13 +1360,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_send_handshake_cmd timeout2!\n"
+literal|"mpt_send_handshake_cmd timeout2"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1442,13 +1407,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_send_handshake_cmd timeout! index = %d\n"
+literal|"mpt_send_handshake_cmd timeout! index = %d"
 argument_list|,
 name|i
 argument_list|)
@@ -1529,13 +1492,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_recv_handshake_cmd timeout1!\n"
+literal|"mpt_recv_handshake_cmd timeout1"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1575,13 +1536,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_recv_handshake_cmd timeout2!\n"
+literal|"mpt_recv_handshake_cmd timeout2"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1632,14 +1591,12 @@ name|MsgLength
 operator|)
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
 literal|"reply length does not match message length: "
-literal|"got 0x%02x, expected 0x%02lx\n"
+literal|"got 0x%02x, expected 0x%02x"
 argument_list|,
 name|hdr
 operator|->
@@ -1647,14 +1604,9 @@ name|MsgLength
 operator|<<
 literal|2
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|reply_len
 operator|<<
 literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1696,13 +1648,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_recv_handshake_cmd timeout3!\n"
+literal|"mpt_recv_handshake_cmd timeout3"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1754,13 +1704,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_recv_handshake_cmd timeout4!\n"
+literal|"mpt_recv_handshake_cmd timeout4"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2324,13 +2272,11 @@ operator|==
 literal|1000
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"read_cfg_header timed out\n"
+literal|"read_cfg_header timed out"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2378,17 +2324,28 @@ operator|!=
 name|MPI_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_read_cfg_header: Config Info Status %x\n"
+literal|"mpt_read_cfg_header: Config Info Status %x"
 argument_list|,
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|mpt_free_reply
+argument_list|(
+name|mpt
+argument_list|,
+operator|(
+name|req
+operator|->
+name|sequence
+operator|<<
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2499,21 +2456,6 @@ name|req
 operator|->
 name|req_vbuf
 expr_stmt|;
-name|amt
-operator|=
-operator|(
-name|cfgp
-operator|->
-name|Header
-operator|.
-name|PageLength
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
-operator|)
-expr_stmt|;
 name|bzero
 argument_list|(
 name|cfgp
@@ -2539,6 +2481,21 @@ name|Header
 operator|=
 operator|*
 name|hdr
+expr_stmt|;
+name|amt
+operator|=
+operator|(
+name|cfgp
+operator|->
+name|Header
+operator|.
+name|PageLength
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|)
 expr_stmt|;
 name|cfgp
 operator|->
@@ -2643,13 +2600,11 @@ operator|==
 literal|1000
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"read_cfg_page timed out\n"
+literal|"read_cfg_page timed out"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2697,17 +2652,28 @@ operator|!=
 name|MPI_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_read_cfg_page: Config Info Status %x\n"
+literal|"mpt_read_cfg_page: Config Info Status %x"
 argument_list|,
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|mpt_free_reply
+argument_list|(
+name|mpt
+argument_list|,
+operator|(
+name|req
+operator|->
+name|sequence
+operator|<<
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2996,13 +2962,11 @@ operator|!=
 name|MPI_CONFIG_PAGEATTR_PERSISTENT
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"page type 0x%x not changeable\n"
+literal|"page type 0x%x not changeable"
 argument_list|,
 name|hdr
 operator|->
@@ -3024,21 +2988,6 @@ name|PageType
 operator|&=
 name|MPI_CONFIG_PAGETYPE_MASK
 expr_stmt|;
-name|amt
-operator|=
-operator|(
-name|cfgp
-operator|->
-name|Header
-operator|.
-name|PageLength
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
-operator|)
-expr_stmt|;
 name|cfgp
 operator|->
 name|Action
@@ -3057,6 +3006,21 @@ name|Header
 operator|=
 operator|*
 name|hdr
+expr_stmt|;
+name|amt
+operator|=
+operator|(
+name|cfgp
+operator|->
+name|Header
+operator|.
+name|PageLength
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|)
 expr_stmt|;
 name|cfgp
 operator|->
@@ -3276,6 +3240,13 @@ argument_list|,
 name|amt
 argument_list|)
 expr_stmt|;
+comment|/* Restore stripped out attributes */
+name|hdr
+operator|->
+name|PageType
+operator||=
+name|hdr_attr
+expr_stmt|;
 name|mpt_check_doorbell
 argument_list|(
 name|mpt
@@ -3318,13 +3289,11 @@ name|PageType
 operator||=
 name|hdr_attr
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_write_cfg_page timed out\n"
+literal|"mpt_write_cfg_page timed out"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3372,17 +3341,28 @@ operator|!=
 name|MPI_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_write_cfg_page: Config Info Status %x\n"
+literal|"mpt_write_cfg_page: Config Info Status %x"
 argument_list|,
 name|reply
 operator|->
 name|IOCStatus
+argument_list|)
+expr_stmt|;
+name|mpt_free_reply
+argument_list|(
+name|mpt
+argument_list|,
+operator|(
+name|req
+operator|->
+name|sequence
+operator|<<
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3404,13 +3384,6 @@ operator|<<
 literal|1
 operator|)
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Restore stripped out attributes 	 */
-name|hdr
-operator|->
-name|PageType
-operator||=
-name|hdr_attr
 expr_stmt|;
 name|mpt_free_request
 argument_list|(
@@ -3487,13 +3460,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 0 Header: %x %x %x %x\n"
+literal|"SPI Port Page 0 Header: %x %x %x %x"
 argument_list|,
 name|mpt
 operator|->
@@ -3570,13 +3541,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 1 Header: %x %x %x %x\n"
+literal|"SPI Port Page 1 Header: %x %x %x %x"
 argument_list|,
 name|mpt
 operator|->
@@ -3653,13 +3622,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 2 Header: %x %x %x %x\n"
+literal|"SPI Port Page 2 Header: %x %x %x %x"
 argument_list|,
 name|mpt
 operator|->
@@ -3753,13 +3720,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Target %d Device Page 0 Header: %x %x %x %x\n"
+literal|"SPI Target %d Device Page 0 Header: %x %x %x %x"
 argument_list|,
 name|i
 argument_list|,
@@ -3853,13 +3818,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Target %d Device Page 1 Header: %x %x %x %x\n"
+literal|"SPI Target %d Device Page 1 Header: %x %x %x %x"
 argument_list|,
 name|i
 argument_list|,
@@ -3932,13 +3895,11 @@ condition|(
 name|rv
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to read SPI Port Page 0\n"
+literal|"failed to read SPI Port Page 0"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3952,13 +3913,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 0: Capabilities %x PhysicalInterface %x\n"
+literal|"SPI Port Page 0: Capabilities %x PhysicalInterface %x"
 argument_list|,
 name|mpt
 operator|->
@@ -3995,13 +3954,11 @@ condition|(
 name|rv
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to read SPI Port Page 1\n"
+literal|"failed to read SPI Port Page 1"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4015,13 +3972,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 1: Configuration %x OnBusTimerValue %x\n"
+literal|"SPI Port Page 1: Configuration %x OnBusTimerValue %x"
 argument_list|,
 name|mpt
 operator|->
@@ -4058,13 +4013,11 @@ condition|(
 name|rv
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to read SPI Port Page 2\n"
+literal|"failed to read SPI Port Page 2"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4078,13 +4031,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 2: Flags %x Settings %x\n"
+literal|"SPI Port Page 2: Flags %x Settings %x"
 argument_list|,
 name|mpt
 operator|->
@@ -4113,13 +4064,11 @@ name|i
 operator|++
 control|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 2 Tgt %d: timo %x SF %x Flags %x\n"
+literal|"SPI Port Page 2 Tgt %d: timo %x SF %x Flags %x"
 argument_list|,
 name|i
 argument_list|,
@@ -4197,13 +4146,11 @@ condition|(
 name|rv
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"cannot read SPI Tgt %d Device Page 0\n"
+literal|"cannot read SPI Tgt %d Device Page 0"
 argument_list|,
 name|i
 argument_list|)
@@ -4219,13 +4166,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Tgt %d Page 0: NParms %x Information %x\n"
+literal|"SPI Tgt %d Page 0: NParms %x Information %x"
 argument_list|,
 name|i
 argument_list|,
@@ -4273,13 +4218,11 @@ condition|(
 name|rv
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"cannot read SPI Tgt %d Device Page 1\n"
+literal|"cannot read SPI Tgt %d Device Page 1"
 argument_list|,
 name|i
 argument_list|)
@@ -4295,13 +4238,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Tgt %d Page 1: RParms %x Configuration %x\n"
+literal|"SPI Tgt %d Page 1: RParms %x Configuration %x"
 argument_list|,
 name|i
 argument_list|,
@@ -4395,13 +4336,11 @@ block|{
 name|fCONFIG_PAGE_SCSI_PORT_1
 name|tmp
 decl_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Port Page 1 Config value bad (%x)- should be %x\n"
+literal|"SPI Port Page 1 Config value bad (%x)- should be %x"
 argument_list|,
 name|mpt
 operator|->
@@ -4477,13 +4416,11 @@ operator|!=
 name|pp1val
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to reset SPI Port Page 1 Config value\n"
+literal|"failed to reset SPI Port Page 1 Config value"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4547,13 +4484,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Set Tgt %d SPI DevicePage 1 values to %x 0 %x\n"
+literal|"Set Tgt %d SPI DevicePage 1 values to %x 0 %x"
 argument_list|,
 name|i
 argument_list|,
@@ -4629,13 +4564,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Tgt %d Page 1: RParm %x Configuration %x\n"
+literal|"SPI Tgt %d Page 1: RParm %x Configuration %x"
 argument_list|,
 name|i
 argument_list|,
@@ -4660,73 +4593,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the BIOS hasn't been enabled, the SCSI Port Page2 device 	 * parameter are apparently complete nonsense. I've had partially 	 * sensible Page2 settings on *one* bus, but nothing on another- 	 * it's ridiculous. 	 * 	 * For that matter, the Port Page 0 parameters are *also* nonsense, 	 * so the offset and period and currently connected physical interface 	 * is also nonsense. 	 * 	 * This makes it very difficult to try and figure out what maximum 	 * settings we could have. Therefore, we'll synthesize the maximums 	 * here. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|mpt
-operator|->
-name|mpt_port_page2
-operator|.
-name|DeviceSettings
-index|[
-name|i
-index|]
-operator|.
-name|DeviceFlags
-operator|=
-name|MPI_SCSIPORTPAGE2_DEVICE_DISCONNECT_ENABLE
-operator||
-name|MPI_SCSIPORTPAGE2_DEVICE_TAG_QUEUE_ENABLE
-expr_stmt|;
-block|}
-name|mpt
-operator|->
-name|mpt_port_page0
-operator|.
-name|Capabilities
-operator|=
-name|MPI_SCSIPORTPAGE0_CAP_IU
-operator||
-name|MPI_SCSIPORTPAGE0_CAP_DT
-operator||
-name|MPI_SCSIPORTPAGE0_CAP_QAS
-operator||
-name|MPI_SCSIPORTPAGE0_CAP_WIDE
-operator||
-operator|(
-literal|31
-operator|<<
-literal|16
-operator|)
-operator||
-comment|/* offset */
-operator|(
-literal|8
-operator|<<
-literal|8
-operator|)
-expr_stmt|;
-comment|/* period */
-name|mpt
-operator|->
-name|mpt_port_page0
-operator|.
-name|PhysicalInterface
-operator|=
-name|MPI_SCSIPORTPAGE0_PHY_SIGNAL_LVD
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4821,13 +4687,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"enabling port %d\n"
+literal|"enabling port %d"
 argument_list|,
 name|port
 argument_list|)
@@ -4864,13 +4728,11 @@ operator|==
 literal|100000
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"port enable timed out\n"
+literal|"port enable timed out"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4988,13 +4850,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"%sabling async events\n"
+literal|"%sabling async events"
 argument_list|,
 name|onoff
 condition|?
@@ -5153,13 +5013,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"doorbell req = %s\n"
+literal|"doorbell req = %s"
 argument_list|,
 name|mpt_ioc_diag
 argument_list|(
@@ -5269,13 +5127,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_get_iocfacts failed\n"
+literal|"mpt_get_iocfacts failed"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5289,11 +5145,9 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
 literal|"IOCFACTS: GlobalCredits=%d BlockSize=%u "
 literal|"Request Frame Size %u\n"
@@ -5341,13 +5195,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_get_portfacts failed\n"
+literal|"mpt_get_portfacts failed"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5361,11 +5213,9 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
 literal|"PORTFACTS: Type %x PFlags %x IID %d MaxDev %d\n"
 argument_list|,
@@ -5402,13 +5252,11 @@ operator|!=
 name|MPI_PORTFACTS_PORTTYPE_FC
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Unsupported Port Type (%x)\n"
+literal|"Unsupported Port Type (%x)"
 argument_list|,
 name|pfp
 operator|.
@@ -5433,13 +5281,11 @@ name|MPI_PORTFACTS_PROTOCOL_INITIATOR
 operator|)
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"initiator role unsupported\n"
+literal|"initiator role unsupported"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5493,13 +5339,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_send_ioc_init failed\n"
+literal|"mpt_send_ioc_init failed"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5513,13 +5357,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_send_ioc_init ok\n"
+literal|"mpt_send_ioc_init ok"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5535,13 +5377,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"IOC failed to go to run state\n"
+literal|"IOC failed to go to run state"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5555,13 +5395,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"IOC now at RUNSTATE\n"
+literal|"IOC now at RUNSTATE"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5677,13 +5515,11 @@ operator|!=
 name|MPT_OK
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to enable port 0\n"
+literal|"failed to enable port 0"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5697,13 +5533,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"enabled port 0\n"
+literal|"enabled port 0"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5717,13 +5551,11 @@ operator|>=
 name|MPT_MAX_TRYS
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"failed to initialize IOC\n"
+literal|"failed to initialize IOC"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5741,13 +5573,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"enabling interrupts\n"
+literal|"enabling interrupts"
 argument_list|)
 expr_stmt|;
 block|}

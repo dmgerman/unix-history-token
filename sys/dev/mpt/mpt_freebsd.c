@@ -449,13 +449,11 @@ operator|!=
 name|oseq
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"bullet missed in timeout\n"
+literal|"bullet missed in timeout"
 argument_list|)
 expr_stmt|;
 name|MPT_UNLOCK
@@ -465,23 +463,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"bullet U-turned in timeout: got us\n"
+literal|"bullet U-turned in timeout: got us"
 argument_list|)
 expr_stmt|;
 block|}
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"time out on request index = 0x%02x sequence = 0x%08x\n"
+literal|"time out on request index = 0x%02x sequence = 0x%08x"
 argument_list|,
 name|req
 operator|->
@@ -497,13 +491,11 @@ argument_list|(
 name|mpt
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Status %08X; Mask %08X; Doorbell %08X\n"
+literal|"Status %08x; Mask %08x; Doorbell %08x"
 argument_list|,
 name|mpt_read
 argument_list|(
@@ -827,13 +819,11 @@ name|error
 operator|!=
 name|EFBIG
 condition|)
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"bus_dmamap_load returned %d\n"
+literal|"bus_dmamap_load returned %d"
 argument_list|,
 name|error
 argument_list|)
@@ -1859,13 +1849,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"FREEZEQ\n"
+literal|"FREEZEQ"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2633,13 +2621,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_bus_reset: mpt_send_handshake return %d\n"
+literal|"mpt_bus_reset: mpt_send_handshake return %d"
 argument_list|,
 name|error
 argument_list|)
@@ -2803,13 +2789,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"enable port reply idx %d\n"
+literal|"enable port reply idx %d"
 argument_list|,
 name|index
 argument_list|)
@@ -2942,13 +2926,11 @@ block|}
 block|}
 else|else
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"unknown mpt_ctlop: %x\n"
+literal|"unknown mpt_ctlop: %x"
 argument_list|,
 name|dmsg
 operator|->
@@ -2984,12 +2966,8 @@ case|case
 name|MPI_EVENT_LOG_DATA
 case|:
 comment|/* Some error occured that LSI wants logged */
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
 literal|"\tEvtLogData: IOCLogInfo: 0x%08x\n"
 argument_list|,
 name|msg
@@ -2997,12 +2975,8 @@ operator|->
 name|IOCLogInfo
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
 literal|"\tEvtLogData: Event Data:"
 argument_list|)
 expr_stmt|;
@@ -3026,13 +3000,9 @@ name|i
 operator|++
 control|)
 block|{
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
-literal|"  %08X"
+literal|"  %08x"
 argument_list|,
 name|msg
 operator|->
@@ -3044,12 +3014,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3057,13 +3023,11 @@ break|break;
 case|case
 name|MPI_EVENT_UNIT_ATTENTION
 case|:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Bus: 0x%02x TargetID: 0x%02x\n"
+literal|"Bus: 0x%02x TargetID: 0x%02x"
 argument_list|,
 operator|(
 name|msg
@@ -3093,13 +3057,11 @@ case|case
 name|MPI_EVENT_IOC_BUS_RESET
 case|:
 comment|/* We generated a bus reset */
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"IOC Bus Reset Port: %d\n"
+literal|"IOC Bus Reset Port: %d"
 argument_list|,
 operator|(
 name|msg
@@ -3120,13 +3082,11 @@ case|case
 name|MPI_EVENT_EXT_BUS_RESET
 case|:
 comment|/* Someone else generated a bus reset */
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Ext Bus Reset\n"
+literal|"Ext Bus Reset"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * These replies don't return EventData like the MPI 		 * spec says they do 		 */
@@ -3136,13 +3096,11 @@ case|case
 name|MPI_EVENT_RESCAN
 case|:
 comment|/* 		 * In general this means a device has been added 		 * to the loop. 		 */
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Rescan Port: %d\n"
+literal|"Rescan Port: %d"
 argument_list|,
 operator|(
 name|msg
@@ -3163,13 +3121,11 @@ break|break;
 case|case
 name|MPI_EVENT_LINK_STATUS_CHANGE
 case|:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Port %d: LinkState: %s\n"
+literal|"Port %d: LinkState: %s"
 argument_list|,
 operator|(
 name|msg
@@ -3227,13 +3183,11 @@ block|{
 case|case
 literal|0x01
 case|:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Port 0x%x: FC LinkEvent: LIP(%02X,%02X) (Loop Initialization)\n"
+literal|"Port 0x%x: FC LinkEvent: LIP(%02x,%02x) (Loop Initialization)\n"
 argument_list|,
 operator|(
 name|msg
@@ -3318,7 +3272,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Device %02X doesn't like FC performance\n"
+literal|"Device %02x doesn't like FC performance\n"
 argument_list|,
 name|msg
 operator|->
@@ -3361,7 +3315,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Device %02X detected loop failure at its receiver\n"
+literal|"Device %02x detected loop failure at its receiver\n"
 argument_list|,
 name|msg
 operator|->
@@ -3378,7 +3332,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Device %02X requests that device %02X reset itself\n"
+literal|"Device %02x requests that device %02x reset itself\n"
 argument_list|,
 name|msg
 operator|->
@@ -3409,13 +3363,11 @@ break|break;
 case|case
 literal|0x02
 case|:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Port 0x%x: FC LinkEvent: LPE(%02X,%02X) (Loop Port Enable)\n"
+literal|"Port 0x%x: FC LinkEvent: LPE(%02x,%02x) (Loop Port Enable)"
 argument_list|,
 operator|(
 name|msg
@@ -3462,13 +3414,11 @@ break|break;
 case|case
 literal|0x03
 case|:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Port 0x%x: FC LinkEvent: LPB(%02X,%02X) (Loop Port Bypass)\n"
+literal|"Port 0x%x: FC LinkEvent: LPB(%02x,%02x) (Loop Port Bypass)"
 argument_list|,
 operator|(
 name|msg
@@ -3513,13 +3463,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Port 0x%x: FC LinkEvent: Unknown FC event (%02X %02X %02X)\n"
+literal|"Port 0x%x: FC LinkEvent: Unknown FC event (%02x %02x %02x)"
 argument_list|,
 operator|(
 name|msg
@@ -3581,13 +3529,11 @@ break|break;
 case|case
 name|MPI_EVENT_LOGOUT
 case|:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"FC Logout Port: %d N_PortID: %02X\n"
+literal|"FC Logout Port: %d N_PortID: %02x"
 argument_list|,
 operator|(
 name|msg
@@ -3617,13 +3563,11 @@ case|:
 comment|/* This is just an acknowledgement of our  		   mpt_send_event_request */
 break|break;
 default|default:
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Unknown event %X\n"
+literal|"Unknown event 0x%x\n"
 argument_list|,
 name|msg
 operator|->
@@ -3840,13 +3784,11 @@ operator|*
 operator|)
 name|mpt_reply
 expr_stmt|;
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"Address Reply (index %u)\n"
+literal|"Address Reply (index %u)"
 argument_list|,
 name|mpt_reply
 operator|->
@@ -3855,13 +3797,9 @@ operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
-literal|"%08X %08X %08X %08X\n"
+literal|"%08x %08x %08x %08x\n"
 argument_list|,
 name|pReply
 index|[
@@ -3884,13 +3822,9 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
-literal|"%08X %08X %08X %08X\n"
+literal|"%08x %08x %08x %08x\n"
 argument_list|,
 name|pReply
 index|[
@@ -3913,13 +3847,9 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|printf
 argument_list|(
-name|mpt
-operator|->
-name|dev
-argument_list|,
-literal|"%08X %08X %08X %08X\n\n"
+literal|"%08x %08x %08x %08x\n\n"
 argument_list|,
 name|pReply
 index|[
@@ -3981,13 +3911,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_done: index 0x%x, NULL reply\n"
+literal|"mpt_done: index 0x%x, NULL reply"
 argument_list|,
 name|index
 argument_list|)
@@ -4010,9 +3938,11 @@ name|mpt
 argument_list|)
 condition|)
 block|{
-name|printf
+name|mpt_prt
 argument_list|(
-literal|"mpt_done: invalid index (%x) in reply\n"
+name|mpt
+argument_list|,
+literal|"mpt_done: invalid index (%x) in reply"
 argument_list|,
 name|index
 argument_list|)
@@ -4071,13 +4001,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"mpt_done: TASK MGMT\n"
+literal|"mpt_done: TASK MGMT"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4139,11 +4067,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
 literal|"mpt_done: corrupted ccb, index = 0x%02x seq = 0x%08x"
 argument_list|,
@@ -4370,13 +4296,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"THAWQ\n"
+literal|"THAWQ"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4468,12 +4392,6 @@ name|CAM_DATA_RUN_ERR
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-literal|0
-block|device_printf(mpt->dev, "underrun, scsi status is %x\n", ccb->csio.scsi_status); 		ccb->csio.scsi_status = SCSI_STATUS_QUEUE_FULL;
-endif|#
-directive|endif
 comment|/* Fall through */
 case|case
 name|MPI_IOCSTATUS_SUCCESS
@@ -4830,13 +4748,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"THAWQ\n"
+literal|"THAWQ"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4987,13 +4903,11 @@ name|verbose
 operator|>
 literal|1
 condition|)
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"XPT_RESET_BUS\n"
+literal|"XPT_RESET_BUS"
 argument_list|)
 expr_stmt|;
 name|CAMLOCK_2_MPTLOCK
@@ -5056,13 +4970,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"FREEZEQ\n"
+literal|"FREEZEQ"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5136,13 +5048,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"THAWQ\n"
+literal|"THAWQ"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5873,13 +5783,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SET tgt %d flags %x period %x off %x\n"
+literal|"SET tgt %d flags %x period %x off %x"
 argument_list|,
 name|tgt
 argument_list|,
@@ -6096,13 +6004,11 @@ name|Header
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"cannot get target %d DP0\n"
+literal|"cannot get target %d DP0"
 argument_list|,
 name|tgt
 argument_list|)
@@ -6119,13 +6025,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Tgt %d Page 0: NParms %x Information %x\n"
+literal|"SPI Tgt %d Page 0: NParms %x Information %x"
 argument_list|,
 name|tgt
 argument_list|,
@@ -6528,13 +6432,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"GET %s tgt %d flags %x period %x off %x\n"
+literal|"GET %s tgt %d flags %x period %x off %x"
 argument_list|,
 name|IS_CURRENT_SETTINGS
 argument_list|(
@@ -7024,13 +6926,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Target %d Page 1: RequestedParameters %x Config %x\n"
+literal|"SPI Target %d Page 1: RequestedParameters %x Config %x"
 argument_list|,
 name|tgt
 argument_list|,
@@ -7171,12 +7071,6 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((mpt->mpt_port_page0.PhysicalInterface& 		    MPI_SCSIPORTPAGE0_PHY_SIGNAL_TYPE_MASK) !=  		    MPI_SCSIPORTPAGE0_PHY_SIGNAL_LVD&& factor< 0xa) { 			factor = 0xa; 		}
-endif|#
-directive|endif
 name|np
 operator|=
 literal|0
@@ -7292,13 +7186,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|device_printf
+name|mpt_prt
 argument_list|(
 name|mpt
-operator|->
-name|dev
 argument_list|,
-literal|"SPI Target %d Page 1: RParams %x Config %x\n"
+literal|"SPI Target %d Page 1: RParams %x Config %x"
 argument_list|,
 name|tgt
 argument_list|,

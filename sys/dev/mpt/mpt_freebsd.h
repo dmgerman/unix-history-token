@@ -1171,6 +1171,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mpt_prt
+parameter_list|(
+name|mpt_softc_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mpt_set_config_regs
 parameter_list|(
 name|mpt_softc_t
