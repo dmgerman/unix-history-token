@@ -161,6 +161,14 @@ decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
+specifier|extern
+name|int
+name|krb_debug
+decl_stmt|;
+name|krb_debug
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|inst
 operator|=
