@@ -984,6 +984,8 @@ name|strlen
 argument_list|(
 name|src
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* XXX allocation is too big, realloc?*/
@@ -1716,7 +1718,7 @@ name|malloc
 argument_list|(
 name|len
 operator|+
-literal|14
+literal|15
 argument_list|)
 expr_stmt|;
 if|if
@@ -1768,6 +1770,15 @@ literal|7
 argument_list|)
 expr_stmt|;
 comment|/*   and end of word   */
+name|string
+index|[
+name|len
+operator|+
+literal|14
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|error
 operator|=
 name|regcomp
@@ -2155,8 +2166,6 @@ expr_stmt|;
 name|linez
 index|[
 name|len
-operator|+
-literal|1
 index|]
 operator|=
 literal|'\0'
