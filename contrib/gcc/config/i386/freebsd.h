@@ -111,6 +111,40 @@ value|"\   %{!maout: \     %{!shared:crtend.o%s} \     %{shared:crtendS.o%s} crt
 end_define
 
 begin_comment
+comment|/* FreeBSD conditionalizes the use of ".section rodata" depending on    ELF mode - otherwise .text.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_CONST_SECTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|USE_CONST_SECTION
+value|TARGET_ELF
+end_define
+
+begin_comment
+comment|/* ".string" doesn't work for the aout case. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STRING_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STRING_ASM_OP
+value|(TARGET_AOUT ? "\t.asciz\t" : "\t.string\t")
+end_define
+
+begin_comment
 comment|/************************[  Target stuff  ]***********************************/
 end_comment
 
@@ -643,6 +677,10 @@ begin_comment
 comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
 end_comment
 
+begin_comment
+comment|/* XXX configuration of this is broken in the same way as HAVE_GAS_SHF_MERGE,    but it is easier to fix in an MD way.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -661,7 +699,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|if ((LOG) != 0) {														\     if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\   }
+value|do {									\   if ((LOG) != 0) {							\     if (TARGET_AOUT)							\       ASM_OUTPUT_ALIGN ((FILE), (LOG));					\     else if ((MAX_SKIP) == 0)						\       fprintf ((FILE), "\t.p2align %d\n", (LOG));			\     else								\       fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\   }									\ } while (0)
 end_define
 
 begin_endif

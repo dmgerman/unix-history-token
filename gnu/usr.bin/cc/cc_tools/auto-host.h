@@ -1713,6 +1713,10 @@ begin_comment
 comment|/* Define if your assembler supports marking sections with SHF_MERGE flag. */
 end_comment
 
+begin_comment
+comment|/* XXX:DEO new; caused Peter IA-64 trouble until he adjusted    sys/boot/efi/libefi/arch/ia64/ldscript.ia64.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1721,8 +1725,14 @@ value|1
 end_define
 
 begin_comment
-comment|/* XXX:DEO new, caused Peter IA-64 trouble until he adjusted sys/boot/efi/libefi/arch/ia64/ldscript.ia64 */
+comment|/* XXX HAVE_GAS_SHF_MERGE is target-dependent so it shouldn't be put in    this target-independent config file.  Defining it breaks aout support    on i386's.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GAS_SHF_MERGE
+end_undef
 
 begin_comment
 comment|/* Define if your assembler supports explicit relocations. */
