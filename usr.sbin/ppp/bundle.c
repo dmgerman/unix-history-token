@@ -7983,8 +7983,11 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Expecting %d scatter/gather bytes\n"
+literal|"Expecting %u scatter/gather bytes\n"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -8041,10 +8044,13 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed recvmsg: Got %d, not %d\n"
+literal|"Failed recvmsg: Got %d, not %u\n"
 argument_list|,
 name|got
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -9120,7 +9126,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Sending %d descriptor%s and %d bytes in scatter"
+literal|"Sending %d descriptor%s and %u bytes in scatter"
 literal|"/gather array\n"
 argument_list|,
 name|nfd
@@ -9133,6 +9139,9 @@ literal|""
 else|:
 literal|"s"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0
@@ -9192,7 +9201,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed initial sendmsg: Only sent %d of %d\n"
+literal|"%s: Failed initial sendmsg: Only sent %d of %u\n"
 argument_list|,
 name|sun
 operator|->
@@ -9200,6 +9209,9 @@ name|sun_path
 argument_list|,
 name|got
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|iov
 index|[
 literal|0

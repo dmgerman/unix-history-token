@@ -2177,7 +2177,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"%s: DescriptorWrite: wrote %d(%d) to %d\n"
+literal|"%s: DescriptorWrite: wrote %d(%lu) to %d\n"
 argument_list|,
 name|p
 operator|->
@@ -2187,6 +2187,10 @@ name|name
 argument_list|,
 name|nw
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|p
 operator|->
 name|out

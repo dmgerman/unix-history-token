@@ -2050,8 +2050,12 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"nat_LayerPull: Problem with IP header length (%d)\n"
+literal|"nat_LayerPull: Problem with IP header length (%lu)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|bp
 operator|->
 name|m_len

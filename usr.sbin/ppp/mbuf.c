@@ -501,8 +501,12 @@ name|log_Printf
 argument_list|(
 name|LogALERT
 argument_list|,
-literal|"Failed to allocate memory (%u)\n"
+literal|"Failed to allocate memory (%lu)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|BUCKET_CHUNK
 operator|*
 name|size
@@ -1841,8 +1845,12 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"m_enqueue: len = %d\n"
+literal|"m_enqueue: len = %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|queue
 operator|->
 name|len

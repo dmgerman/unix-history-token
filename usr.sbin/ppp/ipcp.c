@@ -2059,8 +2059,12 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Queued packets:  %d\n"
+literal|" Queued packets:  %lu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ip_QueueLen
 argument_list|(
 name|ipcp
