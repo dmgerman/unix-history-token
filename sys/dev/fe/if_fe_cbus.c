@@ -6,24 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_fe.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -2898,21 +2880,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|FE_8BIT_SUPPORT
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"skip LAC-98012/013(only 16-bit cards are supported)\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|ENXIO
-return|;
-else|#
-directive|else
 name|struct
 name|fe_softc
 modifier|*
@@ -3203,9 +3170,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
-comment|/* FE_8BIT_SUPPORT */
 block|}
 end_function
 

@@ -176,14 +176,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * If you define this option, 8-bit cards are also supported.  */
-end_comment
-
-begin_comment
-comment|/*#define FE_8BIT_SUPPORT*/
-end_comment
-
-begin_comment
 comment|/*  * Device configuration flags.  */
 end_comment
 
@@ -4993,9 +4985,6 @@ literal|12
 condition|)
 block|{
 comment|/* Read 4 more bytes, and skip the rest of the packet.  */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -5051,8 +5040,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 operator|(
 name|void
@@ -5088,9 +5075,6 @@ block|}
 else|else
 block|{
 comment|/* We should not come here unless receiving RUNTs.  */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -5129,8 +5113,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 for|for
 control|(
@@ -5229,9 +5211,6 @@ literal|1300
 argument_list|)
 expr_stmt|;
 comment|/* 	 * When we come here, the receive buffer management may 	 * have been broken.  So, we cannot use skip operation. 	 * Just discard everything in the buffer. 	 */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -5284,8 +5263,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 for|for
 control|(
@@ -5787,9 +5764,6 @@ name|FE_D5_BUFEMP
 condition|)
 return|return;
 comment|/* 		 * Extract a receive status byte. 		 * As our 86960 is in 16 bit bus access mode, we have to 		 * use inw() to get the status byte.  The significant 		 * value is returned in lower 8 bits. 		 */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -5824,8 +5798,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|status
 operator|=
@@ -5841,9 +5813,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Extract the packet length. 		 * It is a sum of a header (14 bytes) and a payload. 		 * CRC has been stripped off by the 86960. 		 */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -5881,8 +5850,6 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|len
 operator|=
@@ -6571,9 +6538,6 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* Get a packet.  */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -6604,8 +6568,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|fe_insw
 argument_list|(
@@ -6854,9 +6816,6 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Put the length word for this frame. 	 * Does 86960 accept odd length?  -- Yes. 	 * Do we need to pad the length to minimum size by ourselves? 	 * -- Generally yes.  But for (or will be) the last 	 * packet in the transmission buffer, we can skip the 	 * padding process.  It may gain performance slightly.  FIXME. 	 */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -6909,8 +6868,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|fe_outw
 argument_list|(
@@ -6930,9 +6887,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Update buffer status now. 	 * Truncate the length up to an even number, since we use outw(). 	 */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -6945,8 +6899,6 @@ operator|)
 operator|!=
 name|FE_D6_SBW_BYTE
 condition|)
-endif|#
-directive|endif
 block|{
 name|length
 operator|=
@@ -6981,9 +6933,6 @@ name|txb_count
 operator|++
 expr_stmt|;
 comment|/* 	 * Transfer the data from mbuf chain to the transmission buffer. 	 * MB86960 seems to require that data be transferred as words, and 	 * only words.  So that we require some extra code to patch 	 * over odd-length mbufs. 	 */
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -7042,8 +6991,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 comment|/* 16-bit cards are a pain.  */
 name|savebyte
@@ -7203,9 +7150,6 @@ operator|-
 name|ETHER_CRC_LEN
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|FE_8BIT_SUPPORT
 if|if
 condition|(
 operator|(
@@ -7236,8 +7180,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|fe_outsw
 argument_list|(
