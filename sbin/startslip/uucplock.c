@@ -58,6 +58,30 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -77,7 +101,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|int
+name|pid_t
 name|pid
 parameter_list|)
 function_decl|;
@@ -85,7 +109,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|pid_t
 name|get_pid
 parameter_list|(
 name|int
@@ -98,18 +122,19 @@ begin_comment
 comment|/*  * uucp style locking routines  * return: 0 - success  * 	  -1 - failure  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|uu_lock
-argument_list|(
-argument|char *ttyname
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|ttyname
+parameter_list|)
 block|{
 name|int
 name|fd
-decl_stmt|,
+decl_stmt|;
+name|pid_t
 name|pid
 decl_stmt|;
 name|char
@@ -123,10 +148,6 @@ operator|+
 name|MAXNAMLEN
 index|]
 decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -196,28 +217,32 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|pid
+operator|=
 name|get_pid
 argument_list|(
 name|fd
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"lock read: %m"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|close
 argument_list|(
 name|fd
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lock read: %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -274,19 +299,19 @@ operator|<
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"lock lseek: %m"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|close
 argument_list|(
 name|fd
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lock lseek: %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -314,6 +339,13 @@ name|pid
 argument_list|)
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"lock write: %m"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -328,13 +360,6 @@ operator|)
 name|unlink
 argument_list|(
 name|tbuf
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"lock write: %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -358,16 +383,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|uu_unlock
-argument_list|(
-argument|char *ttyname
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|ttyname
+parameter_list|)
 block|{
 name|char
 name|tbuf
@@ -401,7 +426,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -411,7 +436,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|int
+name|pid_t
 name|pid
 parameter_list|)
 block|{
@@ -432,9 +457,6 @@ name|buf
 argument_list|,
 literal|"%10ld\n"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pid
 argument_list|)
 expr_stmt|;
@@ -455,7 +477,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|pid_t
 name|get_pid
 parameter_list|(
 name|int
@@ -464,14 +486,15 @@ parameter_list|)
 block|{
 name|int
 name|bytes_read
-decl_stmt|,
-name|pid
 decl_stmt|;
 name|char
 name|buf
 index|[
 literal|32
 index|]
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|bytes_read
 operator|=
