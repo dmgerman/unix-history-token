@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/swapgeneric.c	7.8 (Berkeley) 10/11/92  *  *	@(#)swapgeneric.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/swapgeneric.c	7.8 (Berkeley) 10/11/92  *  *	@(#)swapgeneric.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -212,6 +212,8 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
+name|part
+decl_stmt|,
 name|swaponroot
 init|=
 literal|0
@@ -226,6 +228,10 @@ goto|goto
 name|doswap
 goto|;
 name|unit
+operator|=
+literal|0
+expr_stmt|;
+name|part
 operator|=
 literal|0
 expr_stmt|;
@@ -391,12 +397,33 @@ if|if
 condition|(
 operator|*
 name|cp
-operator|==
-literal|'*'
+operator|<
+literal|'a'
+operator|||
+operator|*
+name|cp
+operator|>
+literal|'h'
 condition|)
-name|swaponroot
-operator|++
+block|{
+name|printf
+argument_list|(
+literal|"bad/missing partiiton number\n"
+argument_list|)
 expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+name|part
+operator|=
+operator|*
+name|cp
+operator|++
+operator|-
+literal|'a'
+expr_stmt|;
+comment|/* 		if (*cp == '*') 			swaponroot++;  */
 goto|goto
 name|found
 goto|;
@@ -498,9 +525,13 @@ operator|->
 name|gc_root
 argument_list|)
 argument_list|,
+operator|(
 name|unit
 operator|*
 literal|8
+operator|)
+operator|+
+name|part
 argument_list|)
 expr_stmt|;
 name|rootdev
@@ -520,6 +551,8 @@ argument_list|,
 name|unit
 argument_list|,
 literal|'a'
+operator|+
+name|part
 argument_list|)
 expr_stmt|;
 name|doswap
@@ -542,12 +575,44 @@ argument_list|(
 name|rootdev
 argument_list|)
 argument_list|,
+operator|(
 name|minor
 argument_list|(
 name|rootdev
 argument_list|)
+operator|&
+operator|~
+literal|0x7
+operator|)
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"using swap device: %s%d%c\n"
+argument_list|,
+name|gc
+operator|->
+name|gc_name
+argument_list|,
+name|unit
+argument_list|,
+literal|'a'
+operator|+
+operator|(
+name|minor
+argument_list|(
+name|swdevt
+index|[
+literal|0
+index|]
+operator|.
+name|sw_dev
+argument_list|)
+operator|&
+literal|0x7
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* swap size and dumplo set during autoconfigure */
