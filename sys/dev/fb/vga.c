@@ -7010,7 +7010,7 @@ if|if
 condition|(
 name|biosadapters
 operator|>
-literal|1
+literal|0
 condition|)
 block|{
 for|for
