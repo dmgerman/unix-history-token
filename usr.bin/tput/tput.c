@@ -691,10 +691,8 @@ case|:
 break|break;
 default|default:
 comment|/* 				 * hpux has lot's of them, but we complain 				 */
-name|errx
+name|warnx
 argument_list|(
-literal|2
-argument_list|,
 name|erresc
 argument_list|,
 operator|*
