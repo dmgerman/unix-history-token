@@ -96,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_llc.h>
+file|<net/if_dl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
+file|<net/if_llc.h>
 end_include
 
 begin_include
