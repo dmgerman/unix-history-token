@@ -2790,6 +2790,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_DAISY
+value|0x3579
+end_define
+
+begin_comment
+comment|/* Daisy Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_INTEL
 value|0x8086
 end_define
@@ -3858,6 +3869,21 @@ end_define
 
 begin_comment
 comment|/* 10/100 ethernet adapter */
+end_comment
+
+begin_comment
+comment|/* Daisy Technology products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_DAISY_DMC
+value|0x6901
+end_define
+
+begin_comment
+comment|/* PhotoClip Camera */
 end_comment
 
 begin_comment
