@@ -365,7 +365,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  *     *  No logins   "
+literal|"  *     *   No logins   "
 argument_list|)
 expr_stmt|;
 goto|goto
