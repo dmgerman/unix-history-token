@@ -39,52 +39,6 @@ block|}
 enum|;
 end_enum
 
-begin_struct
-struct|struct
-name|usave
-block|{
-name|struct
-name|timeval
-name|u_start
-decl_stmt|;
-name|struct
-name|rusage
-name|u_ru
-decl_stmt|;
-name|struct
-name|rusage
-name|u_cru
-decl_stmt|;
-name|char
-name|u_acflag
-decl_stmt|;
-name|char
-name|u_valid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|KI_PROC
-parameter_list|(
-name|ki
-parameter_list|)
-value|(&(ki)->ki_p->kp_proc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KI_EPROC
-parameter_list|(
-name|ki
-parameter_list|)
-value|(&(ki)->ki_p->kp_eproc)
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -95,12 +49,7 @@ name|kinfo_proc
 modifier|*
 name|ki_p
 decl_stmt|;
-comment|/* proc structure */
-name|struct
-name|usave
-name|ki_u
-decl_stmt|;
-comment|/* interesting parts of user */
+comment|/* kinfo_proc structure */
 name|char
 modifier|*
 name|ki_args
@@ -111,6 +60,10 @@ modifier|*
 name|ki_env
 decl_stmt|;
 comment|/* environment */
+name|int
+name|ki_valid
+decl_stmt|;
+comment|/* 1 => uarea stuff valid */
 block|}
 name|KINFO
 typedef|;
@@ -219,7 +172,7 @@ name|short
 name|width
 decl_stmt|;
 comment|/* printing width */
-comment|/* 	 * The following (optional) elements are hooks for passing information 	 * to the generic output routines: pvar, evar, uvar (those which print 	 * simple elements from well known structures: proc, eproc, usave) 	 */
+comment|/* 	 * The following (optional) elements are hooks for passing information 	 * to the generic output routine pvar (which prints simple elements 	 * from the well known kinfo_proc structure). 	 */
 name|int
 name|off
 decl_stmt|;

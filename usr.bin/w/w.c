@@ -449,7 +449,7 @@ name|debugproc
 parameter_list|(
 name|p
 parameter_list|)
-value|*((struct kinfo_proc **)&(p)->kp_eproc.e_spare[0])
+value|*((struct kinfo_proc **)&(p)->ki_spare[0])
 end_define
 
 begin_decl_stmt
@@ -1323,43 +1323,21 @@ name|kp
 operator|++
 control|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|pr
-init|=
-operator|&
-name|kp
-operator|->
-name|kp_proc
-decl_stmt|;
-name|struct
-name|eproc
-modifier|*
-name|e
-decl_stmt|;
 if|if
 condition|(
-name|pr
+name|kp
 operator|->
-name|p_stat
+name|ki_stat
 operator|==
 name|SIDL
 operator|||
-name|pr
+name|kp
 operator|->
-name|p_stat
+name|ki_stat
 operator|==
 name|SZOMB
 condition|)
 continue|continue;
-name|e
-operator|=
-operator|&
-name|kp
-operator|->
-name|kp_eproc
-expr_stmt|;
 for|for
 control|(
 name|ep
@@ -1383,9 +1361,9 @@ name|ep
 operator|->
 name|tdev
 operator|==
-name|e
+name|kp
 operator|->
-name|e_tdev
+name|ki_tdev
 condition|)
 block|{
 comment|/* 				 * proc is associated with this terminal 				 */
@@ -1397,13 +1375,13 @@ name|kp
 operator|==
 name|NULL
 operator|&&
-name|e
+name|kp
 operator|->
-name|e_pgid
+name|ki_pgid
 operator|==
-name|e
+name|kp
 operator|->
-name|e_tpgid
+name|ki_tpgid
 condition|)
 block|{
 comment|/* 					 * Proc is 'most interesting' 					 */
@@ -1411,14 +1389,11 @@ if|if
 condition|(
 name|proc_compare
 argument_list|(
-operator|&
 name|ep
 operator|->
 name|kp
-operator|->
-name|kp_proc
 argument_list|,
-name|pr
+name|kp
 argument_list|)
 condition|)
 name|ep
@@ -1428,7 +1403,7 @@ operator|=
 name|kp
 expr_stmt|;
 block|}
-comment|/* 				 * Proc debug option info; add to debug 				 * list using kinfo_proc kp_eproc.e_spare 				 * as next pointer; ptr to ptr avoids the 				 * ptr = long assumption. 				 */
+comment|/* 				 * Proc debug option info; add to debug 				 * list using kinfo_proc ki_spare[0] 				 * as next pointer; ptr to ptr avoids the 				 * ptr = long assumption. 				 */
 name|dkp
 operator|=
 name|ep
@@ -1584,9 +1559,7 @@ name|ep
 operator|->
 name|kp
 operator|->
-name|kp_proc
-operator|.
-name|p_comm
+name|ki_comm
 argument_list|,
 name|MAXCOMLEN
 argument_list|)
@@ -2089,9 +2062,7 @@ argument_list|)
 argument_list|,
 name|dkp
 operator|->
-name|kp_proc
-operator|.
-name|p_comm
+name|ki_comm
 argument_list|,
 name|MAXCOMLEN
 argument_list|)
@@ -2115,9 +2086,7 @@ literal|"\t\t%-9d %s\n"
 argument_list|,
 name|dkp
 operator|->
-name|kp_proc
-operator|.
-name|p_pid
+name|ki_pid
 argument_list|,
 name|ptr
 argument_list|)

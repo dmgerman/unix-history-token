@@ -161,90 +161,297 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * KERN_PROC subtype ops return arrays of augmented proc structures:  */
+comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * When adding new fields to this structure, ALWAYS add them at the end  * and decrease the size of the spare field by the amount of space that  * you are adding.  Byte aligned data should be added to the ki_sparestring  * space; other entries should be added to the ki_spare space. Always  * verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE when you are  * done. If you change the size of this structure, many programs will stop  * working! Once you have added the new field, you will need to add code  * to initialize it in two places: kern/kern_proc.c in the function  * fill_kinfo_proc and in lib/libkvm/kvm_proc.c in the function kvm_proclist.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|640
+end_define
+
+begin_comment
+comment|/* the correct size for kinfo_proc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WMESGLEN
+value|8
+end_define
+
+begin_comment
+comment|/* size of returned wchan message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTXNAMELEN
+value|8
+end_define
+
+begin_comment
+comment|/* size of returned mutex name */
 end_comment
 
 begin_struct
 struct|struct
 name|kinfo_proc
 block|{
-name|struct
-name|proc
-name|kp_proc
+name|int
+name|ki_structsize
 decl_stmt|;
-comment|/* proc structure */
-struct|struct
-name|eproc
-block|{
+comment|/* size of this structure */
+name|struct
+name|pargs
+modifier|*
+name|ki_args
+decl_stmt|;
+comment|/* address of command arguments */
 name|struct
 name|proc
 modifier|*
-name|e_paddr
+name|ki_paddr
 decl_stmt|;
 comment|/* address of proc */
 name|struct
-name|session
+name|user
 modifier|*
-name|e_sess
+name|ki_addr
 decl_stmt|;
-comment|/* session pointer */
+comment|/* kernel virtual addr of u-area */
 name|struct
-name|pcred
-name|e_pcred
+name|vnode
+modifier|*
+name|ki_tracep
 decl_stmt|;
-comment|/* process credentials */
+comment|/* pointer to trace file */
 name|struct
-name|ucred
-name|e_ucred
+name|vnode
+modifier|*
+name|ki_textvp
 decl_stmt|;
-comment|/* current credentials */
+comment|/* pointer to executable file */
 name|struct
-name|procsig
-name|e_procsig
+name|filedesc
+modifier|*
+name|ki_fd
 decl_stmt|;
-comment|/* shared signal structure */
+comment|/* pointer to open file info */
 name|struct
 name|vmspace
-name|e_vm
+modifier|*
+name|ki_vmspace
 decl_stmt|;
-comment|/* address space */
-name|struct
-name|pstats
-name|e_stats
+comment|/* pointer to kernel vmspace struct */
+name|void
+modifier|*
+name|ki_wchan
 decl_stmt|;
-comment|/* process stats */
+comment|/* sleep address */
 name|pid_t
-name|e_ppid
+name|ki_pid
+decl_stmt|;
+comment|/* Process identifier */
+name|pid_t
+name|ki_ppid
 decl_stmt|;
 comment|/* parent process id */
 name|pid_t
-name|e_pgid
+name|ki_pgid
 decl_stmt|;
 comment|/* process group id */
+name|pid_t
+name|ki_tpgid
+decl_stmt|;
+comment|/* tty process group id */
+name|pid_t
+name|ki_sid
+decl_stmt|;
+comment|/* Process session ID */
+name|pid_t
+name|ki_tsid
+decl_stmt|;
+comment|/* Terminal session ID */
 name|short
-name|e_jobc
+name|ki_jobc
 decl_stmt|;
 comment|/* job control counter */
 name|udev_t
-name|e_tdev
+name|ki_tdev
 decl_stmt|;
 comment|/* controlling tty dev */
-name|pid_t
-name|e_tpgid
+name|sigset_t
+name|ki_siglist
 decl_stmt|;
-comment|/* tty process group id */
+comment|/* Signals arrived but not delivered */
+name|sigset_t
+name|ki_sigmask
+decl_stmt|;
+comment|/* Current signal mask */
+name|sigset_t
+name|ki_sigignore
+decl_stmt|;
+comment|/* Signals being ignored */
+name|sigset_t
+name|ki_sigcatch
+decl_stmt|;
+comment|/* Signals being caught by user */
+name|uid_t
+name|ki_uid
+decl_stmt|;
+comment|/* effective user id */
+name|uid_t
+name|ki_ruid
+decl_stmt|;
+comment|/* Real user id */
+name|uid_t
+name|ki_svuid
+decl_stmt|;
+comment|/* Saved effective user id */
+name|gid_t
+name|ki_rgid
+decl_stmt|;
+comment|/* Real group id */
+name|gid_t
+name|ki_svgid
+decl_stmt|;
+comment|/* Saved effective group id */
+name|short
+name|ki_ngroups
+decl_stmt|;
+comment|/* number of groups */
+name|gid_t
+name|ki_groups
+index|[
+name|NGROUPS
+index|]
+decl_stmt|;
+comment|/* groups */
+name|vm_size_t
+name|ki_size
+decl_stmt|;
+comment|/* virtual size */
+name|segsz_t
+name|ki_rssize
+decl_stmt|;
+comment|/* current resident set size in pages */
+name|segsz_t
+name|ki_swrss
+decl_stmt|;
+comment|/* resident set size before last swap */
+name|segsz_t
+name|ki_tsize
+decl_stmt|;
+comment|/* text size (pages) XXX */
+name|segsz_t
+name|ki_dsize
+decl_stmt|;
+comment|/* data size (pages) XXX */
+name|segsz_t
+name|ki_ssize
+decl_stmt|;
+comment|/* stack size (pages) */
+name|u_short
+name|ki_xstat
+decl_stmt|;
+comment|/* Exit status for wait& stop signal */
+name|u_short
+name|ki_acflag
+decl_stmt|;
+comment|/* Accounting flags */
+name|fixpt_t
+name|ki_pctcpu
+decl_stmt|;
+comment|/* %cpu for process during ki_swtime */
+name|u_int
+name|ki_estcpu
+decl_stmt|;
+comment|/* Time averaged value of ki_cpticks */
+name|u_int
+name|ki_slptime
+decl_stmt|;
+comment|/* Time since last blocked */
+name|u_int
+name|ki_swtime
+decl_stmt|;
+comment|/* Time swapped in or out */
+name|u_int64_t
+name|ki_runtime
+decl_stmt|;
+comment|/* Real time in microsec */
 name|struct
-name|session
-modifier|*
-name|e_tsess
+name|timeval
+name|ki_start
 decl_stmt|;
-comment|/* tty session pointer */
-define|#
-directive|define
-name|WMESGLEN
-value|7
+comment|/* starting time */
+name|struct
+name|timeval
+name|ki_childtime
+decl_stmt|;
+comment|/* time used by process children */
+name|long
+name|ki_flag
+decl_stmt|;
+comment|/* P_* flags */
+name|long
+name|ki_kiflag
+decl_stmt|;
+comment|/* KI_* flags (below) */
+name|int
+name|ki_traceflag
+decl_stmt|;
+comment|/* Kernel trace points */
+name|u_char
+name|ki_priority
+decl_stmt|;
+comment|/* Process priority */
+name|u_char
+name|ki_usrpri
+decl_stmt|;
+comment|/* User-priority based on p_cpu */
+name|u_char
+name|ki_nativepri
+decl_stmt|;
+comment|/* Priority before propogation */
 name|char
-name|e_wmesg
+name|ki_stat
+decl_stmt|;
+comment|/* S* process status */
+name|char
+name|ki_nice
+decl_stmt|;
+comment|/* Process "nice" value */
+name|char
+name|ki_lock
+decl_stmt|;
+comment|/* Process lock (prevent swap) count */
+name|char
+name|ki_rqindex
+decl_stmt|;
+comment|/* Run queue index */
+name|u_char
+name|ki_oncpu
+decl_stmt|;
+comment|/* Which cpu we are on */
+name|u_char
+name|ki_lastcpu
+decl_stmt|;
+comment|/* Last cpu we were on */
+name|char
+name|ki_comm
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* command name */
+name|char
+name|ki_wmesg
 index|[
 name|WMESGLEN
 operator|+
@@ -252,78 +459,55 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* wchan message */
-define|#
-directive|define
-name|MTXNAMELEN
-value|7
 name|char
-name|e_mtxname
+name|ki_login
+index|[
+name|MAXLOGNAME
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* setlogin name */
+name|char
+name|ki_mtxname
 index|[
 name|MTXNAMELEN
 operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* blocked mutex */
-name|segsz_t
-name|e_xsize
-decl_stmt|;
-comment|/* text size */
-name|short
-name|e_xrssize
-decl_stmt|;
-comment|/* text rss */
-name|short
-name|e_xccount
-decl_stmt|;
-comment|/* text references */
-name|short
-name|e_xswrss
-decl_stmt|;
-name|long
-name|e_flag
-decl_stmt|;
-define|#
-directive|define
-name|EPROC_CTTY
-value|0x01
-comment|/* controlling tty vnode active */
-define|#
-directive|define
-name|EPROC_SLEADER
-value|0x02
-comment|/* session leader */
+comment|/* mutex name */
 name|char
-name|e_login
+name|ki_sparestrings
 index|[
-name|roundup
-argument_list|(
-name|MAXLOGNAME
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
-argument_list|)
+literal|102
 index|]
 decl_stmt|;
-comment|/* setlogin() name */
+comment|/* spare string space */
+name|struct
+name|rtprio
+name|ki_rtprio
+decl_stmt|;
+comment|/* Realtime priority */
+name|struct
+name|rusage
+name|ki_rusage
+decl_stmt|;
+comment|/* process rusage statistics */
 name|long
-name|e_spare
+name|ki_spare
 index|[
-literal|2
+literal|25
 index|]
 decl_stmt|;
-block|}
-name|kp_eproc
-struct|;
+comment|/* spare constants */
 block|}
 struct|;
 end_struct
 
 begin_decl_stmt
 name|void
-name|fill_eproc
+name|fill_kinfo_proc
 name|__P
 argument_list|(
 operator|(
@@ -332,12 +516,49 @@ name|proc
 operator|*
 operator|,
 expr|struct
-name|eproc
+name|kinfo_proc
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ki_sessflag values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_CTTY
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* controlling tty vnode active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_SLEADER
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* session leader */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_MTXBLOCK
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* proc blocked on mutex ki_mtxname */
+end_comment
 
 begin_comment
 comment|/*  * Per process structure containing data that isn't needed in core  * when the process isn't running (esp. when swapped out).  * This structure may or may not be at the same kernel address  * in all processes.  */

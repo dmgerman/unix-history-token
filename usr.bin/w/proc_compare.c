@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)proc_compare.c	8.2 (Berkeley) 9/23/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)proc_compare.c	8.2 (Berkeley) 9/23/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/user.h>
 end_include
 
 begin_include
@@ -63,7 +76,7 @@ name|ISRUN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((p)->p_stat == SRUN) || ((p)->p_stat == SIDL))
+value|(((p)->ki_stat == SRUN) || ((p)->ki_stat == SIDL))
 end_define
 
 begin_define
@@ -107,9 +120,8 @@ name|p1
 parameter_list|,
 name|p2
 parameter_list|)
-specifier|register
 name|struct
-name|proc
+name|kinfo_proc
 modifier|*
 name|p1
 decl_stmt|,
@@ -172,11 +184,11 @@ if|if
 condition|(
 name|p2
 operator|->
-name|p_estcpu
+name|ki_estcpu
 operator|>
 name|p1
 operator|->
-name|p_estcpu
+name|ki_estcpu
 condition|)
 return|return
 operator|(
@@ -187,11 +199,11 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_estcpu
+name|ki_estcpu
 operator|>
 name|p2
 operator|->
-name|p_estcpu
+name|ki_estcpu
 condition|)
 return|return
 operator|(
@@ -202,11 +214,11 @@ return|return
 operator|(
 name|p2
 operator|->
-name|p_pid
+name|ki_pid
 operator|>
 name|p1
 operator|->
-name|p_pid
+name|ki_pid
 operator|)
 return|;
 comment|/* tie - return highest pid */
@@ -218,13 +230,13 @@ name|TESTAB
 argument_list|(
 name|p1
 operator|->
-name|p_stat
+name|ki_stat
 operator|==
 name|SZOMB
 argument_list|,
 name|p2
 operator|->
-name|p_stat
+name|ki_stat
 operator|==
 name|SZOMB
 argument_list|)
@@ -253,11 +265,11 @@ return|return
 operator|(
 name|p2
 operator|->
-name|p_pid
+name|ki_pid
 operator|>
 name|p1
 operator|->
-name|p_pid
+name|ki_pid
 operator|)
 return|;
 comment|/* tie - return highest pid */
@@ -267,11 +279,11 @@ if|if
 condition|(
 name|p2
 operator|->
-name|p_slptime
+name|ki_slptime
 operator|>
 name|p1
 operator|->
-name|p_slptime
+name|ki_slptime
 condition|)
 return|return
 operator|(
@@ -282,11 +294,11 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_slptime
+name|ki_slptime
 operator|>
 name|p2
 operator|->
-name|p_slptime
+name|ki_slptime
 condition|)
 return|return
 operator|(
@@ -298,14 +310,14 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_flag
+name|ki_flag
 operator|&
 name|P_SINTR
 operator|&&
 operator|(
 name|p2
 operator|->
-name|p_flag
+name|ki_flag
 operator|&
 name|P_SINTR
 operator|)
@@ -321,14 +333,14 @@ if|if
 condition|(
 name|p2
 operator|->
-name|p_flag
+name|ki_flag
 operator|&
 name|P_SINTR
 operator|&&
 operator|(
 name|p1
 operator|->
-name|p_flag
+name|ki_flag
 operator|&
 name|P_SINTR
 operator|)
@@ -344,11 +356,11 @@ return|return
 operator|(
 name|p2
 operator|->
-name|p_pid
+name|ki_pid
 operator|>
 name|p1
 operator|->
-name|p_pid
+name|ki_pid
 operator|)
 return|;
 comment|/* tie - return highest pid */

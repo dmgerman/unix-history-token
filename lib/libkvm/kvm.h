@@ -420,9 +420,8 @@ operator|(
 name|kvm_t
 operator|*
 operator|,
-specifier|const
 expr|struct
-name|proc
+name|kinfo_proc
 operator|*
 operator|,
 name|unsigned

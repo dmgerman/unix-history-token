@@ -291,42 +291,6 @@ directive|include
 file|"loadavg.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PP
-parameter_list|(
-name|pp
-parameter_list|,
-name|field
-parameter_list|)
-value|((pp)->kp_proc . field)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EP
-parameter_list|(
-name|pp
-parameter_list|,
-name|field
-parameter_list|)
-value|((pp)->kp_eproc . field)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VP
-parameter_list|(
-name|pp
-parameter_list|,
-name|field
-parameter_list|)
-value|((pp)->kp_eproc.e_vm . field)
-end_define
-
 begin_comment
 comment|/* define what weighted cpu is.  */
 end_comment
@@ -340,7 +304,7 @@ name|pct
 parameter_list|,
 name|pp
 parameter_list|)
-value|(PP((pp), p_swtime) == 0 ? 0.0 : \ 			 ((pct) / (1.0 - exp(PP((pp), p_swtime) * logcpu))))
+value|((pp)->ki_swtime == 0 ? 0.0 : \ 			 ((pct) / (1.0 - exp((pp)->ki_swtime * logcpu))))
 end_define
 
 begin_comment
@@ -354,7 +318,7 @@ name|PROCSIZE
 parameter_list|(
 name|pp
 parameter_list|)
-value|(VP((pp), vm_map.size) / 1024)
+value|((pp)->ki_size / 1024)
 end_define
 
 begin_comment
@@ -2295,24 +2259,18 @@ block|{
 comment|/* 	 *  Place pointers to each valid proc structure in pref[]. 	 *  Process slots that are actually in use have a non-zero 	 *  status field.  Processes with P_SYSTEM set are system 	 *  processes---these get ignored unless show_sysprocs is set. 	 */
 if|if
 condition|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_stat
-argument_list|)
+operator|->
+name|ki_stat
 operator|!=
 literal|0
 operator|&&
 operator|(
 name|show_self
 operator|!=
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_pid
-argument_list|)
+operator|->
+name|ki_pid
 operator|)
 operator|&&
 operator|(
@@ -2320,12 +2278,9 @@ name|show_system
 operator|||
 operator|(
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_flag
-argument_list|)
+operator|->
+name|ki_flag
 operator|&
 name|P_SYSTEM
 operator|)
@@ -2344,24 +2299,18 @@ operator|(
 name|unsigned
 name|char
 operator|)
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_stat
-argument_list|)
+operator|->
+name|ki_stat
 index|]
 operator|++
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_stat
-argument_list|)
+operator|->
+name|ki_stat
 operator|!=
 name|SZOMB
 operator|)
@@ -2370,23 +2319,17 @@ operator|(
 name|show_idle
 operator|||
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_pctcpu
-argument_list|)
+operator|->
+name|ki_pctcpu
 operator|!=
 literal|0
 operator|)
 operator|||
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_stat
-argument_list|)
+operator|->
+name|ki_stat
 operator|==
 name|SRUN
 operator|)
@@ -2396,14 +2339,9 @@ operator|(
 operator|!
 name|show_uid
 operator|||
-name|EP
-argument_list|(
 name|pp
-argument_list|,
-name|e_pcred
-operator|.
-name|p_ruid
-argument_list|)
+operator|->
+name|ki_ruid
 operator|==
 operator|(
 name|uid_t
@@ -2591,12 +2529,9 @@ comment|/* get the process's command name */
 if|if
 condition|(
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_flag
-argument_list|)
+operator|->
+name|ki_flag
 operator|&
 name|P_INMEM
 operator|)
@@ -2609,17 +2544,14 @@ name|char
 modifier|*
 name|comm
 init|=
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_comm
-argument_list|)
+operator|->
+name|ki_comm
 decl_stmt|;
 define|#
 directive|define
 name|COMSIZ
-value|sizeof(PP(pp, p_comm))
+value|sizeof(pp->ki_comm)
 name|char
 name|buf
 index|[
@@ -2700,12 +2632,9 @@ comment|/*      * Convert the process's runtime from microseconds to seconds.  T
 name|cputime
 operator|=
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_runtime
-argument_list|)
+operator|->
+name|ki_runtime
 operator|+
 literal|500000
 operator|)
@@ -2717,12 +2646,9 @@ name|pct
 operator|=
 name|pctdouble
 argument_list|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_pctcpu
-argument_list|)
+operator|->
+name|ki_pctcpu
 argument_list|)
 expr_stmt|;
 comment|/* generate "STATE" field */
@@ -2730,12 +2656,9 @@ switch|switch
 condition|(
 name|state
 operator|=
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_stat
-argument_list|)
+operator|->
+name|ki_stat
 condition|)
 block|{
 case|case
@@ -2745,12 +2668,9 @@ if|if
 condition|(
 name|smpmode
 operator|&&
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_oncpu
-argument_list|)
+operator|->
+name|ki_oncpu
 operator|!=
 literal|0xff
 condition|)
@@ -2760,12 +2680,9 @@ name|status
 argument_list|,
 literal|"CPU%d"
 argument_list|,
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_oncpu
-argument_list|)
+operator|->
+name|ki_oncpu
 argument_list|)
 expr_stmt|;
 else|else
@@ -2782,14 +2699,11 @@ name|SMTX
 case|:
 if|if
 condition|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_mtxname
-argument_list|)
-operator|!=
-name|NULL
+operator|->
+name|ki_kiflag
+operator|&
+name|KI_MTXBLOCK
 condition|)
 block|{
 name|sprintf
@@ -2798,12 +2712,9 @@ name|status
 argument_list|,
 literal|"*%.6s"
 argument_list|,
-name|EP
-argument_list|(
 name|pp
-argument_list|,
-name|e_mtxname
-argument_list|)
+operator|->
+name|ki_mtxname
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2814,12 +2725,9 @@ name|SSLEEP
 case|:
 if|if
 condition|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_wmesg
-argument_list|)
+operator|->
+name|ki_wmesg
 operator|!=
 name|NULL
 condition|)
@@ -2830,12 +2738,9 @@ name|status
 argument_list|,
 literal|"%.6s"
 argument_list|,
-name|EP
-argument_list|(
 name|pp
-argument_list|,
-name|e_wmesg
-argument_list|)
+operator|->
+name|ki_wmesg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2900,12 +2805,9 @@ name|smp_Proc_format
 else|:
 name|up_Proc_format
 argument_list|,
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_pid
-argument_list|)
+operator|->
+name|ki_pid
 argument_list|,
 name|namelength
 argument_list|,
@@ -2916,58 +2818,41 @@ modifier|*
 name|get_userid
 call|)
 argument_list|(
-name|EP
-argument_list|(
 name|pp
-argument_list|,
-name|e_pcred
-operator|.
-name|p_ruid
-argument_list|)
+operator|->
+name|ki_ruid
 argument_list|)
 argument_list|,
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_priority
-argument_list|)
+operator|->
+name|ki_priority
 operator|-
 name|PZERO
 argument_list|,
 comment|/* 	     * normal time      -> nice value -20 - +20  	     * real time 0 - 31 -> nice value -52 - -21 	     * idle time 0 - 31 -> nice value +21 - +52 	     */
 operator|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_rtprio
+operator|->
+name|ki_rtprio
 operator|.
 name|type
-argument_list|)
 operator|==
 name|RTP_PRIO_NORMAL
 condition|?
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_nice
-argument_list|)
+operator|->
+name|ki_nice
 operator|-
 name|NZERO
 else|:
 operator|(
 name|RTP_PRIO_IS_REALTIME
 argument_list|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_rtprio
+operator|->
+name|ki_rtprio
 operator|.
 name|type
-argument_list|)
 argument_list|)
 condition|?
 operator|(
@@ -2977,14 +2862,11 @@ literal|1
 operator|-
 name|RTP_PRIO_MAX
 operator|+
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_rtprio
+operator|->
+name|ki_rtprio
 operator|.
 name|prio
-argument_list|)
 operator|)
 else|:
 operator|(
@@ -2992,14 +2874,11 @@ name|PRIO_MAX
 operator|+
 literal|1
 operator|+
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_rtprio
+operator|->
+name|ki_rtprio
 operator|.
 name|prio
-argument_list|)
 operator|)
 operator|)
 operator|)
@@ -3016,12 +2895,9 @@ name|format_k2
 argument_list|(
 name|pagetok
 argument_list|(
-name|VP
-argument_list|(
 name|pp
-argument_list|,
-name|vm_rssize
-argument_list|)
+operator|->
+name|ki_rssize
 argument_list|)
 argument_list|)
 argument_list|,
@@ -3029,12 +2905,9 @@ name|status
 argument_list|,
 name|smpmode
 condition|?
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_lastcpu
-argument_list|)
+operator|->
+name|ki_lastcpu
 else|:
 literal|0
 argument_list|,
@@ -3068,12 +2941,9 @@ literal|0
 argument_list|,
 name|printable
 argument_list|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_comm
-argument_list|)
+operator|->
+name|ki_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3307,7 +3177,7 @@ define|#
 directive|define
 name|ORDERKEY_PCTCPU
 define|\
-value|if (lresult = (long) PP(p2, p_pctcpu) - (long) PP(p1, p_pctcpu), \      (result = lresult> 0 ? 1 : lresult< 0 ? -1 : 0) == 0)
+value|if (lresult = (long) p2->ki_pctcpu - (long) p1->ki_pctcpu, \      (result = lresult> 0 ? 1 : lresult< 0 ? -1 : 0) == 0)
 end_define
 
 begin_define
@@ -3315,7 +3185,7 @@ define|#
 directive|define
 name|ORDERKEY_CPTICKS
 define|\
-value|if ((result = PP(p2, p_runtime)> PP(p1, p_runtime) ? 1 : \                 PP(p2, p_runtime)< PP(p1, p_runtime) ? -1 : 0) == 0)
+value|if ((result = p2->ki_runtime> p1->ki_runtime ? 1 : \                 p2->ki_runtime< p1->ki_runtime ? -1 : 0) == 0)
 end_define
 
 begin_define
@@ -3323,7 +3193,7 @@ define|#
 directive|define
 name|ORDERKEY_STATE
 define|\
-value|if ((result = sorted_state[(unsigned char) PP(p2, p_stat)] - \                 sorted_state[(unsigned char) PP(p1, p_stat)]) == 0)
+value|if ((result = sorted_state[(unsigned char) p2->ki_stat] - \                 sorted_state[(unsigned char) p1->ki_stat]) == 0)
 end_define
 
 begin_define
@@ -3331,7 +3201,7 @@ define|#
 directive|define
 name|ORDERKEY_PRIO
 define|\
-value|if ((result = PP(p2, p_priority) - PP(p1, p_priority)) == 0)
+value|if ((result = p2->ki_priority - p1->ki_priority) == 0)
 end_define
 
 begin_define
@@ -3339,7 +3209,7 @@ define|#
 directive|define
 name|ORDERKEY_RSSIZE
 define|\
-value|if ((result = VP(p2, vm_rssize) - VP(p1, vm_rssize)) == 0)
+value|if ((result = p2->ki_rssize - p1->ki_rssize) == 0)
 end_define
 
 begin_define
@@ -3888,12 +3758,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|PP
-argument_list|(
 name|pp
-argument_list|,
-name|p_pid
-argument_list|)
+operator|->
+name|ki_pid
 operator|==
 operator|(
 name|pid_t
@@ -3906,14 +3773,9 @@ operator|(
 operator|(
 name|int
 operator|)
-name|EP
-argument_list|(
 name|pp
-argument_list|,
-name|e_pcred
-operator|.
-name|p_ruid
-argument_list|)
+operator|->
+name|ki_ruid
 operator|)
 return|;
 block|}
