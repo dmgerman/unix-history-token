@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|IH_SHIFT
-value|3
+value|PTR_SHIFT
 end_define
 
 begin_define
@@ -126,18 +126,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_struct
-struct|struct
-name|intr_handler
-block|{
-name|ih_func_t
-modifier|*
-name|ih_func
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -221,18 +209,9 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|intr_handler
+name|ih_func_t
+modifier|*
 name|intr_handlers
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|intr_queue
-name|intr_queues
 index|[]
 decl_stmt|;
 end_decl_stmt
