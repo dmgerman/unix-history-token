@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -3052,6 +3052,28 @@ modifier|*
 name|buildaddr
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|12
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"remotename(%s)\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 comment|/* 	**  See if this mailer wants the name to be rewritten.  There are 	**  many problems here, owing to the standards for doing replies. 	**  In general, these names should only be rewritten if we are 	**  sending to another host that runs sendmail. 	*/
 if|if
 condition|(
@@ -3068,11 +3090,33 @@ operator|&&
 operator|!
 name|force
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|12
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"remotename [ditto]\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 return|return
 operator|(
 name|name
 operator|)
 return|;
+block|}
 comment|/* 	**  Do general rewriting of name. 	**	This will also take care of doing global name translation. 	*/
 name|define
 argument_list|(
@@ -3271,9 +3315,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"remotename(%s) => `%s'\n"
-argument_list|,
-name|name
+literal|"remotename => `%s'\n"
 argument_list|,
 name|buf
 argument_list|)
