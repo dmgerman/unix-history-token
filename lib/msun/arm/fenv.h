@@ -116,6 +116,12 @@ name|_ENABLE_MASK
 value|(FE_ALL_EXCEPT<< _FPUSW_SHIFT)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_HARD_FLOAT
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -123,7 +129,7 @@ name|__rfs
 parameter_list|(
 name|__fpsr
 parameter_list|)
-value|__asm("rfs %0" : "=m" (*(__fpsr)))
+value|__asm("rfs %0" : "=r" (*(__fpsr)))
 end_define
 
 begin_define
@@ -133,8 +139,36 @@ name|__wfs
 parameter_list|(
 name|__fpsr
 parameter_list|)
-value|__asm __volatile("wfs %0" : : "m" (__fpsr))
+value|__asm __volatile("wfs %0" : : "r" (__fpsr))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__rfs
+parameter_list|(
+name|__fpsr
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__wfs
+parameter_list|(
+name|__fpsr
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
