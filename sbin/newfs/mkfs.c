@@ -284,15 +284,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|fsi
-decl_stmt|,
-name|fso
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|randinit
 decl_stmt|;
 end_decl_stmt
@@ -505,12 +496,6 @@ parameter_list|,
 name|char
 modifier|*
 name|fsys
-parameter_list|,
-name|int
-name|fi
-parameter_list|,
-name|int
-name|fo
 parameter_list|)
 block|{
 name|long
@@ -594,14 +579,6 @@ name|srandomdev
 argument_list|()
 expr_stmt|;
 block|}
-name|fsi
-operator|=
-name|fi
-expr_stmt|;
-name|fso
-operator|=
-name|fo
-expr_stmt|;
 name|sblock
 operator|.
 name|fs_inodefmt
@@ -2146,6 +2123,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|cpgflg
+operator|&&
 name|sblock
 operator|.
 name|fs_cpg
@@ -2153,17 +2132,6 @@ operator|!=
 name|cpg
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|cpgflg
-condition|)
-name|printf
-argument_list|(
-literal|"Warning: "
-argument_list|)
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 operator|!
@@ -3328,6 +3296,13 @@ name|wtfsflush
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Update information about this partion in pack 	 * label, to that it may be updated on disk. 	 */
+if|if
+condition|(
+name|pp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|pp
 operator|->
 name|p_fstype
@@ -3358,6 +3333,7 @@ name|sblock
 operator|.
 name|fs_cpg
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5829,7 +5805,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
-name|fsi
+name|fso
 argument_list|,
 operator|(
 name|off_t
@@ -5866,7 +5842,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-name|fsi
+name|fso
 argument_list|,
 name|bf
 argument_list|,

@@ -64,7 +64,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|sectorsize
 decl_stmt|;
 end_decl_stmt
@@ -205,6 +205,17 @@ begin_comment
 comment|/* expected number of files per directory */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|fso
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* filedescriptor to device */
+end_comment
+
 begin_function_decl
 name|void
 name|mkfs
@@ -215,10 +226,6 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
