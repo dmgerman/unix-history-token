@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.16 84/01/11"
+literal|"@(#)wwwrite.c	3.17 84/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,11 @@ begin_block
 block|{
 name|char
 name|hascursor
+decl_stmt|;
+name|int
+name|saven
+init|=
+name|n
 decl_stmt|;
 name|wwnwrite
 operator|++
@@ -1342,7 +1347,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|saven
 return|;
 block|}
 end_block
