@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.14	83/04/05	*/
+comment|/*	lpr.c	4.15	83/04/29	*/
 end_comment
 
 begin_comment
@@ -23,49 +23,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lp.local.h"
+file|"lp.h"
 end_include
 
 begin_decl_stmt
@@ -165,23 +123,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|lflag
+name|sflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* link flag */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|person
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user name */
+comment|/* symbolic link flag */
 end_comment
 
 begin_decl_stmt
@@ -227,60 +174,6 @@ comment|/* amount to indent */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|DN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* path name to daemon program */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|LP
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* line printer device name */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|RM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* remote machine name if no local printer */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|SD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spool directory */
-end_comment
-
-begin_decl_stmt
-name|int
-name|MX
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum size in blocks of a print file */
-end_comment
-
-begin_decl_stmt
 name|int
 name|hdr
 init|=
@@ -300,6 +193,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* user id */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|person
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user name */
 end_comment
 
 begin_decl_stmt
@@ -340,19 +244,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|host
-index|[
-literal|32
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* host name */
-end_comment
-
-begin_decl_stmt
-name|char
 modifier|*
 name|class
 init|=
@@ -375,53 +266,17 @@ begin_comment
 comment|/* job name on header page */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* program name */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|pgetstr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|char
 modifier|*
 name|linked
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cleanup
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -447,22 +302,12 @@ index|[]
 decl_stmt|;
 block|{
 specifier|extern
-name|char
-modifier|*
-name|getlogin
-parameter_list|()
-function_decl|;
-specifier|extern
 name|struct
 name|passwd
 modifier|*
 name|getpwuid
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getpwnam
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 name|struct
 name|passwd
 modifier|*
@@ -486,21 +331,11 @@ name|int
 name|i
 decl_stmt|,
 name|f
-decl_stmt|,
-name|out
-argument_list|()
-decl_stmt|;
-name|char
-modifier|*
-name|printer
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|stat
 name|stb
 decl_stmt|;
-comment|/* 	 * Strategy to maintain protected spooling area: 	 *	1. Spooling area is writable only by daemon and spooling group 	 *	2. lpr runs setuid root and setgrp spooling group; it uses 	 *	   root to access any file it wants (verifying things before 	 *	   with an access call) and group id to know how it should 	 *	   set up ownership of files in spooling area. 	 *	3. Files in spooling area are owned by daemon and spooling 	 *	   group, with mode 660. 	 *	4. lpd runs setuid root and setgrp spooling group to 	 *	   access files and printer.  Users can't get to anything 	 *	   w/o help of lpq and lprm programs. 	 */
 if|if
 condition|(
 name|signal
@@ -516,7 +351,7 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|out
+name|cleanup
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,7 +369,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|out
+name|cleanup
 argument_list|)
 expr_stmt|;
 if|if
@@ -552,7 +387,7 @@ name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|out
+name|cleanup
 argument_list|)
 expr_stmt|;
 if|if
@@ -570,7 +405,7 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|out
+name|cleanup
 argument_list|)
 expr_stmt|;
 name|gethostname
@@ -596,14 +431,10 @@ name|argc
 operator|>
 literal|1
 operator|&&
-operator|(
-name|arg
-operator|=
 name|argv
 index|[
 literal|1
 index|]
-operator|)
 index|[
 literal|0
 index|]
@@ -614,8 +445,11 @@ block|{
 name|argc
 operator|--
 expr_stmt|;
-name|argv
+name|arg
+operator|=
+operator|*
 operator|++
+name|argv
 expr_stmt|;
 switch|switch
 condition|(
@@ -769,7 +603,15 @@ comment|/* print using ``pr'' */
 case|case
 literal|'t'
 case|:
-comment|/* print troff output */
+comment|/* print troff output (cat files) */
+case|case
+literal|'d'
+case|:
+comment|/* print tex output (dvi files) */
+case|case
+literal|'g'
+case|:
+comment|/* print graph(1G) output */
 case|case
 literal|'c'
 case|:
@@ -784,6 +626,15 @@ name|arg
 index|[
 literal|1
 index|]
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* print fortran output */
+name|format
+operator|=
+literal|'r'
 expr_stmt|;
 break|break;
 case|case
@@ -870,7 +721,7 @@ case|case
 literal|'s'
 case|:
 comment|/* try to link files */
-name|lflag
+name|sflag
 operator|++
 expr_stmt|;
 break|break;
@@ -956,55 +807,17 @@ name|printer
 operator|=
 name|DEFLP
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|chkprinter
 argument_list|(
 name|printer
 argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: unknown printer %s\n"
-argument_list|,
-name|name
-argument_list|,
-name|printer
-argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Get the identity of the person doing the lpr and initialize the 	 * control file. 	 */
+comment|/* 	 * Get the identity of the person doing the lpr using the same 	 * algorithm as lprm.  	 */
 name|userid
 operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|person
-operator|=
-name|getlogin
-argument_list|()
-operator|)
-operator|==
-name|NULL
-operator|||
-name|strlen
-argument_list|(
-name|person
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -1018,39 +831,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|person
-operator|=
-literal|"Unknown User"
+name|fatal
+argument_list|(
+literal|"Who are you?"
+argument_list|)
 expr_stmt|;
-else|else
 name|person
 operator|=
 name|pw
 operator|->
 name|pw_name
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|pw
-operator|=
-name|getpwnam
-argument_list|(
-name|person
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|userid
-operator|=
-name|pw
-operator|->
-name|pw_uid
-expr_stmt|;
-comment|/* in case of su */
+comment|/* 	 * Initialize the control file. 	 */
 name|mktemps
 argument_list|()
 expr_stmt|;
@@ -1100,6 +892,24 @@ expr_stmt|;
 else|else
 name|jobname
 operator|=
+operator|(
+name|arg
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|?
+name|arg
+operator|+
+literal|1
+else|:
 name|argv
 index|[
 literal|1
@@ -1158,6 +968,10 @@ condition|(
 name|format
 operator|==
 literal|'t'
+operator|||
+name|format
+operator|==
+literal|'d'
 condition|)
 for|for
 control|(
@@ -1206,6 +1020,7 @@ argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Read the files and spool them. 	 */
 if|if
 condition|(
 name|argc
@@ -1511,7 +1326,7 @@ name|inchar
 index|]
 operator|++
 expr_stmt|;
-name|out
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -1551,7 +1366,7 @@ name|inchar
 index|]
 operator|++
 expr_stmt|;
-name|out
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -1572,69 +1387,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|LP
-operator|&&
-name|stat
-argument_list|(
-name|LP
-argument_list|,
-operator|&
-name|stb
-argument_list|)
-operator|>=
-literal|0
-operator|&&
-operator|(
-name|stb
-operator|.
-name|st_mode
-operator|&
-literal|0777
-operator|)
-operator|==
-literal|0
+operator|!
+name|startdaemon
+argument_list|()
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"jobs queued, but %s is down.\n"
-argument_list|,
-name|printer
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|execl
-argument_list|(
-name|DN
-argument_list|,
-operator|(
-name|arg
-operator|=
-name|rindex
-argument_list|(
-name|DN
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-condition|?
-name|arg
-operator|+
-literal|1
-else|:
-name|DN
-argument_list|,
-name|printer
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"jobs queued, but cannot start daemon.\n"
@@ -1646,10 +1402,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|out
+name|cleanup
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -2179,13 +1935,10 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|out
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|BSD41C
 if|if
 condition|(
 name|chown
@@ -2201,25 +1954,6 @@ operator|<
 literal|0
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-name|chown
-argument_list|(
-name|n
-argument_list|,
-name|userid
-argument_list|,
-name|getegid
-argument_list|()
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-endif|#
-directive|endif
 name|unlink
 argument_list|(
 name|n
@@ -2234,7 +1968,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|out
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -2267,7 +2001,7 @@ argument_list|(
 literal|"too many files - break up the job\n"
 argument_list|)
 expr_stmt|;
-name|out
+name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -2302,9 +2036,18 @@ name|f
 operator|)
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Cleanup after interrupts and errors.  */
-name|out
+end_comment
+
+begin_macro
+name|cleanup
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|i
@@ -2433,15 +2176,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Test to see if this is a printable file.  * Return -1 if it is not, 1 if we should try to link and or in 2 if  * we should remove it after printing.  */
+end_comment
+
+begin_macro
 name|test
 argument_list|(
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|file
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|exec
@@ -2664,7 +2419,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|lflag
+name|sflag
 operator|&&
 operator|(
 name|statb
@@ -2771,7 +2526,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * itoa - integer to string conversion  */
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|itoa
@@ -2830,7 +2591,13 @@ name|p
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Perform lookup for printer name or abbreviation --  */
+end_comment
+
+begin_expr_stmt
 name|chkprinter
 argument_list|(
 name|s
@@ -2840,39 +2607,21 @@ name|char
 operator|*
 name|s
 expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
-specifier|static
-name|char
-name|buf
-index|[
-name|BUFSIZ
-operator|/
-literal|2
-index|]
-decl_stmt|;
-name|char
-name|b
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|int
-name|stat
-decl_stmt|;
-name|char
-modifier|*
-name|bp
-init|=
-name|buf
+name|status
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|stat
+name|status
 operator|=
 name|pgetent
 argument_list|(
-name|b
+name|line
 argument_list|,
 name|s
 argument_list|)
@@ -2880,71 +2629,22 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"%s: can't open printer description file\n"
-argument_list|,
-name|name
+literal|"cannot open printer description file"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
-name|stat
+name|status
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-operator|(
-name|DN
-operator|=
-name|pgetstr
+name|fatal
 argument_list|(
-literal|"dn"
-argument_list|,
-operator|&
-name|bp
+literal|"unknown printer"
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|DN
-operator|=
-name|DEFDAEMON
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|LP
-operator|=
-name|pgetstr
-argument_list|(
-literal|"lp"
-argument_list|,
-operator|&
-name|bp
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|LP
-operator|=
-name|DEFDEVLP
 expr_stmt|;
 if|if
 condition|(
@@ -2985,23 +2685,22 @@ name|DEFMX
 expr_stmt|;
 name|RM
 operator|=
-name|pgetstr
-argument_list|(
-literal|"rm"
-argument_list|,
-operator|&
-name|bp
-argument_list|)
+name|host
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+comment|/* machine for getport to connect to */
 block|}
+end_block
+
+begin_comment
 comment|/*  * Make the temp files.  */
+end_comment
+
+begin_macro
 name|mktemps
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -3106,9 +2805,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD41C
 if|if
 condition|(
 name|flock
@@ -3137,8 +2833,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|n
 operator|=
 literal|0
@@ -3269,7 +2963,13 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Make a temp file name.  */
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|mktemp
@@ -3308,20 +3008,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
+name|fatal
 argument_list|(
-literal|"%s: out of memory\n"
-argument_list|,
-name|name
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -3346,7 +3037,7 @@ name|s
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vpsf.c	4.2	83/03/17	*/
+comment|/*	vpsf.c	4.3	83/04/29	*/
 end_comment
 
 begin_comment
 comment|/*  * Versatec printer filter  * 	make wide listings by placing pages side by side  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -196,28 +190,6 @@ begin_comment
 comment|/* accounting information file */
 end_comment
 
-begin_macro
-name|onintr
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_function
 name|main
 parameter_list|(
@@ -238,34 +210,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|onintr
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|--

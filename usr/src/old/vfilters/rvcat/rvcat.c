@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rvcat.c	4.2	83/03/17	*/
+comment|/*	rvcat.c	4.3	83/04/29	*/
 end_comment
 
 begin_comment
 comment|/*  * Cat Simulator for Versatec and Varian  * Modified for Varian with rotated fonts: wnj 5/30/80.  *  * Takes two extra special codes defined by rvsort:  *	0115 - break for new page, goto (0,0)  *	0116 - lead 64* following byte  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -38,10 +32,6 @@ index|[]
 init|=
 block|{
 name|VPRINT
-block|,
-literal|0
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -53,10 +43,6 @@ index|[]
 init|=
 block|{
 name|VPLOT
-block|,
-literal|0
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1307,28 +1293,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|onintr
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_function
 name|main
 parameter_list|(
@@ -1363,34 +1327,6 @@ name|acctfile
 init|=
 name|NULL
 decl_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|onintr
-argument_list|)
-expr_stmt|;
 name|varian
 operator|=
 literal|1
@@ -2453,7 +2389,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Varian accounting is done by 11 inch pages; 	 * Versatec accounting is by the (12 inch) foot. 	 */
+comment|/* 	 * Varian accounting is done by 8.5 inch pages; 	 * Versatec accounting is by the (12 inch) foot. 	 */
 name|fprintf
 argument_list|(
 name|a
@@ -2469,7 +2405,7 @@ operator|/
 operator|(
 name|varian
 condition|?
-literal|11.0
+literal|8.5
 else|:
 literal|12.0
 operator|)

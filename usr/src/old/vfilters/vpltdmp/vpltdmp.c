@@ -28,7 +28,7 @@ comment|/****************************************************************/
 end_comment
 
 begin_comment
-comment|/*  VPLTDMP: version 4.1			updated %G%  *  *  reads raster file created by vplot and dumps it onto the  *  Varian or Versatec plotter.  *  Input comes from file descriptor 0, output is to file descriptor 1.  */
+comment|/*  VPLTDMP: version 4.2			updated %G%  *  *  reads raster file created by vplot and dumps it onto the  *  Varian or Versatec plotter.  *  Input comes from file descriptor 0, output is to file descriptor 1.  */
 end_comment
 
 begin_include
@@ -69,7 +69,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vpltdmp.c	4.1\t%G%"
+literal|"@(#)vpltdmp.c	4.2\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ name|write
 argument_list|(
 name|OUT
 argument_list|,
-literal|"\014"
+literal|"\f"
 argument_list|,
 literal|2
 argument_list|)
@@ -472,7 +472,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Varian accounting is done by 11 inch pages; 	 * Versatec accounting is by the (12 inch) foot. 	 */
+comment|/* 	 * Varian accounting is done by 8.5 inch pages; 	 * Versatec accounting is by the (12 inch) foot. 	 */
 name|fprintf
 argument_list|(
 name|a
@@ -488,7 +488,7 @@ operator|/
 operator|(
 name|varian
 condition|?
-literal|11.0
+literal|8.5
 else|:
 literal|12.0
 operator|)
