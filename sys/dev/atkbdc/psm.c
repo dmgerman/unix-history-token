@@ -8727,6 +8727,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|unit
 operator|=
 operator|(
@@ -8742,6 +8745,11 @@ name|psm_devclass
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8794,6 +8802,11 @@ operator|->
 name|watchdog
 operator|=
 name|TRUE
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
