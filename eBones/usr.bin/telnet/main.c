@@ -278,6 +278,20 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* FORWARD */
+ifdef|#
+directive|ifdef
+name|SOCKS
+name|SOCKSinit
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SOCKS */
 name|tninit
 argument_list|()
 expr_stmt|;
