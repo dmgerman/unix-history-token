@@ -112,6 +112,24 @@ file|<dev/aic/aicvar.h>
 end_include
 
 begin_decl_stmt
+name|struct
+name|aic_softc
+name|aic_softcs
+index|[
+name|NAIC
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|aic_unit
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|aic_action

@@ -570,5 +570,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|aic_softc
+name|aic_softcs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|aic_unit
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
