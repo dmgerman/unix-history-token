@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1961,39 +1961,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
-
-begin_expr_stmt
-call|(
-name|void
-call|)
-argument_list|(
-name|tpcb
-operator|->
-name|tp_nlproto
-operator|->
-name|nlp_mtu
-argument_list|)
-argument_list|(
-name|so
-argument_list|,
-name|tpcb
-operator|->
-name|tp_npcb
-argument_list|,
-operator|&
-name|tpcb
-operator|->
-name|tp_l_tpdusize
-argument_list|,
-operator|&
-name|tpcb
-operator|->
-name|tp_tpdusize
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_if
 if|if
