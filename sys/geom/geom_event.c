@@ -1211,7 +1211,6 @@ operator|->
 name|ref
 index|[
 name|n
-operator|++
 index|]
 operator|=
 name|p
