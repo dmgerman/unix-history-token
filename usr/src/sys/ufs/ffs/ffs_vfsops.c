@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.78 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.79 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2626,10 +2626,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|syncprt
-decl_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2666,13 +2662,6 @@ name|allerror
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|syncprt
-condition|)
-name|ufs_bufstats
-argument_list|()
-expr_stmt|;
 name|fs
 operator|=
 name|ump
