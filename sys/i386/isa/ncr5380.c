@@ -808,15 +808,11 @@ parameter_list|)
 value|{\ 	register u_long cnt = count; char *msg = message;\ 	while (cnt--&& ! (condition)) continue;\ 	if (cnt == -1&& msg)\ 		printf ("nca: %s timeout\n", msg); }
 end_define
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|inthand2_t
 name|ncaintr
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -3086,7 +3082,7 @@ comment|/*  * Catch an interrupt from the adaptor.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ncaintr
 parameter_list|(
 name|int
@@ -3143,11 +3139,6 @@ operator|->
 name|RPIR
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

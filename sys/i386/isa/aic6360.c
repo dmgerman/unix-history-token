@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.9 1995/05/30 08:01:12 rgrimes Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.10 1995/08/23 23:02:25 gibbs Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3650,14 +3650,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|inthand2_t
 name|aicintr
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -10496,30 +10490,42 @@ begin_comment
 comment|/*  * This is the workhorse routine of the driver.  * Deficiencies (for now):  * 1) always uses programmed I/O  * 2) doesn't support synchronous transfers properly (yet)  */
 end_comment
 
-begin_function
-name|int
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+end_ifdef
+
+begin_decl_stmt
+name|void
 name|aicintr
-parameter_list|(
+argument_list|(
 name|int
 name|unit
-parameter_list|)
+argument_list|)
 else|#
 directive|else
-function|aicintr
-parameter_list|(
+error|#
+directive|error
+comment|/* the ifdefs for returning unused values were too much trouble */
+name|int
+name|aicintr
+argument_list|(
 name|aic
-parameter_list|)
-specifier|register
-name|struct
+argument_list|)
+decl|register struct
 name|aic_softc
 modifier|*
 name|aic
 decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -10671,9 +10677,7 @@ argument_list|,
 name|INTEN
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 else|else
 block|{
@@ -10875,9 +10879,7 @@ argument_list|,
 name|INTEN
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 comment|/* Come back when REQ is set */
 block|}
 if|if
@@ -10917,9 +10919,7 @@ argument_list|(
 name|aic
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -10943,9 +10943,7 @@ argument_list|(
 name|aic
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 else|else
 block|{
@@ -11237,9 +11235,7 @@ argument_list|,
 name|INTEN
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 elseif|else
 if|if
@@ -11342,9 +11338,7 @@ argument_list|,
 name|INTEN
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 else|else
 block|{
@@ -11387,9 +11381,7 @@ argument_list|,
 name|INTEN
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 block|}
 comment|/* Driver is now in state AIC_HASNEXUS, i.e. we have a current command 	 * working the SCSI bus. 	 */
@@ -11740,9 +11732,7 @@ argument_list|(
 name|aic
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 name|outb
 argument_list|(
@@ -11852,9 +11842,7 @@ argument_list|(
 name|aic
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 name|outb
 argument_list|(
@@ -12175,11 +12163,9 @@ argument_list|,
 name|INTEN
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
-end_function
+end_block
 
 begin_function
 name|void

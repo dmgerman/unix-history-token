@@ -696,9 +696,6 @@ init|=
 name|spltty
 argument_list|()
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|pcrint
 argument_list|()
 expr_stmt|;

@@ -3130,10 +3130,11 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|int
+name|void
 name|pcrint
 parameter_list|(
-name|void
+name|int
+name|unit
 parameter_list|)
 block|{
 if|#
@@ -3183,23 +3184,12 @@ condition|(
 name|kbd_polling
 condition|)
 block|{
-if|if
-condition|(
 name|sgetc
 argument_list|(
 literal|1
 argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-literal|1
-return|;
+expr_stmt|;
+return|return;
 block|}
 while|while
 condition|(
@@ -3324,11 +3314,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 else|#
 directive|else
 comment|/* !PCVT_KBD_FIFO */
@@ -3345,17 +3330,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 if|if
 condition|(
 name|kbd_polling
 condition|)
-return|return
-literal|1
-return|;
+return|return;
 if|if
 condition|(
 operator|!
@@ -3369,9 +3349,7 @@ name|openf
 operator|)
 condition|)
 comment|/* XXX was vs[minor(dev)] */
-return|return
-literal|1
-return|;
+return|return;
 if|#
 directive|if
 name|PCVT_NULLCHARS
@@ -3401,9 +3379,7 @@ operator|,
 name|pcconsp
 operator|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 endif|#
 directive|endif
@@ -3434,9 +3410,6 @@ operator|,
 name|pcconsp
 operator|)
 expr_stmt|;
-return|return
-literal|1
-return|;
 endif|#
 directive|endif
 comment|/* PCVT_KBD_FIFO */

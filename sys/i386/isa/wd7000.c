@@ -931,14 +931,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|inthand2_t
 name|wdsintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -2036,7 +2033,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|wdsintr
 parameter_list|(
 name|int
@@ -2094,9 +2091,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 name|c
 operator|=
@@ -2208,9 +2203,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|1
-return|;
 block|}
 end_function
 

@@ -7237,10 +7237,10 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|int
+name|void
 name|pcrint
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

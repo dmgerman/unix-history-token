@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.5 1995/05/30 08:03:02 rgrimes Exp $ */
+comment|/* $Id: scd.c,v 1.6 1995/09/08 11:07:55 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2508,15 +2508,6 @@ return|return
 operator|-
 literal|1
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|scdintr
-parameter_list|()
-block|{
-return|return;
 block|}
 end_function
 

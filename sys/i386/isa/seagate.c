@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.9 1995/07/13 15:01:38 jkh Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.10 1995/08/23 23:02:30 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -958,15 +958,11 @@ parameter_list|)
 value|{\ 	if (! (t)->ndelay.op&&\ 	    ! sea_wait_for_req_deassert ((t)->adapter, cnt, #op)&&\ 	    ! (t)->init.op)\ 		(t)->ndelay.op = 1;\ 	(t)->init.op = 1; }
 end_define
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|inthand2_t
 name|seaintr
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -2563,7 +2559,7 @@ comment|/*  * Catch an interrupt from the adaptor.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|seaintr
 parameter_list|(
 name|int
@@ -2601,11 +2597,6 @@ argument_list|(
 name|z
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
