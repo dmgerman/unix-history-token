@@ -3442,6 +3442,10 @@ name|modulename
 operator|=
 name|filename
 expr_stmt|;
+else|else
+name|modulename
+operator|++
+expr_stmt|;
 name|lf
 operator|=
 name|linker_find_file_by_name
