@@ -968,13 +968,15 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|pci_enable_busmaster
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
+return|return
+operator|(
 name|PCI_ENABLE_BUSMASTER
 argument_list|(
 name|device_get_parent
@@ -984,20 +986,23 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|pci_disable_busmaster
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
+return|return
+operator|(
 name|PCI_DISABLE_BUSMASTER
 argument_list|(
 name|device_get_parent
@@ -1007,14 +1012,15 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|pci_enable_io
 parameter_list|(
 name|device_t
@@ -1024,6 +1030,8 @@ name|int
 name|space
 parameter_list|)
 block|{
+return|return
+operator|(
 name|PCI_ENABLE_IO
 argument_list|(
 name|device_get_parent
@@ -1035,14 +1043,15 @@ name|dev
 argument_list|,
 name|space
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|pci_disable_io
 parameter_list|(
 name|device_t
@@ -1052,6 +1061,8 @@ name|int
 name|space
 parameter_list|)
 block|{
+return|return
+operator|(
 name|PCI_DISABLE_IO
 argument_list|(
 name|device_get_parent
@@ -1063,7 +1074,8 @@ name|dev
 argument_list|,
 name|space
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

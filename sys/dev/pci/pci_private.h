@@ -193,7 +193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pci_enable_busmaster_method
 parameter_list|(
 name|device_t
@@ -206,7 +206,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pci_disable_busmaster_method
 parameter_list|(
 name|device_t
@@ -219,7 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pci_enable_io_method
 parameter_list|(
 name|device_t
@@ -235,7 +235,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pci_disable_io_method
 parameter_list|(
 name|device_t
