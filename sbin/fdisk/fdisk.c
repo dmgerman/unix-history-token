@@ -526,7 +526,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* test only, if f_flag is given */
+comment|/* test only */
 end_comment
 
 begin_decl_stmt
@@ -1901,6 +1901,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|t_flag
+condition|)
 name|write_s0
 argument_list|()
 expr_stmt|;
