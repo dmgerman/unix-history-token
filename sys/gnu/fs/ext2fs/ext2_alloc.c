@@ -1386,7 +1386,7 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
