@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.7	(Berkeley)	84/03/14  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.8	(Berkeley)	84/04/13  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
