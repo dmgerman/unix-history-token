@@ -379,7 +379,7 @@ name|ret
 operator|->
 name|version
 argument_list|,
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|)
 expr_stmt|;
 name|M_ASN1_New
@@ -459,7 +459,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|a
 operator|->

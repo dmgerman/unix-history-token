@@ -892,12 +892,6 @@ name|i
 operator|++
 control|)
 block|{
-if|#
-directive|if
-literal|0
-block|int data_type,pack_type;
-endif|#
-directive|endif
 name|ASN1_OBJECT
 modifier|*
 name|obj
@@ -994,7 +988,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ASN1_OCTET_STRING_print
+name|M_ASN1_OCTET_STRING_print
 argument_list|(
 name|bp
 argument_list|,
@@ -1176,6 +1170,23 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+operator|!
+name|X509_CERT_AUX_print
+argument_list|(
+name|bp
+argument_list|,
+name|x
+operator|->
+name|aux
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|ret
 operator|=
 literal|1
@@ -1201,10 +1212,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|m
 argument_list|)
 expr_stmt|;

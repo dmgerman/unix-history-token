@@ -139,7 +139,7 @@ name|xi
 operator|->
 name|version
 operator|=
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|()
 operator|)
 operator|==

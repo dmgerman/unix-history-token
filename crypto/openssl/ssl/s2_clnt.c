@@ -7,10 +7,16 @@ begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ssl_locl.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|NO_SSL2
 end_ifndef
 
 begin_include
@@ -35,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/objects.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssl_locl.h"
 end_include
 
 begin_include
@@ -326,7 +326,7 @@ name|new_state
 decl_stmt|,
 name|state
 decl_stmt|;
-name|RAND_seed
+name|RAND_add
 argument_list|(
 operator|&
 name|l
@@ -335,6 +335,8 @@ sizeof|sizeof
 argument_list|(
 name|l
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ERR_clear_error
@@ -900,7 +902,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*	ERR_clear_error();*/
-comment|/* If we want to cache session-ids in the client 			 * and we sucessfully add the session-id to the 			 * cache, and there is a callback, then pass it out. 			 * 26/11/96 - eay - only add if not a re-used session. 			 */
+comment|/* If we want to cache session-ids in the client 			 * and we successfully add the session-id to the 			 * cache, and there is a callback, then pass it out. 			 * 26/11/96 - eay - only add if not a re-used session. 			 */
 name|ssl_update_cache
 argument_list|(
 name|s
@@ -1214,6 +1216,30 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__APPLE_CC__
+comment|/* The Rhapsody 5.5 (a.k.a. MacOS X) compiler bug 		 * workaround.<appro@fy.chalmers.se> */
+name|s
+operator|->
+name|hit
+operator|=
+operator|(
+name|i
+operator|=
+operator|*
+operator|(
+name|p
+operator|++
+operator|)
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|s
 operator|->
 name|hit
@@ -1230,6 +1256,8 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|->
 name|s2
@@ -1539,7 +1567,7 @@ operator|*
 operator|/
 endif|#
 directive|endif
-comment|/* we need to do this incase we were trying to reuse a  		 * client session but others are already reusing it. 		 * If this was a new 'blank' session ID, the session-id 		 * length will still be 0 */
+comment|/* we need to do this in case we were trying to reuse a  		 * client session but others are already reusing it. 		 * If this was a new 'blank' session ID, the session-id 		 * length will still be 0 */
 if|if
 condition|(
 name|s
@@ -1742,7 +1770,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* In theory we could have ciphers sent back that we 		 * don't want to use but that does not matter since we 		 * will check against the list we origionally sent and 		 * for performance reasons we should not bother to match 		 * the two lists up just to check. */
+comment|/* In theory we could have ciphers sent back that we 		 * don't want to use but that does not matter since we 		 * will check against the list we originally sent and 		 * for performance reasons we should not bother to match 		 * the two lists up just to check. */
 for|for
 control|(
 name|i
@@ -1822,7 +1850,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|s
@@ -1833,26 +1860,29 @@ name|peer
 operator|!=
 name|NULL
 condition|)
-name|X509_free
+comment|/* can't happen*/
+block|{
+name|ssl2_return_error
 argument_list|(
 name|s
-operator|->
-name|session
-operator|->
-name|peer
+argument_list|,
+name|SSL2_PE_UNDEFINED_ERROR
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* What is all this meant to accomplish?? */
-comment|/* hmmm, can we have the problem of the other session with this 	 * cert, Free's it before we increment the reference count. */
-block|CRYPTO_w_lock(CRYPTO_LOCK_X509); 	s->session->peer=s->session->sess_cert->key->x509;
-comment|/* Shouldn't do this: already locked */
-comment|/*CRYPTO_add(&s->session->peer->references,1,CRYPTO_LOCK_X509);*/
-block|s->session->peer->references++; 	CRYPTO_w_unlock(CRYPTO_LOCK_X509);
-else|#
-directive|else
+name|SSLerr
+argument_list|(
+name|SSL_F_GET_SERVER_HELLO
+argument_list|,
+name|SSL_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|s
 operator|->
 name|session
@@ -1886,8 +1916,48 @@ argument_list|,
 name|CRYPTO_LOCK_X509
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
+if|if
+condition|(
+name|s
+operator|->
+name|session
+operator|->
+name|peer
+operator|!=
+name|s
+operator|->
+name|session
+operator|->
+name|sess_cert
+operator|->
+name|peer_key
+operator|->
+name|x509
+condition|)
+comment|/* can't happen */
+block|{
+name|ssl2_return_error
+argument_list|(
+name|s
+argument_list|,
+name|SSL2_PE_UNDEFINED_ERROR
+argument_list|)
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_GET_SERVER_HELLO
+argument_list|,
+name|SSL_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|s
 operator|->
 name|s2
@@ -2202,7 +2272,7 @@ argument_list|)
 expr_stmt|;
 comment|/* challenge length */
 comment|/*challenge id data*/
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|s
 operator|->
@@ -2433,7 +2503,7 @@ name|i
 operator|>
 literal|0
 condition|)
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|sess
 operator|->
@@ -2462,6 +2532,9 @@ name|i
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
 name|RAND_bytes
 argument_list|(
 name|sess
@@ -2470,7 +2543,25 @@ name|master_key
 argument_list|,
 name|i
 argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|ssl2_return_error
+argument_list|(
+name|s
+argument_list|,
+name|SSL2_PE_UNDEFINED_ERROR
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|sess
@@ -3486,7 +3577,7 @@ name|privatekey
 argument_list|)
 condition|)
 block|{
-comment|/* this is not good.  If things have failed it 			 * means there so something wrong with the key. 			 * We will contiune with a 0 length signature 			 */
+comment|/* this is not good.  If things have failed it 			 * means there so something wrong with the key. 			 * We will continue with a 0 length signature 			 */
 block|}
 name|memset
 argument_list|(
@@ -4652,6 +4743,37 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NO_SSL2 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PEDANTIC
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

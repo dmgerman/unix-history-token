@@ -484,10 +484,6 @@ block|{
 name|Free
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|)
-operator|(
 operator|*
 name|a
 operator|)
@@ -979,14 +975,6 @@ expr_stmt|;
 block|}
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -1019,10 +1007,6 @@ name|NULL
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 operator|->
 name|asn1
@@ -1061,7 +1045,7 @@ block|{
 case|case
 name|NID_pkcs7_data
 case|:
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|a
 operator|->

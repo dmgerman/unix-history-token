@@ -473,7 +473,7 @@ condition|)
 goto|goto
 name|err_bn
 goto|;
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|bs
 argument_list|)
@@ -532,7 +532,7 @@ name|bs
 operator|!=
 name|NULL
 condition|)
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|bs
 argument_list|)
@@ -544,6 +544,37 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NO_RSA */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PEDANTIC
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

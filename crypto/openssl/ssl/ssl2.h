@@ -300,7 +300,7 @@ endif|#
 directive|endif
 typedef|typedef
 struct|struct
-name|ssl2_ctx_st
+name|ssl2_state_st
 block|{
 name|int
 name|three_byte_header
@@ -513,7 +513,7 @@ block|}
 name|tmp
 struct|;
 block|}
-name|SSL2_CTX
+name|SSL2_STATE
 typedef|;
 comment|/* SSLv2 */
 comment|/* client */

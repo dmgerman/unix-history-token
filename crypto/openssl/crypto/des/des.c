@@ -19,6 +19,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -101,6 +107,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* MSDOS */
+end_comment
 
 begin_include
 include|#
@@ -187,41 +197,6 @@ include|#
 directive|include
 file|<openssl/rand.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VMS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|M_XENIX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -1486,15 +1461,15 @@ literal|"options:"
 block|,
 literal|"-v         : des(1) version number"
 block|,
-literal|"-e         : encrypt using sunOS compatible user key to DES key conversion."
+literal|"-e         : encrypt using SunOS compatible user key to DES key conversion."
 block|,
 literal|"-E         : encrypt "
 block|,
-literal|"-d         : decrypt using sunOS compatible user key to DES key conversion."
+literal|"-d         : decrypt using SunOS compatible user key to DES key conversion."
 block|,
 literal|"-D         : decrypt "
 block|,
-literal|"-c[ckname] : generate a cbc_cksum using sunOS compatible user key to"
+literal|"-c[ckname] : generate a cbc_cksum using SunOS compatible user key to"
 block|,
 literal|"             DES key conversion and output to ckname (stdout default,"
 block|,
@@ -1508,7 +1483,7 @@ literal|"-C[ckname] : generate a cbc_cksum as for -c but compatible with -[ED]."
 block|,
 literal|"-k key     : use key 'key'"
 block|,
-literal|"-h         : the key that is entered will be a hexidecimal number"
+literal|"-h         : the key that is entered will be a hexadecimal number"
 block|,
 literal|"             that is used directly as the des key"
 block|,
@@ -1516,13 +1491,13 @@ literal|"-u[uuname] : input file is uudecoded if -[dD] or output uuencoded data 
 block|,
 literal|"             (uuname is the filename to put in the uuencode header)."
 block|,
-literal|"-b         : encrypt using DES in ecb encryption mode, the defaut is cbc mode."
+literal|"-b         : encrypt using DES in ecb encryption mode, the default is cbc mode."
 block|,
-literal|"-3         : encrypt using tripple DES encryption.  This uses 2 keys"
+literal|"-3         : encrypt using triple DES encryption.  This uses 2 keys"
 block|,
 literal|"             generated from the input key.  If the input key is less"
 block|,
-literal|"             than 8 characters long, this is equivelent to normal"
+literal|"             than 8 characters long, this is equivalent to normal"
 block|,
 literal|"             encryption.  Default is triple cbc, -b makes it triple ecb."
 block|,
@@ -2006,7 +1981,7 @@ operator|=
 name|k
 expr_stmt|;
 block|}
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|k2
@@ -2051,7 +2026,7 @@ operator|&
 name|k2
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|k2
@@ -2168,7 +2143,7 @@ operator||
 literal|0x80
 expr_stmt|;
 block|}
-name|des_set_key
+name|des_set_key_unchecked
 argument_list|(
 operator|&
 name|kk
@@ -2336,7 +2311,7 @@ condition|;
 name|i
 operator|--
 control|)
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|buf
 operator|+

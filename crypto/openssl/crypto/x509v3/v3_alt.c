@@ -224,9 +224,7 @@ name|NULL
 block|,
 name|NULL
 block|}
-block|,
-name|EXT_END
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1329,7 +1327,7 @@ argument_list|)
 expr_stmt|;
 name|email
 operator|=
-name|ASN1_IA5STRING_dup
+name|M_ASN1_IA5STRING_dup
 argument_list|(
 name|X509_NAME_ENTRY_get_data
 argument_list|(
@@ -1417,7 +1415,7 @@ argument_list|(
 name|gen
 argument_list|)
 expr_stmt|;
-name|ASN1_IA5STRING_free
+name|M_ASN1_IA5STRING_free
 argument_list|(
 name|email
 argument_list|)
@@ -1948,7 +1946,7 @@ name|d
 operator|.
 name|ip
 operator|=
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|()
 operator|)
 operator|||
@@ -2023,7 +2021,7 @@ name|d
 operator|.
 name|ia5
 operator|=
-name|ASN1_IA5STRING_new
+name|M_ASN1_IA5STRING_new
 argument_list|()
 operator|)
 operator|||

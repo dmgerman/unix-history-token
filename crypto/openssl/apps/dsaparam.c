@@ -16,6 +16,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -64,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/rand.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/dsa.h>
 end_include
 
@@ -99,7 +99,7 @@ value|dsaparam_main
 end_define
 
 begin_comment
-comment|/* -inform arg	- input format - default PEM (one of DER, TXT or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  * -noout  * -text  * -C  * -noout  * -genkey  */
+comment|/* -inform arg	- input format - default PEM (DER or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  * -noout  * -text  * -C  * -noout  * -genkey  */
 end_comment
 
 begin_function_decl
@@ -114,9 +114,22 @@ parameter_list|,
 name|int
 name|n
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -206,16 +219,10 @@ name|genkey
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|200
-index|]
-decl_stmt|,
-modifier|*
-name|randfile
+name|int
+name|need_rand
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 name|apps_startup
 argument_list|()
@@ -471,10 +478,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|genkey
 operator|=
 literal|1
 expr_stmt|;
+name|need_rand
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -506,6 +519,10 @@ operator|(
 operator|++
 name|argv
 operator|)
+expr_stmt|;
+name|need_rand
+operator|=
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -546,6 +563,10 @@ comment|/* generate a key */
 name|numbits
 operator|=
 name|num
+expr_stmt|;
+name|need_rand
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -600,14 +621,14 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -inform arg   input format - one of DER TXT PEM\n"
+literal|" -inform arg   input format - DER or PEM\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -outform arg  output format - one of DER TXT PEM\n"
+literal|" -outform arg  output format - DER or PEM\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -628,7 +649,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -text         check the DSA parameters\n"
+literal|" -text         print the key in text\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -786,27 +807,51 @@ block|}
 block|}
 if|if
 condition|(
+name|need_rand
+condition|)
+block|{
+name|app_RAND_load_file
+argument_list|(
+name|NULL
+argument_list|,
+name|bio_err
+argument_list|,
+operator|(
+name|inrand
+operator|!=
+name|NULL
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inrand
+operator|!=
+name|NULL
+condition|)
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"%ld semi-random bytes loaded\n"
+argument_list|,
+name|app_RAND_load_files
+argument_list|(
+name|inrand
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|numbits
 operator|>
 literal|0
 condition|)
 block|{
-name|randfile
-operator|=
-name|RAND_file_name
+name|assert
 argument_list|(
-name|buffer
-argument_list|,
-literal|200
-argument_list|)
-expr_stmt|;
-name|RAND_load_file
-argument_list|(
-name|randfile
-argument_list|,
-literal|1024L
-operator|*
-literal|1024L
+name|need_rand
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -841,10 +886,6 @@ name|NULL
 argument_list|,
 name|dsa_cb
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|bio_err
 argument_list|)
 expr_stmt|;
@@ -1330,7 +1371,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"unable to write DSA paramaters\n"
+literal|"unable to write DSA parameters\n"
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -1352,6 +1393,11 @@ name|DSA
 modifier|*
 name|dsakey
 decl_stmt|;
+name|assert
+argument_list|(
+name|need_rand
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1439,6 +1485,17 @@ name|dsakey
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|need_rand
+condition|)
+name|app_RAND_write_file
+argument_list|(
+name|NULL
+argument_list|,
+name|bio_err
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 literal|0
@@ -1498,7 +1555,7 @@ parameter_list|,
 name|int
 name|n
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg
 parameter_list|)
@@ -1550,10 +1607,6 @@ literal|'\n'
 expr_stmt|;
 name|BIO_write
 argument_list|(
-operator|(
-name|BIO
-operator|*
-operator|)
 name|arg
 argument_list|,
 operator|&
@@ -1567,10 +1620,6 @@ name|void
 operator|)
 name|BIO_flush
 argument_list|(
-operator|(
-name|BIO
-operator|*
-operator|)
 name|arg
 argument_list|)
 expr_stmt|;

@@ -99,6 +99,26 @@ name|M_ASN1_D2I_start_sequence
 parameter_list|()
 define|\
 value|if (!asn1_GetSequence(&c,&length)) \ 		{ c.line=__LINE__; goto err; }
+comment|/* Begin reading ASN1 without a surrounding sequence */
+define|#
+directive|define
+name|M_ASN1_D2I_begin
+parameter_list|()
+define|\
+value|c.slen = length;
+comment|/* End reading ASN1 with no check on length */
+define|#
+directive|define
+name|M_ASN1_D2I_Finish_nolen
+parameter_list|(
+name|a
+parameter_list|,
+name|func
+parameter_list|,
+name|e
+parameter_list|)
+define|\
+value|*pp=c.p; \ 	if (a != NULL) (*a)=ret; \ 	return(ret); \ err:\ 	ASN1_MAC_H_err((e),c.error,c.line); \ 	asn1_add_error(*pp,(int)(c.q- *pp)); \ 	if ((ret != NULL)&& ((a == NULL) || (*a != ret))) func(ret); \ 	return(NULL)
 define|#
 directive|define
 name|M_ASN1_D2I_end_sequence

@@ -71,6 +71,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|NO_DES
 name|EVP_PBE_alg_add
 argument_list|(
 name|NID_pbe_WithSHA1And3_Key_TripleDES_CBC
@@ -97,6 +100,8 @@ argument_list|,
 name|PKCS12_PBE_keyivgen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_RC2

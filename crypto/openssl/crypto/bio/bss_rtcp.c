@@ -291,6 +291,8 @@ block|,
 name|rtcp_new
 block|,
 name|rtcp_free
+block|,
+name|NULL
 block|, 	}
 decl_stmt|;
 end_decl_stmt

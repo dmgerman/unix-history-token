@@ -76,7 +76,7 @@ name|pkcs12
 operator|->
 name|version
 operator|=
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|()
 operator|)
 condition|)
@@ -156,7 +156,7 @@ name|d
 operator|.
 name|data
 operator|=
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|()
 operator|)
 condition|)

@@ -235,7 +235,7 @@ name|ret
 operator|->
 name|header
 argument_list|,
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|)
 expr_stmt|;
 name|ret
@@ -279,7 +279,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|a
 operator|->
@@ -307,10 +307,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|a
 argument_list|)
 expr_stmt|;

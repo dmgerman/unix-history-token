@@ -7,10 +7,16 @@ begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ssl_locl.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_RSA
+name|NO_SSL2
 end_ifndef
 
 begin_include
@@ -35,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<openssl/md5.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssl_locl.h"
 end_include
 
 begin_function_decl
@@ -82,7 +82,7 @@ comment|/* NULL_WITH_MD5 v3 */
 if|#
 directive|if
 literal|0
-block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_eNULL|SSL_MD5|SSL_EXP40|SSL_SSLV2, 	0, 	SSL_ALL_CIPHERS, 	},
+block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_eNULL|SSL_MD5|SSL_SSLV2, 	SSL_EXPORT|SSL_EXP40, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
 endif|#
 directive|endif
 comment|/* RC4_128_EXPORT40_WITH_MD5 */
@@ -101,13 +101,21 @@ name|SSL_RC4
 operator||
 name|SSL_MD5
 operator||
-name|SSL_EXP40
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_EXPORT
+operator||
+name|SSL_EXP40
 block|,
 name|SSL2_CF_5_BYTE_ENC
 block|,
+literal|40
+block|,
+literal|128
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC4_128_WITH_MD5 */
@@ -126,15 +134,21 @@ name|SSL_RC4
 operator||
 name|SSL_MD5
 operator||
-name|SSL_NOT_EXP
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_NOT_EXP
 operator||
 name|SSL_MEDIUM
 block|,
 literal|0
 block|,
+literal|128
+block|,
+literal|128
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC2_128_CBC_EXPORT40_WITH_MD5 */
@@ -153,13 +167,21 @@ name|SSL_RC2
 operator||
 name|SSL_MD5
 operator||
-name|SSL_EXP40
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_EXPORT
+operator||
+name|SSL_EXP40
 block|,
 name|SSL2_CF_5_BYTE_ENC
 block|,
+literal|40
+block|,
+literal|128
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC2_128_CBC_WITH_MD5 */
@@ -178,15 +200,21 @@ name|SSL_RC2
 operator||
 name|SSL_MD5
 operator||
-name|SSL_NOT_EXP
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_NOT_EXP
 operator||
 name|SSL_MEDIUM
 block|,
 literal|0
 block|,
+literal|128
+block|,
+literal|128
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* IDEA_128_CBC_WITH_MD5 */
@@ -205,15 +233,21 @@ name|SSL_IDEA
 operator||
 name|SSL_MD5
 operator||
-name|SSL_NOT_EXP
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_NOT_EXP
 operator||
 name|SSL_MEDIUM
 block|,
 literal|0
 block|,
+literal|128
+block|,
+literal|128
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* DES_64_CBC_WITH_MD5 */
@@ -232,15 +266,21 @@ name|SSL_DES
 operator||
 name|SSL_MD5
 operator||
-name|SSL_NOT_EXP
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
 block|,
 literal|0
 block|,
+literal|56
+block|,
+literal|56
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* DES_192_EDE3_CBC_WITH_MD5 */
@@ -259,15 +299,21 @@ name|SSL_3DES
 operator||
 name|SSL_MD5
 operator||
-name|SSL_NOT_EXP
-operator||
 name|SSL_SSLV2
+block|,
+name|SSL_NOT_EXP
 operator||
 name|SSL_HIGH
 block|,
 literal|0
 block|,
+literal|168
+block|,
+literal|168
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* RC4_64_WITH_MD5 */
@@ -290,12 +336,20 @@ operator||
 name|SSL_MD5
 operator||
 name|SSL_SSLV2
+block|,
+name|SSL_NOT_EXP
 operator||
 name|SSL_LOW
 block|,
 name|SSL2_CF_8_BYTE_ENC
 block|,
+literal|64
+block|,
+literal|64
+block|,
 name|SSL_ALL_CIPHERS
+block|,
+name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 endif|#
@@ -304,7 +358,7 @@ comment|/* NULL SSLeay (testing) */
 if|#
 directive|if
 literal|0
-block|{	 	0, 	SSL2_TXT_NULL, 	SSL2_CK_NULL, 	0, 	SSL_ALL_CIPHERS, 	},
+block|{	 	0, 	SSL2_TXT_NULL, 	SSL2_CK_NULL, 	0, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
 endif|#
 directive|endif
 comment|/* end of list :-) */
@@ -369,7 +423,16 @@ name|ssl2_default_timeout
 block|,
 operator|&
 name|ssl3_undef_enc_method
-block|, 	}
+block|,
+name|ssl_undefined_function
+block|,
+name|ssl2_callback_ctrl
+block|,
+comment|/* local */
+name|ssl2_ctx_callback_ctrl
+block|,
+comment|/* local */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -491,7 +554,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|SSL2_CTX
+name|SSL2_STATE
 modifier|*
 name|s2
 decl_stmt|;
@@ -500,16 +563,11 @@ condition|(
 operator|(
 name|s2
 operator|=
-operator|(
-name|SSL2_CTX
-operator|*
-operator|)
 name|Malloc
 argument_list|(
 sizeof|sizeof
-argument_list|(
-name|SSL2_CTX
-argument_list|)
+expr|*
+name|s2
 argument_list|)
 operator|)
 operator|==
@@ -525,9 +583,8 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-argument_list|(
-name|SSL2_CTX
-argument_list|)
+expr|*
+name|s2
 argument_list|)
 expr_stmt|;
 if|if
@@ -537,11 +594,6 @@ name|s2
 operator|->
 name|rbuf
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|Malloc
 argument_list|(
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
@@ -562,11 +614,6 @@ name|s2
 operator|->
 name|wbuf
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|Malloc
 argument_list|(
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
@@ -658,7 +705,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|SSL2_CTX
+name|SSL2_STATE
 modifier|*
 name|s2
 decl_stmt|;
@@ -712,9 +759,8 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-argument_list|(
-name|SSL2_CTX
-argument_list|)
+expr|*
+name|s2
 argument_list|)
 expr_stmt|;
 name|Free
@@ -740,7 +786,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|SSL2_CTX
+name|SSL2_STATE
 modifier|*
 name|s2
 decl_stmt|;
@@ -777,9 +823,8 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-argument_list|(
-name|SSL2_CTX
-argument_list|)
+expr|*
+name|s2
 argument_list|)
 expr_stmt|;
 name|s2
@@ -875,6 +920,33 @@ end_function
 
 begin_function
 name|long
+name|ssl2_callback_ctrl
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
 name|ssl2_ctx_ctrl
 parameter_list|(
 name|SSL_CTX
@@ -890,6 +962,33 @@ parameter_list|,
 name|char
 modifier|*
 name|parg
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|long
+name|ssl2_ctx_callback_ctrl
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
 parameter_list|)
 block|{
 return|return
@@ -1329,11 +1428,6 @@ argument_list|(
 operator|&
 name|ctx
 argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 operator|&
 name|c
 argument_list|,
@@ -1584,6 +1678,37 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NO_SSL2 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PEDANTIC
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

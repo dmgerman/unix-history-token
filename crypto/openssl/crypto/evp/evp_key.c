@@ -117,38 +117,9 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_DES
-end_ifdef
-
-begin_function_decl
-name|int
-name|des_read_pw_string
-parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|prompt
-parameter_list|,
-name|int
-name|verify
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* For historical reasons, the standard function for reading passwords is  * in the DES library -- if someone ever wants to disable DES,  * this function will fail */
+end_comment
 
 begin_function
 name|int
@@ -170,6 +141,9 @@ name|int
 name|verify
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|NO_DES
 if|if
 condition|(
 operator|(
@@ -205,6 +179,14 @@ name|verify
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

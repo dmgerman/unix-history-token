@@ -89,6 +89,9 @@ name|int
 name|ver
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|NO_SSL2
 if|if
 condition|(
 name|ver
@@ -101,6 +104,8 @@ name|SSLv2_client_method
 argument_list|()
 operator|)
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ver
@@ -248,7 +253,7 @@ name|new_state
 decl_stmt|,
 name|state
 decl_stmt|;
-name|RAND_seed
+name|RAND_add
 argument_list|(
 operator|&
 name|Time
@@ -257,6 +262,8 @@ sizeof|sizeof
 argument_list|(
 name|Time
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ERR_clear_error
@@ -756,7 +763,7 @@ name|s3
 operator|->
 name|client_random
 expr_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 name|p
 argument_list|,
@@ -1032,7 +1039,7 @@ argument_list|,
 name|SSL3_RANDOM_SIZE
 argument_list|)
 expr_stmt|;
-name|RAND_bytes
+name|RAND_pseudo_bytes
 argument_list|(
 operator|&
 operator|(
@@ -1188,8 +1195,6 @@ name|p
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|ch_len
 decl_stmt|;
 name|int
 name|n
@@ -1268,8 +1273,26 @@ literal|0x02
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NO_SSL2
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL23_GET_SERVER_HELLO
+argument_list|,
+name|SSL_R_UNSUPPORTED_PROTOCOL
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+else|#
+directive|else
 comment|/* we are talking sslv2 */
 comment|/* we need to clean up the SSLv3 setup and put in the 		 * sslv2 stuff. */
+name|int
+name|ch_len
+decl_stmt|;
 if|if
 condition|(
 name|s
@@ -1513,6 +1536,8 @@ name|method
 operator|->
 name|ssl_connect
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if

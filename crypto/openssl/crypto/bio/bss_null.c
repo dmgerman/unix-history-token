@@ -173,6 +173,8 @@ block|,
 name|null_new
 block|,
 name|null_free
+block|,
+name|NULL
 block|, 	}
 decl_stmt|;
 end_decl_stmt

@@ -131,6 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|SSL23_version_str
@@ -206,6 +207,12 @@ name|ssl23_default_timeout
 block|,
 operator|&
 name|ssl3_undef_enc_method
+block|,
+name|ssl_undefined_function
+block|,
+name|ssl3_callback_ctrl
+block|,
+name|ssl3_ctx_callback_ctrl
 block|, 	}
 decl_stmt|;
 end_decl_stmt
@@ -255,9 +262,14 @@ return|return
 operator|(
 name|ssl3_num_ciphers
 argument_list|()
+ifndef|#
+directive|ifndef
+name|NO_SSL2
 operator|+
 name|ssl2_num_ciphers
 argument_list|()
+endif|#
+directive|endif
 operator|)
 return|;
 block|}
@@ -296,6 +308,9 @@ argument_list|)
 operator|)
 return|;
 else|else
+ifndef|#
+directive|ifndef
+name|NO_SSL2
 return|return
 operator|(
 name|ssl2_get_cipher
@@ -306,6 +321,15 @@ name|uu
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -396,6 +420,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_SSL2
 if|if
 condition|(
 name|cp
@@ -409,6 +436,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|cp

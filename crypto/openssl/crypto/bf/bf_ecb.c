@@ -26,7 +26,7 @@ file|<openssl/opensslv.h>
 end_include
 
 begin_comment
-comment|/* Blowfish as implemented from 'Blowfish: Springer-Verlag paper'  * (From LECTURE NOTES IN COIMPUTER SCIENCE 809, FAST SOFTWARE ENCRYPTION,  * CAMBRIDGE SECURITY WORKSHOP, CAMBRIDGE, U.K., DECEMBER 9-11, 1993)  */
+comment|/* Blowfish as implemented from 'Blowfish: Springer-Verlag paper'  * (From LECTURE NOTES IN COMPUTER SCIENCE 809, FAST SOFTWARE ENCRYPTION,  * CAMBRIDGE SECURITY WORKSHOP, CAMBRIDGE, U.K., DECEMBER 9-11, 1993)  */
 end_comment
 
 begin_decl_stmt
@@ -35,7 +35,7 @@ name|char
 modifier|*
 name|BF_version
 init|=
-literal|"BlowFish"
+literal|"Blowfish"
 name|OPENSSL_VERSION_PTEXT
 decl_stmt|;
 end_decl_stmt
@@ -84,6 +84,7 @@ begin_function
 name|void
 name|BF_ecb_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -94,9 +95,10 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|BF_KEY
 modifier|*
-name|ks
+name|key
 parameter_list|,
 name|int
 name|encrypt
@@ -146,7 +148,7 @@ name|BF_encrypt
 argument_list|(
 name|d
 argument_list|,
-name|ks
+name|key
 argument_list|)
 expr_stmt|;
 else|else
@@ -154,7 +156,7 @@ name|BF_decrypt
 argument_list|(
 name|d
 argument_list|,
-name|ks
+name|key
 argument_list|)
 expr_stmt|;
 name|l

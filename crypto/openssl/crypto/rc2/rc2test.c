@@ -73,6 +73,7 @@ file|<openssl/rc2.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|RC2key
@@ -224,6 +225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|RC2plain
@@ -311,6 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|RC2cipher

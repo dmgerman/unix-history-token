@@ -86,7 +86,7 @@ name|cert_info
 operator|->
 name|version
 operator|=
-name|ASN1_INTEGER_new
+name|M_ASN1_INTEGER_new
 argument_list|()
 operator|)
 operator|==
@@ -160,7 +160,7 @@ condition|)
 block|{
 name|in
 operator|=
-name|ASN1_INTEGER_dup
+name|M_ASN1_INTEGER_dup
 argument_list|(
 name|serial
 argument_list|)
@@ -172,7 +172,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ASN1_INTEGER_free
+name|M_ASN1_INTEGER_free
 argument_list|(
 name|x
 operator|->
@@ -364,7 +364,7 @@ condition|)
 block|{
 name|in
 operator|=
-name|ASN1_UTCTIME_dup
+name|M_ASN1_UTCTIME_dup
 argument_list|(
 name|tm
 argument_list|)
@@ -376,7 +376,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ASN1_UTCTIME_free
+name|M_ASN1_UTCTIME_free
 argument_list|(
 name|x
 operator|->
@@ -468,7 +468,7 @@ condition|)
 block|{
 name|in
 operator|=
-name|ASN1_UTCTIME_dup
+name|M_ASN1_UTCTIME_dup
 argument_list|(
 name|tm
 argument_list|)
@@ -480,7 +480,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ASN1_UTCTIME_free
+name|M_ASN1_UTCTIME_free
 argument_list|(
 name|x
 operator|->

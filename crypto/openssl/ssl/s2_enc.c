@@ -10,13 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"ssl_locl.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SSL2
+end_ifndef
 
 begin_include
 include|#
 directive|include
-file|"ssl_locl.h"
+file|<stdio.h>
 end_include
 
 begin_function
@@ -663,6 +669,42 @@ expr_stmt|;
 comment|/* some would say I should zero the md context */
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NO_SSL2 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PEDANTIC
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

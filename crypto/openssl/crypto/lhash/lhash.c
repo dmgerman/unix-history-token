@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* Code for dynamic hash table routines  * Author - Eric Young v 2.0  *  * 2.2 eay - added #include "crypto.h" so the memory leak checking code is  *	     present. eay 18-Jun-98  *  * 2.1 eay - Added an 'error in last operation' flag. eay 6-May-98  *  * 2.0 eay - Fixed a bug that occured when using lh_delete  *	     from inside lh_doall().  As entries were deleted,  *	     the 'table' was 'contract()ed', making some entries  *	     jump from the end of the table to the start, there by  *	     skiping the lh_doall() processing. eay - 4/12/95  *  * 1.9 eay - Fixed a memory leak in lh_free, the LHASH_NODEs  *	     were not being free()ed. 21/11/95  *  * 1.8 eay - Put the stats routines into a separate file, lh_stats.c  *	     19/09/95  *  * 1.7 eay - Removed the fputs() for realloc failures - the code  *           should silently tolerate them.  I have also fixed things  *           lint complained about 04/05/95  *  * 1.6 eay - Fixed an invalid pointers in contract/expand 27/07/92  *  * 1.5 eay - Fixed a misuse of realloc in expand 02/03/1992  *  * 1.4 eay - Fixed lh_doall so the function can call lh_delete 28/05/91  *  * 1.3 eay - Fixed a few lint problems 19/3/1991  *  * 1.2 eay - Fixed lh_doall problem 13/3/1991  *  * 1.1 eay - Added lh_doall  *  * 1.0 eay - First version  */
+comment|/* Code for dynamic hash table routines  * Author - Eric Young v 2.0  *  * 2.2 eay - added #include "crypto.h" so the memory leak checking code is  *	     present. eay 18-Jun-98  *  * 2.1 eay - Added an 'error in last operation' flag. eay 6-May-98  *  * 2.0 eay - Fixed a bug that occurred when using lh_delete  *	     from inside lh_doall().  As entries were deleted,  *	     the 'table' was 'contract()ed', making some entries  *	     jump from the end of the table to the start, there by  *	     skipping the lh_doall() processing. eay - 4/12/95  *  * 1.9 eay - Fixed a memory leak in lh_free, the LHASH_NODEs  *	     were not being free()ed. 21/11/95  *  * 1.8 eay - Put the stats routines into a separate file, lh_stats.c  *	     19/09/95  *  * 1.7 eay - Removed the fputs() for realloc failures - the code  *           should silently tolerate them.  I have also fixed things  *           lint complained about 04/05/95  *  * 1.6 eay - Fixed an invalid pointers in contract/expand 27/07/92  *  * 1.5 eay - Fixed a misuse of realloc in expand 02/03/1992  *  * 1.4 eay - Fixed lh_doall so the function can call lh_delete 28/05/91  *  * 1.3 eay - Fixed a few lint problems 19/3/1991  *  * 1.2 eay - Fixed lh_doall problem 13/3/1991  *  * 1.1 eay - Added lh_doall  *  * 1.0 eay - First version  */
 end_comment
 
 begin_include
@@ -87,20 +87,6 @@ begin_comment
 comment|/* load times 256  (default 1) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|P_CP
-value|char *
-end_define
-
-begin_define
-define|#
-directive|define
-name|P_CPP
-value|char *,char *
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -136,7 +122,7 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -436,10 +422,6 @@ name|err1
 label|:
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ret
 argument_list|)
 expr_stmt|;
@@ -531,10 +513,6 @@ block|}
 block|}
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|lh
 operator|->
 name|b
@@ -542,10 +520,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|lh
 argument_list|)
 expr_stmt|;
@@ -553,7 +527,7 @@ block|}
 end_function
 
 begin_function
-name|char
+name|void
 modifier|*
 name|lh_insert
 parameter_list|(
@@ -561,7 +535,7 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|)
@@ -578,7 +552,7 @@ modifier|*
 modifier|*
 name|rn
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|ret
 decl_stmt|;
@@ -742,7 +716,7 @@ block|}
 end_function
 
 begin_function
-name|char
+name|void
 modifier|*
 name|lh_delete
 parameter_list|(
@@ -750,7 +724,7 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|)
@@ -767,7 +741,7 @@ modifier|*
 modifier|*
 name|rn
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|ret
 decl_stmt|;
@@ -830,10 +804,6 @@ name|data
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|nn
 argument_list|)
 expr_stmt|;
@@ -890,7 +860,7 @@ block|}
 end_function
 
 begin_function
-name|char
+name|void
 modifier|*
 name|lh_retrieve
 parameter_list|(
@@ -898,7 +868,7 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|)
@@ -912,7 +882,7 @@ modifier|*
 modifier|*
 name|rn
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|ret
 decl_stmt|;
@@ -1021,7 +991,7 @@ name|func
 function_decl|)
 parameter_list|()
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg
 parameter_list|)
@@ -1333,10 +1303,6 @@ operator|*
 operator|)
 name|Realloc
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|lh
 operator|->
 name|b
@@ -1512,10 +1478,6 @@ operator|*
 operator|)
 name|Realloc
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|lh
 operator|->
 name|b
@@ -1673,7 +1635,7 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -1862,10 +1824,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* static unsigned long lh_strhash(str) char *str; 	{ 	int i,l; 	unsigned long ret=0; 	unsigned short *s;  	if (str == NULL) return(0); 	l=(strlen(str)+1)/2; 	s=(unsigned short *)str; 	for (i=0; i<l; i++) 		ret^=(s[i]<<(i&0x0f)); 	return(ret); 	} */
-end_comment
-
-begin_comment
 comment|/* The following hash seems to work very well on normal text strings  * no collisions on /usr/dict/words and it distributes on %2^n quite  * well, not as good as MD5, but still good.  */
 end_comment
 
@@ -1999,6 +1957,28 @@ operator|)
 operator|^
 name|ret
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|unsigned
+name|long
+name|lh_num_items
+parameter_list|(
+name|LHASH
+modifier|*
+name|lh
+parameter_list|)
+block|{
+return|return
+name|lh
+condition|?
+name|lh
+operator|->
+name|num_items
+else|:
+literal|0
 return|;
 block|}
 end_function

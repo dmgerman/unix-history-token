@@ -106,6 +106,7 @@ comment|/* FIPS 180-1 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|test
@@ -128,6 +129,7 @@ name|SHA_0
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|ret
@@ -142,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|bigret
@@ -162,6 +165,7 @@ name|SHA_1
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|ret
@@ -176,6 +180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|bigret

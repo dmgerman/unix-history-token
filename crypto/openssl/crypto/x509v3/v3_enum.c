@@ -29,17 +29,6 @@ directive|include
 file|<openssl/x509v3.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|ASN1_ENUMERATED
-modifier|*
-name|asn1_enumerated_new
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|ENUMERATED_NAMES
@@ -135,12 +124,12 @@ block|,
 operator|(
 name|X509V3_EXT_NEW
 operator|)
-name|asn1_enumerated_new
+name|ASN1_ENUMERATED_new
 block|,
 operator|(
 name|X509V3_EXT_FREE
 operator|)
-name|ASN1_STRING_free
+name|ASN1_ENUMERATED_free
 block|,
 operator|(
 name|X509V3_EXT_D2I
@@ -160,7 +149,7 @@ block|,
 operator|(
 name|X509V3_EXT_S2I
 operator|)
-name|NULL
+literal|0
 block|,
 name|NULL
 block|,
@@ -174,22 +163,6 @@ name|crl_reasons
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|ASN1_ENUMERATED
-modifier|*
-name|asn1_enumerated_new
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|ASN1_ENUMERATED_new
-argument_list|()
-return|;
-block|}
-end_function
 
 begin_function
 name|char

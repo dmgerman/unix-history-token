@@ -26,6 +26,7 @@ file|"ssl_locl.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tls1_version_str
@@ -34,12 +35,6 @@ literal|"TLSv1"
 name|OPENSSL_VERSION_PTEXT
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_PROTO
-end_ifndef
 
 begin_function_decl
 specifier|static
@@ -50,24 +45,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|long
-name|tls1_default_timeout
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -154,6 +131,12 @@ name|tls1_default_timeout
 block|,
 operator|&
 name|TLSv1_enc_data
+block|,
+name|ssl_undefined_function
+block|,
+name|ssl3_callback_ctrl
+block|,
+name|ssl3_ctx_callback_ctrl
 block|, 	}
 decl_stmt|;
 end_decl_stmt
@@ -282,7 +265,7 @@ literal|0
 end_if
 
 begin_endif
-unit|long tls1_ctrl(SSL *s, int cmd, long larg, char *parg) 	{ 	return(0); 	}
+unit|long tls1_ctrl(SSL *s, int cmd, long larg, char *parg) 	{ 	return(0); 	}  long tls1_callback_ctrl(SSL *s, int cmd, void *(*fp)()) 	{ 	return(0); 	}
 endif|#
 directive|endif
 end_endif

@@ -47,7 +47,7 @@ typedef|typedef
 struct|struct
 name|lhash_node_st
 block|{
-name|char
+name|void
 modifier|*
 name|data
 decl_stmt|;
@@ -202,14 +202,18 @@ argument_list|(
 operator|*
 name|h
 argument_list|)
-argument_list|()
+argument_list|(
+comment|/* void *a */
+argument_list|)
 argument_list|,
 name|int
 argument_list|(
 operator|*
 name|c
 argument_list|)
-argument_list|()
+argument_list|(
+comment|/* void *a,void *b */
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|void
@@ -220,7 +224,7 @@ modifier|*
 name|lh
 parameter_list|)
 function_decl|;
-name|char
+name|void
 modifier|*
 name|lh_insert
 parameter_list|(
@@ -228,12 +232,12 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|)
 function_decl|;
-name|char
+name|void
 modifier|*
 name|lh_delete
 parameter_list|(
@@ -241,12 +245,12 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|)
 function_decl|;
-name|char
+name|void
 modifier|*
 name|lh_retrieve
 parameter_list|(
@@ -254,7 +258,7 @@ name|LHASH
 modifier|*
 name|lh
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|data
 parameter_list|)
@@ -272,7 +276,7 @@ modifier|*
 name|func
 function_decl|)
 parameter_list|(
-comment|/* char *b */
+comment|/*void *b*/
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -289,10 +293,10 @@ modifier|*
 name|func
 function_decl|)
 parameter_list|(
-comment|/*char *a,char *b*/
+comment|/*void *a,void *b*/
 parameter_list|)
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg
 parameter_list|)
@@ -305,6 +309,15 @@ specifier|const
 name|char
 modifier|*
 name|c
+parameter_list|)
+function_decl|;
+name|unsigned
+name|long
+name|lh_num_items
+parameter_list|(
+name|LHASH
+modifier|*
+name|lh
 parameter_list|)
 function_decl|;
 ifndef|#

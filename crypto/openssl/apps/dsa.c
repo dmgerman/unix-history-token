@@ -96,6 +96,19 @@ begin_comment
 comment|/* -inform arg	- input format - default PEM (one of DER, NET or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  * -des		- encrypt output if PEM format with DES in cbc mode  * -des3	- encrypt output if PEM format  * -idea	- encrypt output if PEM format  * -text	- print a text version  * -modulus	- print the DSA public key  */
 end_comment
 
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|MAIN
@@ -158,6 +171,15 @@ name|noout
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|pubin
+init|=
+literal|0
+decl_stmt|,
+name|pubout
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|infile
@@ -167,6 +189,28 @@ name|outfile
 decl_stmt|,
 modifier|*
 name|prog
+decl_stmt|;
+name|char
+modifier|*
+name|passargin
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|passargout
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|passin
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|passout
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|modulus
@@ -388,6 +432,72 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-passin"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|argc
+operator|<
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+name|passargin
+operator|=
+operator|*
+operator|(
+operator|++
+name|argv
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-passout"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|argc
+operator|<
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+name|passargout
+operator|=
+operator|*
+operator|(
+operator|++
+name|argv
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-noout"
 argument_list|)
 operator|==
@@ -428,6 +538,40 @@ operator|==
 literal|0
 condition|)
 name|modulus
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-pubin"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pubin
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-pubout"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pubout
 operator|=
 literal|1
 expr_stmt|;
@@ -505,42 +649,56 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -inform arg   input format - one of DER NET PEM\n"
+literal|" -inform arg     input format - DER or PEM\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -outform arg  output format - one of DER NET PEM\n"
+literal|" -outform arg    output format - DER or PEM\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -in arg       input file\n"
+literal|" -in arg         input file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -out arg      output file\n"
+literal|" -passin arg     input file pass phrase source\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -des          encrypt PEM output with cbc des\n"
+literal|" -out arg        output file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -des3         encrypt PEM output with ede cbc des using 168 bit key\n"
+literal|" -passout arg    output file pass phrase source\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -des            encrypt PEM output with cbc des\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -des3           encrypt PEM output with ede cbc des using 168 bit key\n"
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -550,7 +708,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -idea         encrypt PEM output with cbc idea\n"
+literal|" -idea           encrypt PEM output with cbc idea\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -559,21 +717,21 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -text         print the key in text\n"
+literal|" -text           print the key in text\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -noout        don't print key out\n"
+literal|" -noout          don't print key out\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -modulus      print the DSA public value\n"
+literal|" -modulus        print the DSA public value\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -583,6 +741,36 @@ block|}
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|app_passwd
+argument_list|(
+name|bio_err
+argument_list|,
+name|passargin
+argument_list|,
+name|passargout
+argument_list|,
+operator|&
+name|passin
+argument_list|,
+operator|&
+name|passout
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Error getting passwords\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
 name|in
 operator|=
 name|BIO_new
@@ -666,7 +854,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"read DSA private key\n"
+literal|"read DSA key\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -675,6 +863,21 @@ name|informat
 operator|==
 name|FORMAT_ASN1
 condition|)
+block|{
+if|if
+condition|(
+name|pubin
+condition|)
+name|dsa
+operator|=
+name|d2i_DSA_PUBKEY_bio
+argument_list|(
+name|in
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
 name|dsa
 operator|=
 name|d2i_DSAPrivateKey_bio
@@ -684,6 +887,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -691,6 +895,25 @@ name|informat
 operator|==
 name|FORMAT_PEM
 condition|)
+block|{
+if|if
+condition|(
+name|pubin
+condition|)
+name|dsa
+operator|=
+name|PEM_read_bio_DSA_PUBKEY
+argument_list|(
+name|in
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
 name|dsa
 operator|=
 name|PEM_read_bio_DSAPrivateKey
@@ -701,9 +924,10 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|passin
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|BIO_printf
@@ -728,7 +952,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"unable to load Private Key\n"
+literal|"unable to load Key\n"
 argument_list|)
 expr_stmt|;
 name|ERR_print_errors
@@ -850,7 +1074,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"writing DSA private key\n"
+literal|"writing DSA key\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -859,6 +1083,23 @@ name|outformat
 operator|==
 name|FORMAT_ASN1
 condition|)
+block|{
+if|if
+condition|(
+name|pubin
+operator|||
+name|pubout
+condition|)
+name|i
+operator|=
+name|i2d_DSA_PUBKEY_bio
+argument_list|(
+name|out
+argument_list|,
+name|dsa
+argument_list|)
+expr_stmt|;
+else|else
 name|i
 operator|=
 name|i2d_DSAPrivateKey_bio
@@ -868,6 +1109,7 @@ argument_list|,
 name|dsa
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -875,6 +1117,23 @@ name|outformat
 operator|==
 name|FORMAT_PEM
 condition|)
+block|{
+if|if
+condition|(
+name|pubin
+operator|||
+name|pubout
+condition|)
+name|i
+operator|=
+name|PEM_write_bio_DSA_PUBKEY
+argument_list|(
+name|out
+argument_list|,
+name|dsa
+argument_list|)
+expr_stmt|;
+else|else
 name|i
 operator|=
 name|PEM_write_bio_DSAPrivateKey
@@ -891,9 +1150,10 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|passout
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|BIO_printf
@@ -964,6 +1224,24 @@ condition|)
 name|DSA_free
 argument_list|(
 name|dsa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|passin
+condition|)
+name|Free
+argument_list|(
+name|passin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|passout
+condition|)
+name|Free
+argument_list|(
+name|passout
 argument_list|)
 expr_stmt|;
 name|EXIT

@@ -322,6 +322,10 @@ begin_comment
 comment|/* up from 16 for SSLv3 */
 end_comment
 
+begin_comment
+comment|/*  * Define the Bitmasks for SSL_CIPHER.algorithms.  * This bits are used packed as dense as possible. If new methods/ciphers  * etc will be added, the bits a likely to change, so this information  * is for internal library use only, even though SSL_CIPHER.algorithms  * can be publicly accessed.  * Use the according functions for cipher management instead.  *  * The bit mask handling in the selection and sorting scheme in  * ssl_create_cipher_list() has only limited capabilities, reflecting  * that the different entities within are mutually exclusive:  * ONLY ONE BIT PER MASK CAN BE SET AT A TIME.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -574,30 +578,127 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSL_EXP_MASK
-value|0x00300000L
+name|SSL_SSL_MASK
+value|0x00180000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_EXP40
+name|SSL_SSLV2
+value|0x00080000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_SSLV3
 value|0x00100000L
 end_define
 
 begin_define
 define|#
 directive|define
+name|SSL_TLSV1
+value|SSL_SSLV3
+end_define
+
+begin_comment
+comment|/* for now */
+end_comment
+
+begin_comment
+comment|/* we have used 001fffff - 11 bits left to go */
+end_comment
+
+begin_comment
+comment|/*  * Export and cipher strength information. For each cipher we have to decide  * whether it is exportable or not. This information is likely to change  * over time, since the export control rules are no static technical issue.  *  * Independent of the export flag the cipher strength is sorted into classes.  * SSL_EXP40 was denoting the 40bit US export limit of past times, which now  * is at 56bit (SSL_EXP56). If the exportable cipher class is going to change  * again (eg. to 64bit) the use of "SSL_EXP*" becomes blurred even more,  * since SSL_EXP64 could be similar to SSL_LOW.  * For this reason SSL_MICRO and SSL_MINI macros are included to widen the  * namespace of SSL_LOW-SSL_HIGH to lower values. As development of speed  * and ciphers goes, another extension to SSL_SUPER and/or SSL_ULTRA would  * be possible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSL_EXP_MASK
+value|0x00000003L
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSL_NOT_EXP
-value|0x00200000L
+value|0x00000001L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_EXPORT
+value|0x00000002L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_STRONG_MASK
+value|0x0000007cL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_EXP40
+value|0x00000004L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_MICRO
+value|(SSL_EXP40)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_EXP56
-value|0x00300000L
+value|0x00000008L
 end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_MINI
+value|(SSL_EXP56)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_LOW
+value|0x00000010L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_MEDIUM
+value|0x00000020L
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_HIGH
+value|0x00000040L
+end_define
+
+begin_comment
+comment|/* we have used 0000007f - 25 bits left to go */
+end_comment
+
+begin_comment
+comment|/*  * Macros to check the export status and cipher strength for export ciphers.  * Even though the macros for EXPORT and EXPORT40/56 have similar names,  * their meaning is different:  * *_EXPORT macros check the 'exportable' status.  * *_EXPORT40/56 macros are used to check whether a certain cipher strength  *          is given.  * Since the SSL_IS_EXPORT* and SSL_EXPORT* macros depend on the correct  * algorithm structure element to be passed (algorithms, algo_strength) and no  * typechecking can be done as they are all of type unsigned long, their  * direct usage is discouraged.  * Use the SSL_C_* macros instead.  */
+end_comment
 
 begin_define
 define|#
@@ -606,7 +707,7 @@ name|SSL_IS_EXPORT
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)&SSL_EXP40)
+value|((a)&SSL_EXPORT)
 end_define
 
 begin_define
@@ -616,7 +717,7 @@ name|SSL_IS_EXPORT56
 parameter_list|(
 name|a
 parameter_list|)
-value|(((a)&SSL_EXP_MASK) == SSL_EXP56)
+value|((a)&SSL_EXP56)
 end_define
 
 begin_define
@@ -626,7 +727,7 @@ name|SSL_IS_EXPORT40
 parameter_list|(
 name|a
 parameter_list|)
-value|(((a)&SSL_EXP_MASK) == SSL_EXP40)
+value|((a)&SSL_EXP40)
 end_define
 
 begin_define
@@ -636,7 +737,7 @@ name|SSL_C_IS_EXPORT
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_IS_EXPORT((c)->algorithms)
+value|SSL_IS_EXPORT((c)->algo_strength)
 end_define
 
 begin_define
@@ -646,7 +747,7 @@ name|SSL_C_IS_EXPORT56
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_IS_EXPORT56((c)->algorithms)
+value|SSL_IS_EXPORT56((c)->algo_strength)
 end_define
 
 begin_define
@@ -656,7 +757,7 @@ name|SSL_C_IS_EXPORT40
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_IS_EXPORT40((c)->algorithms)
+value|SSL_IS_EXPORT40((c)->algo_strength)
 end_define
 
 begin_define
@@ -665,8 +766,10 @@ directive|define
 name|SSL_EXPORT_KEYLENGTH
 parameter_list|(
 name|a
+parameter_list|,
+name|s
 parameter_list|)
-value|(SSL_IS_EXPORT40(a) ? 5 : \ 				 ((a)&SSL_ENC_MASK) == SSL_DES ? 8 : 7)
+value|(SSL_IS_EXPORT40(s) ? 5 : \ 				 ((a)&SSL_ENC_MASK) == SSL_DES ? 8 : 7)
 end_define
 
 begin_define
@@ -686,7 +789,7 @@ name|SSL_C_EXPORT_KEYLENGTH
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_EXPORT_KEYLENGTH((c)->algorithms)
+value|SSL_EXPORT_KEYLENGTH((c)->algorithms, \ 				(c)->algo_strength)
 end_define
 
 begin_define
@@ -696,72 +799,8 @@ name|SSL_C_EXPORT_PKEYLENGTH
 parameter_list|(
 name|c
 parameter_list|)
-value|SSL_EXPORT_PKEYLENGTH((c)->algorithms)
+value|SSL_EXPORT_PKEYLENGTH((c)->algo_strength)
 end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_SSL_MASK
-value|0x00c00000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_SSLV2
-value|0x00400000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_SSLV3
-value|0x00800000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_TLSV1
-value|SSL_SSLV3
-end_define
-
-begin_comment
-comment|/* for now */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSL_STRONG_MASK
-value|0x07000000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_LOW
-value|0x01000000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_MEDIUM
-value|0x02000000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_HIGH
-value|0x04000000L
-end_define
-
-begin_comment
-comment|/* we have used 0fffffff - 4 bits left to go */
-end_comment
 
 begin_define
 define|#
@@ -774,7 +813,14 @@ begin_define
 define|#
 directive|define
 name|SSL_ALL_CIPHERS
-value|(SSL_MKEY_MASK|SSL_AUTH_MASK|SSL_ENC_MASK|\ 				SSL_MAC_MASK|SSL_EXP_MASK)
+value|(SSL_MKEY_MASK|SSL_AUTH_MASK|SSL_ENC_MASK|\ 				SSL_MAC_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_ALL_STRENGTHS
+value|(SSL_EXP_MASK|SSL_STRONG_MASK)
 end_define
 
 begin_comment
@@ -859,7 +905,7 @@ name|CERT_PKEY
 modifier|*
 name|key
 decl_stmt|;
-comment|/* ALWAYS points to an element of the pkeys array 					 * Probably it would make more sense to store 					 * an index, not a pointer. */
+comment|/* ALWAYS points to an element of the pkeys array 			 * Probably it would make more sense to store 			 * an index, not a pointer. */
 comment|/* The following masks are for the key and auth 	 * algorithms that are supported by the certs below */
 name|int
 name|valid
@@ -1071,7 +1117,7 @@ value|((ssl)->method->get_cipher_by_char(ptr))
 end_define
 
 begin_comment
-comment|/* This is for the SSLv3/TLSv1.0 differences in crypto/hash stuff  * It is a bit of a mess of functions, but hell, think of it as  * an opaque strucute :-) */
+comment|/* This is for the SSLv3/TLSv1.0 differences in crypto/hash stuff  * It is a bit of a mess of functions, but hell, think of it as  * an opaque structure :-) */
 end_comment
 
 begin_typedef
@@ -1084,42 +1130,96 @@ function_decl|(
 modifier|*
 name|enc
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
 name|mac
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
 name|setup_key_block
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
 name|generate_master_secret
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
 name|change_cipher_state
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
 modifier|*
 name|final_finish_mac
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|EVP_MD_CTX
+modifier|*
+parameter_list|,
+name|EVP_MD_CTX
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 name|int
 name|finish_mac_length
@@ -1129,34 +1229,42 @@ function_decl|(
 modifier|*
 name|cert_verify_mac
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|SSL
+modifier|*
+parameter_list|,
+name|EVP_MD_CTX
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
-name|unsigned
+specifier|const
 name|char
-name|client_finished
-index|[
-literal|20
-index|]
+modifier|*
+name|client_finished_label
 decl_stmt|;
 name|int
-name|client_finished_len
+name|client_finished_label_len
 decl_stmt|;
-name|unsigned
+specifier|const
 name|char
-name|server_finished
-index|[
-literal|20
-index|]
+modifier|*
+name|server_finished_label
 decl_stmt|;
 name|int
-name|server_finished_len
+name|server_finished_label_len
 decl_stmt|;
 name|int
 function_decl|(
 modifier|*
 name|alert_value
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 block|}
 name|SSL3_ENC_METHOD
@@ -1175,7 +1283,7 @@ block|{
 name|int
 name|comp_id
 decl_stmt|;
-comment|/* The identifer byte for this compression type */
+comment|/* The identifier byte for this compression type */
 name|char
 modifier|*
 name|name
@@ -1496,6 +1604,7 @@ argument_list|)
 operator|*
 name|ssl_create_cipher_list
 argument_list|(
+specifier|const
 name|SSL_METHOD
 operator|*
 name|meth
@@ -1516,9 +1625,10 @@ operator|*
 operator|*
 name|sorted
 argument_list|,
+specifier|const
 name|char
 operator|*
-name|str
+name|rule_str
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2024,6 +2134,48 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|long
+name|ssl2_callback_ctrl
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|ssl2_ctx_callback_ctrl
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ssl2_pending
 parameter_list|(
@@ -2269,7 +2421,7 @@ parameter_list|,
 name|int
 name|b
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|sender
@@ -2358,20 +2510,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ssl3_part_read
-parameter_list|(
-name|SSL
-modifier|*
-name|s
-parameter_list|,
-name|int
-name|i
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ssl3_write_bytes
 parameter_list|(
 name|SSL
@@ -2408,7 +2546,7 @@ name|EVP_MD_CTX
 modifier|*
 name|ctx2
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|sender
@@ -2714,6 +2852,48 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|long
+name|ssl3_callback_ctrl
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|ssl3_ctx_callback_ctrl
+parameter_list|(
+name|SSL_CTX
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ssl3_pending
 parameter_list|(
@@ -2826,6 +3006,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|long
+name|tls1_callback_ctrl
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|SSL_METHOD
 modifier|*
 name|tlsv1_base_method
@@ -2915,7 +3116,7 @@ name|EVP_MD_CTX
 modifier|*
 name|in2_ctx
 parameter_list|,
-name|unsigned
+specifier|const
 name|char
 modifier|*
 name|str

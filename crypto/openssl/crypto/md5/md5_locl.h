@@ -71,6 +71,11 @@ name|defined
 argument_list|(
 name|_M_IX86
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL__
+argument_list|)
 end_if
 
 begin_define
@@ -180,10 +185,15 @@ name|defined
 argument_list|(
 name|_M_IX86
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__INTEL__
+argument_list|)
 end_if
 
 begin_comment
-comment|/*  * *_block_host_order is expected to handle aligned data while  * *_block_data_order - unaligned. As algorithm and host (x86)  * are in this case of the same "endianess" these two are  * otherwise indistinguishable. But normally you don't want to  * call the same function because unaligned access in places  * where alignment is expected is usually a "Bad Thing". Indeed,  * on RISCs you get punished with BUS ERROR signal or *severe*  * performance degradation. Intel CPUs are in turn perfectly  * capable of loading unaligned data without such drastic side  * effect. Yes, they say it's slower than aligned load, but no  * exception is generated and therefore performance degradation  * is *incomparable* with RISCs. What we should weight here is  * costs of unaligned access against costs of aligning data.  * According to my measurements allowing unaligned access results  * in ~9% performance improvement on Pentium II operating at  * 266MHz. I won't be surprised if the difference will be higher  * on faster systems:-)  *  *<appro@fy.chalmers.se>  */
+comment|/*  * *_block_host_order is expected to handle aligned data while  * *_block_data_order - unaligned. As algorithm and host (x86)  * are in this case of the same "endianness" these two are  * otherwise indistinguishable. But normally you don't want to  * call the same function because unaligned access in places  * where alignment is expected is usually a "Bad Thing". Indeed,  * on RISCs you get punished with BUS ERROR signal or *severe*  * performance degradation. Intel CPUs are in turn perfectly  * capable of loading unaligned data without such drastic side  * effect. Yes, they say it's slower than aligned load, but no  * exception is generated and therefore performance degradation  * is *incomparable* with RISCs. What we should weight here is  * costs of unaligned access against costs of aligning data.  * According to my measurements allowing unaligned access results  * in ~9% performance improvement on Pentium II operating at  * 266MHz. I won't be surprised if the difference will be higher  * on faster systems:-)  *  *<appro@fy.chalmers.se>  */
 end_comment
 
 begin_define
@@ -263,6 +273,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|HASH_MAKE_STRING
+parameter_list|(
+name|c
+parameter_list|,
+name|s
+parameter_list|)
+value|do {	\ 	unsigned long ll;		\ 	ll=(c)->A; HOST_l2c(ll,(s));	\ 	ll=(c)->B; HOST_l2c(ll,(s));	\ 	ll=(c)->C; HOST_l2c(ll,(s));	\ 	ll=(c)->D; HOST_l2c(ll,(s));	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HASH_BLOCK_HOST_ORDER
 value|md5_block_host_order
 end_define
@@ -290,30 +312,13 @@ value|md5_block_data_order
 end_define
 
 begin_comment
-comment|/*  * Little-endians (Intel and Alpha) feel better without this.  * It looks like memcpy does better job than generic  * md5_block_data_order on copying-n-aligning input data.  * But franlky speaking I didn't expect such result on Alpha.  * On the other hand I've got this with egcs-1.0.2 and if  * program is compiled with another (better?) compiler it  * might turn out other way around.  *  *<appro@fy.chalmers.se>  */
+comment|/*  * Little-endians (Intel and Alpha) feel better without this.  * It looks like memcpy does better job than generic  * md5_block_data_order on copying-n-aligning input data.  * But frankly speaking I didn't expect such result on Alpha.  * On the other hand I've got this with egcs-1.0.2 and if  * program is compiled with another (better?) compiler it  * might turn out other way around.  *  *<appro@fy.chalmers.se>  */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FLAT_INC
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"../md32_common.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -321,17 +326,12 @@ directive|include
 file|"md32_common.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* #define	F(x,y,z)	(((x)& (y))  |  ((~(x))& (z))) #define	G(x,y,z)	(((x)& (z))  |  ((y)& (~(z)))) */
 end_comment
 
 begin_comment
-comment|/* As pointed out by Wei Dai<weidai@eskimo.com>, the above can be  * simplified to the code below.  Wei attributes these optimisations  * to Peter Gutmann's SHS code, and he attributes it to Rich Schroeppel.  */
+comment|/* As pointed out by Wei Dai<weidai@eskimo.com>, the above can be  * simplified to the code below.  Wei attributes these optimizations  * to Peter Gutmann's SHS code, and he attributes it to Rich Schroeppel.  */
 end_comment
 
 begin_define

@@ -110,8 +110,21 @@ value|crl2pkcs7_main
 end_define
 
 begin_comment
-comment|/* -inform arg	- input format - default PEM (one of DER, TXT or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  */
+comment|/* -inform arg	- input format - default PEM (DER or PEM)  * -outform arg - output format - default PEM  * -in arg	- input file - default stdin  * -out arg	- output file - default stdout  */
 end_comment
+
+begin_function_decl
+name|int
+name|MAIN
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -539,14 +552,14 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -inform arg    input format - one of DER TXT PEM\n"
+literal|" -inform arg    input format - DER or PEM\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -outform arg   output format - one of DER TXT PEM\n"
+literal|" -outform arg   output format - DER or PEM\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf

@@ -194,7 +194,7 @@ value|(*((c)++)=(unsigned char)(((l)>>24L)&0xff), \                          *((
 end_define
 
 begin_comment
-comment|/* This is actually a big endian algorithm, the most significate byte  * is used to lookup array 0 */
+comment|/* This is actually a big endian algorithm, the most significant byte  * is used to lookup array 0 */
 end_comment
 
 begin_if
@@ -297,7 +297,7 @@ comment|/* left shift */
 end_comment
 
 begin_comment
-comment|/*  * This is normally very good on RISC platforms where normally you  * have to explicitely "multiplicate" array index by sizeof(BF_LONG)  * in order to caclulate the effective address. This implementation  * excuses CPU from this extra work. Power[PC] uses should have most  * fun as (R>>BF_i)&BF_M gets folded into a single instruction, namely  * rlwinm. So let'em double-check if their compiler does it.  */
+comment|/*  * This is normally very good on RISC platforms where normally you  * have to explicitly "multiply" array index by sizeof(BF_LONG)  * in order to calculate the effective address. This implementation  * excuses CPU from this extra work. Power[PC] uses should have most  * fun as (R>>BF_i)&BF_M gets folded into a single instruction, namely  * rlwinm. So let'em double-check if their compiler does it.  */
 end_comment
 
 begin_define

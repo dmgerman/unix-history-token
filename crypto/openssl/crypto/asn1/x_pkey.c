@@ -320,7 +320,7 @@ name|ret
 operator|->
 name|enc_pkey
 argument_list|,
-name|ASN1_OCTET_STRING_new
+name|M_ASN1_OCTET_STRING_new
 argument_list|)
 expr_stmt|;
 name|ret
@@ -486,7 +486,7 @@ name|enc_pkey
 operator|!=
 name|NULL
 condition|)
-name|ASN1_OCTET_STRING_free
+name|M_ASN1_OCTET_STRING_free
 argument_list|(
 name|x
 operator|->
@@ -526,10 +526,6 @@ operator|)
 condition|)
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|x
 operator|->
 name|key_data
@@ -537,14 +533,6 @@ argument_list|)
 expr_stmt|;
 name|Free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|char
-operator|*
-operator|)
 name|x
 argument_list|)
 expr_stmt|;
