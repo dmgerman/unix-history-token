@@ -3397,17 +3397,12 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that the interface cannot be in promiscuous mode if 	 * there are no BPF listeners.  And if we are in promiscuous 	 * mode, we have to check if this packet is really ours. 	 */
+block|}
+endif|#
+directive|endif
+comment|/*      * XXX: Some cards seem to be in promiscous mode all the time.      * we need to make sure we only get our own stuff always.      * bleah!      */
 if|if
 condition|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
-operator|)
-operator|&&
 operator|(
 name|eh
 operator|->
@@ -3452,9 +3447,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-endif|#
-directive|endif
 comment|/* We assume the header fit entirely in one mbuf. */
 name|m_adj
 argument_list|(
