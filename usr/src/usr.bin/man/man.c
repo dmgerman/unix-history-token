@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.1 (Berkeley) %G%"
+literal|"@(#)man.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -692,7 +692,7 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
-name|end
+name|cp
 decl_stmt|;
 name|char
 name|fname
@@ -708,27 +708,25 @@ name|res
 operator|=
 literal|0
 init|;
+name|path
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|path
+operator|!=
+literal|'\0'
 condition|;
 name|path
 operator|=
-name|end
-operator|+
-literal|1
+name|cp
 control|)
 block|{
 if|if
 condition|(
-operator|!
-operator|*
-name|path
-condition|)
-comment|/* foo: */
-break|break;
-if|if
-condition|(
-name|end
+name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|path
 argument_list|,
@@ -738,16 +736,21 @@ condition|)
 block|{
 if|if
 condition|(
-name|end
+name|cp
 operator|==
 name|path
 operator|+
 literal|1
 condition|)
+block|{
 comment|/* foo::bar */
+operator|++
+name|cp
+expr_stmt|;
 continue|continue;
+block|}
 operator|*
-name|end
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -801,7 +804,12 @@ argument_list|,
 name|R_OK
 argument_list|)
 condition|)
+block|{
+operator|++
+name|cp
+expr_stmt|;
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -859,12 +867,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|end
+name|cp
 condition|)
-break|break;
 operator|*
-name|end
+name|cp
+operator|++
 operator|=
 literal|':'
 expr_stmt|;
