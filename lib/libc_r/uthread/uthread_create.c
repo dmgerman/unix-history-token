@@ -299,33 +299,6 @@ name|magic
 operator|=
 name|PTHREAD_MAGIC
 expr_stmt|;
-if|if
-condition|(
-name|pattr
-operator|->
-name|suspend
-operator|==
-name|PTHREAD_CREATE_SUSPENDED
-condition|)
-block|{
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|new_thread
-argument_list|,
-name|PS_SUSPENDED
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|new_thread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Initialise the thread for signals: */
 name|new_thread
 operator|->
@@ -681,11 +654,11 @@ block|{
 comment|/* Copy the scheduling attributes: */
 name|new_thread
 operator|->
-name|pthread_priority
+name|base_priority
 operator|=
 name|_thread_run
 operator|->
-name|pthread_priority
+name|base_priority
 expr_stmt|;
 name|new_thread
 operator|->
@@ -695,19 +668,19 @@ name|prio
 operator|=
 name|_thread_run
 operator|->
-name|pthread_priority
+name|base_priority
 expr_stmt|;
 name|new_thread
 operator|->
 name|attr
 operator|.
-name|schedparam_policy
+name|sched_policy
 operator|=
 name|_thread_run
 operator|->
 name|attr
 operator|.
-name|schedparam_policy
+name|sched_policy
 expr_stmt|;
 block|}
 else|else
@@ -715,7 +688,7 @@ block|{
 comment|/* 				 * Use just the thread priority, leaving the 				 * other scheduling attributes as their 				 * default values:  				 */
 name|new_thread
 operator|->
-name|pthread_priority
+name|base_priority
 operator|=
 name|new_thread
 operator|->
@@ -724,6 +697,20 @@ operator|.
 name|prio
 expr_stmt|;
 block|}
+name|new_thread
+operator|->
+name|active_priority
+operator|=
+name|new_thread
+operator|->
+name|base_priority
+expr_stmt|;
+name|new_thread
+operator|->
+name|inherited_priority
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Initialise the join queue for the new thread: */
 name|_thread_queue_init
 argument_list|(
@@ -733,6 +720,15 @@ name|new_thread
 operator|->
 name|join_queue
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Initialize the mutex queue: */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|new_thread
+operator|->
+name|mutexq
 argument_list|)
 expr_stmt|;
 comment|/* Initialise hooks in the thread structure: */
@@ -792,6 +788,49 @@ name|new_thread
 expr_stmt|;
 comment|/* Unlock the thread list: */
 name|_unlock_thread_list
+argument_list|()
+expr_stmt|;
+comment|/* 			 * Guard against preemption by a scheduling signal. 			 * A change of thread state modifies the waiting 			 * and priority queues. 			 */
+name|_thread_kern_sched_defer
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pattr
+operator|->
+name|suspend
+operator|==
+name|PTHREAD_CREATE_SUSPENDED
+condition|)
+block|{
+name|new_thread
+operator|->
+name|state
+operator|=
+name|PS_SUSPENDED
+expr_stmt|;
+name|PTHREAD_WAITQ_INSERT
+argument_list|(
+name|new_thread
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|new_thread
+operator|->
+name|state
+operator|=
+name|PS_RUNNING
+expr_stmt|;
+name|PTHREAD_PRIOQ_INSERT_TAIL
+argument_list|(
+name|new_thread
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * Reenable preemption and yield if a scheduling 			 * signal occurred while in the critical region. 			 */
+name|_thread_kern_sched_undefer
 argument_list|()
 expr_stmt|;
 comment|/* Return a pointer to the thread structure: */

@@ -193,7 +193,7 @@ name|NULL
 operator|&&
 name|sig
 operator|!=
-name|SIGVTALRM
+name|_SCHED_SIGNAL
 operator|&&
 name|sig
 operator|!=

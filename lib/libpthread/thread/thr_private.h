@@ -94,6 +94,12 @@ directive|include
 file|<spinlock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pthread_np.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel fatal error handler macro.  */
 end_comment
@@ -133,7 +139,88 @@ value|_thread_sys_write(2,_x,strlen(_x));
 end_define
 
 begin_comment
-comment|/*  * State change macro:  */
+comment|/*  * Priority queue manipulation macros:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_PRIOQ_INSERT_HEAD
+parameter_list|(
+name|thrd
+parameter_list|)
+value|_pq_insert_head(&_readyq,thrd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_PRIOQ_INSERT_TAIL
+parameter_list|(
+name|thrd
+parameter_list|)
+value|_pq_insert_tail(&_readyq,thrd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_PRIOQ_REMOVE
+parameter_list|(
+name|thrd
+parameter_list|)
+value|_pq_remove(&_readyq,thrd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_PRIOQ_FIRST
+value|_pq_first(&_readyq)
+end_define
+
+begin_comment
+comment|/*  * Waiting queue manipulation macros:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_WAITQ_INSERT
+parameter_list|(
+name|thrd
+parameter_list|)
+value|TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_WAITQ_REMOVE
+parameter_list|(
+name|thrd
+parameter_list|)
+value|TAILQ_REMOVE(&_waitingq,thrd,pqe)
+end_define
+
+begin_comment
+comment|/*  * State change macro without scheduling queue change:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_SET_STATE
+parameter_list|(
+name|thrd
+parameter_list|,
+name|newstate
+parameter_list|)
+value|{				\ 	(thrd)->state = newstate;					\ 	(thrd)->fname = __FILE__;					\ 	(thrd)->lineno = __LINE__;					\ }
+end_define
+
+begin_comment
+comment|/*  * State change macro with scheduling queue change - This must be  * called with preemption deferred (see thread_kern_sched_[un]defer).  */
 end_comment
 
 begin_define
@@ -145,8 +232,59 @@ name|thrd
 parameter_list|,
 name|newstate
 parameter_list|)
-value|{				\ 	(thrd)->state = newstate;					\ 	(thrd)->fname = __FILE__;					\ 	(thrd)->lineno = __LINE__;					\ }
+value|{				\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 			PTHREAD_PRIOQ_REMOVE(thrd);			\ 			PTHREAD_WAITQ_INSERT(thrd);			\ 		} else if (newstate == PS_RUNNING) { 			\ 			PTHREAD_WAITQ_REMOVE(thrd);			\ 			PTHREAD_PRIOQ_INSERT_TAIL(thrd);		\ 		}							\ 	}								\ 	PTHREAD_SET_STATE(thrd, newstate);				\ }
 end_define
+
+begin_comment
+comment|/*  * Define the signals to be used for scheduling.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_PTHREADS_COMPAT_SCHED
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_ITIMER_SCHED_TIMER
+value|ITIMER_VIRTUAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SCHED_SIGNAL
+value|SIGVTALRM
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_ITIMER_SCHED_TIMER
+value|ITIMER_PROF
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SCHED_SIGNAL
+value|SIGPROF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Queue definitions.  */
@@ -175,6 +313,70 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Priority queues.  *  * XXX It'd be nice if these were contained in uthread_priority_queue.[ch].  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|pq_list
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pthread
+argument_list|)
+name|pl_head
+expr_stmt|;
+comment|/* list of threads at this priority */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pq_list
+argument_list|)
+name|pl_link
+expr_stmt|;
+comment|/* link for queue of priority lists */
+name|int
+name|pl_prio
+decl_stmt|;
+comment|/* the priority of this list */
+name|int
+name|pl_queued
+decl_stmt|;
+comment|/* is this in the priority queue */
+block|}
+name|pq_list_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|pq_queue
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pq_list
+argument_list|)
+name|pq_queue
+expr_stmt|;
+comment|/* queue of priority lists */
+name|pq_list_t
+modifier|*
+name|pq_lists
+decl_stmt|;
+comment|/* array of all priority lists */
+name|int
+name|pq_size
+decl_stmt|;
+comment|/* number of priority lists */
+block|}
+name|pq_queue_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Static queue initialization values.   */
 end_comment
 
@@ -183,6 +385,17 @@ define|#
 directive|define
 name|PTHREAD_QUEUE_INITIALIZER
 value|{ NULL, NULL, NULL }
+end_define
+
+begin_comment
+comment|/*  * TailQ initialization values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAILQ_INITIALIZER
+value|{ NULL, NULL }
 end_define
 
 begin_comment
@@ -212,10 +425,17 @@ name|enum
 name|pthread_mutextype
 name|m_type
 decl_stmt|;
-name|struct
-name|pthread_queue
-name|m_queue
+name|int
+name|m_protocol
 decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument|mutex_head
+argument_list|,
+argument|pthread
+argument_list|)
+name|m_queue
+expr_stmt|;
 name|struct
 name|pthread
 modifier|*
@@ -228,6 +448,23 @@ decl_stmt|;
 name|long
 name|m_flags
 decl_stmt|;
+name|int
+name|m_refcount
+decl_stmt|;
+comment|/* 	 * Used for priority inheritence and protection. 	 * 	 *   m_prio       - For priority inheritence, the highest active 	 *                  priority (threads locking the mutex inherit 	 *                  this priority).  For priority protection, the 	 *                  ceiling priority of this mutex. 	 *   m_saved_prio - mutex owners inherited priority before 	 *                  taking the mutex, restored when the owner 	 *                  unlocks the mutex. 	 */
+name|int
+name|m_prio
+decl_stmt|;
+name|int
+name|m_saved_prio
+decl_stmt|;
+comment|/* 	 * Link for list of all mutexes a thread currently owns. 	 */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pthread_mutex
+argument_list|)
+name|m_qe
+expr_stmt|;
 comment|/* 	 * Lock for accesses to this structure. 	 */
 name|spinlock_t
 name|lock
@@ -270,7 +507,7 @@ define|#
 directive|define
 name|PTHREAD_MUTEX_STATIC_INITIALIZER
 define|\
-value|{ MUTEX_TYPE_FAST, PTHREAD_QUEUE_INITIALIZER, \ 	NULL, { NULL }, MUTEX_FLAGS_INITED }
+value|{ PTHREAD_MUTEX_DEFAULT, PTHREAD_PRIO_NONE, TAILQ_INITIALIZER, \ 	NULL, { NULL }, MUTEX_FLAGS_INITED, 0, 0, 0, TAILQ_INITIALIZER }
 end_define
 
 begin_struct
@@ -280,6 +517,12 @@ block|{
 name|enum
 name|pthread_mutextype
 name|m_type
+decl_stmt|;
+name|int
+name|m_protocol
+decl_stmt|;
+name|int
+name|m_ceiling
 decl_stmt|;
 name|long
 name|m_flags
@@ -311,9 +554,16 @@ name|enum
 name|pthread_cond_type
 name|c_type
 decl_stmt|;
-name|struct
-name|pthread_queue
+name|TAILQ_HEAD
+argument_list|(
+argument|cond_head
+argument_list|,
+argument|pthread
+argument_list|)
 name|c_queue
+expr_stmt|;
+name|pthread_mutex_t
+name|c_mutex
 decl_stmt|;
 name|void
 modifier|*
@@ -379,7 +629,7 @@ define|#
 directive|define
 name|PTHREAD_COND_STATIC_INITIALIZER
 define|\
-value|{ COND_TYPE_FAST, PTHREAD_QUEUE_INITIALIZER, NULL, COND_FLAGS_INITED }
+value|{ COND_TYPE_FAST, PTHREAD_QUEUE_INITIALIZER, NULL, NULL \ 	COND_FLAGS_INITED }
 end_define
 
 begin_comment
@@ -415,7 +665,13 @@ struct|struct
 name|pthread_attr
 block|{
 name|int
-name|schedparam_policy
+name|sched_policy
+decl_stmt|;
+name|int
+name|sched_inherit
+decl_stmt|;
+name|int
+name|sched_interval
 decl_stmt|;
 name|int
 name|prio
@@ -635,11 +891,15 @@ name|PS_SIGSUSPEND
 block|,
 name|PS_SIGWAIT
 block|,
+name|PS_SPINBLOCK
+block|,
 name|PS_JOIN
 block|,
 name|PS_SUSPENDED
 block|,
 name|PS_DEAD
+block|,
+name|PS_DEADLOCK
 block|,
 name|PS_STATE_MAX
 block|}
@@ -764,11 +1024,9 @@ union|union
 name|pthread_wait_data
 block|{
 name|pthread_mutex_t
-modifier|*
 name|mutex
 decl_stmt|;
 name|pthread_cond_t
-modifier|*
 name|cond
 decl_stmt|;
 specifier|const
@@ -799,6 +1057,10 @@ name|struct
 name|pthread_select_data
 modifier|*
 name|select_data
+decl_stmt|;
+name|spinlock_t
+modifier|*
+name|spinlock
 decl_stmt|;
 block|}
 union|;
@@ -952,7 +1214,7 @@ name|struct
 name|pthread_queue
 name|join_queue
 decl_stmt|;
-comment|/* 	 * The current thread can belong to only one queue at a time. 	 * 	 * Pointer to queue (if any) on which the current thread is waiting. 	 * 	 * XXX The queuing should be changed to use the TAILQ entry below. 	 * XXX For the time being, it's hybrid. 	 */
+comment|/* 	 * The current thread can belong to only one scheduling queue 	 * at a time (ready or waiting queue).  It can also belong to 	 * a queue of threads waiting on mutexes or condition variables. 	 * Use pqe for the scheduling queue link (both ready and waiting), 	 * and qe for other links (mutexes and condition variables). 	 * 	 * Pointer to queue (if any) on which the current thread is waiting. 	 * 	 * XXX The queuing should be changed to use the TAILQ entry below. 	 * XXX For the time being, it's hybrid. 	 */
 name|struct
 name|pthread_queue
 modifier|*
@@ -964,6 +1226,13 @@ name|pthread
 modifier|*
 name|qnxt
 decl_stmt|;
+comment|/* Priority queue entry for this thread: */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pthread
+argument_list|)
+name|pqe
+expr_stmt|;
 comment|/* Queue entry for this thread: */
 name|TAILQ_ENTRY
 argument_list|(
@@ -984,17 +1253,59 @@ comment|/* Signal number when in state PS_SIGWAIT: */
 name|int
 name|signo
 decl_stmt|;
+comment|/* 	 * Set to non-zero when this thread has deferred thread 	 * scheduling.  We allow for recursive deferral. 	 */
+name|int
+name|sched_defer_count
+decl_stmt|;
+comment|/* 	 * Set to TRUE if this thread should yield after undeferring 	 * thread scheduling. 	 */
+name|int
+name|yield_on_sched_undefer
+decl_stmt|;
 comment|/* Miscellaneous data. */
 name|int
 name|flags
 decl_stmt|;
 define|#
 directive|define
+name|PTHREAD_FLAGS_PRIVATE
+value|0x0001
+define|#
+directive|define
 name|PTHREAD_EXITING
-value|0x0100
+value|0x0002
+define|#
+directive|define
+name|PTHREAD_FLAGS_QUEUED
+value|0x0004
+comment|/* in queue (qe is used) */
+define|#
+directive|define
+name|PTHREAD_FLAGS_TRACE
+value|0x0008
+comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
 name|char
-name|pthread_priority
+name|base_priority
 decl_stmt|;
+comment|/* 	 * Inherited priority is the priority a thread inherits by 	 * taking a priority inheritence or protection mutex.  It 	 * is not affected by base priority changes.  Inherited 	 * priority defaults to and remains 0 until a mutex is taken 	 * that is being waited on by any other thread whose priority 	 * is non-zero. 	 */
+name|char
+name|inherited_priority
+decl_stmt|;
+comment|/* 	 * Active priority is always the maximum of the threads base 	 * priority and inherited priority.  When there is a change 	 * in either the real or inherited priority, the active 	 * priority must be recalculated. 	 */
+name|char
+name|active_priority
+decl_stmt|;
+comment|/* Number of priority ceiling or protection mutexes owned. */
+name|int
+name|priority_mutex_count
+decl_stmt|;
+comment|/* 	 * Queue of currently owned mutexes. 	 */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pthread_mutex
+argument_list|)
+name|mutexq
+expr_stmt|;
 name|void
 modifier|*
 name|ret
@@ -1054,6 +1365,40 @@ name|pthread
 modifier|*
 specifier|volatile
 name|_thread_run
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+operator|&
+name|_thread_kern_thread
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Ptr to the thread structure for the last user thread to run: */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|pthread
+modifier|*
+specifier|volatile
+name|_last_user_thread
 ifdef|#
 directive|ifdef
 name|GLOBAL_PTHREAD_PRIVATE
@@ -1350,6 +1695,10 @@ init|=
 block|{
 name|SCHED_RR
 block|,
+literal|0
+block|,
+name|TIMESLICE_USEC
+block|,
 name|PTHREAD_DEFAULT_PRIORITY
 block|,
 name|PTHREAD_CREATE_RUNNING
@@ -1395,7 +1744,11 @@ directive|ifdef
 name|GLOBAL_PTHREAD_PRIVATE
 init|=
 block|{
-name|MUTEX_TYPE_FAST
+name|PTHREAD_MUTEX_DEFAULT
+block|,
+name|PTHREAD_PRIO_NONE
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -1601,6 +1954,64 @@ name|_thread_sigact
 index|[
 name|NSIG
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Scheduling queues:  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|pq_queue_t
+name|_readyq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|TAILQ_HEAD
+argument_list|(,
+name|pthread
+argument_list|)
+name|_waitingq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Indicates that the waitingq now has threads ready to run. */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+specifier|volatile
+name|int
+name|_waitingq_check_reqd
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+literal|0
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Thread switch hook. */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|pthread_switch_routine_t
+name|_sched_switch_hook
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|NULL
+endif|#
+directive|endif
 decl_stmt|;
 end_decl_stmt
 
@@ -1869,6 +2280,115 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|_mutex_cv_lock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_mutex_cv_unlock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_mutex_notify_priochange
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_pq_init
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
+name|pq
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pq_remove
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
+name|pq
+parameter_list|,
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pq_insert_head
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
+name|pq
+parameter_list|,
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pq_insert_tail
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
+name|pq
+parameter_list|,
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pthread
+modifier|*
+name|_pq_first
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
+name|pq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|_thread_exit
 parameter_list|(
@@ -2004,6 +2524,24 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_kern_sched_defer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_kern_sched_undefer
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

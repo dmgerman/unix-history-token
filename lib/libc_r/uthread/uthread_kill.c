@@ -98,6 +98,10 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Guard against preemption by a scheduling signal. 		 * A change of thread state modifies the waiting 		 * and priority queues. 		 */
+name|_thread_kern_sched_defer
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|pthread
@@ -300,6 +304,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Reenable preemption and yield if a scheduling signal 		 * occurred while in the critical region. 		 */
+name|_thread_kern_sched_undefer
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Return the completion status: */
 return|return

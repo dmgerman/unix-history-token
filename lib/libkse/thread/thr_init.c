@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -578,6 +578,30 @@ literal|"Cannot get kernel write pipe flags"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Initialize the ready queue: */
+elseif|else
+if|if
+condition|(
+name|_pq_init
+argument_list|(
+operator|&
+name|_readyq
+argument_list|,
+name|PTHREAD_MIN_PRIORITY
+argument_list|,
+name|PTHREAD_MAX_PRIORITY
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Abort this application: */
+name|PANIC
+argument_list|(
+literal|"Cannot allocate priority ready queue."
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Allocate memory for the thread structure of the initial thread: */
 elseif|else
 if|if
@@ -625,6 +649,12 @@ name|pthread
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|_thread_kern_thread
+operator|.
+name|flags
+operator|=
+name|PTHREAD_FLAGS_PRIVATE
+expr_stmt|;
 name|memset
 argument_list|(
 name|_thread_initial
@@ -638,12 +668,43 @@ name|pthread
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Initialize the waiting queue: */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_waitingq
+argument_list|)
+expr_stmt|;
+comment|/* Initialize the scheduling switch hook routine: */
+name|_sched_switch_hook
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 		 * Write a magic value to the thread structure 		 * to help identify valid ones: 		 */
+name|_thread_initial
+operator|->
+name|magic
+operator|=
+name|PTHREAD_MAGIC
+expr_stmt|;
 comment|/* Default the priority of the initial thread: */
 name|_thread_initial
 operator|->
-name|pthread_priority
+name|base_priority
 operator|=
 name|PTHREAD_DEFAULT_PRIORITY
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|active_priority
+operator|=
+name|PTHREAD_DEFAULT_PRIORITY
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|inherited_priority
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Initialise the state of the initial thread: */
 name|_thread_initial
@@ -663,7 +724,36 @@ name|join_queue
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Initialize the owned mutex queue and count: */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+operator|(
+name|_thread_initial
+operator|->
+name|mutexq
+operator|)
+argument_list|)
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|priority_mutex_count
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Initialise the rest of the fields: */
+name|_thread_initial
+operator|->
+name|sched_defer_count
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|yield_on_sched_undefer
+operator|=
+literal|0
+expr_stmt|;
 name|_thread_initial
 operator|->
 name|specific_data
@@ -804,7 +894,7 @@ if|if
 condition|(
 name|_thread_sys_sigaction
 argument_list|(
-name|SIGVTALRM
+name|_SCHED_SIGNAL
 argument_list|,
 operator|&
 name|act
@@ -985,6 +1075,14 @@ condition|)
 name|PANIC
 argument_list|(
 literal|"Failed to initialise garbage collector mutex or condvar"
+argument_list|)
+expr_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|kern_inc_prio_time
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;

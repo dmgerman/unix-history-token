@@ -98,7 +98,7 @@ literal|0
 expr_stmt|;
 name|setitimer
 argument_list|(
-name|ITIMER_VIRTUAL
+name|_ITIMER_SCHED_TIMER
 argument_list|,
 operator|&
 name|itimer
@@ -413,6 +413,10 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * Guard against preemption by a scheduling signal.  A change of 	 * thread state modifies the waiting and priority queues. 	 */
+name|_thread_kern_sched_defer
+argument_list|()
+expr_stmt|;
 comment|/* Check if there are any threads joined to this one: */
 while|while
 condition|(
@@ -442,6 +446,10 @@ name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Reenable preemption and yield if a scheduling signal 	 * occurred while in the critical region. 	 */
+name|_thread_kern_sched_undefer
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
 if|if
 condition|(

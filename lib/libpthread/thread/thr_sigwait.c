@@ -117,7 +117,7 @@ name|act
 operator|.
 name|sa_mask
 argument_list|,
-name|SIGVTALRM
+name|_SCHED_SIGNAL
 argument_list|)
 expr_stmt|;
 name|sigdelset

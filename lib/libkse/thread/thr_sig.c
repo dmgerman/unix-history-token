@@ -46,6 +46,22 @@ file|"pthread_private.h"
 end_include
 
 begin_comment
+comment|/*  * State change macro for signal handler:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_SIG_NEW_STATE
+parameter_list|(
+name|thrd
+parameter_list|,
+name|newstate
+parameter_list|)
+value|{				\ 	if ((_thread_run->sched_defer_count == 0)&&			\ 	    (_thread_kern_in_sched == 0)) { 				\ 		PTHREAD_NEW_STATE(thrd, newstate);			\ 	} else {							\ 		_waitingq_check_reqd = 1;				\ 		PTHREAD_SET_STATE(thrd, newstate);			\ 	}								\ }
+end_define
+
+begin_comment
 comment|/* Static variables: */
 end_comment
 
@@ -190,7 +206,7 @@ if|if
 condition|(
 name|sig
 operator|==
-name|SIGVTALRM
+name|_SCHED_SIGNAL
 condition|)
 block|{
 comment|/* Check if the scheduler interrupt has come at an 		 * unfortunate time which one of the threads is 		 * modifying the thread list: 		 */
@@ -202,6 +218,20 @@ name|access_lock
 condition|)
 comment|/* 			 * Set a flag so that the thread that has 			 * the lock yields when it unlocks the 			 * thread list: 			 */
 name|yield_on_unlock_thread
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 		 * Check if the scheduler interrupt has come when 		 * the currently running thread has deferred thread 		 * scheduling. 		 */
+elseif|else
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|sched_defer_count
+condition|)
+name|_thread_run
+operator|->
+name|yield_on_sched_undefer
 operator|=
 literal|1
 expr_stmt|;
@@ -327,23 +357,15 @@ name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Enter a loop to process each thread in the linked 		 * list that is sigwait-ing on a signal.  Since POSIX 		 * doesn't specify which thread will get the signal 		 * if there are multiple waiters, we'll give it to the 		 * first one we find. 		 */
-for|for
-control|(
-name|pthread
-operator|=
-name|_thread_link_list
-init|;
-name|pthread
-operator|!=
-name|NULL
-condition|;
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-control|)
+comment|/* 		 * Enter a loop to process each thread in the waiting 		 * list that is sigwait-ing on a signal.  Since POSIX 		 * doesn't specify which thread will get the signal 		 * if there are multiple waiters, we'll give it to the 		 * first one we find. 		 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|pthread
+argument_list|,
+argument|&_waitingq
+argument_list|,
+argument|pqe
+argument_list|)
 block|{
 if|if
 condition|(
@@ -368,7 +390,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
+name|PTHREAD_SIG_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
@@ -417,6 +439,16 @@ name|pthread
 operator|->
 name|nxt
 control|)
+block|{
+name|pthread_t
+name|pthread_saved
+init|=
+name|_thread_run
+decl_stmt|;
+name|_thread_run
+operator|=
+name|pthread
+expr_stmt|;
 name|_thread_signal
 argument_list|(
 name|pthread
@@ -424,10 +456,15 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-comment|/* Dispatch pending signals to the running thread: */
+comment|/* 				 * Dispatch pending signals to the 				 * running thread: 				 */
 name|_dispatch_signals
 argument_list|()
 expr_stmt|;
+name|_thread_run
+operator|=
+name|pthread_saved
+expr_stmt|;
+block|}
 block|}
 comment|/* Returns nothing. */
 return|return;
@@ -526,7 +563,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
+name|PTHREAD_SIG_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
@@ -580,7 +617,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
+name|PTHREAD_SIG_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
@@ -626,7 +663,7 @@ name|SIG_DFL
 condition|)
 block|{
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
+name|PTHREAD_SIG_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
