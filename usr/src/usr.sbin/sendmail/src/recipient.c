@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.18 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -939,9 +939,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|ForceMail
-operator|&&
 name|sameaddr
 argument_list|(
 name|q
