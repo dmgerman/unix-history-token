@@ -4188,6 +4188,8 @@ name|s
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|count
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -4205,6 +4207,41 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|sc
+operator|->
+name|amr_busyslots
+condition|)
+block|{
+name|tsleep
+argument_list|(
+name|sc
+argument_list|,
+name|PRIBIO
+operator||
+name|PCATCH
+argument_list|,
+literal|"amrpoll"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
+operator|++
+operator|>
+literal|10
+condition|)
+block|{
+break|break;
+block|}
+block|}
 if|if
 condition|(
 name|sc
@@ -4218,7 +4255,7 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"adapter is busy"
+literal|"adapter is busy\n"
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4309,6 +4346,14 @@ operator|->
 name|mb_ack
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|amr_mailbox
+operator|->
+name|mb_busy
+operator|=
+literal|1
 expr_stmt|;
 name|AMR_QPUT_IDB
 argument_list|(
@@ -4406,6 +4451,16 @@ operator||
 name|AMR_QIDB_ACK
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|AMR_QGET_IDB
+argument_list|(
+name|sc
+argument_list|)
+operator|&
+name|AMR_QIDB_ACK
+condition|)
+empty_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -6212,6 +6267,20 @@ name|ac
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|amr_busyslots
+condition|)
+block|{
+name|wakeup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -7600,7 +7669,7 @@ operator|==
 name|AMR_SIG_438
 condition|)
 block|{
-comment|/* the AMI 438 is an NetRaid 3si in HP-land */
+comment|/* the AMI 438 is a NetRaid 3si in HP-land */
 name|prod
 operator|=
 literal|"HP NetRaid 3si"
