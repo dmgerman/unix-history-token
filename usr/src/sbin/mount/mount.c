@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.25 (Berkeley) %G%"
+literal|"@(#)mount.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +689,8 @@ name|getmntinfo
 argument_list|(
 operator|&
 name|mntbuf
+argument_list|,
+name|MNT_NOWAIT
 argument_list|)
 operator|)
 operator|==
@@ -2359,6 +2361,8 @@ name|getmntinfo
 argument_list|(
 operator|&
 name|mntbuf
+argument_list|,
+name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
 for|for
