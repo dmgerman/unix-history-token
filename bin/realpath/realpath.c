@@ -85,37 +85,6 @@ if|if
 condition|(
 name|argc
 operator|==
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|p
-operator|=
-name|getcwd
-argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"getcwd()"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|argc
-operator|==
 literal|2
 condition|)
 block|{
@@ -184,7 +153,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: realpath [path]\n"
+literal|"usage: realpath path\n"
 argument_list|)
 expr_stmt|;
 name|exit
