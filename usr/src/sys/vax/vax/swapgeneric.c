@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -500,13 +500,11 @@ name|gp
 condition|;
 name|cp
 operator|++
-operator|,
-name|gp
-operator|++
 control|)
 if|if
 condition|(
 operator|*
+operator|++
 name|gp
 operator|==
 literal|0
@@ -581,6 +579,9 @@ condition|)
 name|swaponroot
 operator|++
 expr_stmt|;
+goto|goto
+name|found
+goto|;
 block|}
 for|for
 control|(
