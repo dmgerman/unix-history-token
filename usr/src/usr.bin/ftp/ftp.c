@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.24.1.2 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
