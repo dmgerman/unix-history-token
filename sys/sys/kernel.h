@@ -321,6 +321,11 @@ init|=
 literal|0x2400000
 block|,
 comment|/* set up run queue*/
+name|SI_SUB_KTRACE
+init|=
+literal|0x2480000
+block|,
+comment|/* ktrace */
 name|SI_SUB_CREATE_INIT
 init|=
 literal|0x2500000
