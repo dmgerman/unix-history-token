@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.61 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.62 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.61 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.62 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,9 +1008,12 @@ name|tfp
 argument_list|,
 literal|"M%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|e
 operator|->
 name|e_message
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -1142,7 +1145,10 @@ name|tfp
 argument_list|,
 literal|"$r%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -1169,7 +1175,10 @@ name|tfp
 argument_list|,
 literal|"$s%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -1196,7 +1205,10 @@ name|tfp
 argument_list|,
 literal|"$_%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -1245,7 +1257,10 @@ name|tfp
 argument_list|,
 literal|"S%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1269,9 +1284,12 @@ name|tfp
 argument_list|,
 literal|"Z%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|e
 operator|->
 name|e_envid
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -1338,9 +1356,12 @@ name|tfp
 argument_list|,
 literal|"E%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|q
 operator|->
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1422,9 +1443,12 @@ name|tfp
 argument_list|,
 literal|"Q%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|q
 operator|->
 name|q_orcpt
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putc
@@ -1558,9 +1582,12 @@ name|tfp
 argument_list|,
 literal|"%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|q
 operator|->
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2469,9 +2496,12 @@ literal|"C%s:%s\n"
 argument_list|,
 name|uname
 argument_list|,
+name|denlstring
+argument_list|(
 name|a
 operator|->
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

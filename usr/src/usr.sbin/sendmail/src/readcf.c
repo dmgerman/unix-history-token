@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.62 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5263,6 +5263,9 @@ name|char
 modifier|*
 name|subopt
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 specifier|extern
 name|bool
 name|atobool
@@ -6613,13 +6616,8 @@ case|case
 literal|'M'
 case|:
 comment|/* define macro */
-name|define
-argument_list|(
-name|val
-index|[
-literal|0
-index|]
-argument_list|,
+name|p
+operator|=
 name|newstr
 argument_list|(
 operator|&
@@ -6628,6 +6626,29 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|safe
+condition|)
+name|cleanstrcpy
+argument_list|(
+name|p
+argument_list|,
+name|p
+argument_list|,
+name|MAXNAME
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+name|val
+index|[
+literal|0
+index|]
+argument_list|,
+name|p
 argument_list|,
 name|CurEnv
 argument_list|)
