@@ -254,9 +254,9 @@ begin_decl_stmt
 name|int
 name|nclist
 init|=
-literal|100
+literal|60
 operator|+
-literal|16
+literal|12
 operator|*
 name|MAXUSERS
 decl_stmt|;
