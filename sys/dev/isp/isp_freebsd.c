@@ -659,12 +659,6 @@ directive|ifdef
 name|ISP_TARGET_MODE
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"targbh.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|__inline
@@ -4994,33 +4988,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* XXX WE REALLY NEED A HARDWIRED SENSE/INQ CTIO TO USE XXX */
-block|u_int32_t ccode = SCSI_STATUS_CHECK_COND | ECMD_SVALID;
-if|#
-directive|if
-name|NTARGBH
-operator|>
-literal|0
-comment|/* Not Ready, Unit Not Self-Configured yet.... */
-block|ccode |= (SSD_KEY_NOT_READY<< 8) | (0x3E<< 24);
-else|#
-directive|else
-comment|/* Illegal Request, Unit Not Self-Configured yet.... */
-block|ccode |= (SSD_KEY_ILLEGAL_REQUEST<< 8) | (0x25<< 24);
-endif|#
-directive|endif
-else|#
-directive|else
+comment|/* 		 * What we'd like to know is whether or not we have a listener 		 * upstream that really hasn't configured yet. If we do, then 		 * we can give a more sensible reply here. If not, then we can 		 * reject this out of hand. 		 * 		 * Choices for what to send were 		 *                  *	Not Ready, Unit Not Self-Configured Yet 		 *	(0x2,0x3e,0x00) 		 * 		 * for the former and 		 * 		 *	Illegal Request, Logical Unit Not Supported 		 *	(0x5,0x25,0x00) 		 * 		 * for the latter. 		 * 		 * We used to decide whether there was at least one listener 		 * based upon whether the black hole driver was configured. 		 * However, recent config(8) changes have made this hard to do 		 * at this time. 		 * 		 */
 name|u_int32_t
 name|ccode
 init|=
 name|SCSI_STATUS_BUSY
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Because we can't autofeed sense data back with 		 * a command for parallel SCSI, we can't give back 		 * a CHECK CONDITION. We'll give back a BUSY status 		 * instead. This works out okay because the only 		 * time we should, in fact, get this, is in the 		 * case that somebody configured us without the 		 * blackhole driver, so they get what they deserve. 		 */
 name|isp_endcmd
 argument_list|(
