@@ -351,7 +351,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(STAILQ_EMPTY(head) ?						\ 		NULL :							\ 	        ((struct type *)					\ 		((char *)((head)->stqh_last) - __offsetof(struct type, field))))
+value|(STAILQ_EMPTY((head)) ?						\ 		NULL :							\ 	        ((struct type *)					\ 		((char *)((head)->stqh_last) - __offsetof(struct type, field))))
 end_define
 
 begin_define
@@ -379,7 +379,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD(head, field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		if ((STAILQ_NEXT(curelm, field) =			\ 		     STAILQ_NEXT(STAILQ_NEXT(curelm, field), field)) == NULL)\ 			(head)->stqh_last =&STAILQ_NEXT((curelm), field);\ 	}								\ } while (0)
+value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		if ((STAILQ_NEXT(curelm, field) =			\ 		     STAILQ_NEXT(STAILQ_NEXT(curelm, field), field)) == NULL)\ 			(head)->stqh_last =&STAILQ_NEXT((curelm), field);\ 	}								\ } while (0)
 end_define
 
 begin_define
