@@ -438,22 +438,6 @@ name|struct
 name|ciss_ldrive
 modifier|*
 name|ld
-parameter_list|,
-name|int
-name|async
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ciss_accept_media_complete
-parameter_list|(
-name|struct
-name|ciss_request
-modifier|*
-name|cr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5158,8 +5142,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|ld
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6951,9 +6933,6 @@ name|struct
 name|ciss_ldrive
 modifier|*
 name|ld
-parameter_list|,
-name|int
-name|async
 parameter_list|)
 block|{
 name|struct
@@ -6972,7 +6951,12 @@ modifier|*
 name|cbc
 decl_stmt|;
 name|int
+name|command_status
+decl_stmt|;
+name|int
 name|error
+init|=
+literal|0
 decl_stmt|,
 name|ldrive
 decl_stmt|;
@@ -6993,15 +6977,7 @@ name|debug
 argument_list|(
 literal|0
 argument_list|,
-literal|"bringing logical drive %d back online %ssynchronously"
-argument_list|,
-name|ldrive
-argument_list|,
-name|async
-condition|?
-literal|"a"
-else|:
-literal|""
+literal|"bringing logical drive %d back online"
 argument_list|)
 expr_stmt|;
 comment|/*      * Build a CISS BMIC command to bring the drive back online.      */
@@ -7074,43 +7050,7 @@ name|log_drive
 operator|=
 name|ldrive
 expr_stmt|;
-comment|/*      * Dispatch the request asynchronously if we can't sleep waiting      * for it to complete.      */
-if|if
-condition|(
-name|async
-condition|)
-block|{
-name|cr
-operator|->
-name|cr_complete
-operator|=
-name|ciss_accept_media_complete
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|ciss_start
-argument_list|(
-name|cr
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|out
-goto|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|else
-block|{
-comment|/* 	 * Submit the request and wait for it to complete. 	 */
+comment|/*      * Submit the request and wait for it to complete.      */
 if|if
 condition|(
 operator|(
@@ -7133,7 +7073,7 @@ name|ciss_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"error sending BMIC LSTATUS command (%d)\n"
+literal|"error sending BMIC ACCEPT MEDIA command (%d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -7142,53 +7082,6 @@ goto|goto
 name|out
 goto|;
 block|}
-block|}
-comment|/*      * Call the completion callback manually.      */
-name|ciss_accept_media_complete
-argument_list|(
-name|cr
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|out
-label|:
-if|if
-condition|(
-name|cr
-operator|!=
-name|NULL
-condition|)
-name|ciss_release_request
-argument_list|(
-name|cr
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ciss_accept_media_complete
-parameter_list|(
-name|struct
-name|ciss_request
-modifier|*
-name|cr
-parameter_list|)
-block|{
-name|int
-name|command_status
-decl_stmt|;
 comment|/*      * Check response.      */
 name|ciss_report_request
 argument_list|(
@@ -7228,11 +7121,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|out
+label|:
+if|if
+condition|(
+name|cr
+operator|!=
+name|NULL
+condition|)
 name|ciss_release_request
 argument_list|(
 name|cr
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -15380,8 +15286,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|ld
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 break|break;
