@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)checknr.c	4.5 (Berkeley) %G%"
+literal|"@(#)checknr.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * checknr: check an nroff/troff input file for matching macro calls.  * we also attempt to match size and font changes, but only the embedded  * kind.  These must end in \s0 and \fP resp.  Maybe more sophistication  * later but for now think of these restrictions as contributions to  * structured typesetting.  */
@@ -192,6 +203,10 @@ literal|"AB"
 block|,
 literal|"AE"
 block|,
+literal|"BD"
+block|,
+literal|"DE"
+block|,
 literal|"CD"
 block|,
 literal|"DE"
@@ -235,6 +250,14 @@ block|,
 literal|"SM"
 block|,
 literal|"NL"
+block|,
+literal|"XA"
+block|,
+literal|"XE"
+block|,
+literal|"XS"
+block|,
+literal|"XE"
 block|,
 comment|/* The -me package */
 literal|"(b"
@@ -407,6 +430,8 @@ literal|"AI"
 block|,
 literal|"AL"
 block|,
+literal|"AM"
+block|,
 literal|"AS"
 block|,
 literal|"AT"
@@ -505,6 +530,8 @@ literal|"H"
 block|,
 literal|"HC"
 block|,
+literal|"HD"
+block|,
 literal|"HM"
 block|,
 literal|"HO"
@@ -522,6 +549,8 @@ block|,
 literal|"IM"
 block|,
 literal|"IP"
+block|,
+literal|"IX"
 block|,
 literal|"IZ"
 block|,
@@ -585,6 +614,8 @@ literal|"OP"
 block|,
 literal|"P"
 block|,
+literal|"P1"
+block|,
 literal|"PF"
 block|,
 literal|"PH"
@@ -592,6 +623,8 @@ block|,
 literal|"PP"
 block|,
 literal|"PT"
+block|,
+literal|"PX"
 block|,
 literal|"PY"
 block|,
@@ -679,13 +712,19 @@ literal|"WC"
 block|,
 literal|"WH"
 block|,
+literal|"XA"
+block|,
 literal|"XD"
+block|,
+literal|"XE"
 block|,
 literal|"XF"
 block|,
 literal|"XK"
 block|,
 literal|"XP"
+block|,
+literal|"XS"
 block|,
 literal|"["
 block|,
