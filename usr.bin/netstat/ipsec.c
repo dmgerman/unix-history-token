@@ -27,9 +27,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)inet.c	8.5 (Berkeley) 5/24/95"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "from: @(#)inet.c	8.4 (Berkeley) 4/20/94";
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -41,6 +49,11 @@ init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -121,28 +134,6 @@ include|#
 directive|include
 file|"netstat.h"
 end_include
-
-begin_comment
-comment|/*  * portability issues:  * - bsdi[34] uses PLURAL(), not plural().  * - freebsd2 can't print "unsigned long long" properly.  */
-end_comment
-
-begin_comment
-comment|/*  * XXX see PORTABILITY for the twist  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLU
-value|"%llu"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAST
-value|unsigned long long
-end_define
 
 begin_ifdef
 ifdef|#
@@ -285,17 +276,6 @@ block|,
 literal|"null"
 block|, }
 block|,
-ifdef|#
-directive|ifdef
-name|SADB_X_EALG_RC5CBC
-block|{
-name|SADB_X_EALG_RC5CBC
-block|,
-literal|"rc5-cbc"
-block|, }
-block|,
-endif|#
-directive|endif
 block|{
 name|SADB_X_EALG_CAST128CBC
 block|,
@@ -608,16 +588,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\t%s: "
-name|LLU
-literal|"\n"
+literal|"\t\t%s: %llu\n"
 argument_list|,
 name|p
 operator|->
 name|str
 argument_list|,
 operator|(
-name|CAST
+name|unsigned
+name|long
+name|long
 operator|)
 name|hist
 index|[
@@ -630,9 +610,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\t\t#%ld: "
-name|LLU
-literal|"\n"
+literal|"\t\t#%ld: %llu\n"
 argument_list|,
 operator|(
 name|long
@@ -640,7 +618,9 @@ operator|)
 name|proto
 argument_list|,
 operator|(
-name|CAST
+name|unsigned
+name|long
+name|long
 operator|)
 name|hist
 index|[
@@ -669,7 +649,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipsecstat.f || sflag<= 1) \     printf(m, (CAST)ipsecstat.f, plural(ipsecstat.f))
+value|if (ipsecstat.f || sflag<= 1) \     printf(m, (unsigned long long)ipsecstat.f, plural(ipsecstat.f))
 define|#
 directive|define
 name|hist
@@ -686,18 +666,14 @@ name|p
 argument_list|(
 name|in_success
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s processed successfully\n"
+literal|"\t%llu inbound packet%s processed successfully\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_polvio
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s violated process security "
+literal|"\t%llu inbound packet%s violated process security "
 literal|"policy\n"
 argument_list|)
 expr_stmt|;
@@ -705,72 +681,56 @@ name|p
 argument_list|(
 name|in_nosa
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s with no SA available\n"
+literal|"\t%llu inbound packet%s with no SA available\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_inval
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" invalid inbound packet%s\n"
+literal|"\t%llu invalid inbound packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_nomem
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s failed due to insufficient memory\n"
+literal|"\t%llu inbound packet%s failed due to insufficient memory\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_badspi
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s failed getting SPI\n"
+literal|"\t%llu inbound packet%s failed getting SPI\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_ahreplay
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s failed on AH replay check\n"
+literal|"\t%llu inbound packet%s failed on AH replay check\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_espreplay
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s failed on ESP replay check\n"
+literal|"\t%llu inbound packet%s failed on ESP replay check\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_ahauthsucc
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s considered authentic\n"
+literal|"\t%llu inbound packet%s considered authentic\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_ahauthfail
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" inbound packet%s failed on authentication\n"
+literal|"\t%llu inbound packet%s failed on authentication\n"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -810,18 +770,14 @@ name|p
 argument_list|(
 name|out_success
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" outbound packet%s processed successfully\n"
+literal|"\t%llu outbound packet%s processed successfully\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_polvio
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" outbound packet%s violated process security "
+literal|"\t%llu outbound packet%s violated process security "
 literal|"policy\n"
 argument_list|)
 expr_stmt|;
@@ -829,36 +785,28 @@ name|p
 argument_list|(
 name|out_nosa
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" outbound packet%s with no SA available\n"
+literal|"\t%llu outbound packet%s with no SA available\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_inval
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" invalid outbound packet%s\n"
+literal|"\t%llu invalid outbound packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_nomem
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" outbound packet%s failed due to insufficient memory\n"
+literal|"\t%llu outbound packet%s failed due to insufficient memory\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_noroute
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" outbound packet%s with no route\n"
+literal|"\t%llu outbound packet%s with no route\n"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -990,7 +938,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 if|if
@@ -1096,24 +1044,20 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfkeystat.f || sflag<= 1) \     printf(m, (CAST)pfkeystat.f, plural(pfkeystat.f))
-comment|/* kernel -> userland */
+value|if (pfkeystat.f || sflag<= 1) \     printf(m, (unsigned long long)pfkeystat.f, plural(pfkeystat.f))
+comment|/* userland -> kernel */
 name|p
 argument_list|(
 name|out_total
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" request%s sent to userland\n"
+literal|"\t%llu request%s sent from userland\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_bytes
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" byte%s sent to userland\n"
+literal|"\t%llu byte%s sent from userland\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1178,9 +1122,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: "
-name|LLU
-literal|"\n"
+literal|"\t\t%s: %llu\n"
 argument_list|,
 name|pfkey_msgtype_names
 argument_list|(
@@ -1188,7 +1130,9 @@ name|type
 argument_list|)
 argument_list|,
 operator|(
-name|CAST
+name|unsigned
+name|long
+name|long
 operator|)
 name|pfkeystat
 operator|.
@@ -1203,100 +1147,78 @@ name|p
 argument_list|(
 name|out_invlen
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with invalid length field\n"
+literal|"\t%llu message%s with invalid length field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invver
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with invalid version field\n"
+literal|"\t%llu message%s with invalid version field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invmsgtype
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with invalid message type field\n"
+literal|"\t%llu message%s with invalid message type field\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_tooshort
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s too short\n"
+literal|"\t%llu message%s too short\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_nomem
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with memory allocation failure\n"
+literal|"\t%llu message%s with memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_dupext
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with duplicate extension\n"
+literal|"\t%llu message%s with duplicate extension\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invexttype
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with invalid extension type\n"
+literal|"\t%llu message%s with invalid extension type\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invsatype
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with invalid sa type\n"
+literal|"\t%llu message%s with invalid sa type\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invaddr
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with invalid address extension\n"
+literal|"\t%llu message%s with invalid address extension\n"
 argument_list|)
 expr_stmt|;
-comment|/* userland -> kernel */
+comment|/* kernel -> userland */
 name|p
 argument_list|(
 name|in_total
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" request%s sent from userland\n"
+literal|"\t%llu request%s sent to userland\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_bytes
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" byte%s sent from userland\n"
+literal|"\t%llu byte%s sent to userland\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1361,9 +1283,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%s: "
-name|LLU
-literal|"\n"
+literal|"\t\t%s: %llu\n"
 argument_list|,
 name|pfkey_msgtype_names
 argument_list|(
@@ -1371,7 +1291,9 @@ name|type
 argument_list|)
 argument_list|,
 operator|(
-name|CAST
+name|unsigned
+name|long
+name|long
 operator|)
 name|pfkeystat
 operator|.
@@ -1389,9 +1311,7 @@ index|[
 name|KEY_SENDUP_ONE
 index|]
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s toward single socket\n"
+literal|"\t%llu message%s toward single socket\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -1401,9 +1321,7 @@ index|[
 name|KEY_SENDUP_ALL
 index|]
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s toward all sockets\n"
+literal|"\t%llu message%s toward all sockets\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -1413,18 +1331,14 @@ index|[
 name|KEY_SENDUP_REGISTERED
 index|]
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s toward registered sockets\n"
+literal|"\t%llu message%s toward registered sockets\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_nomem
 argument_list|,
-literal|"\t"
-name|LLU
-literal|" message%s with memory allocation failure\n"
+literal|"\t%llu message%s with memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 undef|#
