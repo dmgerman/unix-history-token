@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.44 1999/02/18 00:52:12 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.45 1999/02/18 19:11:46 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -538,9 +538,14 @@ name|challenge
 parameter_list|,
 name|u_char
 name|type
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 parameter_list|,
 name|int
 name|lanman
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|char
@@ -1581,12 +1586,17 @@ name|challenge
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|chap
 operator|->
 name|peertries
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1610,9 +1620,14 @@ name|key
 parameter_list|,
 name|u_char
 name|type
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 parameter_list|,
 name|int
 name|lm
+endif|#
+directive|endif
 parameter_list|)
 block|{
 name|u_char
@@ -1638,8 +1653,13 @@ operator|->
 name|challenge
 argument_list|,
 name|type
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 argument_list|,
 name|lm
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 if|if
@@ -1678,6 +1698,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|chap
 operator|->
 name|NTRespSent
@@ -1685,6 +1708,8 @@ operator|=
 operator|!
 name|lm
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|ans
@@ -2149,6 +2174,9 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|int
 name|lanman
 init|=
@@ -2209,6 +2237,8 @@ name|chap80nt
 argument_list|)
 operator|)
 decl_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|end
@@ -2283,8 +2313,13 @@ operator|.
 name|lcp
 operator|.
 name|his_authtype
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 argument_list|,
 name|lanman
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|chap_Cleanup
@@ -2743,9 +2778,6 @@ parameter_list|(
 name|u_char
 name|type
 parameter_list|,
-name|int
-name|lm
-parameter_list|,
 name|char
 modifier|*
 name|myans
@@ -2759,6 +2791,14 @@ name|hisans
 parameter_list|,
 name|int
 name|hislen
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+parameter_list|,
+name|int
+name|lm
+endif|#
+directive|endif
 parameter_list|)
 block|{
 if|if
@@ -2770,6 +2810,9 @@ condition|)
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 elseif|else
 if|if
 condition|(
@@ -2806,6 +2849,8 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -2826,6 +2871,12 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+end_ifdef
 
 begin_function
 specifier|static
@@ -2873,6 +2924,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -2969,6 +3025,9 @@ name|challenge
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|chap
 operator|->
 name|NTRespSent
@@ -2981,6 +3040,8 @@ name|peertries
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3045,12 +3106,18 @@ name|int
 name|len
 decl_stmt|,
 name|nlen
-decl_stmt|,
-name|lanman
 decl_stmt|;
 name|u_char
 name|alen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+name|int
+name|lanman
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -3236,10 +3303,15 @@ operator|.
 name|id
 expr_stmt|;
 comment|/* We respond with this id */
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|lanman
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|chap
@@ -3331,6 +3403,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|lanman
 operator|=
 name|p
@@ -3378,6 +3453,8 @@ name|chap80nt
 argument_list|)
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|CHAP_RESPONSE
@@ -3504,6 +3581,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|lanman
 operator|=
 name|alen
@@ -3517,6 +3597,8 @@ index|]
 operator|==
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|CHAP_SUCCESS
@@ -3634,6 +3716,9 @@ name|in
 operator|.
 name|name
 argument_list|,
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|lanman
 operator|&&
 name|chap
@@ -3650,6 +3735,8 @@ name|CHAP_RESPONSE
 condition|?
 literal|" - lanman"
 else|:
+endif|#
+directive|endif
 literal|""
 argument_list|)
 expr_stmt|;
@@ -3675,6 +3762,9 @@ index|]
 argument_list|,
 name|alen
 argument_list|,
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|lanman
 operator|&&
 name|chap
@@ -3691,6 +3781,8 @@ name|CHAP_RESPONSE
 condition|?
 literal|" - lanman"
 else|:
+endif|#
+directive|endif
 literal|""
 argument_list|)
 expr_stmt|;
@@ -3851,8 +3943,13 @@ operator|.
 name|lcp
 operator|.
 name|his_authtype
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 argument_list|,
 name|lanman
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3973,6 +4070,9 @@ name|char
 modifier|*
 name|myans
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 if|if
 condition|(
 name|lanman
@@ -4064,6 +4164,8 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|myans
 operator|=
@@ -4090,8 +4192,13 @@ operator|.
 name|lcp
 operator|.
 name|want_authtype
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 argument_list|,
 name|lanman
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 if|if
@@ -4119,8 +4226,6 @@ name|lcp
 operator|.
 name|want_authtype
 argument_list|,
-name|lanman
-argument_list|,
 name|myans
 operator|+
 literal|1
@@ -4133,6 +4238,13 @@ operator|+
 literal|1
 argument_list|,
 name|alen
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+argument_list|,
+name|lanman
+endif|#
+directive|endif
 argument_list|)
 condition|)
 name|key
