@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.7 1995/05/30 07:56:58 rgrimes Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.8 1995/11/24 14:13:36 bde Exp $  */
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ value|'\b'
 end_define
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|cnmaygetc
 name|__P
@@ -143,7 +143,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|db_delete
 name|__P
@@ -160,7 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|db_inputchar
 name|__P
@@ -174,7 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|db_putnchars
 name|__P
@@ -191,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|db_putstring
 name|__P
