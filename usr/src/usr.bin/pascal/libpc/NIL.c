@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)NIL.c 1.2 %G%"
+literal|"@(#)NIL.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,6 +18,15 @@ include|#
 directive|include
 file|"h00vars.h"
 end_include
+
+begin_decl_stmt
+name|char
+name|ENIL
+index|[]
+init|=
+literal|"Pointer value out of legal range\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|char
@@ -45,7 +54,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-literal|"Pointer value out of legal range\n"
+name|ENIL
 argument_list|,
 literal|0
 argument_list|)

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)LINO.c 1.2 %G%"
+literal|"@(#)LINO.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,6 +18,15 @@ include|#
 directive|include
 file|"h00vars.h"
 end_include
+
+begin_decl_stmt
+name|char
+name|ELINO
+index|[]
+init|=
+literal|"Statement count limit of %D exceeded\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|LINO
@@ -36,7 +45,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-literal|"Statement count limit of %D exceeded\n"
+name|ELINO
 argument_list|,
 name|_stcnt
 argument_list|)

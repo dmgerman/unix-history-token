@@ -9,7 +9,16 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RANG4.c 1.3 %G%"
+literal|"@(#)RANG4.c 1.4 %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|ERANG
+index|[]
+init|=
+literal|"Value of %D is out of range\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +55,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-literal|"Value of %D is out of range\n"
+name|ERANG
 argument_list|,
 name|value
 argument_list|)

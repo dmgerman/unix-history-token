@@ -9,7 +9,16 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SUBSC.c 1.3 %G%"
+literal|"@(#)SUBSC.c 1.4 %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|ESUBSC
+index|[]
+init|=
+literal|"Subscript value of %D is out of range\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +53,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-literal|"Subscript value of %D is out of range\n"
+name|ESUBSC
 argument_list|,
 name|i
 argument_list|)

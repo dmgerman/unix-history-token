@@ -9,7 +9,16 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CHR.c 1.3 %G%"
+literal|"@(#)CHR.c 1.4 %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|ECHR
+index|[]
+init|=
+literal|"Argument to chr of %D is out of range\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +28,7 @@ name|CHR
 parameter_list|(
 name|value
 parameter_list|)
+name|unsigned
 name|long
 name|value
 decl_stmt|;
@@ -26,17 +36,13 @@ block|{
 if|if
 condition|(
 name|value
-operator|<
-literal|0
-operator|||
-name|value
 operator|>
 literal|127
 condition|)
 block|{
 name|ERROR
 argument_list|(
-literal|"Argument to chr of %D is out of range\n"
+name|ECHR
 argument_list|,
 name|value
 argument_list|)

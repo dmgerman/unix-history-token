@@ -9,9 +9,21 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RSNG4.c 1.3 %G%"
+literal|"@(#)RSNG4.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ERANG
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ERANG is defined in RANG4.c */
+end_comment
 
 begin_function
 name|long
@@ -24,6 +36,7 @@ parameter_list|)
 name|long
 name|value
 decl_stmt|;
+name|unsigned
 name|long
 name|upper
 decl_stmt|;
@@ -31,17 +44,13 @@ block|{
 if|if
 condition|(
 name|value
-operator|<
-literal|0
-operator|||
-name|value
 operator|>
 name|upper
 condition|)
 block|{
 name|ERROR
 argument_list|(
-literal|"Value of %D is out of range\n"
+name|ERANG
 argument_list|,
 name|value
 argument_list|)
