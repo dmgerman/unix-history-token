@@ -179,6 +179,12 @@ directive|include
 file|"canohost.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
+
 begin_comment
 comment|/* Session id for the current session. */
 end_comment

@@ -115,6 +115,24 @@ directive|include
 file|"misc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -3331,7 +3349,9 @@ block|}
 name|remotehost
 operator|=
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|problem
 operator|=
@@ -3614,7 +3634,9 @@ modifier|*
 name|remotehost
 init|=
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 decl_stmt|;
 name|memset
 argument_list|(
