@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * defs.h  *  * Definitions for f77pass1  *  * University of Utah CS Dept modification history:  *  * $Log:	defs.h,v $  * Revision 5.3  85/08/10  06:31:09  donn  * Added missing definition for intrconv().  *   * Revision 5.2  85/08/10  04:01:53  donn  * Jerry Berkman's change to add a definition for 'dblflag' and to ifdef  * the Fortran 66 compatibility flags.  *   * Revision 5.1  85/08/10  03:44:01  donn  * 4.3 alpha  *   * Revision 2.3  85/06/07  21:06:48  root  * Add copyright  *   * Revision 2.2  85/01/11  21:02:58  donn  * Added 'issaved' bit to addrblocks to help implement SAVE statements.  *   * Revision 2.1  84/07/19  12:02:46  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/27  00:49:40  donn  * Added external references to lists of argument temporaries, used in the  * Berkeley changes to reduce offsets of data.  *   */
+comment|/*  * defs.h  *  * Definitions for f77pass1  *  * University of Utah CS Dept modification history:  *  * $Log:	defs.h,v $  * Revision 5.5  86/01/10  17:11:11  donn  * Add a vparamval field to Nameblock struct -- fix up klugy sharing between  * Paramblock and Nameblock structs.  *   * Revision 5.4  85/11/25  00:23:47  donn  * 4.3 beta  *   * Revision 5.3  85/08/10  06:31:09  donn  * Added missing definition for intrconv().  *   * Revision 5.2  85/08/10  04:01:53  donn  * Jerry Berkman's change to add a definition for 'dblflag' and to ifdef  * the Fortran 66 compatibility flags.  *   * Revision 5.1  85/08/10  03:44:01  donn  * 4.3 alpha  *   * Revision 2.3  85/06/07  21:06:48  root  * Add copyright  *   * Revision 2.2  85/01/11  21:02:58  donn  * Added 'issaved' bit to addrblocks to help implement SAVE statements.  *   * Revision 2.1  84/07/19  12:02:46  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/27  00:49:40  donn  * Added external references to lists of argument temporaries, used in the  * Berkeley changes to reduce offsets of data.  *   */
 end_comment
 
 begin_include
@@ -1435,6 +1435,9 @@ name|varname
 index|[
 name|VL
 index|]
+decl_stmt|;
+name|expptr
+name|vparamval
 decl_stmt|;
 name|unsigned
 name|vdovar
