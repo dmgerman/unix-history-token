@@ -78,13 +78,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_STRUCT_STAT_ST_BIRTHTIME
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_STRUCT_STAT_ST_MTIMENSEC
 value|1
 end_define
