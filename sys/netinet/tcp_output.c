@@ -365,7 +365,7 @@ begin_decl_stmt
 name|int
 name|tcp_do_newreno
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
