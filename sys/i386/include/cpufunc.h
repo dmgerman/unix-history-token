@@ -174,6 +174,23 @@ asm|__asm __volatile("movl %%cr3, %%eax; movl %%eax, %%cr3" : : : "ax");
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|u_long
+name|rcr2
+parameter_list|()
+block|{
+name|u_long
+name|data
+decl_stmt|;
+asm|__asm __volatile("movl %%cr2,%%eax" : "=a" (data));
+return|return
+name|data
+return|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -329,15 +346,6 @@ end_function_decl
 begin_function_decl
 name|u_long
 name|rcr3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_long
-name|rcr2
 parameter_list|(
 name|void
 parameter_list|)
