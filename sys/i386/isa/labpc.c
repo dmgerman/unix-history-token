@@ -3366,7 +3366,7 @@ name|ctlr
 operator|->
 name|start_queue
 operator|.
-name|b_active
+name|b_bcount
 operator|=
 literal|0
 expr_stmt|;
@@ -3546,7 +3546,7 @@ name|ctlr
 operator|->
 name|start_queue
 operator|.
-name|b_active
+name|b_bcount
 condition|)
 block|{
 name|ctlr
@@ -3570,7 +3570,7 @@ name|ctlr
 operator|->
 name|start_queue
 operator|.
-name|b_active
+name|b_bcount
 operator|=
 literal|1
 expr_stmt|;
