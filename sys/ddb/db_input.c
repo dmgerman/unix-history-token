@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.19 1997/08/17 21:21:50 joerg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_input.c,v 1.20 1997/11/07 02:34:50 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -113,6 +113,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+name|db_lhistory_buffer
+index|[
+literal|2048
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|db_lhistlsize
 decl_stmt|,
@@ -122,12 +132,12 @@ name|db_lhistcur
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DB_LHIST_NLINES
-value|10
-end_define
+begin_decl_stmt
+specifier|static
+name|int
+name|db_lhist_nlines
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1197,26 +1207,32 @@ name|db_lhistlsize
 condition|)
 block|{
 comment|/* Should not happen, but to be sane, throw history away. */
-name|FREE
-argument_list|(
-name|db_lhistory
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
 name|db_lhistory
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|db_lhistory
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* Initialize input line history. */
+name|db_lhistory
+operator|=
+name|db_lhistory_buffer
+expr_stmt|;
+name|db_lhist_nlines
+operator|=
+operator|(
+sizeof|sizeof
+name|db_lhistory_buffer
+operator|)
+operator|/
+name|lsize
+expr_stmt|;
 name|db_lhistlsize
 operator|=
 name|lsize
@@ -1225,22 +1241,6 @@ name|db_lhistidx
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|MALLOC
-argument_list|(
-name|db_lhistory
-argument_list|,
-name|char
-operator|*
-argument_list|,
-name|lsize
-operator|*
-name|DB_LHIST_NLINES
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_NOWAIT
-argument_list|)
 expr_stmt|;
 block|}
 name|db_lhistcur
@@ -1309,7 +1309,7 @@ condition|(
 operator|++
 name|db_lhistidx
 operator|==
-name|DB_LHIST_NLINES
+name|db_lhist_nlines
 condition|)
 block|{
 comment|/* Rotate history. */
@@ -1324,7 +1324,7 @@ argument_list|,
 name|db_lhistlsize
 operator|*
 operator|(
-name|DB_LHIST_NLINES
+name|db_lhist_nlines
 operator|-
 literal|1
 operator|)
