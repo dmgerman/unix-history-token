@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.56 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.57 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.56 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.57 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1989,6 +1989,11 @@ name|RealHostAddr
 expr_stmt|;
 if|if
 condition|(
+name|isatty
+argument_list|(
+name|fd
+argument_list|)
+operator|||
 name|getpeername
 argument_list|(
 name|fd
