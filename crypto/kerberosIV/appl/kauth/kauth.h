@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: kauth.h,v 1.18 1997/05/20 18:40:31 bg Exp $ */
+comment|/* $Id: kauth.h,v 1.20 1998/06/13 00:06:45 assar Exp $ */
 end_comment
 
 begin_ifdef
@@ -316,6 +316,36 @@ directive|include
 file|<socks.h>
 end_include
 
+begin_comment
+comment|/* This doesn't belong here. */
+end_comment
+
+begin_function_decl
+name|struct
+name|tm
+modifier|*
+name|localtime
+parameter_list|(
+specifier|const
+name|time_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|hostent
+modifier|*
+name|gethostbyname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -442,20 +472,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
+name|int
 name|pack_args
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|krb_principal
 modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -466,6 +500,7 @@ begin_function_decl
 name|int
 name|unpack_args
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

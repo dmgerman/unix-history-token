@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: acl.h,v 1.5 1997/04/01 08:17:52 joda Exp $ */
+comment|/* $Id: acl.h,v 1.6 1997/12/05 03:31:47 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -18,12 +18,6 @@ define|#
 directive|define
 name|__ACL_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_decl_stmt
 name|void

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: inet_aton.c,v 1.10 1997/05/20 19:57:03 bg Exp $"
+literal|"$Id: inet_aton.c,v 1.11 1997/09/29 14:00:28 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -67,6 +67,40 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IN6_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET6_IN6_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6.h>
 end_include
 
 begin_endif

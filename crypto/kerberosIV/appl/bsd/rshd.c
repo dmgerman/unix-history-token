@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rshd.c,v 1.51 1997/05/13 09:42:39 bg Exp $"
+literal|"$Id: rshd.c,v 1.58 1999/06/17 18:49:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -795,7 +795,7 @@ name|sig
 decl_stmt|,
 name|buf
 index|[
-name|BUFSIZ
+name|DES_RW_MAXWRITE
 index|]
 decl_stmt|;
 name|char
@@ -1246,7 +1246,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"rshd: remote host requires Kerberos authentication\n"
+literal|"rshd: Remote host requires Kerberos authentication.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1359,7 +1359,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"rlogind: getsockname: %m"
+literal|"rshd: getsockname: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1740,6 +1740,7 @@ if|if
 condition|(
 name|errorstr
 operator|||
+operator|(
 name|pwd
 operator|->
 name|pw_passwd
@@ -1773,6 +1774,7 @@ name|locuser
 argument_list|)
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -2919,6 +2921,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_SETPCRED */
+if|if
+condition|(
+name|do_osfc2_magic
+argument_list|(
+name|pwd
+operator|->
+name|pw_uid
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|setgid
 argument_list|(
 operator|(
@@ -2950,7 +2966,7 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-name|strncat
+name|strcat_truncate
 argument_list|(
 name|homedir
 argument_list|,
@@ -2962,66 +2978,26 @@ sizeof|sizeof
 argument_list|(
 name|homedir
 argument_list|)
-operator|-
-literal|6
 argument_list|)
 expr_stmt|;
-comment|/* Need to extend path to find rcp */
-name|strncat
+comment|/* Need to prepend path with BINDIR (/usr/athena/bin) to find rcp */
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+argument_list|,
+literal|"PATH=%s:%s"
 argument_list|,
 name|BINDIR
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|path
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|strncat
-argument_list|(
-name|path
-argument_list|,
-literal|":"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|path
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|strncat
-argument_list|(
-name|path
-argument_list|,
 name|_PATH_DEFPATH
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|path
-argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|path
-index|[
-sizeof|sizeof
-argument_list|(
-name|path
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|strncat
+name|strcat_truncate
 argument_list|(
 name|shell
 argument_list|,
@@ -3033,11 +3009,9 @@ sizeof|sizeof
 argument_list|(
 name|shell
 argument_list|)
-operator|-
-literal|7
 argument_list|)
 expr_stmt|;
-name|strncat
+name|strcat_truncate
 argument_list|(
 name|username
 argument_list|,
@@ -3049,8 +3023,6 @@ sizeof|sizeof
 argument_list|(
 name|username
 argument_list|)
-operator|-
-literal|6
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3159,7 +3131,7 @@ name|k_setpag
 argument_list|()
 expr_stmt|;
 comment|/* Put users process in an new pag */
-name|k_afsklog
+name|krb_afslog
 argument_list|(
 literal|0
 argument_list|,
@@ -3263,7 +3235,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|len
-operator|=
+operator|+=
 name|vsnprintf
 argument_list|(
 name|bp

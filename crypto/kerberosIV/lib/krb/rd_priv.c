@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_priv.c,v 1.24 1997/05/14 17:53:29 joda Exp $"
+literal|"$Id: rd_priv.c,v 1.26 1998/05/26 19:57:42 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24,7 +24,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lsb_addr_comp.h"
+file|"krb-archaeology.h"
 end_include
 
 begin_comment
@@ -336,7 +336,7 @@ name|krb_debug
 condition|)
 name|krb_warning
 argument_list|(
-literal|"\ndelta_t = %d"
+literal|"delta_t = %d\n"
 argument_list|,
 operator|(
 name|int

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getcwd.c,v 1.7 1997/04/01 08:19:00 joda Exp $"
+literal|"$Id: getcwd.c,v 1.10 1998/06/09 19:25:36 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,11 +28,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
 
 begin_include
 include|#
@@ -40,11 +57,10 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"protos.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -86,7 +102,7 @@ if|if
 condition|(
 name|ret
 condition|)
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|path
 argument_list|,

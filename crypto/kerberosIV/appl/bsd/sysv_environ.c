@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sysv_environ.c,v 1.21 1997/05/14 17:34:15 joda Exp $"
+literal|"$Id: sysv_environ.c,v 1.23 1997/12/14 23:50:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -375,9 +375,6 @@ block|{
 name|unsigned
 name|umask_val
 decl_stmt|;
-name|long
-name|limit_val
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -655,7 +652,7 @@ name|sep
 operator|=
 literal|""
 expr_stmt|;
-name|k_concat
+name|roken_concat
 argument_list|(
 name|buf
 argument_list|,
@@ -792,6 +789,9 @@ condition|(
 name|default_ulimit
 condition|)
 block|{
+name|long
+name|limit_val
+decl_stmt|;
 if|if
 condition|(
 name|sscanf

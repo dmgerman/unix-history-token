@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kinit.c,v 1.15 1997/03/30 18:58:46 assar Exp $"
+literal|"$Id: kinit.c,v 1.17 1997/12/12 04:48:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -221,14 +221,6 @@ name|lifetime
 operator|=
 name|LIFE
 expr_stmt|;
-name|set_progname
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -387,7 +379,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|k_gethostname
+name|gethostname
 argument_list|(
 name|buf
 argument_list|,
@@ -398,7 +390,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"k_gethostname failed"
+literal|"gethostname failed"
 argument_list|)
 expr_stmt|;
 name|printf

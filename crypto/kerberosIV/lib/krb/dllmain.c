@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997, 1998 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: dllmain.c,v 1.6 1997/05/02 14:29:13 assar Exp $"
+literal|"$Id: dllmain.c,v 1.8 1998/07/13 14:29:33 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -70,7 +70,7 @@ name|buf
 condition|?
 name|buf
 else|:
-literal|"can't tell you"
+literal|"Out of memory!"
 argument_list|,
 literal|"kerberos message"
 argument_list|,
@@ -82,6 +82,66 @@ expr_stmt|;
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|PostUpdateMessage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|HWND
+name|hWnd
+decl_stmt|;
+specifier|static
+name|UINT
+name|km_message
+decl_stmt|;
+if|if
+condition|(
+name|km_message
+operator|==
+literal|0
+condition|)
+name|km_message
+operator|=
+name|RegisterWindowMessage
+argument_list|(
+literal|"krb4-update-cache"
+argument_list|)
+expr_stmt|;
+name|hWnd
+operator|=
+name|FindWindow
+argument_list|(
+literal|"KrbManagerWndClass"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hWnd
+operator|==
+name|NULL
+condition|)
+name|hWnd
+operator|=
+name|HWND_BROADCAST
+expr_stmt|;
+name|PostMessage
+argument_list|(
+name|hWnd
+argument_list|,
+name|km_message
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -201,7 +261,11 @@ argument_list|(
 name|s
 argument_list|)
 block|,
-literal|0
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -217,37 +281,21 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|STARTF_USESHOWWINDOW
+block|,
+name|SW_SHOWMINNOACTIVE
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|,
-literal|0
+name|NULL
 block|,
-literal|0
+name|NULL
 block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
-name|s
-operator|.
-name|dwFlags
-operator|=
-name|STARTF_USESHOWWINDOW
-expr_stmt|;
-name|s
-operator|.
-name|wShowWindow
-operator|=
-name|SW_HIDE
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -277,24 +325,19 @@ name|p
 argument_list|)
 condition|)
 block|{
-name|msg
-argument_list|(
-literal|"Unable to create kerberos manager process.\n"
-literal|"Make sure krbmanager.exe is in your PATH."
-argument_list|,
-name|GetLastError
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
+if|#
+directive|if
+literal|0
+block|msg("Unable to create Kerberos manager process.\n" 		    "Make sure krbmanager.exe is in your PATH.", 		    GetLastError()); 		return FALSE;
+endif|#
+directive|endif
 block|}
 block|}
 break|break;
 case|case
 name|DLL_PROCESS_DETACH
 case|:
+comment|/* should this really be done here? */
 name|freeTktMem
 argument_list|(
 literal|0

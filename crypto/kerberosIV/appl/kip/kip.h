@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: kip.h,v 1.16 1997/05/20 18:40:31 bg Exp $ */
+comment|/* $Id: kip.h,v 1.17 1997/12/14 23:57:21 assar Exp $ */
 end_comment
 
 begin_ifdef
@@ -211,6 +211,23 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_TCP_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

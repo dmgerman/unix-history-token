@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getdtablesize.c,v 1.8 1997/04/20 05:51:06 assar Exp $"
+literal|"$Id: getdtablesize.c,v 1.9 1997/07/11 20:20:26 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -34,11 +34,22 @@ directive|include
 file|"roken.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TYPES_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -106,11 +117,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

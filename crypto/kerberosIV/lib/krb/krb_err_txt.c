@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb_err_txt.c,v 1.12 1997/04/02 05:37:10 joda Exp $"
+literal|"$Id: krb_err_txt.c,v 1.13 1998/01/31 08:11:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -151,7 +151,7 @@ comment|/* 038 */
 literal|"Protocol version mismatch (krb_rd_req)"
 block|,
 comment|/* 039 */
-literal|"Illegal message type (krb_rd_req)"
+literal|"Invalid message type (krb_rd_req)"
 block|,
 comment|/* 040 */
 literal|"Message integrity error (krb_rd_req)"
@@ -637,7 +637,7 @@ name|char
 name|err_failure
 index|[]
 init|=
-literal|"Illegal error code passed (krb_get_err_text)"
+literal|"Unknown error code passed (krb_get_err_text)"
 decl_stmt|;
 end_decl_stmt
 

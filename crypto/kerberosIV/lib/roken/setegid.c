@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: setegid.c,v 1.7 1997/04/01 08:19:07 joda Exp $"
+literal|"$Id: setegid.c,v 1.8 1997/07/11 20:20:32 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,11 +28,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -44,7 +55,7 @@ begin_function
 name|int
 name|setegid
 parameter_list|(
-name|int
+name|gid_t
 name|egid
 parameter_list|)
 block|{

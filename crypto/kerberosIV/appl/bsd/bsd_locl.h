@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: bsd_locl.h,v 1.98 1997/05/25 01:14:17 assar Exp $ */
+comment|/* $Id: bsd_locl.h,v 1.109.2.1 1999/07/22 03:13:49 assar Exp $ */
 end_comment
 
 begin_define
@@ -63,8 +63,8 @@ if|#
 directive|if
 operator|(
 name|SunOS
-operator|==
-literal|5
+operator|>=
+literal|50
 operator|)
 operator|||
 name|defined
@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 
@@ -146,6 +152,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_IO_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_UNISTD_H
 end_ifdef
 
@@ -153,6 +176,23 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBUTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_endif
@@ -581,7 +621,7 @@ argument_list|)
 operator|&&
 name|SunOS
 operator|!=
-literal|4
+literal|40
 end_if
 
 begin_include
@@ -975,11 +1015,6 @@ directive|include
 file|<utmp.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -992,6 +1027,11 @@ directive|define
 name|UT_NAMESIZE
 value|sizeof(((struct utmp *)0)->ut_name)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1042,6 +1082,12 @@ directive|ifdef
 name|HAVE_USERSEC_H
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|aud_rec
+struct_decl|;
+end_struct_decl
+
 begin_include
 include|#
 directive|include
@@ -1056,6 +1102,23 @@ end_endif
 begin_comment
 comment|/* HAVE_USERSEC_H */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OSFC2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"/usr/include/prot.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1098,6 +1161,36 @@ include|#
 directive|include
 file|<socks.h>
 end_include
+
+begin_comment
+comment|/* This doesn't belong here. */
+end_comment
+
+begin_function_decl
+name|struct
+name|tm
+modifier|*
+name|localtime
+parameter_list|(
+specifier|const
+name|time_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|hostent
+modifier|*
+name|gethostbyname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1363,6 +1456,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|forkpty_truncate
+parameter_list|(
+name|int
+modifier|*
+name|amaster
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|size_t
+name|name_sz
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|termp
+parameter_list|,
+name|struct
+name|winsize
+modifier|*
+name|winp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1489,7 +1610,8 @@ begin_function_decl
 name|int
 name|login_access
 parameter_list|(
-name|char
+name|struct
+name|passwd
 modifier|*
 name|user
 parameter_list|,
@@ -1499,40 +1621,6 @@ name|from
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_IRUSEROK
-end_ifndef
-
-begin_function_decl
-name|int
-name|iruserok
-parameter_list|(
-name|u_int32_t
-name|raddr
-parameter_list|,
-name|int
-name|superuser
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ruser
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|luser
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -1606,6 +1694,24 @@ name|iv
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* used in des_read and des_write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DES_RW_MAXWRITE
+value|(1024*16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DES_RW_BSIZE
+value|(DES_RW_MAXWRITE+4)
+end_define
 
 begin_function_decl
 name|void
@@ -1736,7 +1842,7 @@ if|#
 directive|if
 name|SunOS
 operator|==
-literal|4
+literal|40
 end_if
 
 begin_include
@@ -1755,7 +1861,13 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_AIX
+name|HAVE_SYS_TERMIO_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_TERMIOS_H
 argument_list|)
 end_if
 
@@ -1945,6 +2057,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UTMP_H
+end_ifdef
+
 begin_function_decl
 name|void
 name|prepare_utmp
@@ -1965,6 +2083,20 @@ parameter_list|,
 name|char
 modifier|*
 name|hostname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|int
+name|do_osfc2_magic
+parameter_list|(
+name|uid_t
 parameter_list|)
 function_decl|;
 end_function_decl

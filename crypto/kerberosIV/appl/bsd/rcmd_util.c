@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rcmd_util.c,v 1.15 1997/05/02 14:27:44 assar Exp $"
+literal|"$Id: rcmd_util.c,v 1.17 1997/09/24 21:14:23 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -886,7 +886,7 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
-name|warnx
+name|vwarnx
 argument_list|(
 name|fmt
 argument_list|,

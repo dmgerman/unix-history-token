@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: forkpty.c,v 1.52 1997/05/25 07:37:01 assar Exp $"
+literal|"$Id: forkpty.c,v 1.53.2.2 1999/08/19 13:37:16 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -513,6 +513,9 @@ name|char
 modifier|*
 name|pts_name
 parameter_list|,
+name|size_t
+name|pts_name_sz
+parameter_list|,
 name|int
 modifier|*
 name|streams_pty
@@ -604,14 +607,16 @@ operator|!=
 name|NULL
 condition|)
 comment|/* Get slave's name */
-name|strcpy
+comment|/* Return name of slave */
+name|strcpy_truncate
 argument_list|(
 name|pts_name
 argument_list|,
 name|ptr1
+argument_list|,
+name|pts_name_sz
 argument_list|)
 expr_stmt|;
-comment|/* Return name of slave */
 else|else
 block|{
 name|close
@@ -695,6 +700,9 @@ name|char
 modifier|*
 name|pts_name
 parameter_list|,
+name|size_t
+name|pts_name_sz
+parameter_list|,
 name|int
 modifier|*
 name|streams_pty
@@ -748,7 +756,7 @@ if|#
 directive|if
 name|SunOS
 operator|==
-literal|4
+literal|40
 comment|/* Avoid a bug in SunOS4 ttydriver */
 if|if
 condition|(
@@ -986,11 +994,13 @@ name|streams_pty
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|pts_name
 argument_list|,
 name|p
+argument_list|,
+name|pts_name_sz
 argument_list|)
 expr_stmt|;
 return|return
@@ -1008,6 +1018,8 @@ operator|=
 name|ptym_open_streams_flavor
 argument_list|(
 name|pts_name
+argument_list|,
+name|pts_name_sz
 argument_list|,
 name|streams_pty
 argument_list|)
@@ -1036,6 +1048,8 @@ name|ptym_open_bsd_flavor
 argument_list|(
 name|pts_name
 argument_list|,
+name|pts_name_sz
+argument_list|,
 name|streams_pty
 argument_list|)
 expr_stmt|;
@@ -1063,6 +1077,8 @@ operator|=
 name|ptym_open_streams_flavor
 argument_list|(
 name|pts_name
+argument_list|,
+name|pts_name_sz
 argument_list|,
 name|streams_pty
 argument_list|)
@@ -1388,6 +1404,8 @@ literal|1
 expr_stmt|;
 comment|/* group tty is not in the group file */
 comment|/* Grant access to slave */
+if|if
+condition|(
 name|chown
 argument_list|(
 name|pts_name
@@ -1397,7 +1415,20 @@ argument_list|()
 argument_list|,
 name|gid
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|0
+argument_list|,
+literal|"chown slave tty failed"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|pts_name
@@ -1407,6 +1438,17 @@ operator||
 name|S_IWUSR
 operator||
 name|S_IWGRP
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|0
+argument_list|,
+literal|"chmod slave tty failed"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1448,7 +1490,7 @@ end_function
 
 begin_function
 name|int
-name|forkpty
+name|forkpty_truncate
 parameter_list|(
 name|int
 modifier|*
@@ -1457,6 +1499,9 @@ parameter_list|,
 name|char
 modifier|*
 name|slave_name
+parameter_list|,
+name|size_t
+name|slave_name_sz
 parameter_list|,
 name|struct
 name|termios
@@ -1530,14 +1575,16 @@ name|slave_name
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+comment|/* Return name of slave */
+name|strcpy_truncate
 argument_list|(
 name|slave_name
 argument_list|,
 name|pts_name
+argument_list|,
+name|slave_name_sz
 argument_list|)
 expr_stmt|;
-comment|/* Return name of slave */
 name|pid
 operator|=
 name|fork
@@ -1870,6 +1917,46 @@ operator|)
 return|;
 comment|/* Parent returns pid of child */
 block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|forkpty
+parameter_list|(
+name|int
+modifier|*
+name|ptrfdm
+parameter_list|,
+name|char
+modifier|*
+name|slave_name
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|slave_termios
+parameter_list|,
+name|struct
+name|winsize
+modifier|*
+name|slave_winsize
+parameter_list|)
+block|{
+return|return
+name|forkpty_truncate
+argument_list|(
+name|ptrfdm
+argument_list|,
+name|slave_name
+argument_list|,
+name|MaxPathLen
+argument_list|,
+name|slave_termios
+argument_list|,
+name|slave_winsize
+argument_list|)
+return|;
 block|}
 end_function
 

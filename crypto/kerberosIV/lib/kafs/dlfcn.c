@@ -434,16 +434,11 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"calloc: "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|errbuf
+literal|"calloc: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -474,16 +469,11 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"strdup: "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|errbuf
+literal|"strdup: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -544,25 +534,18 @@ expr_stmt|;
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"dlopen: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"dlopen: %s: "
 argument_list|,
 name|path
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|errbuf
-argument_list|,
-literal|": "
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If AIX says the file is not executable, the error 		 * can be further described by querying the loader about 		 * the last error. 		 */
@@ -603,13 +586,18 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -641,13 +629,18 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -696,16 +689,16 @@ expr_stmt|;
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"loadbind: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"loadbind: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -771,16 +764,16 @@ expr_stmt|;
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"loadbind: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"loadbind: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1026,90 +1019,135 @@ block|{
 case|case
 name|L_ERROR_TOOMANY
 case|:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 literal|"to many errors"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|L_ERROR_NOLIB
 case|:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 literal|"can't load library"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|L_ERROR_UNDEF
 case|:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 literal|"can't find symbol"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|L_ERROR_RLDBAD
 case|:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 literal|"bad RLD"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|L_ERROR_FORMAT
 case|:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 literal|"bad exec format in"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|L_ERROR_ERRNO
 case|:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1121,15 +1159,25 @@ operator|++
 name|p
 argument_list|)
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|strcat
+name|strcat_truncate
 argument_list|(
 name|errbuf
 argument_list|,
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1210,16 +1258,16 @@ return|;
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"dlsym: undefined symbol "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"dlsym: undefined symbol %s"
 argument_list|,
 name|symbol
 argument_list|)
@@ -1411,9 +1459,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1650,16 +1705,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1690,16 +1745,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1763,16 +1818,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1797,16 +1852,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1910,16 +1965,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1946,9 +2001,14 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"readExports: bad magic"
 argument_list|)
@@ -1987,9 +2047,14 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"readExports: cannot read data section header"
 argument_list|)
@@ -2027,9 +2092,14 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"readExports: cannot read loader section header"
 argument_list|)
@@ -2073,16 +2143,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2124,9 +2194,14 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"readExports: cannot seek to loader section"
 argument_list|)
@@ -2172,9 +2247,14 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"readExports: cannot read loader section"
 argument_list|)
@@ -2285,16 +2365,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"readExports: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"readExports: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2403,7 +2483,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 			 * The l_name member is not zero terminated, we 			 * must copy the first SYMNMLEN chars and make 			 * sure we have a zero byte at the end. 			 */
-name|strncpy
+name|strcpy_truncate
 argument_list|(
 name|tmpsym
 argument_list|,
@@ -2412,14 +2492,9 @@ operator|->
 name|l_name
 argument_list|,
 name|SYMNMLEN
+operator|+
+literal|1
 argument_list|)
-expr_stmt|;
-name|tmpsym
-index|[
-name|SYMNMLEN
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|symname
 operator|=
@@ -2539,16 +2614,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"findMain: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"findMail: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2611,16 +2686,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"findMain: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"findMail: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2644,16 +2719,16 @@ block|{
 name|errvalid
 operator|++
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"findMain: "
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|errbuf
+argument_list|)
+argument_list|,
+literal|"findMail: %s"
 argument_list|,
 name|strerror
 argument_list|(

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verrx.c,v 1.6 1997/03/30 08:05:39 joda Exp $"
+literal|"$Id: verrx.c,v 1.7 1997/11/12 00:10:26 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,15 +52,16 @@ parameter_list|)
 block|{
 name|warnerr
 argument_list|(
-literal|1
-argument_list|,
-name|eval
-argument_list|,
 literal|0
 argument_list|,
 name|fmt
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|eval
 argument_list|)
 expr_stmt|;
 block|}

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mini_inetd.c,v 1.10 1997/05/02 14:30:07 assar Exp $"
+literal|"$Id: mini_inetd.c,v 1.13 1998/02/05 22:54:33 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -27,6 +27,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -96,6 +102,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IN6_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET6_IN6_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -116,7 +156,12 @@ name|sa
 decl_stmt|;
 name|int
 name|s
-init|=
+decl_stmt|;
+name|int
+name|s2
+decl_stmt|;
+name|s
+operator|=
 name|socket
 argument_list|(
 name|AF_INET
@@ -125,15 +170,7 @@ name|SOCK_STREAM
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
-name|int
-name|s2
-decl_stmt|;
-name|int
-name|one
-init|=
-literal|1
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -163,6 +200,12 @@ name|defined
 argument_list|(
 name|HAVE_SETSOCKOPT
 argument_list|)
+block|{
+name|int
+name|one
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|setsockopt
@@ -199,6 +242,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sysv_default.c,v 1.9 1997/03/31 01:47:59 assar Exp $"
+literal|"$Id: sysv_default.c,v 1.11 1999/03/13 21:15:24 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -114,7 +114,7 @@ name|char
 modifier|*
 name|default_timeout
 init|=
-literal|"60"
+literal|"180"
 decl_stmt|;
 end_decl_stmt
 
@@ -349,7 +349,7 @@ name|trim
 parameter_list|(
 name|s
 parameter_list|)
-value|{ \ 	char   *cp = s + strlen(s); \ 	while (cp> s&& isspace(cp[-1])) \ 	    cp--; \ 	*cp = 0; \ }
+value|{ \ 	char   *cp = s + strlen(s); \ 	while (cp> s&& isspace((unsigned char)cp[-1])) \ 	    cp--; \ 	*cp = 0; \ }
 end_define
 
 begin_comment

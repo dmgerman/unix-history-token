@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kntoln.c,v 1.7 1997/03/23 03:53:12 joda Exp $"
+literal|"$Id: kntoln.c,v 1.10 1998/06/09 19:25:21 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -174,32 +174,32 @@ comment|/*  * antoln converts an authentication name into a local name by lookin
 end_comment
 
 begin_comment
-unit|static char     lrealm[REALM_SZ] = "";  an_to_ln(ad,lname) AUTH_DAT        *ad; char            *lname; {         static DBM *aname = NULL;         char keyname[ANAME_SZ+INST_SZ+REALM_SZ+2];          if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE))                 return(KFAILURE);          if((strcmp(ad->pinst,"")&& strcmp(ad->pinst,"root")) || strcmp(ad->prealm,lrealm)) {                 datum val;                 datum key;
-comment|/*                  * Non-local name (or) non-null and non-root instance.                  * Look up in dbm file.                  */
+unit|static char     lrealm[REALM_SZ] = "";  int an_to_ln(AUTH_DAT *ad, char *lname) {     static DBM *aname = NULL;     char keyname[ANAME_SZ+INST_SZ+REALM_SZ+2];      if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE)) 	return(KFAILURE);      if((strcmp(ad->pinst,"")&& strcmp(ad->pinst,"root")) ||        strcmp(ad->prealm,lrealm)) { 	datum val; 	datum key;
+comment|/* 	 * Non-local name (or) non-null and non-root instance. 	 * Look up in dbm file. 	 */
 end_comment
 
 begin_comment
-unit|if (!aname) {                         if ((aname = dbm_open("/etc/aname", O_RDONLY, 0))                             == NULL) return (KFAILURE);                 }
+unit|if (!aname) { 	    if ((aname = dbm_open("/etc/aname", O_RDONLY, 0)) 		== NULL) return (KFAILURE); 	}
 comment|/* Construct dbm lookup key. */
 end_comment
 
 begin_comment
-unit|an_to_a(ad, keyname);                 key.dptr = keyname;                 key.dsize = strlen(keyname)+1;                 flock(dbm_dirfno(aname), LOCK_SH);                 val = dbm_fetch(aname, key);                 flock(dbm_dirfno(aname), LOCK_UN);                 if (!val.dptr) {                   dbm_close(aname);                   return(KFAILURE);                 }
+unit|an_to_a(ad, keyname); 	key.dptr = keyname; 	key.dsize = strlen(keyname)+1; 	flock(dbm_dirfno(aname), LOCK_SH); 	val = dbm_fetch(aname, key); 	flock(dbm_dirfno(aname), LOCK_UN); 	if (!val.dptr) { 	    dbm_close(aname); 	    return(KFAILURE); 	}
 comment|/* Got it! */
 end_comment
 
 begin_comment
-unit|strcpy(lname,val.dptr);                 return(KSUCCESS);         } else strcpy(lname,ad->pname);         return(KSUCCESS); }  an_to_a(ad, str)         AUTH_DAT *ad;         char *str; {         strcpy(str, ad->pname);         if(*ad->pinst) {                 strcat(str, ".");                 strcat(str, ad->pinst);         }         strcat(str, "@");         strcat(str, ad->prealm); }
+unit|strcpy(lname,val.dptr); 	return(KSUCCESS);     } else strcpy(lname,ad->pname);     return(KSUCCESS); }  void an_to_a(AUTH_DAT *ad, char *str) {     strcpy(str, ad->pname);     if(*ad->pinst) { 	strcat(str, "."); 	strcat(str, ad->pinst);     }     strcat(str, "@");     strcat(str, ad->prealm); }
 comment|/*  * Parse a string of the form "user[.instance][@realm]"   * into a struct AUTH_DAT.  */
 end_comment
 
 begin_comment
-unit|a_to_an(str, ad)         AUTH_DAT *ad;         char *str; {         char *buf = (char *)malloc(strlen(str)+1);         char *rlm, *inst, *princ;          if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE)) {                 free(buf);                 return(KFAILURE);         }
+unit|int a_to_an(char *str, AUTH_DAT *ad) {     char *buf = (char *)malloc(strlen(str)+1);     char *rlm, *inst, *princ;      if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE)) { 	free(buf); 	return(KFAILURE);     }
 comment|/* destructive string hacking is more fun.. */
 end_comment
 
 begin_endif
-unit|strcpy(buf, str);          if (rlm = index(buf, '@')) {                 *rlm++ = '\0';         }         if (inst = index(buf, '.')) {                 *inst++ = '\0';         }         strcpy(ad->pname, buf);         if(inst) strcpy(ad->pinst, inst);         else *ad->pinst = '\0';         if (rlm) strcpy(ad->prealm, rlm);         else strcpy(ad->prealm, lrealm);         free(buf);         return(KSUCCESS); }
+unit|strcpy(buf, str);      if (rlm = index(buf, '@')) { 	*rlm++ = '\0';     }     if (inst = index(buf, '.')) { 	*inst++ = '\0';     }     strcpy(ad->pname, buf);     if(inst) strcpy(ad->pinst, inst);     else *ad->pinst = '\0';     if (rlm) strcpy(ad->prealm, rlm);     else strcpy(ad->prealm, lrealm);     free(buf);     return(KSUCCESS); }
 endif|#
 directive|endif
 end_endif

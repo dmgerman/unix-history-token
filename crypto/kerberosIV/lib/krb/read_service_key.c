@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: read_service_key.c,v 1.8 1997/03/23 03:53:16 joda Exp $"
+literal|"$Id: read_service_key.c,v 1.11 1999/03/10 18:34:34 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -25,6 +25,7 @@ begin_function
 name|int
 name|read_service_key
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|service
@@ -35,6 +36,7 @@ modifier|*
 name|instance
 parameter_list|,
 comment|/* Instance name or "*" */
+specifier|const
 name|char
 modifier|*
 name|realm
@@ -44,12 +46,13 @@ name|int
 name|kvno
 parameter_list|,
 comment|/* Key version number */
+specifier|const
 name|char
 modifier|*
 name|file
 parameter_list|,
 comment|/* Filename */
-name|char
+name|void
 modifier|*
 name|key
 parameter_list|)
@@ -243,7 +246,8 @@ if|if
 condition|(
 name|wcard
 condition|)
-name|strncpy
+block|{
+name|strcpy_truncate
 argument_list|(
 name|instance
 argument_list|,
@@ -252,6 +256,7 @@ argument_list|,
 name|INST_SZ
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Is this the right realm */
 if|if
 condition|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_name.c,v 1.4 1997/04/01 08:18:39 joda Exp $"
+literal|"$Id: parse_name.c,v 1.5 1998/06/09 19:25:24 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -299,22 +299,26 @@ operator|==
 literal|0
 condition|)
 block|{
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|np
 argument_list|,
 name|p
 operator|.
 name|name
+argument_list|,
+name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|ip
 argument_list|,
 name|p
 operator|.
 name|instance
+argument_list|,
+name|INST_SZ
 argument_list|)
 expr_stmt|;
 if|if
@@ -326,13 +330,15 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|strcpy_truncate
 argument_list|(
 name|rp
 argument_list|,
 name|p
 operator|.
 name|realm
+argument_list|,
+name|REALM_SZ
 argument_list|)
 expr_stmt|;
 block|}

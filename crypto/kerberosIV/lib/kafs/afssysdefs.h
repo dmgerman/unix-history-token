@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: afssysdefs.h,v 1.15 1997/04/01 08:18:12 joda Exp $ */
+comment|/* $Id: afssysdefs.h,v 1.19.4.1 1999/07/22 03:21:43 assar Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ if|#
 directive|if
 name|SunOS
 operator|==
-literal|4
+literal|40
 end_if
 
 begin_define
@@ -35,8 +35,12 @@ begin_if
 if|#
 directive|if
 name|SunOS
-operator|==
-literal|5
+operator|>=
+literal|50
+operator|&&
+name|SunOS
+operator|<
+literal|57
 end_if
 
 begin_define
@@ -44,6 +48,26 @@ define|#
 directive|define
 name|AFS_SYSCALL
 value|105
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SunOS
+operator|==
+literal|57
+end_if
+
+begin_define
+define|#
+directive|define
+name|AFS_SYSCALL
+value|73
 end_define
 
 begin_endif
@@ -72,6 +96,13 @@ define|#
 directive|define
 name|AFS_SYSCALL2
 value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFS_SYSCALL3
+value|48
 end_define
 
 begin_endif
@@ -179,7 +210,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 end_if
 

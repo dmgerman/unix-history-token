@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: vwarnx.c,v 1.6 1997/03/30 08:05:40 joda Exp $"
+literal|"$Id: vwarnx.c,v 1.7 1997/11/12 00:09:45 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,10 +49,6 @@ parameter_list|)
 block|{
 name|warnerr
 argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
 literal|0
 argument_list|,
 name|fmt

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: warnerr.c,v 1.6 1997/04/02 14:59:54 bg Exp $"
+literal|"$Id: warnerr.c,v 1.7 1997/11/12 00:09:08 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -119,12 +119,6 @@ name|void
 name|warnerr
 parameter_list|(
 name|int
-name|doexit
-parameter_list|,
-name|int
-name|eval
-parameter_list|,
-name|int
 name|doerrno
 parameter_list|,
 specifier|const
@@ -222,15 +216,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|doexit
-condition|)
-name|exit
-argument_list|(
-name|eval
 argument_list|)
 expr_stmt|;
 block|}

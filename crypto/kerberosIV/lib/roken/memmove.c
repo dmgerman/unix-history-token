@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: memmove.c,v 1.5 1997/04/01 08:19:05 joda Exp $"
+literal|"$Id: memmove.c,v 1.6 1997/07/11 20:20:30 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,11 +32,22 @@ begin_comment
 comment|/*   * memmove for systems that doesn't have it   */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TYPES_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
