@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|BUS_SPACE_UNRESTRICTED
-value|(~0UL)
+value|(~0)
 end_define
 
 begin_comment
