@@ -326,56 +326,56 @@ begin_define
 define|#
 directive|define
 name|KTR_CT1
-value|0x010000000
+value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT2
-value|0x020000000
+value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT3
-value|0x040000000
+value|0x04000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT4
-value|0x080000000
+value|0x08000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT5
-value|0x100000000
+value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT6
-value|0x200000000
+value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT7
-value|0x400000000
+value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTR_CT8
-value|0x800000000
+value|0x80000000
 end_define
 
 begin_comment
