@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.6 1993/09/08 05:55:56 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.7 1993/09/08 06:12:05 rich Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -805,7 +805,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ioctl(TIOCSCTTY) failed: %s\n"
+literal|"ioctl(TIOCSCTTY) failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -830,7 +830,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"tcsetpgrp failed: %s\n"
+literal|"tcsetpgrp failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -857,7 +857,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGINT handler: %s\n"
+literal|"cannot install SIGINT handler: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -884,7 +884,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGHUP handler: %s\n"
+literal|"cannot install SIGHUP handler: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1269,7 +1269,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sl%d connected to %s at %d b/s\n"
+literal|"sl%d connected to %s at %d b/s"
 argument_list|,
 name|unit
 argument_list|,
@@ -1350,7 +1350,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"No redial phone number or command. aborting.\n"
+literal|"No redial phone number or command. aborting."
 argument_list|,
 name|dev
 argument_list|)
@@ -1383,7 +1383,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sl%d on %s caught SIGINT, exiting.\n"
+literal|"sl%d on %s caught SIGINT, exiting."
 argument_list|,
 name|unit
 argument_list|,
