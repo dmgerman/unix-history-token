@@ -1967,6 +1967,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|!=
+name|SYS_RES_MEMORY
+operator|||
 name|error
 operator|!=
 literal|0
