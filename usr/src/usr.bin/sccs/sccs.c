@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.46 %G%"
+literal|"@(#)sccs.c	1.47 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,7 +578,7 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|"delta:mysrp/get:ixbeskecl -t"
+literal|"delta:mysrp/get:ixbeskcl -t"
 block|,
 literal|"deledit"
 block|,
@@ -586,7 +586,7 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|"delta:mysrp/get:ixbeskecl -e -t"
+literal|"delta:mysrp/get:ixbskcl -e -t"
 block|,
 literal|"fix"
 block|,
@@ -1219,11 +1219,6 @@ operator|*
 name|p
 operator|!=
 literal|'/'
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|':'
 condition|;
 control|)
 block|{
@@ -1303,6 +1298,11 @@ operator|*
 name|p
 operator|!=
 literal|'/'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|' '
 condition|)
 operator|*
 name|q
