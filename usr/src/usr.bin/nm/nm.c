@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c 3.1 %G%"
+literal|"@(#)nm.c 3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<newar.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<newa.out.h>
+file|<a.out.h>
 end_include
 
 begin_include
@@ -697,9 +697,15 @@ argument_list|(
 name|off_t
 argument_list|)
 operator|>
+operator|(
+name|archive
+condition|?
+name|off
+else|:
 name|stb
 operator|.
 name|st_size
+operator|)
 condition|)
 name|error
 argument_list|(
