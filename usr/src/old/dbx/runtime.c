@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c 1.2 %G%"
+literal|"@(#)runtime.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,6 +1136,8 @@ argument_list|(
 name|frp
 operator|->
 name|save_pc
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,6 +1163,8 @@ argument_list|(
 name|frp
 operator|->
 name|save_pc
+operator|-
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.2 %G%"
+literal|"@(#)source.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,7 +843,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Figure out current source position.  */
+comment|/*  * Figure out current source position.  * Have to use "pc - 1" because pc is the address of the next instruction  * rather than the current one.  */
 end_comment
 
 begin_function
@@ -859,6 +859,8 @@ operator|=
 name|srcline
 argument_list|(
 name|pc
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|filename
@@ -866,6 +868,8 @@ operator|=
 name|srcfilename
 argument_list|(
 name|pc
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|setsource
