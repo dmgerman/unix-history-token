@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.14 (Berkeley) %G%"
+literal|"@(#)timed.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -200,7 +206,7 @@ name|char
 name|tracefile
 index|[]
 init|=
-literal|"/usr/adm/timed.log"
+name|_PATH_TIMEDLOG
 decl_stmt|;
 end_decl_stmt
 

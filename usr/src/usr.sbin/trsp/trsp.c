@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trsp.c	6.3 (Berkeley) %G%"
+literal|"@(#)trsp.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,12 @@ directive|include
 file|<nlist.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 name|unsigned
 name|long
@@ -324,14 +330,18 @@ decl_stmt|;
 name|char
 modifier|*
 name|system
-init|=
-literal|"/vmunix"
 decl_stmt|,
 modifier|*
 name|core
-init|=
-literal|"/dev/kmem"
 decl_stmt|;
+name|system
+operator|=
+name|_PATH_UNIX
+expr_stmt|;
+name|core
+operator|=
+name|_PATH_KMEM
+expr_stmt|;
 name|argc
 operator|--
 operator|,

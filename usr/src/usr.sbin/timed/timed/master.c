@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.17 (Berkeley) %G%"
+literal|"@(#)master.c	2.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -206,7 +212,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/usr/adm/timed.masterlog"
+name|_PATH_MASTERLOG
 argument_list|,
 literal|"w"
 argument_list|)

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.6 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,6 +224,12 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -487,11 +493,14 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: trpt [-afjst] [-p hex-address] [system [core]]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: trpt [-afjst] [-p hex-address] [system [core]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -510,7 +519,7 @@ name|optind
 expr_stmt|;
 name|core
 operator|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 expr_stmt|;
 if|if
 condition|(
@@ -556,7 +565,7 @@ block|}
 else|else
 name|system
 operator|=
-literal|"/vmunix"
+name|_PATH_UNIX
 expr_stmt|;
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.19 (Berkeley) %G%"
+literal|"@(#)slave.c	2.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -285,7 +291,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/usr/adm/timed.masterlog"
+name|_PATH_MASTERLOG
 argument_list|,
 literal|"w"
 argument_list|)
@@ -587,7 +593,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/usr/adm/timed.masterlog"
+name|_PATH_MASTERLOG
 argument_list|,
 literal|"w"
 argument_list|)
