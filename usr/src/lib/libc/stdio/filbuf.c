@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)filbuf.c	4.4 (Berkeley) %G% */
+comment|/* @(#)filbuf.c	4.5 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -234,20 +234,35 @@ condition|(
 name|iop
 operator|==
 name|stdin
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|stdout
 operator|->
 name|_flag
 operator|&
 name|_IOLBF
-operator|)
 condition|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stderr
+operator|->
+name|_flag
+operator|&
+name|_IOLBF
+condition|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
 name|iop
 operator|->
 name|_cnt
