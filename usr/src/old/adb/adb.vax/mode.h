@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mode.h	4.2	81/05/14	*/
+comment|/*	mode.h	4.3	87/03/22	*/
 end_comment
 
 begin_include
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|LINSIZ
-value|512
+value|1024
 end_define
 
 begin_decl_stmt
