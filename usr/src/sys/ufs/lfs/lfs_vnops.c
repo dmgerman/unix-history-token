@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8822,6 +8822,8 @@ operator|+
 name|fl
 operator|->
 name|l_len
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * Create the lockf structure 	 */
 name|MALLOC
@@ -9312,6 +9314,11 @@ return|;
 block|}
 block|}
 comment|/* 	 * No blocks!!  Add the lock.  Note that addlock will 	 * downgrade or upgrade any overlapping locks this 	 * process already owns. 	 */
+name|lf_addlock
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOCKF_DEBUG
@@ -9321,6 +9328,7 @@ name|lockf_debug
 operator|&
 literal|4
 condition|)
+block|{
 name|lf_print
 argument_list|(
 literal|"ufs_advlock: got the lock"
@@ -9328,14 +9336,15 @@ argument_list|,
 name|lock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOCKF_DEBUG */
-name|lf_addlock
+name|lf_printlist
 argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* LOCKF_DEBUG */
 return|return
 operator|(
 literal|0
@@ -9417,6 +9426,17 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCKF_DEBUG
+name|lf_printlist
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOCKF_DEBUG */
 name|FREE
 argument_list|(
 name|lock
@@ -9556,6 +9576,8 @@ operator|-
 name|block
 operator|->
 name|lf_start
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
