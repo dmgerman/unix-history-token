@@ -5414,13 +5414,13 @@ block|{
 name|free
 argument_list|(
 name|ap
+operator|->
+name|buf
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|ap
-operator|->
-name|buf
 argument_list|)
 expr_stmt|;
 block|}
