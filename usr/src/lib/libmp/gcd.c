@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcd.c	5.1 (Berkeley) %G%"
+literal|"@(#)gcd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,6 +258,8 @@ operator|=
 name|xalloc
 argument_list|(
 literal|1
+argument_list|,
+literal|"invert"
 argument_list|)
 expr_stmt|;
 operator|*
