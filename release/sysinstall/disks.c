@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.48 1996/05/09 09:42:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.31.2.42 1996/05/24 06:08:24 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -425,7 +425,7 @@ name|current_chunk
 condition|)
 name|attrset
 argument_list|(
-name|item_selected_attr
+name|ATTR_SELECTED
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1134,6 +1134,11 @@ name|cp
 decl_stmt|;
 name|int
 name|size
+decl_stmt|,
+name|subtype
+decl_stmt|;
+name|chunk_e
+name|partitiontype
 decl_stmt|;
 name|snprintf
 argument_list|(
@@ -1157,8 +1162,8 @@ name|msgGetInput
 argument_list|(
 name|tmp
 argument_list|,
-literal|"Please specify the size for new FreeBSD partition in blocks, or append\n"
-literal|"a trailing `M' for megabytes (e.g. 20M)."
+literal|"Please specify the size for new FreeBSD partition in blocks\n"
+literal|"or append a trailing `M' for megabytes (e.g. 20M)."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1199,6 +1204,75 @@ name|size
 operator|*=
 name|ONE_MEG
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|tmp
+argument_list|,
+literal|"165"
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|tmp
+argument_list|,
+literal|"Enter type of partition to create:\n\n"
+literal|"Pressing Enter will choose the default, a native FreeBSD\n"
+literal|"partition (type 165).  You can choose other types, 6 for a\n"
+literal|"DOS partition or 131 for a Linux partition, for example.\n\n"
+literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
+literal|"be formatted or otherwise prepared, it will simply reserve space\n"
+literal|"for you to use another tool, such as DOS FORMAT, to later format\n"
+literal|"and use the partition."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|&&
+operator|(
+name|subtype
+operator|=
+name|strtol
+argument_list|(
+name|val
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|subtype
+operator|==
+literal|165
+condition|)
+name|partitiontype
+operator|=
+name|freebsd
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|subtype
+operator|==
+literal|6
+condition|)
+name|partitiontype
+operator|=
+name|fat
+expr_stmt|;
+else|else
+name|partitiontype
+operator|=
+name|unknown
+expr_stmt|;
 name|Create_Chunk
 argument_list|(
 name|d
@@ -1212,9 +1286,9 @@ name|offset
 argument_list|,
 name|size
 argument_list|,
-name|freebsd
+name|partitiontype
 argument_list|,
-literal|3
+name|subtype
 argument_list|,
 operator|(
 name|chunk_info
@@ -1240,6 +1314,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
