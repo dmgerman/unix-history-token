@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strerror.c	5.3 (Berkeley) %G%"
+literal|"@(#)strerror.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,9 +68,10 @@ specifier|static
 name|char
 name|ebuf
 index|[
-literal|20
+literal|40
 index|]
 decl_stmt|;
+comment|/* 64-bit number + slop */
 if|if
 condition|(
 operator|(
