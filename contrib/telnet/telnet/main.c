@@ -628,7 +628,7 @@ break|break;
 case|case
 literal|'d'
 case|:
-name|debug
+name|telnet_debug
 operator|=
 literal|1
 expr_stmt|;

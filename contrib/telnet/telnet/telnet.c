@@ -307,7 +307,7 @@ decl_stmt|,
 name|ISend
 decl_stmt|,
 comment|/* trying to send network data in */
-name|debug
+name|telnet_debug
 init|=
 literal|0
 decl_stmt|,

@@ -247,6 +247,7 @@ comment|/* do we print login banner? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=

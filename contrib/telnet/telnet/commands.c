@@ -2861,7 +2861,7 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-name|debug
+name|telnet_debug
 argument_list|)
 operator|)
 operator|<
@@ -2879,7 +2879,7 @@ directive|else
 comment|/* NOT43 */
 if|if
 condition|(
-name|debug
+name|telnet_debug
 condition|)
 block|{
 if|if
@@ -3612,7 +3612,7 @@ operator|)
 name|togdebug
 block|,
 operator|&
-name|debug
+name|telnet_debug
 block|,
 literal|"turn on socket level debugging"
 block|}
@@ -12780,7 +12780,7 @@ directive|endif
 comment|/* defined(IPPROTO_IP)&& defined(IP_TOS) */
 if|if
 condition|(
-name|debug
+name|telnet_debug
 operator|&&
 name|SetSockOpt
 argument_list|(
