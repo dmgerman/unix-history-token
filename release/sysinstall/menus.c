@@ -2856,7 +2856,7 @@ block|,
 block|{
 literal|"Russia"
 block|,
-literal|"ftp.kiae.su"
+literal|"ftp.ru.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2865,7 +2865,22 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.kiae.su/FreeBSD/"
+literal|"=ftp://ftp.ru.freebsd.org/FreeBSD/"
+block|}
+block|,
+block|{
+literal|"Russia #2"
+block|,
+literal|"ftp2.ru.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.ru.freebsd.org/FreeBSD/"
 block|}
 block|,
 block|{
