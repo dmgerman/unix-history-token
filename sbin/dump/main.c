@@ -820,12 +820,6 @@ name|lastlevel
 operator|=
 literal|'?'
 expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
 break|break;
 case|case
 literal|'u'
