@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dd.c,v 1.16 1999/04/25 21:13:33 imp Exp $"
+literal|"$Id: dd.c,v 1.18 1999/06/20 14:58:51 green Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/diskslice.h>
 end_include
 
 begin_include
@@ -1128,6 +1134,10 @@ name|mtget
 name|mt
 decl_stmt|;
 name|struct
+name|diskslices
+name|ds
+decl_stmt|;
+name|struct
 name|stat
 name|sb
 decl_stmt|;
@@ -1153,6 +1163,45 @@ name|io
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|S_ISCHR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|||
+name|S_ISBLK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+operator|&&
+name|ioctl
+argument_list|(
+name|io
+operator|->
+name|fd
+argument_list|,
+name|DIOCGSLICEINFO
+argument_list|,
+operator|&
+name|ds
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|io
+operator|->
+name|flags
+operator||=
+name|ISDISK
 expr_stmt|;
 if|if
 condition|(

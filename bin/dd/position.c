@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: position.c,v 1.8 1998/05/13 07:33:54 charnier Exp $"
+literal|"$Id: position.c,v 1.10 1999/06/20 14:58:55 green Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ operator||
 name|ISTAPE
 operator|)
 operator|)
+operator|||
+name|in
+operator|.
+name|flags
+operator|&
+name|ISDISK
 condition|)
 block|{
 if|if
@@ -322,7 +328,7 @@ decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|;
-comment|/* 	 * If not a tape, try seeking on the file.  Seeking on a pipe is 	 * going to fail, but don't protect the user -- they shouldn't 	 * have specified the seek operand. 	 */
+comment|/* If not a character, pipe or tape device, try to seek on it. */
 if|if
 condition|(
 operator|!
@@ -331,8 +337,20 @@ name|out
 operator|.
 name|flags
 operator|&
+operator|(
+name|ISCHR
+operator||
+name|ISPIPE
+operator||
 name|ISTAPE
 operator|)
+operator|)
+operator|||
+name|out
+operator|.
+name|flags
+operator|&
+name|ISDISK
 condition|)
 block|{
 if|if
