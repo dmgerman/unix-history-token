@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	5.11 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1324,6 +1324,9 @@ operator|~
 name|MDELETED
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -1478,6 +1481,9 @@ argument_list|(
 name|times
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 
