@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.43	83/01/04	*/
+comment|/*	ip_output.c	1.44	83/01/08	*/
 end_comment
 
 begin_include
@@ -498,8 +498,15 @@ name|ifp
 operator|->
 name|if_broadaddr
 expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 name|dst
-operator|.
+operator|)
+operator|->
 name|sin_addr
 operator|=
 name|sin
