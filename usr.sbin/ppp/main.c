@@ -1458,7 +1458,7 @@ name|conf
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|_PATH_PPP
+name|PPP_CONFDIR
 argument_list|,
 name|CONFFILE
 argument_list|)

@@ -121,7 +121,7 @@ name|line
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|_PATH_PPP
+name|PPP_CONFDIR
 argument_list|,
 name|file
 argument_list|)
@@ -1539,7 +1539,7 @@ name|filename
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|_PATH_PPP
+name|PPP_CONFDIR
 argument_list|,
 name|file
 argument_list|)
@@ -2141,10 +2141,10 @@ operator|-
 literal|2
 condition|)
 return|return
-name|_PATH_PPP
+name|PPP_CONFDIR
 literal|"/"
 name|CONFFILE
-literal|": File not found"
+literal|" : File not found"
 return|;
 block|}
 if|if
