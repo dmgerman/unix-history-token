@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_set.c	7.1	%G%"
+literal|"@(#)ex_set.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,22 @@ condition|)
 name|value
 argument_list|(
 name|TABSTOP
+argument_list|)
+operator|=
+name|TABS
+expr_stmt|;
+if|if
+condition|(
+name|value
+argument_list|(
+name|HARDTABS
+argument_list|)
+operator|<=
+literal|0
+condition|)
+name|value
+argument_list|(
+name|HARDTABS
 argument_list|)
 operator|=
 name|TABS
