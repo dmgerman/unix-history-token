@@ -696,31 +696,19 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/* HAS_SETEGID  *	This symbol, if defined, indicates that the setegid routine is available  *	to change the effective gid of the current program.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAS_SETEGID
-end_define
-
-begin_comment
-comment|/**/
+comment|/* HAS_SETEGID  *	This symbol, if defined, indicates that the setegid routine is available  *	to change the effective gid of the current program.  *	Do not use on systems with _POSIX_SAVED_IDS support.  */
 end_comment
 
 begin_comment
-comment|/* HAS_SETEUID  *	This symbol, if defined, indicates that the seteuid routine is available  *	to change the effective uid of the current program.  */
+comment|/*#undef	HAS_SETEGID		/**/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAS_SETEUID
-end_define
+begin_comment
+comment|/* HAS_SETEUID  *	This symbol, if defined, indicates that the seteuid routine is available  *	to change the effective uid of the current program.  *	Do not use on systems with _POSIX_SAVED_IDS support.  */
+end_comment
 
 begin_comment
-comment|/**/
+comment|/*#undef	HAS_SETEUID		/**/
 end_comment
 
 begin_comment
