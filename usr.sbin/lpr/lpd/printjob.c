@@ -7526,11 +7526,6 @@ argument_list|,
 name|jobname
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-literal|"XXX compiler confusion"
-expr_stmt|;
-comment|/* XXX shut GCC up */
 switch|switch
 condition|(
 name|bombed
@@ -7539,33 +7534,37 @@ block|{
 case|case
 name|OK
 case|:
+name|cp
+operator|=
+literal|"OK"
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\ncompleted successfully\n"
 argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-literal|"OK"
 expr_stmt|;
 break|break;
 default|default:
 case|case
 name|FATALERR
 case|:
+name|cp
+operator|=
+literal|"FATALERR"
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\ncould not be printed\n"
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-literal|"FATALERR"
-expr_stmt|;
 break|break;
 case|case
 name|NOACCT
 case|:
+name|cp
+operator|=
+literal|"NOACCT"
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\ncould not be printed without an account on %s\n"
@@ -7573,14 +7572,14 @@ argument_list|,
 name|local_host
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-literal|"NOACCT"
-expr_stmt|;
 break|break;
 case|case
 name|FILTERERR
 case|:
+name|cp
+operator|=
+literal|"FILTERERR"
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -7651,22 +7650,18 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-literal|"FILTERERR"
-expr_stmt|;
 break|break;
 case|case
 name|ACCESS
 case|:
+name|cp
+operator|=
+literal|"ACCESS"
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nwas not printed because it was not linked to the original file\n"
 argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-literal|"ACCESS"
 expr_stmt|;
 block|}
 name|fflush
