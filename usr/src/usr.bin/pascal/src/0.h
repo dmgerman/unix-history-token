@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.18 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.19 %G%"; */
 end_comment
 
 begin_define
@@ -552,24 +552,6 @@ name|int
 name|pnumcnt
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PTREE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"pTree.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|PTREE
-end_endif
 
 begin_struct
 struct|struct
