@@ -2260,12 +2260,12 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|1024
+name|NI_MAXHOST
 index|]
 decl_stmt|,
 name|pbuf
 index|[
-literal|10
+name|NI_MAXSERV
 index|]
 decl_stmt|;
 name|struct
