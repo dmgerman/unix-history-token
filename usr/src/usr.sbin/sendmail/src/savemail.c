@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.26 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -922,17 +922,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syserr
-argument_list|(
-literal|"554 Can't return mail to %s"
-argument_list|,
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_paddr
-argument_list|)
-expr_stmt|;
+comment|/* no local directory */
 name|state
 operator|=
 name|ESM_MAIL
