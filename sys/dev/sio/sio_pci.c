@@ -264,7 +264,14 @@ block|,
 literal|0x10
 block|}
 block|,
-comment|/* { 0xXXXXXXXX, "Xircom Cardbus modem", 0x10 }, */
+block|{
+literal|0x0103115d
+block|,
+literal|"Xircom Cardbus modem"
+block|,
+literal|0x10
+block|}
+block|,
 block|{
 literal|0x00000000
 block|,
