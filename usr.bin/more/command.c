@@ -435,7 +435,7 @@ name|char
 modifier|*
 name|bufend
 decl_stmt|;
-comment|/* The last spot available in the buffer --- remember 	                 * to leave one after bufend for the '\0'!  (You must 	                 * add the '\0' yourself!!) */
+comment|/* One after the last address available in the buffer. 	                 * No character will be placed into *bufend. */
 block|{
 if|if
 condition|(
@@ -1833,9 +1833,21 @@ name|isdigit
 argument_list|(
 name|c
 argument_list|)
+operator|&&
+name|c
+operator|!=
+name|erase_char
+operator|&&
+name|c
+operator|!=
+name|werase_char
+operator|&&
+name|c
+operator|!=
+name|kill_char
 condition|)
 block|{
-comment|/* mark the end of an input number N, if any */
+comment|/* 			 * Mark the end of an input number N, if any. 			 */
 if|if
 condition|(
 operator|!
@@ -1873,6 +1885,9 @@ operator|=
 name|inbuf
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|cmd_char
 argument_list|(
 name|c
@@ -1907,6 +1922,12 @@ argument_list|(
 name|inbuf
 argument_list|)
 expr_stmt|;
+else|else
+name|Nstate
+operator|=
+name|GETTING
+expr_stmt|;
+comment|/* abort command */
 if|if
 condition|(
 name|Nstate
