@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.20 1997/07/23 20:42:16 fsmp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.17 1997/07/28 03:40:09 smp Exp smp $  *  */
 end_comment
 
 begin_ifndef
@@ -51,6 +51,10 @@ begin_comment
 comment|/* SMP&& !APIC_IO */
 end_comment
 
+begin_comment
+comment|/* Number of CPUs. */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -82,6 +86,41 @@ begin_comment
 comment|/* SMP&& NCPU */
 end_comment
 
+begin_comment
+comment|/* Number of IO APICs. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APIC_IO
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NAPIC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NAPIC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP&& NAPIC */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -95,6 +134,12 @@ argument_list|(
 name|APIC_IO
 argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * For sending values to POST displays.  * XXX FIXME: where does this really belong, isa.h/isa.c perhaps?  */
@@ -1097,6 +1142,15 @@ name|u_int
 name|other_cpus
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#
