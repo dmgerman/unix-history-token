@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.15 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2873,6 +2873,10 @@ name|ncs_goodhits
 operator|+
 name|nchstats
 operator|.
+name|ncs_neghits
+operator|+
+name|nchstats
+operator|.
 name|ncs_badhits
 operator|+
 name|nchstats
@@ -2889,20 +2893,31 @@ name|ncs_long
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9d total name lookups"
+literal|"%9d total name lookups\n"
 argument_list|,
 name|nchtotal
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" (cache hits %d%% system %d%% per-process)\n"
+literal|"%9s cache hits (%d%% pos + %d%% neg) system %d%% per-process\n"
+argument_list|,
+literal|""
 argument_list|,
 name|pct
 argument_list|(
 name|nchstats
 operator|.
 name|ncs_goodhits
+argument_list|,
+name|nchtotal
+argument_list|)
+argument_list|,
+name|pct
+argument_list|(
+name|nchstats
+operator|.
+name|ncs_neghits
 argument_list|,
 name|nchtotal
 argument_list|)
@@ -2919,21 +2934,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9s badhits %d, falsehits %d, toolong %d\n"
+literal|"%9s deletions %d%%, falsehits %d%%, toolong %d%%\n"
 argument_list|,
 literal|""
 argument_list|,
+name|pct
+argument_list|(
 name|nchstats
 operator|.
 name|ncs_badhits
 argument_list|,
+name|nchtotal
+argument_list|)
+argument_list|,
+name|pct
+argument_list|(
 name|nchstats
 operator|.
 name|ncs_falsehits
 argument_list|,
+name|nchtotal
+argument_list|)
+argument_list|,
+name|pct
+argument_list|(
 name|nchstats
 operator|.
 name|ncs_long
+argument_list|,
+name|nchtotal
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lseek
