@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2059,12 +2059,6 @@ name|nbp
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|error
-decl_stmt|,
-name|allerror
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2156,18 +2150,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|=
 name|bawrite
 argument_list|(
 name|bp
 argument_list|)
-condition|)
-name|allerror
-operator|=
-name|error
 expr_stmt|;
 goto|goto
 name|loop
@@ -2244,7 +2230,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|allerror
+literal|0
 operator|)
 return|;
 block|}
