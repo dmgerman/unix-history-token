@@ -1989,10 +1989,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* two separate prints in case of an unmapped page and trap */
 name|printf
 argument_list|(
-literal|"cpuid = %d; "
+literal|"cpuid = %d\n"
 argument_list|,
 name|PCPU_GET
 argument_list|(
@@ -2000,27 +1999,6 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APIC_IO
-name|printf
-argument_list|(
-literal|"lapic.id = %08x\n"
-argument_list|,
-name|lapic
-operator|.
-name|id
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
