@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.35	81/06/02	*/
+comment|/*	dh.c	4.36	81/06/05	*/
 end_comment
 
 begin_include
@@ -3458,6 +3458,11 @@ name|dhcsr
 operator||=
 name|DH_IE
 expr_stmt|;
+if|#
+directive|if
+name|NBK
+operator|>
+literal|0
 operator|(
 operator|(
 expr|struct
@@ -3473,6 +3478,8 @@ name|dhsilo
 operator|=
 literal|16
 expr_stmt|;
+endif|#
+directive|endif
 name|unit
 operator|=
 name|dh
