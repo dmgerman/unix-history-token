@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ftp_var.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ftp_var.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -199,16 +199,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* return/reply code for ftp command */
-end_comment
-
-begin_decl_stmt
-name|int
-name|macroflg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* active macro */
 end_comment
 
 begin_decl_stmt
@@ -643,9 +633,6 @@ name|macros
 index|[
 literal|16
 index|]
-decl_stmt|,
-modifier|*
-name|macpt
 decl_stmt|;
 end_decl_stmt
 
@@ -700,6 +687,51 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|mktemp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strncpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strncat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strcat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

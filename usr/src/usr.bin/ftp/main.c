@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -109,6 +115,13 @@ include|#
 directive|include
 file|<pwd.h>
 end_include
+
+begin_function_decl
+name|uid_t
+name|getuid
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -307,7 +320,7 @@ break|break;
 default|default:
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"ftp: %c: unknown option\n"
 argument_list|,
@@ -339,6 +352,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up defaults for FTP. 	 */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|typename
@@ -350,6 +366,9 @@ name|type
 operator|=
 name|TYPE_A
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|formname
@@ -361,6 +380,9 @@ name|form
 operator|=
 name|FORM_N
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|modename
@@ -372,6 +394,9 @@ name|mode
 operator|=
 name|MODE_S
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|structname
@@ -383,6 +408,9 @@ name|stru
 operator|=
 name|STRU_F
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|bytename
@@ -462,6 +490,9 @@ name|home
 operator|=
 name|homedir
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|home
@@ -491,6 +522,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -498,6 +532,9 @@ argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -531,6 +568,9 @@ condition|(
 name|top
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -538,6 +578,9 @@ argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -610,6 +653,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|shutdown
 argument_list|(
 name|fileno
@@ -622,6 +668,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|cout
@@ -639,6 +688,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|shutdown
 argument_list|(
 name|data
@@ -684,6 +736,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|shutdown
 argument_list|(
 name|fileno
@@ -696,6 +751,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|cout
@@ -723,72 +781,9 @@ expr_stmt|;
 block|}
 end_block
 
-begin_function
-name|char
-modifier|*
-name|tail
-parameter_list|(
-name|filename
-parameter_list|)
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|filename
-condition|)
-block|{
-name|s
-operator|=
-name|rindex
-argument_list|(
-name|filename
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-name|NULL
-condition|)
-break|break;
-if|if
-condition|(
-name|s
-index|[
-literal|1
-index|]
-condition|)
-return|return
-operator|(
-name|s
-operator|+
-literal|1
-operator|)
-return|;
-operator|*
-name|s
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|filename
-operator|)
-return|;
-block|}
-end_function
+begin_comment
+comment|/*char * tail(filename) 	char *filename; { 	register char *s; 	 	while (*filename) { 		s = rindex(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		*s = '\0'; 	} 	return (filename); } */
+end_comment
 
 begin_comment
 comment|/*  * Command parser.  */
@@ -837,6 +832,9 @@ condition|(
 operator|!
 name|top
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -858,6 +856,9 @@ argument_list|(
 literal|"ftp> "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -989,6 +990,9 @@ name|c
 operator|->
 name|c_bell
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|CTRL
@@ -1007,6 +1011,9 @@ name|help
 condition|)
 break|break;
 block|}
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1014,6 +1021,9 @@ argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1856,6 +1866,9 @@ name|k
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|' '
@@ -1910,6 +1923,9 @@ operator|&
 operator|~
 literal|7
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\t'
@@ -2009,7 +2025,7 @@ comment|/*  * Call routine with argc, argv set from args (terminated by 0).  */
 end_comment
 
 begin_comment
-comment|/* VARARGS2 */
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domacro.c	1.1 (Berkeley) %G%"
+literal|"@(#)domacro.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ include|#
 directive|include
 file|<sys/ttychars.h>
 end_include
-
-begin_decl_stmt
-name|jmp_buf
-name|macabort
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|domacro
@@ -114,22 +108,8 @@ decl_stmt|,
 name|loopflg
 init|=
 literal|0
-decl_stmt|,
-argument_list|(
-operator|*
-name|oldintr
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|char
-modifier|*
-modifier|*
-name|gargs
-decl_stmt|,
-modifier|*
-modifier|*
-name|cpp
-decl_stmt|,
 name|line2
 index|[
 literal|200
@@ -167,6 +147,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -179,6 +162,9 @@ argument_list|(
 literal|"(macro name) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -289,6 +275,9 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|line2
@@ -416,6 +405,9 @@ operator|>=
 name|j
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|cp2
@@ -469,6 +461,9 @@ operator|<
 name|argc
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|cp2
@@ -635,6 +630,9 @@ operator|->
 name|c_bell
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|CTRL
@@ -644,6 +642,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|line

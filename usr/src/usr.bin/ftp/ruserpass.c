@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	1.2 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +150,14 @@ name|getlogin
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct
@@ -370,13 +378,13 @@ index|]
 decl_stmt|,
 modifier|*
 name|tmp
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
 name|t
 decl_stmt|,
 name|i
+decl_stmt|,
+name|c
 decl_stmt|;
 name|struct
 name|stat
@@ -403,6 +411,9 @@ name|hdir
 operator|=
 literal|"."
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -528,6 +539,9 @@ name|aname
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|tokval
@@ -536,6 +550,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 operator|*
@@ -628,6 +645,9 @@ name|apass
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|tokval
@@ -636,6 +656,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 operator|*
@@ -712,6 +735,9 @@ name|aacct
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|tokval
@@ -720,6 +746,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 operator|*
@@ -1101,11 +1130,19 @@ goto|;
 block|}
 name|done
 label|:
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|cfile
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

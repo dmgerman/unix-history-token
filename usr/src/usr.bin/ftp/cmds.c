@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.4 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_decl_stmt
@@ -237,6 +243,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -249,6 +258,9 @@ argument_list|(
 literal|"(to) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -392,6 +404,9 @@ if|if
 condition|(
 name|autologin
 condition|)
+operator|(
+name|void
+operator|)
 name|login
 argument_list|(
 name|argv
@@ -720,6 +735,9 @@ operator|==
 name|COMPLETE
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|typename
@@ -859,6 +877,10 @@ begin_comment
 comment|/*  * Set file transfer mode.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|setmode
 argument_list|(
@@ -897,6 +919,10 @@ begin_comment
 comment|/*  * Set file transfer format.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|setform
 argument_list|(
@@ -933,6 +959,10 @@ end_block
 
 begin_comment
 comment|/*  * Set file transfer structure.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -1042,6 +1072,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -1054,6 +1087,9 @@ argument_list|(
 literal|"(local-file) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -1111,6 +1147,9 @@ operator|<
 literal|3
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -1123,6 +1162,9 @@ argument_list|(
 literal|"(remote-file) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -1352,6 +1394,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -1364,6 +1409,9 @@ argument_list|(
 literal|"(local-files) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -1464,8 +1512,6 @@ name|cp
 operator|=
 name|remglob
 argument_list|(
-name|argc
-argument_list|,
 name|argv
 argument_list|,
 literal|0
@@ -2058,6 +2104,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -2070,6 +2119,9 @@ argument_list|(
 literal|"(remote-file) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -2127,6 +2179,9 @@ operator|<
 literal|3
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -2139,6 +2194,9 @@ argument_list|(
 literal|"(local-file) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -2506,6 +2564,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -2518,6 +2579,9 @@ argument_list|(
 literal|"(remote-files) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -2601,8 +2665,6 @@ name|cp
 operator|=
 name|remglob
 argument_list|(
-name|argc
-argument_list|,
 name|argv
 argument_list|,
 name|proxy
@@ -2824,21 +2886,17 @@ name|char
 modifier|*
 name|remglob
 parameter_list|(
-name|argc
-parameter_list|,
 name|argv
 parameter_list|,
 name|doswitch
 parameter_list|)
-name|int
-name|argc
-decl_stmt|,
-name|doswitch
-decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
+decl_stmt|;
+name|int
+name|doswitch
 decl_stmt|;
 block|{
 name|char
@@ -2903,6 +2961,9 @@ condition|(
 name|ftemp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ftemp
@@ -2965,6 +3026,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|temp
@@ -2972,6 +3036,9 @@ argument_list|,
 literal|"/tmp/ftpXXXXXX"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mktemp
 argument_list|(
 name|temp
@@ -3062,6 +3129,9 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|temp
@@ -3103,6 +3173,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ftemp
@@ -3171,6 +3244,10 @@ end_function
 
 begin_comment
 comment|/*  * Show status.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -3848,6 +3925,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -3860,6 +3940,9 @@ argument_list|(
 literal|"(remote-directory) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4088,6 +4171,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -4100,6 +4186,9 @@ argument_list|(
 literal|"(remote-file) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4214,6 +4303,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -4226,6 +4318,9 @@ argument_list|(
 literal|"(remote-files) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4309,8 +4404,6 @@ name|cp
 operator|=
 name|remglob
 argument_list|(
-name|argc
-argument_list|,
 name|argv
 argument_list|,
 literal|0
@@ -4443,6 +4536,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -4455,6 +4551,9 @@ argument_list|(
 literal|"(from-name) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4512,6 +4611,9 @@ operator|<
 literal|3
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -4524,6 +4626,9 @@ argument_list|(
 literal|"(to-name) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4796,6 +4901,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -4808,6 +4916,9 @@ argument_list|(
 literal|"(remote-files) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -4839,6 +4950,9 @@ operator|<
 literal|3
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -4851,6 +4965,9 @@ argument_list|(
 literal|"(local-file) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -5105,6 +5222,10 @@ begin_comment
 comment|/*  * Do a shell escape  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|shell
 argument_list|(
@@ -5125,11 +5246,7 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|i
-decl_stmt|,
 name|pid
-decl_stmt|,
-name|status
 decl_stmt|,
 argument_list|(
 operator|*
@@ -5154,6 +5271,10 @@ name|shell
 decl_stmt|,
 modifier|*
 name|namep
+decl_stmt|;
+name|union
+name|wait
+name|status
 decl_stmt|;
 name|old1
 operator|=
@@ -5198,11 +5319,17 @@ condition|;
 name|pid
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|pid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -5210,6 +5337,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -5253,6 +5383,9 @@ name|namep
 operator|=
 name|shell
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|shellnam
@@ -5260,6 +5393,9 @@ argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|shellnam
@@ -5298,6 +5434,9 @@ argument_list|,
 name|shell
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -5378,6 +5517,9 @@ operator|!=
 name|pid
 condition|)
 empty_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -5385,6 +5527,9 @@ argument_list|,
 name|old1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -5462,7 +5607,7 @@ literal|80
 index|]
 decl_stmt|,
 modifier|*
-name|getpass
+name|mygetpass
 argument_list|()
 decl_stmt|;
 name|int
@@ -5479,6 +5624,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -5491,6 +5639,9 @@ argument_list|(
 literal|"(username) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -5573,7 +5724,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|getpass
+name|mygetpass
 argument_list|(
 literal|"Password: "
 argument_list|)
@@ -5686,7 +5837,7 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"Login failed.\n"
 argument_list|)
@@ -5785,6 +5936,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -5797,6 +5951,9 @@ argument_list|(
 literal|"(directory-name) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -5891,6 +6048,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -5903,6 +6063,9 @@ argument_list|(
 literal|"(directory-name) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -6006,6 +6169,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -6018,6 +6184,9 @@ argument_list|(
 literal|"(command line to send) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -6066,6 +6235,9 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -6090,6 +6262,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -6097,6 +6272,9 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -6355,11 +6533,17 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 name|line
@@ -6402,6 +6586,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"ftp: %s\n"
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6552,7 +6738,7 @@ literal|50
 index|]
 decl_stmt|,
 modifier|*
-name|getpass
+name|mygetpass
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -6632,7 +6818,7 @@ else|else
 block|{
 name|ap
 operator|=
-name|getpass
+name|mygetpass
 argument_list|(
 literal|"Account:"
 argument_list|)
@@ -6776,6 +6962,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -6788,6 +6977,9 @@ argument_list|(
 literal|"(command) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -6864,6 +7056,9 @@ argument_list|(
 literal|"?Ambiguous command\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6888,6 +7083,9 @@ argument_list|(
 literal|"?Invalid command\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6913,6 +7111,9 @@ argument_list|(
 literal|"?Invalid proxy command\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -6969,6 +7170,9 @@ argument_list|(
 literal|"Not connected\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -7441,6 +7645,9 @@ operator|<
 literal|3
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -7453,6 +7660,9 @@ argument_list|(
 literal|"(mapout) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -8512,6 +8722,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -8524,6 +8737,9 @@ argument_list|(
 literal|"(macro name) "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gets
 argument_list|(
 operator|&
@@ -8583,6 +8799,9 @@ literal|"Enter macro line by line, terminating it with a null line\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|macros
