@@ -1133,19 +1133,9 @@ operator|/
 literal|1048576
 argument_list|)
 expr_stmt|;
-comment|/* This truncates if memory> 4GB, is this possible on PC98? */
 name|realmem
 operator|=
-operator|(
-name|long
-operator|)
-name|ptoa
-argument_list|(
-operator|(
-name|uintmax_t
-operator|)
 name|Maxmem
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
