@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)isctype.c	5.4 (Berkeley) %G%"
+literal|"@(#)isctype.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,11 +619,18 @@ begin_block
 block|{
 return|return
 operator|(
+name|isupper
+argument_list|(
+name|c
+argument_list|)
+condition|?
 name|c
 operator|-
 literal|'A'
 operator|+
 literal|'a'
+else|:
+name|c
 operator|)
 return|;
 block|}
@@ -652,11 +659,18 @@ begin_block
 block|{
 return|return
 operator|(
+name|islower
+argument_list|(
+name|c
+argument_list|)
+condition|?
 name|c
 operator|-
 literal|'a'
 operator|+
 literal|'A'
+else|:
+name|c
 operator|)
 return|;
 block|}
