@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -764,7 +764,14 @@ name|nc_prev
 operator|=
 name|ncq
 expr_stmt|;
-comment|/* remove from old hash chain */
+comment|/* remove from old hash chain, if on one */
+if|if
+condition|(
+name|ncp
+operator|->
+name|nc_back
+condition|)
+block|{
 if|if
 condition|(
 name|ncq
@@ -788,6 +795,19 @@ name|nc_back
 operator|=
 name|ncq
 expr_stmt|;
+name|ncp
+operator|->
+name|nc_forw
+operator|=
+name|NULL
+expr_stmt|;
+name|ncp
+operator|->
+name|nc_back
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 else|else
 return|return;
@@ -1146,7 +1166,14 @@ name|nc_dvp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* remove entry from its hash chain */
+comment|/* remove from old hash chain, if on one */
+if|if
+condition|(
+name|ncp
+operator|->
+name|nc_back
+condition|)
+block|{
 if|if
 condition|(
 name|nxtcp
@@ -1182,6 +1209,7 @@ name|nc_back
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 comment|/* delete this entry from LRU chain */
 if|if
 condition|(
