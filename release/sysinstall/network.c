@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.6.2.6 1995/06/04 22:49:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.6.2.7 1995/06/05 21:19:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -34,7 +40,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|Boolean
+name|pid_t
 name|startPPP
 parameter_list|(
 name|Device
@@ -105,6 +111,10 @@ block|{
 if|if
 condition|(
 operator|!
+name|dev
+operator|->
+name|private
+operator|=
 name|startPPP
 argument_list|(
 name|dev
@@ -187,9 +197,17 @@ argument_list|(
 name|attach
 argument_list|)
 condition|)
+block|{
+name|dev
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|TRUE
 return|;
+block|}
 else|else
 block|{
 name|msgConfirm
@@ -331,6 +349,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -345,7 +366,6 @@ name|OPT_LEAVE_NETWORK_UP
 operator|)
 condition|)
 return|return;
-comment|/* If we're running PPP or SLIP, it's too much trouble to shut down so forget it */
 if|if
 condition|(
 name|strncmp
@@ -442,6 +462,30 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|pid
+operator|=
+name|dev
+operator|->
+name|private
+condition|)
+block|{
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -490,7 +534,7 @@ end_comment
 
 begin_function
 specifier|static
-name|Boolean
+name|pid_t
 name|startPPP
 parameter_list|(
 name|Device
@@ -510,6 +554,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|val
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|char
 name|myaddr
@@ -544,7 +591,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|FALSE
+literal|0
 return|;
 name|Mkdir
 argument_list|(
@@ -648,7 +695,7 @@ literal|"Couldn't open /etc/ppp/ppp.conf file!  This isn't going to work"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+literal|0
 return|;
 block|}
 name|fprintf
@@ -862,12 +909,14 @@ literal|"Warning:  No /dev/tun0 device.  PPP will not work!"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+literal|0
 return|;
 block|}
 if|if
 condition|(
 operator|!
+name|pid
+operator|=
 name|fork
 argument_list|()
 condition|)
@@ -918,7 +967,7 @@ literal|"The PPP command is now started on screen 3 (type ALT-F3 to\ninteract wi
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|pid
 return|;
 block|}
 end_function
