@@ -1019,6 +1019,8 @@ block|}
 if|if
 condition|(
 name|name
+operator|&&
+name|name
 index|[
 literal|0
 index|]
