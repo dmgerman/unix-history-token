@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strfile.c	5.7 (Berkeley) %G%"
+literal|"@(#)strfile.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +105,7 @@ comment|/* MAXPATHLEN */
 end_comment
 
 begin_comment
-comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsv] [ -cC ] sourcefile [ datafile ]  *  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	v - Verbose.  Give summary of data processed.  (Default)  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case   *	r - randomize the order of the strings  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
+comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsx] [ -cC ] sourcefile [ datafile ]  *  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case   *	r - randomize the order of the strings  *	x - set rotated bit  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
 end_comment
 
 begin_define
@@ -283,6 +283,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* randomize order flag */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Xflag
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set rotated bit */
 end_comment
 
 begin_decl_stmt
@@ -782,6 +794,16 @@ condition|)
 name|randomize
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|Xflag
+condition|)
+name|Tbl
+operator|.
+name|str_flags
+operator||=
+name|STR_ROTATED
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -986,7 +1008,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:iors"
+literal|"c:iorsx"
 argument_list|)
 operator|)
 operator|!=
@@ -1043,7 +1065,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-comment|/* ignore case in ordering */
+comment|/* randomize pointers */
 name|Rflag
 operator|++
 expr_stmt|;
@@ -1053,6 +1075,14 @@ literal|'s'
 case|:
 comment|/* silent */
 name|Sflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+comment|/* set the rotated bit */
+name|Xflag
 operator|++
 expr_stmt|;
 break|break;
@@ -1158,7 +1188,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"strfile [-iors] [-c char] sourcefile [datafile]\n"
+literal|"strfile [-iorsx] [-c char] sourcefile [datafile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
