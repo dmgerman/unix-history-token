@@ -2246,7 +2246,7 @@ literal|"Please configure your mouse"
 block|,
 literal|"You can cut and paste text in the text console by running the mouse\n"
 literal|"daemon.  Specify a port and a protocol type of your mouse and enable\n"
-literal|"the mouse daemon.  If you don't want this feature, select 4 to disable\n"
+literal|"the mouse daemon.  If you don't want this feature, select 6 to disable\n"
 literal|"the daemon.\n"
 literal|"Once you've enabled the mouse daemon, you can specify \"/dev/sysmouse\"\n"
 literal|"as your mouse device and \"SysMouse\" or \"MouseSystems\" as mouse\n"
