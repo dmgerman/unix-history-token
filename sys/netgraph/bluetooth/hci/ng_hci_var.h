@@ -477,7 +477,7 @@ name|buffer
 decl_stmt|;
 comment|/* buffer info */
 name|struct
-name|callout_handle
+name|callout
 name|cmd_timo
 decl_stmt|;
 comment|/* command timeout */
@@ -593,7 +593,7 @@ name|role
 decl_stmt|;
 comment|/* MASTER/SLAVE */
 name|struct
-name|callout_handle
+name|callout
 name|con_timo
 decl_stmt|;
 comment|/* con. timeout */

@@ -1053,7 +1053,7 @@ argument_list|,
 name|num_pkts
 argument_list|)
 expr_stmt|;
-name|callout_handle_init
+name|ng_callout_init
 argument_list|(
 operator|&
 name|con
@@ -1293,7 +1293,7 @@ comment|/* ng_hci_con_by_bdaddr */
 end_comment
 
 begin_comment
-comment|/*  * Set HCI command timeout  * XXX FIXME: check unit->cmd_timo.callout != NULL  */
+comment|/*  * Set HCI command timeout  * XXX FIXME: check return code from ng_timeout  */
 end_comment
 
 begin_function
@@ -1332,12 +1332,13 @@ name|state
 operator||=
 name|NG_HCI_UNIT_COMMAND_PENDING
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|unit
 operator|->
 name|cmd_timo
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|unit
 operator|->
 name|node
@@ -1407,6 +1408,7 @@ if|if
 condition|(
 name|ng_untimeout
 argument_list|(
+operator|&
 name|unit
 operator|->
 name|cmd_timo
@@ -1443,7 +1445,7 @@ comment|/* ng_hci_command_untimeout */
 end_comment
 
 begin_comment
-comment|/*  * Set HCI connection timeout  * XXX FIXME: check unit->cmd_timo.callout != NULL  */
+comment|/*  * Set HCI connection timeout  * XXX FIXME: check return code from ng_timeout  */
 end_comment
 
 begin_function
@@ -1484,12 +1486,13 @@ name|flags
 operator||=
 name|NG_HCI_CON_TIMEOUT_PENDING
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|con
 operator|->
 name|con_timo
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|con
 operator|->
 name|unit
@@ -1565,6 +1568,7 @@ if|if
 condition|(
 name|ng_untimeout
 argument_list|(
+operator|&
 name|con
 operator|->
 name|con_timo

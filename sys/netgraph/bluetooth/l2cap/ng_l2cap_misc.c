@@ -421,7 +421,7 @@ name|remote
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|callout_handle_init
+name|ng_callout_init
 argument_list|(
 operator|&
 name|con
@@ -644,7 +644,7 @@ comment|/* ng_l2cap_con_unref */
 end_comment
 
 begin_comment
-comment|/*  * Set auto disconnect timeout  * XXX FIXME: check con->con_timo.callout != NULL  */
+comment|/*  * Set auto disconnect timeout  * XXX FIXME: check return code from ng_timeout  */
 end_comment
 
 begin_function
@@ -697,12 +697,13 @@ name|flags
 operator||=
 name|NG_L2CAP_CON_AUTO_DISCON_TIMO
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|con
 operator|->
 name|con_timo
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|con
 operator|->
 name|l2cap
@@ -791,6 +792,7 @@ if|if
 condition|(
 name|ng_untimeout
 argument_list|(
+operator|&
 name|con
 operator|->
 name|con_timo
@@ -1633,7 +1635,7 @@ name|token
 operator|=
 name|token
 expr_stmt|;
-name|callout_handle_init
+name|ng_callout_init
 argument_list|(
 operator|&
 name|cmd
@@ -1741,7 +1743,7 @@ comment|/* ng_l2cap_cmd_by_ident */
 end_comment
 
 begin_comment
-comment|/*  * Set LP timeout  * XXX FIXME: check con->con_timo.callout != NULL  */
+comment|/*  * Set LP timeout  * XXX FIXME: check return code from ng_timeout  */
 end_comment
 
 begin_function
@@ -1794,12 +1796,13 @@ name|flags
 operator||=
 name|NG_L2CAP_CON_LP_TIMO
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|con
 operator|->
 name|con_timo
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|con
 operator|->
 name|l2cap
@@ -1883,6 +1886,7 @@ if|if
 condition|(
 name|ng_untimeout
 argument_list|(
+operator|&
 name|con
 operator|->
 name|con_timo
@@ -1921,7 +1925,7 @@ comment|/* ng_l2cap_lp_untimeout */
 end_comment
 
 begin_comment
-comment|/*  * Set L2CAP command timeout  * XXX FIXME: check cmd->timo.callout != NULL  */
+comment|/*  * Set L2CAP command timeout  * XXX FIXME: check return code from ng_timeout  */
 end_comment
 
 begin_function
@@ -1996,12 +2000,13 @@ name|flags
 operator||=
 name|NG_L2CAP_CMD_PENDING
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|cmd
 operator|->
 name|timo
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|cmd
 operator|->
 name|con
@@ -2086,6 +2091,7 @@ if|if
 condition|(
 name|ng_untimeout
 argument_list|(
+operator|&
 name|cmd
 operator|->
 name|timo

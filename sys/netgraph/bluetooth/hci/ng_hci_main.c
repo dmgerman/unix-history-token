@@ -462,7 +462,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Init command queue& command timeout handler */
-name|callout_handle_init
+name|ng_callout_init
 argument_list|(
 operator|&
 name|unit

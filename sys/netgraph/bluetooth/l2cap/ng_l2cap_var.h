@@ -274,7 +274,7 @@ name|con_handle
 decl_stmt|;
 comment|/* ACL connection handle */
 name|struct
-name|callout_handle
+name|callout
 name|con_timo
 decl_stmt|;
 comment|/* connection timeout */
@@ -464,7 +464,7 @@ name|token
 decl_stmt|;
 comment|/* L2CA message token */
 name|struct
-name|callout_handle
+name|callout
 name|timo
 decl_stmt|;
 comment|/* RTX/ERTX timeout */
