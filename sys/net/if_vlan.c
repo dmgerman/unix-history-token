@@ -636,7 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Program our multicast filter. What we're actually doing is  * programming the multicast filter of the parent. This has the  * side effect of causing the parent interface to receive multicast  * traffic that it doesn't really want, which ends up being discarded  * later by the upper protocol layers. Unfortunately, there's no way  * to avoid this: there really is only one physical interface.  */
+comment|/*  * Program our multicast filter. What we're actually doing is  * programming the multicast filter of the parent. This has the  * side effect of causing the parent interface to receive multicast  * traffic that it doesn't really want, which ends up being discarded  * later by the upper protocol layers. Unfortunately, there's no way  * to avoid this: there really is only one physical interface.  *  * XXX: There is a possible race here if more than one thread is  *      modifying the multicast state of the vlan interface at the same time.  */
 end_comment
 
 begin_function
@@ -684,6 +684,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/*VLAN_LOCK_ASSERT();*/
 comment|/* Find the parent. */
 name|sc
 operator|=
@@ -878,9 +879,20 @@ argument_list|)
 argument_list|,
 name|M_VLAN
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mc
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|bcopy
 argument_list|(
 name|LLADDR
@@ -3105,6 +3117,7 @@ operator|->
 name|ifv_if
 argument_list|)
 expr_stmt|;
+comment|/* XXX: VLAN lock held */
 return|return
 operator|(
 literal|0
@@ -4269,6 +4282,7 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
+comment|/*VLAN_LOCK();*/
 name|error
 operator|=
 name|vlan_setmulti
@@ -4276,6 +4290,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/*VLAN_UNLOCK();*/
 break|break;
 default|default:
 name|error
