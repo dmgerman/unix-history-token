@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1514,6 +1514,8 @@ argument|dst
 argument_list|,
 argument|gateway
 argument_list|,
+argument|cmd
+argument_list|,
 argument|flags
 argument_list|)
 end_macro
@@ -1531,6 +1533,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|cmd
+decl_stmt|,
 name|flags
 decl_stmt|;
 end_decl_stmt
@@ -1541,39 +1545,6 @@ name|struct
 name|rtentry
 name|route
 decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-if|if
-condition|(
-name|flags
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|cmd
-operator|=
-operator|(
-name|int
-operator|)
-name|SIOCDELRT
-expr_stmt|;
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|cmd
-operator|=
-operator|(
-name|int
-operator|)
-name|SIOCADDRT
-expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|(
