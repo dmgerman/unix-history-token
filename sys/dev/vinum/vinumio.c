@@ -2764,7 +2764,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Then the volume configuration */
+comment|/* First, the volume configuration */
 for|for
 control|(
 name|i
@@ -3365,6 +3365,10 @@ name|queue_daemon_request
 argument_list|(
 name|daemonrq_saveconfig
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

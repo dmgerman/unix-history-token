@@ -181,6 +181,10 @@ name|logrq
 argument_list|(
 name|loginfo_iodone
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|rqe
 argument_list|,
 name|ubp
@@ -734,6 +738,10 @@ name|queue_daemon_request
 argument_list|(
 name|daemonrq_ioerror
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|rq
 argument_list|)
 expr_stmt|;

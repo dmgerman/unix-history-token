@@ -806,6 +806,10 @@ name|queue_daemon_request
 argument_list|(
 name|daemonrq_return
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1041,6 +1045,9 @@ init|=
 block|{
 literal|"vinum"
 block|,
+operator|(
+name|modeventhand_t
+operator|)
 name|vinum_modevent
 block|,
 literal|0
@@ -1067,7 +1074,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_comment
-comment|/*  * Open a vinum object  * At the moment, we only open volumes and the  * super device.  It's a nice concept to be  * able to open drives, subdisks and plexes, but  * I can't think what good it could be   */
+comment|/* Open a vinum object */
 end_comment
 
 begin_function

@@ -266,11 +266,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|total_malloced
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -336,7 +337,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* use malloc for smaller and irregular stuff */
 if|if
 condition|(
 name|result

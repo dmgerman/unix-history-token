@@ -568,6 +568,10 @@ modifier|*
 name|plex
 decl_stmt|;
 comment|/* for daemonrq_init */
+name|int
+name|nothing
+decl_stmt|;
+comment|/* for passing NULL */
 block|}
 union|;
 end_union

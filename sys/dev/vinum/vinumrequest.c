@@ -663,6 +663,10 @@ name|logrq
 argument_list|(
 name|loginfo_user_bp
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|bp
 argument_list|,
 name|bp
@@ -1532,6 +1536,10 @@ name|logrq
 argument_list|(
 name|loginfo_user_bpl
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1760,6 +1768,10 @@ name|logrq
 argument_list|(
 name|loginfo_rqe
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|rqe
 argument_list|,
 name|rq

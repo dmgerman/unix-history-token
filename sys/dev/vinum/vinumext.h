@@ -25,9 +25,12 @@ directive|ifdef
 name|VINUMDEBUG
 end_ifdef
 
-begin_extern
-extern|extern debug;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* debug flags */

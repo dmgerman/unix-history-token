@@ -610,6 +610,10 @@ name|queue_daemon_request
 argument_list|(
 name|daemonrq_ping
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
