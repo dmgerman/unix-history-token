@@ -492,12 +492,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* How the hell did you get here?? */
+comment|/* Better late than never I suppose.. */
 name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Yamhill?"
+literal|"IA-32e"
 argument_list|)
 expr_stmt|;
 block|}
