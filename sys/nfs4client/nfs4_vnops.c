@@ -4746,9 +4746,6 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
-name|int
-name|vpid
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -4792,12 +4789,6 @@ name|newvp
 operator|=
 operator|*
 name|vpp
-expr_stmt|;
-name|vpid
-operator|=
-name|newvp
-operator|->
-name|v_id
 expr_stmt|;
 comment|/* 		 * See the comment starting `Step through' in ufs/ufs_lookup.c 		 * for an explanation of the locking protocol 		 */
 if|if
@@ -4944,15 +4935,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|vpid
-operator|==
-name|newvp
-operator|->
-name|v_id
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 name|VOP_GETATTR
 argument_list|(
@@ -5023,7 +5005,6 @@ argument_list|(
 name|newvp
 argument_list|)
 expr_stmt|;
-block|}
 name|vput
 argument_list|(
 name|newvp
