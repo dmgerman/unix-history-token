@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  $Id: dist.h,v 1.34 1999/05/07 20:31:34 jkh Exp $  */
+comment|/*  $Id: dist.h,v 1.35 1999/05/14 07:15:04 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|DIST_ALL
-value|0xFFFFF
+value|0x1FFFF
 end_define
 
 begin_comment
