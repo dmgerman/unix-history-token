@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.17 (Berkeley) %G%"
+literal|"@(#)tar.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4486,6 +4486,13 @@ expr_stmt|;
 if|if
 condition|(
 name|pflag
+operator|&&
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
 condition|)
 name|chmod
 argument_list|(
