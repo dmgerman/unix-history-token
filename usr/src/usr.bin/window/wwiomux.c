@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.17 (Berkeley) %G%"
+literal|"@(#)wwiomux.c	3.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_comment
@@ -77,16 +83,9 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-specifier|static
 name|struct
 name|timeval
 name|tv
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 name|char
 name|noblock
@@ -234,7 +233,38 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+comment|/* 			 * Defensive code.  If somebody else (for example, 			 * wall) clears the ASYNC flag on us, we will block 			 * forever.  So we need a finite timeout and set 			 * the flag again.  Anything more clever will probably 			 * need even more system calls.  (This is a bug 			 * in the kernel.) 			 * I don't like this one bit. 			 */
+name|fcntl
+argument_list|(
+literal|0
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|wwnewtty
+operator|.
+name|ww_fflags
+argument_list|)
+expr_stmt|;
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|30
+expr_stmt|;
 block|}
+else|else
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 name|wwnselect
 operator|++
 expr_stmt|;
@@ -259,17 +289,8 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|noblock
-condition|?
 operator|&
 name|tv
-else|:
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|wwsetjmp
