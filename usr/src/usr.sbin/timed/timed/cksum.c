@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1985, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_empty
-empty|#ident "$Revision: 1.3 $"
-end_empty
 
 begin_ifndef
 ifndef|#
@@ -25,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cksum.c	2.6 (Berkeley) 6/1/90"
+literal|"@(#)cksum.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,14 +28,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_empty
+empty|#ident "$Revision: 1.3 $"
+end_empty
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* sgi */
-end_comment
 
 begin_include
 include|#
