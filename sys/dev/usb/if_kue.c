@@ -272,6 +272,12 @@ name|USB_PRODUCT_KLSI_DUH3E10BT
 block|}
 block|,
 block|{
+name|USB_VENDOR_KLSI
+block|,
+name|USB_PRODUCT_KLSI_DUH3E10BTN
+block|}
+block|,
+block|{
 name|USB_VENDOR_PERACOM
 block|,
 name|USB_PRODUCT_PERACOM_ENET3
