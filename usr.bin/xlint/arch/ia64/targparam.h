@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|LDOUBLE_SIZE
-value|(12 * CHAR_BIT)
+value|(16 * CHAR_BIT)
 end_define
 
 begin_define
