@@ -357,12 +357,12 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-block|}
 name|kg
 operator|->
 name|kg_runnable
 operator|--
 expr_stmt|;
+block|}
 name|CTR2
 argument_list|(
 name|KTR_RUNQ
@@ -665,7 +665,7 @@ comment|/*  * Remove a thread from its KSEGRP's run queue.  * This in turn may r
 end_comment
 
 begin_comment
-unit|static void remrunqueue(struct thread *td) { 	struct thread *td2, *td3; 	struct ksegrp *kg; 	struct kse *ke;  	mtx_assert(&sched_lock, MA_OWNED); 	KASSERT((TD_ON_RUNQ(td)), ("remrunqueue: Bad state on run queue")); 	kg = td->td_ksegrp; 	ke = td->td_kse; 	CTR1(KTR_RUNQ, "remrunqueue: td%p", td); 	kg->kg_runnable--; 	TD_SET_CAN_RUN(td);
+unit|static void remrunqueue(struct thread *td) { 	struct thread *td2, *td3; 	struct ksegrp *kg; 	struct kse *ke;  	mtx_assert(&sched_lock, MA_OWNED); 	KASSERT((TD_ON_RUNQ(td)), ("remrunqueue: Bad state on run queue")); 	kg = td->td_ksegrp; 	ke = td->td_kse; 	CTR1(KTR_RUNQ, "remrunqueue: td%p", td); 	TD_SET_CAN_RUN(td);
 comment|/* 	 * If it is not a threaded process, take the shortcut. 	 */
 end_comment
 
@@ -675,7 +675,7 @@ comment|/* Bring its kse with it, leave the thread attached */
 end_comment
 
 begin_comment
-unit|sched_rem(td); 		ke->ke_state = KES_THREAD;  		return; 	}    	td3 = TAILQ_PREV(td, threadqueue, td_runq); 	TAILQ_REMOVE(&kg->kg_runq, td, td_runq); 	if (ke) {
+unit|sched_rem(td); 		ke->ke_state = KES_THREAD;  		return; 	}    	td3 = TAILQ_PREV(td, threadqueue, td_runq); 	TAILQ_REMOVE(&kg->kg_runq, td, td_runq); 	kg->kg_runnable--; 	if (ke) {
 comment|/* 		 * This thread has been assigned to a KSE. 		 * We need to dissociate it and try assign the 		 * KSE to the next available thread. Then, we should 		 * see if we need to move the KSE in the run queues. 		 */
 end_comment
 
@@ -805,11 +805,6 @@ name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
-name|kg
-operator|->
-name|kg_runnable
-operator|--
-expr_stmt|;
 name|TD_SET_CAN_RUN
 argument_list|(
 name|td
@@ -860,6 +855,11 @@ name|td
 argument_list|,
 name|td_runq
 argument_list|)
+expr_stmt|;
+name|kg
+operator|->
+name|kg_runnable
+operator|--
 expr_stmt|;
 name|td
 operator|->
@@ -965,11 +965,6 @@ operator|=
 name|td
 operator|->
 name|td_ksegrp
-expr_stmt|;
-name|kg
-operator|->
-name|kg_runnable
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -1173,6 +1168,11 @@ operator|->
 name|td_priority
 condition|)
 block|{
+name|kg
+operator|->
+name|kg_runnable
+operator|++
+expr_stmt|;
 name|TAILQ_INSERT_BEFORE
 argument_list|(
 name|td2
@@ -1193,6 +1193,11 @@ name|NULL
 condition|)
 block|{
 comment|/* We ran off the end of the TAILQ or it was empty. */
+name|kg
+operator|->
+name|kg_runnable
+operator|++
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
