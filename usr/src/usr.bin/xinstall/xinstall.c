@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.30 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -722,9 +722,9 @@ operator|.
 name|st_mode
 operator|&
 operator|(
-name|IMMUTABLE
+name|UF_IMMUTABLE
 operator||
-name|APPEND
+name|UF_APPEND
 operator|)
 condition|)
 operator|(
@@ -740,9 +740,9 @@ name|st_flags
 operator|&
 operator|~
 operator|(
-name|APPEND
+name|UF_APPEND
 operator||
-name|IMMUTABLE
+name|UF_IMMUTABLE
 operator|)
 argument_list|)
 expr_stmt|;
@@ -966,9 +966,9 @@ operator|.
 name|st_flags
 operator|&
 operator|(
-name|APPEND
+name|UF_APPEND
 operator||
-name|IMMUTABLE
+name|UF_IMMUTABLE
 operator|)
 condition|)
 operator|(
@@ -984,9 +984,9 @@ name|st_flags
 operator|&
 operator|~
 operator|(
-name|APPEND
+name|UF_APPEND
 operator||
-name|IMMUTABLE
+name|UF_IMMUTABLE
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1223,7 +1223,7 @@ operator|.
 name|st_flags
 operator|&
 operator|~
-name|NODUMP
+name|UF_NODUMP
 argument_list|)
 condition|)
 block|{
