@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.15 %G%"
+literal|"@(#)langpats.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,6 +341,18 @@ block|{
 literal|"_IN\n"
 block|,
 literal|"	movl	sp@,d1\n\ 	subl	sp@(4),d1\n\ 	cmpl	sp@(8),d1\n\ 	jhi	1f\n\ 	movl	sp@(12),a0\n\ 	movl	d1,d0\n\ 	lsrl	#3,d0\n\ 	btst	d1,a0@(0,d0:l)\n\ 	jeq	1f\n\ 	moveq	#1,d0\n\ 	jra	2f\n\ 1:\n\ 	moveq	#0,d0\n\ 2:\n"
+block|}
+block|,
+block|{
+literal|"_RANG4\n"
+block|,
+literal|"	movl	sp@,d0\n\ 	cmpl	sp@(4),d0\n\ 	jlt	1f\n\ 	cmpl	sp@(8),d0\n\ 	jle	2f\n\ 1:\n\ 	pea	_ERANG\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 2:\n"
+block|}
+block|,
+block|{
+literal|"_RSNG4\n"
+block|,
+literal|"	movl	sp@,d0\n\ 	cmpl	sp@(4),d0\n\ 	jls	1f\n\ 	pea	_ERANG\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 1:\n"
 block|}
 block|,
 endif|#
