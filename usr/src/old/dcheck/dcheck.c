@@ -2,10 +2,10 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)dcheck.c 2.2 %G%"
+literal|"@(#)dcheck.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ directive|include
 file|<sys/fs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dir.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -74,16 +80,16 @@ directive|include
 file|"../h/fs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/ndir.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<dir.h>
-end_include
 
 begin_include
 include|#
@@ -470,25 +476,6 @@ name|sblock
 operator|.
 name|fs_ncg
 expr_stmt|;
-if|if
-condition|(
-name|nfiles
-operator|>
-literal|65535
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: preposterous number of files\n"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|nerror
-operator|++
-expr_stmt|;
-return|return;
-block|}
 name|ecount
 operator|=
 operator|(
