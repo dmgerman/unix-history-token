@@ -431,9 +431,7 @@ endif|#
 directive|endif
 name|PROC_LOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 if|#
@@ -781,9 +779,7 @@ endif|#
 directive|endif
 name|PROC_UNLOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the signal mask 	 */
@@ -892,9 +888,7 @@ name|mask
 decl_stmt|;
 name|PROC_LOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 if|#
@@ -905,9 +899,7 @@ name|DONE_MORE_SIGALTSTACK_WORK
 argument_list|)
 name|psp
 operator|=
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_sigacts
 expr_stmt|;
@@ -916,9 +908,7 @@ directive|endif
 name|sf
 operator|=
 operator|&
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_sigstk
 expr_stmt|;
@@ -1333,9 +1323,7 @@ expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1848,9 +1836,7 @@ expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Build the argument list for the signal handler. 	 * Notes: 	 * 	- we always build the whole argument list, even when we 	 *	  don't need to [when SA_SIGINFO is not set, we don't need 	 *	  to pass all sf_si and sf_uc] 	 *	- we don't pass the correct signal address [we need to 	 *	  modify many kernel files to enable that] 	 */
@@ -1997,9 +1983,7 @@ block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
 name|PROC_LOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 name|sigexit
