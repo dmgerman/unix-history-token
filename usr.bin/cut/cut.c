@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -232,11 +238,19 @@ expr_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|dchar
 operator|=
 literal|'\t'
 expr_stmt|;
 comment|/* default delimiter is \t */
+comment|/* Since we don't support multi-byte characters, the -c and -b  	   options are equivalent, and the -n option is meaningless. */
 while|while
 condition|(
 operator|(
@@ -248,18 +262,20 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:d:f:s"
+literal|"b:c:d:f:sn"
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+name|EOF
 condition|)
 switch|switch
 condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
 case|case
 literal|'c'
 case|:
@@ -314,6 +330,10 @@ name|sflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
 break|break;
 case|case
 literal|'?'
@@ -1217,9 +1237,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: cut -c list [file1 ...]"
+literal|"usage: cut -b list [-n] [file ...]"
+argument_list|,
+literal|"       cut -c list [file ...]"
 argument_list|,
 literal|"       cut -f list [-s] [-d delim] [file ...]"
 argument_list|)
