@@ -4011,6 +4011,40 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
+literal|"\nSUBCLEAN_TARGETS="
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|progs
+init|;
+name|p
+operator|!=
+name|NULL
+condition|;
+name|p
+operator|=
+name|p
+operator|->
+name|next
+control|)
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|" %s_clean"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
 literal|"\n\n"
 argument_list|)
 expr_stmt|;
@@ -4065,9 +4099,23 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
+literal|"realclean: clean subclean\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
 literal|"clean:\n\trm -f %s *.lo *.o *_stub.c\n"
 argument_list|,
 name|execfname
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"subclean: $(SUBCLEAN_TARGETS)\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4162,11 +4210,33 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t(cd $(%s_SRCDIR)&& make depend&& make $(%s_OBJS))\n\n"
+literal|"\t(cd $(%s_SRCDIR)&& make depend&& make $(%s_OBJS))\n"
 argument_list|,
 name|p
 operator|->
 name|ident
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"%s_clean:\n"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\t(cd $(%s_SRCDIR)&& make clean)\n\n"
 argument_list|,
 name|p
 operator|->
