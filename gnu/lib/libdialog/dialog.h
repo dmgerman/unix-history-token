@@ -78,6 +78,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DITEM_STATUS
+parameter_list|(
+name|flag
+parameter_list|)
+value|((flag)& 0x0000FFFF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DITEM_SUCCESS
 value|0
 end_define
@@ -86,21 +96,46 @@ begin_define
 define|#
 directive|define
 name|DITEM_FAILURE
-value|-1
+value|1
 end_define
+
+begin_comment
+comment|/* Flags - returned in upper 16 bits of return status */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|DITEM_LEAVE_MENU
-value|-2
+value|(1<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DITEM_REDRAW
-value|-3
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DITEM_RECREATE
+value|(1<< 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DITEM_RESTORE
+value|(1<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DITEM_CONTINUE
+value|(1<< 20)
 end_define
 
 begin_comment
@@ -187,6 +222,9 @@ decl_stmt|,
 name|mark
 decl_stmt|,
 name|rbra
+decl_stmt|;
+name|int
+name|aux
 decl_stmt|;
 block|}
 name|dialogMenuItem
