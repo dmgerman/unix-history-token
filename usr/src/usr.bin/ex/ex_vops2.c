@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops2.c	6.3 %G%"
+literal|"@(#)ex_vops2.c	6.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2749,24 +2749,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|FIONREAD
-argument_list|,
-operator|&
-name|cnt
-argument_list|)
-operator|!=
-literal|0
-operator|||
-name|cnt
-operator|==
-literal|0
-condition|)
 name|flush
 argument_list|()
 expr_stmt|;
