@@ -838,7 +838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and vput  * instead of two vputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  */
+comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and vput  * instead of two vputs.  *  * Overall outline of ufs_lookup:  *  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  */
 end_comment
 
 begin_function
@@ -1064,46 +1064,6 @@ operator||
 name|WANTPARENT
 operator|)
 expr_stmt|;
-comment|/* 	 * Check accessiblity of directory. 	 */
-if|if
-condition|(
-operator|(
-name|dp
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-operator|)
-operator|!=
-name|IFDIR
-condition|)
-return|return
-operator|(
-name|ENOTDIR
-operator|)
-return|;
-if|if
-condition|(
-name|error
-operator|=
-name|VOP_ACCESS
-argument_list|(
-name|vdp
-argument_list|,
-name|VEXEC
-argument_list|,
-name|cred
-argument_list|,
-name|cnp
-operator|->
-name|cn_proc
-argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 */
 comment|/* 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
 name|slotstatus
