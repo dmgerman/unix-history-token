@@ -16,29 +16,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* Data for exclusion/inclusion handling: defined in matching.c */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|matching
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|links_entry
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|archive_dir_entry
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/*  * The internal state for the "bsdtar" program.  This is registered  * with the 'archive' structure so that this information will be  * available to the read/write callbacks.  */
+comment|/*  * The internal state for the "bsdtar" program.  *  * Keeping all of the state in a structure like this simplifies memory  * leak testing (at exit, anything left on the heap is suspect).  A  * pointer to this structure is passed to most bsdtar internal  * functions.  */
 end_comment
 
 begin_struct
@@ -127,14 +105,22 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* Miscellaneous state information */
-name|size_t
-name|u_width
+name|int
+name|argc
 decl_stmt|;
-comment|/* for 'list_item' */
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
 name|size_t
 name|gs_width
 decl_stmt|;
-comment|/* For 'list_item' */
+comment|/* For 'list_item' in read.c */
+name|size_t
+name|u_width
+decl_stmt|;
+comment|/* for 'list_item' in read.c */
 name|char
 modifier|*
 name|user_uname
@@ -144,69 +130,37 @@ name|uid_t
 name|user_uid
 decl_stmt|;
 comment|/* UID running this program */
-name|int
-name|argc
-decl_stmt|;
-name|char
+comment|/* 	 * Data for various subsystems.  Full definitions are located in 	 * the file where they are used. 	 */
+name|struct
+name|archive_dir
 modifier|*
-modifier|*
-name|argv
+name|archive_dir
 decl_stmt|;
+comment|/* for write.c */
+name|struct
+name|gname_cache
+modifier|*
+name|gname_cache
+decl_stmt|;
+comment|/* for write.c */
+name|struct
+name|links_cache
+modifier|*
+name|links_cache
+decl_stmt|;
+comment|/* for write.c */
 name|struct
 name|matching
 modifier|*
 name|matching
 decl_stmt|;
+comment|/* for matching.c */
 name|struct
-name|links_entry
+name|uname_cache
 modifier|*
-name|links_head
+name|uname_cache
 decl_stmt|;
-name|struct
-name|archive_dir_entry
-modifier|*
-name|archive_dir_head
-decl_stmt|,
-modifier|*
-name|archive_dir_tail
-decl_stmt|;
-comment|/* An arbitrary prime number. */
-define|#
-directive|define
-name|bsdtar_hash_size
-value|71
-comment|/* A simple hash of uid/uname for caching uname lookups. */
-struct|struct
-block|{
-name|uid_t
-name|uid
-decl_stmt|;
-name|char
-modifier|*
-name|uname
-decl_stmt|;
-block|}
-name|uname_lookup
-index|[
-name|bsdtar_hash_size
-index|]
-struct|;
-comment|/* A simple hash of gid/gname for caching gname lookups. */
-struct|struct
-block|{
-name|gid_t
-name|gid
-decl_stmt|;
-name|char
-modifier|*
-name|gname
-decl_stmt|;
-block|}
-name|gname_lookup
-index|[
-name|bsdtar_hash_size
-index|]
-struct|;
+comment|/* for write.c */
 block|}
 struct|;
 end_struct
