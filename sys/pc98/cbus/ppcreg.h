@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 2001 Alcove - Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_ifndef
@@ -100,6 +100,20 @@ name|NS_PC87334
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMC_37C935
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_PC87303
+value|12
+end_define
+
 begin_comment
 comment|/*  * Parallel Port Chipset Type. SMC versus GENERIC (others)  */
 end_comment
@@ -145,6 +159,10 @@ name|int
 name|ppc_avm
 decl_stmt|;
 comment|/* chipset available modes */
+name|int
+name|ppc_dtm
+decl_stmt|;
+comment|/* chipset detected modes */
 define|#
 directive|define
 name|PPC_IRQ_NONE
@@ -286,6 +304,12 @@ name|res_drq
 decl_stmt|,
 modifier|*
 name|res_ioport
+decl_stmt|;
+name|bus_space_handle_t
+name|bsh
+decl_stmt|;
+name|bus_space_tag_t
+name|bst
 decl_stmt|;
 name|void
 modifier|*
@@ -595,7 +619,7 @@ name|r_dtr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_SPP_DTR))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_SPP_DTR))
 end_define
 
 begin_define
@@ -605,7 +629,7 @@ name|r_str
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_SPP_STR))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_SPP_STR))
 end_define
 
 begin_define
@@ -615,7 +639,7 @@ name|r_ctr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_SPP_CTR))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_SPP_CTR))
 end_define
 
 begin_define
@@ -625,7 +649,7 @@ name|r_epp_A
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_EPP_ADDR))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_EPP_ADDR))
 end_define
 
 begin_define
@@ -635,7 +659,7 @@ name|r_epp_D
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_EPP_DATA))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_EPP_DATA))
 end_define
 
 begin_define
@@ -645,7 +669,7 @@ name|r_cnfgA
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_CNFGA))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_CNFGA))
 end_define
 
 begin_define
@@ -655,7 +679,7 @@ name|r_cnfgB
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_CNFGB))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_CNFGB))
 end_define
 
 begin_define
@@ -665,7 +689,7 @@ name|r_ecr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_ECR))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_ECR))
 end_define
 
 begin_define
@@ -675,7 +699,7 @@ name|r_fifo
 parameter_list|(
 name|ppc
 parameter_list|)
-value|(inb((ppc)->ppc_base + PPC_ECP_D_FIFO))
+value|(bus_space_read_1((ppc)->bst, (ppc)->bsh, PPC_ECP_D_FIFO))
 end_define
 
 begin_define
@@ -687,7 +711,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_SPP_DTR, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_SPP_DTR, byte))
 end_define
 
 begin_define
@@ -699,7 +723,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_SPP_STR, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_SPP_STR, byte))
 end_define
 
 begin_define
@@ -711,7 +735,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_SPP_CTR, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_SPP_CTR, byte))
 end_define
 
 begin_define
@@ -723,7 +747,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_EPP_ADDR, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_EPP_ADDR, byte))
 end_define
 
 begin_define
@@ -735,7 +759,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_EPP_DATA, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_EPP_DATA, byte))
 end_define
 
 begin_define
@@ -747,7 +771,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_ECP_ECR, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_ECP_ECR, byte))
 end_define
 
 begin_define
@@ -759,7 +783,7 @@ name|ppc
 parameter_list|,
 name|byte
 parameter_list|)
-value|outb((ppc)->ppc_base + PPC_ECP_D_FIFO, byte)
+value|(bus_space_write_1((ppc)->bst, (ppc)->bsh, PPC_ECP_D_FIFO, byte))
 end_define
 
 begin_comment
@@ -1059,6 +1083,134 @@ end_define
 begin_comment
 comment|/* ECP and EPP */
 end_comment
+
+begin_comment
+comment|/*  * Register defines for the SMC FDC37C935 parts  */
+end_comment
+
+begin_comment
+comment|/* Configuration ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMC935_CFG
+value|0x370
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_IND
+value|0x370
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_DAT
+value|0x371
+end_define
+
+begin_comment
+comment|/* Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMC935_LOGDEV
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ID
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_PORTHI
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_PORTLO
+value|0x61
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_PPMODE
+value|0xf0
+end_define
+
+begin_comment
+comment|/* Parallel port modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMC935_SPP
+value|0x38 + 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_EPP19SPP
+value|0x38 + 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ECP
+value|0x38 + 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ECPEPP19
+value|0x38 + 3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_CENT
+value|0x38 + 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_EPP17SPP
+value|0x38 + 5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_UNUSED
+value|0x38 + 6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMC935_ECPEPP17
+value|0x38 + 7
+end_define
 
 begin_comment
 comment|/*  * Register defines for the Winbond W83877F parts  */
