@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.8	81/11/12	*/
+comment|/*	conf.c	4.9	81/12/01	*/
 end_comment
 
 begin_include
@@ -294,6 +294,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|utstrategy
+argument_list|()
+decl_stmt|,
+name|utopen
+argument_list|()
+decl_stmt|,
+name|utclose
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|devsw
 name|devsw
@@ -363,6 +376,14 @@ block|,
 name|udopen
 block|,
 name|nullsys
+block|,
+literal|"ut"
+block|,
+name|utstrategy
+block|,
+name|utopen
+block|,
+name|utclose
 block|,
 literal|0
 block|,
