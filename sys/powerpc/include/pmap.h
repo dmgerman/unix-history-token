@@ -262,6 +262,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pmap_dev_direct_mapped
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
