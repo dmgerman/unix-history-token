@@ -456,10 +456,17 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 parameter_list|,
 name|u_int32_t
 modifier|*
 name|deltap
+endif|#
+directive|endif
 parameter_list|)
 function_decl|;
 end_function_decl
