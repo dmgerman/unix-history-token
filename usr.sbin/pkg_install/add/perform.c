@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.10 1994/10/14 05:34:04 jkh Exp $"
+literal|"$Id: perform.c,v 1.11 1994/10/14 05:43:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,6 +774,7 @@ name|success
 goto|;
 comment|/* well, partial anyway */
 block|}
+comment|/* Protect against old packages with bogus @name fields */
 name|sprintf
 argument_list|(
 name|LogDir
@@ -782,7 +783,10 @@ literal|"%s/%s"
 argument_list|,
 name|LOG_DIR
 argument_list|,
+name|basename_of
+argument_list|(
 name|PkgName
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
