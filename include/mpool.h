@@ -51,14 +51,14 @@ typedef|typedef
 struct|struct
 name|_bkt
 block|{
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_bkt
 argument_list|)
 name|hq
 expr_stmt|;
 comment|/* hash queue */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_bkt
 argument_list|)
@@ -98,7 +98,7 @@ typedef|typedef
 struct|struct
 name|MPOOL
 block|{
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_lqh
 argument_list|,
@@ -108,7 +108,7 @@ name|lqh
 expr_stmt|;
 comment|/* lru queue head */
 comment|/* hash queue array */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_hqh
 argument_list|,
