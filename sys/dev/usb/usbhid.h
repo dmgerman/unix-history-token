@@ -537,7 +537,7 @@ value|0x0048
 end_define
 
 begin_comment
-comment|// M$ Wireless Intellimouse Wheel
+comment|/* M$ Wireless Intellimouse Wheel */
 end_comment
 
 begin_define
