@@ -161,18 +161,18 @@ name|ec_softc
 block|{
 name|struct
 name|arpcom
-name|ec_ac
+name|arpcom
 decl_stmt|;
 comment|/* Ethernet common part 	*/
 define|#
 directive|define
 name|ec_if
-value|ec_ac.ac_if
+value|arpcom.ac_if
 comment|/* network-visible interface 	*/
 define|#
 directive|define
 name|ec_addr
-value|ec_ac.ac_enaddr
+value|arpcom.ac_enaddr
 comment|/* hardware Ethernet address 	*/
 name|u_char
 name|ec_flags
@@ -2644,7 +2644,9 @@ operator|)
 operator|(
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 operator|)
 expr_stmt|;
 else|else
@@ -2673,13 +2675,17 @@ name|caddr_t
 operator|)
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;

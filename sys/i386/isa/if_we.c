@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  *  * BPF Packet Filter Support added by Marc Frajola, 12/30/92  * Input& other routines re-written by David Greenman, 1/2/93  * BPF trailer support added by David Greenman, 1/7/93  * we_attach enhanced with link level address by Rodney W. Grimes, 1/30/93  *  * $Log: if_we.c,v $  * Revision 1.3  1993/08/22  22:54:56  ats  * Added a new-line in the output of the ethernet-address that it gets  * on it's line alone ( not mangled with the FPU detection ).  * Commented out a debug printf in if_ec.c ( printf("ecinit") ).  *  * Revision 1.2  1993/07/29  12:07:10  davidg  * Added include of systm.h to get min/max/bcmp etc...  *  * Revision 1.1.1.1  1993/06/12  14:58:01  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  93/02/18  17:21:57  davidg  * Bugs in mbuf cluster allocation fixed  * Problem with nfs wanting mbufs aligned on longword boundries fixed  *   */
+comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  *  * BPF Packet Filter Support added by Marc Frajola, 12/30/92  * Input& other routines re-written by David Greenman, 1/2/93  * BPF trailer support added by David Greenman, 1/7/93  * we_attach enhanced with link level address by Rodney W. Grimes, 1/30/93  *  * $Log: if_we.c,v $  * Revision 1.4  1993/08/24  00:15:31  rgrimes  * Fixed the printf's for ethernet address so that ALL ethernet drivers are  * consistent in the format of this.  *  * Revision 1.3  1993/08/22  22:54:56  ats  * Added a new-line in the output of the ethernet-address that it gets  * on it's line alone ( not mangled with the FPU detection ).  * Commented out a debug printf in if_ec.c ( printf("ecinit") ).  *  * Revision 1.2  1993/07/29  12:07:10  davidg  * Added include of systm.h to get min/max/bcmp etc...  *  * Revision 1.1.1.1  1993/06/12  14:58:01  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  93/02/18  17:21:57  davidg  * Bugs in mbuf cluster allocation fixed  * Problem with nfs wanting mbufs aligned on longword boundries fixed  *   */
 end_comment
 
 begin_include
@@ -261,19 +261,9 @@ name|we_softc
 block|{
 name|struct
 name|arpcom
-name|we_ac
+name|arpcom
 decl_stmt|;
 comment|/* Ethernet common part 	*/
-define|#
-directive|define
-name|we_if
-value|we_ac.ac_if
-comment|/* network-visible interface 	*/
-define|#
-directive|define
-name|we_addr
-value|we_ac.ac_enaddr
-comment|/* hardware Ethernet address 	*/
 name|u_char
 name|we_flags
 decl_stmt|;
@@ -857,7 +847,9 @@ name|i
 control|)
 name|sc
 operator|->
-name|we_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 index|]
@@ -1037,7 +1029,9 @@ init|=
 operator|&
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|union
 name|we_command
@@ -1262,7 +1256,9 @@ name|bcopy
 argument_list|(
 name|sc
 operator|->
-name|we_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 name|LLADDR
 argument_list|(
@@ -1313,7 +1309,9 @@ name|ether_sprintf
 argument_list|(
 name|sc
 operator|->
-name|we_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1536,7 +1534,9 @@ init|=
 operator|&
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|union
 name|we_command
@@ -1858,7 +1858,9 @@ name|i
 argument_list|,
 name|sc
 operator|->
-name|we_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 index|]
@@ -1948,7 +1950,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator|&
@@ -2103,7 +2107,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_snd
 argument_list|,
@@ -2540,7 +2546,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_timer
 operator|=
@@ -2668,7 +2676,9 @@ block|{
 comment|/* need to read these registers to clear status */
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_collisions
 operator|+=
@@ -2684,7 +2694,9 @@ expr_stmt|;
 operator|++
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_oerrors
 expr_stmt|;
@@ -2737,7 +2749,9 @@ expr_stmt|;
 operator|++
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ierrors
 expr_stmt|;
@@ -2780,7 +2794,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|)
 expr_stmt|;
 comment|/* re-enable onboard interrupts */
@@ -2894,7 +2910,9 @@ name|WDF_TXBUSY
 expr_stmt|;
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_timer
 operator|=
@@ -2903,13 +2921,17 @@ expr_stmt|;
 operator|++
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_opackets
 expr_stmt|;
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_collisions
 operator|+=
@@ -3531,7 +3553,9 @@ operator|)
 operator|(
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 operator|)
 expr_stmt|;
 else|else
@@ -3560,13 +3584,17 @@ name|caddr_t
 operator|)
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
-name|ns_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3666,7 +3694,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator|&
@@ -3819,7 +3849,9 @@ operator|++
 control|)
 name|sc
 operator|->
-name|we_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|i
 index|]
@@ -3941,7 +3973,9 @@ struct|;
 operator|++
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_ipackets
 expr_stmt|;
@@ -3973,7 +4007,9 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 expr_stmt|;
 name|m
 operator|->
@@ -4284,7 +4320,9 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 operator|.
 name|if_flags
 operator|&
@@ -4299,7 +4337,9 @@ name|ether_dhost
 argument_list|,
 name|sc
 operator|->
-name|we_addr
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4368,7 +4408,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|we_if
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|eh
 argument_list|,
