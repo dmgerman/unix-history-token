@@ -724,15 +724,15 @@ name|hci_force_fan
 block|}
 block|,
 block|{
-literal|"cpu_speed"
-block|,
-name|hci_cpu_speed
-block|}
-block|,
-block|{
 literal|"video_output"
 block|,
 name|hci_video_output
+block|}
+block|,
+block|{
+literal|"lcd_brightness"
+block|,
+name|hci_lcd_brightness
 block|}
 block|,
 block|{
@@ -742,9 +742,9 @@ name|hci_lcd_backlight
 block|}
 block|,
 block|{
-literal|"lcd_brightness"
+literal|"cpu_speed"
 block|,
-name|hci_lcd_brightness
+name|hci_cpu_speed
 block|}
 block|,
 block|{
@@ -934,7 +934,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Toshiba Extra HCI"
+literal|"Toshiba HCI Extras"
 argument_list|)
 expr_stmt|;
 name|ret
