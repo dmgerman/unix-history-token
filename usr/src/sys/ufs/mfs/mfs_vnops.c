@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/specdev.h>
 end_include
 
 begin_include
@@ -286,7 +292,7 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
-name|mfs_fsync
+name|spec_fsync
 block|}
 block|,
 comment|/* fsync */
@@ -1463,6 +1469,9 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Finish any pending I/O requests. 	 */
 while|while
 condition|(
@@ -1500,25 +1509,28 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * On last close of a memory filesystem 	 * we must invalidate any in core blocks, so that 	 * we can, free up its vnode. 	 */
-name|vflushbuf
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|error
+operator|=
 name|vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
 literal|1
+argument_list|,
+name|ap
+operator|->
+name|a_cred
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 comment|/* 	 * There should be no way to have any more uses of this 	 * vnode, so if we find any other uses, it is a panic. 	 */
