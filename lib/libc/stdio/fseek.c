@@ -768,7 +768,7 @@ condition|)
 goto|goto
 name|dumb
 goto|;
-comment|/* 	 * (If the buffer was modified, we have to 	 * skip this; see fgetln.c.) 	 */
+comment|/* 	 * If the buffer was modified or the file position was changed, 	 * we have to skip this; see fgetln.c, stdio.c. 	 */
 if|if
 condition|(
 name|fp
