@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.37 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.38 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.37 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.38 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -876,8 +876,6 @@ argument_list|(
 name|SendmailAddress
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
