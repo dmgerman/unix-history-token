@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -2897,13 +2897,13 @@ expr_stmt|;
 if|if
 condition|(
 name|dist
-operator|>
+operator|<=
 name|lp
 operator|->
 name|d_maxdist
-operator|||
+operator|&&
 name|dist
-operator|<
+operator|>=
 name|lp
 operator|->
 name|d_mindist
@@ -5013,7 +5013,7 @@ break|break;
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -6565,7 +6565,7 @@ block|,
 literal|290
 block|,
 comment|/* F=cyl 290 thru 814 */
-literal|291280
+literal|291192
 block|,
 literal|118
 block|,
