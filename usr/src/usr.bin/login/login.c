@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.78 (Berkeley) %G%"
+literal|"@(#)login.c	5.79 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2354,9 +2354,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Copyright (c) 1980,1983,1986,1988,1990,1991 The Regents of the University\n%s"
+literal|"%s\n\t%s  %s\n\n"
 argument_list|,
-literal|"of California.  All rights reserved.\n\n"
+literal|"Copyright (c) 1980, 1983, 1986, 1988, 1990, 1991, 1993"
+argument_list|,
+literal|"The Regents of the University of California. "
+argument_list|,
+literal|"All rights reserved."
 argument_list|)
 expr_stmt|;
 name|motd
