@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2887,6 +2887,17 @@ argument_list|(
 operator|&
 name|atv
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Avoid inadvertently sleeping forever. 		 */
+if|if
+condition|(
+name|timo
+operator|==
+literal|0
+condition|)
+name|timo
+operator|=
+literal|1
 expr_stmt|;
 name|splx
 argument_list|(
