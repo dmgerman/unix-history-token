@@ -278,7 +278,7 @@ name|ISASCII
 parameter_list|(
 name|c
 parameter_list|)
-value|isascii((unsigned char)c)
+value|isascii(c)
 end_define
 
 begin_endif
@@ -299,7 +299,7 @@ name|ISBLANK
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII(c)&& isblank((unsigned char)c))
+value|(ISASCII(c)&& isblank(c))
 end_define
 
 begin_else
@@ -335,7 +335,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII(c)&& isgraph((unsigned char)c))
+value|(ISASCII(c)&& isgraph(c))
 end_define
 
 begin_else
@@ -350,7 +350,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII(c)&& isprint((unsigned char)c)&& !isspace((unsigned char)c))
+value|(ISASCII(c)&& isprint(c)&& !isspace(c))
 end_define
 
 begin_endif
@@ -365,7 +365,7 @@ name|ISPRINT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isprint ((unsigned char)c))
+value|(ISASCII (c)&& isprint (c))
 end_define
 
 begin_define
@@ -375,7 +375,7 @@ name|ISDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isdigit ((unsigned char)c))
+value|(ISASCII (c)&& isdigit (c))
 end_define
 
 begin_define
@@ -385,7 +385,7 @@ name|ISALNUM
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isalnum ((unsigned char)c))
+value|(ISASCII (c)&& isalnum (c))
 end_define
 
 begin_define
@@ -395,7 +395,7 @@ name|ISALPHA
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isalpha ((unsigned char)c))
+value|(ISASCII (c)&& isalpha (c))
 end_define
 
 begin_define
@@ -405,7 +405,7 @@ name|ISCNTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& iscntrl ((unsigned char)c))
+value|(ISASCII (c)&& iscntrl (c))
 end_define
 
 begin_define
@@ -415,7 +415,7 @@ name|ISLOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& islower ((unsigned char)c))
+value|(ISASCII (c)&& islower (c))
 end_define
 
 begin_define
@@ -425,7 +425,7 @@ name|ISPUNCT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& ispunct ((unsigned char)c))
+value|(ISASCII (c)&& ispunct (c))
 end_define
 
 begin_define
@@ -435,7 +435,7 @@ name|ISSPACE
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isspace ((unsigned char)c))
+value|(ISASCII (c)&& isspace (c))
 end_define
 
 begin_define
@@ -445,7 +445,7 @@ name|ISUPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isupper ((unsigned char)c))
+value|(ISASCII (c)&& isupper (c))
 end_define
 
 begin_define
@@ -455,7 +455,7 @@ name|ISXDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISASCII (c)&& isxdigit ((unsigned char)c))
+value|(ISASCII (c)&& isxdigit (c))
 end_define
 
 begin_ifdef

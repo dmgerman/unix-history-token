@@ -7725,10 +7725,6 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -7753,10 +7749,6 @@ operator|&&
 operator|!
 name|isdigit
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -7782,10 +7774,6 @@ name|p
 operator|&&
 name|isdigit
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)

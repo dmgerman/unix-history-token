@@ -3140,10 +3140,6 @@ condition|(
 operator|!
 name|isalpha
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|arg
 index|[
 literal|0
@@ -3181,10 +3177,6 @@ condition|(
 operator|!
 name|isalnum
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp2
 argument_list|)

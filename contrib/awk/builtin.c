@@ -1115,8 +1115,7 @@ condition|(
 name|casetable
 index|[
 operator|(
-name|unsigned
-name|char
+name|int
 operator|)
 operator|*
 name|p1
@@ -1125,8 +1124,7 @@ operator|==
 name|casetable
 index|[
 operator|(
-name|unsigned
-name|char
+name|int
 operator|)
 operator|*
 name|p2
@@ -9158,10 +9156,6 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|str
 argument_list|)
