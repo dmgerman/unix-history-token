@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.12 (Berkeley) %G%"
+literal|"@(#)ld.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,11 +234,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|hp300
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
+end_if
 
 begin_define
 define|#
