@@ -3438,6 +3438,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|PTHREAD_ASSERT
+argument_list|(
+name|mtx
+operator|!=
+name|NULL
+argument_list|,
+literal|"mutex is NULL when it should not be"
+argument_list|)
+expr_stmt|;
 name|mutex_queue_remove
 argument_list|(
 name|mtx

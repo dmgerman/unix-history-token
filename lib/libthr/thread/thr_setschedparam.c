@@ -270,6 +270,10 @@ break|break;
 block|}
 else|else
 block|{
+name|mtx
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
 block|}
 block|}
