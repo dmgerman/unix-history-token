@@ -5977,7 +5977,6 @@ name|INET6
 end_ifdef
 
 begin_function
-specifier|static
 name|struct
 name|ifaddr
 modifier|*
@@ -6100,7 +6099,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 modifier|*
 name|carp_macmatch6
