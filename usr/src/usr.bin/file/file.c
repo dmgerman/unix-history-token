@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.18 (Berkeley) %G%"
+literal|"@(#)file.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,7 +599,7 @@ name|S_IFLNK
 case|:
 name|printf
 argument_list|(
-literal|"%s: symbolic link"
+literal|"%s:\tsymbolic link"
 argument_list|,
 name|file
 argument_list|)
@@ -651,7 +651,7 @@ name|S_IFDIR
 case|:
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s:\t"
 argument_list|,
 name|file
 argument_list|)
@@ -683,7 +683,7 @@ name|S_IFBLK
 case|:
 name|printf
 argument_list|(
-literal|"%s: %s special (%d/%d)\n"
+literal|"%s:\t%s special (%d/%d)\n"
 argument_list|,
 name|file
 argument_list|,
@@ -722,7 +722,7 @@ name|S_IFSOCK
 case|:
 name|printf
 argument_list|(
-literal|"%s: socket\n"
+literal|"%s:\tsocket\n"
 argument_list|,
 name|file
 argument_list|)
@@ -761,6 +761,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|printf
+argument_list|(
+literal|"%s:\t"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 name|in
 operator|=
 name|read
