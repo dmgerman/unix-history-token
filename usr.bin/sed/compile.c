@@ -713,6 +713,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|appendnum
+operator|==
+literal|0
+condition|)
+name|appends
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|appends
 operator|=
