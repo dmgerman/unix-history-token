@@ -1331,6 +1331,19 @@ end_function_decl
 
 begin_function_decl
 name|double
+name|fma
+parameter_list|(
+name|double
+parameter_list|,
+name|double
+parameter_list|,
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
 name|hypot
 parameter_list|(
 name|double
@@ -1339,10 +1352,6 @@ name|double
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Our ilogb raises no exceptions; we side with IEEE-754R and C99, not POSIX */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -2288,6 +2297,19 @@ begin_function_decl
 name|float
 name|fdimf
 parameter_list|(
+name|float
+parameter_list|,
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|fmaf
+parameter_list|(
+name|float
+parameter_list|,
 name|float
 parameter_list|,
 name|float
