@@ -44,7 +44,9 @@ block|,
 name|RANDOM_MOUSE
 block|,
 name|RANDOM_NET
-block|, \
+block|,
+name|RANDOM_INTERRUPT
+block|,
 name|ENTROPYSOURCE
 block|}
 enum|;
