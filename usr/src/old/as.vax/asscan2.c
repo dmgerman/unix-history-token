@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan2.c 4.4 %G%"
+literal|"@(#)asscan2.c 4.4 4/16/82"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,30 @@ init|=
 name|NL
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|BUFSIZ
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|BUFSIZ
+value|4096
+end_define
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.4 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.4 2/14/82  */
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|TOKBUFLG
-value|BUFSIZ
+value|4096
 end_define
 
 begin_define
@@ -477,14 +477,15 @@ begin_define
 define|#
 directive|define
 name|MAXSTRLG
-value|127
+value|2048
 end_define
 
 begin_struct
 struct|struct
 name|strdesc
 block|{
-name|char
+name|unsigned
+name|short
 name|str_lg
 decl_stmt|;
 name|char
