@@ -317,7 +317,7 @@ name|ident
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|ident
+name|kern_ident
 argument_list|,
 literal|0
 argument_list|,
