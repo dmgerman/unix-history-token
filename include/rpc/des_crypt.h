@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)des_crypt.h	2.1 88/08/11 4.0 RPCSRC;	from 1.4 88/02/08 (C) 1986 SMI  *  * des_crypt.h, des library routine interface  * Copyright (C) 1986, Sun Microsystems, Inc.  */
+comment|/*  * @(#)des_crypt.h	2.1 88/08/11 4.0 RPCSRC;	from 1.4 88/02/08 (C) 1986 SMI  * $FreeBSD$  *  * des_crypt.h, des library routine interface  * Copyright (C) 1986, Sun Microsystems, Inc.  */
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ begin_decl_stmt
 name|__END_DECLS
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 comment|/*   * Set des parity for a key.  * DES parity is odd and in the low bit of each byte  */
 name|__BEGIN_DECLS
 ifdef|#

@@ -27,7 +27,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -508,11 +508,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
@@ -802,7 +797,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

@@ -18,7 +18,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -47,7 +47,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_expr_stmt
@@ -100,7 +100,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_define
@@ -129,7 +129,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_define
@@ -192,7 +192,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_comment
@@ -1208,7 +1208,7 @@ expr_stmt|;
 comment|/* set length of EOB code, if any */
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|memzero
 argument_list|(
 operator|(
@@ -4481,7 +4481,7 @@ name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|u_char
 modifier|*
 name|p
@@ -4521,7 +4521,7 @@ name|gz_slide
 condition|)
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 return|return
 operator|(
 name|ENOMEM
@@ -4614,7 +4614,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 if|if
 condition|(
 name|p

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This code is derived from code available from the STB bulletin board  */
+comment|/*  * This code is derived from code available from the STB bulletin board  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include

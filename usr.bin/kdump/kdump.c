@@ -70,7 +70,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERNEL
+name|_KERNEL
 end_define
 
 begin_decl_stmt
@@ -89,7 +89,7 @@ end_include
 begin_undef
 undef|#
 directive|undef
-name|KERNEL
+name|_KERNEL
 end_undef
 
 begin_include

@@ -26,7 +26,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -42,7 +42,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CAMDEBUG&& KERNEL */
+comment|/* CAMDEBUG&& _KERNEL */
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -192,7 +192,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !CAMDEBUG || !KERNEL */
+comment|/* !CAMDEBUG || !_KERNEL */
 end_comment
 
 begin_define
@@ -237,7 +237,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CAMDEBUG&& KERNEL */
+comment|/* CAMDEBUG&& _KERNEL */
 end_comment
 
 begin_endif

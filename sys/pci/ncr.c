@@ -40,7 +40,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -54,10 +54,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* defined(KERNEL) */
-end_comment
 
 begin_comment
 comment|/*========================================================== ** **	Configuration and Debugging ** **	May be overwritten in<arch/conf/xxxx> ** **========================================================== */
@@ -325,7 +321,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -392,10 +388,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 begin_include
 include|#
@@ -3095,7 +3087,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_function_decl
@@ -3575,7 +3567,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
@@ -3667,7 +3659,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -24688,7 +24680,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 end_unit

@@ -329,7 +329,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 if|if
 condition|(
 name|auth
@@ -373,7 +373,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 if|if
 condition|(
 name|au
@@ -569,7 +569,7 @@ name|AUTH_UNIX
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|au
 operator|->
 name|au_origcred

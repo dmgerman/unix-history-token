@@ -104,7 +104,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|KERNEL
+name|_KERNEL
 end_define
 
 begin_include

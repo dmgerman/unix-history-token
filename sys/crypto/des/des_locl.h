@@ -182,7 +182,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|&&
 operator|(

@@ -19,7 +19,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -32,10 +32,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 begin_include
 include|#
@@ -440,7 +436,7 @@ begin_function_decl
 name|__END_DECLS
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 specifier|static
 name|__inline
 name|void
@@ -483,10 +479,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 begin_endif
 endif|#

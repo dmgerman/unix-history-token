@@ -254,11 +254,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
@@ -281,10 +276,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 begin_endif
 endif|#

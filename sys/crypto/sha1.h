@@ -81,19 +81,11 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern

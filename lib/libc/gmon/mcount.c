@@ -15,7 +15,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|&&
 name|defined
@@ -67,7 +67,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -207,7 +207,7 @@ name|toindex
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|MCOUNT_DECL
 argument_list|(
 argument|s
@@ -237,7 +237,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|MCOUNT_ENTER
 argument_list|(
 name|s
@@ -263,7 +263,7 @@ name|lowpc
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 comment|/* 	 * When we are called from an exception handler, frompci may be 	 * for a user address.  Convert such frompci's to the index of 	 * user() to merge all user counts. 	 */
 if|if
 condition|(
@@ -321,7 +321,6 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* KERNEL */
 ifdef|#
 directive|ifdef
 name|GUPROF
@@ -487,7 +486,7 @@ directive|endif
 comment|/* GUPROF */
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 comment|/* 	 * When we are called from an exception handler, frompc is faked 	 * to be for where the exception occurred.  We've just solidified 	 * the count for there.  Now convert frompci to the index of btrap() 	 * for trap handlers and bintr() for interrupt handlers to make 	 * exceptions appear in the call graph as calls from btrap() and 	 * bintr() instead of calls from all over. 	 */
 if|if
 condition|(
@@ -550,7 +549,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* KERNEL */
 comment|/* 	 * check that frompc is a reasonable pc value. 	 * for example:	signal catchers get called from the stack, 	 *		not from text space.  too bad. 	 */
 if|if
 condition|(
@@ -836,7 +834,7 @@ name|done
 label|:
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|MCOUNT_EXIT
 argument_list|(
 name|s
@@ -863,7 +861,7 @@ name|GMON_PROF_ERROR
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|MCOUNT_EXIT
 argument_list|(
 name|s
