@@ -368,12 +368,12 @@ define|#
 directive|define
 name|tlb_tte_demap
 parameter_list|(
-name|tte
+name|tp
 parameter_list|,
 name|pm
 parameter_list|)
 define|\
-value|tlb_page_demap(TD_GET_TLB((tte).tte_data), pm, \ 	    TV_GET_VA((tte).tte_vpn));
+value|tlb_page_demap(TTE_GET_TLB(tp), pm, TTE_GET_VA(tp))
 end_define
 
 begin_endif

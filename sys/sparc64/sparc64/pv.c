@@ -682,7 +682,6 @@ argument_list|)
 expr_stmt|;
 name|tlb_tte_demap
 argument_list|(
-operator|*
 name|tp
 argument_list|,
 name|pv
@@ -1241,7 +1240,6 @@ argument_list|)
 expr_stmt|;
 name|tlb_tte_demap
 argument_list|(
-operator|*
 name|tp
 argument_list|,
 name|pv

@@ -60,35 +60,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_SIZE_SIZE
+name|TD_SIZE_BITS
 value|(2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TD_SOFT2_SIZE
+name|TD_SOFT2_BITS
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TD_DIAG_SIZE
+name|TD_DIAG_BITS
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TD_PA_SIZE
+name|TD_PA_BITS
 value|(28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TD_SOFT_SIZE
+name|TD_SOFT_BITS
 value|(6)
 end_define
 
@@ -96,35 +96,42 @@ begin_define
 define|#
 directive|define
 name|TD_SIZE_MASK
-value|(((1UL<< TD_SIZE_SIZE) - 1)<< TD_SIZE_SHIFT)
+value|((1UL<< TD_SIZE_BITS) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_SOFT2_MASK
-value|(((1UL<< TD_SOFT2_SIZE) - 1)<< TD_SOFT2_SHIFT)
+value|((1UL<< TD_SOFT2_BITS) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_DIAG_MASK
-value|(((1UL<< TD_DIAG_SIZE) - 1)<< TD_DIAG_SHIFT)
+value|((1UL<< TD_DIAG_BITS) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_PA_MASK
-value|(((1UL<< TD_PA_SIZE) - 1)<< TD_PA_SHIFT)
+value|((1UL<< TD_PA_BITS) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_SOFT_MASK
-value|(((1UL<< TD_SOFT_SIZE) - 1)<< TD_SOFT_SHIFT)
+value|((1UL<< TD_SOFT_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SIZE_SPREAD
+value|(3)
 end_define
 
 begin_define
@@ -218,7 +225,7 @@ name|TD_PA
 parameter_list|(
 name|pa
 parameter_list|)
-value|((pa)& TD_PA_MASK)
+value|((pa)& (TD_PA_MASK<< TD_PA_SHIFT))
 end_define
 
 begin_define
@@ -318,41 +325,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_GET_SIZE
+name|TTE_GET_SIZE
 parameter_list|(
-name|d
+name|tp
 parameter_list|)
-value|(((d)>> TD_SIZE_SHIFT)& 3)
+define|\
+value|(((tp)->tte_data>> TD_SIZE_SHIFT)& TD_SIZE_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TD_GET_PA
+name|TTE_GET_PAGE_SHIFT
 parameter_list|(
-name|d
+name|tp
 parameter_list|)
-value|((d)& TD_PA_MASK)
+define|\
+value|(PAGE_SHIFT + (TTE_GET_SIZE(tp) * TD_SIZE_SPREAD))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TD_GET_TLB
+name|TTE_GET_PAGE_SIZE
 parameter_list|(
-name|d
+name|tp
 parameter_list|)
-value|(((d)& TD_EXEC) ? (TLB_DTLB | TLB_ITLB) : TLB_DTLB)
+define|\
+value|(1<< TTE_GET_PAGE_SHIFT(tp))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TV_GET_VA
+name|TTE_GET_PAGE_MASK
 parameter_list|(
-name|vpn
+name|tp
 parameter_list|)
-value|((vpn)<< PAGE_SHIFT)
+define|\
+value|(TTE_GET_PAGE_SIZE(tp) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTE_GET_PA
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|((tp)->tte_data& (TD_PA_MASK<< TD_PA_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTE_GET_TLB
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|(((tp)->tte_data& TD_EXEC) ? (TLB_DTLB | TLB_ITLB) : TLB_DTLB)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTE_GET_VA
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|((tp)->tte_vpn<< PAGE_SHIFT)
 end_define
 
 begin_struct
@@ -377,7 +421,8 @@ name|tte_match_vpn
 parameter_list|(
 name|struct
 name|tte
-name|tte
+modifier|*
+name|tp
 parameter_list|,
 name|vm_offset_t
 name|vpn
@@ -386,8 +431,8 @@ block|{
 return|return
 operator|(
 operator|(
-name|tte
-operator|.
+name|tp
+operator|->
 name|tte_data
 operator|&
 name|TD_V
@@ -395,8 +440,8 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|tte
-operator|.
+name|tp
+operator|->
 name|tte_vpn
 operator|==
 name|vpn
@@ -413,7 +458,8 @@ name|tte_match
 parameter_list|(
 name|struct
 name|tte
-name|tte
+modifier|*
+name|tp
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -423,7 +469,7 @@ return|return
 operator|(
 name|tte_match_vpn
 argument_list|(
-name|tte
+name|tp
 argument_list|,
 name|va
 operator|>>
