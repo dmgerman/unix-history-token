@@ -35,12 +35,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	1.3	%G%"
+literal|"@(#)err.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		-1 always ** **	Side Effects: **		Sets Error. **		Sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		-1 always ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ argument_list|,
 name|errbuf
 argument_list|)
 expr_stmt|;
-name|Error
+name|Errors
 operator|++
 expr_stmt|;
 comment|/* determine exit status if not already set */
@@ -241,7 +241,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		-1 ** **	Side Effects: **		sets Error. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		-1 ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -283,7 +283,7 @@ condition|(
 name|SuprErrs
 condition|)
 return|return;
-name|Error
+name|Errors
 operator|++
 expr_stmt|;
 if|if

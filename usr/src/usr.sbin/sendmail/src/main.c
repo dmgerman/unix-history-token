@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.10	%G%"
+literal|"@(#)main.c	1.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,22 +177,22 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|Error
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if errors */
-end_comment
-
-begin_decl_stmt
-name|bool
 name|SuprErrs
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* supress errors if set */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Errors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* count of errors */
 end_comment
 
 begin_decl_stmt
@@ -1026,7 +1026,9 @@ block|}
 comment|/* if we have had errors sofar, drop out now */
 if|if
 condition|(
-name|Error
+name|Errors
+operator|>
+literal|0
 operator|&&
 name|ExitStat
 operator|==

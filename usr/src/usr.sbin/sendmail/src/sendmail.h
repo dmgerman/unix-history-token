@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.5	%G% */
+comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.6	%G% */
 end_comment
 
 begin_include
@@ -66,6 +66,17 @@ end_define
 
 begin_comment
 comment|/* maximum value of HopCount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALIASFILE
+value|"/usr/lib/aliases"
+end_define
+
+begin_comment
+comment|/* location of alias file */
 end_comment
 
 begin_comment
@@ -493,17 +504,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|bool
-name|Error
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if errors */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
 name|UseMsgId
 decl_stmt|;
 end_decl_stmt
@@ -532,6 +532,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* save leading "From" lines */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|Errors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if errors */
 end_comment
 
 begin_decl_stmt

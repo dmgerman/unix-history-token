@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.6	%G%"
+literal|"@(#)deliver.c	1.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,7 +210,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|Error
+name|Errors
 operator|=
 literal|0
 expr_stmt|;
@@ -958,7 +958,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Error may be set. **		ExitStat may be set. ** **	Called By: **		deliver */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. ** **	Called By: **		deliver */
 end_comment
 
 begin_expr_stmt
@@ -1051,7 +1051,7 @@ literal|"ok"
 expr_stmt|;
 else|else
 block|{
-name|Error
+name|Errors
 operator|++
 expr_stmt|;
 if|if
@@ -1594,60 +1594,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* 	**  Don't go to the net if already on the target host. 	**	This is important on the berkeley network, since 	**	it get confused if we ask to send to ourselves. 	**	For nets like the ARPANET, we probably will have 	**	the local list set to NULL to simplify testing. 	**	The canonical representation of the name is also set 	**	to be just the local name so the duplicate letter 	**	suppression algorithm will work. 	*/
-if|if
-condition|(
-operator|(
-name|pvp
-operator|=
-name|m
-operator|->
-name|m_local
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-while|while
-condition|(
-operator|*
-name|pvp
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|pvp
-operator|++
-argument_list|,
-name|a
-operator|->
-name|q_host
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|a
-operator|->
-name|q_mailer
-operator|=
-name|m
-operator|=
-operator|&
-name|Mailer
-index|[
-literal|0
-index|]
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
 comment|/* 	**  Look up this person in the recipient list.  If they 	**  are there already, return, otherwise continue. 	*/
 if|if
 condition|(
