@@ -134,6 +134,9 @@ directive|endif
 operator|&
 name|gzipfs_fsops
 block|,
+operator|&
+name|splitfs_fsops
+block|,
 name|NULL
 block|}
 decl_stmt|;
