@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookbib.c	4.2 (Berkeley) %G%"
+literal|"@(#)lookbib.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,22 +208,22 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|fputs
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tNeither index file %s.ia "
 argument_list|,
 name|s
-argument_list|,
-name|stderr
 argument_list|)
 expr_stmt|;
-name|fputs
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"nor reference file %s found\n"
 argument_list|,
 name|s
-argument_list|,
-name|stderr
 argument_list|)
 expr_stmt|;
 name|exit
