@@ -29,6 +29,12 @@ directive|include
 file|"../ntn3270/general.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"spint.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -48,13 +54,6 @@ define|#
 directive|define
 name|PSP_FCB2
 value|0x6c
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERRUPT_NUMBER
-value|73
 end_define
 
 begin_typedef
@@ -85,35 +84,6 @@ decl_stmt|;
 comment|/* Segment of FCB 2 */
 block|}
 name|ExecList
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|union
-name|REGS
-name|regs
-decl_stmt|;
-name|struct
-name|SREGS
-name|sregs
-decl_stmt|;
-name|int
-name|int_no
-decl_stmt|;
-comment|/* Which interrupt to wait on */
-name|int
-name|done
-decl_stmt|;
-comment|/* Are we done, or just took an interrupt? */
-name|int
-name|rc
-decl_stmt|;
-comment|/* return code */
-block|}
-name|Spawn
 typedef|;
 end_typedef
 
@@ -628,6 +598,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERRUPT_NUMBER
+value|73
+end_define
+
 begin_function
 name|main
 parameter_list|(
@@ -818,7 +802,7 @@ operator|=
 name|length
 expr_stmt|;
 block|}
-comment|/*      * do_spawn returns when either the command has finished, or when      * the required interrupt comes in.  In the latter case, the appropriate      * thing to do is to process the interrupt, and then return to      * the interrupt issuer.      */
+comment|/*      * do_spawn() returns when either the command has finished, or when      * the required interrupt comes in.  In the latter case, the appropriate      * thing to do is to process the interrupt, and then return to      * the interrupt issuer by calling continue_spawn().      */
 name|do_spawn
 argument_list|(
 name|command
@@ -827,7 +811,7 @@ operator|&
 name|spawned
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|spawned
 operator|.
@@ -837,6 +821,27 @@ literal|0
 condition|)
 block|{
 comment|/* Process request */
+name|spawned
+operator|.
+name|regs
+operator|.
+name|h
+operator|.
+name|al
+operator|=
+literal|0
+expr_stmt|;
+name|spawned
+operator|.
+name|regs
+operator|.
+name|x
+operator|.
+name|cflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* No errors (yet) */
 switch|switch
 condition|(
 name|spawned
@@ -858,7 +863,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|cx
+name|bx
 operator|+=
 name|spawned
 operator|.
@@ -866,7 +871,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|dx
+name|cx
 expr_stmt|;
 break|break;
 case|case
@@ -879,7 +884,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|cx
+name|bx
 operator|-=
 name|spawned
 operator|.
@@ -887,7 +892,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|dx
+name|cx
 expr_stmt|;
 break|break;
 case|case
@@ -900,7 +905,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|cx
+name|bx
 operator|*=
 name|spawned
 operator|.
@@ -908,7 +913,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|dx
+name|cx
 expr_stmt|;
 break|break;
 case|case
@@ -921,7 +926,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|cx
+name|bx
 operator|/=
 name|spawned
 operator|.
@@ -929,7 +934,7 @@ name|regs
 operator|.
 name|x
 operator|.
-name|dx
+name|cx
 expr_stmt|;
 break|break;
 default|default:
@@ -957,14 +962,23 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+name|spawned
+operator|.
+name|regs
+operator|.
+name|h
+operator|.
+name|ah
+operator|=
+literal|0
+expr_stmt|;
+comment|/* We saw this */
 name|continue_spawn
 argument_list|(
 operator|&
 name|spawned
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
-comment|/* continue_spawn() causes an eventual return from do_spawn. */
 block|}
 if|if
 condition|(
