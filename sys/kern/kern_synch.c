@@ -790,7 +790,7 @@ value|11
 end_define
 
 begin_comment
-comment|/*  * Recompute process priorities, every hz ticks.  */
+comment|/*  * Recompute process priorities, every hz ticks.  * MP-safe, called without the Giant mutex.  */
 end_comment
 
 begin_comment
@@ -2805,7 +2805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement timeout for msleep or asleep()/mawait()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  */
+comment|/*  * Implement timeout for msleep or asleep()/mawait()  *  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  * MP-safe, called without the Giant mutex.  */
 end_comment
 
 begin_function
