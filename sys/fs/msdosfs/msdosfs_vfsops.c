@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.39 1998/12/07 21:58:35 archie Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.40 1999/01/27 22:42:09 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -2484,11 +2484,6 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"mountmsdosfs(): bad signature\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -2704,11 +2699,6 @@ directive|endif
 name|error
 operator|=
 name|EINVAL
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"mountmsdosfs(): bad bpb\n"
-argument_list|)
 expr_stmt|;
 goto|goto
 name|error_exit
