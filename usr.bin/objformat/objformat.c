@@ -144,6 +144,26 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|argc
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: objformat\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%s\n"
