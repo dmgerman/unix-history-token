@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* "@(#)head.h 4.1 %G%" */
+comment|/* "@(#)head.h 4.2 %G%" */
 end_comment
 
 begin_include
@@ -201,7 +201,7 @@ begin_decl_stmt
 name|char
 name|curfile
 index|[
-literal|30
+literal|120
 index|]
 decl_stmt|;
 end_decl_stmt
