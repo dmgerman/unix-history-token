@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.34 1997/02/12 16:19:11 mpp Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.35 1997/02/24 17:08:49 bde Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -24,16 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_comment
-comment|/* defines plimit structure in proc struct */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -46,19 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -86,18 +70,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/dirent.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_comment
-comment|/* defines dirent structure		*/
-end_comment
 
 begin_include
 include|#
@@ -4923,7 +4897,7 @@ name|dirent
 operator|.
 name|d_reclen
 operator|=
-name|DIRSIZ
+name|GENERIC_DIRSIZ
 argument_list|(
 operator|&
 name|dirent
