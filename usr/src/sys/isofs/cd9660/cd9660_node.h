@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.h	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_node.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -170,11 +170,11 @@ name|ino_t
 name|i_ino
 decl_stmt|;
 comment|/* inode number of found directory */
-name|pid_t
-name|i_lockholder
-decl_stmt|,
-name|i_lockwaiter
+name|struct
+name|lock
+name|i_lock
 decl_stmt|;
+comment|/* node lock */
 name|long
 name|iso_extent
 decl_stmt|;
@@ -210,28 +210,6 @@ end_define
 
 begin_comment
 comment|/* flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LOCKED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* inode is locked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_WANTED
-value|0x0002
-end_define
-
-begin_comment
-comment|/* some process waiting on lock */
 end_comment
 
 begin_define
