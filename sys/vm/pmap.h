@@ -322,6 +322,9 @@ operator|,
 name|vm_offset_t
 name|addr
 operator|,
+name|vm_prot_t
+name|prot
+operator|,
 name|vm_object_t
 name|object
 operator|,

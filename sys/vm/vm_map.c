@@ -2107,6 +2107,8 @@ name|pmap
 argument_list|,
 name|start
 argument_list|,
+name|prot
+argument_list|,
 name|object
 argument_list|,
 name|OFF_TO_IDX
@@ -4820,6 +4822,10 @@ operator|->
 name|pmap
 argument_list|,
 name|useStart
+argument_list|,
+name|current
+operator|->
+name|protection
 argument_list|,
 name|current
 operator|->
@@ -11215,6 +11221,10 @@ operator|->
 name|pmap
 argument_list|,
 name|uaddr
+argument_list|,
+name|entry
+operator|->
+name|protection
 argument_list|,
 name|srcobject
 argument_list|,
