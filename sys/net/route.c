@@ -2991,7 +2991,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|Bcopy
+name|bcopy
 argument_list|(
 name|dst
 argument_list|,
@@ -4202,7 +4202,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * copy the new gateway value into the memory chunk 	 */
-name|Bcopy
+name|bcopy
 argument_list|(
 name|gate
 argument_list|,
@@ -4232,7 +4232,7 @@ condition|(
 name|old
 condition|)
 block|{
-name|Bcopy
+name|bcopy
 argument_list|(
 name|dst
 argument_list|,
