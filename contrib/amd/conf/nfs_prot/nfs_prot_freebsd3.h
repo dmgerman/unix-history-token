@@ -15,11 +15,22 @@ directive|define
 name|_AMU_NFS_PROT_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMMENT_OUT
-end_ifdef
+begin_comment
+comment|/* nfs_prot.h defines struct `nfs_fh3', but it is a ``dmr "unwarranted  * chumminess with the C implementation".  We need the more complete  * structure, which is defined below.  So get the stock `nfs_fh3'  * out of the way.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|nfs_fh3
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|nfs_fh3
+value|nfs_fh3_fbsd_
+end_define
 
 begin_ifdef
 ifdef|#
@@ -41,38 +52,6 @@ end_endif
 begin_comment
 comment|/* HAVE_RPCSVC_NFS_PROT_H */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMMENT_OUT */
-end_comment
-
-begin_comment
-comment|/* nfs_prot.h defines struct `nfs_fh3', but it is a ``dmr "unwarranted  * chumminess with the C implementation".  We need the more complete  * structure, which is defined below.  So get the stock `nfs_fh3'  * out of the way.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|nfs_fh3
-struct_decl|;
-end_struct_decl
-
-begin_define
-define|#
-directive|define
-name|nfs_fh3
-value|nfs_fh3_fbsd_
-end_define
-
-begin_include
-include|#
-directive|include
-file|"nfs_prot.h"
-end_include
 
 begin_undef
 undef|#

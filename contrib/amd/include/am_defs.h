@@ -3845,12 +3845,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMMENT_OUT
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_RPCSVC_MOUNT_H
 end_ifdef
 
@@ -3883,17 +3877,6 @@ end_endif
 begin_comment
 comment|/* HAVE_RPCSVC_MOUNT_H */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"mount.h"
-end_include
 
 begin_comment
 comment|/*  * Actions to take if<rpcsvc/nis.h> exists.  */
