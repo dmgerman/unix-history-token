@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)filter.c	1.1 (Berkeley) %G%"
+literal|"@(#)filter.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|reg
 name|int
 name|i
 decl_stmt|;
@@ -210,6 +210,9 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|filename
@@ -219,6 +222,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|filename
@@ -392,6 +398,9 @@ argument_list|(
 name|inbuffer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|substitute
 argument_list|(
 name|names_ignored
@@ -503,13 +512,13 @@ modifier|*
 name|key
 decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|int
 name|ub
 decl_stmt|,
 name|lb
 decl_stmt|;
-specifier|register
+name|reg
 name|int
 name|halfway
 decl_stmt|;
@@ -619,17 +628,15 @@ name|discardit
 parameter_list|(
 name|errorp
 parameter_list|)
-specifier|register
-name|struct
-name|error_desc
-modifier|*
+name|reg
+name|Eptr
 name|errorp
 decl_stmt|;
 block|{
 name|int
 name|language
 decl_stmt|;
-specifier|register
+name|reg
 name|int
 name|i
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  @(#)error.h	1.1 (Berkeley) %G%  */
+comment|/*  *  @(#)error.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -13,6 +13,13 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|reg
+value|register
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRUE
 value|1
 end_define
@@ -21,6 +28,20 @@ begin_define
 define|#
 directive|define
 name|FALSE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|true
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|false
 value|0
 end_define
 
@@ -476,6 +497,111 @@ name|query
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|terse
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|inquire
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* inquire for yes/no */
+end_comment
+
+begin_comment
+comment|/*   *	codes for inquire() to return  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_NO
+value|1
+end_define
+
+begin_comment
+comment|/* 'N' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_no
+value|2
+end_define
+
+begin_comment
+comment|/* 'n' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_YES
+value|3
+end_define
+
+begin_comment
+comment|/* 'Y' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_yes
+value|4
+end_define
+
+begin_comment
+comment|/* 'y' */
+end_comment
+
+begin_function_decl
+name|int
+name|probethisfile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  *	codes for probethisfile to return  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_NOTEXIST
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_NOTREAD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_NOTWRITE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_TOUCHIT
+value|4
+end_define
+
 begin_comment
 comment|/*  *	Describes attributes about a language  */
 end_comment
@@ -645,13 +771,27 @@ begin_comment
 comment|/*   *	Structure definition for a full error  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|struct
+name|edesc
+name|Edesc
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|Edesc
+modifier|*
+name|Eptr
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|error_desc
+name|edesc
 block|{
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 name|error_next
 decl_stmt|;
 comment|/*linked together*/
@@ -706,18 +846,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 name|er_head
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 name|errors
 decl_stmt|;
@@ -736,9 +872,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 modifier|*
 name|files
@@ -850,6 +984,22 @@ name|persperdexplode
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  *	Printing hacks  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|plural
+argument_list|()
+decl_stmt|,
+modifier|*
+name|verbform
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

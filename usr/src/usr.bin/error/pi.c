@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pi.c	1.1 (Berkeley) %G%"
+literal|"@(#)pi.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +316,7 @@ name|alldigits
 parameter_list|(
 name|string
 parameter_list|)
-specifier|register
+name|reg
 name|char
 modifier|*
 name|string
@@ -361,7 +361,7 @@ name|char
 modifier|*
 name|member
 decl_stmt|;
-specifier|register
+name|reg
 name|char
 modifier|*
 modifier|*
@@ -483,17 +483,12 @@ name|piptr
 parameter_list|(
 name|string
 parameter_list|)
-specifier|register
+name|reg
 name|char
 modifier|*
 name|string
 decl_stmt|;
 block|{
-name|int
-name|state
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -584,12 +579,6 @@ modifier|*
 modifier|*
 name|nwordv
 decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|128
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -651,6 +640,9 @@ name|language
 operator|=
 name|INPI
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|substitute
 argument_list|(
 name|wordv

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.2 (Berkeley) %G%"
+literal|"@(#)main.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,17 +42,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 name|er_head
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 name|errors
 decl_stmt|;
@@ -67,9 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 modifier|*
 name|files
@@ -152,6 +146,18 @@ comment|/* this is not pi */
 end_comment
 
 begin_decl_stmt
+name|boolean
+name|terse
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terse output */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|suffixlist
@@ -179,7 +185,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	error [-I ignorename] [-n] [-q] [-t suffixlist] [-s] [-v] [infile]  *	  *	-I:	the following name, `ignorename' contains a list of  *		function names that are not to be treated as hard errors.  *		Default: ~/.errorsrc  *  *	-n:	don't touch ANY files!  *  *	-q:	The user is to be queried before touching each  *		file; if not specified, all files with hard, non  *		ignorable errors are touched (assuming they can be).  *  *	-t:	touch only files ending with the list of suffices, each  *		suffix preceded by a dot.  *		eg, -t .c.y.l  *		will touch only files ending with .c, .y or .l  *  *	-s:	print a summary of the error's categories.  *  *	-v:	after touching all files, overlay vi(1), ex(1) or ed(1)  *		on top of error, entered in the first file with  *		an error in it, with the appropriate editor  *		set up to use the "next" command to get the other  *		files containing errors.  *  *	-p:	(obsolete: for older versions of pi without bug  *		fix regarding printing out the name of the main file  *		with an error in it)  *		Take the following argument and use it as the name of  *		the pascal source file, suffix .p  *  *	-E:	show the errors in sorted order; intended for  *		debugging.  *  *	-S:	show the errors in unsorted order  *		(as they come from the error file)  *  *	infile:	The error messages come from this file.  *		Default: stdin  */
+comment|/*  *	error [-I ignorename] [-n] [-q] [-t suffixlist] [-s] [-v] [infile]  *	  *	-T:	terse output  *  *	-I:	the following name, `ignorename' contains a list of  *		function names that are not to be treated as hard errors.  *		Default: ~/.errorsrc  *  *	-n:	don't touch ANY files!  *  *	-q:	The user is to be queried before touching each  *		file; if not specified, all files with hard, non  *		ignorable errors are touched (assuming they can be).  *  *	-t:	touch only files ending with the list of suffices, each  *		suffix preceded by a dot.  *		eg, -t .c.y.l  *		will touch only files ending with .c, .y or .l  *  *	-s:	print a summary of the error's categories.  *  *	-v:	after touching all files, overlay vi(1), ex(1) or ed(1)  *		on top of error, entered in the first file with  *		an error in it, with the appropriate editor  *		set up to use the "next" command to get the other  *		files containing errors.  *  *	-p:	(obsolete: for older versions of pi without bug  *		fix regarding printing out the name of the main file  *		with an error in it)  *		Take the following argument and use it as the name of  *		the pascal source file, suffix .p  *  *	-E:	show the errors in sorted order; intended for  *		debugging.  *  *	-S:	show the errors in unsorted order  *		(as they come from the error file)  *  *	infile:	The error messages come from this file.  *		Default: stdin  */
 end_comment
 
 begin_function
@@ -254,7 +260,6 @@ name|argc
 operator|>
 literal|1
 condition|)
-block|{
 for|for
 control|(
 init|;
@@ -300,7 +305,6 @@ condition|;
 name|cp
 operator|++
 control|)
-block|{
 switch|switch
 condition|(
 operator|*
@@ -324,7 +328,6 @@ break|break;
 case|case
 literal|'n'
 case|:
-comment|/* no touch */
 name|notouch
 operator|=
 name|TRUE
@@ -333,7 +336,6 @@ break|break;
 case|case
 literal|'q'
 case|:
-comment|/* query */
 name|query
 operator|=
 name|TRUE
@@ -350,7 +352,6 @@ break|break;
 case|case
 literal|'s'
 case|:
-comment|/* show summary */
 name|pr_summary
 operator|=
 name|TRUE
@@ -359,8 +360,15 @@ break|break;
 case|case
 literal|'v'
 case|:
-comment|/* edit files */
 name|edit_files
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|terse
 operator|=
 name|TRUE
 expr_stmt|;
@@ -467,12 +475,7 @@ index|]
 expr_stmt|;
 break|break;
 block|}
-comment|/*end of the argument switch*/
 block|}
-comment|/*end of loop to consume characters after '-'*/
-block|}
-block|}
-comment|/* end of being at least one argument */
 if|if
 condition|(
 name|notouch
@@ -658,9 +661,7 @@ name|nerrors
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|error_desc
-operator|*
+name|Eptr
 argument_list|)
 argument_list|,
 name|errorsort
@@ -824,46 +825,97 @@ argument_list|)
 operator|&&
 name|edit_files
 condition|)
+name|forkvi
+argument_list|(
+name|ed_argc
+argument_list|,
+name|ed_argv
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|forkvi
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|if
 condition|(
-operator|!
 name|query
-operator|||
+condition|)
+block|{
+switch|switch
+condition|(
 name|inquire
 argument_list|(
+name|terse
+condition|?
+literal|"Edit? "
+else|:
 literal|"Do you still want to edit the files you touched? "
 argument_list|)
 condition|)
 block|{
-comment|/* 			 *	ed_agument's first argument is 			 *	a vi/ex compatabile search argument 			 *	to find the first occurance of ### 			 */
+case|case
+name|Q_NO
+case|:
+case|case
+name|Q_no
+case|:
+return|return;
+default|default:
+break|break;
+block|}
+block|}
+comment|/* 	 *	ed_agument's first argument is 	 *	a vi/ex compatabile search argument 	 *	to find the first occurance of ### 	 */
 name|try
 argument_list|(
 literal|"vi"
 argument_list|,
-name|ed_argc
+name|argc
 argument_list|,
-name|ed_argv
+name|argv
 argument_list|)
 expr_stmt|;
 name|try
 argument_list|(
 literal|"ex"
 argument_list|,
-name|ed_argc
+name|argc
 argument_list|,
-name|ed_argv
+name|argv
 argument_list|)
 expr_stmt|;
 name|try
 argument_list|(
 literal|"ed"
 argument_list|,
-name|ed_argc
+name|argc
 operator|-
 literal|1
 argument_list|,
-name|ed_argv
+name|argv
 operator|+
 literal|1
 argument_list|)
@@ -876,9 +928,7 @@ literal|"Can't find any editors.\n"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-end_function
+end_block
 
 begin_macro
 name|try
@@ -998,27 +1048,21 @@ name|epp1
 parameter_list|,
 name|epp2
 parameter_list|)
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 name|epp1
 decl_stmt|,
 decl|*
-modifier|*
 name|epp2
 decl_stmt|;
 end_function
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|error_desc
-modifier|*
+name|reg
+name|Eptr
 name|ep1
 decl_stmt|,
-modifier|*
 name|ep2
 decl_stmt|;
 name|int

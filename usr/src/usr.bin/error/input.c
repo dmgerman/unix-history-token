@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.3 (Berkeley) 81/02/28"
+literal|"@(#)input.c	1.4 (Berkeley) 82/01/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,9 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 modifier|*
 name|r_errorv
@@ -495,13 +493,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|error_desc
-modifier|*
+name|reg
+name|Eptr
 name|newerror
 decl_stmt|;
-specifier|register
+name|reg
 name|char
 modifier|*
 name|cp
@@ -581,9 +577,7 @@ block|{
 name|newerror
 operator|=
 operator|(
-expr|struct
-name|error_desc
-operator|*
+name|Eptr
 operator|)
 name|Calloc
 argument_list|(
@@ -591,8 +585,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|error_desc
+name|Edesc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -865,6 +858,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|substitute
 argument_list|(
 name|currentfilename
@@ -1298,12 +1294,12 @@ name|Errorclass
 name|richieccom
 parameter_list|()
 block|{
-specifier|register
+name|reg
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
+name|reg
 name|char
 modifier|*
 modifier|*
@@ -1455,12 +1451,7 @@ name|Errorclass
 name|lint0
 parameter_list|()
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-specifier|register
+name|reg
 name|char
 modifier|*
 modifier|*
@@ -2358,11 +2349,6 @@ name|Errorclass
 name|ri
 parameter_list|()
 block|{
-name|char
-modifier|*
-modifier|*
-name|nwordv
-decl_stmt|;
 comment|/*  *	Match an error message produced by ri; here is the  *	procedure yanked from the distributed version of ri  *	April 24, 1980.  *	  *	serror(str, x1, x2, x3)  *		char str[];  *		char *x1, *x2, *x3;  *	{  *		extern int yylineno;  *		  *		putc('"', stdout);  *		fputs(srcfile, stdout);  *		putc('"', stdout);  *		fprintf(stdout, " %d: ", yylineno);  *		fprintf(stdout, str, x1, x2, x3);  *		fprintf(stdout, "\n");  *		synerrs++;  *	}  */
 if|if
 condition|(

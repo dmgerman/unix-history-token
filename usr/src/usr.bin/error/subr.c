@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)subr.c	1.1 (Berkeley) %G%"
+literal|"@(#)subr.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ file|"error.h"
 end_include
 
 begin_comment
-comment|/*  *	go through and arrayify a list of rules  */
+comment|/*  *	Arrayify a list of rules  */
 end_comment
 
 begin_macro
@@ -50,9 +50,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 modifier|*
 modifier|*
 name|e_array
@@ -60,33 +58,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 name|header
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|error_desc
-modifier|*
+name|reg
+name|Eptr
 name|errorp
 decl_stmt|;
-specifier|register
-name|struct
-name|error_desc
-modifier|*
+name|reg
+name|Eptr
 modifier|*
 name|array
 decl_stmt|;
-specifier|register
+name|reg
 name|int
 name|listlength
 decl_stmt|;
-specifier|register
+name|reg
 name|int
 name|listindex
 decl_stmt|;
@@ -115,9 +107,7 @@ continue|continue;
 name|array
 operator|=
 operator|(
-expr|struct
-name|error_desc
-operator|*
+name|Eptr
 operator|*
 operator|)
 name|Calloc
@@ -128,9 +118,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|error_desc
-operator|*
+name|Eptr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -178,9 +166,7 @@ name|listindex
 index|]
 operator|=
 operator|(
-expr|struct
-name|error_desc
-operator|*
+name|Eptr
 operator|)
 literal|0
 expr_stmt|;
@@ -351,6 +337,9 @@ name|char
 modifier|*
 name|outstring
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|outstring
@@ -394,17 +383,17 @@ name|string
 parameter_list|,
 name|ch
 parameter_list|)
-specifier|register
+name|reg
 name|char
 modifier|*
 name|string
 decl_stmt|;
-specifier|register
+name|reg
 name|char
 name|ch
 decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|int
 name|i
 decl_stmt|;
@@ -471,7 +460,7 @@ decl_stmt|,
 name|chnew
 decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|char
 modifier|*
 name|cp
@@ -704,7 +693,7 @@ end_function
 
 begin_block
 block|{
-specifier|register
+name|reg
 name|char
 modifier|*
 name|cp
@@ -872,7 +861,7 @@ end_function
 
 begin_block
 block|{
-specifier|register
+name|reg
 name|char
 modifier|*
 name|cp
@@ -1293,9 +1282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|error_desc
-modifier|*
+name|Eptr
 name|errorv
 index|[]
 decl_stmt|;
@@ -1303,14 +1290,12 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|reg
 name|int
 name|i
 decl_stmt|;
-specifier|register
-name|struct
-name|error_desc
-modifier|*
+name|reg
+name|Eptr
 name|errorp
 decl_stmt|;
 for|for
@@ -1524,7 +1509,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|reg
 name|char
 modifier|*
 name|cp
@@ -1788,7 +1773,7 @@ modifier|*
 name|wordv2
 decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|int
 name|i
 decl_stmt|;
@@ -1871,7 +1856,7 @@ modifier|*
 name|wordv
 decl_stmt|;
 block|{
-specifier|register
+name|reg
 name|char
 modifier|*
 modifier|*
@@ -1884,7 +1869,7 @@ name|emptyhead
 operator|+
 name|wordc
 decl_stmt|;
-specifier|register
+name|reg
 name|int
 name|i
 decl_stmt|;
@@ -1956,6 +1941,80 @@ block|}
 return|return
 operator|(
 name|nwordv
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	plural'ize and verb forms  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|S
+init|=
+literal|"s"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|N
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|char
+modifier|*
+name|plural
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|n
+operator|>
+literal|1
+condition|?
+name|S
+else|:
+name|N
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|verbform
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|n
+operator|>
+literal|1
+condition|?
+name|N
+else|:
+name|S
 operator|)
 return|;
 block|}
