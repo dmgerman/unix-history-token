@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.1.1.2 1996/04/13 15:33:10 joerg Exp $"
+literal|"$Id: init.c,v 1.3 1996/05/05 19:01:09 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,11 @@ literal|"Lo"
 block|}
 block|,
 comment|/* locale for strftime() */
+block|{
+literal|"pp"
+block|}
+block|,
+comment|/* ppp login program */
 block|{
 literal|0
 block|}

@@ -39,7 +39,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/pas.h>
+file|<i386/isa/sound/pas_defs.h>
 end_include
 
 begin_decl_stmt

@@ -1425,6 +1425,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* from awe_wave.c */
+end_comment
+
+begin_function_decl
+name|long
+name|attach_awe_obsolete
+parameter_list|(
+name|long
+name|mem_start
+parameter_list|,
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|probe_awe_obsolete
+parameter_list|(
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*	From pas_card.c	*/
 end_comment
 

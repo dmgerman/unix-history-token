@@ -470,6 +470,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|AWE32_BASE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AWE32_BASE
+value|0x620
+end_define
+
+begin_comment
+comment|/* Default = 0x620-3, 0xA20-3, 0xE20-3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PAS_BASE
 end_ifndef
 

@@ -1199,11 +1199,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|strlen
+argument_list|(
 name|link_name
-operator|-
-name|lp
-operator|->
-name|name
+argument_list|)
 operator|>=
 name|NAMSIZ
 condition|)
