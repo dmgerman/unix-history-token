@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	@(#)ipx_ip.c  *  * $Id: ipx_ip.c,v 1.8 1996/05/08 19:31:45 jhay Exp $  */
+comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	@(#)ipx_ip.c  *  * $Id: ipx_ip.c,v 1.9 1996/06/12 05:10:27 gpalmer Exp $  */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -46,31 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/protosw.h>
+file|<sys/sockio.h>
 end_include
 
 begin_include
@@ -124,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mtpr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipx/ipx.h>
 end_include
 
@@ -143,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|<netipx/ipx_ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipx/ipx_var.h>
 end_include
 
 begin_decl_stmt
@@ -164,7 +146,106 @@ begin_comment
 comment|/* list of all hosts and gateways or broadcast addrs */
 end_comment
 
+begin_function_decl
+specifier|static
+name|struct
+name|ifnet_en
+modifier|*
+name|ipxipattach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ipxip_free
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ipxipioctl
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|caddr_t
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ipxipoutput
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|dst
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+name|rt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ipxip_rtchange
+parameter_list|(
+name|struct
+name|in_addr
+modifier|*
+name|dst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ipxipstart
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|struct
 name|ifnet_en
 modifier|*
@@ -356,11 +437,8 @@ begin_comment
 comment|/*  * Process an ioctl request.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|ipxipioctl
 parameter_list|(
@@ -532,6 +610,8 @@ block|{
 if|if
 condition|(
 name|ipxip_lastin
+operator|!=
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -606,7 +686,7 @@ name|s
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipxipif
@@ -653,7 +733,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -678,7 +758,7 @@ name|s
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipxipif
@@ -856,11 +936,8 @@ return|return;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|ipxipoutput
 parameter_list|(
@@ -1012,7 +1089,7 @@ if|if
 condition|(
 name|m0
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -1108,7 +1185,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1193,7 +1270,7 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|ro
 argument_list|,
@@ -1243,6 +1320,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ipxipstart
 parameter_list|(
@@ -1355,12 +1433,9 @@ decl_stmt|;
 comment|/* 	 * First, make sure we already have an IPX address: 	 */
 if|if
 condition|(
-name|ipx_hosteqnh
-argument_list|(
-name|ipx_thishost
-argument_list|,
-name|ipx_zerohost
-argument_list|)
+name|ipx_ifaddr
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1406,7 +1481,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 operator|||
 name|ro
 operator|.
@@ -1414,7 +1489,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 return|return
@@ -1449,6 +1524,8 @@ operator|=
 name|in_ifaddr
 init|;
 name|ia
+operator|!=
+name|NULL
 condition|;
 name|ia
 operator|=
@@ -1469,7 +1546,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ia
 operator|=
@@ -1479,7 +1556,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|RTFREE
@@ -1516,6 +1593,8 @@ operator|=
 name|ipxip_list
 init|;
 name|ifn
+operator|!=
+name|NULL
 condition|;
 name|ifn
 operator|=
@@ -1621,9 +1700,6 @@ operator|*
 operator|)
 name|ipx_dst
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|ipx_control
 argument_list|(
 name|so
@@ -1647,6 +1723,7 @@ operator|)
 name|ifn
 argument_list|)
 expr_stmt|;
+comment|/* use any of our addresses */
 name|satoipx_addr
 argument_list|(
 name|ifr_ipxip
@@ -1656,7 +1733,13 @@ argument_list|)
 operator|.
 name|x_host
 operator|=
-name|ipx_thishost
+name|ipx_ifaddr
+operator|->
+name|ia_addr
+operator|.
+name|sipx_addr
+operator|.
+name|x_host
 expr_stmt|;
 return|return
 operator|(
@@ -1688,6 +1771,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ipxip_free
 parameter_list|(
@@ -1727,6 +1811,8 @@ condition|(
 name|ro
 operator|->
 name|ro_rt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|RTFREE
@@ -1740,7 +1826,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|ifp
@@ -1781,17 +1867,11 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/*extern u_char inetctlerrmap[]; */
-comment|/*XXX*/
-comment|/*JRE*/
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-comment|/* int in_rtchange(); */
-comment|/*XXX*/
-comment|/*JRE*/
 if|if
 condition|(
 operator|(
@@ -1871,6 +1951,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ipxip_rtchange
 parameter_list|(
@@ -1896,6 +1977,8 @@ operator|=
 name|ipxip_list
 init|;
 name|ifn
+operator|!=
+name|NULL
 condition|;
 name|ifn
 operator|=
@@ -1921,6 +2004,8 @@ operator|->
 name|ifen_route
 operator|.
 name|ro_rt
+operator|!=
+name|NULL
 condition|)
 block|{
 name|RTFREE
@@ -1938,7 +2023,7 @@ name|ifen_route
 operator|.
 name|ro_rt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1949,6 +2034,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* IPXIP */
+end_comment
 
 end_unit
 
