@@ -439,7 +439,7 @@ begin_define
 define|#
 directive|define
 name|VM_SWZONE_SIZE_MAX
-value|(70 * 1024 * 1024)
+value|(32 * 1024 * 1024)
 end_define
 
 begin_endif

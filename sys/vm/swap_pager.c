@@ -905,12 +905,14 @@ name|nsw_wcount_async_max
 operator|=
 name|nsw_wcount_async
 expr_stmt|;
-comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 70MB by default. 	 */
+comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
 name|n
 operator|=
 name|cnt
 operator|.
 name|v_page_count
+operator|/
+literal|2
 expr_stmt|;
 if|if
 condition|(
