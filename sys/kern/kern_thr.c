@@ -353,12 +353,6 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__alpha__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|__powerpc__
 argument_list|)
 name|cpu_throw
