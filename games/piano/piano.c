@@ -65,6 +65,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|initcmd
@@ -97,6 +98,7 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
@@ -107,6 +109,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|kstr
@@ -359,19 +362,22 @@ name|int
 name|fd
 parameter_list|,
 name|int
-name|echo
+name|p_echo
 parameter_list|)
 block|{
 name|int
 name|err
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
-init|=
+decl_stmt|;
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|s
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|write
 argument_list|(
 name|fd
@@ -394,7 +400,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|echo
+name|p_echo
 condition|)
 block|{
 name|fputs
