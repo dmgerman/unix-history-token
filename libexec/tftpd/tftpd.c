@@ -320,6 +320,7 @@ specifier|static
 struct|struct
 name|dirlist
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -360,6 +361,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|errtomsg
@@ -383,7 +385,29 @@ begin_function_decl
 specifier|static
 name|void
 name|oack
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|timer
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|justquit
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -431,6 +455,7 @@ name|passwd
 modifier|*
 name|nobody
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|chuser
@@ -1400,6 +1425,7 @@ begin_struct
 struct|struct
 name|formats
 block|{
+specifier|const
 name|char
 modifier|*
 name|f_mode
@@ -1490,6 +1516,14 @@ endif|#
 directive|endif
 block|{
 literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 block|}
 struct|;
@@ -1499,6 +1533,7 @@ begin_struct
 struct|struct
 name|options
 block|{
+specifier|const
 name|char
 modifier|*
 name|o_type
@@ -1518,16 +1553,28 @@ init|=
 block|{
 block|{
 literal|"tsize"
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 block|,
 comment|/* OPT_TSIZE */
 block|{
 literal|"timeout"
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 block|,
 comment|/* OPT_TIMEOUT */
 block|{
 name|NULL
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 block|}
 struct|;
@@ -2652,10 +2699,6 @@ name|struct
 name|tftphdr
 modifier|*
 name|dp
-decl_stmt|,
-modifier|*
-name|r_init
-argument_list|()
 decl_stmt|;
 name|struct
 name|tftphdr
@@ -3052,10 +3095,6 @@ name|struct
 name|tftphdr
 modifier|*
 name|dp
-decl_stmt|,
-modifier|*
-name|w_init
-argument_list|()
 decl_stmt|;
 name|struct
 name|tftphdr
@@ -3519,6 +3558,7 @@ block|{
 name|int
 name|e_code
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|e_msg
@@ -3594,6 +3634,7 @@ end_struct
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|errtomsg
@@ -3604,7 +3645,7 @@ parameter_list|)
 block|{
 specifier|static
 name|char
-name|buf
+name|ebuf
 index|[
 literal|20
 index|]
@@ -3653,7 +3694,7 @@ name|e_msg
 return|;
 name|snprintf
 argument_list|(
-name|buf
+name|ebuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3666,7 +3707,7 @@ name|error
 argument_list|)
 expr_stmt|;
 return|return
-name|buf
+name|ebuf
 return|;
 block|}
 end_function
