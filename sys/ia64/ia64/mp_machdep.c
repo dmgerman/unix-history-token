@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/sal.h>
 end_include
 
@@ -338,11 +344,9 @@ end_comment
 begin_expr_stmt
 name|ia64_set_cflg
 argument_list|(
-operator|(
 name|CR0_PE
 operator||
 name|CR0_PG
-operator|)
 operator||
 operator|(
 call|(
@@ -390,6 +394,26 @@ end_while
 begin_asm
 asm|__asm __volatile("ssm psr.ic|psr.i;; srlz.i;;");
 end_asm
+
+begin_comment
+comment|/* 	 * Get and save the CPU specific MCA records. Should we get the 	 * MCA state for each processor, or just the CMC state? 	 */
+end_comment
+
+begin_expr_stmt
+name|ia64_mca_save_state
+argument_list|(
+name|SAL_INFO_MCA
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ia64_mca_save_state
+argument_list|(
+name|SAL_INFO_CMC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|ap_awake
