@@ -456,6 +456,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|dev_t
+name|ida_dev_t
+decl_stmt|;
 name|int
 name|regs_res_type
 decl_stmt|;
