@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_mem.h,v 1.16 2002/05/19 06:24:33 augustss Exp $	*/
+comment|/*	$NetBSD: usb_mem.h,v 1.18 2002/05/28 17:45:17 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -75,10 +75,9 @@ name|DMAADDR
 parameter_list|(
 name|dma
 parameter_list|,
-name|offset
+name|o
 parameter_list|)
-define|\
-value|((dma)->block->map->dm_segs[0].ds_addr + (dma)->offs + (offset))
+value|((dma)->block->map->dm_segs[0].ds_addr + (dma)->offs + (o))
 end_define
 
 begin_define
@@ -88,10 +87,10 @@ name|KERNADDR
 parameter_list|(
 name|dma
 parameter_list|,
-name|offset
+name|o
 parameter_list|)
 define|\
-value|((void *)((char *)((dma)->block->kaddr + (dma)->offs) + (offset)))
+value|((void *)((char *)((dma)->block->kaddr + (dma)->offs) + (o)))
 end_define
 
 begin_function_decl
@@ -246,10 +245,9 @@ name|DMAADDR
 parameter_list|(
 name|dma
 parameter_list|,
-name|offset
+name|o
 parameter_list|)
-define|\
-value|(alpha_XXX_dmamap((vm_offset_t) *(dma) + (offset)))
+value|(alpha_XXX_dmamap((vm_offset_t) *(dma) + (o)))
 end_define
 
 begin_else
@@ -264,9 +262,9 @@ name|DMAADDR
 parameter_list|(
 name|dma
 parameter_list|,
-name|offset
+name|o
 parameter_list|)
-value|(vtophys(*(dma) + (offset)))
+value|(vtophys(*(dma) + (o)))
 end_define
 
 begin_endif
@@ -281,15 +279,19 @@ name|KERNADDR
 parameter_list|(
 name|dma
 parameter_list|,
-name|offset
+name|o
 parameter_list|)
-value|((void *) (*(dma) + (offset)))
+value|((void *) ((char *)*(dma) + (o)))
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 end_unit
 
