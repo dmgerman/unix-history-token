@@ -57,7 +57,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.133 2003/01/17 19:04:36 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.148 2003/01/20 12:05:41 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,7 +92,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *      generate #line directives in place of deleted code  */
+comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *      generate #line directives in place of deleted code  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
 end_comment
 
 begin_include
@@ -151,9 +151,6 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|LT_PLAIN
-block|,
-comment|/* ordinary line */
 name|LT_TRUEI
 block|,
 comment|/* a true #if with ignore flag */
@@ -184,6 +181,18 @@ comment|/* #else */
 name|LT_ENDIF
 block|,
 comment|/* #endif */
+name|LT_DODGY
+block|,
+comment|/* flag: directive is not on one line */
+name|LT_DODGY_LAST
+init|=
+name|LT_DODGY
+operator|+
+name|LT_ENDIF
+block|,
+name|LT_PLAIN
+block|,
+comment|/* ordinary line */
 name|LT_EOF
 block|,
 comment|/* end of file */
@@ -203,8 +212,6 @@ name|linetype_name
 index|[]
 init|=
 block|{
-literal|"PLAIN"
-block|,
 literal|"TRUEI"
 block|,
 literal|"FALSEI"
@@ -224,6 +231,28 @@ block|,
 literal|"ELSE"
 block|,
 literal|"ENDIF"
+block|,
+literal|"DODGY TRUEI"
+block|,
+literal|"DODGY FALSEI"
+block|,
+literal|"DODGY IF"
+block|,
+literal|"DODGY TRUE"
+block|,
+literal|"DODGY FALSE"
+block|,
+literal|"DODGY ELIF"
+block|,
+literal|"DODGY ELTRUE"
+block|,
+literal|"DODGY ELFALSE"
+block|,
+literal|"DODGY ELSE"
+block|,
+literal|"DODGY ENDIF"
+block|,
+literal|"PLAIN"
 block|,
 literal|"EOF"
 block|}
@@ -436,6 +465,17 @@ comment|/* maximum number of symbols */
 end_comment
 
 begin_comment
+comment|/*  * Sometimes when editing a keyword the replacement text is longer, so  * we leave some space at the end of the tline buffer to accommodate this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EDITSLOP
+value|10
+end_define
+
+begin_comment
 comment|/*  * Globals.  */
 end_comment
 
@@ -459,6 +499,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* -d: debugging reports */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|iocccok
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -e: fewer IOCCC errors */
 end_comment
 
 begin_decl_stmt
@@ -605,7 +656,7 @@ name|tline
 index|[
 name|MAXLINE
 operator|+
-literal|10
+name|EDITSLOP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -812,6 +863,38 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|ignoreoff
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ignoreon
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|keywordedit
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|nest
 parameter_list|(
 name|void
@@ -888,16 +971,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|unignore
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|usage
 parameter_list|(
 name|void
@@ -946,7 +1019,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:D:U:I:cdklst"
+literal|"i:D:U:I:cdeklst"
 argument_list|)
 operator|)
 operator|!=
@@ -1051,6 +1124,15 @@ case|case
 literal|'d'
 case|:
 name|debugging
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* fewer errors from dodgy lines */
+name|iocccok
 operator|=
 name|true
 expr_stmt|;
@@ -1235,9 +1317,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s"
-argument_list|,
-literal|"unifdef [-cdklst] [[-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym]] ... [file]\n"
+literal|"usage: unifdef [-cdeklst]"
+literal|" [[-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym]] ... [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1249,7 +1330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line. A NULL entry  * indicate that processing is complete.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintin the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we turn the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We change the #elif to #else and the  * following directive to #endif since this has the desired behaviour.  */
+comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line. A NULL entry  * indicate that processing is complete.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
 end_comment
 
 begin_typedef
@@ -1397,7 +1478,7 @@ block|{
 name|drop
 argument_list|()
 expr_stmt|;
-name|unignore
+name|ignoreoff
 argument_list|()
 expr_stmt|;
 name|state
@@ -1419,7 +1500,7 @@ block|{
 name|drop
 argument_list|()
 expr_stmt|;
-name|unignore
+name|ignoreoff
 argument_list|()
 expr_stmt|;
 name|state
@@ -1464,7 +1545,7 @@ block|{
 name|print
 argument_list|()
 expr_stmt|;
-name|unignore
+name|ignoreoff
 argument_list|()
 expr_stmt|;
 name|state
@@ -1526,7 +1607,7 @@ block|{
 name|drop
 argument_list|()
 expr_stmt|;
-name|unignore
+name|ignoreoff
 argument_list|()
 expr_stmt|;
 name|state
@@ -1548,7 +1629,7 @@ block|{
 name|drop
 argument_list|()
 expr_stmt|;
-name|unignore
+name|ignoreoff
 argument_list|()
 expr_stmt|;
 name|state
@@ -1668,6 +1749,79 @@ block|}
 end_function
 
 begin_comment
+comment|/* variable pedantry for obfuscated lines */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|Oiffy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|iocccok
+condition|)
+name|Fpass
+argument_list|()
+expr_stmt|;
+else|else
+name|Eioccc
+argument_list|()
+expr_stmt|;
+name|ignoreon
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|Oif
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|iocccok
+condition|)
+name|Fpass
+argument_list|()
+expr_stmt|;
+else|else
+name|Eioccc
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|Oelif
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|iocccok
+condition|)
+name|Pelif
+argument_list|()
+expr_stmt|;
+else|else
+name|Eioccc
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* ignore comments in this block */
 end_comment
 
@@ -1682,12 +1836,8 @@ block|{
 name|Fdrop
 argument_list|()
 expr_stmt|;
-name|ignore
-index|[
-name|depth
-index|]
-operator|=
-name|true
+name|ignoreon
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1703,12 +1853,8 @@ block|{
 name|Ftrue
 argument_list|()
 expr_stmt|;
-name|ignore
-index|[
-name|depth
-index|]
-operator|=
-name|true
+name|ignoreon
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1724,18 +1870,14 @@ block|{
 name|Ffalse
 argument_list|()
 expr_stmt|;
-name|ignore
-index|[
-name|depth
-index|]
-operator|=
-name|true
+name|ignoreon
+argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* modify this line */
+comment|/* edit this line */
 end_comment
 
 begin_function
@@ -1769,15 +1911,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|strcpy
+name|keywordedit
 argument_list|(
-name|keyword
-argument_list|,
 literal|"else\n"
 argument_list|)
-expr_stmt|;
-name|print
-argument_list|()
 expr_stmt|;
 name|state
 argument_list|(
@@ -1795,15 +1932,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|strcpy
+name|keywordedit
 argument_list|(
-name|keyword
-argument_list|,
 literal|"endif\n"
 argument_list|)
-expr_stmt|;
-name|print
-argument_list|()
 expr_stmt|;
 name|state
 argument_list|(
@@ -1821,15 +1953,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|strcpy
+name|keywordedit
 argument_list|(
-name|keyword
-argument_list|,
 literal|"endif\n"
 argument_list|)
-expr_stmt|;
-name|print
-argument_list|()
 expr_stmt|;
 name|state
 argument_list|(
@@ -1855,8 +1982,6 @@ init|=
 block|{
 comment|/* IS_OUTSIDE */
 block|{
-name|print
-block|,
 name|Itrue
 block|,
 name|Ifalse
@@ -1877,13 +2002,33 @@ name|Eelse
 block|,
 name|Eendif
 block|,
+name|Oiffy
+block|,
+name|Oiffy
+block|,
+name|Fpass
+block|,
+name|Oif
+block|,
+name|Oif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelse
+block|,
+name|Eendif
+block|,
+name|print
+block|,
 name|NULL
 block|}
 block|,
 comment|/* IS_FALSE_PREFIX */
 block|{
-name|drop
-block|,
 name|Idrop
 block|,
 name|Idrop
@@ -1904,13 +2049,33 @@ name|Selse
 block|,
 name|Dendif
 block|,
+name|Idrop
+block|,
+name|Idrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Mpass
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|drop
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_TRUE_PREFIX */
 block|{
-name|print
-block|,
 name|Itrue
 block|,
 name|Ifalse
@@ -1931,13 +2096,33 @@ name|Delse
 block|,
 name|Dendif
 block|,
+name|Oiffy
+block|,
+name|Oiffy
+block|,
+name|Fpass
+block|,
+name|Oif
+block|,
+name|Oif
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|print
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_PASS_MIDDLE */
 block|{
-name|print
-block|,
 name|Itrue
 block|,
 name|Ifalse
@@ -1958,13 +2143,33 @@ name|Pelse
 block|,
 name|Pendif
 block|,
+name|Oiffy
+block|,
+name|Oiffy
+block|,
+name|Fpass
+block|,
+name|Oif
+block|,
+name|Oif
+block|,
+name|Pelif
+block|,
+name|Oelif
+block|,
+name|Oelif
+block|,
+name|Pelse
+block|,
+name|Pendif
+block|,
+name|print
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_FALSE_MIDDLE */
 block|{
-name|drop
-block|,
 name|Idrop
 block|,
 name|Idrop
@@ -1985,13 +2190,33 @@ name|Pelse
 block|,
 name|Pendif
 block|,
+name|Idrop
+block|,
+name|Idrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|drop
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_TRUE_MIDDLE */
 block|{
-name|print
-block|,
 name|Itrue
 block|,
 name|Ifalse
@@ -2012,13 +2237,33 @@ name|Melse
 block|,
 name|Pendif
 block|,
+name|Oiffy
+block|,
+name|Oiffy
+block|,
+name|Fpass
+block|,
+name|Oif
+block|,
+name|Oif
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Eioccc
+block|,
+name|Pendif
+block|,
+name|print
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_PASS_ELSE */
 block|{
-name|print
-block|,
 name|Itrue
 block|,
 name|Ifalse
@@ -2039,13 +2284,33 @@ name|Eelse
 block|,
 name|Pendif
 block|,
+name|Oiffy
+block|,
+name|Oiffy
+block|,
+name|Fpass
+block|,
+name|Oif
+block|,
+name|Oif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelse
+block|,
+name|Pendif
+block|,
+name|print
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_FALSE_ELSE */
 block|{
-name|drop
-block|,
 name|Idrop
 block|,
 name|Idrop
@@ -2066,13 +2331,33 @@ name|Eelse
 block|,
 name|Dendif
 block|,
+name|Idrop
+block|,
+name|Idrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelse
+block|,
+name|Eioccc
+block|,
+name|drop
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_TRUE_ELSE */
 block|{
-name|print
-block|,
 name|Itrue
 block|,
 name|Ifalse
@@ -2093,13 +2378,33 @@ name|Eelse
 block|,
 name|Dendif
 block|,
+name|Oiffy
+block|,
+name|Oiffy
+block|,
+name|Fpass
+block|,
+name|Oif
+block|,
+name|Oif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelif
+block|,
+name|Eelse
+block|,
+name|Eioccc
+block|,
+name|print
+block|,
 name|Eeof
 block|}
 block|,
 comment|/* IS_FALSE_TRAILER */
 block|{
-name|drop
-block|,
 name|Idrop
 block|,
 name|Idrop
@@ -2120,9 +2425,31 @@ name|Delse
 block|,
 name|Dendif
 block|,
+name|Idrop
+block|,
+name|Idrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Fdrop
+block|,
+name|Dfalse
+block|,
+name|Dfalse
+block|,
+name|Dfalse
+block|,
+name|Delse
+block|,
+name|Eioccc
+block|,
+name|drop
+block|,
 name|Eeof
 block|}
-comment|/*PLAIN TRUEI FALSEI IF   TRUE  FALSE  ELIF  ELTRUE ELFALSE ELSE  ENDIF  EOF*/
+comment|/*TRUEI  FALSEI IF     TRUE   FALSE  ELIF   ELTRUE ELFALSE ELSE  ENDIF   TRUEI  FALSEI IF     TRUE   FALSE  ELIF   ELTRUE ELFALSE ELSE  ENDIF (DODGY)   PLAIN  EOF */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2130,6 +2457,80 @@ end_decl_stmt
 begin_comment
 comment|/*  * State machine utility functions  */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|ignoreoff
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ignoring
+index|[
+name|depth
+index|]
+operator|=
+name|ignoring
+index|[
+name|depth
+operator|-
+literal|1
+index|]
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ignoreon
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ignoring
+index|[
+name|depth
+index|]
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|keywordedit
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|replacement
+parameter_list|)
+block|{
+name|strlcpy
+argument_list|(
+name|keyword
+argument_list|,
+name|replacement
+argument_list|,
+name|tline
+operator|+
+sizeof|sizeof
+argument_list|(
+name|tline
+argument_list|)
+operator|-
+name|keyword
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -2179,29 +2580,6 @@ name|depth
 index|]
 operator|=
 name|is
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|unignore
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ignore
-index|[
-name|depth
-index|]
-operator|=
-name|ignore
-index|[
-name|depth
-operator|-
-literal|1
-index|]
 expr_stmt|;
 block|}
 end_function
@@ -2484,6 +2862,7 @@ name|cp
 operator|-
 name|keyword
 expr_stmt|;
+comment|/* no way can we deal with a continuation inside a keyword */
 if|if
 condition|(
 name|strncmp
@@ -2778,9 +3157,21 @@ operator|||
 name|incomment
 operator|)
 condition|)
-name|Eioccc
-argument_list|()
+block|{
+name|retval
+operator|+=
+name|LT_DODGY
 expr_stmt|;
+if|if
+condition|(
+name|incomment
+condition|)
+name|linestate
+operator|=
+name|LS_DIRTY
+expr_stmt|;
+block|}
+comment|/* skipcomment should have changed the state */
 if|if
 condition|(
 name|linestate
@@ -4783,10 +5174,8 @@ name|depth
 operator|==
 literal|0
 condition|)
-name|errx
+name|warnx
 argument_list|(
-literal|2
-argument_list|,
 literal|"%s: %d: %s"
 argument_list|,
 name|filename
@@ -4797,10 +5186,8 @@ name|msg
 argument_list|)
 expr_stmt|;
 else|else
-name|errx
+name|warnx
 argument_list|(
-literal|2
-argument_list|,
 literal|"%s: %d: %s (#if line %d depth %d)"
 argument_list|,
 name|filename
@@ -4815,6 +5202,13 @@ name|depth
 index|]
 argument_list|,
 name|depth
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"output may be truncated"
 argument_list|)
 expr_stmt|;
 block|}
