@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.2 (Berkeley) %G%"
+literal|"@(#)setup.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,7 @@ name|Dict
 operator|=
 name|fopen
 argument_list|(
-name|DICT
+name|_PATH_DICT
 argument_list|,
 literal|"r"
 argument_list|)
@@ -178,7 +178,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|DICT
+name|_PATH_DICT
 argument_list|)
 expr_stmt|;
 name|endwin
