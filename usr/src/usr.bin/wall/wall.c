@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.8 (Berkeley) %G%"
+literal|"@(#)wall.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1020,15 +1020,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+comment|/* 			 * We get ENODEV on a slip line 			 * if we're running as root 			 */
 if|if
 condition|(
 name|errno
 operator|!=
 name|ENODEV
 condition|)
-block|{
-comment|/* 			 * We get ENODEV on a slip line 			 * if we're running as root 			 */
 operator|(
 name|void
 operator|)
