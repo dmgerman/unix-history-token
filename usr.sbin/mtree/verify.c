@@ -837,6 +837,11 @@ argument_list|,
 name|S_IRWXU
 argument_list|)
 condition|)
+block|{
+name|create
+operator|=
+literal|1
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -850,6 +855,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|create
