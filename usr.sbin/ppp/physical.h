@@ -91,6 +91,13 @@ name|EXEC_DEVICE
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE
+value|7
+end_define
+
 begin_comment
 comment|/* Returns from awaitcarrier() */
 end_comment
