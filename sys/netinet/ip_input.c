@@ -835,6 +835,45 @@ index|]
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|ipqlock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IPQ_LOCK
+parameter_list|()
+value|mtx_lock(&ipqlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPQ_UNLOCK
+parameter_list|()
+value|mtx_unlock(&ipqlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPQ_LOCK_INIT
+parameter_list|()
+value|mtx_init(&ipqlock, "ipqlock", NULL, MTX_DEF);
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPQ_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&ipqlock, MA_OWNED);
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1227,6 +1266,9 @@ operator|=
 name|pr
 operator|-
 name|inetsw
+expr_stmt|;
+name|IPQ_LOCK_INIT
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -3112,6 +3154,9 @@ operator|->
 name|ip_id
 argument_list|)
 expr_stmt|;
+name|IPQ_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* 		 * Look for queue of fragments 		 * of this datagram. 		 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -3342,6 +3387,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|IPQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|ipstat
 operator|.
 name|ips_toosmall
@@ -3409,6 +3457,9 @@ name|args
 operator|.
 name|divert_rule
 argument_list|)
+expr_stmt|;
+name|IPQ_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4068,6 +4119,9 @@ name|i
 decl_stmt|,
 name|next
 decl_stmt|;
+name|IPQ_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Presence of header sizes in mbufs 	 * would confuse code below. 	 */
 name|m
 operator|->
@@ -5054,6 +5108,9 @@ name|mbuf
 modifier|*
 name|q
 decl_stmt|;
+name|IPQ_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|fp
@@ -5131,6 +5188,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|IPQ_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5291,6 +5351,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|IPQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|ipflow_slowtimo
 argument_list|()
 expr_stmt|;
@@ -5314,6 +5377,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|IPQ_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5376,6 +5442,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IPQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|in_rtqdrain
 argument_list|()
 expr_stmt|;
