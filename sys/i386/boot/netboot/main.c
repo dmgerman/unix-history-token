@@ -3,6 +3,10 @@ begin_comment
 comment|/************************************************************************** NETBOOT -  BOOTP/TFTP Bootstrap Program  Author: Martin Renters   Date: Dec/93  **************************************************************************/
 end_comment
 
+begin_comment
+comment|/* #define MDEBUG */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -558,6 +562,19 @@ operator|.
 name|ipaddr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MDEBUG
+name|printf
+argument_list|(
+literal|"\n=>>"
+argument_list|)
+expr_stmt|;
+name|getchar
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Now use TFTP to load configuration file */
 name|sprintf
 argument_list|(
@@ -633,7 +650,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Execute commands in config file */
+ifdef|#
+directive|ifdef
+name|MDEBUG
+name|printf
+argument_list|(
+literal|"\n=>>"
+argument_list|)
+expr_stmt|;
+name|getchar
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|p
 operator|=
 name|config_buffer
@@ -700,6 +729,19 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MDEBUG
+name|printf
+argument_list|(
+literal|"\n=>>"
+argument_list|)
+expr_stmt|;
+name|getchar
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Check to make sure we've got a rootfs */
 if|if
 condition|(
@@ -726,7 +768,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Fill in nfsdiskless.myif */
-name|sprintf
+comment|/* 	sprintf(&nfsdiskless.myif.ifra_name,"ep0"); 	*/
+name|eth_fillname
 argument_list|(
 operator|&
 name|nfsdiskless
@@ -734,8 +777,6 @@ operator|.
 name|myif
 operator|.
 name|ifra_name
-argument_list|,
-literal|"ed0"
 argument_list|)
 expr_stmt|;
 name|nfsdiskless

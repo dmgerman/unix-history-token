@@ -62,6 +62,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VENDOR_3C509
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|FLAG_PIO
 value|0x01
 end_define
