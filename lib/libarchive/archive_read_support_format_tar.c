@@ -1635,13 +1635,32 @@ argument_list|(
 name|h
 argument_list|)
 condition|)
+block|{
+comment|/* If it's a known tar file, end-of-archive is definite. */
+if|if
+condition|(
+operator|(
+name|a
+operator|->
+name|archive_format
+operator|&
+name|ARCHIVE_FORMAT_BASE_MASK
+operator|)
+operator|==
+name|ARCHIVE_FORMAT_TAR
+condition|)
 return|return
 operator|(
-name|bid
-operator|+
+literal|512
+operator|)
+return|;
+comment|/* Empty archive? */
+return|return
+operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* If it's not an end-of-archive mark, it must have a valid checksum.*/
 if|if
 condition|(
@@ -1821,6 +1840,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|bid
+operator|+=
+literal|2
+expr_stmt|;
+comment|/* 6 bits of variation in an 8-bit field leaves 2 bits. */
 comment|/* Sanity check: Look at first byte of mode field. */
 switch|switch
 condition|(
