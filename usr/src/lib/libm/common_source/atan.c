@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985 Regents of the University of California.  *   * Use and reproduction of this software are granted  in  accordance  with  * the terms and conditions specified in  the  Berkeley  Software  License  * Agreement (in particular, this entails acknowledgement of the programs'  * source, and inclusion of this notice) with the additional understanding  * that  all  recipients  should regard themselves as participants  in  an  * ongoing  research  project and hence should  feel  obligated  to report  * their  experiences (good or bad) with these elementary function  codes,  * using "sendbug 4bsd-bugs@BERKELEY", to the authors.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  * All recipients should regard themselves as participants in an ongoing  * research project and hence should feel obligated to report their  * experiences (good or bad) with these elementary function codes, using  * the sendbug(8) program, to the authors.  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atan.c	1.1 (Berkeley) 8/21/85; 5.1 (ucb.elefunt) %G%"
+literal|"@(#)atan.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* ATAN(X)  * RETURNS ARC TANGENT OF X  * DOUBLE PRECISION (IEEE DOUBLE 53 bits, VAX D FORMAT 56 bits)  * CODED IN C BY K.C. NG, 4/16/85, REVISED ON 6/10/85.  *  * Required kernel function:  *	atan2(y,x)   *  * Method:                    *	atan(x) = atan2(x,1.0).   *  * Special case:  *	if x is NaN, return x itself.  *  * Accuracy:  * 1)  If atan2() uses machine PI, then  *   *	atan(x) returns (PI/pi) * (the exact arc tangent of x) nearly rounded;  *	and PI is the exact pi rounded to machine precision (see atan2 for  *      details):  *  *	in decimal:  *		pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *	in hexadecimal:  *		pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18	error=.276ulps  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2    error=.206ulps  *	  *	In a test run with more than 200,000 random arguments on a VAX, the   *	maximum observed error in ulps (units in the last place) was  *	0.86 ulps.      (comparing against (PI/pi)*(exact atan(x))).  *  * 2)  If atan2() uses true pi, then  *  *	atan(x) returns the exact atan(x) with error below about 2 ulps.  *  *	In a test run with more than 1,024,000 random arguments on a VAX, the   *	maximum observed error in ulps (units in the last place) was  *	0.85 ulps.  */
