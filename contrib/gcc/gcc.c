@@ -11869,6 +11869,20 @@ argument_list|,
 name|NULL_PTR
 argument_list|)
 expr_stmt|;
+name|add_prefix
+argument_list|(
+operator|&
+name|startfile_prefixes
+argument_list|,
+literal|"/usr/libdata/gcc/"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL_PTR
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 comment|/* not FREEBSD_NATIVE */
