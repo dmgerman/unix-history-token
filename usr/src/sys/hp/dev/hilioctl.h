@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilioctl.h 1.1 90/07/09$  *  *	@(#)hilioctl.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilioctl.h 1.1 90/07/09$  *  *	@(#)hilioctl.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -131,6 +131,10 @@ end_define
 
 begin_comment
 comment|/* Identify& describe */
+end_comment
+
+begin_comment
+comment|/*#define HILID   0x400c6803*/
 end_comment
 
 begin_define
@@ -461,6 +465,10 @@ end_define
 
 begin_comment
 comment|/* Read the real time. */
+end_comment
+
+begin_comment
+comment|/*#define EFTRRT	0x40064831*/
 end_comment
 
 begin_define
