@@ -94,6 +94,7 @@ name|binit
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -108,6 +109,7 @@ name|bput
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -117,6 +119,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ccval
@@ -1152,6 +1155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|label
@@ -1165,6 +1169,7 @@ name|binit
 parameter_list|(
 name|lb
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|lb
@@ -1202,6 +1207,7 @@ name|bput
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1276,6 +1282,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ccval

@@ -89,6 +89,25 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|c_cchar
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Special control characters.  *  * Cchars1 are the standard names, cchars2 are the old aliases.  * The first are displayed, but both are recognized on the  * command line.  */
 end_comment
@@ -254,6 +273,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -292,6 +315,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -324,6 +351,7 @@ name|strcmp
 argument_list|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|cchar
 operator|*
@@ -335,6 +363,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|cchar
 operator|*

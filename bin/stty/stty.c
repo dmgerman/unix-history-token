@@ -133,6 +133,22 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -498,7 +514,7 @@ name|argv
 argument_list|)
 condition|)
 block|{
-name|int
+name|speed_t
 name|speed
 decl_stmt|;
 name|speed

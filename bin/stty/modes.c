@@ -65,10 +65,30 @@ directive|include
 file|"stty.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|msearch
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|*
+operator|,
+expr|struct
+name|info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|modes
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -432,6 +452,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -702,6 +726,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -1121,6 +1149,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
@@ -1264,6 +1296,10 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;
