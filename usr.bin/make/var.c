@@ -1483,8 +1483,10 @@ name|VAR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s:%s = %s\n"
 argument_list|,
 name|ctxt
@@ -1582,8 +1584,10 @@ name|VAR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s:delete %s\n"
 argument_list|,
 name|ctxt
@@ -1788,8 +1792,10 @@ name|VAR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s:%s = %s\n"
 argument_list|,
 name|ctxt
@@ -1951,8 +1957,10 @@ name|VAR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s:%s = %s\n"
 argument_list|,
 name|ctxt
@@ -6592,8 +6600,10 @@ name|VAR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Applying :%c to \"%s\"\n"
 argument_list|,
 operator|*
@@ -8757,8 +8767,10 @@ name|VAR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Result is \"%s\"\n"
 argument_list|,
 name|newStr
