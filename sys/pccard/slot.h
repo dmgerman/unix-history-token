@@ -43,12 +43,6 @@ directive|include
 file|<machine/resource.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
 begin_comment
 comment|/*  *	Controller data - Specific to each slot controller.  */
 end_comment
