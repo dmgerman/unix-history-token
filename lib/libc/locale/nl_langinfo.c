@@ -219,7 +219,14 @@ name|T_FMT_AMPM
 case|:
 name|ret
 operator|=
-literal|"%r"
+operator|(
+name|char
+operator|*
+operator|)
+name|__get_current_time_locale
+argument_list|()
+operator|->
+name|ampm_fmt
 expr_stmt|;
 break|break;
 case|case
