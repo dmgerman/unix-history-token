@@ -171,7 +171,7 @@ name|iovec
 modifier|*
 name|iovp
 decl_stmt|;
-name|int
+name|unsigned
 name|iovcnt
 decl_stmt|;
 block|}
@@ -201,12 +201,6 @@ decl_stmt|;
 comment|/* XXX */
 if|if
 condition|(
-name|uap
-operator|->
-name|iovcnt
-operator|<=
-literal|0
-operator|||
 name|uap
 operator|->
 name|iovcnt
@@ -265,10 +259,6 @@ name|caddr_t
 operator|)
 name|aiov
 argument_list|,
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|uap
 operator|->
 name|iovcnt
@@ -277,7 +267,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|iovec
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -321,7 +310,7 @@ name|char
 modifier|*
 name|cbuf
 decl_stmt|;
-name|int
+name|unsigned
 name|count
 decl_stmt|;
 block|}
@@ -404,7 +393,7 @@ name|iovec
 modifier|*
 name|iovp
 decl_stmt|;
-name|int
+name|unsigned
 name|iovcnt
 decl_stmt|;
 block|}
@@ -434,12 +423,6 @@ decl_stmt|;
 comment|/* XXX */
 if|if
 condition|(
-name|uap
-operator|->
-name|iovcnt
-operator|<=
-literal|0
-operator|||
 name|uap
 operator|->
 name|iovcnt
@@ -498,10 +481,6 @@ name|caddr_t
 operator|)
 name|aiov
 argument_list|,
-call|(
-name|unsigned
-call|)
-argument_list|(
 name|uap
 operator|->
 name|iovcnt
@@ -510,7 +489,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|iovec
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

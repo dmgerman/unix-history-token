@@ -118,7 +118,7 @@ name|char
 modifier|*
 name|hostname
 decl_stmt|;
-name|int
+name|u_int
 name|len
 decl_stmt|;
 block|}
