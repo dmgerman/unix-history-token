@@ -323,7 +323,7 @@ comment|/* end word	-			*/
 end_comment
 
 begin_comment
-comment|/*  * Structure for [] character-set representation.  Character sets are  * done as bit vectors, grouped 8 to a byte vector for compactness.  * The individual set therefore has both a pointer to the byte vector  * and a mask to pick out the relevant bit of each byte.  A hash code  * simplifies testing whether two sets could be identical.  *  * This will get trickier for multicharacter collating elements.  As  * preliminary hooks for dealing with such things, we also carry along  * a string of multi-character elements, and decide the size of the  * vectors at run time.  */
+comment|/*  * Structure for [] character-set representation.  Character sets are  * done as bit vectors, grouped 8 to a byte vector for compactness.  * The individual set therefore has both a pointer to the byte vector  * and a mask to pick out the relevant bit of each byte.  A hash code  * simplifies testing whether two sets could be identical.  */
 end_comment
 
 begin_typedef
@@ -343,14 +343,6 @@ name|short
 name|hash
 decl_stmt|;
 comment|/* hash code */
-name|size_t
-name|smultis
-decl_stmt|;
-name|char
-modifier|*
-name|multis
-decl_stmt|;
-comment|/* -> char[smulti]  ab\0cd\0ef\0\0 */
 block|}
 name|cset
 typedef|;
@@ -395,64 +387,6 @@ name|c
 parameter_list|)
 value|((cs)->ptr[(uch)(c)]& (cs)->mask)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MCadd
-parameter_list|(
-name|p
-parameter_list|,
-name|cs
-parameter_list|,
-name|cp
-parameter_list|)
-value|mcadd(p, cs, cp)
-end_define
-
-begin_comment
-comment|/* regcomp() internal fns */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCsub
-parameter_list|(
-name|p
-parameter_list|,
-name|cs
-parameter_list|,
-name|cp
-parameter_list|)
-value|mcsub(p, cs, cp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCin
-parameter_list|(
-name|p
-parameter_list|,
-name|cs
-parameter_list|,
-name|cp
-parameter_list|)
-value|mcin(p, cs, cp)
-end_define
-
-begin_comment
-comment|/* stuff for character categories */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|cat_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * main compiled-expression structure  */
@@ -535,15 +469,6 @@ name|int
 name|neol
 decl_stmt|;
 comment|/* number of $ used */
-name|int
-name|ncategories
-decl_stmt|;
-comment|/* how many character categories */
-name|cat_t
-modifier|*
-name|categories
-decl_stmt|;
-comment|/* ->catspace[-CHAR_MIN] */
 name|char
 modifier|*
 name|must
@@ -579,14 +504,6 @@ name|sopno
 name|nplus
 decl_stmt|;
 comment|/* how deep does it nest +s? */
-comment|/* catspace must be last */
-name|cat_t
-name|catspace
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* actually [NC] */
 block|}
 struct|;
 end_struct
