@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ktrace.c	5.1 (Berkeley) %G%"
+literal|"@(#)ktrace.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,6 +221,10 @@ case|:
 name|clear
 operator|=
 name|CLEARALL
+expr_stmt|;
+name|pidset
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
