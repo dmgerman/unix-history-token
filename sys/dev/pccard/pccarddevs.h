@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.20 2001/11/19 05:02:55 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.21 2001/11/19 05:11:35 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.145 2001/11/08 17:05:42 christos Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.146 2001/11/18 04:25:43 mrg Exp $ */
 end_comment
 
 begin_comment
@@ -671,6 +671,15 @@ end_define
 begin_comment
 comment|/* EMTAC Technology Corporation */
 end_comment
+
+begin_expr_stmt
+name|vector
+name|LINKSYS2
+literal|0x0274
+name|The
+name|Linksys
+name|Group
+end_expr_stmt
 
 begin_define
 define|#
@@ -2070,6 +2079,27 @@ define|#
 directive|define
 name|PCMCIA_STR_LINKSYS_COMBO_ECARD
 value|"Linksys Combo EthernetCard"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_LINKSYS2_IWN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_LINKSYS2_IWN
+value|0x1612
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_LINKSYS2_IWN
+value|"Instant Wireless Network PC Card"
 end_define
 
 begin_comment
