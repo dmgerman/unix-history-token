@@ -4904,6 +4904,9 @@ block|}
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|NO_DSA
 name|dsa_c
 index|[
 name|R_DSA_512
@@ -5049,6 +5052,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 define|#
 directive|define
 name|COND
@@ -7679,7 +7684,7 @@ argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
-name|dsa_doit
+name|rsa_doit
 index|[
 name|j
 index|]
