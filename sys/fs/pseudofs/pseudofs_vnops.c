@@ -1055,6 +1055,22 @@ argument_list|(
 name|proc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|sbuf_delete
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* XXX we should possibly detect and handle overflows */
 name|sbuf_finish
 argument_list|(
@@ -1949,6 +1965,23 @@ argument_list|(
 name|proc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|sbuf_delete
+argument_list|(
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* XXX we should detect and handle overflows */
 name|sbuf_finish
 argument_list|(
