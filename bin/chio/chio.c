@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chio.c,v 1.1.1.1 1997/03/06 15:30:06 joerg Exp $	*/
+comment|/*	$Id: chio.c,v 1.1.1.1.2.1 1997/06/06 16:02:01 charnier Exp $	*/
 end_comment
 
 begin_comment
@@ -508,10 +508,6 @@ name|int
 name|ch
 decl_stmt|,
 name|i
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 while|while
 condition|(
@@ -1986,11 +1982,16 @@ name|echet
 decl_stmt|;
 name|char
 modifier|*
-name|cmdname
-decl_stmt|,
-modifier|*
 name|description
 decl_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
+name|description
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * On a status command, we expect the following: 	 * 	 * [<ET>] 	 * 	 * where ET == element type. 	 * 	 * If we get no arguments, we get the status of all 	 * known element types. 	 */
 if|if
 condition|(
@@ -2689,9 +2690,24 @@ condition|)
 continue|continue;
 name|bp
 operator|+=
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+operator|(
+name|bp
+operator|-
+operator|&
+name|buf
+index|[
+literal|0
+index|]
+operator|)
 argument_list|,
 literal|"%c%.*s"
 argument_list|,
@@ -2759,7 +2775,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chio command arg1 arg2 ...\n"
+literal|"usage: chio [-f changer] command [args ...]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
