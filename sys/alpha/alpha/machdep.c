@@ -2456,11 +2456,16 @@ name|platform
 operator|.
 name|cons_init
 condition|)
+block|{
 name|platform
 operator|.
 name|cons_init
 argument_list|()
 expr_stmt|;
+name|promcndetach
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* NO MORE FIRMWARE ACCESS ALLOWED */
 ifdef|#
 directive|ifdef
