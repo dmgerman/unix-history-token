@@ -394,7 +394,7 @@ operator|<
 literal|0
 operator|||
 name|id
-operator|>
+operator|>=
 name|channels_alloc
 condition|)
 block|{
