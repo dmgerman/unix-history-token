@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pr_time.c,v 1.6.2.3 1997/08/26 06:47:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,10 +319,19 @@ name|printf
 argument_list|(
 literal|" %2d:%02d "
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|idle
 operator|/
 literal|3600
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|idle
 operator|%
@@ -330,6 +339,7 @@ literal|3600
 operator|)
 operator|/
 literal|60
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -358,9 +368,14 @@ name|printf
 argument_list|(
 literal|"    %2d "
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|idle
 operator|/
 literal|60
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

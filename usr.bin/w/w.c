@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.16.2.3 1997/08/26 06:47:45 charnier Exp $"
+literal|"$Id: w.c,v 1.16.2.4 1997/08/29 05:30:12 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,6 +343,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if -d flag: output debug info */
+end_comment
+
+begin_decl_stmt
+name|int
 name|sortidle
 decl_stmt|;
 end_decl_stmt
@@ -407,6 +417,12 @@ modifier|*
 name|args
 decl_stmt|;
 comment|/* arg list of interesting process */
+name|struct
+name|kinfo_proc
+modifier|*
+name|dkp
+decl_stmt|;
+comment|/* debug option proc list */
 block|}
 modifier|*
 name|ep
@@ -522,6 +538,11 @@ modifier|*
 name|kp
 decl_stmt|;
 name|struct
+name|kinfo_proc
+modifier|*
+name|dkp
+decl_stmt|;
+name|struct
 name|hostent
 modifier|*
 name|hp
@@ -631,7 +652,7 @@ literal|1
 expr_stmt|;
 name|p
 operator|=
-literal|"hiflM:N:nsuw"
+literal|"dhiflM:N:nsuw"
 expr_stmt|;
 block|}
 name|memf
@@ -663,6 +684,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|dflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'h'
 case|:
@@ -1134,7 +1163,7 @@ expr_stmt|;
 define|#
 directive|define
 name|HEADER
-value|"USER     TTY FROM              LOGIN@  IDLE WHAT\n"
+value|"USER             TTY FROM              LOGIN@  IDLE WHAT\n"
 define|#
 directive|define
 name|WUSED
@@ -1260,6 +1289,16 @@ operator|==
 name|e
 operator|->
 name|e_tdev
+condition|)
+block|{
+comment|/* 				 * proc is associated with this terminal 				 */
+if|if
+condition|(
+name|ep
+operator|->
+name|kp
+operator|==
+name|NULL
 operator|&&
 name|e
 operator|->
@@ -1270,7 +1309,7 @@ operator|->
 name|e_tpgid
 condition|)
 block|{
-comment|/* 				 * Proc is in foreground of this terminal 				 */
+comment|/* 					 * Proc is 'most interesting' 					 */
 if|if
 condition|(
 name|proc_compare
@@ -1291,7 +1330,43 @@ name|kp
 operator|=
 name|kp
 expr_stmt|;
-break|break;
+block|}
+comment|/* 				 * Proc debug option info; add to debug 				 * list using kinfo_proc kp_eproc.e_spare 				 * as next pointer; ptr to ptr avoids the 				 * ptr = long assumption. 				 */
+name|dkp
+operator|=
+name|ep
+operator|->
+name|dkp
+expr_stmt|;
+name|ep
+operator|->
+name|dkp
+operator|=
+name|kp
+expr_stmt|;
+operator|*
+operator|(
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+operator|(
+operator|&
+name|kp
+operator|->
+name|kp_eproc
+operator|.
+name|e_spare
+index|[
+literal|0
+index|]
+operator|)
+operator|)
+operator|=
+name|dkp
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1902,6 +1977,101 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|dflag
+condition|)
+block|{
+for|for
+control|(
+name|dkp
+operator|=
+name|ep
+operator|->
+name|dkp
+init|;
+name|dkp
+operator|!=
+name|NULL
+condition|;
+name|dkp
+operator|=
+operator|*
+operator|(
+operator|(
+expr|struct
+name|kinfo_proc
+operator|*
+operator|*
+operator|)
+operator|(
+operator|&
+name|dkp
+operator|->
+name|kp_eproc
+operator|.
+name|e_spare
+index|[
+literal|0
+index|]
+operator|)
+operator|)
+control|)
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|fmt_argv
+argument_list|(
+name|kvm_getargv
+argument_list|(
+name|kd
+argument_list|,
+name|dkp
+argument_list|,
+name|argwidth
+argument_list|)
+argument_list|,
+name|dkp
+operator|->
+name|kp_proc
+operator|.
+name|p_comm
+argument_list|,
+name|MAXCOMLEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+literal|"-"
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\t\t%-9d %s\n"
+argument_list|,
+name|dkp
+operator|->
+name|kp_proc
+operator|.
+name|p_pid
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 operator|(
 name|void
 operator|)
@@ -2099,6 +2269,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|mins
+decl_stmt|,
+name|secs
 decl_stmt|;
 name|int
 name|mib
@@ -2254,6 +2426,12 @@ name|uptime
 operator|/
 literal|60
 expr_stmt|;
+name|secs
+operator|=
+name|uptime
+operator|%
+literal|60
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2308,8 +2486,7 @@ argument_list|,
 name|mins
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|hrs
@@ -2334,6 +2511,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|mins
@@ -2358,7 +2536,25 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %d sec%s,"
+argument_list|,
+name|secs
+argument_list|,
+name|secs
+operator|>
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Print number of users logged in to system */
 operator|(
@@ -2582,7 +2778,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: w [-hin] [-M core] [-N system] [user]\n"
+literal|"usage: w [-dhin] [-M core] [-N system] [user]\n"
 argument_list|)
 expr_stmt|;
 else|else
