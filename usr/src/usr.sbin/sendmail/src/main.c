@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.48 (Berkeley) %G%"
+literal|"@(#)main.c	6.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6076,6 +6076,9 @@ index|]
 operator|==
 name|NULL
 operator|||
+operator|!
+name|isdigit
+argument_list|(
 name|argv
 index|[
 literal|1
@@ -6083,8 +6086,7 @@ index|]
 index|[
 literal|0
 index|]
-operator|==
-literal|'-'
+argument_list|)
 operator|)
 condition|)
 operator|*
