@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -204,6 +204,12 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tuba_table_size
+decl_stmt|,
+name|tcp_keepidle
+decl_stmt|,
+name|tcp_keepintvl
+decl_stmt|,
+name|tcp_maxidle
 decl_stmt|;
 end_decl_stmt
 
@@ -231,14 +237,17 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|inpcb
-modifier|*
-name|tuba_last_inpcb
+name|tuba_inpcb
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
 name|inpcb
+modifier|*
+name|tuba_last_inpcb
+init|=
+operator|&
 name|tuba_inpcb
 decl_stmt|;
 end_decl_stmt
@@ -366,6 +375,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_iso
 modifier|*
+modifier|*
 name|siso
 decl_stmt|;
 name|u_long
@@ -398,21 +408,14 @@ if|if
 condition|(
 name|siso
 condition|)
-block|{
 operator|*
 name|siso
 operator|=
-name|null_siso
-expr_stmt|;
-name|siso
-operator|->
-name|siso_addr
-operator|=
+operator|&
 name|tc
 operator|->
-name|tc_addr
+name|tc_siso
 expr_stmt|;
-block|}
 name|REDUCE
 argument_list|(
 operator|*
@@ -539,6 +542,7 @@ argument_list|,
 operator|&
 name|sum
 argument_list|,
+operator|&
 name|tuba_isopcb
 operator|.
 name|isop_faddr
@@ -558,6 +562,7 @@ argument_list|,
 operator|&
 name|sum
 argument_list|,
+operator|&
 name|tuba_isopcb
 operator|.
 name|isop_laddr
@@ -600,6 +605,7 @@ operator|(
 expr|struct
 name|sockaddr_iso
 operator|*
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -621,6 +627,7 @@ argument_list|,
 operator|(
 expr|struct
 name|sockaddr_iso
+operator|*
 operator|*
 operator|)
 literal|0
@@ -717,8 +724,8 @@ expr|struct
 name|ip
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|i
+operator|=
 name|clnp_output
 argument_list|(
 name|m
@@ -733,6 +740,10 @@ name|len
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|i
 operator|)
 return|;
 block|}
@@ -1103,15 +1114,9 @@ expr_stmt|;
 operator|*
 name|siso
 operator|=
-name|null_siso
-expr_stmt|;
-name|siso
-operator|->
-name|siso_addr
-operator|=
 name|tc
 operator|->
-name|tc_addr
+name|tc_siso
 expr_stmt|;
 name|siso
 operator|->
@@ -1233,12 +1238,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|s
-init|=
-name|splnet
-argument_list|()
-decl_stmt|;
 name|unsigned
 name|long
 name|sum
@@ -1655,6 +1654,16 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+expr_stmt|;
 name|m0
 operator|->
 name|m_next
@@ -1829,6 +1838,26 @@ directive|include
 file|<netinet/tcp_input.c>
 block|}
 end_block
+
+begin_define
+define|#
+directive|define
+name|tcp_slowtimo
+value|tuba_slowtimo
+end_define
+
+begin_define
+define|#
+directive|define
+name|tcp_fasttimo
+value|tuba_fasttimo
+end_define
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_timer.c>
+end_include
 
 end_unit
 

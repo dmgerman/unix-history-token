@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -41,10 +41,10 @@ name|tc_sum_out
 decl_stmt|;
 comment|/* for outbound cksum */
 name|struct
-name|iso_addr
-name|tc_addr
+name|sockaddr_iso
+name|tc_siso
 decl_stmt|;
-comment|/* so you can respond */
+comment|/* for responding */
 name|char
 name|tc_EID
 index|[
