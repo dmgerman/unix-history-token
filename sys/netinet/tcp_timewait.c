@@ -2877,9 +2877,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-name|int
-name|callout_flag
-decl_stmt|;
 name|tm
 operator|=
 name|uma_zalloc
@@ -2932,14 +2929,6 @@ comment|/* INET6 */
 name|tcp_mssdflt
 expr_stmt|;
 comment|/* Set up our timeouts. */
-name|callout_flag
-operator|=
-name|debug_mpsafenet
-condition|?
-name|CALLOUT_MPSAFE
-else|:
-literal|0
-expr_stmt|;
 name|callout_init
 argument_list|(
 name|tp
@@ -2951,7 +2940,7 @@ name|tm
 operator|->
 name|tcpcb_mem_rexmt
 argument_list|,
-name|callout_flag
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2965,7 +2954,7 @@ name|tm
 operator|->
 name|tcpcb_mem_persist
 argument_list|,
-name|callout_flag
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2979,7 +2968,7 @@ name|tm
 operator|->
 name|tcpcb_mem_keep
 argument_list|,
-name|callout_flag
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -2993,7 +2982,7 @@ name|tm
 operator|->
 name|tcpcb_mem_2msl
 argument_list|,
-name|callout_flag
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3007,7 +2996,7 @@ name|tm
 operator|->
 name|tcpcb_mem_delack
 argument_list|,
-name|callout_flag
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 if|if

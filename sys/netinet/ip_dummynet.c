@@ -9777,11 +9777,7 @@ argument_list|(
 operator|&
 name|dn_timeout
 argument_list|,
-name|debug_mpsafenet
-condition|?
-name|CALLOUT_MPSAFE
-else|:
-literal|0
+name|NET_CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_reset
