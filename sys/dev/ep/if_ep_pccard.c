@@ -923,13 +923,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"unload\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
