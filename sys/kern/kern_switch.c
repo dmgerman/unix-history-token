@@ -726,6 +726,17 @@ argument_list|(
 name|rqh
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"runq_choose: no proc on busy queue"
+operator|)
+argument_list|)
+expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_RUNQ
@@ -814,6 +825,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|bzero
+argument_list|(
+name|rq
+argument_list|,
+sizeof|sizeof
+expr|*
+name|rq
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
