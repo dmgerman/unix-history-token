@@ -86,17 +86,16 @@ name|void
 name|pos_in
 parameter_list|()
 block|{
-name|size_t
+name|int
 name|bcnt
+decl_stmt|,
+name|warned
 decl_stmt|;
 name|ssize_t
 name|nr
 decl_stmt|;
 name|off_t
 name|cnt
-decl_stmt|;
-name|int
-name|warned
 decl_stmt|;
 comment|/* If not a character, pipe or tape device, try to seek on it. */
 if|if

@@ -248,7 +248,7 @@ comment|/* conversion function */
 end_comment
 
 begin_decl_stmt
-name|size_t
+name|quad_t
 name|cpy_cnt
 decl_stmt|;
 end_decl_stmt
@@ -258,7 +258,7 @@ comment|/* # of blocks to copy */
 end_comment
 
 begin_decl_stmt
-name|size_t
+name|off_t
 name|pending
 init|=
 literal|0
@@ -280,7 +280,7 @@ comment|/* conversion options */
 end_comment
 
 begin_decl_stmt
-name|size_t
+name|int
 name|cbsz
 decl_stmt|;
 end_decl_stmt
@@ -290,7 +290,7 @@ comment|/* conversion block size */
 end_comment
 
 begin_decl_stmt
-name|int
+name|quad_t
 name|files_cnt
 init|=
 literal|1
@@ -439,6 +439,8 @@ operator|.
 name|name
 argument_list|,
 name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -663,6 +665,10 @@ name|db
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|u_int
+call|)
+argument_list|(
 name|MAX
 argument_list|(
 name|in
@@ -673,6 +679,7 @@ name|cbsz
 argument_list|)
 operator|+
 name|cbsz
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -685,11 +692,16 @@ name|db
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|u_int
+call|)
+argument_list|(
 name|out
 operator|.
 name|dbsz
 operator|+
 name|cbsz
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -1727,14 +1739,13 @@ name|int
 name|warned
 decl_stmt|;
 name|int
-name|sparse
-decl_stmt|;
-name|size_t
 name|cnt
 decl_stmt|,
 name|n
 decl_stmt|,
 name|i
+decl_stmt|,
+name|sparse
 decl_stmt|;
 name|ssize_t
 name|nw
@@ -1871,9 +1882,6 @@ name|out
 operator|.
 name|fd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|pending
 argument_list|,
 name|SEEK_CUR
@@ -1886,8 +1894,7 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: seek error creating"
-literal|" sparse file"
+literal|"%s: seek error creating sparse file"
 argument_list|,
 name|out
 operator|.

@@ -80,7 +80,7 @@ name|void
 name|def
 parameter_list|()
 block|{
-name|size_t
+name|int
 name|cnt
 decl_stmt|;
 name|u_char
@@ -224,8 +224,7 @@ name|intrunc
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|;
-name|size_t
+decl_stmt|,
 name|cnt
 decl_stmt|,
 name|maxlen
@@ -702,7 +701,7 @@ name|void
 name|unblock
 parameter_list|()
 block|{
-name|size_t
+name|int
 name|cnt
 decl_stmt|;
 name|u_char
@@ -909,7 +908,7 @@ name|void
 name|unblock_close
 parameter_list|()
 block|{
-name|size_t
+name|int
 name|cnt
 decl_stmt|;
 name|u_char

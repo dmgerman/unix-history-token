@@ -196,14 +196,14 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|size_t
+name|quad_t
 name|cpy_cnt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|size_t
+name|int
 name|cbsz
 decl_stmt|;
 end_decl_stmt
@@ -217,7 +217,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|quad_t
 name|files_cnt
 decl_stmt|;
 end_decl_stmt
