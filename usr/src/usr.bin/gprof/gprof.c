@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.6 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1977,12 +1977,12 @@ specifier|extern
 name|int
 name|aflag
 decl_stmt|;
-comment|/* if static functions desired */
+comment|/* if static functions aren't desired */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* 	 *	must be a text symbol, 	 *	and static text symbols qualify if aflag set. 	 */
+comment|/* 	 *	must be a text symbol, 	 *	and static text symbols don't qualify if aflag set. 	 */
 if|if
 condition|(
 operator|!
@@ -2008,7 +2008,11 @@ operator|==
 name|N_TEXT
 operator|)
 operator|&&
+operator|(
 name|aflag
+operator|==
+literal|0
+operator|)
 operator|)
 operator|)
 condition|)
