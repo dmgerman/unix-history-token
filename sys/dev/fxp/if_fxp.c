@@ -8430,8 +8430,6 @@ name|cbp
 operator|->
 name|byte_count
 operator|=
-name|htole16
-argument_list|(
 name|sc
 operator|->
 name|flags
@@ -8441,7 +8439,6 @@ condition|?
 literal|32
 else|:
 literal|22
-argument_list|)
 expr_stmt|;
 name|cbp
 operator|->
