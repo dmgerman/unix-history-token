@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.19 1996/06/02 00:14:50 gpalmer Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.20 1996/06/09 23:46:21 alex Exp $  */
 end_comment
 
 begin_comment
@@ -49,8 +49,10 @@ name|struct
 name|in_addr
 name|fu_via_ip
 decl_stmt|;
+comment|/* Specified by IP address */
 struct|struct
 block|{
+comment|/* Specified by interface name */
 define|#
 directive|define
 name|FW_IFNLEN
@@ -138,6 +140,10 @@ name|long
 name|timestamp
 decl_stmt|;
 comment|/* timestamp (tv_sec) of last match */
+name|u_short
+name|fw_divert_port
+decl_stmt|;
+comment|/* Divert port (options IPDIVERT) */
 block|}
 struct|;
 end_struct
@@ -245,6 +251,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_COMMAND
+value|0x0030
+end_define
+
+begin_comment
+comment|/* Mask for type of chain entry:      */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_ACCEPT
 value|0x0010
 end_define
@@ -261,7 +278,29 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* This is an accept rule	      */
+comment|/* This is a count rule		      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_DIVERT
+value|0x0030
+end_define
+
+begin_comment
+comment|/* This is a divert rule	      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_DENY
+value|0x0000
+end_define
+
+begin_comment
+comment|/* This is a deny rule	              */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.43 1996/06/29 03:33:20 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.44 1996/07/09 20:49:38 nate Exp $  */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -106,6 +112,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/udp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
 end_include
 
 begin_include
@@ -571,7 +583,7 @@ operator|*
 name|rif
 operator|,
 name|int
-name|dir
+name|dirport
 operator|,
 expr|struct
 name|mbuf
@@ -1442,7 +1454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns 1 if it should be accepted, 0 otherwise.  */
+comment|/*  * We overload the "dirport" parameter:  *  *   If dirport is negative, packet is outgoing; otherwise incoming.  *   The low order 16 bits of dirport, if non-zero, indicate that  *   we should ignore all ``divert<port>'' rules, where<port> is  *   the low order 16 bits.  *  * Return value:  *  *   -1		The packet was denied/rejected and has been dropped   *    0		The packet is to be accepted; route normally  *<port>	Divert the packet to divert<port>, if any socket  *		is bound to it; otherwise just drop it.  */
 end_comment
 
 begin_function
@@ -1465,7 +1477,7 @@ modifier|*
 name|rif
 parameter_list|,
 name|int
-name|dir
+name|dirport
 parameter_list|,
 name|struct
 name|mbuf
@@ -1641,7 +1653,8 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|src
@@ -1798,8 +1811,9 @@ expr_stmt|;
 comment|/* Check direction inbound */
 if|if
 condition|(
-operator|!
-name|dir
+name|dirport
+operator|>=
+literal|0
 operator|&&
 operator|!
 operator|(
@@ -1814,7 +1828,9 @@ continue|continue;
 comment|/* Check direction outbound */
 if|if
 condition|(
-name|dir
+name|dirport
+operator|<
+literal|0
 operator|&&
 operator|!
 operator|(
@@ -2278,15 +2294,20 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|f
 operator|->
 name|fw_flg
 operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
 name|IP_FW_F_ACCEPT
 condition|)
+block|{
 name|ipfw_report
 argument_list|(
-literal|"Allow"
+literal|"Accept"
 argument_list|,
 name|f
 operator|->
@@ -2299,15 +2320,63 @@ operator|->
 name|fw_pcnt
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|f
 operator|->
 name|fw_flg
 operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
+name|IP_FW_F_DIVERT
+condition|)
+block|{
+if|if
+condition|(
+name|f
+operator|->
+name|fw_divert_port
+operator|!=
+operator|(
+name|dirport
+operator|&
+literal|0xffff
+operator|)
+condition|)
+name|ipfw_report
+argument_list|(
+literal|"Divert"
+argument_list|,
+name|f
+operator|->
+name|fw_number
+argument_list|,
+name|ip
+argument_list|,
+name|f
+operator|->
+name|fw_pcnt
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
 name|IP_FW_F_COUNT
 condition|)
+block|{
 name|ipfw_report
 argument_list|(
 literal|"Count"
@@ -2323,7 +2392,9 @@ operator|->
 name|fw_pcnt
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|ipfw_report
 argument_list|(
 literal|"Deny"
@@ -2340,42 +2411,124 @@ name|fw_pcnt
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* Take appropriate action */
 if|if
 condition|(
+operator|(
 name|f
 operator|->
 name|fw_flg
 operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
 name|IP_FW_F_ACCEPT
 condition|)
+block|{
 return|return
-literal|1
+literal|0
 return|;
+block|}
+elseif|else
 if|if
 condition|(
+operator|(
 name|f
 operator|->
 name|fw_flg
 operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
 name|IP_FW_F_COUNT
 condition|)
+block|{
 continue|continue;
-break|break;
 block|}
-comment|/* 	 * Don't icmp outgoing packets at all 	 */
+elseif|else
+if|if
+condition|(
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
+name|IP_FW_F_DIVERT
+condition|)
+block|{
 if|if
 condition|(
 name|f
-operator|!=
-name|NULL
-operator|&&
-operator|!
-name|dir
+operator|->
+name|fw_divert_port
+operator|==
+operator|(
+name|dirport
+operator|&
+literal|0xffff
+operator|)
 condition|)
-block|{
-comment|/* 		 * Do not ICMP reply to icmp packets....:) or to packets 		 * rejected by entry without the special ICMP reply flag. 		 */
+continue|continue;
+comment|/* ignore this rule */
+return|return
+operator|(
+name|f
+operator|->
+name|fw_divert_port
+operator|)
+return|;
+block|}
+else|else
+break|break;
+comment|/* ie, deny/reject */
+block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
+operator|!
+name|chain
+condition|)
+comment|/* rule 65535 should always be there */
+name|panic
+argument_list|(
+literal|"ip_fw: chain"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|f
+condition|)
+name|panic
+argument_list|(
+literal|"ip_fw: entry"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * At this point, we're going to drop the packet. 	 * Send an ICMP only if all of the following are true: 	 * 	 * - The packet is an incoming packet 	 * - The packet matched a deny rule 	 * - The packet is not an ICMP packet 	 * - The rule has the special ICMP reply flag set 	 */
+if|if
+condition|(
+name|dirport
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
+name|IP_FW_F_DENY
+operator|&&
 operator|(
 name|f_prt
 operator|!=
@@ -2427,9 +2580,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
-block|}
 block|}
 name|m_freem
 argument_list|(
@@ -2438,7 +2591,8 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 end_function
@@ -3419,6 +3573,39 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* Diverting to port zero is illegal */
+if|if
+condition|(
+operator|(
+name|frwl
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
+name|IP_FW_F_DIVERT
+operator|&&
+name|frwl
+operator|->
+name|fw_divert_port
+operator|==
+literal|0
+condition|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"ip_fw_ctl: can't divert to port 0\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 return|return
 name|frwl
 return|;
@@ -3904,19 +4091,45 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"IP firewall initialized, "
+literal|"IP packet filtering initialized, "
+ifdef|#
+directive|ifdef
+name|IPDIVERT
+literal|"divert enabled, "
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+literal|"divert disabled, "
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|IPFIREWALL_VERBOSE
+end_ifndef
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"logging disabled\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|if
 condition|(
 name|fw_verbose_limit
@@ -3936,12 +4149,15 @@ argument_list|,
 name|fw_verbose_limit
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
-block|}
-end_function
+end_endif
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_MODULE
@@ -3966,10 +4182,10 @@ file|<sys/lkm.h>
 end_include
 
 begin_expr_stmt
-name|MOD_MISC
-argument_list|(
+unit|MOD_MISC
+operator|(
 name|ipfw
-argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
 
