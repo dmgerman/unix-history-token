@@ -4001,6 +4001,35 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|a
+operator|->
+name|a_vp
+operator|==
+name|a
+operator|->
+name|a_bp
+operator|->
+name|b_vp
+argument_list|,
+operator|(
+literal|"%s(%p != %p)"
+operator|,
+name|__func__
+operator|,
+name|a
+operator|->
+name|a_vp
+operator|,
+name|a
+operator|->
+name|a_bp
+operator|->
+name|b_vp
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* cd9660 has this test reversed, but it seems more logical this way */
 if|if
 condition|(
