@@ -4,7 +4,7 @@ comment|/*-  * Definitions for low level routines and data structures  * for the
 end_comment
 
 begin_comment
-comment|/*  * Ported from:  * advansys.c - Linux Host Driver for AdvanSys SCSI Adapters  *       * Copyright (c) 1995-1998 Advanced System Products, Inc.  * All Rights Reserved.  *     * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
+comment|/*-  * Ported from:  * advansys.c - Linux Host Driver for AdvanSys SCSI Adapters  *       * Copyright (c) 1995-1998 Advanced System Products, Inc.  * All Rights Reserved.  *     * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that redistributions of source  * code retain the above copyright notice and this comment without  * modification.  */
 end_comment
 
 begin_ifndef
