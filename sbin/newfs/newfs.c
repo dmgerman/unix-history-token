@@ -322,7 +322,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Once upon a time...  *    For each cylinder we keep track of the availability of blocks at different  *    rotational positions, so that we can lay out the data to be picked  *    up with minimum rotational latency.  NRPOS is the default number of  *    rotational positions that we distinguish.  With NRPOS of 8 the resolution  *    of our summary information is 2ms for a typical 3600 rpm drive.  *  * ...but now we make this 1 (which escentially disables the rotational  * position table because modern drives with read-ahead and write-behind do  * better without the rotational position table.  */
+comment|/*  * Once upon a time...  *    For each cylinder we keep track of the availability of blocks at different  *    rotational positions, so that we can lay out the data to be picked  *    up with minimum rotational latency.  NRPOS is the default number of  *    rotational positions that we distinguish.  With NRPOS of 8 the resolution  *    of our summary information is 2ms for a typical 3600 rpm drive.  *  * ...but now we make this 1 (which essentially disables the rotational  * position table because modern drives with read-ahead and write-behind do  * better without the rotational position table.  */
 end_comment
 
 begin_define
@@ -1047,7 +1047,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad maximum contiguous blocks\n"
+literal|"%s: bad maximum contiguous blocks"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1122,7 +1122,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad rotational delay\n"
+literal|"%s: bad rotational delay"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1146,7 +1146,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad blocks per file in a cylinder group\n"
+literal|"%s: bad blocks per file in a cylinder group"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1194,7 +1194,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad bytes per inode\n"
+literal|"%s: bad bytes per inode"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1270,7 +1270,7 @@ literal|99
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad free space %%\n"
+literal|"%s: bad free space %%"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1294,7 +1294,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad rotational layout count\n"
+literal|"%s: bad rotational layout count"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1365,7 +1365,7 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"%s: unknown optimization preference: use `space' or `time'."
+literal|"%s: unknown optimization preference: use `space' or `time'"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1412,7 +1412,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad revolutions/minute\n"
+literal|"%s: bad revolutions/minute"
 argument_list|,
 name|optarg
 argument_list|)
@@ -2475,7 +2475,7 @@ name|ntracks
 operator|-
 name|cylspares
 expr_stmt|;
-comment|/* 	 * Only complain if -t or -u have been specified; the default 	 * case (4096 sectors per cylinder) is intented to disagree 	 * with the disklabel. 	 */
+comment|/* 	 * Only complain if -t or -u have been specified; the default 	 * case (4096 sectors per cylinder) is intended to disagree 	 * with the disklabel. 	 */
 if|if
 condition|(
 name|t_or_u_flag
