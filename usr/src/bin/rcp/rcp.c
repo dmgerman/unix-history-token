@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.6 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -521,24 +527,19 @@ name|errs
 argument_list|)
 expr_stmt|;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: rcp [-p] f1 f2; or: rcp [-rp] f1 ... fn d2\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|rem
-operator|=
-operator|-
-literal|1
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -548,6 +549,11 @@ literal|2
 condition|)
 name|targetshouldbedirectory
 operator|=
+literal|1
+expr_stmt|;
+name|rem
+operator|=
+operator|-
 literal|1
 expr_stmt|;
 operator|(
@@ -3429,9 +3435,13 @@ condition|(
 operator|(
 name|of
 operator|=
-name|creat
+name|open
 argument_list|(
 name|nambuf
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
 argument_list|,
 name|mode
 argument_list|)
@@ -3687,6 +3697,27 @@ name|count
 condition|)
 name|wrerr
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ftruncate
+argument_list|(
+name|of
+argument_list|,
+name|size
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"rcp: can't truncate %s: %s\n"
+argument_list|,
+name|nambuf
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -4062,6 +4093,28 @@ name|buf
 operator|+
 literal|1
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|fputs
+argument_list|(
+literal|"usage: rcp [-p] f1 f2; or: rcp [-rp] f1 ... fn d2\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
