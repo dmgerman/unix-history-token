@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: key_var.h,v 1.8 2000/05/24 17:28:23 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -85,6 +93,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|KEYCTL_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ }
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|_ARRAYLEN
 parameter_list|(
 name|p
@@ -122,88 +143,14 @@ parameter_list|)
 value|((caddr_t)((caddr_t)(key) + sizeof(struct sadb_key)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|_INADDR
-parameter_list|(
-name|in
-parameter_list|)
-value|((struct sockaddr_in *)(in))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IN6ADDR
-parameter_list|(
-name|in6
-parameter_list|)
-value|((struct sockaddr_in6 *)(in6))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SALENBYAF
-parameter_list|(
-name|family
-parameter_list|)
-define|\
-value|(((family) == AF_INET) ? \ 		(u_int)sizeof(struct sockaddr_in) : \ 		(u_int)sizeof(struct sockaddr_in6))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_INALENBYAF
-parameter_list|(
-name|family
-parameter_list|)
-define|\
-value|(((family) == AF_INET) ? \ 		(u_int)sizeof(struct in_addr) : \ 		(u_int)sizeof(struct in6_addr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_INADDRBYSA
-parameter_list|(
-name|saddr
-parameter_list|)
-define|\
-value|((((struct sockaddr *)(saddr))->sa_family == AF_INET) ? \ 		(caddr_t)&((struct sockaddr_in *)(saddr))->sin_addr : \ 		(caddr_t)&((struct sockaddr_in6 *)(saddr))->sin6_addr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_INPORTBYSA
-parameter_list|(
-name|saddr
-parameter_list|)
-define|\
-value|((((struct sockaddr *)(saddr))->sa_family == AF_INET) ? \ 		((struct sockaddr_in *)(saddr))->sin_port : \ 		((struct sockaddr_in6 *)(saddr))->sin6_port)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCTL_DECL
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_net_key
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*_KERNEL*/
+end_comment
 
 begin_endif
 endif|#

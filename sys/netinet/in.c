@@ -921,6 +921,9 @@ block|{
 case|case
 name|SIOCSIFPHYADDR
 case|:
+case|case
+name|SIOCDIFPHYADDR
+case|:
 if|if
 condition|(
 name|p

@@ -181,6 +181,12 @@ name|int
 name|csum_data
 decl_stmt|;
 comment|/* data field used by csum routines */
+name|struct
+name|mbuf
+modifier|*
+name|aux
+decl_stmt|;
+comment|/* extra data buffer; ipsec/others */
 block|}
 struct|;
 end_struct
@@ -1046,7 +1052,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		_mm->m_type = _mtype;					\ 		mbstat.m_mtypes[_mtype]++;				\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		_mm->m_pkthdr.csum_flags = 0;				\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, _mtype);	\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		_mm->m_type = _mtype;					\ 		mbstat.m_mtypes[_mtype]++;				\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		_mm->m_pkthdr.csum_flags = 0;				\ 		_mm->m_pkthdr.aux = (struct mbuf *)NULL;		\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, _mtype);	\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1134,7 +1140,7 @@ value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->
 end_define
 
 begin_comment
-comment|/*  * Copy mbuf pkthdr from "from" to "to".  * from must have M_PKTHDR set, and to must be empty.  */
+comment|/*  * Copy mbuf pkthdr from "from" to "to".  * from must have M_PKTHDR set, and to must be empty.  * aux pointer will be moved to `to'.  */
 end_comment
 
 begin_define
@@ -1146,7 +1152,7 @@ name|to
 parameter_list|,
 name|from
 parameter_list|)
-value|do {					\ 	struct mbuf *_mfrom = (from);					\ 	struct mbuf *_mto = (to);					\ 									\ 	_mto->m_data = _mto->m_pktdat;					\ 	_mto->m_flags = _mfrom->m_flags& M_COPYFLAGS;			\ 	_mto->m_pkthdr = _mfrom->m_pkthdr;				\ } while (0)
+value|do {					\ 	struct mbuf *_mfrom = (from);					\ 	struct mbuf *_mto = (to);					\ 									\ 	_mto->m_data = _mto->m_pktdat;					\ 	_mto->m_flags = _mfrom->m_flags& M_COPYFLAGS;			\ 	_mto->m_pkthdr = _mfrom->m_pkthdr;				\ 	_mfrom->m_pkthdr.aux = (struct mbuf *)NULL;			\ } while (0)
 end_define
 
 begin_comment
@@ -1275,6 +1281,24 @@ name|l
 parameter_list|)
 value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
+
+begin_comment
+comment|/*  * pkthdr.aux type tags.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mauxtag
+block|{
+name|int
+name|af
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -1755,6 +1779,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_pulldown
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|m_print
 name|__P
@@ -1835,6 +1882,64 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_aux_add
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_aux_find
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_aux_delete
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

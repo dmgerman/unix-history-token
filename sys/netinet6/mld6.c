@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: mld6.c,v 1.19 2000/05/05 11:01:03 sumikawa Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -10,7 +18,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
 end_include
 
 begin_include
@@ -70,13 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/in6.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -88,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/icmp6.h>
+file|<netinet/icmp6.h>
 end_include
 
 begin_include
@@ -236,7 +244,7 @@ name|ip6h_len
 operator|=
 literal|0
 expr_stmt|;
-comment|/* (8>> 3) - 1*/
+comment|/* (8>> 3) - 1 */
 comment|/* XXX: grotty hard coding... */
 name|hbh_buf
 index|[
@@ -324,7 +332,7 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-comment|/* 	 * (draft-ietf-ipngwg-mld, page 10) 	 * The node never sends a Report or Done for the link-scope all-nodes 	 * address. 	 * MLD messages are never sent for multicast addresses whose scope is 0 	 * (reserved) or 1 (node-local). 	 */
+comment|/* 	 * RFC2710 page 10: 	 * The node never sends a Report or Done for the link-scope all-nodes 	 * address. 	 * MLD messages are never sent for multicast addresses whose scope is 0 	 * (reserved) or 1 (node-local). 	 */
 name|mld6_all_nodes_linklocal
 operator|.
 name|s6_addr16
@@ -546,22 +554,6 @@ name|struct
 name|mld6_hdr
 modifier|*
 name|mldh
-init|=
-operator|(
-expr|struct
-name|mld6_hdr
-operator|*
-operator|)
-operator|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-operator|+
-name|off
-operator|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -621,9 +613,85 @@ name|ip6_src
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * spec(draft-ietf-ipngwg-mld) does not explicitly 		 * specify to discard the packet from a non link-local 		 * source address. But we believe it's expected to do so. 		 */
+comment|/* 		 * spec (RFC2710) does not explicitly 		 * specify to discard the packet from a non link-local 		 * source address. But we believe it's expected to do so. 		 */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|PULLDOWN_TEST
+name|IP6_EXTHDR_CHECK
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|mldh
+argument_list|)
+argument_list|,)
+expr_stmt|;
+name|mldh
+operator|=
+operator|(
+expr|struct
+name|mld6_hdr
+operator|*
+operator|)
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
+operator|+
+name|off
+operator|)
+expr_stmt|;
+else|#
+directive|else
+name|IP6_EXTHDR_GET
+argument_list|(
+name|mldh
+argument_list|,
+expr|struct
+name|mld6_hdr
+operator|*
+argument_list|,
+name|m
+argument_list|,
+name|off
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|mldh
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mldh
+operator|==
+name|NULL
+condition|)
+block|{
+name|icmp6stat
+operator|.
+name|icp6s_tooshort
+operator|++
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * In the MLD6 specification, there are 3 states and a flag. 	 * 	 * In Non-Listener state, we simply don't have a membership record. 	 * In Delaying Listener state, our timer is running (in6m->in6m_timer) 	 * In Idle Listener state, our timer is not running (in6m->in6m_timer==0) 	 * 	 * The flag is in6m->in6m_state, it is set to MLD6_OTHERLISTENER if 	 * we have heard a report from another member, or MLD6_IREPORTEDLAST 	 * if we sent the last report. 	 */
 switch|switch
 condition|(
@@ -693,7 +761,7 @@ name|if_index
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* 		* - Start the timers in all of our membership records 		*   that the query applies to for the interface on 		*   which the query arrived excl. those that belong 		*   to the "all-nodes" group (ff02::1). 		* - Restart any timer that is already running but has 		*   A value longer than the requested timeout. 		* - Use the value specified in the query message as 		*   the maximum timeout. 		*/
+comment|/* 		 * - Start the timers in all of our membership records 		 *   that the query applies to for the interface on 		 *   which the query arrived excl. those that belong 		 *   to the "all-nodes" group (ff02::1). 		 * - Restart any timer that is already running but has 		 *   A value longer than the requested timeout. 		 * - Use the value specified in the query message as 		 *   the maximum timeout. 		 */
 name|IFP_TO_IA6
 argument_list|(
 name|ifp
@@ -708,7 +776,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 		* XXX: System timer resolution is too low to handle Max 		* Response Delay, so set 1 to the internal timer even if 		* the calculated value equals to zero when Max Response 		* Delay is positive. 		*/
+comment|/* 		 * XXX: System timer resolution is too low to handle Max 		 * Response Delay, so set 1 to the internal timer even if 		 * the calculated value equals to zero when Max Response 		 * Delay is positive. 		 */
 name|timer
 operator|=
 name|ntohs
@@ -920,7 +988,7 @@ break|break;
 case|case
 name|MLD6_LISTENER_REPORT
 case|:
-comment|/* 		* For fast leave to work, we have to know that we are the 		* last person to send a report for this group.  Reports 		* can potentially get looped back if we are a multicast 		* router, so discard reports sourced by me. 		* Note that it is impossible to check IFF_LOOPBACK flag of 		* ifp for this purpose, since ip6_mloopback pass the physical 		* interface to looutput. 		*/
+comment|/* 		 * For fast leave to work, we have to know that we are the 		 * last person to send a report for this group.  Reports 		 * can potentially get looped back if we are a multicast 		 * router, so discard reports sourced by me. 		 * Note that it is impossible to check IFF_LOOPBACK flag of 		 * ifp for this purpose, since ip6_mloopback pass the physical 		 * interface to looutput. 		 */
 if|if
 condition|(
 name|m
@@ -970,7 +1038,7 @@ name|if_index
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* 		* If we belong to the group being reported, stop 		* our timer for that group. 		*/
+comment|/* 		 * If we belong to the group being reported, stop 		 * our timer for that group. 		 */
 name|IN6_LOOKUP_MULTI
 argument_list|(
 name|mldh
@@ -1040,6 +1108,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1230,6 +1303,10 @@ operator|=
 name|in6ifa_ifpforlinklocal
 argument_list|(
 name|ifp
+argument_list|,
+name|IN6_IFF_NOTREADY
+operator||
+name|IN6_IFF_ANYCAST
 argument_list|)
 operator|)
 operator|==
@@ -1342,7 +1419,14 @@ expr_stmt|;
 name|ip6
 operator|->
 name|ip6_vfc
-operator|=
+operator|&=
+operator|~
+name|IPV6_VERSION_MASK
+expr_stmt|;
+name|ip6
+operator|->
+name|ip6_vfc
+operator||=
 name|IPV6_VERSION
 expr_stmt|;
 comment|/* ip6_plen will be set later */
@@ -1511,7 +1595,11 @@ name|im6o
 operator|.
 name|im6o_multicast_loop
 operator|=
-literal|0
+operator|(
+name|ip6_mrouter
+operator|!=
+name|NULL
+operator|)
 expr_stmt|;
 comment|/* increment output statictics */
 name|icmp6stat

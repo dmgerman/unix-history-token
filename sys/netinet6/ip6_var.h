@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: ip6_var.h,v 1.33 2000/06/11 14:59:20 jinmei Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -27,16 +35,17 @@ begin_struct
 struct|struct
 name|ip6q
 block|{
-name|u_long
+name|u_int32_t
 name|ip6q_head
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|ip6q_len
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6q_nxt
 decl_stmt|;
-name|u_char
+comment|/* ip6f_nxt in first fragment */
+name|u_int8_t
 name|ip6q_hlim
 decl_stmt|;
 name|struct
@@ -49,13 +58,13 @@ name|ip6asfrag
 modifier|*
 name|ip6q_up
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|ip6q_ident
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6q_arrive
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6q_ttl
 decl_stmt|;
 name|struct
@@ -77,6 +86,16 @@ decl_stmt|;
 name|int
 name|ip6q_unfrglen
 decl_stmt|;
+comment|/* len of unfragmentable part */
+ifdef|#
+directive|ifdef
+name|notyet
+name|u_char
+modifier|*
+name|ip6q_nxtp
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -85,16 +104,16 @@ begin_struct
 struct|struct
 name|ip6asfrag
 block|{
-name|u_long
+name|u_int32_t
 name|ip6af_head
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|ip6af_len
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6af_nxt
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|ip6af_hlim
 decl_stmt|;
 comment|/* must not override the above members during reassembling */
@@ -108,31 +127,27 @@ name|ip6asfrag
 modifier|*
 name|ip6af_up
 decl_stmt|;
-name|u_short
-name|ip6af_mff
-decl_stmt|;
-name|u_short
-name|ip6af_off
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|ip6af_m
 decl_stmt|;
-name|u_long
+name|int
 name|ip6af_offset
 decl_stmt|;
-comment|/* offset where next header starts */
-name|u_short
+comment|/* offset in ip6af_m to next header */
+name|int
 name|ip6af_frglen
 decl_stmt|;
 comment|/* fragmentable part length */
-name|u_char
-name|ip6af_x1
-index|[
-literal|10
-index|]
+name|int
+name|ip6af_off
 decl_stmt|;
+comment|/* fragment offset */
+name|u_int16_t
+name|ip6af_mff
+decl_stmt|;
+comment|/* more fragment bit in frag off */
 block|}
 struct|;
 end_struct
@@ -274,136 +289,182 @@ begin_struct
 struct|struct
 name|ip6stat
 block|{
-name|u_long
+name|u_quad_t
 name|ip6s_total
 decl_stmt|;
 comment|/* total packets received */
-name|u_long
+name|u_quad_t
 name|ip6s_tooshort
 decl_stmt|;
 comment|/* packet too short */
-name|u_long
+name|u_quad_t
 name|ip6s_toosmall
 decl_stmt|;
 comment|/* not enough data */
-name|u_long
+name|u_quad_t
 name|ip6s_fragments
 decl_stmt|;
 comment|/* fragments received */
-name|u_long
+name|u_quad_t
 name|ip6s_fragdropped
 decl_stmt|;
 comment|/* frags dropped(dups, out of space) */
-name|u_long
+name|u_quad_t
 name|ip6s_fragtimeout
 decl_stmt|;
 comment|/* fragments timed out */
-name|u_long
+name|u_quad_t
 name|ip6s_fragoverflow
 decl_stmt|;
 comment|/* fragments that exceeded limit */
-name|u_long
+name|u_quad_t
 name|ip6s_forward
 decl_stmt|;
 comment|/* packets forwarded */
-name|u_long
+name|u_quad_t
 name|ip6s_cantforward
 decl_stmt|;
 comment|/* packets rcvd for unreachable dest */
-name|u_long
+name|u_quad_t
 name|ip6s_redirectsent
 decl_stmt|;
 comment|/* packets forwarded on same net */
-name|u_long
+name|u_quad_t
 name|ip6s_delivered
 decl_stmt|;
 comment|/* datagrams delivered to upper level*/
-name|u_long
+name|u_quad_t
 name|ip6s_localout
 decl_stmt|;
 comment|/* total ip packets generated here */
-name|u_long
+name|u_quad_t
 name|ip6s_odropped
 decl_stmt|;
 comment|/* lost packets due to nobufs, etc. */
-name|u_long
+name|u_quad_t
 name|ip6s_reassembled
 decl_stmt|;
 comment|/* total packets reassembled ok */
-name|u_long
+name|u_quad_t
 name|ip6s_fragmented
 decl_stmt|;
 comment|/* datagrams sucessfully fragmented */
-name|u_long
+name|u_quad_t
 name|ip6s_ofragments
 decl_stmt|;
 comment|/* output fragments created */
-name|u_long
+name|u_quad_t
 name|ip6s_cantfrag
 decl_stmt|;
 comment|/* don't fragment flag was set, etc. */
-name|u_long
+name|u_quad_t
 name|ip6s_badoptions
 decl_stmt|;
 comment|/* error in option processing */
-name|u_long
+name|u_quad_t
 name|ip6s_noroute
 decl_stmt|;
 comment|/* packets discarded due to no route */
-name|u_long
+name|u_quad_t
 name|ip6s_badvers
 decl_stmt|;
 comment|/* ip6 version != 6 */
-name|u_long
+name|u_quad_t
 name|ip6s_rawout
 decl_stmt|;
 comment|/* total raw ip packets generated */
-name|u_long
+name|u_quad_t
 name|ip6s_badscope
 decl_stmt|;
 comment|/* scope error */
-name|u_long
+name|u_quad_t
 name|ip6s_notmember
 decl_stmt|;
 comment|/* don't join this multicast group */
-name|u_long
+name|u_quad_t
 name|ip6s_nxthist
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* next header history */
-name|u_long
+name|u_quad_t
 name|ip6s_m1
 decl_stmt|;
 comment|/* one mbuf */
-name|u_long
+name|u_quad_t
 name|ip6s_m2m
 index|[
 literal|32
 index|]
 decl_stmt|;
 comment|/* two or more mbuf */
-name|u_long
+name|u_quad_t
 name|ip6s_mext1
 decl_stmt|;
 comment|/* one ext mbuf */
-name|u_long
+name|u_quad_t
 name|ip6s_mext2m
 decl_stmt|;
 comment|/* two or more ext mbuf */
-name|u_long
+name|u_quad_t
 name|ip6s_exthdrtoolong
 decl_stmt|;
 comment|/* ext hdr are not continuous */
-name|u_long
+name|u_quad_t
 name|ip6s_nogif
 decl_stmt|;
 comment|/* no match gif found */
-name|u_long
+name|u_quad_t
 name|ip6s_toomanyhdr
 decl_stmt|;
 comment|/* discarded due to too many headers */
+comment|/* 	 * statistics for improvement of the source address selection 	 * algorithm: 	 * XXX: hardcoded 16 = # of ip6 multicast scope types + 1 	 */
+comment|/* number of times that address selection fails */
+name|u_quad_t
+name|ip6s_sources_none
+decl_stmt|;
+comment|/* number of times that an address on the outgoing I/F is chosen */
+name|u_quad_t
+name|ip6s_sources_sameif
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* number of times that an address on a non-outgoing I/F is chosen */
+name|u_quad_t
+name|ip6s_sources_otherif
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 	 * number of times that an address that has the same scope 	 * from the destination is chosen. 	 */
+name|u_quad_t
+name|ip6s_sources_samescope
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 	 * number of times that an address that has a different scope 	 * from the destination is chosen. 	 */
+name|u_quad_t
+name|ip6s_sources_otherscope
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* number of times that an deprecated address is chosen */
+name|u_quad_t
+name|ip6s_sources_deprecated
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|u_quad_t
+name|ip6s_forward_cachehit
+decl_stmt|;
+name|u_quad_t
+name|ip6s_forward_cachemiss
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -443,12 +504,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_SOCKINMRCVIF
-value|0x100
+name|IPV6_MINMTU
+value|0x04
 end_define
 
 begin_comment
-comment|/* IPSEC hack; 					 * socket pointer in sending 					 * packet's m_pkthdr.rcvif */
+comment|/* use minimum MTU (IPV6_USE_MIN_MTU) */
 end_comment
 
 begin_decl_stmt
@@ -816,6 +877,48 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ip6_nexthdr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip6_lasthdr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ip6_mforward
 name|__P
 argument_list|(
@@ -1025,6 +1128,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|ip6_clearpktopts
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip6_pktopts
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ip6_pktopts
+modifier|*
+name|ip6_copypktopts
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip6_pktopts
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ip6_optlen
 name|__P
@@ -1144,6 +1283,25 @@ name|offp
 operator|,
 name|int
 name|proto
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|rip6_ctlinput
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

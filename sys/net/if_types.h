@@ -547,6 +547,13 @@ name|IFT_FAITH
 value|0x38
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFT_STF
+value|0x39
+end_define
+
 begin_endif
 endif|#
 directive|endif

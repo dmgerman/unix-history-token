@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: ah_output.c,v 1.22 2000/07/03 13:23:28 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -10,24 +18,14 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
+file|"opt_inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
+file|"opt_inet6.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|ahdprintf
-parameter_list|(
-name|x
-parameter_list|)
-value|printf x
-end_define
 
 begin_include
 include|#
@@ -39,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -92,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -137,12 +123,6 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/in_pcb.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -152,7 +132,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6.h>
+file|<netinet/ip6.h>
 end_include
 
 begin_include
@@ -164,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/icmp6.h>
+file|<netinet/icmp6.h>
 end_include
 
 begin_endif
@@ -178,12 +158,6 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet6/ah.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -195,6 +169,23 @@ include|#
 directive|include
 file|<netinet6/ipsec6.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<netinet6/ah.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_include
 include|#
@@ -218,39 +209,6 @@ include|#
 directive|include
 file|<netkey/keydb.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netkey/key_debug.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KEYDEBUG
-parameter_list|(
-name|lev
-parameter_list|,
-name|arg
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -335,7 +293,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|contrive
+name|estimate
 goto|;
 if|if
 condition|(
@@ -356,7 +314,7 @@ operator|!=
 name|SADB_SASTATE_DYING
 condition|)
 goto|goto
-name|contrive
+name|estimate
 goto|;
 comment|/* we need transport mode AH. */
 name|algo
@@ -377,7 +335,7 @@ operator|!
 name|algo
 condition|)
 goto|goto
-name|contrive
+name|estimate
 goto|;
 comment|/* 	 * XXX 	 * right now we don't calcurate the padding size.  simply 	 * treat the padding size as constant, for simplicity. 	 * 	 * XXX variable size padding support 	 */
 name|hdrsiz
@@ -437,7 +395,7 @@ expr_stmt|;
 return|return
 name|hdrsiz
 return|;
-name|contrive
+name|estimate
 label|:
 comment|/* ASSUMING: 	 *	sizeof(struct newah)> sizeof(struct ah). 	 *	16 = (16 + 3)& ~(4 - 1). 	 */
 return|return
@@ -572,12 +530,14 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ah4_output: internal error: "
-literal|"sav->replay is null: "
-literal|"%x->%x, SPI=%u\n"
-argument_list|,
+literal|"sav->replay is null: %x->%x, SPI=%u\n"
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -589,7 +549,7 @@ name|ip_src
 operator|.
 name|s_addr
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -601,7 +561,7 @@ name|ip_dst
 operator|.
 name|s_addr
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -611,6 +571,7 @@ name|sav
 operator|->
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -810,11 +771,15 @@ operator|!
 name|n
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ENOBUFS in ah4_output %d\n"
-argument_list|,
+operator|,
 name|__LINE__
+operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1057,6 +1022,61 @@ name|ah_spi
 operator|=
 name|spi
 expr_stmt|;
+if|if
+condition|(
+name|sav
+operator|->
+name|replay
+operator|->
+name|count
+operator|==
+operator|~
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sav
+operator|->
+name|flags
+operator|&
+name|SADB_X_EXT_CYCSEQ
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* XXX Is it noisy ? */
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_WARNING
+operator|,
+literal|"replay counter overflowed. %s\n"
+operator|,
+name|ipsec_logsastr
+argument_list|(
+name|sav
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|out_inval
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+block|}
 name|sav
 operator|->
 name|replay
@@ -1128,9 +1148,13 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"IPv4 AH output: size exceeds limit\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsecstat
@@ -1193,6 +1217,8 @@ name|caddr_t
 operator|)
 name|ahsumpos
 argument_list|,
+name|plen
+argument_list|,
 name|algo
 argument_list|,
 name|sav
@@ -1203,9 +1229,18 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"error after ah4_calccksum, called from ah4_output"
+operator|)
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|m
@@ -1509,9 +1544,13 @@ name|ip6_hdr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ah6_output: first mbuf too short\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1572,9 +1611,13 @@ operator|!=
 name|md
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ah6_output: md is not in chain\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1696,9 +1739,13 @@ operator|>
 name|IPV6_MAXPACKET
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"ip6_output: AH with IPv6 jumbogram is not supported\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1758,11 +1805,14 @@ operator|->
 name|replay
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ah6_output: internal error: "
 literal|"sav->replay is null: SPI=%u\n"
-argument_list|,
+operator|,
 operator|(
 name|u_int32_t
 operator|)
@@ -1772,6 +1822,7 @@ name|sav
 operator|->
 name|spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ipsec6stat
@@ -1779,10 +1830,14 @@ operator|.
 name|out_inval
 operator|++
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|EINVAL
 return|;
-comment|/* no change at all */
 block|}
 name|algo
 operator|=
@@ -1973,6 +2028,61 @@ name|ah_spi
 operator|=
 name|spi
 expr_stmt|;
+if|if
+condition|(
+name|sav
+operator|->
+name|replay
+operator|->
+name|count
+operator|==
+operator|~
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sav
+operator|->
+name|flags
+operator|&
+name|SADB_X_EXT_CYCSEQ
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* XXX Is it noisy ? */
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_WARNING
+operator|,
+literal|"replay counter overflowed. %s\n"
+operator|,
+name|ipsec_logsastr
+argument_list|(
+name|sav
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|out_inval
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+block|}
 name|sav
 operator|->
 name|replay
@@ -2016,6 +2126,8 @@ name|caddr_t
 operator|)
 name|ahsumpos
 argument_list|,
+name|plen
+argument_list|,
 name|algo
 argument_list|,
 name|sav
@@ -2025,17 +2137,33 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|ipsec6stat
 operator|.
 name|out_inval
 operator|++
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|ipsec6stat
 operator|.
 name|out_success
 operator|++
 expr_stmt|;
+name|key_sa_recordxfer
+argument_list|(
+name|sav
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 name|ipsec6stat
 operator|.
 name|out_ahhist
@@ -2045,13 +2173,6 @@ operator|->
 name|alg_auth
 index|]
 operator|++
-expr_stmt|;
-name|key_sa_recordxfer
-argument_list|(
-name|sav
-argument_list|,
-name|m
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2143,9 +2264,13 @@ operator|<
 name|hlen
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ah4_finaldst: parameter mbuf wrong (not pulled up)\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2182,11 +2307,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_DEBUG
+operator|,
 literal|"ah4_finaldst: wrong optlen %d\n"
-argument_list|,
+operator|,
 name|optlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2271,24 +2400,28 @@ name|IPOPT_OLEN
 index|]
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"ip_finaldst: invalid IP option "
 literal|"(code=%02x len=%02x)\n"
-argument_list|,
+operator|,
 name|q
 index|[
 name|i
 operator|+
 name|IPOPT_OPTVAL
 index|]
-argument_list|,
+operator|,
 name|q
 index|[
 name|i
 operator|+
 name|IPOPT_OLEN
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2346,24 +2479,28 @@ name|IPOPT_OLEN
 index|]
 condition|)
 block|{
-name|printf
+name|ipseclog
 argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
 literal|"ip_finaldst: invalid IP option "
 literal|"(code=%02x len=%02x)\n"
-argument_list|,
+operator|,
 name|q
 index|[
 name|i
 operator|+
 name|IPOPT_OPTVAL
 index|]
-argument_list|,
+operator|,
 name|q
 index|[
 name|i
 operator|+
 name|IPOPT_OLEN
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: ipsec.h,v 1.33 2000/06/19 14:31:49 sakane Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -38,7 +46,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Security Policy Index  * NOTE: Encure to be same address family and upper layer protocol.  * NOTE: ul_proto, port number, uid, gid:  *	ANY: reserved for waldcard.  *	0 to (~0 - 1): is one of the number of each value.  */
+comment|/*  * Security Policy Index  * NOTE: Ensure to be same address family and upper layer protocol.  * NOTE: ul_proto, port number, uid, gid:  *	ANY: reserved for waldcard.  *	0 to (~0 - 1): is one of the number of each value.  */
 end_comment
 
 begin_struct
@@ -71,6 +79,23 @@ name|u_int16_t
 name|ul_proto
 decl_stmt|;
 comment|/* upper layer Protocol */
+ifdef|#
+directive|ifdef
+name|notyet
+name|uid_t
+name|uids
+decl_stmt|;
+name|uid_t
+name|uidd
+decl_stmt|;
+name|gid_t
+name|gids
+decl_stmt|;
+name|gid_t
+name|gidd
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -98,6 +123,10 @@ name|secpolicyindex
 name|spidx
 decl_stmt|;
 comment|/* selector */
+name|u_int32_t
+name|id
+decl_stmt|;
+comment|/* It's unique number on the system. */
 name|u_int
 name|state
 decl_stmt|;
@@ -144,6 +173,8 @@ name|struct
 name|secasindex
 name|saidx
 decl_stmt|;
+comment|/* hint for search proper SA */
+comment|/* if __ss_len == 0 then no address specified.*/
 name|u_int
 name|level
 decl_stmt|;
@@ -190,6 +221,37 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* SP acquiring list table. */
+end_comment
+
+begin_struct
+struct|struct
+name|secspacq
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|secspacq
+argument_list|)
+name|chain
+expr_stmt|;
+name|struct
+name|secpolicyindex
+name|spidx
+decl_stmt|;
+name|u_int32_t
+name|tick
+decl_stmt|;
+comment|/* for lifetime */
+name|int
+name|count
+decl_stmt|;
+comment|/* for lifetime */
+comment|/* XXX: here is mbuf place holder to be sent ? */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -199,11 +261,15 @@ begin_comment
 comment|/*_KERNEL*/
 end_comment
 
+begin_comment
+comment|/* according to IANA assignment, port 0x0000 and proto 0xff are reserved. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPSEC_PORT_ANY
-value|65535
+value|0
 end_define
 
 begin_define
@@ -217,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|IPSEC_PROTO_ANY
-value|65535
+value|255
 end_define
 
 begin_comment
@@ -406,6 +472,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPSEC_MANUAL_REQID_MAX
+value|0x3fff
+end_define
+
+begin_comment
+comment|/* 				 * if security policy level == unique, this id 				 * indicate to a relative SA for use, else is 				 * zero. 				 * 1 - 0x3fff are reserved for manual keying. 				 * 0 are reserved for above reason.  Others is 				 * for kernel use. 				 * Note that this id doesn't identify SA 				 * by only itself. 				 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPSEC_REPLAYWSIZE
 value|32
 end_define
@@ -418,92 +495,112 @@ begin_struct
 struct|struct
 name|ipsecstat
 block|{
-name|u_long
+name|u_quad_t
 name|in_success
 decl_stmt|;
 comment|/* succeeded inbound process */
-name|u_long
+name|u_quad_t
 name|in_polvio
 decl_stmt|;
 comment|/* security policy violation for inbound process */
-name|u_long
+name|u_quad_t
 name|in_nosa
 decl_stmt|;
 comment|/* inbound SA is unavailable */
-name|u_long
+name|u_quad_t
 name|in_inval
 decl_stmt|;
 comment|/* inbound processing failed due to EINVAL */
-name|u_long
+name|u_quad_t
+name|in_nomem
+decl_stmt|;
+comment|/* inbound processing failed due to ENOBUFS */
+name|u_quad_t
 name|in_badspi
 decl_stmt|;
 comment|/* failed getting a SPI */
-name|u_long
+name|u_quad_t
 name|in_ahreplay
 decl_stmt|;
 comment|/* AH replay check failed */
-name|u_long
+name|u_quad_t
 name|in_espreplay
 decl_stmt|;
 comment|/* ESP replay check failed */
-name|u_long
+name|u_quad_t
 name|in_ahauthsucc
 decl_stmt|;
 comment|/* AH authentication success */
-name|u_long
+name|u_quad_t
 name|in_ahauthfail
 decl_stmt|;
 comment|/* AH authentication failure */
-name|u_long
+name|u_quad_t
 name|in_espauthsucc
 decl_stmt|;
 comment|/* ESP authentication success */
-name|u_long
+name|u_quad_t
 name|in_espauthfail
 decl_stmt|;
 comment|/* ESP authentication failure */
-name|u_long
+name|u_quad_t
 name|in_esphist
 index|[
-name|SADB_EALG_MAX
+literal|256
 index|]
 decl_stmt|;
-name|u_long
+name|u_quad_t
 name|in_ahhist
 index|[
-name|SADB_AALG_MAX
+literal|256
 index|]
 decl_stmt|;
-name|u_long
+name|u_quad_t
+name|in_comphist
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|u_quad_t
 name|out_success
 decl_stmt|;
 comment|/* succeeded outbound process */
-name|u_long
+name|u_quad_t
 name|out_polvio
 decl_stmt|;
 comment|/* security policy violation for outbound process */
-name|u_long
+name|u_quad_t
 name|out_nosa
 decl_stmt|;
 comment|/* outbound SA is unavailable */
-name|u_long
+name|u_quad_t
 name|out_inval
 decl_stmt|;
 comment|/* outbound process failed due to EINVAL */
-name|u_long
+name|u_quad_t
+name|out_nomem
+decl_stmt|;
+comment|/* inbound processing failed due to ENOBUFS */
+name|u_quad_t
 name|out_noroute
 decl_stmt|;
 comment|/* there is no route */
-name|u_long
+name|u_quad_t
 name|out_esphist
 index|[
-name|SADB_EALG_MAX
+literal|256
 index|]
 decl_stmt|;
-name|u_long
+name|u_quad_t
 name|out_ahhist
 index|[
-name|SADB_AALG_MAX
+literal|256
+index|]
+decl_stmt|;
+name|u_quad_t
+name|out_comphist
+index|[
+literal|256
 index|]
 decl_stmt|;
 block|}
@@ -580,12 +677,27 @@ begin_comment
 comment|/* int; AH tunnel mode */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*obsolete, do not reuse*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPSECCTL_INBOUND_CALL_IKE
 value|7
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -618,36 +730,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPSECCTL_MAXID
+name|IPSECCTL_DEBUG
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
+name|IPSECCTL_MAXID
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPSECCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ "inbound_call_ike", CTLTYPE_INT }, \ 	{ "ah_cleartos", CTLTYPE_INT }, \ 	{ "ah_offsetmask", CTLTYPE_INT }, \ 	{ "dfbit", CTLTYPE_INT }, \ 	{ "ecn", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "ah_cleartos", CTLTYPE_INT }, \ 	{ "ah_offsetmask", CTLTYPE_INT }, \ 	{ "dfbit", CTLTYPE_INT }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPSEC6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ "inbound_call_ike", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ecn", CTLTYPE_INT }, \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPSECCTL_VARS
-value|{ \ 	0, \ 	0, \&ip4_def_policy.policy, \&ip4_esp_trans_deflev, \&ip4_esp_net_deflev, \&ip4_ah_trans_deflev, \&ip4_ah_net_deflev, \&ip4_inbound_call_ike, \&ip4_ah_cleartos, \&ip4_ah_offsetmask, \&ip4_ipsec_dfbit, \&ip4_ipsec_ecn, \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPSEC6CTL_VARS
-value|{ \ 	0, \ 	0, \&ip6_def_policy.policy, \&ip6_esp_trans_deflev, \&ip6_esp_net_deflev, \&ip6_ah_trans_deflev, \&ip6_ah_net_deflev, \&ip6_inbound_call_ike, \ 	0, \ 	0, \ 	0, \&ip6_ipsec_ecn, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -655,25 +760,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCTL_DECL
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_net_inet_ipsec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -697,6 +783,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipsec_debug
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -745,13 +838,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ip4_inbound_call_ike
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|ip4_ah_cleartos
 decl_stmt|;
 end_decl_stmt
@@ -776,6 +862,16 @@ name|int
 name|ip4_ipsec_ecn
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ipseclog
+parameter_list|(
+name|x
+parameter_list|)
+value|do { if (ipsec_debug) log x; } while (0)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -906,6 +1002,9 @@ operator|,
 name|caddr_t
 name|request
 operator|,
+name|size_t
+name|len
+operator|,
 name|int
 name|priv
 operator|)
@@ -927,6 +1026,9 @@ name|inpcb
 operator|,
 name|caddr_t
 name|request
+operator|,
+name|size_t
+name|len
 operator|,
 expr|struct
 name|mbuf
@@ -1000,12 +1102,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|tcpcb
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|tcp6cb
 struct_decl|;
 end_struct_decl
 
@@ -1195,6 +1291,42 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipsec_setsocket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|socket
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|socket
+modifier|*
+name|ipsec_getsocket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1219,10 +1351,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|policy
 operator|,
 name|int
-name|buflen
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1236,7 +1366,6 @@ name|__P
 argument_list|(
 operator|(
 name|caddr_t
-name|buf
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1251,11 +1380,9 @@ name|__P
 argument_list|(
 operator|(
 name|caddr_t
-name|buf
 operator|,
 name|char
 operator|*
-name|delimiter
 operator|)
 argument_list|)
 decl_stmt|;

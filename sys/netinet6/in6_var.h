@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
+comment|/*	$KAME: in6_var.h,v 1.33 2000/05/17 05:07:26 jinmei Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_var.h	8.1 (Berkeley) 6/10/93  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_var.h	8.1 (Berkeley) 6/10/93  */
 end_comment
 
 begin_ifndef
@@ -124,94 +132,94 @@ begin_struct
 struct|struct
 name|in6_ifstat
 block|{
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_receive
 decl_stmt|;
 comment|/* # of total input datagram */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_hdrerr
 decl_stmt|;
 comment|/* # of datagrams with invalid hdr */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_toobig
 decl_stmt|;
 comment|/* # of datagrams exceeded MTU */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_noroute
 decl_stmt|;
 comment|/* # of datagrams with no route */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_addrerr
 decl_stmt|;
 comment|/* # of datagrams with invalid dst */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_protounknown
 decl_stmt|;
 comment|/* # of datagrams with unknown proto */
 comment|/* NOTE: increment on final dst if */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_truncated
 decl_stmt|;
 comment|/* # of truncated datagrams */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_discard
 decl_stmt|;
 comment|/* # of discarded datagrams */
 comment|/* NOTE: fragment timeout is not here */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_deliver
 decl_stmt|;
 comment|/* # of datagrams delivered to ULP */
 comment|/* NOTE: increment on final dst if */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_forward
 decl_stmt|;
 comment|/* # of datagrams forwarded */
 comment|/* NOTE: increment on outgoing if */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_request
 decl_stmt|;
 comment|/* # of outgoing datagrams from ULP */
 comment|/* NOTE: does not include forwrads */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_discard
 decl_stmt|;
 comment|/* # of discarded datagrams */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_fragok
 decl_stmt|;
 comment|/* # of datagrams fragmented */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_fragfail
 decl_stmt|;
 comment|/* # of datagrams failed on fragment */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_fragcreat
 decl_stmt|;
 comment|/* # of fragment datagrams */
 comment|/* NOTE: this is # after fragment */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_reass_reqd
 decl_stmt|;
 comment|/* # of incoming fragmented packets */
 comment|/* NOTE: increment on final dst if */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_reass_ok
 decl_stmt|;
 comment|/* # of reassembled packets */
 comment|/* NOTE: this is # after reass */
 comment|/* NOTE: increment on final dst if */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_reass_fail
 decl_stmt|;
 comment|/* # of reass failures */
 comment|/* NOTE: may not be packet count */
 comment|/* NOTE: increment on final dst if */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_mcast
 decl_stmt|;
 comment|/* # of inbound multicast datagrams */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_mcast
 decl_stmt|;
 comment|/* # of outbound multicast datagrams */
@@ -229,140 +237,140 @@ name|icmp6_ifstat
 block|{
 comment|/* 	 * Input statistics 	 */
 comment|/* ipv6IfIcmpInMsgs, total # of input messages */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_msg
 decl_stmt|;
 comment|/* ipv6IfIcmpInErrors, # of input error messages */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_error
 decl_stmt|;
 comment|/* ipv6IfIcmpInDestUnreachs, # of input dest unreach errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_dstunreach
 decl_stmt|;
 comment|/* ipv6IfIcmpInAdminProhibs, # of input administratively prohibited errs */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_adminprohib
 decl_stmt|;
 comment|/* ipv6IfIcmpInTimeExcds, # of input time exceeded errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_timeexceed
 decl_stmt|;
 comment|/* ipv6IfIcmpInParmProblems, # of input parameter problem errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_paramprob
 decl_stmt|;
 comment|/* ipv6IfIcmpInPktTooBigs, # of input packet too big errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_pkttoobig
 decl_stmt|;
 comment|/* ipv6IfIcmpInEchos, # of input echo requests */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_echo
 decl_stmt|;
 comment|/* ipv6IfIcmpInEchoReplies, # of input echo replies */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_echoreply
 decl_stmt|;
 comment|/* ipv6IfIcmpInRouterSolicits, # of input router solicitations */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_routersolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpInRouterAdvertisements, # of input router advertisements */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_routeradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpInNeighborSolicits, # of input neighbor solicitations */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_neighborsolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpInNeighborAdvertisements, # of input neighbor advertisements */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_neighboradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpInRedirects, # of input redirects */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_redirect
 decl_stmt|;
 comment|/* ipv6IfIcmpInGroupMembQueries, # of input MLD queries */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_mldquery
 decl_stmt|;
 comment|/* ipv6IfIcmpInGroupMembResponses, # of input MLD reports */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_mldreport
 decl_stmt|;
 comment|/* ipv6IfIcmpInGroupMembReductions, # of input MLD done */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_in_mlddone
 decl_stmt|;
 comment|/* 	 * Output statistics. We should solve unresolved routing problem... 	 */
 comment|/* ipv6IfIcmpOutMsgs, total # of output messages */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_msg
 decl_stmt|;
 comment|/* ipv6IfIcmpOutErrors, # of output error messages */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_error
 decl_stmt|;
 comment|/* ipv6IfIcmpOutDestUnreachs, # of output dest unreach errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_dstunreach
 decl_stmt|;
 comment|/* ipv6IfIcmpOutAdminProhibs, # of output administratively prohibited errs */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_adminprohib
 decl_stmt|;
 comment|/* ipv6IfIcmpOutTimeExcds, # of output time exceeded errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_timeexceed
 decl_stmt|;
 comment|/* ipv6IfIcmpOutParmProblems, # of output parameter problem errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_paramprob
 decl_stmt|;
 comment|/* ipv6IfIcmpOutPktTooBigs, # of output packet too big errors */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_pkttoobig
 decl_stmt|;
 comment|/* ipv6IfIcmpOutEchos, # of output echo requests */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_echo
 decl_stmt|;
 comment|/* ipv6IfIcmpOutEchoReplies, # of output echo replies */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_echoreply
 decl_stmt|;
 comment|/* ipv6IfIcmpOutRouterSolicits, # of output router solicitations */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_routersolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpOutRouterAdvertisements, # of output router advertisements */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_routeradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpOutNeighborSolicits, # of output neighbor solicitations */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_neighborsolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpOutNeighborAdvertisements, # of output neighbor advertisements */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_neighboradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpOutRedirects, # of output redirects */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_redirect
 decl_stmt|;
 comment|/* ipv6IfIcmpOutGroupMembQueries, # of output MLD queries */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_mldquery
 decl_stmt|;
 comment|/* ipv6IfIcmpOutGroupMembResponses, # of output MLD reports */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_mldreport
 decl_stmt|;
 comment|/* ipv6IfIcmpOutGroupMembReductions, # of output MLD done */
-name|u_int64_t
+name|u_quad_t
 name|ifs6_out_mlddone
 decl_stmt|;
 block|}
@@ -412,6 +420,12 @@ decl_stmt|;
 name|struct
 name|icmp6_ifstat
 name|ifru_icmp6stat
+decl_stmt|;
+name|u_int32_t
+name|ifru_scope_id
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 name|ifr_ifru
@@ -897,6 +911,16 @@ name|SIOCGIFADDR_IN6
 value|_IOWR('i', 33, struct in6_ifreq)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * SIOCSxxx ioctls should be unused (see comments in in6.c), but  * we do not shift numbers for binary compatibility.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -907,15 +931,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIOCGIFDSTADDR_IN6
-value|_IOWR('i', 34, struct in6_ifreq)
+name|SIOCSIFNETMASK_IN6
+value|_IOW('i', 22, struct in6_ifreq)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|SIOCSIFNETMASK_IN6
-value|_IOW('i', 22, struct in6_ifreq)
+name|SIOCGIFDSTADDR_IN6
+value|_IOWR('i', 34, struct in6_ifreq)
 end_define
 
 begin_define
@@ -1042,6 +1071,52 @@ define|#
 directive|define
 name|SIOCGIFSTAT_ICMP6
 value|_IOWR('i', 84, struct in6_ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSDEFIFACE_IN6
+value|_IOWR('i', 85, struct in6_ndifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGDEFIFACE_IN6
+value|_IOWR('i', 86, struct in6_ndifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFINFO_FLAGS
+value|_IOWR('i', 87, struct in6_ndireq)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSSCOPE6
+value|_IOW('i', 88, struct in6_ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGSCOPE6
+value|_IOWR('i', 89, struct in6_ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGSCOPE6DEF
+value|_IOWR('i', 90, struct in6_ifreq)
 end_define
 
 begin_define
@@ -1204,6 +1279,41 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|IN6_ARE_SCOPE_CMP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)-(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_ARE_SCOPE_EQUAL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)==(b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1298,7 +1408,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|unsigned
+name|long
 name|in6_maxmtu
 decl_stmt|;
 end_decl_stmt
@@ -1323,10 +1434,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MALLOC_DECLARE */
-end_comment
-
-begin_comment
 comment|/*  * Macro for finding the internet address structure (in6_ifaddr) corresponding  * to a given interface (ifnet structure).  */
 end_comment
 
@@ -1344,7 +1451,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in6_ifaddr *ia; */
 define|\
-value|do {									\ 	struct ifaddr *ifa;						\ 	TAILQ_FOREACH(ifa,&(ifp)->if_addrlist, ifa_list) {		\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (0)
+value|do {									\ 	struct ifaddr *ifa;						\ 	for (ifa = (ifp)->if_addrlist.tqh_first; ifa; ifa = ifa->ifa_list.tqe_next) {	\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (0)
 end_define
 
 begin_endif
@@ -1431,25 +1538,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCTL_DECL
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_net_inet6_ip6
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_extern
 extern|extern LIST_HEAD(in6_multihead
 operator|,
@@ -1527,7 +1615,7 @@ comment|/* struct in6_multistep step; */
 define|\
 comment|/* struct in6_multi *in6m; */
 define|\
-value|do { \ 	if (((in6m) = (step).i_in6m) != NULL) \ 		(step).i_in6m = LIST_NEXT((step).i_in6m, in6m_entry); \ } while(0)
+value|do { \ 	if (((in6m) = (step).i_in6m) != NULL) \ 		(step).i_in6m = (step).i_in6m->in6m_entry.le_next; \ } while(0)
 end_define
 
 begin_define
@@ -1544,7 +1632,7 @@ comment|/* struct in6_multistep step; */
 define|\
 comment|/* struct in6_multi *in6m */
 define|\
-value|do { \ 	(step).i_in6m = LIST_FIRST(&in6_multihead); \ 		IN6_NEXT_MULTI((step), (in6m)); \ } while(0)
+value|do { \ 	(step).i_in6m = in6_multihead.lh_first; \ 		IN6_NEXT_MULTI((step), (in6m)); \ } while(0)
 end_define
 
 begin_decl_stmt
@@ -1699,6 +1787,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|in6_purgeaddr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|in6_savemkludge
 name|__P
 argument_list|(
@@ -1742,6 +1848,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|in6_purgemkludge
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|in6_ifaddr
 modifier|*
@@ -1752,6 +1872,8 @@ operator|(
 expr|struct
 name|ifnet
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1784,6 +1906,24 @@ name|ip6_sprintf
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|in6_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6_addr2scopeid
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
 expr|struct
 name|in6_addr
 operator|*
@@ -1908,6 +2048,20 @@ expr|struct
 name|in6_ifaddr
 operator|*
 name|ia
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|in6_purgeprefix
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
