@@ -1089,9 +1089,15 @@ name|int
 name|fd
 decl_stmt|,
 name|i
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+name|int
 name|j
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|disk
 modifier|*

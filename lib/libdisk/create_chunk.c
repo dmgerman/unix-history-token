@@ -832,15 +832,23 @@ name|c1
 decl_stmt|,
 modifier|*
 name|c2
-decl_stmt|,
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+name|struct
+name|chunk
 modifier|*
 name|c3
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|;
+endif|#
+directive|endif
 name|c1
 operator|=
 name|d
@@ -1551,6 +1559,9 @@ argument_list|,
 literal|"Serious internal trouble"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
