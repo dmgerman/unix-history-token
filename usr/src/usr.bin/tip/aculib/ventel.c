@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ventel.c	1.1	82/04/19	*/
+comment|/*	ventel.c	1.2	82/07/29	*/
 end_comment
 
 begin_if
@@ -100,6 +100,9 @@ name|connected
 init|=
 literal|0
 decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ACULOG
@@ -151,6 +154,26 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|VERBOSE
+argument_list|)
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\ndialing..."
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|FD
@@ -162,7 +185,7 @@ argument_list|)
 expr_stmt|;
 name|echo
 argument_list|(
-literal|"k$\n$D$I$A$L$:$<"
+literal|"k$\r$\n$D$I$A$L$:$<"
 argument_list|)
 expr_stmt|;
 for|for
@@ -196,7 +219,8 @@ name|read
 argument_list|(
 name|FD
 argument_list|,
-name|cp
+operator|&
+name|c
 argument_list|,
 literal|1
 argument_list|)
@@ -492,6 +516,11 @@ name|c
 operator|&=
 literal|0177
 expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -505,18 +534,13 @@ name|VERBOSE
 argument_list|)
 argument_list|)
 condition|)
-endif|#
-directive|endif
 name|putchar
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|timeout
