@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.9 (Berkeley) %G%"
+literal|"@(#)termios.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ name|KERNEL
 end_define
 
 begin_comment
-comment|/* XXX - FREAD and FWRITE was ifdef'd KERNEL*/
+comment|/* XXX - FREAD and FWRITE ifdef'd KERNEL*/
 end_comment
 
 begin_include
@@ -182,18 +182,18 @@ operator|=
 operator|&
 name|localterm
 expr_stmt|;
-name|opt
-operator|&=
-operator|~
-name|TCSASOFT
-expr_stmt|;
 block|}
-if|if
+switch|switch
 condition|(
 name|opt
-operator|==
-name|TCSANOW
+operator|&
+operator|~
+name|TCSASOFT
 condition|)
+block|{
+case|case
+name|TCSANOW
+case|:
 return|return
 operator|(
 name|ioctl
@@ -206,13 +206,9 @@ name|t
 argument_list|)
 operator|)
 return|;
-elseif|else
-if|if
-condition|(
-name|opt
-operator|==
+case|case
 name|TCSADRAIN
-condition|)
+case|:
 return|return
 operator|(
 name|ioctl
@@ -225,6 +221,9 @@ name|t
 argument_list|)
 operator|)
 return|;
+case|case
+name|TIOCSETAF
+case|:
 return|return
 operator|(
 name|ioctl
@@ -237,6 +236,18 @@ name|t
 argument_list|)
 operator|)
 return|;
+default|default:
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 end_function
 
@@ -446,7 +457,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|cfsetspeed
 parameter_list|(
 name|t
@@ -472,11 +483,16 @@ name|c_ospeed
 operator|=
 name|speed
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Make a pre-existing termios structure into "raw" mode:  * character-at-a-time mode with no characters interpreted,  * 8-bit data path.  */
+comment|/*  * Make a pre-existing termios structure into "raw" mode: character-at-a-time  * mode with no characters interpreted, 8-bit data path.  */
 end_comment
 
 begin_function
@@ -555,7 +571,7 @@ name|c_cflag
 operator||=
 name|CS8
 expr_stmt|;
-comment|/* set MIN/TIME */
+comment|/* XXX set MIN/TIME */
 block|}
 end_function
 
@@ -614,6 +630,9 @@ operator|-
 literal|1
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|select
 argument_list|(
 literal|0
@@ -671,8 +690,8 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
+return|return
+operator|(
 name|ioctl
 argument_list|(
 name|fd
@@ -684,15 +703,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-condition|)
-return|return
-operator|(
+condition|?
 operator|-
 literal|1
-operator|)
-return|;
-return|return
-operator|(
+else|:
 literal|0
 operator|)
 return|;
@@ -764,8 +778,8 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
+return|return
+operator|(
 name|ioctl
 argument_list|(
 name|fd
@@ -778,15 +792,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-condition|)
-return|return
-operator|(
+condition|?
 operator|-
 literal|1
-operator|)
-return|;
-return|return
-operator|(
+else|:
 literal|0
 operator|)
 return|;
@@ -812,6 +821,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|termios
+name|term
+decl_stmt|;
+name|u_char
+name|c
+decl_stmt|;
 switch|switch
 condition|(
 name|action
@@ -830,9 +846,16 @@ name|TIOCSTOP
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|?
+operator|-
+literal|1
+else|:
+literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|TCOON
 case|:
@@ -846,25 +869,22 @@ name|TIOCSTART
 argument_list|,
 literal|0
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|?
+operator|-
+literal|1
+else|:
+literal|0
 operator|)
 return|;
-break|break;
-case|case
-name|TCIOFF
-case|:
 case|case
 name|TCION
 case|:
-block|{
-comment|/* these posix functions are STUPID */
-name|struct
-name|termios
-name|term
-decl_stmt|;
-name|unsigned
-name|char
-name|c
-decl_stmt|;
+case|case
+name|TCIOFF
+case|:
 if|if
 condition|(
 name|tcgetattr
@@ -912,7 +932,10 @@ argument_list|,
 operator|&
 name|c
 argument_list|,
-literal|1
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 operator|==
 operator|-
@@ -924,8 +947,11 @@ operator|-
 literal|1
 operator|)
 return|;
-break|break;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
 name|errno
 operator|=
@@ -938,11 +964,7 @@ literal|1
 operator|)
 return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 end_block
 
