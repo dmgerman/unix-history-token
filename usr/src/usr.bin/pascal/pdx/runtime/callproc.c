@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)callproc.c 1.1 %G%"
+literal|"@(#)callproc.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,13 @@ name|symbol
 argument_list|)
 expr_stmt|;
 block|}
+name|pushargs
+argument_list|(
+name|proc
+argument_list|,
+name|arglist
+argument_list|)
+expr_stmt|;
 name|pushenv
 argument_list|(
 name|proc
@@ -203,13 +210,6 @@ operator|.
 name|funcv
 operator|.
 name|codeloc
-argument_list|)
-expr_stmt|;
-name|pushargs
-argument_list|(
-name|proc
-argument_list|,
-name|arglist
 argument_list|)
 expr_stmt|;
 name|pushframe
