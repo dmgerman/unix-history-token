@@ -451,6 +451,13 @@ name|method
 decl_stmt|,
 name|methoduid
 decl_stmt|;
+name|int
+name|cflag
+decl_stmt|;
+name|cflag
+operator|=
+literal|0
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|prefix
@@ -477,7 +484,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:pu:v"
+literal|"cd:pu:v"
 argument_list|)
 operator|)
 operator|!=
@@ -488,6 +495,15 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+comment|/* verify only */
+name|cflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -522,9 +538,6 @@ literal|'v'
 case|:
 comment|/* backward compatible */
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|usage
 argument_list|()
@@ -661,6 +674,36 @@ argument_list|(
 name|pname
 argument_list|)
 expr_stmt|;
+comment|/* check only if password database is valid */
+if|if
+condition|(
+name|cflag
+condition|)
+block|{
+for|for
+control|(
+name|cnt
+operator|=
+literal|1
+init|;
+name|scan
+argument_list|(
+name|fp
+argument_list|,
+operator|&
+name|pwd
+argument_list|)
+condition|;
+operator|++
+name|cnt
+control|)
+empty_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Open the temporary insecure password database. */
 operator|(
 name|void
@@ -3090,7 +3133,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd_mkdb [-p] [-d<dest dir>] [-u<local username>] file\n"
+literal|"usage: pwd_mkdb [-c] [-p] [-d<dest dir>] [-u<local username>] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
