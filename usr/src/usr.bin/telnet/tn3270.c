@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	5.4 (Berkeley) %G%"
+literal|"@(#)tn3270.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1384,7 +1384,7 @@ argument_list|)
 end_if
 
 begin_function
-name|void
+name|int
 name|settranscom
 parameter_list|(
 name|argc
@@ -1424,7 +1424,9 @@ operator|==
 literal|1
 condition|)
 block|{
-return|return;
+return|return
+literal|1
+return|;
 block|}
 name|transcom
 operator|=
@@ -1481,6 +1483,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
