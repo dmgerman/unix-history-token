@@ -637,16 +637,6 @@ name|fs
 operator|->
 name|fs_size
 expr_stmt|;
-name|rootdev
-operator|=
-name|makedev
-argument_list|(
-literal|255
-argument_list|,
-name|mfs_minor
-operator|++
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"rootfs is %ld Kbyte compiled in MFS\n"
@@ -673,7 +663,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mfs_mountroot: can't find rootvp"
+literal|"mfs_mount: can't find rootvp - "
 argument_list|)
 expr_stmt|;
 return|return
@@ -1570,16 +1560,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|mfs_cdevsw
-init|=
-block|{}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Memory based filesystem initialization.  */
 end_comment
@@ -1597,35 +1577,51 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
-name|dev_t
-name|dev
-init|=
-name|NODEV
-decl_stmt|;
-name|cdevsw_add
+ifdef|#
+directive|ifdef
+name|MFS_ROOT
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
-operator|&
-name|dev
-argument_list|,
-operator|&
-name|mfs_cdevsw
-argument_list|,
-name|NULL
+literal|"Considering MFS root f/s.\n"
 argument_list|)
 expr_stmt|;
-name|cdevsw_add_generic
+if|if
+condition|(
+name|mfs_getimage
+argument_list|()
+condition|)
+block|{
+name|mountrootfsname
+operator|=
+literal|"mfs"
+expr_stmt|;
+name|rootdev
+operator|=
+name|makedev
 argument_list|(
 literal|255
 argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-operator|&
-name|mfs_cdevsw
+name|mfs_minor
+operator|++
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"No MFS image available as root f/s.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
