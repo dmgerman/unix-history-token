@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	4.5 (Berkeley) %G%"
+literal|"@(#)log.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACULOG
-end_ifdef
 
 begin_include
 include|#
@@ -235,6 +229,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|ACULOG
 name|flog
 operator|=
 name|fopen
@@ -260,13 +257,10 @@ argument_list|,
 literal|"can't open log file\r\n"
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_block
 
 end_unit
 
