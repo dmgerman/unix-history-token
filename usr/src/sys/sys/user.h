@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)user.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)user.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -201,6 +201,10 @@ name|NGROUPS
 index|]
 decl_stmt|;
 comment|/* groups, 0 terminated */
+define|#
+directive|define
+name|u_cred
+value|u_uid
 comment|/* 1.2 - memory management */
 name|size_t
 name|u_tsize
