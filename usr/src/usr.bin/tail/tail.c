@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tail.c	4.3 (Berkeley) %G%"
+literal|"@(#)tail.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,15 @@ expr_stmt|;
 name|arg
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|arg
+argument_list|)
+condition|)
+block|{
 name|n
 operator|=
 literal|0
@@ -196,6 +205,13 @@ name|arg
 operator|++
 operator|-
 literal|'0'
+expr_stmt|;
+block|}
+else|else
+name|n
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -345,7 +361,8 @@ if|if
 condition|(
 name|n
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|n
 operator|=
@@ -391,7 +408,8 @@ if|if
 condition|(
 name|n
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|n
 operator|=
