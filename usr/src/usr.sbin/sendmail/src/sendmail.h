@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.114		%G%"
+literal|"@(#)sendmail.h	3.115		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,6 +795,17 @@ end_define
 
 begin_comment
 comment|/* if another value is found, drop this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_RESENT
+value|00010
+end_define
+
+begin_comment
+comment|/* this address is a "resent-..." address */
 end_comment
 
 begin_define
