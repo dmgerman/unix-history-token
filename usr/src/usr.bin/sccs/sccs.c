@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.18 %G%"
+literal|"@(#)sccs.c	1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,7 +1985,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"%12s: being editted: %s"
+literal|"%12s: being edited: %s"
 argument_list|,
 name|basefile
 argument_list|,
@@ -2063,7 +2063,7 @@ name|really
 condition|)
 name|printf
 argument_list|(
-literal|"Nothing being editted\n"
+literal|"Nothing being edited\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2073,7 +2073,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  UNEDIT -- unedit a file ** **	Checks to see that the current user is actually editting **	the file and arranges that s/he is not editting it. ** **	Parameters: **		fn -- the name of the file to be uneditted. ** **	Returns: **		none. ** **	Side Effects: **		fn is removed **		entries are removed from pfile. */
+comment|/* **  UNEDIT -- unedit a file ** **	Checks to see that the current user is actually editting **	the file and arranges that s/he is not editting it. ** **	Parameters: **		fn -- the name of the file to be unedited. ** **	Returns: **		none. ** **	Side Effects: **		fn is removed **		entries are removed from pfile. */
 end_comment
 
 begin_macro
@@ -2254,7 +2254,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%12s: not being editted\n"
+literal|"%12s: not being edited\n"
 argument_list|,
 name|fn
 argument_list|)
@@ -2497,7 +2497,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%12s: not being editted by you\n"
+literal|"%12s: not being edited by you\n"
 argument_list|,
 name|fn
 argument_list|)
