@@ -21,26 +21,28 @@ operator|)
 name|what
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
+modifier|*
 name|pattern
-index|[]
+init|=
 literal|"@(#)"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
+modifier|*
 name|opattern
-index|[]
+init|=
 literal|"~|^`"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
