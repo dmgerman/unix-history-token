@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48 (Berkeley) 4/18/94 (with daemon mode)"
+literal|"@(#)daemon.c	8.48.1.2 (Berkeley) 2/9/95 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48 (Berkeley) 4/18/94 (without daemon mode)"
+literal|"@(#)daemon.c	8.48.1.2 (Berkeley) 2/9/95 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4119,17 +4119,38 @@ name|p
 argument_list|)
 condition|)
 continue|continue;
-comment|/* p now points to the authenticated name */
-operator|(
-name|void
-operator|)
-name|sprintf
+comment|/* p now points to the authenticated name -- copy carefully */
+name|cleanstrcpy
 argument_list|(
 name|hbuf
 argument_list|,
-literal|"%s@%s"
-argument_list|,
 name|p
+argument_list|,
+name|MAXNAME
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|hbuf
+argument_list|)
+expr_stmt|;
+name|hbuf
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|'@'
+expr_stmt|;
+name|strcpy
+argument_list|(
+operator|&
+name|hbuf
+index|[
+name|i
+index|]
 argument_list|,
 name|RealHostName
 operator|==

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.23 (Berkeley) 3/18/94"
+literal|"@(#)readcf.c	8.23.1.2 (Berkeley) 2/10/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -4841,13 +4841,8 @@ case|case
 literal|'M'
 case|:
 comment|/* define macro */
-name|define
-argument_list|(
-name|val
-index|[
-literal|0
-index|]
-argument_list|,
+name|p
+operator|=
 name|newstr
 argument_list|(
 operator|&
@@ -4856,6 +4851,29 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|safe
+condition|)
+name|cleanstrcpy
+argument_list|(
+name|p
+argument_list|,
+name|p
+argument_list|,
+name|MAXNAME
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+name|val
+index|[
+literal|0
+index|]
+argument_list|,
+name|p
 argument_list|,
 name|CurEnv
 argument_list|)

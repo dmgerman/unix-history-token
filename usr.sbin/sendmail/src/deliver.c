@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.82 (Berkeley) 4/18/94"
+literal|"@(#)deliver.c	8.84.1.1 (Berkeley) 2/10/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,6 +284,15 @@ block|{
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|queueup
+argument_list|(
+name|e
+argument_list|,
+name|TRUE
+argument_list|,
+name|announcequeueup
+argument_list|)
 expr_stmt|;
 name|e
 operator|->
@@ -3586,7 +3595,7 @@ argument_list|)
 expr_stmt|;
 name|rcode
 operator|=
-name|EX_OSERR
+name|EX_CONFIG
 expr_stmt|;
 goto|goto
 name|give_up
@@ -6635,6 +6644,8 @@ name|SysExMsg
 index|[
 name|i
 index|]
+operator|+
+literal|1
 argument_list|,
 name|statmsg
 argument_list|)
@@ -6745,17 +6756,33 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+name|mbuf
+index|[
+literal|8
+index|]
+decl_stmt|;
 name|Errors
 operator|++
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|mbuf
+argument_list|,
+literal|"%.3s %%s"
+argument_list|,
+name|statmsg
+argument_list|)
+expr_stmt|;
 name|usrerr
 argument_list|(
-name|statmsg
+name|mbuf
 argument_list|,
-name|errstring
-argument_list|(
-name|errno
-argument_list|)
+operator|&
+name|statmsg
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -6816,6 +6843,14 @@ literal|"giveresponse: stat=%d, e->e_message=%s\n"
 argument_list|,
 name|stat
 argument_list|,
+name|e
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
 name|e
 operator|->
 name|e_message
