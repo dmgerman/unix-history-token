@@ -133,6 +133,8 @@ name|MOPT_ASYNC
 block|,
 name|MOPT_SYNC
 block|,
+name|MOPT_FORCE
+block|,
 name|MOPT_UPDATE
 block|,
 name|MOPT_UQUOTA

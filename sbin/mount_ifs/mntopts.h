@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|MOPT_FORCE
-value|{ "force",	1, MNT_FORCE, 0 }
+value|{ "force",	0, MNT_FORCE, 0 }
 end_define
 
 begin_define
