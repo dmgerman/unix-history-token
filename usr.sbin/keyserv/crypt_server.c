@@ -586,31 +586,26 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function_decl
 name|int
-argument_list|(
-argument|*_my_crypt
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|_my_crypt
+function_decl|)
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|desparams
-operator|*
-operator|)
-argument_list|)
-operator|=
+modifier|*
+parameter_list|)
+init|=
 name|NULL
-expr_stmt|;
-end_expr_stmt
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -654,7 +649,7 @@ begin_define
 define|#
 directive|define
 name|LIBCRYPTO
-value|"libcrypto.so.1"
+value|"libcrypto.so.2"
 end_define
 
 begin_else
@@ -666,7 +661,7 @@ begin_define
 define|#
 directive|define
 name|LIBCRYPTO
-value|"libcrypto.so.1."
+value|"libcrypto.so.2."
 end_define
 
 begin_endif
