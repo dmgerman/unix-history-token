@@ -879,8 +879,6 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1717,8 +1715,6 @@ parameter_list|,
 name|object
 parameter_list|,
 name|desired
-parameter_list|,
-name|map_remove_only
 parameter_list|)
 name|vm_map_t
 name|map
@@ -1728,9 +1724,6 @@ name|object
 decl_stmt|;
 name|vm_pindex_t
 name|desired
-decl_stmt|;
-name|int
-name|map_remove_only
 decl_stmt|;
 block|{
 name|vm_page_t
@@ -1789,7 +1782,7 @@ condition|)
 return|return;
 name|remove_mode
 operator|=
-name|map_remove_only
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2297,8 +2290,6 @@ argument_list|,
 name|bigobj
 argument_list|,
 name|desired
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Next, hunt around for other pages to deactivate.  We actually 	 * do this search sort of wrong -- .text first is not the best idea. 	 */
@@ -2365,8 +2356,6 @@ argument_list|,
 name|obj
 argument_list|,
 name|desired
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
