@@ -429,21 +429,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|spillfd
-parameter_list|(
-name|void
-modifier|*
-name|src
-parameter_list|,
-name|void
-modifier|*
-name|dst
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|syscall
 parameter_list|(
