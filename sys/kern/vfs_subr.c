@@ -4049,9 +4049,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_FSYNC
+name|BO_SYNC
 argument_list|(
-name|vp
+name|bo
 argument_list|,
 name|MNT_WAIT
 argument_list|,

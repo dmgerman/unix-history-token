@@ -96,6 +96,11 @@ operator|.
 name|bop_strategy
 operator|=
 name|g_vfs_strategy
+block|,
+operator|.
+name|bop_sync
+operator|=
+name|bufsync
 block|,	 }
 decl_stmt|;
 end_decl_stmt

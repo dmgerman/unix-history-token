@@ -465,6 +465,11 @@ operator|.
 name|bop_strategy
 operator|=
 name|ffs_geom_strategy
+block|,
+operator|.
+name|bop_sync
+operator|=
+name|bufsync
 block|, }
 decl_stmt|;
 end_decl_stmt

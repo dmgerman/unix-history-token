@@ -124,6 +124,26 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|b_sync_t
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+parameter_list|,
+name|int
+name|waitfor
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|buf_ops
@@ -140,6 +160,10 @@ name|b_strategy_t
 modifier|*
 name|bop_strategy
 decl_stmt|;
+name|b_sync_t
+modifier|*
+name|bop_sync
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -154,6 +178,20 @@ parameter_list|,
 name|bp
 parameter_list|)
 value|((bo)->bo_ops->bop_strategy((bo), (bp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_SYNC
+parameter_list|(
+name|bo
+parameter_list|,
+name|w
+parameter_list|,
+name|td
+parameter_list|)
+value|((bo)->bo_ops->bop_sync((bo), (w), (td)))
 end_define
 
 begin_define
@@ -350,6 +388,26 @@ name|slpflag
 parameter_list|,
 name|int
 name|timeo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bufsync
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|,
+name|int
+name|waitfor
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
