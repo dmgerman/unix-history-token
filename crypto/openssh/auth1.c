@@ -1717,7 +1717,9 @@ condition|(
 operator|!
 name|auth_krb5_tgt
 argument_list|(
-name|luser
+name|pw
+operator|->
+name|pw_name
 argument_list|,
 operator|&
 name|tgt
@@ -1729,7 +1731,9 @@ name|verbose
 argument_list|(
 literal|"Kerberos V5 TGT refused for %.100s"
 argument_list|,
-name|luser
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 expr_stmt|;
 name|xfree

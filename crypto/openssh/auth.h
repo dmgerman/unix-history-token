@@ -284,6 +284,12 @@ directive|include
 file|<krb5.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<krb.h>
+end_include
+
 begin_function_decl
 name|int
 name|auth_krb5
