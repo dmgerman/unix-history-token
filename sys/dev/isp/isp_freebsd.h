@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions  * Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -184,15 +184,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__sparcv9__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc__
-argument_list|)
+name|_MACHINE_ARCH
+operator|==
+name|sparc64
 end_if
 
 begin_define
@@ -279,11 +273,64 @@ name|last_xframt
 decl_stmt|;
 name|u_int32_t
 name|tag
+range|:
+literal|16
+decl_stmt|,
+name|lun
+range|:
+literal|13
+decl_stmt|,
+comment|/* not enough */
+name|state
+range|:
+literal|3
 decl_stmt|;
 block|}
 name|atio_private_data_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ATPD_STATE_FREE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_STATE_ATIO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_STATE_CAM
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_STATE_CTIO
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_STATE_LAST_CTIO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPD_STATE_PDON
+value|5
+end_define
 
 begin_typedef
 typedef|typedef
@@ -316,6 +363,9 @@ name|bus
 decl_stmt|;
 name|u_int32_t
 name|hold
+decl_stmt|;
+name|int
+name|atio_count
 decl_stmt|;
 block|}
 name|tstate_t
@@ -364,6 +414,9 @@ decl_stmt|;
 name|u_int64_t
 name|default_node_wwn
 decl_stmt|;
+name|u_int32_t
+name|default_id
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -392,17 +445,29 @@ name|intr_config_hook
 name|ehook
 decl_stmt|;
 name|u_int8_t
+label|:
+literal|1
+operator|,
+name|fcbsy
+operator|:
+literal|1
+operator|,
+name|ktmature
+operator|:
+literal|1
+operator|,
 name|mboxwaiting
-decl_stmt|;
-name|u_int8_t
-name|simqfrozen
-decl_stmt|;
-name|u_int8_t
-name|drain
-decl_stmt|;
-name|u_int8_t
+operator|:
+literal|1
+operator|,
 name|intsok
-decl_stmt|;
+operator|:
+literal|1
+operator|,
+name|simqfrozen
+operator|:
+literal|3
+expr_stmt|;
 name|int
 name|islocked
 decl_stmt|;
@@ -644,42 +709,8 @@ name|MAXISPREQUEST
 parameter_list|(
 name|isp
 parameter_list|)
-value|256
+value|((IS_FC(isp) || IS_ULTRA2(isp))? 1024 : 256)
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MEMORYBARRIER
-parameter_list|(
-name|isp
-parameter_list|,
-name|type
-parameter_list|,
-name|offset
-parameter_list|,
-name|size
-parameter_list|)
-value|alpha_mb()
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_elif
 
 begin_define
 define|#
@@ -695,33 +726,8 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|do { ia64_mf(); ia64_mf_a(); } while (0)
+value|switch (type) {							\ case SYNC_SFORDEV:						\ case SYNC_REQUEST:						\ 	bus_dmamap_sync(isp->isp_cdmat, isp->isp_cdmap, 	\ 	   BUS_DMASYNC_PREREAD | BUS_DMASYNC_PREWRITE);		\ 	break;							\ case SYNC_SFORCPU:						\ case SYNC_RESULT:						\ 	bus_dmamap_sync(isp->isp_cdmat, isp->isp_cdmap,		\ 	   BUS_DMASYNC_POSTREAD | BUS_DMASYNC_POSTWRITE);	\ 	break;							\ default:							\ 	break;							\ }
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MEMORYBARRIER
-parameter_list|(
-name|isp
-parameter_list|,
-name|type
-parameter_list|,
-name|offset
-parameter_list|,
-name|size
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -747,7 +753,7 @@ parameter_list|(
 name|isp
 parameter_list|)
 define|\
-value|if (isp->isp_osinfo.mboxwaiting) { \ 		isp->isp_osinfo.mboxwaiting = 0; \ 		wakeup(&isp->isp_osinfo.mboxwaiting); \ 	} \ 	isp->isp_mboxbsy = 0
+value|if (isp->isp_osinfo.mboxwaiting) { \ 		isp->isp_osinfo.mboxwaiting = 0; \ 		wakeup(&isp->isp_mbxworkp); \ 	} \ 	isp->isp_mboxbsy = 0
 end_define
 
 begin_define
@@ -766,6 +772,8 @@ name|FC_SCRATCH_ACQUIRE
 parameter_list|(
 name|isp
 parameter_list|)
+define|\
+value|if (isp->isp_osinfo.fcbsy) {					\ 		isp_prt(isp, ISP_LOGWARN,				\ 		    "FC scratch area busy (line %d)!", __LINE__);	\ 	} else								\ 		isp->isp_osinfo.fcbsy = 1
 end_define
 
 begin_define
@@ -775,6 +783,7 @@ name|FC_SCRATCH_RELEASE
 parameter_list|(
 name|isp
 parameter_list|)
+value|isp->isp_osinfo.fcbsy = 0
 end_define
 
 begin_ifndef
@@ -1150,7 +1159,7 @@ name|DEFAULT_IID
 parameter_list|(
 name|x
 parameter_list|)
-value|7
+value|(isp)->isp_osinfo.default_id
 end_define
 
 begin_define
@@ -1160,7 +1169,7 @@ name|DEFAULT_LOOPID
 parameter_list|(
 name|x
 parameter_list|)
-value|109
+value|(isp)->isp_osinfo.default_id
 end_define
 
 begin_define
@@ -1952,9 +1961,7 @@ argument_list|(
 operator|&
 name|isp
 operator|->
-name|isp_osinfo
-operator|.
-name|mboxwaiting
+name|isp_mbxworkp
 argument_list|,
 name|PRIBIO
 argument_list|,
