@@ -639,6 +639,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|R_Zalloc
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|(p = (t) calloc(1,(unsigned int)(n)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|Free
 parameter_list|(
 name|p
@@ -703,6 +717,20 @@ parameter_list|,
 name|n
 parameter_list|)
 value|(p = (t) malloc((unsigned long)(n), M_RTABLE, M_NOWAIT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_Zalloc
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|(p = (t) malloc((unsigned long)(n), M_RTABLE, M_NOWAIT | M_ZERO))
 end_define
 
 begin_define
