@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.15 (Berkeley) %G%"
+literal|"@(#)mime.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1522,7 +1522,7 @@ name|e_dfp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  Heuristically determine encoding method. 	**	If more than 1/8 of the total characters have the 	**	eighth bit set, use base64; else use quoted-printable. 	*/
+comment|/* 	**  Heuristically determine encoding method. 	**	If more than 1/8 of the total characters have the 	**	eighth bit set, use base64; else use quoted-printable. 	**	However, only encode binary encoded data as base64, 	**	since otherwise the NL=>CRLF mapping will be a problem. 	*/
 if|if
 condition|(
 name|tTd
@@ -1535,14 +1535,41 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mime8to7: %ld high bit(s) in %ld byte(s)\n"
+literal|"mime8to7: %ld high bit(s) in %ld byte(s), cte=%s\n"
 argument_list|,
 name|sectionhighbits
 argument_list|,
 name|sectionsize
+argument_list|,
+name|cte
+operator|==
+name|NULL
+condition|?
+literal|"[none]"
+else|:
+name|cte
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cte
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|cte
+argument_list|,
+literal|"binary"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sectionsize
+operator|=
+name|sectionhighbits
+expr_stmt|;
 name|linelen
 operator|=
 literal|0
@@ -1737,23 +1764,27 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|cte
+operator|!=
+name|NULL
+operator|&&
 name|strcasecmp
 argument_list|(
-name|type
+name|cte
 argument_list|,
-literal|"text"
+literal|"binary"
 argument_list|)
 operator|==
 literal|0
 condition|)
 name|getcharf
 operator|=
-name|mime_getchar_crlf
+name|mime_getchar
 expr_stmt|;
 else|else
 name|getcharf
 operator|=
-name|mime_getchar
+name|mime_getchar_crlf
 expr_stmt|;
 name|putline
 argument_list|(
