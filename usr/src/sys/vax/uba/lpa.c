@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lpa.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)lpa.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1868,8 +1868,6 @@ name|v
 argument_list|,
 literal|2
 argument_list|,
-name|UIO_WRITE
-argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
@@ -2170,8 +2168,6 @@ operator|)
 name|p
 argument_list|,
 name|n
-argument_list|,
-name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
@@ -3159,8 +3155,6 @@ operator|->
 name|sc_ubufn
 argument_list|,
 literal|1
-argument_list|,
-name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)rx50.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)rx50.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -313,7 +313,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Perform a read (rw==UIO_READ) or write (rw==UIO_WRITE).  */
+comment|/*  * Perform a read (uio->uio_rw==UIO_READ) or write (uio->uio_rw==UIO_WRITE).  */
 end_comment
 
 begin_macro
@@ -321,9 +321,9 @@ name|rx50operation
 argument_list|(
 argument|dev
 argument_list|,
-argument|rw
-argument_list|,
 argument|uio
+argument_list|,
+argument|flags
 argument_list|)
 end_macro
 
@@ -334,18 +334,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|enum
-name|uio_rw
-name|rw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -529,7 +528,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|rw
+name|uio
+operator|->
+name|uio_rw
 operator|==
 name|UIO_WRITE
 condition|)
@@ -553,7 +554,9 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|rw
+name|uio
+operator|->
+name|uio_rw
 operator|==
 name|UIO_WRITE
 condition|)
@@ -566,8 +569,6 @@ argument_list|(
 name|secbuf
 argument_list|,
 literal|512
-argument_list|,
-name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
@@ -764,7 +765,9 @@ break|break;
 block|}
 if|if
 condition|(
-name|rw
+name|uio
+operator|->
+name|uio_rw
 operator|==
 name|UIO_READ
 condition|)
@@ -808,8 +811,6 @@ name|secbuf
 argument_list|,
 literal|512
 argument_list|,
-name|UIO_READ
-argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
@@ -847,86 +848,6 @@ expr_stmt|;
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|rx50read
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|rx50operation
-argument_list|(
-name|dev
-argument_list|,
-name|UIO_READ
-argument_list|,
-name|uio
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|rx50write
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|rx50operation
-argument_list|(
-name|dev
-argument_list|,
-name|UIO_WRITE
-argument_list|,
-name|uio
-argument_list|)
 operator|)
 return|;
 block|}
