@@ -13,7 +13,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/vm_machdep.c,v 1.2 1993/07/18 20:56:17 paul Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/vm_machdep.c,v 1.3 1993/07/27 10:52:21 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,6 +450,13 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
+comment|/*NOTREACHED*/
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
 block|}
 end_function
 
