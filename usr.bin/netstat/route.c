@@ -2710,7 +2710,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6d %8ld "
+literal|"%6ld %8ld "
 argument_list|,
 name|rt
 operator|->

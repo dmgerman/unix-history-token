@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netgraph.h>
+file|<netgraph/ng_socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netgraph/ng_socket.h>
+file|<netgraph/ng_message.h>
 end_include
 
 begin_comment

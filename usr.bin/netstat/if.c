@@ -376,7 +376,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"%-6s %9d%9d%9d%9d%9d%9d%9d%9d\n"
+literal|"%-6s %9ld%9ld%9ld%9ld%9ld%9ld%9ld%9ld\n"
 argument_list|,
 name|s
 operator|.
