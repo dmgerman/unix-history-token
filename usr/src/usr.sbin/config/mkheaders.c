@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	5.3 (Berkeley) %G%"
+literal|"@(#)mkheaders.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,25 +258,19 @@ literal|0
 operator|&&
 name|mp
 operator|!=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
-operator|-
-literal|1
+name|TO_NEXUS
 operator|&&
 name|mp
 operator|->
 name|d_conn
 operator|!=
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
-operator|-
-literal|1
+literal|0
+operator|&&
+name|mp
+operator|->
+name|d_conn
+operator|!=
+name|TO_NEXUS
 condition|)
 block|{
 name|do_count
