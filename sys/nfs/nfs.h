@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.22 1997/02/22 09:42:34 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.23 1997/03/27 20:01:03 guido Exp $  */
 end_comment
 
 begin_ifndef
@@ -18,12 +18,6 @@ end_define
 begin_comment
 comment|/*  * Tunable constants for nfs  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_define
 define|#
@@ -256,7 +250,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Max. number async_daemons runable */
+comment|/* Max. number async_daemons runnable */
 end_comment
 
 begin_define
@@ -302,6 +296,28 @@ end_define
 begin_comment
 comment|/* Must be a multiple of DIRBLKSIZ */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DIRBLKSIZ
+value|512
+end_define
+
+begin_comment
+comment|/* XXX we used to use ufs's DIRBLKSIZ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Oddballs  */
@@ -455,382 +471,6 @@ directive|define
 name|NFS_UIDALLOC
 value|128
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * NFS mount option flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_SOFT
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* soft mount (hard is default) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WSIZE
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* set write size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RSIZE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* set read size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_TIMEO
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* set initial timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RETRANS
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* set number of request retries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_MAXGRPS
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* set maximum grouplist size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_INT
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* allow interrupts on hard mount */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_NOCONN
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* Don't Connect the socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_NQNFS
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Use Nqnfs protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_NFSV3
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* Use NFS Version 3 protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_KERB
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Use Kerberos authentication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DUMBTIMR
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* Don't estimate rtt dynamically */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_LEASETERM
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* set lease term (nqnfs) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_READAHEAD
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* set read ahead */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DEADTHRESH
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* set dead server retry thresh */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RESVPORT
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* Allocate a reserved port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RDIRPLUS
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Use Readdirplus for V3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_READDIRSIZE
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* Set readdir size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_INTERNAL
-value|0xfffc0000
-end_define
-
-begin_comment
-comment|/* Bits set internally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_HASWRITEVERF
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* Has write verifier for V3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_GOTPATHCONF
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* Got the V3 pathconf info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_GOTFSINFO
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* Got the V3 fsinfo */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_MNTD
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* Mnt server for mnt point */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DISMINPROG
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Dismount in progress */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_DISMNT
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* Dismounted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_SNDLOCK
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Send socket lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WANTSND
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Want above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_RCVLOCK
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* Rcv socket lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WANTRCV
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* Want above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WAITAUTH
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* Wait for authentication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_HASAUTH
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* Has authenticator */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_WANTAUTH
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* Wants an authenticator */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSMNT_AUTHERR
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* Authentication error */
-end_comment
 
 begin_comment
 comment|/*  * Arguments to mount NFS  */
