@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.11 %G%"
+literal|"@(#)pccaseop.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,13 @@ define|#
 directive|define
 name|FORCENAME
 value|"d0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDRTEMP
+value|"a0"
 end_define
 
 begin_endif
@@ -1109,6 +1116,98 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|vax
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'J'
+argument_list|)
+condition|)
+block|{
+comment|/* 	     *	We have a table of absolute addresses. 	     * 	     *	subl2	to make r0 a 0-origin byte offset. 	     *	cmpl	check against upper limit. 	     *	blssu	error if out of bounds. 	     *	ashl	to make r0 a 0-origin long offset, 	     *	jmp	and indirect through it. 	     */
+name|putprintf
+argument_list|(
+literal|"	subl2	$%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	cmpl	$%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|ctab
+index|[
+name|count
+index|]
+operator|.
+name|cconst
+operator|-
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	blssu	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+literal|0
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	ashl	$2,%s,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|FORCENAME
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jmp	*%s%d(%s)"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|fromlabel
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 	     *	We can use the VAX casel instruction with a table 	     *	of short relative offsets. 	     */
 name|putprintf
 argument_list|(
 literal|"	casel	%s,$%d,$%d"
@@ -1139,13 +1238,14 @@ operator|.
 name|cconst
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|vax
 ifdef|#
 directive|ifdef
 name|mc68000
-comment|/* 	     *	subl	to make d0 a 0-origin byte offset. 	     *	cmpl	check against upper limit. 	     *	bhi	error if out of bounds. 	     *	addw	to make d0 a 0-origin word offset. 	     *	movw	pick up a jump-table entry 	     *	jmp	and indirect through it. 	     */
+comment|/* 	 *	subl	to make d0 a 0-origin byte offset. 	 *	cmpl	check against upper limit. 	 *	bhi	error if out of bounds. 	 */
 name|putprintf
 argument_list|(
 literal|"	subl	#%d,%s"
@@ -1201,6 +1301,50 @@ operator|.
 name|clabel
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'J'
+argument_list|)
+condition|)
+block|{
+comment|/* 	     *	We have a table of absolute addresses. 	     * 	     *	asll	to make d0 a 0-origin long offset. 	     *	movl	pick up a jump-table entry 	     *	jmp	and indirect through it. 	     */
+name|putprintf
+argument_list|(
+literal|"	asll	#2,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|FORCENAME
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	movl	pc@(4,%s:l),%s"
+argument_list|,
+literal|0
+argument_list|,
+name|FORCENAME
+argument_list|,
+name|ADDRTEMP
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jmp	%s@"
+argument_list|,
+literal|0
+argument_list|,
+name|ADDRTEMP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 	     *	We have a table of relative addresses. 	     * 	     *	addw	to make d0 a 0-origin word offset. 	     *	movw	pick up a jump-table entry 	     *	jmp	and indirect through it. 	     */
 name|putprintf
 argument_list|(
 literal|"	addw	%s,%s"
@@ -1232,6 +1376,7 @@ argument_list|,
 name|FORCENAME
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|mc68000
@@ -1271,6 +1416,40 @@ index|]
 operator|.
 name|cconst
 condition|)
+block|{
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'J'
+argument_list|)
+condition|)
+block|{
+name|putprintf
+argument_list|(
+literal|"	.long	"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|PREFIXFORMAT
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+name|i
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|putprintf
 argument_list|(
@@ -1313,8 +1492,43 @@ argument_list|,
 name|fromlabel
 argument_list|)
 expr_stmt|;
+block|}
 name|i
 operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'J'
+argument_list|)
+condition|)
+block|{
+name|putprintf
+argument_list|(
+literal|"	.long	"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|PREFIXFORMAT
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+literal|0
+index|]
+operator|.
+name|clabel
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1361,6 +1575,7 @@ name|fromlabel
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|j
 operator|++
 expr_stmt|;
@@ -1369,6 +1584,14 @@ ifdef|#
 directive|ifdef
 name|vax
 comment|/* 	     *	execution continues here if value not in range of case. 	     */
+if|if
+condition|(
+operator|!
+name|opt
+argument_list|(
+literal|'J'
+argument_list|)
+condition|)
 name|putjbr
 argument_list|(
 name|ctab
