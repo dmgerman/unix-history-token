@@ -33,6 +33,10 @@ name|u_short
 name|fid_len
 decl_stmt|;
 comment|/* length of data in bytes */
+name|u_short
+name|fid_reserved
+decl_stmt|;
+comment|/* force longword alignment */
 name|char
 name|fid_data
 index|[
