@@ -1661,21 +1661,59 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'C'
+literal|'-'
 operator|&&
 name|arg
 index|[
 literal|1
 index|]
 operator|==
-literal|'='
+literal|'C'
 condition|)
 block|{
 name|arg
 operator|+=
 literal|2
 expr_stmt|;
-comment|/*- 			 * The logic here for C=<dir> attempts to avoid 			 * chdir() as long as possible.  For example: 			 * "C=/foo C=/bar file" 			 *    needs chdir("/bar") but not chdir("/foo") 			 * "C=/foo C=bar file" 			 *    needs chdir("/foo/bar") 			 * "C=/foo C=bar /file1" 			 *    does not need chdir() 			 * "C=/foo C=bar /file1 file2" 			 *    needs chdir("/foo/bar") before file2 			 * 			 * The only correct way to handle this is to 			 * record a "pending" chdir request and only 			 * execute the real chdir when a non-absolute 			 * filename is seen on the command line. 			 * 			 * I went to all this work so that programs 			 * that build tar command lines don't have to 			 * worry about C= with non-existent 			 * directories; such requests will only fail 			 * if the directory must be accessed. 			 */
+if|if
+condition|(
+operator|*
+name|arg
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|bsdtar
+operator|->
+name|argv
+operator|++
+expr_stmt|;
+name|arg
+operator|=
+operator|*
+name|bsdtar
+operator|->
+name|argv
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Missing argument for -C"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*- 			 * The logic here for -C<dir> attempts to avoid 			 * chdir() as long as possible.  For example: 			 * "-C /foo -C /bar file" 			 *    needs chdir("/bar") but not chdir("/foo") 			 * "-C /foo -C bar file" 			 *    needs chdir("/foo/bar") 			 * "-C /foo -C bar /file1" 			 *    does not need chdir() 			 * "-C /foo -C bar /file1 file2" 			 *    needs chdir("/foo/bar") before file2 			 * 			 * The only correct way to handle this is to 			 * record a "pending" chdir request and only 			 * execute the real chdir when a non-absolute 			 * filename is seen on the command line. 			 * 			 * I went to all this work so that programs 			 * that build tar command lines don't have to 			 * worry about -C with non-existent 			 * directories; such requests will only fail 			 * if the directory must be accessed. 			 */
 if|if
 condition|(
 name|pending_dir
@@ -1686,7 +1724,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-comment|/* The C=/foo C=/bar case; dump first one. */
+comment|/* The -C /foo -C /bar case; dump first one. */
 name|free
 argument_list|(
 name|pending_dir
@@ -1702,7 +1740,7 @@ condition|(
 name|pending_dir
 condition|)
 block|{
-comment|/* The C=/foo C=bar case; concatenate */
+comment|/* The -C /foo -C bar case; concatenate */
 name|char
 modifier|*
 name|old_pending
@@ -1811,7 +1849,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Handle a deferred -C request, see 				 * comments above. */
+comment|/* Handle a deferred -C */
 if|if
 condition|(
 name|chdir
