@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.10	%G%	*/
+comment|/*	kern_clock.c	3.11	%G%	*/
 end_comment
 
 begin_include
@@ -1042,6 +1042,17 @@ block|}
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+operator|!
+name|BASEPRI
+argument_list|(
+name|ps
+argument_list|)
+condition|)
+name|unhang
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|USERMODE
