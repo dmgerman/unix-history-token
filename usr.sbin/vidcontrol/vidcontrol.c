@@ -256,13 +256,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: vidcontrol [-b color] [-c appearance] [-d] [-f [size] file] [-g geometry]"
+literal|"usage: vidcontrol [-CdLPpx] [-b color] [-c appearance] [-f [size] file]"
 argument_list|,
-literal|"                  [-i adapter | mode] [-l screen_map] [-L] [-m on | off]"
+literal|"                  [-g geometry] [-h size] [-i adapter | mode] [-l screen_map]"
 argument_list|,
-literal|"                  [-M char] [-p] [-P] [-r foreground background] [-s number]"
+literal|"                  [-m on | off] [-M char] [-r foreground background] [-s num]"
 argument_list|,
-literal|"                  [-t N | off] [-x] [mode] [foreground [background]] [show]"
+literal|"                  [-t N | off] [mode] [foreground [background]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3737,6 +3737,94 @@ block|}
 end_function
 
 begin_function
+name|void
+name|set_history
+parameter_list|(
+name|char
+modifier|*
+name|opt
+parameter_list|)
+block|{
+name|int
+name|size
+decl_stmt|;
+name|size
+operator|=
+name|atoi
+argument_list|(
+name|opt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|opt
+operator|==
+literal|'\0'
+operator|)
+operator|||
+name|size
+operator|<
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"argument must be a positive number"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_HISTORY
+argument_list|,
+operator|&
+name|size
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"setting history buffer size"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|clear_history
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_CLRHIST
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"clear history buffer"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -3810,7 +3898,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:df:g:i:l:LM:m:pPr:s:t:x"
+literal|"b:Cc:df:g:h:i:l:LM:m:pPr:s:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -3829,6 +3917,13 @@ name|set_border_color
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|clear_history
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -3926,6 +4021,15 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'h'
+case|:
+name|set_history
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'i'
