@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.148 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.149 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3297,9 +3297,16 @@ expr_stmt|;
 comment|/* 		**  See if this user name is "special". 		**	If the user name has a slash in it, assume that this 		**	is a file -- send it off without further ado.  Note 		**	that this type of addresses is not processed along 		**	with the others, so we fudge on the To person. 		*/
 if|if
 condition|(
+name|strcmp
+argument_list|(
 name|m
+operator|->
+name|m_mailer
+argument_list|,
+literal|"[FILE]"
+argument_list|)
 operator|==
-name|FileMailer
+literal|0
 condition|)
 block|{
 name|rcode
