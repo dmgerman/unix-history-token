@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	4.3 (Berkeley) %G%"
+literal|"@(#)touch.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -295,9 +301,9 @@ name|access
 argument_list|(
 name|filename
 argument_list|,
-literal|4
+name|R_OK
 operator||
-literal|2
+name|W_OK
 argument_list|)
 condition|)
 block|{
