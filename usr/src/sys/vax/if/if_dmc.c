@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_dmc.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_dmc.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -470,22 +470,6 @@ begin_struct
 struct|struct
 name|dmc_softc
 block|{
-name|short
-name|sc_oused
-decl_stmt|;
-comment|/* output buffers currently in use */
-name|short
-name|sc_iused
-decl_stmt|;
-comment|/* input buffers given to DMC */
-name|short
-name|sc_flag
-decl_stmt|;
-comment|/* flags */
-name|int
-name|sc_nticks
-decl_stmt|;
-comment|/* seconds since last interrupt */
 name|struct
 name|ifnet
 name|sc_if
@@ -528,6 +512,22 @@ name|NXMT
 index|]
 decl_stmt|;
 comment|/* UNIBUS receive buffer maps */
+name|short
+name|sc_oused
+decl_stmt|;
+comment|/* output buffers currently in use */
+name|short
+name|sc_iused
+decl_stmt|;
+comment|/* input buffers given to DMC */
+name|short
+name|sc_flag
+decl_stmt|;
+comment|/* flags */
+name|int
+name|sc_nticks
+decl_stmt|;
+comment|/* seconds since last interrupt */
 name|int
 name|sc_ubinfo
 decl_stmt|;
