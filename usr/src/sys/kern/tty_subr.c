@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_subr.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_subr.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -76,6 +76,88 @@ name|x
 parameter_list|)
 value|((struct cblock *)(x))
 end_define
+
+begin_comment
+comment|/*  * Initialize clist by freeing all character blocks.  */
+end_comment
+
+begin_macro
+name|cinit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|ccp
+decl_stmt|;
+specifier|register
+name|struct
+name|cblock
+modifier|*
+name|cp
+decl_stmt|;
+name|ccp
+operator|=
+operator|(
+name|int
+operator|)
+name|cfree
+expr_stmt|;
+name|ccp
+operator|=
+operator|(
+name|ccp
+operator|+
+name|CROUND
+operator|)
+operator|&
+operator|~
+name|CROUND
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+operator|(
+expr|struct
+name|cblock
+operator|*
+operator|)
+name|ccp
+init|;
+name|cp
+operator|<
+operator|&
+name|cfree
+index|[
+name|nclist
+operator|-
+literal|1
+index|]
+condition|;
+name|cp
+operator|++
+control|)
+block|{
+name|cp
+operator|->
+name|c_next
+operator|=
+name|cfreelist
+expr_stmt|;
+name|cfreelist
+operator|=
+name|cp
+expr_stmt|;
+name|cfreecount
+operator|+=
+name|CBSIZE
+expr_stmt|;
+block|}
+block|}
+end_block
 
 begin_comment
 comment|/*  * Character list get/put  */

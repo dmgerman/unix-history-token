@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -127,6 +133,14 @@ end_endif
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|buf
@@ -278,9 +292,11 @@ argument_list|,
 name|blkno
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_inblock
 operator|++
@@ -389,6 +405,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|buf
@@ -513,9 +537,11 @@ argument_list|,
 name|blkno
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_inblock
 operator|++
@@ -666,9 +692,11 @@ argument_list|,
 name|rablkno
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_inblock
 operator|++
@@ -749,6 +777,14 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|int
 name|flag
@@ -789,14 +825,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_oublock
 operator|++
 expr_stmt|;
-comment|/* noone paid yet */
+comment|/* no one paid yet */
 else|else
 name|reassignbuf
 argument_list|(
@@ -935,6 +973,14 @@ end_expr_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 operator|(
@@ -963,14 +1009,16 @@ operator|->
 name|b_vp
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_oublock
 operator|++
 expr_stmt|;
-comment|/* noone paid yet */
+comment|/* no one paid yet */
 block|}
 comment|/* 	 * If this is a tape drive, the write must be initiated. 	 */
 if|if

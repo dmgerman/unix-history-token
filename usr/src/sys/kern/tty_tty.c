@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,7 +82,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|syopen
+name|cttyopen
 argument_list|(
 argument|dev
 argument_list|,
@@ -105,15 +105,20 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|)
 decl_stmt|;
 name|int
@@ -161,9 +166,9 @@ else|:
 literal|0
 operator|)
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -200,7 +205,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|syread
+name|cttyread
 argument_list|(
 argument|dev
 argument_list|,
@@ -234,9 +239,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|)
 decl_stmt|;
 name|int
@@ -289,7 +292,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|sywrite
+name|cttywrite
 argument_list|(
 argument|dev
 argument_list|,
@@ -323,9 +326,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|)
 decl_stmt|;
 name|int
@@ -378,7 +379,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|syioctl
+name|cttyioctl
 argument_list|(
 argument|dev
 argument_list|,
@@ -423,9 +424,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|)
 decl_stmt|;
 if|if
@@ -451,15 +450,11 @@ condition|(
 operator|!
 name|SESS_LEADER
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|)
 condition|)
 block|{
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_flag
 operator|&=
@@ -503,7 +498,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|syselect
+name|cttyselect
 argument_list|(
 argument|dev
 argument_list|,
@@ -532,9 +527,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|)
 decl_stmt|;
 if|if

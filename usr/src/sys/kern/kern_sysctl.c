@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -135,8 +135,9 @@ begin_block
 block|{
 name|int
 name|bufsize
-decl_stmt|,
+decl_stmt|;
 comment|/* max size of users buffer */
+name|int
 name|needed
 decl_stmt|,
 name|locked
@@ -662,7 +663,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_uid
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 operator|(
 name|uid_t
@@ -677,6 +680,8 @@ case|:
 if|if
 condition|(
 name|p
+operator|->
+name|p_cred
 operator|->
 name|p_ruid
 operator|!=
@@ -752,6 +757,33 @@ operator|->
 name|p_pgrp
 operator|->
 name|pg_session
+expr_stmt|;
+name|eproc
+operator|.
+name|e_pcred
+operator|=
+operator|*
+name|p
+operator|->
+name|p_cred
+expr_stmt|;
+name|eproc
+operator|.
+name|e_ucred
+operator|=
+operator|*
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
+name|eproc
+operator|.
+name|e_vm
+operator|=
+operator|*
+name|p
+operator|->
+name|p_vmspace
 expr_stmt|;
 name|eproc
 operator|.
