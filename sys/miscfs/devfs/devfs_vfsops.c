@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.23 1997/10/16 06:29:27 julian Exp $  *  *  */
+comment|/*-  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.24 1997/10/16 07:28:50 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -622,11 +622,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"-devfs_unmount-"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mntflags
