@@ -5918,12 +5918,15 @@ argument_list|(
 name|done_ccb
 argument_list|)
 expr_stmt|;
-name|cam_periph_unlock
+name|xpt_schedule
 argument_list|(
 name|periph
+argument_list|,
+comment|/*priority*/
+literal|5
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 block|}
 else|else
