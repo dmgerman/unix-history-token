@@ -3700,12 +3700,6 @@ name|bv_hd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize namecache. 	 */
-name|vp
-operator|->
-name|v_dd
-operator|=
-name|vp
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
