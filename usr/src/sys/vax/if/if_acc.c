@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.22	82/10/17	*/
+comment|/*	if_acc.c	4.23	82/10/20	*/
 end_comment
 
 begin_include
@@ -514,6 +514,14 @@ operator|->
 name|ic_start
 operator|=
 name|accstart
+expr_stmt|;
+name|sc
+operator|->
+name|acc_ifuba
+operator|.
+name|ifu_ubareset
+operator|=
+name|accreset
 expr_stmt|;
 name|sc
 operator|->
