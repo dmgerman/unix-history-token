@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Basic data types for Objective C.    Copyright (C) 1998 Free Software Foundation, Inc.    Contributed by Ovidiu Predescu.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Basic data types for Objective C.    Copyright (C) 1998, 2002 Free Software Foundation, Inc.    Contributed by Ovidiu Predescu.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -169,7 +169,7 @@ parameter_list|,
 name|A
 parameter_list|)
 define|\
-value|({ typeof(V) __v=(V); typeof(A) __a=(A); \      __a*((__v+__a-1)/__a); })
+value|({ typeof (V) __v = (V); typeof (A) __a = (A); \      __a * ((__v+__a - 1)/__a); })
 end_define
 
 begin_define
@@ -182,7 +182,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|GC_set_bit(mask, offset / sizeof (void*))
+value|GC_set_bit (mask, offset / sizeof (void *))
 end_define
 
 begin_comment
@@ -1688,33 +1688,57 @@ begin_comment
 comment|/* !OBJC_WITH_GC */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|__objc_generate_gc_type_description
-parameter_list|(
+argument_list|(
 name|Class
 name|class
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{ }
-end_function
+end_decl_stmt
 
-begin_function
+begin_decl_stmt
 name|void
 name|class_ivar_set_gcinvisible
-parameter_list|(
+argument_list|(
 name|Class
 name|class
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|ivarname
-parameter_list|,
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
 name|BOOL
 name|gc_invisible
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{ }
-end_function
+end_decl_stmt
 
 begin_endif
 endif|#

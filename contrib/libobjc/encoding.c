@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    Bitfield support by Ovidiu Predescu  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2002    Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    Bitfield support by Ovidiu Predescu  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ directive|include
 file|"encoding.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -41,7 +47,7 @@ parameter_list|,
 name|Y
 parameter_list|)
 define|\
-value|({ typeof(X) __x = (X), __y = (Y); \      (__x> __y ? __x : __y); })
+value|({ typeof (X) __x = (X), __y = (Y); \      (__x> __y ? __x : __y); })
 end_define
 
 begin_undef
@@ -60,7 +66,7 @@ parameter_list|,
 name|Y
 parameter_list|)
 define|\
-value|({ typeof(X) __x = (X), __y = (Y); \      (__x< __y ? __x : __y); })
+value|({ typeof (X) __x = (X), __y = (Y); \      (__x< __y ? __x : __y); })
 end_define
 
 begin_undef
@@ -79,7 +85,7 @@ parameter_list|,
 name|A
 parameter_list|)
 define|\
-value|({ typeof(V) __v=(V); typeof(A) __a=(A); \      __a*((__v+__a-1)/__a); })
+value|({ typeof (V) __v = (V); typeof (A) __a = (A); \      __a * ((__v+__a - 1)/__a); })
 end_define
 
 begin_comment
@@ -216,62 +222,27 @@ begin_comment
 comment|/* Some ROUND_TYPE_ALIGN macros use TARGET_foo, and consequently    target_flags.  Define a dummy entry here to so we don't die.  */
 end_comment
 
+begin_comment
+comment|/* ??? FIXME: As of 2002-06-21, the attribute `unused' doesn't seem to    eliminate the warning.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
 name|target_flags
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|atoi
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-name|int
-name|res
-init|=
-literal|0
-decl_stmt|;
-while|while
-condition|(
-name|isdigit
-argument_list|(
-operator|*
-name|str
-argument_list|)
-condition|)
-name|res
-operator|*=
-literal|10
-operator|,
-name|res
-operator|+=
-operator|(
-operator|*
-name|str
-operator|++
-operator|-
-literal|'0'
-operator|)
-expr_stmt|;
-return|return
-name|res
-return|;
-block|}
-end_function
-
 begin_comment
-comment|/*   return the size of an object specified by type  */
+comment|/*   return the size of an object specified by type */
 end_comment
 
 begin_function
@@ -516,6 +487,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -560,6 +535,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -744,7 +723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   Return the alignment of an object specified by type  */
+comment|/*   Return the alignment of an object specified by type */
 end_comment
 
 begin_function
@@ -961,6 +940,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -1189,7 +1172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   The size rounded up to the nearest integral of the wordsize, taken   to be the size of a void*. */
+comment|/*   The size rounded up to the nearest integral of the wordsize, taken   to be the size of a void *. */
 end_comment
 
 begin_function
@@ -1482,6 +1465,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -1531,6 +1518,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -1542,6 +1533,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -1691,6 +1686,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|type
@@ -1740,7 +1739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   Return the number of arguments that the method MTH expects.   Note that all methods need two implicit arguments `self' and   `_cmd'.  */
+comment|/*   Return the number of arguments that the method MTH expects.   Note that all methods need two implicit arguments `self' and   `_cmd'. */
 end_comment
 
 begin_function
@@ -1829,7 +1828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   Return a pointer to the next argument of ARGFRAME.  type points to   the last argument.  Typical use of this look like:    {     char *datum, *type;      for (datum = method_get_first_argument (method, argframe,&type);          datum; datum = method_get_next_argument (argframe,&type))       {         unsigned flags = objc_get_type_qualifiers (type);         type = objc_skip_type_qualifiers (type); 	if (*type != _C_PTR)           [portal encodeData: datum ofType: type]; 	else 	  { 	    if ((flags& _F_IN) == _F_IN)               [portal encodeData: *(char**)datum ofType: ++type]; 	  }       }   } */
+comment|/*   Return a pointer to the next argument of ARGFRAME.  type points to   the last argument.  Typical use of this look like:    {     char *datum, *type;     for (datum = method_get_first_argument (method, argframe,&type);          datum; datum = method_get_next_argument (argframe,&type))       {         unsigned flags = objc_get_type_qualifiers (type);         type = objc_skip_type_qualifiers (type); 	if (*type != _C_PTR)           [portal encodeData: datum ofType: type]; 	else 	  { 	    if ((flags& _F_IN) == _F_IN)               [portal encodeData: *(char **) datum ofType: ++type]; 	  }       }   } */
 end_comment
 
 begin_function
@@ -1913,7 +1912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   Return a pointer to the value of the first argument of the method    described in M with the given argumentframe ARGFRAME.  The type   is returned in TYPE.  type must be passed to successive calls of    method_get_next_argument. */
+comment|/*   Return a pointer to the value of the first argument of the method   described in M with the given argumentframe ARGFRAME.  The type   is returned in TYPE.  type must be passed to successive calls of   method_get_next_argument. */
 end_comment
 
 begin_function
@@ -1955,7 +1954,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    Return a pointer to the ARGth argument of the method    M from the frame ARGFRAME.  The type of the argument    is returned in the value-result argument TYPE  */
+comment|/*    Return a pointer to the ARGth argument of the method    M from the frame ARGFRAME.  The type of the argument    is returned in the value-result argument TYPE */
 end_comment
 
 begin_function
@@ -2317,14 +2316,6 @@ parameter_list|)
 block|{
 specifier|register
 name|int
-name|known_align
-init|=
-name|layout
-operator|->
-name|record_size
-decl_stmt|;
-specifier|register
-name|int
 name|desired_align
 init|=
 literal|0
@@ -2335,14 +2326,20 @@ specifier|const
 name|char
 modifier|*
 name|bfld_type
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int
 name|bfld_type_size
 decl_stmt|,
 name|bfld_type_align
+init|=
+literal|0
 decl_stmt|,
 name|bfld_field_size
+init|=
+literal|0
 decl_stmt|;
 comment|/* The current type without the type qualifiers */
 specifier|const
@@ -2398,6 +2395,10 @@ literal|1
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|bfld_type
 argument_list|)
@@ -2527,6 +2528,10 @@ literal|1
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|bfld_type
 argument_list|)
@@ -2612,6 +2617,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* PCC_BITFIELD_TYPE_MATTERS */
 if|if
 condition|(
 operator|*
@@ -2693,6 +2699,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* PCC_BITFIELD_TYPE_MATTERS */
 comment|/* Does this field automatically have alignment it needs      by virtue of the fields that precede it and the record's      own alignment?  */
 if|if
 condition|(
