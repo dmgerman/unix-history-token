@@ -1479,7 +1479,7 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+comment|/* 		 * Make sure that the provider specified in the drive 		 * specification is an active GEOM provider. 		 */
 name|pp
 operator|=
 name|g_provider_by_name
@@ -1489,6 +1489,36 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"%s: drive not found"
+argument_list|,
+name|d
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+name|g_free
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|d
 operator|->
 name|size
@@ -2197,7 +2227,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX */
+comment|/* 			 * XXX if the provider disapears before we get a chance 			 * to write the config out to the drive, should this 			 * be handled any differently? 			 */
 name|pp
 operator|=
 name|g_provider_by_name
@@ -2207,6 +2237,24 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"geom_vinum: %s: drive disapeared?\n"
+argument_list|,
+name|d
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|cp
 operator|=
 name|g_new_consumer
