@@ -251,6 +251,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_FC0_SUBTYPE_DATA
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC0_SUBTYPE_CF_ACK
 value|0x10
 end_define
@@ -265,8 +272,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_FC0_SUBTYPE_CF_ACPL
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_FC0_SUBTYPE_NODATA
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FC0_SUBTYPE_CFACK
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FC0_SUBTYPE_CFPOLL
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FC0_SUBTYPE_CF_ACK_CF_ACK
+value|0x70
 end_define
 
 begin_define
@@ -422,6 +457,51 @@ name|IEEE80211_ELEMID_CHALLENGE
 value|16
 end_define
 
+begin_comment
+comment|/*  * AUTH management packets  *  *	octect algo[2]  *	octect seq[2]  *	octect status[2]  *	octect chal.id  *	octect chal.length  *	octect chal.text[253]  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int8_t
+modifier|*
+name|ieee80211_mgt_auth_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_ALGORITHM
+parameter_list|(
+name|auth
+parameter_list|)
+define|\
+value|(auth[0] + (auth[1]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_TRANSACTION
+parameter_list|(
+name|auth
+parameter_list|)
+define|\
+value|(auth[2] + (auth[3]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_AUTH_STATUS
+parameter_list|(
+name|auth
+parameter_list|)
+define|\
+value|(auth[4] + (auth[5]<< 8))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -470,6 +550,10 @@ directive|define
 name|IEEE80211_CAPINFO_PRIVACY
 value|0x10
 end_define
+
+begin_comment
+comment|/*  * Reason codes  *  * Unlisted codes are reserved  */
+end_comment
 
 begin_define
 define|#
@@ -532,6 +616,17 @@ define|#
 directive|define
 name|IEEE80211_REASON_ASSOC_NOT_AUTHED
 value|9
+end_define
+
+begin_comment
+comment|/*  * Status code  *  * Unlisted codes are reserved  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_STATUS_SUCCESS
+value|0x0000
 end_define
 
 begin_define
