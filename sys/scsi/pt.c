@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pt: Processor Type driver.  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pt.c,v 1.14 1996/03/10 07:13:06 gibbs Exp $  */
+comment|/*  * pt: Processor Type driver.  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pt.c,v 1.15 1996/03/10 18:17:54 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -822,6 +822,14 @@ block|{
 name|dev_t
 name|dev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|int
+name|unit
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -855,33 +863,62 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-block|{
-name|void
-modifier|*
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+comment|/* XXX only 1 unit. */
+for|for
+control|(
+name|unit
 operator|=
-name|devfs_add_devsw
+literal|0
+init|;
+name|unit
+operator|<
+literal|1
+condition|;
+name|unit
+operator|++
+control|)
+block|{
+comment|/* XXX not saving tokens yet. */
+name|devfs_add_devswf
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"pt"
-argument_list|,
 operator|&
 name|pt_cdevsw
 argument_list|,
-literal|0
+name|unit
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0600
+argument_list|,
+literal|"pt%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|devfs_add_devswf
+argument_list|(
+operator|&
+name|pt_cdevsw
+argument_list|,
+name|unit
+operator||
+name|SCSI_CONTROL_MASK
+argument_list|,
+name|DV_CHR
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"pt%d.ctl"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
