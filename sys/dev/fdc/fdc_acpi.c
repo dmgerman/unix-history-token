@@ -488,7 +488,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|out
+name|out_hintsprobe
 goto|;
 block|}
 comment|/* Parse the output of _FDE in various ways. */
@@ -597,7 +597,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|out
+name|out_hintsprobe
 goto|;
 block|}
 break|break;
@@ -685,7 +685,7 @@ operator|=
 name|ENXIO
 expr_stmt|;
 goto|goto
-name|out
+name|out_hintsprobe
 goto|;
 block|}
 comment|/* Add fd child devices as specified. */
@@ -700,9 +700,9 @@ argument_list|,
 name|fde
 argument_list|)
 expr_stmt|;
-name|out
+name|out_hintsprobe
 label|:
-comment|/* If there was a problem, fall back to the hints-based probe. */
+comment|/* 	 * If there was a problem with the _FDE drive enumeration, fall 	 * back to the hints-based probe. 	 */
 if|if
 condition|(
 name|error
@@ -714,6 +714,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 if|if
 condition|(
 name|buf
