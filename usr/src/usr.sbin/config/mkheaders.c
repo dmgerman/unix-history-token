@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkheaders.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkheaders.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|fprintf
 argument_list|(
 name|outf
 argument_list|,
-literal|"#define %s %d\n"
+literal|"#define %s %u\n"
 argument_list|,
 name|fl
 operator|->
