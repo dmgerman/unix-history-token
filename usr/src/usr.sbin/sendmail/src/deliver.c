@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.10	%G%"
+literal|"@(#)deliver.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2476,7 +2476,11 @@ operator|=
 literal|1
 expr_stmt|;
 name|m
-operator|++
+operator|=
+name|Mailer
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|a
 operator|->
