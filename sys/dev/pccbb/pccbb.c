@@ -3358,7 +3358,7 @@ block|{
 if|if
 condition|(
 name|curr_bus_number
-operator|<
+operator|<=
 name|pribus
 condition|)
 name|curr_bus_number
