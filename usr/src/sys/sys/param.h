@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -36,32 +36,6 @@ end_include
 
 begin_comment
 comment|/*  * Machine-independent constants  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NMOUNT
-value|30
-end_define
-
-begin_comment
-comment|/* number of mountable file systems */
-end_comment
-
-begin_comment
-comment|/* NMOUNT must be<= 255 unless c_mdev (cmap.h) is expanded */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSWAPX
-value|NMOUNT
-end_define
-
-begin_comment
-comment|/* pseudo mount index for swapdev */
 end_comment
 
 begin_define
