@@ -1508,6 +1508,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|ip6_raw_ctloutput
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|,
+expr|struct
+name|sockopt
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|init_ip6pktopts
 name|__P
