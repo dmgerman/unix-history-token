@@ -695,7 +695,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 2.37.2.66 2002/04/23 14:58:27 darrenr Exp $"
+literal|"@(#)$Id: ip_nat.c,v 2.37.2.67 2002/04/27 15:23:39 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9552,9 +9552,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|1
 comment|/* 		 * Fix TCP pseudo header checksum to compensate for the  		 * IP address change. Before we can do the change, we 		 * must make sure that oip is sufficient large to hold 		 * the TCP checksum (normally it does not!). 		 */
 if|if
 condition|(
@@ -9612,8 +9609,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -9697,9 +9692,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|1
 comment|/*  		 * Fix TCP pseudo header checksum to compensate for the  		 * IP address change. Before we can do the change, we 		 * must make sure that oip is sufficient large to hold 		 * the TCP checksum (normally it does not!). 		 */
 if|if
 condition|(
@@ -9757,9 +9749,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-empty_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.43 2002/04/23 16:08:50 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.44 2002/04/25 16:32:15 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1495,6 +1495,12 @@ operator|!
 name|defined
 argument_list|(
 name|IPFILTER_LKM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_INET6
 argument_list|)
 end_if
 
@@ -3873,11 +3879,20 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
-name|__OpenBSD__
+name|OpenBSD
 argument_list|)
+operator|&&
+operator|(
+name|OpenBSD
+operator|<
+literal|200206
+operator|)
+operator|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|_BSDI_VERSION
