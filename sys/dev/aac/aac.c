@@ -3302,12 +3302,10 @@ name|Header
 operator|.
 name|SenderData
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|cm
+operator|->
+name|cm_index
 expr_stmt|;
-comment|/* XXX 64-bit physical 							 * address issue */
 comment|/* put the FIB on the outbound queue */
 name|error
 operator|=
@@ -3742,11 +3740,10 @@ comment|/* nothing to do */
 comment|/* get the command, unmap and queue for later processing */
 name|cm
 operator|=
-operator|(
-expr|struct
-name|aac_command
-operator|*
-operator|)
+name|sc
+operator|->
+name|aac_commands
+operator|+
 name|fib
 operator|->
 name|Header
@@ -5065,6 +5062,14 @@ expr|struct
 name|aac_fib
 argument_list|)
 operator|)
+expr_stmt|;
+name|cm
+operator|->
+name|cm_index
+operator|=
+name|sc
+operator|->
+name|total_fibs
 expr_stmt|;
 if|if
 condition|(

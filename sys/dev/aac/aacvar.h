@@ -413,6 +413,9 @@ comment|/* command creation time */
 name|int
 name|cm_queue
 decl_stmt|;
+name|int
+name|cm_index
+decl_stmt|;
 block|}
 struct|;
 end_struct
