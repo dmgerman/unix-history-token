@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.5.2.1 1997/05/14 00:17:50 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.17 1998/04/30 13:15:31 ache Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -185,7 +191,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|nl_catd
+name|int
 name|loadSet
 parameter_list|()
 function_decl|;
@@ -286,10 +292,27 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|type
+operator|==
+name|NL_CAT_LOCALE
+condition|)
+name|lang
+operator|=
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 if|if
@@ -313,6 +336,7 @@ name|lang
 operator|=
 literal|"C"
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -353,10 +377,6 @@ name|base
 operator|=
 name|cptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -571,7 +591,7 @@ name|catpath
 condition|)
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -580,8 +600,6 @@ operator|(
 name|loadCat
 argument_list|(
 name|catpath
-argument_list|,
-name|type
 argument_list|)
 operator|)
 return|;
@@ -811,6 +829,9 @@ name|set
 operator|->
 name|invalid
 condition|)
+operator|(
+name|void
+operator|)
 name|loadSet
 argument_list|(
 name|cat
@@ -1075,6 +1096,7 @@ decl_stmt|;
 name|int
 name|msgId
 decl_stmt|;
+name|__const
 name|char
 modifier|*
 name|dflt
@@ -1094,10 +1116,30 @@ operator|*
 operator|)
 name|catd
 decl_stmt|;
+name|__const
 name|char
 modifier|*
 name|cptr
 decl_stmt|;
+if|if
+condition|(
+name|catd
+operator|==
+name|NULL
+operator|||
+name|catd
+operator|==
+name|NLERR
+condition|)
+return|return
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|dflt
+operator|)
+return|;
 name|msg
 operator|=
 name|MCGetMsg
@@ -1131,6 +1173,10 @@ name|dflt
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cptr
 operator|)
 return|;
@@ -1166,8 +1212,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|cat
+name|catd
+operator|==
+name|NULL
+operator|||
+name|catd
+operator|==
+name|NLERR
 condition|)
 return|return
 operator|-
@@ -1278,7 +1329,7 @@ define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); return(0);}
+value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); return(NLERR);}
 end_define
 
 begin_define
@@ -1295,16 +1346,11 @@ name|nl_catd
 name|loadCat
 parameter_list|(
 name|catpath
-parameter_list|,
-name|type
 parameter_list|)
 name|__const
 name|char
 modifier|*
 name|catpath
-decl_stmt|;
-name|int
-name|type
 decl_stmt|;
 block|{
 name|MCHeaderT
@@ -1354,7 +1400,7 @@ name|cat
 operator|->
 name|loadType
 operator|=
-name|type
+name|MCLoadBySet
 expr_stmt|;
 if|if
 condition|(
@@ -1381,7 +1427,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -1475,7 +1521,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -1510,7 +1556,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -1774,7 +1820,7 @@ operator|==
 name|MCLoadAll
 condition|)
 block|{
-name|nl_catd
+name|int
 name|res
 decl_stmt|;
 if|if
@@ -1853,9 +1899,8 @@ expr_stmt|;
 if|if
 condition|(
 name|res
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|NOSPACE
 argument_list|()
@@ -1916,7 +1961,7 @@ end_function
 
 begin_function
 specifier|static
-name|nl_catd
+name|int
 name|loadSet
 parameter_list|(
 name|cat
@@ -1974,10 +2019,6 @@ name|data
 operator|.
 name|str
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|set
