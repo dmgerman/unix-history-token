@@ -78,7 +78,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *   * Returns:  *	Nothing  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if neccisary.  */
+comment|/*   * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *   * Returns:  *	Nothing  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if necessary.  */
 end_comment
 
 begin_typedef
@@ -174,7 +174,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the   * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embeded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be neccisary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
+comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the   * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embeded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be necessary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
 end_comment
 
 begin_comment
