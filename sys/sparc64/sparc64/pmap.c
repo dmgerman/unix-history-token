@@ -5921,26 +5921,6 @@ argument_list|,
 name|prot
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_protect: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6799,26 +6779,6 @@ name|int
 name|limit
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_object_init_pt: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX */
 block|}
 end_function
@@ -6837,26 +6797,6 @@ name|vm_map_entry_t
 name|entry
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_prefault: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* XXX */
 block|}
 end_function
@@ -7512,26 +7452,6 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|pm
-operator|==
-operator|&
-name|curproc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_pmap
-operator|||
-name|pm
-operator|==
-name|kernel_pmap
-argument_list|,
-operator|(
-literal|"pmap_remove_pages: non current pmap"
-operator|)
-argument_list|)
-expr_stmt|;
 name|npv
 operator|=
 name|NULL
