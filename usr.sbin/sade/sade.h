@@ -799,6 +799,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_NO_INET6
+value|"noInet6"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_NO_WARN
 value|"noWarn"
 end_define

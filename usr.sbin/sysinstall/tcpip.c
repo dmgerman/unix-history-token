@@ -1918,6 +1918,13 @@ comment|/* 	 * Try a RTSOL scan if such behavior is desired. 	 * If the variable
 if|if
 condition|(
 operator|!
+name|variable_get
+argument_list|(
+name|VAR_NO_INET6
+argument_list|)
+operator|&&
+operator|(
+operator|!
 name|variable_cmp
 argument_list|(
 name|VAR_TRY_RTSOL
@@ -1938,6 +1945,7 @@ name|msgNoYes
 argument_list|(
 literal|"Do you want to try IPv6 configuration of the interface?"
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
