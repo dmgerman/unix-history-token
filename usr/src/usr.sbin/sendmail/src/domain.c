@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.8 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.9 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.8 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.9 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1223,6 +1223,9 @@ decl_stmt|;
 name|bool
 name|amatch
 decl_stmt|;
+name|bool
+name|gotmx
+decl_stmt|;
 name|int
 name|qtype
 decl_stmt|;
@@ -1335,11 +1338,7 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|==
-literal|0
-operator|||
-name|n
-operator|>
+operator|>=
 literal|0
 operator|&&
 operator|*
@@ -1347,6 +1346,15 @@ operator|--
 name|cp
 operator|!=
 literal|'.'
+operator|&&
+name|bitset
+argument_list|(
+name|RES_DNSRCH
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
 condition|)
 block|{
 for|for
@@ -1370,6 +1378,32 @@ operator|=
 operator|*
 name|domain
 operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+operator|&&
+name|bitset
+argument_list|(
+name|RES_DEFNAMES
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
+condition|)
+block|{
+operator|*
+name|dp
+operator|++
+operator|=
+name|_res
+operator|.
+name|defdname
 expr_stmt|;
 block|}
 operator|*
@@ -1403,6 +1437,16 @@ name|NULL
 condition|;
 control|)
 block|{
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_ANY
+condition|)
+name|gotmx
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1727,6 +1771,10 @@ block|{
 case|case
 name|T_MX
 case|:
+name|gotmx
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1858,8 +1906,11 @@ elseif|else
 if|if
 condition|(
 name|qtype
-operator|=
+operator|==
 name|T_A
+operator|&&
+operator|!
+name|gotmx
 condition|)
 name|qtype
 operator|=
