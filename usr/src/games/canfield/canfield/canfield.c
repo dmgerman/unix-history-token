@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c	5.10 (Berkeley) %G%"
+literal|"@(#)canfield.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8167,83 +8167,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Field an interrupt.  */
-end_comment
-
-begin_macro
-name|askquit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|move
-argument_list|(
-name|msgrow
-argument_list|,
-name|msgcol
-argument_list|)
-expr_stmt|;
-name|printw
-argument_list|(
-literal|"Really wish to quit?    "
-argument_list|)
-expr_stmt|;
-do|do
-block|{
-name|getcmd
-argument_list|(
-name|moverow
-argument_list|,
-name|movecol
-argument_list|,
-literal|"y or n?"
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|srcpile
-operator|!=
-literal|'y'
-operator|&&
-name|srcpile
-operator|!=
-literal|'n'
-condition|)
-do|;
-name|clearmsg
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|srcpile
-operator|==
-literal|'y'
-condition|)
-name|cleanup
-argument_list|()
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|askquit
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * procedure to clean up and exit  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|total
 operator|.
@@ -8327,7 +8257,73 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/*  * Field an interrupt.  */
+end_comment
+
+begin_function
+name|void
+name|askquit
+parameter_list|()
+block|{
+name|move
+argument_list|(
+name|msgrow
+argument_list|,
+name|msgcol
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"Really wish to quit?    "
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+name|getcmd
+argument_list|(
+name|moverow
+argument_list|,
+name|movecol
+argument_list|,
+literal|"y or n?"
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|srcpile
+operator|!=
+literal|'y'
+operator|&&
+name|srcpile
+operator|!=
+literal|'n'
+condition|)
+do|;
+name|clearmsg
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|srcpile
+operator|==
+literal|'y'
+condition|)
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|askquit
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Can you tell that this used to be a Pascal program?  */

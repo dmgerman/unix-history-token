@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|TerminateSearch
 argument_list|()
 decl_stmt|,
@@ -158,12 +158,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|Die
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|s
@@ -226,14 +224,12 @@ name|Die
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|TerminateSearch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -272,7 +268,7 @@ name|Die
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|InputCommand
@@ -430,7 +426,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 literal|0
@@ -2687,7 +2683,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 literal|0
@@ -2752,7 +2748,7 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 literal|0
