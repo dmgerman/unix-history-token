@@ -233,6 +233,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|SLIST_FOREACH_PREVPTR
+parameter_list|(
+name|var
+parameter_list|,
+name|varp
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|for ((varp) =&SLIST_FIRST((head));				\ 	    ((var) = *(varp)) != NULL;					\ 	    (varp) =&SLIST_NEXT((var), field))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SLIST_INIT
 parameter_list|(
 name|head
