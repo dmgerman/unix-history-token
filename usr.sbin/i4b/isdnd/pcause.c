@@ -49,9 +49,14 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|error_message
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error_message
+argument_list|)
 argument_list|,
 literal|"%d: "
 argument_list|,

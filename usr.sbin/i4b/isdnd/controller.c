@@ -951,9 +951,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmdbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
 argument_list|,
 literal|"%s %d"
 argument_list|,

@@ -281,9 +281,14 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
