@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.74 2003/10/26 06:31:46 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.75 2003/10/26 20:09:18 imp Exp   */
 end_comment
 
 begin_comment
@@ -3619,7 +3619,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_PRODUCT_OLICOM_OC2220
-value|0x2220
+value|0x2022
 end_define
 
 begin_define
@@ -3627,6 +3627,27 @@ define|#
 directive|define
 name|PCMCIA_STR_OLICOM_OC2220
 value|"GoCard Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_OLICOM_OC2232
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_OLICOM_OC2232
+value|0x3222
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_OLICOM_OC2232
+value|"GoCard Combo Eth/Modem 336"
 end_define
 
 begin_comment
