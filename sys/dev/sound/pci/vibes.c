@@ -2885,6 +2885,15 @@ name|v
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sv_indirect_set
+argument_list|(
+name|sc
+argument_list|,
+name|SV_REG_ADC_INPUT
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
 return|return
 name|mask
 return|;
