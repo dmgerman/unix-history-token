@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999, 2000 Kenneth D. Merry  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002 Kenneth D. Merry  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -334,6 +334,12 @@ name|optreset
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -367,6 +373,11 @@ literal|"acD:O:qR:T:UW:"
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|camcontrol_opts
@@ -374,6 +385,9 @@ name|option_table
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 block|{
 literal|"tur"
 block|,
@@ -418,6 +432,9 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|{
 literal|"rescan"
 block|,
@@ -434,6 +451,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 block|{
 literal|"cmd"
 block|,
@@ -466,6 +486,9 @@ block|,
 name|readdefect_opts
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|{
 literal|"devlist"
 block|,
@@ -474,6 +497,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 block|{
 literal|"periphlist"
 block|,
@@ -530,6 +556,9 @@ block|,
 literal|"qwy"
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|{
 literal|"help"
 block|,
@@ -614,6 +643,12 @@ name|subopt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -767,6 +802,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -847,6 +891,12 @@ name|scan
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -1101,6 +1151,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function
 name|camcontrol_optret
 name|getoption
@@ -1223,6 +1282,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 specifier|static
@@ -1467,6 +1532,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
 
 begin_function
 specifier|static
@@ -1717,10 +1791,8 @@ operator|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"got CAM error %#x, CDM error %d\n"
 argument_list|,
 name|ccb
@@ -2188,6 +2260,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 specifier|static
@@ -4399,6 +4477,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_comment
 comment|/*  * Parse out a bus, or a bus, target and lun in the following  * format:  * bus  * bus:target  * bus:target:lun  *  * Returns the number of parsed components, or 0.  */
 end_comment
@@ -4635,7 +4722,7 @@ name|char
 modifier|*
 name|must
 init|=
-literal|"you must specify a bus, or a bus:target:lun to %s"
+literal|"you must specify \"all\", a bus, or a bus:target:lun to %s"
 decl_stmt|;
 name|int
 name|rv
@@ -4659,6 +4746,10 @@ name|lun
 init|=
 operator|-
 literal|1
+decl_stmt|;
+name|char
+modifier|*
+name|tstr
 decl_stmt|;
 if|if
 condition|(
@@ -4684,6 +4775,53 @@ literal|1
 operator|)
 return|;
 block|}
+name|tstr
+operator|=
+name|argv
+index|[
+name|optind
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|tstr
+argument_list|)
+operator|&&
+operator|(
+operator|*
+name|tstr
+operator|!=
+literal|'\0'
+operator|)
+condition|)
+name|tstr
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|tstr
+argument_list|,
+literal|"all"
+argument_list|,
+name|strlen
+argument_list|(
+literal|"all"
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|arglist
+operator||=
+name|CAM_ARG_BUS
+expr_stmt|;
+else|else
+block|{
 name|rv
 operator|=
 name|parse_btl
@@ -4733,6 +4871,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -4800,30 +4939,24 @@ block|{
 name|union
 name|ccb
 name|ccb
+decl_stmt|,
+name|matchccb
+decl_stmt|;
+name|int
+name|curbus
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|retval
 decl_stmt|;
-if|if
-condition|(
-name|bus
-operator|<
+name|int
+name|bufsize
+decl_stmt|;
+name|retval
+operator|=
 literal|0
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"invalid bus number %d"
-argument_list|,
-name|bus
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -4860,6 +4993,14 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bus
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|ccb
 operator|.
 name|ccb_h
@@ -4947,11 +5088,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4982,11 +5118,6 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -5013,12 +5144,613 @@ operator|&
 name|CAM_STATUS_MASK
 argument_list|)
 expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|1
+name|retval
 operator|)
 return|;
 block|}
+comment|/* 	 * The right way to handle this is to modify the xpt so that it can 	 * handle a wildcarded bus in a rescan or reset CCB.  At the moment 	 * that isn't implemented, so instead we enumerate the busses and 	 * send the rescan or reset to those busses in the case where the 	 * given bus is -1 (wildcard).  We don't send a rescan or reset 	 * to the xpt bus; sending a rescan to the xpt bus is effectively a 	 * no-op, sending a rescan to the xpt bus would result in a status of 	 * CAM_REQ_INVALID. 	 */
+name|bzero
+argument_list|(
+operator|&
+operator|(
+operator|&
+name|matchccb
+operator|.
+name|ccb_h
+operator|)
+index|[
+literal|1
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ccb_dev_match
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ccb_hdr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|matchccb
+operator|.
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_DEV_MATCH
+expr_stmt|;
+name|bufsize
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dev_match_result
+argument_list|)
+operator|*
+literal|20
+expr_stmt|;
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|match_buf_len
+operator|=
+name|bufsize
+expr_stmt|;
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|matches
+operator|=
+operator|(
+expr|struct
+name|dev_match_result
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|bufsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|matches
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"can't malloc memory for matches"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|num_matches
+operator|=
+literal|0
+expr_stmt|;
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|num_patterns
+operator|=
+literal|1
+expr_stmt|;
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|pattern_buf_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dev_match_pattern
+argument_list|)
+expr_stmt|;
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|patterns
+operator|=
+operator|(
+expr|struct
+name|dev_match_pattern
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|pattern_buf_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|patterns
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"can't malloc memory for patterns"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|patterns
+index|[
+literal|0
+index|]
+operator|.
+name|type
+operator|=
+name|DEV_MATCH_BUS
+expr_stmt|;
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|patterns
+index|[
+literal|0
+index|]
+operator|.
+name|pattern
+operator|.
+name|bus_pattern
+operator|.
+name|flags
+operator|=
+name|BUS_MATCH_ANY
+expr_stmt|;
+do|do
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|CAMIOCOMMAND
+argument_list|,
+operator|&
+name|matchccb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"CAMIOCOMMAND ioctl failed"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|matchccb
+operator|.
+name|ccb_h
+operator|.
+name|status
+operator|!=
+name|CAM_REQ_CMP
+operator|)
+operator|||
+operator|(
+operator|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|status
+operator|!=
+name|CAM_DEV_MATCH_LAST
+operator|)
+operator|&&
+operator|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|status
+operator|!=
+name|CAM_DEV_MATCH_MORE
+operator|)
+operator|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"got CAM error %#x, CDM error %d\n"
+argument_list|,
+name|matchccb
+operator|.
+name|ccb_h
+operator|.
+name|status
+argument_list|,
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|status
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|num_matches
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|struct
+name|bus_match_result
+modifier|*
+name|bus_result
+decl_stmt|;
+comment|/* This shouldn't happen. */
+if|if
+condition|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|matches
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|!=
+name|DEV_MATCH_BUS
+condition|)
+continue|continue;
+name|bus_result
+operator|=
+operator|&
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|matches
+index|[
+name|i
+index|]
+operator|.
+name|result
+operator|.
+name|bus_result
+expr_stmt|;
+comment|/* 			 * We don't want to rescan or reset the xpt bus. 			 * See above. 			 */
+if|if
+condition|(
+name|bus_result
+operator|->
+name|path_id
+operator|==
+operator|-
+literal|1
+condition|)
+continue|continue;
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|rescan
+condition|?
+name|XPT_SCAN_BUS
+else|:
+name|XPT_RESET_BUS
+expr_stmt|;
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|path_id
+operator|=
+name|bus_result
+operator|->
+name|path_id
+expr_stmt|;
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|target_id
+operator|=
+name|CAM_TARGET_WILDCARD
+expr_stmt|;
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|target_lun
+operator|=
+name|CAM_LUN_WILDCARD
+expr_stmt|;
+name|ccb
+operator|.
+name|crcn
+operator|.
+name|flags
+operator|=
+name|CAM_FLAG_NONE
+expr_stmt|;
+comment|/* run this at a low priority */
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|pinfo
+operator|.
+name|priority
+operator|=
+literal|5
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|CAMIOCOMMAND
+argument_list|,
+operator|&
+name|ccb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"CAMIOCOMMAND ioctl failed"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|bailout
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_STATUS_MASK
+operator|)
+operator|==
+name|CAM_REQ_CMP
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s of bus %d was successful\n"
+argument_list|,
+name|rescan
+condition|?
+literal|"Re-scan"
+else|:
+literal|"Reset"
+argument_list|,
+name|bus_result
+operator|->
+name|path_id
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * Don't bail out just yet, maybe the other 				 * rescan or reset commands will complete 				 * successfully. 				 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s of bus %d returned error "
+literal|"%#x\n"
+argument_list|,
+name|rescan
+condition|?
+literal|"Re-scan"
+else|:
+literal|"Reset"
+argument_list|,
+name|bus_result
+operator|->
+name|path_id
+argument_list|,
+name|ccb
+operator|.
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_STATUS_MASK
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+block|}
+do|while
+condition|(
+operator|(
+name|matchccb
+operator|.
+name|ccb_h
+operator|.
+name|status
+operator|==
+name|CAM_REQ_CMP
+operator|)
+operator|&&
+operator|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|status
+operator|==
+name|CAM_DEV_MATCH_MORE
+operator|)
+condition|)
+do|;
+name|bailout
+label|:
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|patterns
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|patterns
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|matches
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|matchccb
+operator|.
+name|cdm
+operator|.
+name|matches
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 
@@ -5463,6 +6195,12 @@ return|;
 block|}
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 specifier|static
@@ -6673,6 +7411,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -6684,6 +7431,12 @@ unit|void reassignblocks(struct cam_device *device, u_int32_t *blocks, int num_b
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
+end_ifndef
 
 begin_function
 name|void
@@ -13465,6 +14218,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MINIMALISTIC */
+end_comment
+
 begin_function
 name|void
 name|usage
@@ -13483,14 +14245,23 @@ name|stderr
 argument_list|,
 literal|"usage:  camcontrol<command>  [device id][generic args][command args]\n"
 literal|"        camcontrol devlist    [-v]\n"
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 literal|"        camcontrol periphlist [dev_id][-n dev_name] [-u unit]\n"
 literal|"        camcontrol tur        [dev_id][generic args]\n"
 literal|"        camcontrol inquiry    [dev_id][generic args] [-D] [-S] [-R]\n"
 literal|"        camcontrol start      [dev_id][generic args]\n"
 literal|"        camcontrol stop       [dev_id][generic args]\n"
 literal|"        camcontrol eject      [dev_id][generic args]\n"
-literal|"        camcontrol rescan<bus[:target:lun]>\n"
-literal|"        camcontrol reset<bus[:target:lun]>\n"
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
+literal|"        camcontrol rescan<all | bus[:target:lun]>\n"
+literal|"        camcontrol reset<all | bus[:target:lun]>\n"
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 literal|"        camcontrol defects    [dev_id][generic args]<-f format> [-P][-G]\n"
 literal|"        camcontrol modepage   [dev_id][generic args]<-m page | -l>\n"
 literal|"                              [-P pagectl][-e | -b][-d]\n"
@@ -13503,6 +14274,9 @@ literal|"                              [-D<enable|disable>][-O offset][-q]\n"
 literal|"                              [-R syncrate][-v][-T<enable|disable>]\n"
 literal|"                              [-U][-W bus_width]\n"
 literal|"        camcontrol format     [dev_id][generic args][-q][-w][-y]\n"
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 literal|"        camcontrol help\n"
 argument_list|)
 expr_stmt|;
@@ -13512,6 +14286,9 @@ operator|!
 name|verbose
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 name|fprintf
 argument_list|(
 name|stdout
@@ -13524,8 +14301,8 @@ literal|"inquiry     send a SCSI inquiry command to the named device\n"
 literal|"start       send a Start Unit command to the device\n"
 literal|"stop        send a Stop Unit command to the device\n"
 literal|"eject       send a Stop Unit command to the device with the eject bit set\n"
-literal|"rescan      rescan the given bus, or bus:target:lun\n"
-literal|"reset       reset the given bus, or bus:target:lun\n"
+literal|"rescan      rescan all busses, the given bus, or bus:target:lun\n"
+literal|"reset       reset all busses, the given bus, or bus:target:lun\n"
 literal|"defects     read the defect list of the specified device\n"
 literal|"modepage    display or edit (-e) the given mode page\n"
 literal|"cmd         send the given scsi command, may need -i or -o as well\n"
@@ -13590,6 +14367,9 @@ literal|"-w                don't send immediate format command\n"
 literal|"-y                don't ask any questions\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 block|}
 end_function
 
@@ -13856,6 +14636,9 @@ name|devopen
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 if|if
 condition|(
 operator|(
@@ -14029,6 +14812,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 comment|/* 	 * Start getopt processing at argv[2/3], since we've already 	 * accepted argv[1..2] as the command name, and as a possible 	 * device name. 	 */
 name|optind
 operator|=
@@ -14212,6 +14998,9 @@ default|default:
 break|break;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 comment|/* 	 * For most commands we'll want to open the passthrough device 	 * associated with the specified device.  In the case of the rescan 	 * commands, we don't use a passthrough device at all, just the 	 * transport layer device. 	 */
 if|if
 condition|(
@@ -14327,6 +15116,9 @@ name|cam_errbuf
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 comment|/* 	 * Reset optind to 2, and reset getopt, so these routines can parse 	 * the arguments again. 	 */
 name|optind
 operator|=
@@ -14343,6 +15135,9 @@ operator|&
 name|CAM_ARG_OPT_MASK
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 case|case
 name|CAM_ARG_DEVLIST
 case|:
@@ -14354,6 +15149,9 @@ name|cam_dev
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 case|case
 name|CAM_ARG_DEVTREE
 case|:
@@ -14363,6 +15161,9 @@ name|getdevtree
 argument_list|()
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 case|case
 name|CAM_ARG_TUR
 case|:
@@ -14424,6 +15225,9 @@ name|timeout
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 case|case
 name|CAM_ARG_RESCAN
 case|:
@@ -14454,6 +15258,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|MINIMALISTIC
 case|case
 name|CAM_ARG_READ_DEFECTS
 case|:
@@ -14589,6 +15396,9 @@ name|timeout
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* MINIMALISTIC */
 case|case
 name|CAM_ARG_USAGE
 case|:
