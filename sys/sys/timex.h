@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-1998			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
+comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-2001			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Modification history timex.h  *  * 17 Nov 98	David L. Mills  *	Revised for nanosecond kernel and user interface.  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  *  * $FreeBSD$  */
+comment|/*  * Modification history timex.h  *  * 16 Aug 00	David L. Mills  *	API Version 4. Added MOD_TAI and tai member of ntptimeval  *	structure.  *  * 17 Nov 98	David L. Mills  *	Revised for nanosecond kernel and user interface.  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ begin_define
 define|#
 directive|define
 name|NTP_API
-value|3
+value|4
 end_define
 
 begin_comment
@@ -220,6 +220,17 @@ end_define
 
 begin_comment
 comment|/* set PPS maximum averaging time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD_TAI
+value|0x0080
+end_define
+
+begin_comment
+comment|/* set TAI offset */
 end_comment
 
 begin_define
@@ -544,6 +555,10 @@ name|long
 name|esterror
 decl_stmt|;
 comment|/* estimated error (us) (ro) */
+name|long
+name|tai
+decl_stmt|;
+comment|/* TAI offset */
 name|int
 name|time_state
 decl_stmt|;
