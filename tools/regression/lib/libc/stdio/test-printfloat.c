@@ -443,6 +443,15 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
+literal|"    0"
+argument_list|,
+literal|"%5.0f"
+argument_list|,
+literal|0.001
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
 literal|"1.0123e+00"
 argument_list|,
 literal|"%.4e"
