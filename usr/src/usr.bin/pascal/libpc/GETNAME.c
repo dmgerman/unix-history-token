@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.11 %G%"
+literal|"@(#)GETNAME.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,13 @@ name|window
 index|[
 literal|0
 index|]
+expr_stmt|;
+operator|*
+name|filep
+operator|->
+name|fname
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 		 * Check to see if file is global, or allocated in 		 * the stack by checking its address against the 		 * address of one of our routine's local variables. 		 */
 if|if
