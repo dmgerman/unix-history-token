@@ -3867,6 +3867,28 @@ value|0x10
 end_define
 
 begin_comment
+comment|/*  * Accton vendor ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_ACCTON
+value|0x1113
+end_define
+
+begin_comment
+comment|/*  * Accton device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_EN1217
+value|0x1217
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 
