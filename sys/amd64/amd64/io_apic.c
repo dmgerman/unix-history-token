@@ -177,28 +177,28 @@ begin_define
 define|#
 directive|define
 name|VECTOR_EXTINT
-value|-1
+value|252
 end_define
 
 begin_define
 define|#
 directive|define
 name|VECTOR_NMI
-value|-2
+value|253
 end_define
 
 begin_define
 define|#
 directive|define
 name|VECTOR_SMI
-value|-3
+value|254
 end_define
 
 begin_define
 define|#
 directive|define
 name|VECTOR_DISABLED
-value|-4
+value|255
 end_define
 
 begin_define
@@ -250,27 +250,27 @@ name|struct
 name|intsrc
 name|io_intsrc
 decl_stmt|;
-name|int
+name|u_int
 name|io_intpin
 range|:
 literal|8
 decl_stmt|;
-name|int
+name|u_int
 name|io_vector
 range|:
 literal|8
 decl_stmt|;
-name|int
+name|u_int
 name|io_activehi
 range|:
 literal|1
 decl_stmt|;
-name|int
+name|u_int
 name|io_edgetrigger
 range|:
 literal|1
 decl_stmt|;
-name|int
+name|u_int
 name|io_masked
 range|:
 literal|1
@@ -1592,7 +1592,9 @@ operator|=
 name|intbase
 expr_stmt|;
 name|next_ioapic_base
-operator|+=
+operator|=
+name|intbase
+operator|+
 name|numintr
 expr_stmt|;
 name|io
@@ -1803,7 +1805,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"irq %d\n"
+literal|"irq %u\n"
 argument_list|,
 name|intpin
 operator|->
@@ -2054,8 +2056,8 @@ name|pin
 index|]
 operator|.
 name|io_vector
-operator|<
-literal|0
+operator|>=
+name|NUM_IO_INTS
 condition|)
 return|return
 operator|(
@@ -2147,8 +2149,8 @@ name|pin
 index|]
 operator|.
 name|io_vector
-operator|<
-literal|0
+operator|>=
+name|NUM_IO_INTS
 condition|)
 return|return
 operator|(
@@ -2271,8 +2273,8 @@ name|pin
 index|]
 operator|.
 name|io_vector
-operator|<
-literal|0
+operator|>=
+name|NUM_IO_INTS
 condition|)
 return|return
 operator|(
@@ -2395,8 +2397,8 @@ name|pin
 index|]
 operator|.
 name|io_vector
-operator|<
-literal|0
+operator|>=
+name|NUM_IO_INTS
 condition|)
 return|return
 operator|(
@@ -2522,8 +2524,8 @@ name|pin
 index|]
 operator|.
 name|io_vector
-operator|<
-literal|0
+operator|>=
+name|NUM_IO_INTS
 condition|)
 return|return
 operator|(
@@ -2622,8 +2624,8 @@ name|pin
 index|]
 operator|.
 name|io_vector
-operator|<
-literal|0
+operator|>=
+name|NUM_IO_INTS
 condition|)
 return|return
 operator|(
@@ -3007,8 +3009,8 @@ condition|(
 name|pin
 operator|->
 name|io_vector
-operator|>=
-literal|0
+operator|<
+name|NUM_IO_INTS
 condition|)
 block|{
 ifdef|#
