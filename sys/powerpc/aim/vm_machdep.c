@@ -714,6 +714,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -743,16 +748,16 @@ name|p_stat
 operator|=
 name|SZOMB
 expr_stmt|;
-name|mp_fixme
-argument_list|(
-literal|"assumption: p_pptr won't change at this time"
-argument_list|)
-expr_stmt|;
 name|wakeup
 argument_list|(
 name|p
 operator|->
 name|p_pptr
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|cnt
