@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.36	82/03/19	*/
+comment|/*	uipc_socket.c	4.37	82/03/29	*/
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"../net/in_systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_comment
@@ -3151,6 +3157,74 @@ name|EFAULT
 expr_stmt|;
 return|return;
 block|}
+return|return;
+block|}
+comment|/* routing table update calls */
+case|case
+name|SIOCADDRT
+case|:
+case|case
+name|SIOCDELRT
+case|:
+case|case
+name|SIOCCHGRT
+case|:
+block|{
+name|struct
+name|rtentry
+name|route
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+operator|!
+name|suser
+argument_list|()
+condition|)
+return|return;
+endif|#
+directive|endif
+if|if
+condition|(
+name|copyin
+argument_list|(
+name|cmdp
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|route
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|route
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EFAULT
+expr_stmt|;
+return|return;
+block|}
+name|u
+operator|.
+name|u_error
+operator|=
+name|rtrequest
+argument_list|(
+name|cmd
+argument_list|,
+operator|&
+name|route
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* type/protocol specific ioctls */
