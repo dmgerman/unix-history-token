@@ -1538,6 +1538,12 @@ name|v
 argument_list|)
 return|;
 block|}
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
 name|io
 operator|->
 name|err
@@ -1674,6 +1680,12 @@ condition|)
 return|return
 name|w
 return|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
 name|io
 operator|->
 name|err
