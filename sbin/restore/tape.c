@@ -1508,6 +1508,17 @@ argument_list|,
 name|dumpmap
 argument_list|)
 expr_stmt|;
+comment|/* 'r' restores don't call getvol() for tape 1, so mark it as read. */
+if|if
+condition|(
+name|command
+operator|==
+literal|'r'
+condition|)
+name|tapesread
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1680,17 +1691,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s%s%s%s"
+literal|"%s%s%s%s%s%s%s"
 argument_list|,
 literal|"You have not read any tapes yet.\n"
 argument_list|,
-literal|"Unless you know which volume your"
+literal|"If you are extracting just a few files,"
 argument_list|,
-literal|" file(s) are on you should start\n"
+literal|" start with the last volume\n"
 argument_list|,
-literal|"with the last volume and work"
+literal|"and work towards the first; restore"
 argument_list|,
-literal|" towards the first.\n"
+literal|" can quickly skip tapes that\n"
+argument_list|,
+literal|"have no further files to extract."
+argument_list|,
+literal|" Otherwise, begin with volume 1.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1714,7 +1729,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
 operator|<
@@ -1743,6 +1758,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1841,7 +1858,11 @@ name|tapesread
 operator||=
 literal|1
 operator|<<
+operator|(
 name|volno
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 return|return;
 block|}
@@ -2148,7 +2169,11 @@ name|tapesread
 operator||=
 literal|1
 operator|<<
+operator|(
 name|volno
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|blksread
 operator|=
@@ -6242,6 +6267,25 @@ break|break;
 case|case
 name|TS_END
 case|:
+comment|/* If we missed some tapes, get another volume. */
+if|if
+condition|(
+name|tapesread
+operator|&
+operator|(
+name|tapesread
+operator|+
+literal|1
+operator|)
+condition|)
+block|{
+name|getvol
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|curfile
 operator|.
 name|ino
