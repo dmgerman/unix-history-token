@@ -4702,7 +4702,7 @@ name|argv
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|VarDialScript
+name|VarLoginScript
 argument_list|)
 operator|-
 literal|1
