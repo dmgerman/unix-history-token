@@ -17,7 +17,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|itoa
+name|i_to_a
 parameter_list|(
 name|i
 parameter_list|)

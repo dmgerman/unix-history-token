@@ -841,6 +841,8 @@ block|,
 block|{
 literal|"\""
 block|,
+literal|"dq"
+block|,
 comment|/* 34 */
 block|}
 block|,
@@ -874,6 +876,8 @@ block|}
 block|,
 block|{
 literal|"'"
+block|,
+literal|"cq"
 block|,
 comment|/* 39 */
 block|}
@@ -1810,7 +1814,7 @@ comment|/* 182 */
 block|}
 block|,
 block|{
-literal|"md"
+literal|"pc"
 block|,
 literal|"\267"
 block|,

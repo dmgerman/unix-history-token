@@ -798,6 +798,14 @@ operator|~
 name|environment
 argument_list|()
 expr_stmt|;
+name|void
+name|copy
+parameter_list|(
+specifier|const
+name|environment
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|is_dummy
 parameter_list|()
