@@ -10456,7 +10456,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s maxium target: %d\n"
+literal|"%s maximum target: %d\n"
 argument_list|,
 name|adapter_str
 argument_list|,
@@ -10469,7 +10469,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s maxium LUN: %d\n"
+literal|"%s maximum LUN: %d\n"
 argument_list|,
 name|adapter_str
 argument_list|,
