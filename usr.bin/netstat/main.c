@@ -706,7 +706,7 @@ literal|1
 block|,
 literal|1
 block|,
-name|protopr
+literal|0
 block|,
 name|bdg_stats
 block|,
@@ -887,7 +887,7 @@ literal|1
 block|,
 literal|1
 block|,
-name|protopr
+literal|0
 block|,
 name|bdg_stats
 block|,
