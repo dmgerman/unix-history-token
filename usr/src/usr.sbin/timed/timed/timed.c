@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	1.2 (Berkeley) %G%"
+literal|"@(#)timed.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,7 +379,7 @@ name|sin
 decl_stmt|;
 name|Mflag
 operator|=
-name|SLAVE
+literal|0
 expr_stmt|;
 name|on
 operator|=
@@ -466,7 +466,7 @@ literal|'M'
 case|:
 name|Mflag
 operator|=
-name|MASTER
+literal|1
 expr_stmt|;
 break|break;
 case|case
