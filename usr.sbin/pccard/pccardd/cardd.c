@@ -2277,6 +2277,28 @@ decl_stmt|;
 name|int
 name|rw_flags
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|io
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|io
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|drv
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|drv
+argument_list|)
+expr_stmt|;
 name|offs
 operator|=
 name|sp
@@ -2422,15 +2444,9 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Setting config reg at offs 0x%x (=) 0x%x to 0x%x\n"
+literal|"Setting config reg at offs 0x%x to 0x%x\n"
 argument_list|,
 name|offs
-argument_list|,
-name|sp
-operator|->
-name|cis
-operator|->
-name|reg_addr
 argument_list|,
 name|c
 argument_list|)
@@ -2448,6 +2464,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
 name|usleep
 argument_list|(
 name|sp
@@ -2705,7 +2726,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Assigning I/O window 0, start 0x%x, size 0x%x\n"
+literal|"Assigning I/O window 0, start 0x%x, size 0x%x flags 0x%x\n"
 argument_list|,
 name|io
 operator|.
@@ -2714,10 +2735,20 @@ argument_list|,
 name|io
 operator|.
 name|size
+argument_list|,
+name|io
+operator|.
+name|flags
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|io
+operator|.
+name|flags
+operator||=
+name|IODF_ACTIVE
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -2773,6 +2804,18 @@ operator|<<
 name|sp
 operator|->
 name|irq
+expr_stmt|;
+name|drv
+operator|.
+name|irqmask
+operator|=
+literal|0
+expr_stmt|;
+name|drv
+operator|.
+name|flags
+operator|=
+literal|0x80
 expr_stmt|;
 if|if
 condition|(
@@ -2851,7 +2894,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Assign %s%d, io 0x%x, mem 0x%x, %d bytes, irq %x\n"
+literal|"Assign %s%d, io 0x%x, mem 0x%x, %d bytes, irq %x, flags %x\n"
 argument_list|,
 name|drv
 operator|.
@@ -2876,6 +2919,10 @@ argument_list|,
 name|drv
 operator|.
 name|irqmask
+argument_list|,
+name|drv
+operator|.
+name|flags
 argument_list|)
 expr_stmt|;
 endif|#
