@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.64 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
