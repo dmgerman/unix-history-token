@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_agp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -298,11 +304,29 @@ return|;
 case|case
 literal|0x31881106
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|AGP_AMD64_GART
+argument_list|)
+return|return
+name|NULL
+return|;
+else|#
+directive|else
 return|return
 operator|(
 literal|"VIA 8385 host to PCI bridge"
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 literal|0x31891106
 case|:
@@ -436,9 +460,14 @@ name|dev
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|AGP_NO_AMD64_GART
 case|case
 literal|0x31881106
 case|:
+endif|#
+directive|endif
 case|case
 literal|0x31891106
 case|:
