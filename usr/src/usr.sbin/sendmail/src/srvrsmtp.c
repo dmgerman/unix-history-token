@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.19 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.20 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.19 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.20 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,6 +407,17 @@ begin_comment
 comment|/* one xaction only this run */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|CurSmtpClient
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* who's at the other end of channel */
+end_comment
+
 begin_function_decl
 specifier|static
 name|char
@@ -499,11 +510,30 @@ name|CurHostName
 operator|=
 name|RealHostName
 expr_stmt|;
+name|CurSmtpClient
+operator|=
+name|macvalue
+argument_list|(
+literal|'_'
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CurSmtpClient
+operator|==
+name|NULL
+condition|)
+name|CurSmtpClient
+operator|=
+name|RealHostName
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"server %s startup"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 name|expand
@@ -689,7 +719,7 @@ literal|"421 %s Lost input channel from %s"
 argument_list|,
 name|MyHostName
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -713,7 +743,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"lost input channel from %s"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 endif|#
@@ -770,7 +800,7 @@ name|setproctitle
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -784,7 +814,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -1012,25 +1042,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|p
-operator|=
-name|macvalue
-argument_list|(
-literal|'_'
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-name|p
-operator|=
-name|RealHostName
-expr_stmt|;
 name|message
 argument_list|(
 literal|"250"
@@ -1200,7 +1211,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -2293,6 +2304,28 @@ argument_list|(
 literal|"502 That's none of your business"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|5
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s [rejected]"
+argument_list|,
+name|CurSmtpClient
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 elseif|else
@@ -2351,7 +2384,7 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
