@@ -388,7 +388,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -396,7 +396,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -427,7 +427,7 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -437,7 +437,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dup2
+name|_dup2
 argument_list|(
 name|pdes
 index|[
@@ -454,7 +454,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -500,7 +500,7 @@ condition|(
 operator|(
 name|devnull
 operator|=
-name|open
+name|_open
 argument_list|(
 name|_PATH_DEVNULL
 argument_list|,
@@ -519,7 +519,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dup2
+name|_dup2
 argument_list|(
 name|devnull
 argument_list|,
@@ -533,7 +533,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|close
+name|_close
 argument_list|(
 name|devnull
 argument_list|)
@@ -567,7 +567,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * We are the parent; read the output of the shell wordexp function, 	 * which is a 32-bit hexadecimal word count, a 32-bit hexadecimal 	 * byte count (not including terminating null bytes), followed by 	 * the expanded words separated by nulls. 	 */
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -577,7 +577,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|_read
 argument_list|(
 name|pdes
 index|[
@@ -591,7 +591,7 @@ argument_list|)
 operator|!=
 literal|8
 operator|||
-name|read
+name|_read
 argument_list|(
 name|pdes
 index|[
@@ -606,7 +606,7 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -614,7 +614,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|waitpid
+name|_waitpid
 argument_list|(
 name|pid
 argument_list|,
@@ -763,7 +763,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -771,7 +771,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|waitpid
+name|_waitpid
 argument_list|(
 name|pid
 argument_list|,
@@ -813,7 +813,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -821,7 +821,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|waitpid
+name|_waitpid
 argument_list|(
 name|pid
 argument_list|,
@@ -882,7 +882,7 @@ name|nstrings
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|_read
 argument_list|(
 name|pdes
 index|[
@@ -901,7 +901,7 @@ operator|!=
 name|nbytes
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -909,7 +909,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|waitpid
+name|_waitpid
 argument_list|(
 name|pid
 argument_list|,
@@ -933,7 +933,7 @@ return|;
 block|}
 if|if
 condition|(
-name|waitpid
+name|_waitpid
 argument_list|(
 name|pid
 argument_list|,
@@ -959,7 +959,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -979,7 +979,7 @@ name|WRDE_SYNTAX
 operator|)
 return|;
 block|}
-name|close
+name|_close
 argument_list|(
 name|pdes
 index|[
