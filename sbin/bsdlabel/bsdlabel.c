@@ -122,11 +122,33 @@ directive|include
 file|<sys/disklabel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/diskpc98.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/diskmbr.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

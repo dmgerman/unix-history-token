@@ -89,11 +89,22 @@ directive|include
 file|<sys/diskslice.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/diskmbr.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -106,6 +117,12 @@ include|#
 directive|include
 file|"libdisk.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_define
 define|#
@@ -120,6 +137,11 @@ directive|define
 name|DOSPTYP_ONTRACK
 value|84
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|const
