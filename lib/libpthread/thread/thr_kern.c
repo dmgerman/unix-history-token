@@ -181,14 +181,14 @@ begin_define
 define|#
 directive|define
 name|MAX_CACHED_KSES
-value|((_thread_scope_system == 0) ? 50 : 100)
+value|((_thread_scope_system<= 0) ? 50 : 100)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_CACHED_KSEGS
-value|((_thread_scope_system == 0) ? 50 : 100)
+value|((_thread_scope_system<= 0) ? 50 : 100)
 end_define
 
 begin_define
@@ -1872,7 +1872,7 @@ expr_stmt|;
 if|if
 condition|(
 name|_thread_scope_system
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
@@ -2008,7 +2008,7 @@ expr_stmt|;
 if|if
 condition|(
 name|_thread_scope_system
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{

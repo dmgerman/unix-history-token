@@ -327,7 +327,7 @@ if|if
 condition|(
 operator|(
 name|_thread_scope_system
-operator|==
+operator|<=
 literal|0
 operator|&&
 name|_thread_active_threads
@@ -337,7 +337,7 @@ operator|)
 operator|||
 operator|(
 name|_thread_scope_system
-operator|!=
+operator|>
 literal|0
 operator|&&
 name|_thread_active_threads
