@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	1.1 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	1.2 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -137,6 +137,15 @@ expr_stmt|;
 name|struct
 name|vnode
 modifier|*
+name|dvp
+init|=
+name|ap
+operator|->
+name|a_dvp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
 name|newvp
 decl_stmt|;
 name|struct
@@ -162,17 +171,13 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_LOOKUP(ap->a_dvp = %x->%x, \"%s\", op = %d)\n"
+literal|"lofs_lookup(ap->a_dvp = %x->%x, \"%s\", op = %d)\n"
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
 name|LOFSVP
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 argument_list|,
 name|ap
@@ -191,16 +196,10 @@ name|targetdvp
 operator|=
 name|LOFSVP
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 expr_stmt|;
-name|VREF
-argument_list|(
-name|targetdvp
-argument_list|)
-expr_stmt|;
+comment|/*VREF(targetdvp);*/
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -220,20 +219,15 @@ name|VOP_LOOKUP
 argument_list|(
 name|targetdvp
 argument_list|,
-name|ap
-operator|->
-name|a_vpp
+operator|&
+name|newvp
 argument_list|,
 name|ap
 operator|->
 name|a_cnp
 argument_list|)
 expr_stmt|;
-name|vrele
-argument_list|(
-name|targetdvp
-argument_list|)
-expr_stmt|;
+comment|/*vrele(targetdvp);*/
 if|if
 condition|(
 name|error
@@ -251,17 +245,13 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_LOOKUP(%x->%x) = %d\n"
+literal|"lofs_lookup(%x->%x) = %d\n"
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
 name|LOFSVP
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 argument_list|,
 name|error
@@ -280,28 +270,24 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_LOOKUP(%x->%x) = OK\n"
+literal|"lofs_lookup(%x->%x) = OK\n"
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
 name|LOFSVP
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|newvp
-operator|=
 operator|*
 name|ap
 operator|->
 name|a_vpp
+operator|=
+name|newvp
 expr_stmt|;
 comment|/* 	 * If we just found a directory then make 	 * a loopback node for it and return the loopback 	 * instead of the real vnode.  Otherwise simply 	 * return the aliased directory and vnode. 	 */
 if|if
@@ -334,9 +320,7 @@ return|return
 operator|(
 name|make_lofs
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 operator|->
 name|v_mount
 argument_list|,
@@ -352,11 +336,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lookup: not VDIR; vrele(%x)\n"
-argument_list|,
-name|ap
-operator|->
-name|a_dvp
+literal|"lofs_lookup: not VDIR\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -400,7 +380,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_MKNOD(vp = %x->%x)\n"
+literal|"lofs_mknod(vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -508,7 +488,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_CREATE(ap->a_dvp = %x->%x)\n"
+literal|"lofs_create(ap->a_dvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -582,7 +562,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_CREATE(ap->a_dvp = %x->%x)\n"
+literal|"lofs_create(ap->a_dvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -630,7 +610,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_OPEN(ap->a_vp = %x->%x)\n"
+literal|"lofs_open(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -696,7 +676,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_CLOSE(ap->a_vp = %x->%x)\n"
+literal|"lofs_close(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -762,7 +742,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_ACCESS(ap->a_vp = %x->%x)\n"
+literal|"lofs_access(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -831,7 +811,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_GETATTR(ap->a_vp = %x->%x)\n"
+literal|"lofs_getattr(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -935,7 +915,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_SETATTR(ap->a_vp = %x->%x)\n"
+literal|"lofs_setattr(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1001,7 +981,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_READ(ap->a_vp = %x->%x)\n"
+literal|"lofs_read(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1067,7 +1047,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_WRITE(ap->a_vp = %x->%x)\n"
+literal|"lofs_write(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1133,7 +1113,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_IOCTL(ap->a_vp = %x->%x)\n"
+literal|"lofs_ioctl(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1207,7 +1187,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_SELECT(ap->a_vp = %x->%x)\n"
+literal|"lofs_select(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1277,7 +1257,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_MMAP(ap->a_vp = %x->%x)\n"
+literal|"lofs_mmap(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1343,7 +1323,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_FSYNC(ap->a_vp = %x->%x)\n"
+literal|"lofs_fsync(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1413,7 +1393,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_SEEK(ap->a_vp = %x->%x)\n"
+literal|"lofs_seek(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1482,7 +1462,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_REMOVE(ap->a_vp = %x->%x)\n"
+literal|"lofs_remove(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1618,7 +1598,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_LINK(ap->a_tdvp = %x->%x)\n"
+literal|"lofs_link(ap->a_tdvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1740,7 +1720,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_RENAME(fdvp = %x->%x)\n"
+literal|"lofs_rename(fdvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -1754,7 +1734,7 @@ name|a_fdvp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*printf("VOP_RENAME(tdvp = %x->%x)\n", tndp->ni_dvp, LOFSVP(tndp->ni_dvp));*/
+comment|/*printf("lofs_rename(tdvp = %x->%x)\n", tndp->ni_dvp, LOFSVP(tndp->ni_dvp));*/
 endif|#
 directive|endif
 ifdef|#
@@ -2243,24 +2223,34 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
+name|dvp
+init|=
+name|ap
+operator|->
+name|a_dvp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
 name|xdvp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|newvp
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_MKDIR(vp = %x->%x)\n"
+literal|"lofs_mkdir(vp = %x->%x)\n"
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
 name|LOFSVP
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2268,37 +2258,24 @@ endif|#
 directive|endif
 name|xdvp
 operator|=
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 expr_stmt|;
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 operator|=
 name|LOFSVP
 argument_list|(
 name|xdvp
 argument_list|)
 expr_stmt|;
-name|VREF
-argument_list|(
-name|ap
-operator|->
-name|a_dvp
-argument_list|)
-expr_stmt|;
+comment|/*VREF(dvp);*/
 name|error
 operator|=
 name|VOP_MKDIR
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
-name|ap
-operator|->
-name|a_vpp
+operator|&
+name|newvp
 argument_list|,
 name|ap
 operator|->
@@ -2314,11 +2291,14 @@ condition|(
 name|error
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|xdvp
-argument_list|)
+operator|*
+name|ap
+operator|->
+name|a_vpp
+operator|=
+name|NULLVP
 expr_stmt|;
+comment|/*vrele(xdvp);*/
 return|return
 operator|(
 name|error
@@ -2326,37 +2306,25 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Make a new lofs node 	 */
-name|VREF
-argument_list|(
-name|ap
-operator|->
-name|a_dvp
-argument_list|)
-expr_stmt|;
+comment|/*VREF(dvp);*/
 name|error
 operator|=
 name|make_lofs
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 operator|->
 name|v_mount
 argument_list|,
+operator|&
+name|newvp
+argument_list|)
+expr_stmt|;
+operator|*
 name|ap
 operator|->
 name|a_vpp
-argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-name|xdvp
-argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-name|xdvp
-argument_list|)
+operator|=
+name|newvp
 expr_stmt|;
 return|return
 operator|(
@@ -2389,6 +2357,24 @@ begin_block
 block|{
 name|USES_VOP_RMDIR
 expr_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|dvp
+init|=
+name|ap
+operator|->
+name|a_dvp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2397,17 +2383,13 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_RMDIR(ap->a_vp = %x->%x)\n"
+literal|"lofs_rmdir(dvp = %x->%x)\n"
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
 name|LOFSVP
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2417,45 +2399,33 @@ name|PUSHREF
 argument_list|(
 name|xdvp
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 expr_stmt|;
 name|VREF
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 expr_stmt|;
 name|PUSHREF
 argument_list|(
 name|xvp
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|VREF
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
 name|VOP_RMDIR
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|ap
 operator|->
@@ -2466,32 +2436,24 @@ name|POP
 argument_list|(
 name|xvp
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|POP
 argument_list|(
 name|xdvp
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2638,7 +2600,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_READDIR(ap->a_vp = %x->%x)\n"
+literal|"lofs_readdir(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -2704,7 +2666,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_READLINK(ap->a_vp = %x->%x)\n"
+literal|"lofs_readlink(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -2843,7 +2805,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_INACTIVE(ap->a_vp = %x->%x)\n"
+literal|"lofs_inactive(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -2940,7 +2902,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_RECLAIM(ap->a_vp = %x->%x)\n"
+literal|"lofs_reclaim(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3060,7 +3022,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_LOCK(ap->a_vp = %x->%x)\n"
+literal|"lofs_lock(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3138,7 +3100,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_UNLOCK(ap->a_vp = %x->%x)\n"
+literal|"lofs_unlock(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3193,7 +3155,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_BMAP(ap->a_vp = %x->%x)\n"
+literal|"lofs_bmap(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3262,7 +3224,7 @@ directive|ifdef
 name|LOFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"VOP_STRATEGY(vp = %x->%x)\n"
+literal|"lofs_strategy(vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
