@@ -301,6 +301,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|login_fbtab
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|uid_t
+operator|,
+name|gid_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1724,6 +1741,20 @@ expr_stmt|;
 name|dolastlog
 argument_list|(
 name|quietlog
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set device protections, depending on what terminal the 	 * user is logged in. This feature is used on Suns to give 	 * console users better privacy. 	 */
+name|login_fbtab
+argument_list|(
+name|tty
+argument_list|,
+name|pwd
+operator|->
+name|pw_uid
+argument_list|,
+name|pwd
+operator|->
+name|pw_gid
 argument_list|)
 expr_stmt|;
 operator|(

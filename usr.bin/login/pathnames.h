@@ -30,5 +30,19 @@ name|_PATH_LOGACCESS
 value|"/etc/login.access"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_FBTAB
+value|"/etc/fbtab"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_LOGINDEVPERM
+value|"/etc/logindevperm"
+end_define
+
 end_unit
 
