@@ -668,13 +668,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|DEF_RETRY
-value|10000
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGRND
 value|1
 end_define
@@ -690,7 +683,8 @@ begin_decl_stmt
 name|int
 name|retrycnt
 init|=
-name|DEF_RETRY
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1230,10 +1224,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NFSKERB */
-name|retrycnt
-operator|=
-name|DEF_RETRY
-expr_stmt|;
 name|mntflags
 operator|=
 literal|0
@@ -1910,7 +1900,7 @@ operator|*
 name|p
 operator|||
 name|num
-operator|<=
+operator|<
 literal|0
 condition|)
 name|errx
@@ -2179,6 +2169,18 @@ name|name
 operator|=
 operator|*
 name|argv
+expr_stmt|;
+if|if
+condition|(
+name|retrycnt
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* The default is to keep retrying forever. */
+name|retrycnt
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3328,12 +3330,11 @@ name|ret
 operator|=
 name|TRYRET_LOCALERR
 expr_stmt|;
-while|while
-condition|(
-name|retrycnt
-operator|>
-literal|0
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|remoteerr
 operator|=
@@ -3392,17 +3393,9 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Exit on failures if not BGRND mode, or if all errors 		 * were local. 		 */
+comment|/* Exit if all errors were local. */
 if|if
 condition|(
-operator|(
-name|opflags
-operator|&
-name|BGRND
-operator|)
-operator|==
-literal|0
-operator|||
 operator|!
 name|remoteerr
 condition|)
@@ -3411,11 +3404,16 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If retrycnt == 0, we are to keep retrying forever. 		 * Otherwise decrement it, and exit if it hits zero. 		 */
 if|if
 condition|(
+name|retrycnt
+operator|!=
+literal|0
+operator|&&
 operator|--
 name|retrycnt
-operator|<=
+operator|==
 literal|0
 condition|)
 name|exit
