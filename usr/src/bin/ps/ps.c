@@ -7345,7 +7345,7 @@ name|char
 modifier|*
 name|lhdr
 init|=
-literal|"      F UID   PID  PPID CP PRI NI ADDR    SZ  RSS %*sSTAT TT  TIME"
+literal|"      F  UID   PID  PPID CP PRI NI ADDR    SZ  RSS %*sSTAT TT  TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -7390,7 +7390,7 @@ name|lp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%7x %3d %5u %5u %2d %3d %2d %4x %5d %4d"
+literal|"%7x %4d %5u %5u %2d %3d %2d %4x %5d %4d"
 argument_list|,
 name|ap
 operator|->
@@ -8253,6 +8253,11 @@ name|cp
 operator|++
 operator|=
 literal|'S'
+expr_stmt|;
+operator|*
+name|cp
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
