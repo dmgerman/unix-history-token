@@ -21,36 +21,63 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_expr_stmt
-operator|.
-specifier|register
-operator|%
-name|g2
-operator|,
-operator|#
-name|ignore
-operator|.
-expr|register
-operator|%
-name|g3
-operator|,
-operator|#
-name|ignore
-operator|.
-expr|register
-operator|%
-name|g6
-operator|,
-operator|#
-name|ignore
-operator|.
-expr|register
-operator|%
-name|g7
-operator|,
-operator|#
-name|ignore
-end_expr_stmt
+begin_comment
+comment|/*  * Normal and alternate %g7 point to per-cpu data.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU_REG
+value|%g7
+end_define
+
+begin_comment
+comment|/*  * Alternate %g5 points to a per-cpu stack for temporarily saving alternate  * globals, alternate %g6 points to the pcb of the current process.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASP_REG
+value|%g5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCB_REG
+value|%g6
+end_define
+
+begin_comment
+comment|/*  * Interrupt %g6 points to a per-cpu interrupt queue, %g7 points to the  * interrupt vector table.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IQ_REG
+value|%g6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IV_REG
+value|%g7
+end_define
+
+begin_comment
+comment|/*  * MMU %g7 points to the user tsb.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSB_REG
+value|%g7
+end_define
 
 begin_define
 define|#
@@ -89,10 +116,23 @@ name|PANIC
 parameter_list|(
 name|msg
 parameter_list|,
-name|reg
+name|r1
 parameter_list|)
 define|\
-value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	setx	9b, reg, %o0 ; \ 	call	panic ; \ 	 nop
+value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	panic ; \ 	 nop
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUTS
+parameter_list|(
+name|msg
+parameter_list|,
+name|r1
+parameter_list|)
+define|\
+value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	SET(9b, r1, %o0) ; \ 	call	printf ; \ 	 nop
 end_define
 
 begin_endif
