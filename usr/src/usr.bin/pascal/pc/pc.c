@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c	3.25 (Berkeley) %G%"
+literal|"@(#)pc.c	3.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2451,9 +2451,10 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * warning: vfork doesn't work here, because the call to signal()  	 * done by the child process destroys the parent's SIGINT handler. 	 */
 name|pid
 operator|=
-name|vfork
+name|fork
 argument_list|()
 expr_stmt|;
 if|if
