@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/Am7990.h>
+file|<dev/lnc/if_lncreg.h>
 end_include
 
 begin_comment

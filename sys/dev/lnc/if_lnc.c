@@ -159,7 +159,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_lnc.h>
+file|<dev/lnc/if_lncvar.h>
 end_include
 
 begin_struct
