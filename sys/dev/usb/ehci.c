@@ -12134,7 +12134,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Abort a device request.  * If this routine is called at splusb() it guarantees that the request  * will be removed from the hardware scheduling and that the callback  * for it will be called with USBD_CANCELLED status.  * It's impossible to guarantee that the requested transfer will not  * have happened since the hardware runs concurrently.  * If the transaction has already happened we rely on the ordinary  * interrupt processing to process it.  * XXX This is most probably wrong.  */
+comment|/*  * Abort a device request.  * If this routine is called at splusb() it guarantees that the request  * will be removed from the hardware scheduling and that the callback  * for it will be called with USBD_CANCELLED status.  * It's impossible to guarantee that the requested transfer will not  * have happened since the hardware runs concurrently.  * If the transaction has already happened we rely on the ordinary  * interrupt processing to process it.  */
 end_comment
 
 begin_function
