@@ -4519,17 +4519,16 @@ name|ui_sbsize
 operator|!=
 literal|0
 condition|)
-comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|"freeing uidinfo: uid = %d, sbsize = %ld\n"
+literal|"freeing uidinfo: uid = %d, sbsize = %jd\n"
 argument_list|,
 name|uip
 operator|->
 name|ui_uid
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|uip
 operator|->
