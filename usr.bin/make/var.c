@@ -3658,6 +3658,16 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Now we need to apply any modifiers the user wants applied. 	 * These are: 	 *	:M<pattern> 	 *		words which match the given<pattern>. 	 *<pattern> is of the standard file 	 *		wildcarding form. 	 *	:S<d><pat1><d><pat2><d>[g] 	 *		Substitute<pat2> for<pat1> in the value 	 *	:C<d><pat1><d><pat2><d>[g] 	 *		Substitute<pat2> for regex<pat1> in the value 	 *	:H	Substitute the head of each word 	 *	:T	Substitute the tail of each word 	 *	:E	Substitute the extension (minus '.') of 	 *		each word 	 *	:R	Substitute the root of each word 	 *		(pathname minus the suffix). 	 *	:lhs=rhs 	 *		Like :S, but the rhs goes to the end of 	 *		the invocation. 	 *	:U	Converts variable to upper-case. 	 *	:L	Converts variable to lower-case. 	 */
+if|if
+condition|(
+name|haveModifier
+condition|)
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|rw_str
 operator|=
 name|VarExpand
@@ -3674,16 +3684,6 @@ name|freePtr
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Now we need to apply any modifiers the user wants applied. 	 * These are: 	 *	:M<pattern> 	 *		words which match the given<pattern>. 	 *<pattern> is of the standard file 	 *		wildcarding form. 	 *	:S<d><pat1><d><pat2><d>[g] 	 *		Substitute<pat2> for<pat1> in the value 	 *	:C<d><pat1><d><pat2><d>[g] 	 *		Substitute<pat2> for regex<pat1> in the value 	 *	:H	Substitute the head of each word 	 *	:T	Substitute the tail of each word 	 *	:E	Substitute the extension (minus '.') of 	 *		each word 	 *	:R	Substitute the root of each word 	 *		(pathname minus the suffix). 	 *	:lhs=rhs 	 *		Like :S, but the rhs goes to the end of 	 *		the invocation. 	 *	:U	Converts variable to upper-case. 	 *	:L	Converts variable to lower-case. 	 */
-if|if
-condition|(
-name|haveModifier
-condition|)
-block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|tstr
 operator|++
 expr_stmt|;
@@ -6023,7 +6023,6 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|v
@@ -6055,7 +6054,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Returning the value unmodified, so tell the caller to free 		 * the thing. 		 */
+comment|/* 		     * Returning the value unmodified, so tell the caller to free 		     * the thing. 		     */
 operator|*
 name|freePtr
 operator|=
@@ -6118,7 +6117,7 @@ operator|&
 name|VAR_JUNK
 condition|)
 block|{
-comment|/* 	     * Perform any free'ing needed and set *freePtr to FALSE so the caller 	     * doesn't try to free a static pointer. 	     */
+comment|/* 		 * Perform any free'ing needed and set *freePtr to FALSE so the caller 		 * doesn't try to free a static pointer. 		 */
 if|if
 condition|(
 operator|*
@@ -6244,6 +6243,61 @@ expr_stmt|;
 return|return
 operator|(
 name|rw_str
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+name|char
+modifier|*
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|VarExpand
+argument_list|(
+name|v
+argument_list|,
+name|ctxt
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|v
+operator|->
+name|flags
+operator|&
+name|VAR_FROM_ENV
+condition|)
+block|{
+name|VarDestroy
+argument_list|(
+name|v
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|freePtr
+operator|=
+name|TRUE
+expr_stmt|;
+operator|*
+name|lengthPtr
+operator|=
+name|tstr
+operator|-
+name|input
+operator|+
+literal|1
+expr_stmt|;
+return|return
+operator|(
+name|result
 operator|)
 return|;
 block|}
