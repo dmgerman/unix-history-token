@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|copyright
 index|[]
 init|=
-literal|"@(#)newfs.c	8.13 (Berkeley) 5/1/95"
+literal|"@(#) Copyright (c) 1983, 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)newfs.c	8.13 (Berkeley) 5/1/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|copyright
+name|rcsid
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -96,18 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
@@ -121,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -165,6 +167,29 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -175,17 +200,6 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
 end_include
 
 begin_endif
@@ -798,6 +812,41 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|mkfs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|partition
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -815,15 +864,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|int
 name|ch
@@ -887,11 +927,6 @@ name|special
 decl_stmt|,
 modifier|*
 name|opstring
-decl_stmt|,
-name|buf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -903,10 +938,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|progname
 operator|=
 name|strrchr
@@ -916,6 +958,7 @@ name|argv
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|progname
@@ -1054,7 +1097,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad maximum contiguous blocks\n"
+literal|"%s: bad maximum contiguous blocks"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1129,7 +1172,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad rotational delay\n"
+literal|"%s: bad rotational delay"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1153,7 +1196,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad blocks per file in a cylinder group\n"
+literal|"%s: bad blocks per file in a cylinder group"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1201,7 +1244,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad bytes per inode\n"
+literal|"%s: bad bytes per inode"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1277,7 +1320,7 @@ literal|99
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad free space %%\n"
+literal|"%s: bad free space %%"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1301,7 +1344,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad rotational layout count\n"
+literal|"%s: bad rotational layout count"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1372,7 +1415,7 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"%s: unknown optimization preference: use `space' or `time'."
+literal|"%s: unknown optimization preference: use `space' or `time'"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1419,7 +1462,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad revolutions/minute\n"
+literal|"%s: bad revolutions/minute"
 argument_list|,
 name|optarg
 argument_list|)
@@ -2108,6 +2151,7 @@ operator|-
 literal|1
 operator|||
 operator|(
+operator|(
 operator|*
 name|cp
 operator|<
@@ -2125,6 +2169,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|)
+operator|)
 condition|)
 name|fatal
 argument_list|(
@@ -3331,12 +3376,11 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -3372,11 +3416,8 @@ else|#
 directive|else
 literal|""
 block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+function|;
+end_function
 
 begin_endif
 endif|#
