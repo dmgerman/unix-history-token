@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserv
 end_comment
 
 begin_comment
-comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . 	8/29/95		Fixes suggested by Bruce Evans. 			meteor_mmap should return -1 on error rather than 0. 			unit #> NMETEOR should be unit #>= NMETEOR. 	10/24/95	Turn 50 Hz processing for SECAM and 60 Hz processing 			off for AUTOMODE. 	11/11/95	Change UV from always begin signed to ioctl selected 			to either signed or unsigned. 	12/07/95	Changed 7196 startup codes for 50 Hz as recommended 			by Luigi Rizzo (luigi@iet.unipi.it) 	12/08/95	Clear SECAM bit in PAL/NTSC and set input field count 			bits for 50 Hz mode (PAL/SECAM) before I was setting the 			output count bits. by Luigi Rizzo (luigi@iet.unipi.it) 	12/18/95	Correct odd DMA field (never exceed, but good for safety 			Changed 7196 startup codes for 50 Hz as recommended 			by Luigi Rizzo (luigi@iet.unipi.it) 	12/19/95	Changed field toggle mode to enable (offset 0x3c) 			recommended by luigi@iet.unipi.it 			Added in prototyping, include file, staticizing, 			and DEVFS changes from FreeBSD team. 			Changed the default allocated pages from 151 (NTSC) 			to 217 (PAL). 			Cleaned up some old comments in iic_write(). 			Added a Field (even or odd) only capture mode to  			eliminate the high frequency problems with compression 			algorithms.  Recommended by luigi@iet.unipi.it. 			Changed geometry ioctl so if it couldn't allocated a 			large enough contiguous space, it wouldn't free the 			stuff it already had. 			Added new mode called YUV_422 which delivers the 			data in planer Y followed by U followed by V. This 			differs from the standard YUV_PACKED mode in that 			the chrominance (UV) data is in the correct (different) 			order. This is for programs like vic and mpeg_encode 			so they don't have to reorder the chrominance data. 			Added field count to stats. 			Increment frame count stat if capturing continuous on 			even frame grabs. 			Added my email address to these comments 			(james@cs.uwm.edu) suggested by (luigi@iet.unipt.it :-). 			Changed the user mode signal mechanism to allow the 			user program to be interrupted at the end of a frame 			in any one of the modes.  Added SSIGNAL ioctl. 			Added a SFPS/GFPS ioctl so one may set the frames per 			second that the card catpures.  This code needs to be 			completed. 			Changed the interrupt routine so synchronous capture 			will work on fields or frames and the starting frame 			can be either even or odd. 			Added HALT_N_FRAMES and CONT_N_FRAMES so one could 			stop and continue synchronous capture mode. 			Change the tsleep/wakeup function to wait on mtr 			rather than&read_intr_wait. 			Add option (METEOR_FreeBSD_210) for FreeBSD 2.1 			to compile. */
+comment|/*		Change History: 	8/21/95		Release 	8/23/95		On advice from Stefan Esser, added volatile to PCI 			memory pointers to remove PCI caching . 	8/29/95		Fixes suggested by Bruce Evans. 			meteor_mmap should return -1 on error rather than 0. 			unit #> NMETEOR should be unit #>= NMETEOR. 	10/24/95	Turn 50 Hz processing for SECAM and 60 Hz processing 			off for AUTOMODE. 	11/11/95	Change UV from always begin signed to ioctl selected 			to either signed or unsigned. 	12/07/95	Changed 7196 startup codes for 50 Hz as recommended 			by Luigi Rizzo (luigi@iet.unipi.it) 	12/08/95	Clear SECAM bit in PAL/NTSC and set input field count 			bits for 50 Hz mode (PAL/SECAM) before I was setting the 			output count bits. by Luigi Rizzo (luigi@iet.unipi.it) 	12/18/95	Correct odd DMA field (never exceed, but good for safety 			Changed 7196 startup codes for 50 Hz as recommended 			by Luigi Rizzo (luigi@iet.unipi.it) 	12/19/95	Changed field toggle mode to enable (offset 0x3c) 			recommended by luigi@iet.unipi.it 			Added in prototyping, include file, staticizing, 			and DEVFS changes from FreeBSD team. 			Changed the default allocated pages from 151 (NTSC) 			to 217 (PAL). 			Cleaned up some old comments in iic_write(). 			Added a Field (even or odd) only capture mode to  			eliminate the high frequency problems with compression 			algorithms.  Recommended by luigi@iet.unipi.it. 			Changed geometry ioctl so if it couldn't allocated a 			large enough contiguous space, it wouldn't free the 			stuff it already had. 			Added new mode called YUV_422 which delivers the 			data in planer Y followed by U followed by V. This 			differs from the standard YUV_PACKED mode in that 			the chrominance (UV) data is in the correct (different) 			order. This is for programs like vic and mpeg_encode 			so they don't have to reorder the chrominance data. 			Added field count to stats. 			Increment frame count stat if capturing continuous on 			even frame grabs. 			Added my email address to these comments 			(james@cs.uwm.edu) suggested by (luigi@iet.unipt.it :-). 			Changed the user mode signal mechanism to allow the 			user program to be interrupted at the end of a frame 			in any one of the modes.  Added SSIGNAL ioctl. 			Added a SFPS/GFPS ioctl so one may set the frames per 			second that the card catpures.  This code needs to be 			completed. 			Changed the interrupt routine so synchronous capture 			will work on fields or frames and the starting frame 			can be either even or odd. 			Added HALT_N_FRAMES and CONT_N_FRAMES so one could 			stop and continue synchronous capture mode. 			Change the tsleep/wakeup function to wait on mtr 			rather than&read_intr_wait. 	1/22/96		Add option (METEOR_FreeBSD_210) for FreeBSD 2.1 			to compile. 			Changed intr so it only printed errors every 50 times. 			Added unit number to error messages. 			Added get_meteor_mem and enabled range checking. 	1/30/96		Added prelim test stuff for direct video dma transfers 			from Amancio Hasty (hasty@rah.star-gate.com).  Until 			we get some stuff sorted out, this will be ifdef'ed 			with METEOR_DIRECT_VIDEO.  This is very dangerous to 			use at present since we don't check the address that 			is passed by the user!!!!! 			 */
 end_comment
 
 begin_include
@@ -367,6 +367,10 @@ name|u_long
 name|odd_fields_captured
 decl_stmt|;
 comment|/* number of odd fields captured */
+name|u_long
+name|range_enable
+decl_stmt|;
+comment|/* enable range checking ?? */
 name|unsigned
 name|flags
 decl_stmt|;
@@ -520,6 +524,15 @@ name|devfs_token
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+name|struct
+name|meteor_video
+name|video
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|meteor_reg_t
 typedef|;
@@ -534,6 +547,16 @@ name|NMETEOR
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|METEOR_NUM
+parameter_list|(
+name|mtr
+parameter_list|)
+value|((mtr -&meteor[0])/sizeof(meteor_reg_t))
+end_define
 
 begin_define
 define|#
@@ -1334,7 +1357,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor: saa7116 i2c %s transfer timeout 0x%x"
+literal|"meteor%d: saa7116 i2c %s transfer timeout 0x%x"
+argument_list|,
+name|METEOR_NUM
+argument_list|(
+name|mtr
+argument_list|)
 argument_list|,
 name|rw
 condition|?
@@ -1373,7 +1401,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor: saa7116 i2c %s tranfer aborted"
+literal|"meteor%d: saa7116 i2c %s tranfer aborted"
+argument_list|,
+name|METEOR_NUM
+argument_list|(
+name|mtr
+argument_list|)
 argument_list|,
 name|rw
 condition|?
@@ -1591,7 +1624,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor_intr: pci bus master dma abort: 0x%x 0x%x.\n"
+literal|"meteor%d: intr: pci bus master dma abort: 0x%x 0x%x.\n"
+argument_list|,
+name|METEOR_NUM
+argument_list|(
+name|mtr
+argument_list|)
 argument_list|,
 operator|*
 name|base
@@ -1625,7 +1663,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor_intr: pci bus target dma abort: 0x%x 0x%x.\n"
+literal|"meteor%d: intr: pci bus target dma abort: 0x%x 0x%x.\n"
+argument_list|,
+name|METEOR_NUM
+argument_list|(
+name|mtr
+argument_list|)
 argument_list|,
 operator|*
 name|base
@@ -1665,20 +1708,30 @@ operator|&
 literal|0x300
 condition|)
 block|{
+if|if
+condition|(
 name|mtr
 operator|->
 name|fifo_errors
-operator|++
-expr_stmt|;
-comment|/* incrememnt fifo capture errors cnt */
+operator|%
+literal|50
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"meteor: capture error"
+literal|"meteor%d: capture error"
+argument_list|,
+name|METEOR_NUM
+argument_list|(
+name|mtr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|":%s FIFO overflow.\n"
+literal|": %s FIFO overflow.\n"
 argument_list|,
 name|cap_err
 operator|&
@@ -1690,6 +1743,13 @@ literal|"odd"
 argument_list|)
 expr_stmt|;
 block|}
+name|mtr
+operator|->
+name|fifo_errors
+operator|++
+expr_stmt|;
+comment|/* increment fifo capture errors cnt */
+block|}
 if|if
 condition|(
 name|cap_err
@@ -1697,20 +1757,30 @@ operator|&
 literal|0xc00
 condition|)
 block|{
+if|if
+condition|(
 name|mtr
 operator|->
 name|dma_errors
-operator|++
-expr_stmt|;
-comment|/* increment DMA capture errors cnt */
+operator|%
+literal|50
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"meteor: capture error"
+literal|"meteor%d: capture error"
+argument_list|,
+name|METEOR_NUM
+argument_list|(
+name|mtr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|":%s DMA address.\n"
+literal|": %s DMA address.\n"
 argument_list|,
 name|cap_err
 operator|&
@@ -1721,6 +1791,13 @@ else|:
 literal|"odd"
 argument_list|)
 expr_stmt|;
+block|}
+name|mtr
+operator|->
+name|dma_errors
+operator|++
+expr_stmt|;
+comment|/* increment DMA capture errors cnt */
 block|}
 block|}
 operator|*
@@ -2177,6 +2254,7 @@ operator||=
 literal|0x7
 expr_stmt|;
 comment|/* clear interrupt status */
+return|return;
 block|}
 end_function
 
@@ -2227,7 +2305,81 @@ name|field_mask_odd
 operator|+
 literal|1
 decl_stmt|;
-comment|/* 	 * A little sanity checking first... 	 */
+name|int
+name|is_ntsc
+init|=
+literal|1
+decl_stmt|;
+comment|/* assume ntsc or 30fps */
+name|unsigned
+name|status
+decl_stmt|;
+name|SAA7196_WRITE
+argument_list|(
+name|mtr
+argument_list|,
+literal|0x0d
+argument_list|,
+name|SAA7196_REG
+argument_list|(
+name|mtr
+argument_list|,
+literal|0x0d
+argument_list|)
+operator||
+literal|0x02
+argument_list|)
+expr_stmt|;
+name|SAA7196_READ
+argument_list|(
+name|mtr
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+operator|(
+operator|(
+operator|*
+operator|(
+operator|(
+specifier|volatile
+name|u_long
+operator|*
+operator|)
+name|mtr
+operator|->
+name|stat_reg
+operator|)
+operator|)
+operator|&
+literal|0xff000000L
+operator|)
+operator|>>
+literal|24
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+literal|0x40
+operator|)
+operator|==
+literal|0
+condition|)
+name|is_ntsc
+operator|=
+operator|(
+operator|(
+name|status
+operator|&
+literal|0x20
+operator|)
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
+comment|/* 	 * A little sanity checking... 	 */
 if|if
 condition|(
 name|fps
@@ -2240,6 +2392,21 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|is_ntsc
+operator|&&
+name|fps
+operator|>
+literal|25
+condition|)
+name|fps
+operator|=
+literal|25
+expr_stmt|;
+if|if
+condition|(
+name|is_ntsc
+operator|&&
 name|fps
 operator|>
 literal|30
@@ -2256,6 +2423,91 @@ name|fps
 expr_stmt|;
 comment|/* 	 * Set the fps using the mask/length. 	 */
 comment|/* XXX we need some code to actually do this here... */
+block|}
+end_function
+
+begin_comment
+comment|/*  * There is also a problem with range checking on the 7116.  * It seems to only work for 22 bits, so the max size we can allocate  * is 22 bits long or 4194304 bytes assuming that we put the beginning  * of the buffer on a 2^24 bit boundary.  The range registers will use  * the top 8 bits of the dma start registers along with the bottom 22  * bits of the range register to determine if we go out of range.  * This makes getting memory a real kludge.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RANGE_BOUNDARY
+value|(1<<22)
+end_define
+
+begin_function
+specifier|static
+name|vm_offset_t
+name|get_meteor_mem
+parameter_list|(
+name|int
+name|unit
+parameter_list|,
+name|unsigned
+name|size
+parameter_list|)
+block|{
+name|vm_offset_t
+name|addr
+init|=
+name|NULL
+decl_stmt|;
+name|addr
+operator|=
+name|vm_page_alloc_contig
+argument_list|(
+name|size
+argument_list|,
+literal|0x100000
+argument_list|,
+literal|0xffffffff
+argument_list|,
+literal|1
+operator|<<
+literal|24
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+name|NULL
+condition|)
+name|addr
+operator|=
+name|vm_page_alloc_contig
+argument_list|(
+name|size
+argument_list|,
+literal|0x100000
+argument_list|,
+literal|0xffffffff
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"meteor%d: Unable to allocate %d bytes of memory.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|addr
+return|;
 block|}
 end_function
 
@@ -2382,7 +2634,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|METEOR_IRQ
-comment|/* from the meteor.h file */
 name|u_long
 name|old_irq
 decl_stmt|,
@@ -2391,7 +2642,6 @@ decl_stmt|;
 endif|#
 directive|endif
 endif|METEOR_IRQ
-comment|/* from the meteor.h file */
 name|meteor_reg_t
 modifier|*
 name|mtr
@@ -2411,7 +2661,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor_attach: mx%d: invalid unit number\n"
+literal|"meteor%d: attach:  invalid unit number\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return ;
@@ -2479,7 +2731,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|METEOR_IRQ
-comment|/* from the meteor.h file */
+comment|/* from the configuration file */
 name|old_irq
 operator|=
 name|pci_conf_read
@@ -2509,7 +2761,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"meteor_attach: irq changed from %d to %d\n"
+literal|"meteor%d: attach: irq changed from %d to %d\n"
+argument_list|,
+name|unit
 argument_list|,
 operator|(
 name|old_irq
@@ -2532,11 +2786,16 @@ define|#
 directive|define
 name|PCI_LATENCY_TIMER
 value|0x0c
+ifndef|#
+directive|ifndef
+name|DEF_LATENCY_VALUE
 define|#
 directive|define
 name|DEF_LATENCY_VALUE
 value|32
 comment|/* is this value ok? */
+endif|#
+directive|endif
 name|latency
 operator|=
 name|pci_conf_read
@@ -2567,13 +2826,17 @@ name|latency
 condition|)
 name|printf
 argument_list|(
-literal|"meteor0: PCI bus latency is"
+literal|"meteor%d: PCI bus latency is"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"meteor0: PCI bus latency was 0 changing to"
+literal|"meteor%d: PCI bus latency was 0 changing to"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -2648,15 +2911,11 @@ name|METEOR_ALLOC
 condition|)
 name|buf
 operator|=
-name|vm_page_alloc_contig
+name|get_meteor_mem
 argument_list|(
+name|unit
+argument_list|,
 name|METEOR_ALLOC
-argument_list|,
-literal|0x100000
-argument_list|,
-literal|0xffffffff
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 else|else
@@ -2671,11 +2930,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor0: buffer size %d, addr 0x%x\n"
+literal|"meteor%d: buffer size %d, addr 0x%x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|METEOR_ALLOC
 argument_list|,
+name|vtophys
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2844,7 +3108,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0600
+literal|0644
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3053,6 +3317,43 @@ argument_list|,
 literal|30
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|=
+literal|0
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|banksize
+operator|=
+literal|0
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|ramsize
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3330,21 +3631,6 @@ name|mtr
 operator|->
 name|virt_baseaddr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|RANGE_BUG_FIXED
-define|#
-directive|define
-name|RANGE_ENABLE
-value|0x8000
-else|#
-directive|else
-define|#
-directive|define
-name|RANGE_ENABLE
-value|0x0000
-endif|#
-directive|endif
 name|mtr
 operator|->
 name|flags
@@ -3380,7 +3666,9 @@ name|cap
 operator|=
 literal|0x0ff4
 operator||
-name|RANGE_ENABLE
+name|mtr
+operator|->
+name|range_enable
 expr_stmt|;
 else|else
 operator|*
@@ -3388,7 +3676,9 @@ name|cap
 operator|=
 literal|0x0ff1
 operator||
-name|RANGE_ENABLE
+name|mtr
+operator|->
+name|range_enable
 expr_stmt|;
 break|break;
 case|case
@@ -3411,7 +3701,9 @@ name|cap
 operator|=
 literal|0x0ff8
 operator||
-name|RANGE_ENABLE
+name|mtr
+operator|->
+name|range_enable
 expr_stmt|;
 else|else
 operator|*
@@ -3419,7 +3711,9 @@ name|cap
 operator|=
 literal|0x0ff2
 operator||
-name|RANGE_ENABLE
+name|mtr
+operator|->
+name|range_enable
 expr_stmt|;
 break|break;
 default|default:
@@ -3440,7 +3734,9 @@ name|cap
 operator|=
 literal|0x0ffc
 operator||
-name|RANGE_ENABLE
+name|mtr
+operator|->
+name|range_enable
 expr_stmt|;
 else|else
 operator|*
@@ -3448,7 +3744,9 @@ name|cap
 operator|=
 literal|0x0ff3
 operator||
-name|RANGE_ENABLE
+name|mtr
+operator|->
+name|range_enable
 expr_stmt|;
 break|break;
 block|}
@@ -3622,7 +3920,9 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"meteor_read: tsleep error %d\n"
+literal|"meteor%d: read: tsleep error %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|status
 argument_list|)
@@ -3698,6 +3998,7 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|unsigned
 name|int
 name|temp
 decl_stmt|;
@@ -3725,6 +4026,16 @@ name|meteor_capframe
 modifier|*
 name|frame
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+name|struct
+name|meteor_video
+modifier|*
+name|video
+decl_stmt|;
+endif|#
+directive|endif
 specifier|volatile
 name|u_long
 modifier|*
@@ -3784,6 +4095,117 @@ condition|(
 name|cmd
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+case|case
+name|METEORGVIDEO
+case|:
+name|video
+operator|=
+operator|(
+expr|struct
+name|meteor_video
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|video
+operator|->
+name|addr
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+expr_stmt|;
+name|video
+operator|->
+name|width
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+expr_stmt|;
+name|video
+operator|->
+name|banksize
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|banksize
+expr_stmt|;
+name|video
+operator|->
+name|ramsize
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|ramsize
+expr_stmt|;
+break|break;
+case|case
+name|METEORSVIDEO
+case|:
+name|video
+operator|=
+operator|(
+expr|struct
+name|meteor_video
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|=
+name|video
+operator|->
+name|addr
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|=
+name|video
+operator|->
+name|width
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|banksize
+operator|=
+name|video
+operator|->
+name|banksize
+expr_stmt|;
+name|mtr
+operator|->
+name|video
+operator|.
+name|ramsize
+operator|=
+name|video
+operator|->
+name|ramsize
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|METEORSFPS
 case|:
@@ -4764,7 +5186,9 @@ name|error
 condition|)
 name|printf
 argument_list|(
-literal|"meteor_ioctl: tsleep error %d\n"
+literal|"meteor%d: ioctl: tsleep error %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|error
 argument_list|)
@@ -5272,7 +5696,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor ioctl: Geometry odd or even only.\n"
+literal|"meteor%d: ioctl: Geometry odd or even only.\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -5355,7 +5781,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor ioctl: %d: columns too large or not even.\n"
+literal|"meteor%d: ioctl: %d: columns too large or not even.\n"
+argument_list|,
+name|unit
 argument_list|,
 name|geo
 operator|->
@@ -5410,7 +5838,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor ioctl: %d: rows too large or not even.\n"
+literal|"meteor%d: ioctl: %d: rows too large or not even.\n"
+argument_list|,
+name|unit
 argument_list|,
 name|geo
 operator|->
@@ -5433,7 +5863,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"meteor ioctl: too many frames.\n"
+literal|"meteor%d: ioctl: too many frames.\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|error
@@ -5513,22 +5945,29 @@ operator|>
 name|mtr
 operator|->
 name|alloc_pages
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|==
+literal|0
+endif|#
+directive|endif
 condition|)
 block|{
 name|buf
 operator|=
-name|vm_page_alloc_contig
+name|get_meteor_mem
 argument_list|(
-operator|(
+name|unit
+argument_list|,
 name|temp
 operator|*
-name|PAGE_SIZE
-operator|)
-argument_list|,
-literal|0x100000
-argument_list|,
-literal|0xffffffff
-argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -5568,9 +6007,15 @@ name|alloc_pages
 operator|=
 name|temp
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"meteor_ioctl: Allocating %d bytes\n"
+literal|"meteor%d: ioctl: Allocating %d bytes\n"
+argument_list|,
+name|unit
 argument_list|,
 name|temp
 operator|*
@@ -5580,15 +6025,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"meteor_ioctl: couldn't allocate %d byte buffer.\n"
-argument_list|,
-name|temp
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
@@ -5638,6 +6074,28 @@ name|mtr
 operator|->
 name|virt_baseaddr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+condition|)
+name|buf
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|buf
 operator|=
 name|vtophys
@@ -5769,9 +6227,12 @@ literal|0
 expr_stmt|;
 comment|/* Stride 3 odd  */
 comment|/* set end of DMA location, even/odd */
-ifdef|#
-directive|ifdef
-name|RANGE_BUG_FIXED
+if|if
+condition|(
+name|mtr
+operator|->
+name|range_enable
+condition|)
 operator|*
 operator|(
 name|p
@@ -5794,9 +6255,7 @@ name|alloc_pages
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-else|#
-directive|else
-comment|/* 		 * There is a bug with the range end on the current  		 * 7116 chip.  The 23rd bit is ignored and set to zero 		 * for some reason which makes range checking useless. 		 */
+else|else
 operator|*
 operator|(
 name|p
@@ -5811,10 +6270,57 @@ operator|+
 literal|36
 operator|)
 operator|=
-literal|0
+literal|0xffffffff
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* 		 * Determine if we can use the hardware range detect. 		 */
+if|if
+condition|(
+name|mtr
+operator|->
+name|alloc_pages
+operator|*
+name|PAGE_SIZE
+operator|<
+name|RANGE_BOUNDARY
+operator|&&
+operator|(
+operator|(
+name|buf
+operator|&
+literal|0xff000000
+operator|)
+operator||
+operator|*
+operator|(
+name|p
+operator|+
+literal|35
+operator|)
+operator|)
+operator|==
+operator|(
+name|buf
+operator|+
+name|mtr
+operator|->
+name|alloc_pages
+operator|*
+name|PAGE_SIZE
+operator|)
+condition|)
+name|mtr
+operator|->
+name|range_enable
+operator|=
+literal|0x8000
+expr_stmt|;
+else|else
+name|mtr
+operator|->
+name|range_enable
+operator|=
+literal|0x0
+expr_stmt|;
 switch|switch
 condition|(
 name|geo
@@ -5850,6 +6356,16 @@ name|flags
 operator||=
 name|METEOR_RGB16
 expr_stmt|;
+name|temp
+operator|=
+name|mtr
+operator|->
+name|cols
+operator|*
+name|mtr
+operator|->
+name|depth
+expr_stmt|;
 comment|/* recal stride and starting point */
 switch|switch
 condition|(
@@ -5873,6 +6389,40 @@ operator|=
 name|buf
 expr_stmt|;
 comment|/*dma 1 o */
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+condition|)
+operator|*
+operator|(
+name|p
+operator|+
+literal|9
+operator|)
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|-
+name|temp
+expr_stmt|;
+endif|#
+directive|endif
 name|SAA7196_WRITE
 argument_list|(
 name|mtr
@@ -5896,6 +6446,40 @@ operator|=
 name|buf
 expr_stmt|;
 comment|/*dma 1 e */
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+condition|)
+operator|*
+operator|(
+name|p
+operator|+
+literal|6
+operator|)
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|-
+name|temp
+expr_stmt|;
+endif|#
+directive|endif
 name|SAA7196_WRITE
 argument_list|(
 name|mtr
@@ -5926,13 +6510,56 @@ operator|)
 operator|=
 name|buf
 operator|+
-name|mtr
-operator|->
-name|cols
+name|temp
+expr_stmt|;
 operator|*
+operator|(
+name|p
+operator|+
+literal|6
+operator|)
+operator|=
+operator|*
+operator|(
+name|p
+operator|+
+literal|9
+operator|)
+operator|=
+name|temp
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
 name|mtr
 operator|->
-name|depth
+name|video
+operator|.
+name|addr
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+condition|)
+block|{
+operator|*
+operator|(
+name|p
+operator|+
+literal|3
+operator|)
+operator|=
+name|buf
+operator|+
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
 expr_stmt|;
 operator|*
 operator|(
@@ -5950,12 +6577,21 @@ operator|)
 operator|=
 name|mtr
 operator|->
-name|cols
-operator|*
+name|video
+operator|.
+name|width
+operator|-
+name|temp
+operator|+
 name|mtr
 operator|->
-name|depth
+name|video
+operator|.
+name|width
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|SAA7196_WRITE
 argument_list|(
 name|mtr
@@ -6007,6 +6643,16 @@ name|flags
 operator||=
 name|METEOR_RGB24
 expr_stmt|;
+name|temp
+operator|=
+name|mtr
+operator|->
+name|cols
+operator|*
+name|mtr
+operator|->
+name|depth
+expr_stmt|;
 comment|/* recal stride and starting point */
 switch|switch
 condition|(
@@ -6030,6 +6676,40 @@ operator|=
 name|buf
 expr_stmt|;
 comment|/*dma 1 o */
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+condition|)
+operator|*
+operator|(
+name|p
+operator|+
+literal|9
+operator|)
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|-
+name|temp
+expr_stmt|;
+endif|#
+directive|endif
 name|SAA7196_WRITE
 argument_list|(
 name|mtr
@@ -6053,6 +6733,40 @@ operator|=
 name|buf
 expr_stmt|;
 comment|/*dma 1 e */
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+condition|)
+operator|*
+operator|(
+name|p
+operator|+
+literal|6
+operator|)
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|-
+name|temp
+expr_stmt|;
+endif|#
+directive|endif
 name|SAA7196_WRITE
 argument_list|(
 name|mtr
@@ -6113,6 +6827,70 @@ name|mtr
 operator|->
 name|depth
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|METEOR_TEST_VIDEO
+if|if
+condition|(
+name|mtr
+operator|->
+name|video
+operator|.
+name|addr
+operator|&&
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+condition|)
+block|{
+operator|*
+operator|(
+name|p
+operator|+
+literal|3
+operator|)
+operator|=
+name|buf
+operator|+
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+expr_stmt|;
+operator|*
+operator|(
+name|p
+operator|+
+literal|6
+operator|)
+operator|=
+operator|*
+operator|(
+name|p
+operator|+
+literal|9
+operator|)
+operator|=
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+operator|-
+name|temp
+operator|+
+name|mtr
+operator|->
+name|video
+operator|.
+name|width
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|SAA7196_WRITE
 argument_list|(
 name|mtr
@@ -6943,7 +7721,9 @@ expr_stmt|;
 comment|/* invalid argument */
 name|printf
 argument_list|(
-literal|"meteor_ioctl: invalid output format\n"
+literal|"meteor%d: ioctl: invalid output format\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7330,7 +8110,9 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"meteor_ioctl: invalid ioctl request\n"
+literal|"meteor%d: ioctl: invalid ioctl request\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|error

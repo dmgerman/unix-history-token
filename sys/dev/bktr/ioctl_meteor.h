@@ -101,6 +101,34 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* structure for getting and setting direct transfers to vram */
+end_comment
+
+begin_struct
+struct|struct
+name|meteor_video
+block|{
+name|u_long
+name|addr
+decl_stmt|;
+comment|/* Address of location to dma to */
+name|u_long
+name|width
+decl_stmt|;
+comment|/* Width of memory area */
+name|u_long
+name|banksize
+decl_stmt|;
+comment|/* Size of Vram bank */
+name|u_long
+name|ramsize
+decl_stmt|;
+comment|/* Size of Vram */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -300,6 +328,28 @@ end_define
 
 begin_comment
 comment|/* get signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSVIDEO
+value|_IOW('x', 13, struct meteor_video)
+end_define
+
+begin_comment
+comment|/* set video */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGVIDEO
+value|_IOR('x', 13, struct meteor_video)
+end_define
+
+begin_comment
+comment|/* get video */
 end_comment
 
 begin_define
