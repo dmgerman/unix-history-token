@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.21 (Berkeley) %G%"
+literal|"@(#)wwiomux.c	3.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,9 @@ expr_stmt|;
 name|wwflush
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setjmp
 argument_list|(
 name|wwjmpbuf
@@ -232,6 +235,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 			 * Defensive code.  If somebody else (for example, 			 * wall) clears the ASYNC flag on us, we will block 			 * forever.  So we need a finite timeout and set 			 * the flag again.  Anything more clever will probably 			 * need even more system calls.  (This is a bug 			 * in the kernel.) 			 * I don't like this one bit. 			 */
+operator|(
+name|void
+operator|)
 name|fcntl
 argument_list|(
 literal|0
