@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.18	83/02/20	*/
+comment|/*	uda.c	4.19	83/02/23	*/
 end_comment
 
 begin_include
@@ -1668,15 +1668,9 @@ condition|(
 name|um
 operator|->
 name|um_ubinfo
-operator|==
+operator|!=
 literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"uda: um_ubinfo == 0\n"
-argument_list|)
-expr_stmt|;
-else|else
 name|ubarelse
 argument_list|(
 name|um
