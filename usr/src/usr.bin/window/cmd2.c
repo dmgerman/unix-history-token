@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.18 84/01/12"
+literal|"@(#)cmd2.c	3.19 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,26 +1351,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*VARARGS2*/
-end_comment
-
 begin_expr_stmt
 name|more
 argument_list|(
 name|w
-argument_list|,
-name|fmt
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
 argument_list|)
 specifier|register
 expr|struct
@@ -1379,13 +1363,6 @@ operator|*
 name|w
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1422,26 +1399,6 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-name|fmt
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd6.c	3.4 84/01/11"
+literal|"@(#)cmd6.c	3.5 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,7 +247,16 @@ name|s
 operator|->
 name|s_forw
 control|)
+block|{
 name|more
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
 argument_list|(
 name|w
 argument_list|,
@@ -262,6 +271,7 @@ operator|->
 name|s_data
 argument_list|)
 expr_stmt|;
+block|}
 name|waitnl
 argument_list|(
 name|w
