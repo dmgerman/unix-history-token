@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_resource.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_resource.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1045,6 +1045,15 @@ name|rusage
 modifier|*
 name|rup
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -1055,6 +1064,10 @@ block|{
 case|case
 name|RUSAGE_SELF
 case|:
+block|{
+name|int
+name|s
+decl_stmt|;
 name|rup
 operator|=
 operator|&
@@ -1062,7 +1075,34 @@ name|u
 operator|.
 name|u_ru
 expr_stmt|;
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
+name|rup
+operator|->
+name|ru_stime
+operator|=
+name|p
+operator|->
+name|p_stime
+expr_stmt|;
+name|rup
+operator|->
+name|ru_utime
+operator|=
+name|p
+operator|->
+name|p_utime
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 case|case
 name|RUSAGE_CHILDREN
 case|:
