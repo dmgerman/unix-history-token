@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.23 (Berkeley) %G%"
+literal|"@(#)conf.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4871,7 +4871,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_SCO_UNIX_
+name|_SCO_unix_
 argument_list|)
 define|#
 directive|define
