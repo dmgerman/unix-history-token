@@ -7625,6 +7625,8 @@ argument_list|(
 name|dvp
 argument_list|,
 name|NOTE_WRITE
+operator||
+name|NOTE_LINK
 argument_list|)
 expr_stmt|;
 operator|*
