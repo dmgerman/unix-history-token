@@ -978,6 +978,21 @@ condition|(
 operator|*
 name|p
 operator|==
+literal|'b'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'B'
+condition|)
+empty_stmt|;
+comment|/* do nothing */
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
 literal|'k'
 operator|||
 operator|*
