@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.4	81/11/21	*/
+comment|/*	uipc_socket2.c	4.5	81/11/21	*/
 end_comment
 
 begin_include
@@ -648,6 +648,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|sb
 operator|->
 name|sb_cc
@@ -817,19 +818,21 @@ name|sb
 operator|->
 name|sb_mb
 expr_stmt|;
+name|n
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
-operator|(
+operator|*
+name|np
+condition|)
+block|{
 name|n
 operator|=
 operator|*
 name|np
-operator|)
-operator|&&
-name|n
-operator|->
-name|m_next
-condition|)
+expr_stmt|;
 name|np
 operator|=
 operator|&
@@ -837,6 +840,7 @@ name|n
 operator|->
 name|m_next
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|m
