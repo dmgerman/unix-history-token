@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.14 (Berkeley) %G%"
+literal|"@(#)stty.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,6 +1007,18 @@ block|, }
 block|,
 block|{
 block|{
+literal|"erase2"
+block|,
+literal|"era2"
+block|}
+block|,
+name|VERASE2
+block|,
+name|_POSIX_VDISABLE
+block|, }
+block|,
+block|{
+block|{
 literal|"werase"
 block|,
 literal|"wera"
@@ -1160,7 +1172,9 @@ block|{
 literal|"discard"
 block|,
 literal|"disc"
-block|, }
+block|,
+literal|"flush"
+block|}
 block|,
 name|VDISCARD
 block|,
@@ -1183,14 +1197,14 @@ block|, }
 block|,
 block|{
 block|{
-literal|"info"
+literal|"status"
 block|,
-literal|"info"
+literal|"stat"
 block|}
 block|,
-name|VINFO
+name|VSTATUS
 block|,
-name|CINFO
+name|CSTATUS
 block|, }
 block|,
 literal|0
