@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.8	%G%	*/
+comment|/*	conf.c	3.9	%G%	*/
 end_comment
 
 begin_include
@@ -822,6 +822,22 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|okopen
+argument_list|()
+decl_stmt|,
+name|okread
+argument_list|()
+decl_stmt|,
+name|okioctl
+argument_list|()
+decl_stmt|,
+name|okinput
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|char
 modifier|*
@@ -910,6 +926,27 @@ block|,
 name|nulldev
 block|,
 comment|/* 2 */
+name|okopen
+block|,
+name|nulldev
+block|,
+name|okread
+block|,
+name|ttwrite
+block|,
+name|okioctl
+block|,
+name|okinput
+block|,
+name|nodev
+block|,
+name|nulldev
+block|,
+name|ttstart
+block|,
+name|nulldev
+block|,
+comment|/* 3 */
 name|mxopen
 block|,
 name|mxclose
@@ -930,7 +967,7 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-comment|/* 3 */
+comment|/* 4 */
 literal|0
 block|}
 decl_stmt|;
@@ -940,7 +977,7 @@ begin_decl_stmt
 name|int
 name|nldisp
 init|=
-literal|3
+literal|4
 decl_stmt|;
 end_decl_stmt
 
