@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -267,6 +267,14 @@ name|nfs_iodwant
 index|[
 name|NFS_MAXASYNCDAEMON
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|queue_entry
+name|nfs_bufq
 decl_stmt|;
 end_decl_stmt
 
@@ -3228,6 +3236,12 @@ name|proc
 operator|*
 operator|)
 literal|0
+expr_stmt|;
+name|queue_init
+argument_list|(
+operator|&
+name|nfs_bufq
+argument_list|)
 expr_stmt|;
 name|nfs_xdrneg1
 operator|=
