@@ -2838,7 +2838,7 @@ name|len
 argument_list|,
 name|e
 operator|->
-name|control
+name|addr_type
 operator|&
 literal|4
 condition|?
