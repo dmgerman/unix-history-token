@@ -94,7 +94,7 @@ name|AGP_MODE_GET_RATE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x00000003U)
+value|((x)& 0x00000007U)
 end_define
 
 begin_define
@@ -166,7 +166,7 @@ name|x
 parameter_list|,
 name|v
 parameter_list|)
-value|(((x)& ~0x00000003U) | (v))
+value|(((x)& ~0x00000007U) | (v))
 end_define
 
 begin_define
