@@ -188,6 +188,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|unsigned
+name|acpi_timer_get_timecount_safe
+parameter_list|(
+name|struct
+name|timecounter
+modifier|*
+name|tc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|acpi_timer_sysctl_freq
 parameter_list|(
@@ -297,7 +310,7 @@ name|timecounter
 name|acpi_timer_timecounter
 init|=
 block|{
-name|acpi_timer_get_timecount
+name|acpi_timer_get_timecount_safe
 block|,
 literal|0
 block|,
@@ -537,6 +550,12 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|{ 	u_int64_t	first;      	first = rdtsc(); 	acpi_timer_get_timecount(NULL);	 	printf("acpi_timer_get_timecount %lld cycles\n", rdtsc() - first);  	first = rdtsc(); 	acpi_timer_get_timecount_safe(NULL); 	printf("acpi_timer_get_timecount_safe %lld cycles\n", rdtsc() - first);     }
+endif|#
+directive|endif
 name|return_VOID
 expr_stmt|;
 block|}
@@ -588,7 +607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch current time value from hardware.  */
+comment|/*  * Fetch current time value from reliable hardware.  */
 end_comment
 
 begin_function
@@ -605,6 +624,70 @@ block|{
 return|return
 operator|(
 name|TIMER_READ
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Fetch current time value from hardware that may not correctly  * latch the counter.  */
+end_comment
+
+begin_function
+specifier|static
+name|unsigned
+name|acpi_timer_get_timecount_safe
+parameter_list|(
+name|struct
+name|timecounter
+modifier|*
+name|tc
+parameter_list|)
+block|{
+name|unsigned
+name|u1
+decl_stmt|,
+name|u2
+decl_stmt|,
+name|u3
+decl_stmt|;
+name|u2
+operator|=
+name|TIMER_READ
+expr_stmt|;
+name|u3
+operator|=
+name|TIMER_READ
+expr_stmt|;
+do|do
+block|{
+name|u1
+operator|=
+name|u2
+expr_stmt|;
+name|u2
+operator|=
+name|u3
+expr_stmt|;
+name|u3
+operator|=
+name|TIMER_READ
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|u1
+operator|>
+name|u2
+operator|||
+name|u2
+operator|>
+name|u3
+condition|)
+do|;
+return|return
+operator|(
+name|u2
 operator|)
 return|;
 block|}
@@ -826,7 +909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Chipset workaround driver hung off PCI.  *  * ] 20. ACPI Timer Errata  * ]  * ]   Problem: The power management timer may return improper result when  * ]   read. Although the timer value settles properly after incrementing,  * ]   while incrementing there is a 3nS window every 69.8nS where the  * ]   timer value is indeterminate (a 4.2% chance that the data will be  * ]   incorrect when read). As a result, the ACPI free running count up  * ]   timer specification is violated due to erroneous reads.  Implication:  * ]   System hangs due to the "inaccuracy" of the timer when used by  * ]   software for time critical events and delays.  * ]  * ] Workaround: Read the register twice and compare.  * ] Status: This will not be fixed in the PIIX4 or PIIX4E, it is fixed  * ] in the PIIX4M.  *  * The counter is in other words not latched to the PCI bus clock when  * read.  Notice the workaround isn't:  We need to read until we have  * three monotonic samples and then use the middle one, otherwise we are  * not protected against the fact that the bits can be wrong in two  * directions.  If we only cared about monosity two reads would be enough.  */
+comment|/*  * Chipset workaround driver hung off PCI.  *  * Some ACPI timers are known or believed to suffer from implementation  * problems which can lead to erroneous values being read from the timer.  *  * Since we can't trust unknown chipsets, we default to a timer-read  * routine which compensates for the most common problem (as detailed  * in the excerpt from the Intel PIIX4 datasheet below).  *  * When we detect a known-functional chipset, we disable the workaround  * to improve speed.  *  * ] 20. ACPI Timer Errata  * ]  * ]   Problem: The power management timer may return improper result when  * ]   read. Although the timer value settles properly after incrementing,  * ]   while incrementing there is a 3nS window every 69.8nS where the  * ]   timer value is indeterminate (a 4.2% chance that the data will be  * ]   incorrect when read). As a result, the ACPI free running count up  * ]   timer specification is violated due to erroneous reads.  Implication:  * ]   System hangs due to the "inaccuracy" of the timer when used by  * ]   software for time critical events and delays.  * ]  * ] Workaround: Read the register twice and compare.  * ] Status: This will not be fixed in the PIIX4 or PIIX4E, it is fixed  * ] in the PIIX4M.  *  * The counter is in other words not latched to the PCI bus clock when  * read.  Notice the workaround isn't:  We need to read until we have  * three monotonic samples and then use the middle one, otherwise we are  * not protected against the fact that the bits can be wrong in two  * directions.  If we only cared about monosity two reads would be enough.  */
 end_comment
 
 begin_function_decl
@@ -836,19 +919,6 @@ name|acpi_timer_pci_probe
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|unsigned
-name|acpi_timer_get_timecount_piix
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -916,7 +986,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Look at PCI devices as they go past, and if we detect a PIIX4 older than  * the PIIX4M, use an alternate get_timecount routine.  *  * XXX do we know that other timecounters work?  Perhaps we should test them?  */
+comment|/*  * Look at PCI devices going past; if we detect one we know contains  * a functional ACPI timer device, enable the faster timecounter read  * routine.  */
 end_comment
 
 begin_function
@@ -953,7 +1023,7 @@ name|pci_get_revid
 argument_list|(
 name|dev
 argument_list|)
-operator|<
+operator|>=
 literal|0x03
 operator|)
 condition|)
@@ -962,19 +1032,23 @@ name|acpi_timer_timecounter
 operator|.
 name|tc_get_timecount
 operator|=
-name|acpi_timer_get_timecount_piix
+name|acpi_timer_get_timecount
 expr_stmt|;
 name|acpi_timer_timecounter
 operator|.
 name|tc_name
 operator|=
-literal|"ACPI-PIIX"
+literal|"ACPI-PIIX4M"
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|acpi_timer_dev
 argument_list|,
-literal|"enabling PIIX4 timer workaround\n"
+literal|"PIIX4M or later detected, enabling ACPI timer optimisation\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -984,70 +1058,6 @@ name|ENXIO
 operator|)
 return|;
 comment|/* we never match anything */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Read the buggy PIIX4 ACPI timer and compensate for its behaviour.  */
-end_comment
-
-begin_function
-specifier|static
-name|unsigned
-name|acpi_timer_get_timecount_piix
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|)
-block|{
-name|unsigned
-name|u1
-decl_stmt|,
-name|u2
-decl_stmt|,
-name|u3
-decl_stmt|;
-name|u2
-operator|=
-name|TIMER_READ
-expr_stmt|;
-name|u3
-operator|=
-name|TIMER_READ
-expr_stmt|;
-do|do
-block|{
-name|u1
-operator|=
-name|u2
-expr_stmt|;
-name|u2
-operator|=
-name|u3
-expr_stmt|;
-name|u3
-operator|=
-name|TIMER_READ
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|u1
-operator|>
-name|u2
-operator|||
-name|u2
-operator|>
-name|u3
-condition|)
-do|;
-return|return
-operator|(
-name|u2
-operator|)
-return|;
 block|}
 end_function
 
