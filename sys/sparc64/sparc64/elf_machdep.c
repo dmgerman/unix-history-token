@@ -1414,7 +1414,7 @@ decl_stmt|;
 name|Elf_Addr
 name|mask
 decl_stmt|;
-name|caddr_t
+name|Elf_Addr
 name|addr
 decl_stmt|;
 if|if
@@ -1570,9 +1570,6 @@ operator|)
 return|;
 name|value
 operator|+=
-operator|(
-name|Elf_Addr
-operator|)
 name|addr
 expr_stmt|;
 block|}
@@ -1599,12 +1596,7 @@ argument_list|)
 condition|)
 name|value
 operator|+=
-call|(
-name|Elf_Addr
-call|)
-argument_list|(
 name|relocbase
-argument_list|)
 expr_stmt|;
 name|mask
 operator|=
