@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_unix.c 1.1 89/11/07$  *  *	@(#)vm_unix.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_unix.c 1.1 89/11/07$  *  *	@(#)vm_unix.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,25 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"resourcevar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/vmparam.h"
+file|"vm.h"
 end_include
 
 begin_comment
@@ -89,6 +83,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|vmspace
+modifier|*
+name|vm
+init|=
+name|p
+operator|->
+name|p_vmspace
+decl_stmt|;
 name|vm_offset_t
 name|new
 decl_stmt|,
@@ -106,9 +110,9 @@ operator|=
 operator|(
 name|vm_offset_t
 operator|)
-name|u
-operator|.
-name|u_daddr
+name|vm
+operator|->
+name|vm_daddr
 expr_stmt|;
 name|new
 operator|=
@@ -130,9 +134,9 @@ operator|-
 name|old
 argument_list|)
 operator|>
-name|u
-operator|.
-name|u_rlimit
+name|p
+operator|->
+name|p_rlimit
 index|[
 name|RLIMIT_DATA
 index|]
@@ -152,9 +156,9 @@ name|old
 operator|+
 name|ctob
 argument_list|(
-name|u
-operator|.
-name|u_dsize
+name|vm
+operator|->
+name|vm_dsize
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -175,9 +179,10 @@ name|rv
 operator|=
 name|vm_allocate
 argument_list|(
-name|p
+operator|&
+name|vm
 operator|->
-name|p_map
+name|vm_map
 argument_list|,
 operator|&
 name|old
@@ -207,9 +212,9 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|u
-operator|.
-name|u_dsize
+name|vm
+operator|->
+name|vm_dsize
 operator|+=
 name|btoc
 argument_list|(
@@ -234,9 +239,10 @@ name|rv
 operator|=
 name|vm_deallocate
 argument_list|(
-name|p
+operator|&
+name|vm
 operator|->
-name|p_map
+name|vm_map
 argument_list|,
 name|new
 argument_list|,
@@ -263,9 +269,9 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|u
-operator|.
-name|u_dsize
+name|vm
+operator|->
+name|vm_dsize
 operator|-=
 name|btoc
 argument_list|(
@@ -282,15 +288,25 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * grow the stack to include the SP  * true return if successful.  */
+comment|/*  * Enlarge the "stack segment" to include the specified  * stack pointer for the process.  */
 end_comment
 
 begin_macro
 name|grow
 argument_list|(
+argument|p
+argument_list|,
 argument|sp
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
@@ -300,6 +316,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|vmspace
+modifier|*
+name|vm
+init|=
+name|p
+operator|->
+name|p_vmspace
+decl_stmt|;
 specifier|register
 name|int
 name|si
@@ -312,9 +338,9 @@ operator|<
 operator|(
 name|unsigned
 operator|)
-name|u
-operator|.
-name|u_maxsaddr
+name|vm
+operator|->
+name|vm_maxsaddr
 condition|)
 return|return
 operator|(
@@ -330,9 +356,9 @@ name|USRSTACK
 operator|-
 name|ctob
 argument_list|(
-name|u
-operator|.
-name|u_ssize
+name|vm
+operator|->
+name|vm_ssize
 argument_list|)
 condition|)
 return|return
@@ -352,24 +378,24 @@ operator|-
 name|sp
 argument_list|)
 operator|-
-name|u
-operator|.
-name|u_ssize
+name|vm
+operator|->
+name|vm_ssize
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_ssize
+name|vm
+operator|->
+name|vm_ssize
 operator|+
 name|si
 operator|>
 name|btoc
 argument_list|(
-name|u
-operator|.
-name|u_rlimit
+name|p
+operator|->
+name|p_rlimit
 index|[
 name|RLIMIT_STACK
 index|]
@@ -382,9 +408,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|u
-operator|.
-name|u_ssize
+name|vm
+operator|->
+name|vm_ssize
 operator|+=
 name|si
 expr_stmt|;
@@ -440,7 +466,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 end_block
 
 end_unit

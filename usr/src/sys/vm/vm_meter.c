@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,19 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -36,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/vmparam.h"
+file|"vm_param.h"
 end_include
 
 begin_include
@@ -107,10 +101,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|proc
-index|[
-literal|0
-index|]
+name|proc0
 operator|.
 name|p_slptime
 operator|>
@@ -118,21 +109,15 @@ name|maxslp
 operator|/
 literal|2
 condition|)
-block|{
-name|runout
-operator|=
-literal|0
-expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 operator|&
-name|runout
+name|proc0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -272,6 +257,9 @@ comment|/* fall through */
 case|case
 name|SSTOP
 case|:
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|p
@@ -286,6 +274,8 @@ name|t_pw
 operator|++
 expr_stmt|;
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|p

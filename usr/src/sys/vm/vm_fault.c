@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_fault.c	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_fault.c	7.5 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -16,43 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_object.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_page.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/pmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_statistics.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_pageout.h"
+file|"vm_pageout.h"
 end_include
 
 begin_comment
@@ -240,7 +216,7 @@ name|prot
 expr_stmt|;
 name|first_m
 operator|=
-name|VM_PAGE_NULL
+name|NULL
 expr_stmt|;
 comment|/* 	 *	Make a reference to this object to 	 *	prevent its disposal while we are messing with 	 *	it.  Once we have the reference, the map is free 	 *	to be diddled.  Since objects reference their 	 *	shadows (and copies), they will stay around as well. 	 */
 name|vm_object_lock
@@ -287,7 +263,7 @@ if|if
 condition|(
 name|m
 operator|!=
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 			 *	If the page is being brought in, 			 *	wait for it and then retry. 			 */
@@ -588,7 +564,7 @@ name|object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -620,7 +596,7 @@ if|if
 condition|(
 name|m
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 block|{
 name|UNLOCK_AND_DEALLOCATE
@@ -639,7 +615,7 @@ name|object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -790,7 +766,7 @@ if|if
 condition|(
 name|next_object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 			 *	If there's no object left, fill the page 			 *	in the top object with zeros. 			 */
@@ -831,7 +807,7 @@ expr_stmt|;
 block|}
 name|first_m
 operator|=
-name|VM_PAGE_NULL
+name|NULL
 expr_stmt|;
 name|vm_page_zero_fill
 argument_list|(
@@ -1093,7 +1069,7 @@ name|first_object
 operator|->
 name|copy
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 name|vm_object_t
@@ -1191,7 +1167,7 @@ operator|=
 operator|(
 name|copy_m
 operator|!=
-name|VM_PAGE_NULL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -1327,7 +1303,7 @@ if|if
 condition|(
 name|copy_m
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 					 *	Wait for a page, then retry. 					 */
@@ -1360,7 +1336,7 @@ name|copy_object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 condition|)
 block|{
 name|vm_object_unlock
@@ -2164,7 +2140,7 @@ if|if
 condition|(
 name|dst_m
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 block|{
 name|vm_object_unlock
@@ -2185,7 +2161,7 @@ do|while
 condition|(
 name|dst_m
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 do|;
 comment|/* 		 *	Find the page in the source object, and copy it in. 		 *	(Because the source is wired down, the page will be 		 *	in memory.) 		 */
@@ -2209,7 +2185,7 @@ if|if
 condition|(
 name|src_m
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_kern.c	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_kern.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,37 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"vm_pageout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pageout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_kern.h"
+file|"vm_kern.h"
 end_include
 
 begin_comment
@@ -97,7 +91,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -193,7 +187,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -308,7 +302,7 @@ name|i
 argument_list|)
 operator|)
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 block|{
 name|vm_object_unlock
@@ -502,7 +496,7 @@ name|vm_map_find
 argument_list|(
 name|parent
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -574,7 +568,7 @@ if|if
 condition|(
 name|result
 operator|==
-name|VM_MAP_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -693,7 +687,7 @@ if|if
 condition|(
 name|dst_map
 operator|==
-name|VM_MAP_NULL
+name|NULL
 condition|)
 block|{
 if|if
@@ -887,7 +881,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1035,7 +1029,7 @@ if|if
 condition|(
 name|m
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 condition|)
 block|{
 while|while
@@ -1292,7 +1286,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1509,7 +1503,7 @@ name|vm_map_find
 argument_list|(
 name|kernel_map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t

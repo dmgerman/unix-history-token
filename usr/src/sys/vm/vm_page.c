@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_page.c	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_page.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,49 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm_map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_prot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_statistics.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_pageout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/pmap.h"
+file|"vm_pageout.h"
 end_include
 
 begin_comment
@@ -784,7 +766,7 @@ name|m
 operator|->
 name|object
 operator|=
-name|VM_OBJECT_NULL
+name|NULL
 expr_stmt|;
 name|m
 operator|->
@@ -1111,7 +1093,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, VM_PAGE_NULL is returned.  *  *	The object must be locked.  No side effects.  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	The object must be locked.  No side effects.  */
 end_comment
 
 begin_function
@@ -1259,7 +1241,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGE_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1427,7 +1409,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGE_NULL
+name|NULL
 operator|)
 return|;
 block|}

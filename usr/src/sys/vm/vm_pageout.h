@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1986, Avadis Tevanian, Jr.  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_pageout.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1986, Avadis Tevanian, Jr.  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_pageout.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  *	Header file for pageout daemon.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"lock.h"
-end_include
 
 begin_comment
 comment|/*  *	Exported data structures.  */

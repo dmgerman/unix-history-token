@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, 1986 Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_pager.c	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, 1986 Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_pager.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,56 +16,47 @@ end_include
 begin_include
 include|#
 directive|include
-file|"queue.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
+file|"vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"vm_kern.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_prot.h"
+file|"../hp300/hp300/pte.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../vm/vm_map.h"
-end_include
+begin_comment
+comment|/* XXX XXX XXX */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"../vm/vm_kern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/pmap.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -98,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|swappagerops
-value|PAGER_OPS_NULL
+value|NULL
 end_define
 
 begin_endif
@@ -137,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|vnodepagerops
-value|PAGER_OPS_NULL
+value|NULL
 end_define
 
 begin_endif
@@ -176,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|devicepagerops
-value|PAGER_OPS_NULL
+value|NULL
 end_define
 
 begin_endif
@@ -233,7 +224,7 @@ name|pagerops
 modifier|*
 name|dfltpagerops
 init|=
-name|PAGER_OPS_NULL
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +317,7 @@ if|if
 condition|(
 name|dfltpagerops
 operator|==
-name|PAGER_OPS_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -422,7 +413,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -477,7 +468,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 return|return
 operator|(
@@ -541,7 +532,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -582,7 +573,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -644,9 +635,9 @@ operator|->
 name|pgo_putpage
 operator|)
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|,
-name|VM_PAGE_NULL
+name|NULL
 operator|,
 name|FALSE
 operator|)
@@ -676,9 +667,9 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
+ifdef|#
+directive|ifdef
+name|hp300
 comment|/* 	 * XXX: cannot use pmap_enter as the mapping would be 	 * removed by a pmap_remove_all(). 	 */
 operator|*
 operator|(
@@ -745,9 +736,9 @@ name|vm_offset_t
 name|kva
 decl_stmt|;
 block|{
-if|#
-directive|if
-literal|1
+ifdef|#
+directive|ifdef
+name|hp300
 operator|*
 operator|(
 name|int
@@ -853,7 +844,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -890,7 +881,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr.  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)pmap.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr.  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)pmap.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,45 +19,11 @@ directive|define
 name|_PMAP_VM_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/pmap.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<machine/pmap.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -78,6 +44,36 @@ name|pmap_init
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|pmap_pinit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pmap
+operator|*
+name|pmap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pmap_release
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pmap
+operator|*
+name|pmap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|vm_offset_t

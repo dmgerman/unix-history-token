@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_map.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_map.h	7.1 (Berkeley) 12/5/90  */
 end_comment
 
 begin_comment
@@ -18,94 +18,6 @@ define|#
 directive|define
 name|_VM_MAP_
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/pmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_prot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_inherit.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_object.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_prot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_inherit.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_map_t		the high-level address map data structure.  *	vm_map_entry_t		an entry in an address map.  *	vm_map_version_t	a timestamp of a map, for use with vm_map_lookup  */
@@ -233,13 +145,6 @@ name|vm_map_entry_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|VM_MAP_ENTRY_NULL
-value|((vm_map_entry_t) 0)
-end_define
-
 begin_comment
 comment|/*  *	Maps are doubly-linked lists of map entries, kept sorted  *	by address.  A single hint is provided to start  *	searches again from the last successful search,  *	insertion, or removal.  */
 end_comment
@@ -248,6 +153,12 @@ begin_struct
 struct|struct
 name|vm_map
 block|{
+name|struct
+name|pmap
+modifier|*
+name|pmap
+decl_stmt|;
+comment|/* Physical map */
 name|lock_data_t
 name|lock
 decl_stmt|;
@@ -261,10 +172,6 @@ name|int
 name|nentries
 decl_stmt|;
 comment|/* Number of entries */
-name|pmap_t
-name|pmap
-decl_stmt|;
-comment|/* Physical map */
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -322,13 +229,6 @@ modifier|*
 name|vm_map_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|VM_MAP_NULL
-value|((vm_map_t) 0)
-end_define
 
 begin_comment
 comment|/*  *	Map versions are used to validate a previous lookup attempt.  *  *	Since lookup operations may involve both a main map and  *	a sharing map, it is necessary to have a timestamp from each.  *	[If the main map timestamp has changed, the share_map and  *	associated timestamp are no longer valid; the map version  *	does not include a reference for the imbedded share_map.]  */
@@ -473,13 +373,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|vm_map_copy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_map_t
-name|vm_map_fork
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)swap_pager.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)swap_pager.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -84,31 +78,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm_param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
+file|"queue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"lock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pageout.h"
+file|"vm_prot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/swap_pager.h"
+file|"vm_object.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm_page.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm_pageout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"swap_pager.h"
 end_include
 
 begin_define
@@ -273,13 +285,6 @@ modifier|*
 name|swp_clean_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|SWP_CLEAN_NULL
-value|((swp_clean_t)0)
-end_define
 
 begin_comment
 comment|/* spc_flags values */
@@ -807,7 +812,7 @@ if|if
 condition|(
 name|pager
 operator|!=
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 			 * Use vm_object_lookup to gain a reference 			 * to the object and also to remove from the 			 * object cache. 			 */
@@ -818,7 +823,7 @@ argument_list|(
 name|pager
 argument_list|)
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -861,11 +866,11 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 name|swp
@@ -919,7 +924,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1431,7 +1436,7 @@ name|void
 operator|)
 name|swap_pager_clean
 argument_list|(
-name|VM_PAGE_NULL
+name|NULL
 argument_list|,
 name|B_WRITE
 argument_list|)
@@ -1675,7 +1680,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 block|{
 operator|(
@@ -1683,7 +1688,7 @@ name|void
 operator|)
 name|swap_pager_clean
 argument_list|(
-name|VM_PAGE_NULL
+name|NULL
 argument_list|,
 name|B_WRITE
 argument_list|)
@@ -2513,10 +2518,7 @@ operator|->
 name|b_proc
 operator|=
 operator|&
-name|proc
-index|[
-literal|0
-index|]
+name|proc0
 expr_stmt|;
 comment|/* XXX (but without B_PHYS set this is ok) */
 name|bp
@@ -3216,7 +3218,7 @@ endif|#
 directive|endif
 name|tspc
 operator|=
-name|SWP_CLEAN_NULL
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -3388,7 +3390,7 @@ endif|#
 directive|endif
 name|tspc
 operator|=
-name|SWP_CLEAN_NULL
+name|NULL
 expr_stmt|;
 block|}
 name|spc

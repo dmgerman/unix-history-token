@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_page.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_page.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,30 +18,6 @@ define|#
 directive|define
 name|_VM_PAGE_
 end_define
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_object.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_prot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lock.h"
-end_include
 
 begin_comment
 comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
@@ -192,13 +168,6 @@ modifier|*
 name|vm_page_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_NULL
-value|((vm_page_t) 0)
-end_define
 
 begin_if
 if|#

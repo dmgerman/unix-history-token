@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_object.c	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_object.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,31 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_page.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_object.h"
+file|"vm_page.h"
 end_include
 
 begin_comment
@@ -328,14 +310,14 @@ name|object
 operator|->
 name|copy
 operator|=
-name|VM_OBJECT_NULL
+name|NULL
 expr_stmt|;
 comment|/* 	 *	Object starts out read-write, with no pager. 	 */
 name|object
 operator|->
 name|pager
 operator|=
-name|vm_pager_null
+name|NULL
 expr_stmt|;
 name|object
 operator|->
@@ -360,7 +342,7 @@ name|object
 operator|->
 name|shadow
 operator|=
-name|VM_OBJECT_NULL
+name|NULL
 expr_stmt|;
 name|object
 operator|->
@@ -420,7 +402,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|vm_object_lock
@@ -463,7 +445,7 @@ while|while
 condition|(
 name|object
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 		 *	The cache holds a reference (uncounted) to 		 *	the object; we must lock it before removing 		 *	the object. 		 */
@@ -604,7 +586,7 @@ operator|->
 name|shadow
 operator|)
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 name|vm_object_lock
@@ -624,12 +606,12 @@ name|shadow_object
 operator|->
 name|copy
 operator|=
-name|VM_OBJECT_NULL
+name|NULL
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|else if (shadow_object->copy != VM_OBJECT_NULL) 			panic("vm_object_terminate: copy/shadow inconsistency");
+block|else if (shadow_object->copy != NULL) 			panic("vm_object_terminate: copy/shadow inconsistency");
 endif|#
 directive|endif
 name|vm_object_unlock
@@ -873,7 +855,7 @@ name|object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 condition|)
 name|vm_pager_deallocate
 argument_list|(
@@ -968,7 +950,7 @@ name|object
 operator|->
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 return|return;
 name|again
@@ -1401,7 +1383,7 @@ name|object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 condition|)
 name|vm_pager_deallocate
 argument_list|(
@@ -1472,7 +1454,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|vm_object_lock
@@ -1610,7 +1592,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|vm_object_lock
@@ -1765,14 +1747,14 @@ if|if
 condition|(
 name|src_object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 		 *	Nothing to copy 		 */
 operator|*
 name|dst_object
 operator|=
-name|VM_OBJECT_NULL
+name|NULL
 expr_stmt|;
 operator|*
 name|dst_offset
@@ -1798,7 +1780,7 @@ name|src_object
 operator|->
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 operator|||
 name|src_object
 operator|->
@@ -1920,7 +1902,7 @@ if|if
 condition|(
 name|old_copy
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 		 *	Try to get the locks (out of order) 		 */
@@ -1960,7 +1942,7 @@ name|old_copy
 operator|->
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 block|{
 comment|/* 			 *	Return another reference to 			 *	the existing copy-object. 			 */
@@ -2035,7 +2017,7 @@ if|if
 condition|(
 name|old_copy
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 		 *	Try to get the locks (out of order) 		 */
@@ -2297,7 +2279,7 @@ name|length
 argument_list|)
 operator|)
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2560,7 +2542,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|VM_OBJECT_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -2598,14 +2580,14 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 if|if
 condition|(
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 return|return;
 name|bucket
@@ -2925,7 +2907,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 operator|||
 name|object
 operator|->
@@ -2937,7 +2919,7 @@ name|object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 condition|)
 return|return;
 comment|/* 		 *		There is a backing object, and 		 */
@@ -2951,7 +2933,7 @@ operator|->
 name|shadow
 operator|)
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|vm_object_lock
@@ -2988,7 +2970,7 @@ name|backing_object
 operator|->
 name|shadow
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 operator|&&
 name|backing_object
 operator|->
@@ -2996,7 +2978,7 @@ name|shadow
 operator|->
 name|copy
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 name|vm_object_unlock
@@ -3106,7 +3088,7 @@ if|if
 condition|(
 name|pp
 operator|!=
-name|VM_PAGE_NULL
+name|NULL
 operator|&&
 operator|!
 name|pp
@@ -3182,7 +3164,7 @@ name|backing_object
 operator|->
 name|pager
 operator|=
-name|vm_pager_null
+name|NULL
 expr_stmt|;
 comment|/* 			 *	Object now shadows whatever backing_object did. 			 *	Note that the reference to backing_object->shadow 			 *	moves from within backing_object to within object. 			 */
 name|object
@@ -3207,7 +3189,7 @@ name|object
 operator|->
 name|shadow
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 operator|&&
 name|object
 operator|->
@@ -3215,7 +3197,7 @@ name|shadow
 operator|->
 name|copy
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 name|panic
@@ -3280,7 +3262,7 @@ name|backing_object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 condition|)
 block|{
 name|vm_object_unlock
@@ -3356,7 +3338,7 @@ name|new_offset
 argument_list|)
 operator|)
 operator|==
-name|VM_PAGE_NULL
+name|NULL
 operator|||
 name|pp
 operator|->
@@ -3463,7 +3445,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|p
@@ -3610,7 +3592,7 @@ if|if
 condition|(
 name|next_object
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 return|return
@@ -3623,7 +3605,7 @@ if|if
 condition|(
 name|prev_object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 return|return
@@ -3656,19 +3638,19 @@ name|prev_object
 operator|->
 name|pager
 operator|!=
-name|vm_pager_null
+name|NULL
 operator|||
 name|prev_object
 operator|->
 name|shadow
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 operator|||
 name|prev_object
 operator|->
 name|copy
 operator|!=
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 block|{
 name|vm_object_unlock
@@ -3766,7 +3748,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 name|iprintf

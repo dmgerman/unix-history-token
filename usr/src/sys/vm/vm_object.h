@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_object.h	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1985, Avadis Tevanian, Jr., Michael Wayne Young  * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)vm_object.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,69 +19,11 @@ directive|define
 name|_VM_OBJECT_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"queue.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_pager.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<vm/vm_pager.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  */
@@ -310,13 +252,6 @@ endif|#
 directive|endif
 endif|KERNEL
 end_endif
-
-begin_define
-define|#
-directive|define
-name|VM_OBJECT_NULL
-value|((vm_object_t) 0)
-end_define
 
 begin_comment
 comment|/*  *	Declare procedures that operate on VM objects.  */

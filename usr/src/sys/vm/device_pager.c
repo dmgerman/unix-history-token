@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"queue.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"conf.h"
 end_include
 
@@ -54,43 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm_kern.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_page.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_kern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/device_pager.h"
+file|"device_pager.h"
 end_include
 
 begin_decl_stmt
@@ -235,10 +211,10 @@ name|off
 decl_stmt|;
 specifier|extern
 name|int
-name|nulldev
+name|nullop
 argument_list|()
 decl_stmt|,
-name|nodev
+name|enodev
 argument_list|()
 decl_stmt|;
 ifdef|#
@@ -290,7 +266,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Validation.  Make sure this device can be mapped 		 * and that range to map is acceptible to device. 		 */
@@ -320,15 +296,15 @@ name|mapfunc
 operator|||
 name|mapfunc
 operator|==
-name|nodev
+name|enodev
 operator|||
 name|mapfunc
 operator|==
-name|nulldev
+name|nullop
 condition|)
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 name|nprot
@@ -407,7 +383,7 @@ literal|1
 condition|)
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 comment|/* 		 * Allocate and initialize pager structs 		 */
@@ -431,11 +407,11 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 name|devp
@@ -458,7 +434,7 @@ if|if
 condition|(
 name|devp
 operator|==
-name|DEV_PAGER_NULL
+name|NULL
 condition|)
 block|{
 name|free
@@ -473,7 +449,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1042,7 +1018,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 return|return;
 name|panic
