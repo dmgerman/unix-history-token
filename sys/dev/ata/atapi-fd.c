@@ -1914,7 +1914,7 @@ if|if
 condition|(
 name|request
 operator|->
-name|result
+name|error
 condition|)
 block|{
 name|bp
@@ -1923,7 +1923,7 @@ name|b_error
 operator|=
 name|request
 operator|->
-name|result
+name|error
 expr_stmt|;
 name|bp
 operator|->
@@ -1979,7 +1979,7 @@ if|if
 condition|(
 name|request
 operator|->
-name|result
+name|error
 operator|||
 operator|(
 name|bp
@@ -1996,7 +1996,7 @@ name|b_error
 operator|=
 name|request
 operator|->
-name|result
+name|error
 expr_stmt|;
 name|bp
 operator|->

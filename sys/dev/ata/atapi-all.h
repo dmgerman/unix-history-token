@@ -1322,6 +1322,10 @@ name|int32_t
 name|result
 decl_stmt|;
 comment|/* result of this cmd */
+name|int32_t
+name|error
+decl_stmt|;
+comment|/* result translated to errno */
 name|struct
 name|atapi_reqsense
 name|sense
