@@ -169,6 +169,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_PRODUCT_BROADCOM_5823
+value|0x5823
+end_define
+
+begin_comment
+comment|/* 5823 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UBS_PCI_RTY_SHIFT
 value|8
 end_define
