@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.11 (Berkeley) %G%"
+literal|"@(#)io.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,7 +129,7 @@ name|CTRL
 parameter_list|(
 name|X
 parameter_list|)
-value|('X' - 'A' + 1)
+value|(X - 'A' + 1)
 end_define
 
 begin_ifdef
@@ -2615,7 +2615,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|L
+literal|'L'
 argument_list|)
 condition|)
 block|{
@@ -2836,7 +2836,7 @@ name|putchar
 argument_list|(
 name|CTRL
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 argument_list|)
 expr_stmt|;
