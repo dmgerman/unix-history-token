@@ -3086,6 +3086,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ICBXOPT_ZIO
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|ICBZOPT_ENA_RDXFR_RDY
 value|0x01
 end_define
