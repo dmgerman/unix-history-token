@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chown.c	4.2 (Berkeley) %G%"
+literal|"@(#)chown.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +219,7 @@ name|c
 operator|++
 control|)
 block|{
-name|stat
+name|lstat
 argument_list|(
 name|argv
 index|[
