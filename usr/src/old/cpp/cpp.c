@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.17 %G%"
+literal|"@(#)cpp.c	1.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,19 +54,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ctype.h"
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -9351,16 +9357,20 @@ name|fout
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"w"
 argument_list|)
 operator|)
 condition|)
 block|{
-name|pperror
+name|fprintf
 argument_list|(
-literal|"Can't open /dev/null"
+name|stderr
+argument_list|,
+literal|"cpp: can't open %s\n"
+argument_list|,
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -9391,7 +9401,7 @@ name|nd
 operator|++
 index|]
 operator|=
-literal|"/usr/include"
+name|_PATH_INCLUDES
 expr_stmt|;
 endif|#
 directive|endif
