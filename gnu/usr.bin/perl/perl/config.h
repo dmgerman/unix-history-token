@@ -763,11 +763,11 @@ begin_comment
 comment|/* HAS_SETRESGID  *	This symbol, if defined, indicates that the setresgid routine is  *	available to change the real, effective and saved gid of the current  *	program.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|HAS_SETREGID
-end_undef
+end_define
 
 begin_comment
 comment|/**/
@@ -781,11 +781,11 @@ begin_comment
 comment|/* HAS_SETRESUID  *	This symbol, if defined, indicates that the setresuid routine is  *	available to change the real, effective and saved uid of the current  *	program.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|HAS_SETREUID
-end_undef
+end_define
 
 begin_comment
 comment|/**/
@@ -795,11 +795,11 @@ begin_comment
 comment|/* HAS_SETRGID  *	This symbol, if defined, indicates that the setrgid routine is available  *	to change the real gid of the current program.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|HAS_SETRGID
-end_undef
+end_define
 
 begin_comment
 comment|/**/
@@ -809,11 +809,11 @@ begin_comment
 comment|/* HAS_SETRUID  *	This symbol, if defined, indicates that the setruid routine is available  *	to change the real uid of the current program.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|HAS_SETRUID
-end_undef
+end_define
 
 begin_comment
 comment|/**/
