@@ -260,14 +260,12 @@ name|if_mtu
 operator|=
 name|FAITHMTU
 expr_stmt|;
-comment|/* Change to BROADCAST experimentaly to announce its prefix. */
+comment|/* LOOPBACK commented out to announce IPv6 routes to faith */
 name|ifp
 operator|->
 name|if_flags
 operator|=
-comment|/* IFF_LOOPBACK */
-name|IFF_BROADCAST
-operator||
+comment|/* IFF_LOOPBACK | */
 name|IFF_MULTICAST
 expr_stmt|;
 name|ifp
