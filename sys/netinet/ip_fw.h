@@ -23,7 +23,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metatada) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes.  */
+comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes.  */
 end_comment
 
 begin_enum
@@ -406,7 +406,7 @@ name|struct
 name|in_addr
 name|ip
 decl_stmt|;
-name|int
+name|int32_t
 name|unit
 decl_stmt|;
 block|}
@@ -424,7 +424,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is used for pipe and queue actions, which need to store  * a single pointer (which can have different size on different  * architectures.  */
+comment|/*  * This is used for pipe and queue actions, which need to store  * a single pointer (which can have different size on different  * architectures.  * Note that, because of previous instructions, pipe_ptr might  * be unaligned in the overall structure, so it needs to be  * manipulated with care.  */
 end_comment
 
 begin_typedef
@@ -439,6 +439,7 @@ name|void
 modifier|*
 name|pipe_ptr
 decl_stmt|;
+comment|/* XXX */
 block|}
 name|ipfw_insn_pipe
 typedef|;
@@ -532,10 +533,14 @@ modifier|*
 name|next_rule
 decl_stmt|;
 comment|/* ptr to next [skipto] rule	*/
-name|u_int32_t
-name|set_disable
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* passed up using 'next_rule' */
+block|u_int32_t	set_disable;
 comment|/* disabled sets (for userland)	*/
+endif|#
+directive|endif
 name|u_int16_t
 name|act_ofs
 decl_stmt|;
@@ -654,11 +659,6 @@ name|next
 decl_stmt|;
 comment|/* linked list of rules.	*/
 name|struct
-name|ipfw_flow_id
-name|id
-decl_stmt|;
-comment|/* (masked) flow id		*/
-name|struct
 name|ip_fw
 modifier|*
 name|rule
@@ -669,10 +669,6 @@ modifier|*
 name|parent
 decl_stmt|;
 comment|/* pointer to parent rule	*/
-name|u_int32_t
-name|expire
-decl_stmt|;
-comment|/* expire time			*/
 name|u_int64_t
 name|pcnt
 decl_stmt|;
@@ -681,6 +677,15 @@ name|u_int64_t
 name|bcnt
 decl_stmt|;
 comment|/* byte match counter		*/
+name|struct
+name|ipfw_flow_id
+name|id
+decl_stmt|;
+comment|/* (masked) flow id		*/
+name|u_int32_t
+name|expire
+decl_stmt|;
+comment|/* expire time			*/
 name|u_int32_t
 name|bucket
 decl_stmt|;
@@ -706,10 +711,14 @@ name|u_int16_t
 name|count
 decl_stmt|;
 comment|/* refcount			*/
-name|u_int16_t
-name|rulenum
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* passed up with 'rule' */
+block|u_int16_t	rulenum;
 comment|/* rule number (for userland)	*/
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
