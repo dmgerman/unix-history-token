@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -35,6 +35,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|dipsw1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nplane
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +97,21 @@ name|dipsw1
 operator|&
 name|PS_BMC_CONS
 operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_DEAD
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|nplane
 operator|==
 literal|0
 condition|)
