@@ -1027,6 +1027,9 @@ comment|/* 337 = kldsym */
 literal|"jail"
 block|,
 comment|/* 338 = jail */
+literal|"#339"
+block|,
+comment|/* 339 = pioctl */
 block|}
 decl_stmt|;
 end_decl_stmt

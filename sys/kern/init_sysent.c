@@ -3775,6 +3775,17 @@ name|jail
 block|}
 block|,
 comment|/* 338 = jail */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 339 = pioctl */
 block|}
 decl_stmt|;
 end_decl_stmt
