@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.47 1999/05/11 19:54:00 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.48 1999/05/30 16:51:18 phk Exp $ */
 end_comment
 
 begin_comment
@@ -4135,6 +4135,24 @@ operator|.
 name|b_dep
 argument_list|)
 expr_stmt|;
+name|BUF_LOCKINIT
+argument_list|(
+operator|&
+name|cbp
+operator|->
+name|cb_buf
+argument_list|)
+expr_stmt|;
+name|BUF_LOCK
+argument_list|(
+operator|&
+name|cbp
+operator|->
+name|cb_buf
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|)
+expr_stmt|;
 name|cbp
 operator|->
 name|cb_buf
@@ -4365,6 +4383,24 @@ operator|->
 name|cb_buf
 operator|.
 name|b_dep
+argument_list|)
+expr_stmt|;
+name|BUF_LOCKINIT
+argument_list|(
+operator|&
+name|cbp
+operator|->
+name|cb_buf
+argument_list|)
+expr_stmt|;
+name|BUF_LOCK
+argument_list|(
+operator|&
+name|cbp
+operator|->
+name|cb_buf
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 name|cbp
