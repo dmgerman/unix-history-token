@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cmdtab.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,11 +58,16 @@ comment|/*  * Mail -- a mail program  *  * Define all of the command names and b
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|cmd
 name|cmdtab
 index|[]
 init|=
+block|{
+comment|/*						msgmask msgflag  */
+comment|/* command	function	argtype		result& mask   */
+comment|/* -------	--------	-------		------	-------  */
 block|{
 literal|"next"
 block|,
@@ -60,7 +78,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"alias"
 block|,
 name|group
@@ -72,7 +92,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"print"
 block|,
 name|type
@@ -82,7 +104,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"type"
 block|,
 name|type
@@ -92,7 +116,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"Type"
 block|,
 name|Type
@@ -102,7 +128,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"Print"
 block|,
 name|Type
@@ -112,7 +140,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"visual"
 block|,
 name|visual
@@ -124,7 +154,9 @@ block|,
 literal|0
 block|,
 name|MMNORM
+block|}
 block|,
+block|{
 literal|"top"
 block|,
 name|top
@@ -134,7 +166,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"touch"
 block|,
 name|stouch
@@ -146,7 +180,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"preserve"
 block|,
 name|preserve
@@ -158,7 +194,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"delete"
 block|,
 name|delete
@@ -172,7 +210,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"dp"
 block|,
 name|deltype
@@ -184,7 +224,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"dt"
 block|,
 name|deltype
@@ -196,7 +238,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"undelete"
 block|,
 name|undelete_messages
@@ -208,7 +252,9 @@ block|,
 name|MDELETED
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"unset"
 block|,
 name|unset
@@ -220,7 +266,9 @@ block|,
 literal|1
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"mail"
 block|,
 name|sendmail
@@ -236,7 +284,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"mbox"
 block|,
 name|mboxit
@@ -248,7 +298,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"more"
 block|,
 name|more
@@ -258,7 +310,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"page"
 block|,
 name|more
@@ -268,7 +322,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"More"
 block|,
 name|More
@@ -278,7 +334,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"Page"
 block|,
 name|More
@@ -288,7 +346,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"unread"
 block|,
 name|unread
@@ -298,7 +358,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"!"
 block|,
 name|shell
@@ -310,7 +372,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"copy"
 block|,
 name|copycmd
@@ -322,7 +386,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"chdir"
 block|,
 name|schdir
@@ -334,7 +400,9 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|"cd"
 block|,
 name|schdir
@@ -346,7 +414,9 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|"save"
 block|,
 name|save
@@ -356,7 +426,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"source"
 block|,
 name|source
@@ -368,7 +440,9 @@ block|,
 literal|1
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|"set"
 block|,
 name|set
@@ -380,7 +454,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"shell"
 block|,
 name|dosh
@@ -392,7 +468,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"version"
 block|,
 name|pversion
@@ -404,7 +482,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"group"
 block|,
 name|group
@@ -416,7 +496,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"write"
 block|,
 name|swrite
@@ -426,7 +508,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"from"
 block|,
 name|from
@@ -436,7 +520,9 @@ block|,
 literal|0
 block|,
 name|MMNORM
+block|}
 block|,
+block|{
 literal|"file"
 block|,
 name|file
@@ -450,7 +536,9 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|"folder"
 block|,
 name|file
@@ -464,7 +552,9 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|"folders"
 block|,
 name|folders
@@ -478,7 +568,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"?"
 block|,
 name|help
@@ -490,7 +582,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"z"
 block|,
 name|scroll
@@ -502,7 +596,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"headers"
 block|,
 name|headers
@@ -512,7 +608,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"help"
 block|,
 name|help
@@ -524,7 +622,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"="
 block|,
 name|pdot
@@ -534,7 +634,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"Reply"
 block|,
 name|Respond
@@ -548,7 +650,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"Respond"
 block|,
 name|Respond
@@ -562,7 +666,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"reply"
 block|,
 name|respond
@@ -576,7 +682,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"respond"
 block|,
 name|respond
@@ -590,7 +698,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"edit"
 block|,
 name|editor
@@ -602,7 +712,9 @@ block|,
 literal|0
 block|,
 name|MMNORM
+block|}
 block|,
+block|{
 literal|"echo"
 block|,
 name|echo
@@ -614,7 +726,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"quit"
 block|,
 name|quitcmd
@@ -624,7 +738,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"list"
 block|,
 name|pcmdlist
@@ -636,7 +752,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"xit"
 block|,
 name|rexit
@@ -648,7 +766,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"exit"
 block|,
 name|rexit
@@ -660,7 +780,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"size"
 block|,
 name|messize
@@ -670,7 +792,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"hold"
 block|,
 name|preserve
@@ -682,7 +806,9 @@ block|,
 literal|0
 block|,
 name|MMNDEL
+block|}
 block|,
+block|{
 literal|"if"
 block|,
 name|ifcmd
@@ -696,7 +822,9 @@ block|,
 literal|1
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|"else"
 block|,
 name|elsecmd
@@ -710,7 +838,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"endif"
 block|,
 name|endifcmd
@@ -724,7 +854,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"alternates"
 block|,
 name|alternates
@@ -736,7 +868,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"ignore"
 block|,
 name|igfield
@@ -748,7 +882,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"discard"
 block|,
 name|igfield
@@ -760,7 +896,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"retain"
 block|,
 name|retfield
@@ -772,7 +910,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"saveignore"
 block|,
 name|saveigfield
@@ -784,7 +924,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"savediscard"
 block|,
 name|saveigfield
@@ -796,7 +938,9 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
+block|{
 literal|"saveretain"
 block|,
 name|saveretfield
@@ -808,8 +952,10 @@ block|,
 literal|0
 block|,
 literal|1000
+block|}
 block|,
-comment|/*	"Header",	Header,		STRLIST,	0,	1000,	*/
+comment|/*	{ "Header",	Header,		STRLIST,	0,	1000	}, */
+block|{
 literal|"core"
 block|,
 name|core
@@ -821,7 +967,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"#"
 block|,
 name|null
@@ -833,7 +981,9 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"clobber"
 block|,
 name|clobber
@@ -845,7 +995,9 @@ block|,
 literal|0
 block|,
 literal|1
+block|}
 block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -855,6 +1007,7 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

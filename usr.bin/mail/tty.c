@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tty.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tty.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,10 +171,6 @@ decl_stmt|;
 name|int
 name|errs
 decl_stmt|;
-name|void
-name|ttyint
-parameter_list|()
-function_decl|;
 name|savetstp
 operator|=
 name|signal
@@ -218,7 +227,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"tcgetattr(stdin)"
 argument_list|)
@@ -284,6 +293,9 @@ operator|)
 operator|==
 name|SIG_DFL
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -306,6 +318,9 @@ operator|)
 operator|==
 name|SIG_DFL
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -355,7 +370,7 @@ name|hp
 operator|->
 name|h_to
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ttyset
 operator|++
@@ -418,7 +433,7 @@ name|hp
 operator|->
 name|h_subject
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 name|ttyset
 operator|++
@@ -471,7 +486,7 @@ name|hp
 operator|->
 name|h_cc
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ttyset
 operator|++
@@ -534,7 +549,7 @@ name|hp
 operator|->
 name|h_bcc
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ttyset
 operator|++
@@ -580,6 +595,9 @@ expr_stmt|;
 block|}
 name|out
 label|:
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -587,6 +605,9 @@ argument_list|,
 name|savetstp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -594,6 +615,9 @@ argument_list|,
 name|savettou
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTIN
@@ -639,6 +663,9 @@ operator|&
 name|tio
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -648,6 +675,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -667,25 +697,24 @@ begin_comment
 comment|/*  * Read up a header from standard input.  * The source string has the preliminary contents to  * be read.  *  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
 name|readtty
-argument_list|(
+parameter_list|(
 name|pr
-argument_list|,
+parameter_list|,
 name|src
-argument_list|)
+parameter_list|)
+specifier|const
 name|char
+modifier|*
 name|pr
-index|[]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|src
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|ch
@@ -698,7 +727,6 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -706,10 +734,6 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-name|void
-name|ttystop
-parameter_list|()
-function_decl|;
 name|fputs
 argument_list|(
 name|pr
@@ -717,6 +741,9 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -726,7 +753,7 @@ if|if
 condition|(
 name|src
 operator|!=
-name|NOSTR
+name|NULL
 operator|&&
 name|strlen
 argument_list|(
@@ -756,26 +783,25 @@ if|if
 condition|(
 name|src
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
-name|cp
-operator|=
-name|copy
+name|strlcpy
 argument_list|(
+name|canonb
+argument_list|,
 name|src
 argument_list|,
+sizeof|sizeof
+argument_list|(
 name|canonb
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|cp
-operator|=
-name|copy
-argument_list|(
-literal|""
-argument_list|,
+operator|*
 name|canonb
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 name|fputs
 argument_list|(
@@ -784,6 +810,9 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -795,7 +824,7 @@ name|cp
 operator|=
 name|src
 operator|==
-name|NOSTR
+name|NULL
 condition|?
 literal|""
 else|:
@@ -803,11 +832,15 @@ name|src
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
@@ -858,7 +891,7 @@ expr_stmt|;
 operator|*
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
@@ -878,7 +911,7 @@ operator|*
 name|cp2
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|cp2
 operator|=
@@ -894,6 +927,9 @@ condition|)
 goto|goto
 name|redo
 goto|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -901,6 +937,9 @@ argument_list|,
 name|ttystop
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -908,6 +947,9 @@ argument_list|,
 name|ttystop
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTIN
@@ -957,8 +999,11 @@ block|}
 operator|*
 name|cp2
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -966,6 +1011,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -973,6 +1021,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTTIN
@@ -1005,7 +1056,7 @@ literal|0
 condition|?
 name|canonb
 else|:
-name|NOSTR
+name|NULL
 expr_stmt|;
 name|clearerr
 argument_list|(
@@ -1030,7 +1081,7 @@ if|if
 condition|(
 name|cp
 operator|==
-name|NOSTR
+name|NULL
 operator|||
 operator|*
 name|cp
@@ -1065,7 +1116,7 @@ argument_list|(
 name|canonb
 argument_list|)
 else|:
-name|NOSTR
+name|NULL
 operator|)
 return|;
 while|while
@@ -1188,7 +1239,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 return|return
@@ -1200,7 +1251,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Receipt continuation.  */
@@ -1226,6 +1277,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sigsetmask
 argument_list|(
 name|sigblock
@@ -1240,6 +1294,9 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 literal|0
@@ -1247,6 +1304,9 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigblock
 argument_list|(
 name|sigmask
@@ -1255,6 +1315,9 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|s

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cmd2.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +63,13 @@ begin_comment
 comment|/*  * Mail -- a mail program  *  * More user commands.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|wait_status
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * If any arguments were given, go to the next applicable argument  * following dot, otherwise, go to the next applicable message.  * If given as first command with no arguments, print first message.  */
 end_comment
@@ -65,21 +85,18 @@ modifier|*
 name|msgvec
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|message
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|ip
 decl_stmt|,
 modifier|*
 name|ip2
-decl_stmt|;
-name|int
+decl_stmt|,
 name|list
 index|[
 literal|2
@@ -344,6 +361,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|save1
 argument_list|(
 name|str
@@ -354,6 +372,7 @@ literal|"save"
 argument_list|,
 name|saveignore
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -374,6 +393,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|save1
 argument_list|(
 name|str
@@ -384,6 +404,7 @@ literal|"copy"
 argument_list|,
 name|saveignore
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -411,6 +432,7 @@ decl_stmt|;
 name|int
 name|mark
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cmd
@@ -421,12 +443,6 @@ modifier|*
 name|ignore
 decl_stmt|;
 block|{
-specifier|register
-name|int
-modifier|*
-name|ip
-decl_stmt|;
-specifier|register
 name|struct
 name|message
 modifier|*
@@ -435,7 +451,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|file
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|disp
 decl_stmt|;
@@ -444,6 +462,9 @@ name|f
 decl_stmt|,
 modifier|*
 name|msgvec
+decl_stmt|,
+modifier|*
+name|ip
 decl_stmt|;
 name|FILE
 modifier|*
@@ -464,8 +485,10 @@ literal|2
 operator|)
 operator|*
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|msgvec
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -482,7 +505,7 @@ name|f
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 return|return
 operator|(
@@ -565,7 +588,7 @@ name|file
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 return|return
 operator|(
@@ -579,6 +602,9 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -620,9 +646,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-name|NOSTR
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -668,7 +698,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|send
+name|sendmessage
 argument_list|(
 name|mp
 argument_list|,
@@ -676,17 +706,22 @@ name|obuf
 argument_list|,
 name|ignore
 argument_list|,
-name|NOSTR
+name|NULL
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|obuf
@@ -709,6 +744,9 @@ operator||=
 name|MSAVED
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|obuf
@@ -721,11 +759,16 @@ argument_list|(
 name|obuf
 argument_list|)
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Fclose
 argument_list|(
 name|obuf
@@ -762,6 +805,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|save1
 argument_list|(
 name|str
@@ -772,12 +816,13 @@ literal|"write"
 argument_list|,
 name|ignoreall
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Snarf the file from the end of the command line and  * return a pointer to it.  If there is no file attached,  * just return NOSTR.  Put a null in front of the file  * name so that the message list processing won't see it,  * unless the file name is the only thing on the line, in  * which case, return 0 in the reference flag variable.  */
+comment|/*  * Snarf the file from the end of the command line and  * return a pointer to it.  If there is no file attached,  * just return NULL.  Put a null in front of the file  * name so that the message list processing won't see it,  * unless the file name is the only thing on the line, in  * which case, return 0 in the reference flag variable.  */
 end_comment
 
 begin_function
@@ -798,7 +843,6 @@ modifier|*
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -839,7 +883,7 @@ operator|*
 operator|++
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * Now search for the beginning of the file name. 	 */
 while|while
@@ -873,7 +917,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NOSTR
+name|NULL
 operator|)
 return|;
 block|}
@@ -889,7 +933,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 else|else
 operator|*
@@ -926,7 +970,9 @@ name|msgvec
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1058,17 +1104,15 @@ modifier|*
 name|msgvec
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|message
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
-operator|*
-name|ip
-expr_stmt|;
 name|int
+modifier|*
+name|ip
+decl_stmt|,
 name|last
 decl_stmt|;
 name|last
@@ -1225,16 +1269,15 @@ modifier|*
 name|msgvec
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|message
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
-operator|*
+name|int
+modifier|*
 name|ip
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|ip
@@ -1283,7 +1326,9 @@ name|MDELETED
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1300,11 +1345,6 @@ block|{
 name|int
 name|pid
 decl_stmt|;
-specifier|extern
-name|union
-name|wait
-name|wait_status
-decl_stmt|;
 switch|switch
 condition|(
 name|pid
@@ -1317,7 +1357,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1344,6 +1384,9 @@ argument_list|(
 literal|"Okie dokie"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1356,9 +1399,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|WIFSIGNALED
+argument_list|(
 name|wait_status
-operator|.
-name|w_coredump
+argument_list|)
+operator|&&
+name|WCOREDUMP
+argument_list|(
+name|wait_status
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -1372,7 +1421,9 @@ literal|" -- Can't dump core.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1393,7 +1444,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|times
 decl_stmt|;
@@ -1433,7 +1483,9 @@ name|times
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1458,7 +1510,6 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1518,6 +1569,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|ignore1
 argument_list|(
 name|list
@@ -1528,6 +1580,7 @@ literal|1
 argument_list|,
 literal|"retained"
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1549,6 +1602,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|ignore1
 argument_list|(
 name|list
@@ -1557,6 +1611,7 @@ name|ignore
 argument_list|,
 literal|"ignored"
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1574,6 +1629,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|ignore1
 argument_list|(
 name|list
@@ -1584,6 +1640,7 @@ literal|1
 argument_list|,
 literal|"retained"
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1601,6 +1658,7 @@ index|[]
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|ignore1
 argument_list|(
 name|list
@@ -1609,6 +1667,7 @@ name|saveignore
 argument_list|,
 literal|"ignored"
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1633,6 +1692,7 @@ name|ignoretab
 modifier|*
 name|tab
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|which
@@ -1641,14 +1701,12 @@ block|{
 name|char
 name|field
 index|[
-name|BUFSIZ
+name|LINESIZE
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|h
 decl_stmt|;
-specifier|register
 name|struct
 name|ignore
 modifier|*
@@ -1664,15 +1722,17 @@ condition|(
 operator|*
 name|list
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 return|return
+operator|(
 name|igshow
 argument_list|(
 name|tab
 argument_list|,
 name|which
 argument_list|)
+operator|)
 return|;
 for|for
 control|(
@@ -1689,12 +1749,17 @@ name|ap
 operator|++
 control|)
 block|{
-name|istrcpy
+name|istrncpy
 argument_list|(
 name|field
 argument_list|,
 operator|*
 name|ap
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|field
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1716,11 +1781,6 @@ argument_list|)
 expr_stmt|;
 name|igp
 operator|=
-operator|(
-expr|struct
-name|ignore
-operator|*
-operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -1790,7 +1850,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1812,12 +1874,12 @@ name|ignoretab
 modifier|*
 name|tab
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|which
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|h
 decl_stmt|;
@@ -1835,10 +1897,6 @@ modifier|*
 modifier|*
 name|ring
 decl_stmt|;
-name|int
-name|igcomp
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tab
@@ -1856,7 +1914,9 @@ name|which
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|ring
@@ -1913,7 +1973,7 @@ index|]
 init|;
 name|igp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|igp
 operator|=
@@ -1974,7 +2034,9 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2009,6 +2071,7 @@ name|strcmp
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -2017,6 +2080,7 @@ name|l
 argument_list|,
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*

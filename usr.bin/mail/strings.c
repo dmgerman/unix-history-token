@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)strings.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)strings.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,23 +72,19 @@ name|int
 name|size
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|s
+decl_stmt|,
+name|index
 decl_stmt|;
-specifier|register
 name|struct
 name|strings
 modifier|*
 name|sp
-decl_stmt|;
-name|int
-name|index
 decl_stmt|;
 name|s
 operator|=
@@ -138,7 +147,7 @@ name|sp
 operator|->
 name|s_topFree
 operator|==
-name|NOSTR
+name|NULL
 operator|&&
 operator|(
 name|STRINGSIZE
@@ -172,8 +181,10 @@ index|[
 name|NSPACE
 index|]
 condition|)
-name|panic
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"String too large"
 argument_list|)
 expr_stmt|;
@@ -183,7 +194,7 @@ name|sp
 operator|->
 name|s_topFree
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 block|{
 name|index
@@ -196,6 +207,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|sp
 operator|->
 name|s_topFree
@@ -206,31 +220,19 @@ name|STRINGSIZE
 operator|<<
 name|index
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|s_topFree
+operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No room for space %d\n"
+literal|"No room for space %d"
 argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"Internal error"
-argument_list|)
-expr_stmt|;
-block|}
 name|sp
 operator|->
 name|s_nextFree
@@ -283,13 +285,11 @@ name|void
 name|sreset
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|strings
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|int
 name|index
 decl_stmt|;
@@ -330,7 +330,7 @@ name|sp
 operator|->
 name|s_topFree
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 continue|continue;
 name|sp
@@ -365,7 +365,6 @@ name|void
 name|spreserve
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|strings
 modifier|*
@@ -396,7 +395,7 @@ name|sp
 operator|->
 name|s_topFree
 operator|=
-name|NOSTR
+name|NULL
 expr_stmt|;
 block|}
 end_function

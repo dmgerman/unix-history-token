@@ -22,7 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -34,13 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -52,19 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -142,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|STRINGSIZE
-value|((unsigned) 128)
+value|((unsigned)128)
 end_define
 
 begin_comment
@@ -158,17 +170,6 @@ end_define
 
 begin_comment
 comment|/* Maximum list of raw strings */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOSTR
-value|((char *) 0)
-end_define
-
-begin_comment
-comment|/* Null string pointer */
 end_comment
 
 begin_define
@@ -362,7 +363,7 @@ name|blockof
 parameter_list|(
 name|off
 parameter_list|)
-value|((int) ((off) / 4096))
+value|((int)((off) / 4096))
 end_define
 
 begin_define
@@ -372,7 +373,7 @@ name|boffsetof
 parameter_list|(
 name|off
 parameter_list|)
-value|((int) ((off) % 4096))
+value|((int)((off) % 4096))
 end_define
 
 begin_define
@@ -395,6 +396,7 @@ begin_struct
 struct|struct
 name|cmd
 block|{
+specifier|const
 name|char
 modifier|*
 name|c_name
@@ -760,14 +762,9 @@ block|{
 name|struct
 name|name
 modifier|*
-name|h_to
+name|h_bcc
 decl_stmt|;
-comment|/* Dynamic "To:" string */
-name|char
-modifier|*
-name|h_subject
-decl_stmt|;
-comment|/* Subject string */
+comment|/* Blind carbon copies */
 name|struct
 name|name
 modifier|*
@@ -777,9 +774,20 @@ comment|/* Carbon copies string */
 name|struct
 name|name
 modifier|*
-name|h_bcc
+name|h_smopts
 decl_stmt|;
-comment|/* Blind carbon copies */
+comment|/* Sendmail options */
+name|struct
+name|name
+modifier|*
+name|h_to
+decl_stmt|;
+comment|/* Dynamic "To:" string */
+name|char
+modifier|*
+name|h_inreplyto
+decl_stmt|;
+comment|/* Reference */
 name|char
 modifier|*
 name|h_replyto
@@ -787,15 +795,9 @@ decl_stmt|;
 comment|/* Reply address */
 name|char
 modifier|*
-name|h_inreplyto
+name|h_subject
 decl_stmt|;
-comment|/* Reference */
-name|struct
-name|name
-modifier|*
-name|h_smopts
-decl_stmt|;
-comment|/* Sendmail options */
+comment|/* Subject string */
 block|}
 struct|;
 end_struct
@@ -904,61 +906,6 @@ comment|/* Users in group. */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|NIL
-value|((struct name *) 0)
-end_define
-
-begin_comment
-comment|/* The nil pointer for namelists */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NONE
-value|((struct cmd *) 0)
-end_define
-
-begin_comment
-comment|/* The nil pointer to command tab */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOVAR
-value|((struct var *) 0)
-end_define
-
-begin_comment
-comment|/* The nil pointer to variables */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOGRP
-value|((struct grouphead *) 0)
-end_define
-
-begin_comment
-comment|/* The nil grouphead pointer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOGE
-value|((struct group *) 0)
-end_define
-
-begin_comment
-comment|/* The nil group pointer */
-end_comment
 
 begin_comment
 comment|/*  * Structure of the hash table of ignored header fields  */
@@ -1225,7 +1172,7 @@ name|trunc
 parameter_list|(
 name|stream
 parameter_list|)
-value|{							\ 	(void)fflush(stream); 						\ 	(void)ftruncate(fileno(stream), (long)ftell(stream));		\ }
+value|{							\ 	(void)fflush(stream); 						\ 	(void)ftruncate(fileno(stream), (off_t)ftell(stream));		\ }
 end_define
 
 end_unit

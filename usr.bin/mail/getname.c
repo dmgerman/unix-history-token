@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)getname.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)getname.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +64,7 @@ comment|/* Getname / getuserid for those with hashed passwd data base). */
 end_comment
 
 begin_comment
-comment|/*  * Search the passwd file for a uid.  Return name through ref parameter  * if found, indicating success with 0 return.  Return -1 on error.  */
+comment|/*  * Search the passwd file for a uid. Return name on success, NULL on failure.  */
 end_comment
 
 begin_function
@@ -84,12 +97,16 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|NOSTR
+operator|(
+name|NULL
+operator|)
 return|;
 return|return
+operator|(
 name|pw
 operator|->
 name|pw_name
+operator|)
 return|;
 block|}
 end_function
@@ -128,13 +145,17 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 name|pw
 operator|->
 name|pw_uid
+operator|)
 return|;
 block|}
 end_function

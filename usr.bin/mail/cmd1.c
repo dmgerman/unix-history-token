@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cmd1.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +57,16 @@ begin_comment
 comment|/*  * Mail -- a mail program  *  * User commands.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|cmd
+name|cmdtab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Print the current active headings.  * Don't change dot if invoker didn't give an argument.  */
 end_comment
@@ -66,22 +89,19 @@ modifier|*
 name|msgvec
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|n
 decl_stmt|,
 name|mesg
 decl_stmt|,
 name|flag
+decl_stmt|,
+name|size
 decl_stmt|;
-specifier|register
 name|struct
 name|message
 modifier|*
 name|mp
-decl_stmt|;
-name|int
-name|size
 decl_stmt|;
 name|size
 operator|=
@@ -281,7 +301,6 @@ name|arg
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|s
 decl_stmt|,
@@ -428,7 +447,7 @@ literal|"screen"
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 operator|&&
 operator|(
 name|s
@@ -442,12 +461,16 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 name|s
+operator|)
 return|;
 return|return
+operator|(
 name|screenheight
 operator|-
 literal|4
+operator|)
 return|;
 block|}
 end_function
@@ -467,7 +490,6 @@ modifier|*
 name|msgvec
 decl_stmt|;
 block|{
-specifier|register
 name|int
 modifier|*
 name|ip
@@ -610,7 +632,7 @@ name|mp
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 name|subjline
 operator|=
@@ -755,7 +777,7 @@ argument_list|(
 literal|"show-rcpt"
 argument_list|)
 operator|!=
-name|NOSTR
+name|NULL
 condition|?
 name|skin
 argument_list|(
@@ -778,7 +800,7 @@ if|if
 condition|(
 name|subjline
 operator|==
-name|NOSTR
+name|NULL
 operator|||
 name|subjlen
 operator|<
@@ -872,21 +894,14 @@ name|int
 name|pcmdlist
 parameter_list|()
 block|{
-specifier|register
+specifier|const
 name|struct
 name|cmd
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|cc
-decl_stmt|;
-specifier|extern
-name|struct
-name|cmd
-name|cmdtab
-index|[]
 decl_stmt|;
 name|printf
 argument_list|(
@@ -958,7 +973,7 @@ operator|)
 operator|->
 name|c_name
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 name|printf
 argument_list|(
@@ -1138,23 +1153,20 @@ decl_stmt|,
 name|page
 decl_stmt|;
 block|{
-specifier|register
-operator|*
+name|int
+name|nlines
+decl_stmt|,
+modifier|*
 name|ip
-expr_stmt|;
-specifier|register
+decl_stmt|;
 name|struct
 name|message
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|int
-name|nlines
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1181,7 +1193,7 @@ argument_list|(
 literal|"interactive"
 argument_list|)
 operator|!=
-name|NOSTR
+name|NULL
 operator|&&
 operator|(
 name|page
@@ -1195,7 +1207,7 @@ literal|"crt"
 argument_list|)
 operator|)
 operator|!=
-name|NOSTR
+name|NULL
 operator|)
 condition|)
 block|{
@@ -1297,8 +1309,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warnx
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -1308,6 +1322,9 @@ name|stdout
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1317,6 +1334,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Send messages to the output. 	 * 	 */
 for|for
 control|(
 name|ip
@@ -1363,7 +1381,7 @@ argument_list|(
 literal|"quiet"
 argument_list|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -1378,7 +1396,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|send
+name|sendmessage
 argument_list|(
 name|mp
 argument_list|,
@@ -1390,7 +1408,7 @@ name|ignore
 else|:
 literal|0
 argument_list|,
-name|NOSTR
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1404,6 +1422,9 @@ name|stdout
 condition|)
 block|{
 comment|/* 		 * Ignore SIGPIPE so it can't cause a duplicate close. 		 */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1411,11 +1432,17 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|Pclose
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1434,6 +1461,10 @@ end_function
 
 begin_comment
 comment|/*  * Respond to a broken pipe signal --  * probably caused by quitting more.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -1471,12 +1502,10 @@ modifier|*
 name|msgvec
 decl_stmt|;
 block|{
-specifier|register
 name|int
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|message
 modifier|*
@@ -1519,7 +1548,7 @@ if|if
 condition|(
 name|valtop
 operator|!=
-name|NOSTR
+name|NULL
 condition|)
 block|{
 name|topl
@@ -1594,7 +1623,7 @@ argument_list|(
 literal|"quiet"
 argument_list|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 name|printf
 argument_list|(
@@ -1653,7 +1682,10 @@ name|ibuf
 argument_list|,
 name|linebuf
 argument_list|,
-name|LINESIZE
+sizeof|sizeof
+argument_list|(
+name|linebuf
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1666,7 +1698,14 @@ argument_list|)
 expr_stmt|;
 name|lineb
 operator|=
-name|blankline
+name|strspn
+argument_list|(
+name|linebuf
+argument_list|,
+literal|" \t"
+argument_list|)
+operator|==
+name|strlen
 argument_list|(
 name|linebuf
 argument_list|)
@@ -1696,7 +1735,6 @@ name|msgvec
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 modifier|*
 name|ip
@@ -1764,7 +1802,6 @@ name|msgvec
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 modifier|*
 name|ip
@@ -1831,7 +1868,7 @@ block|{
 name|char
 name|dirname
 index|[
-name|BUFSIZ
+name|PATHSIZE
 index|]
 decl_stmt|;
 name|char
@@ -1843,6 +1880,11 @@ condition|(
 name|getfold
 argument_list|(
 name|dirname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dirname
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1854,7 +1896,9 @@ literal|"No value set for \"folder\"\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1868,7 +1912,7 @@ literal|"LISTER"
 argument_list|)
 operator|)
 operator|==
-name|NOSTR
+name|NULL
 condition|)
 name|cmd
 operator|=
@@ -1891,13 +1935,15 @@ literal|1
 argument_list|,
 name|dirname
 argument_list|,
-name|NOSTR
+name|NULL
 argument_list|,
-name|NOSTR
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
