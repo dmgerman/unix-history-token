@@ -618,13 +618,6 @@ name|argv
 argument_list|,
 name|flags
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|NULL
 argument_list|)
 operator|)
