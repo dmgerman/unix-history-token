@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_pageout.c,v 1.6 1993/11/25 12:07:42 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_pageout.c,v 1.7 1993/12/19 00:56:12 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -244,7 +244,9 @@ if|if
 condition|(
 name|m
 operator|->
-name|clean
+name|flags
+operator|&
+name|PG_CLEAN
 condition|)
 block|{
 name|next
@@ -347,7 +349,9 @@ if|if
 condition|(
 name|m
 operator|->
-name|laundry
+name|flags
+operator|&
+name|PG_LAUNDRY
 condition|)
 block|{
 comment|/* 				 *	Clean the page and remove it from the 				 *	laundry. 				 * 				 *	We set the busy bit to cause 				 *	potential page faults on this page to 				 *	block. 				 * 				 *	And we set pageout-in-progress to keep 				 *	the object from disappearing during 				 *	pageout.  This guarantees that the 				 *	page won't move from the inactive 				 *	queue.  (However, any other page on 				 *	the inactive queue may move!) 				 */
@@ -508,9 +512,9 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|busy
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_BUSY
 expr_stmt|;
 name|vm_stat
 operator|.
@@ -641,9 +645,10 @@ name|VM_PAGER_PEND
 case|:
 name|m
 operator|->
-name|laundry
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_LAUNDRY
 expr_stmt|;
 break|break;
 case|case
@@ -652,15 +657,16 @@ case|:
 comment|/* 					 * Page outside of range of object. 					 * Right now we essentially lose the 					 * changes by pretending it worked. 					 * XXX dubious, what should we do? 					 */
 name|m
 operator|->
-name|laundry
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_LAUNDRY
 expr_stmt|;
 name|m
 operator|->
-name|clean
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|PG_CLEAN
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
@@ -700,9 +706,10 @@ condition|)
 block|{
 name|m
 operator|->
-name|busy
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|PG_BUSY
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(

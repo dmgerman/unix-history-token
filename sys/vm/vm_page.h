@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	7.3 (Berkeley) 4/21/91  *	$Id: vm_page.h,v 1.4 1993/12/12 12:27:25 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	7.3 (Berkeley) 4/21/91  *	$Id: vm_page.h,v 1.5 1993/12/19 00:56:11 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -27,6 +27,97 @@ begin_comment
 comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PG_INACTIVE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_ACTIVE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_LAUNDRY
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_CLEAN
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_BUSY
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_WANTED
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_TABLED
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_COPY_ON_WRITE
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_FICTITIOUS
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_ABSENT
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_FAKE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PAGEROWNED
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PTPAGE
+value|0x1000
+end_define
+
 begin_struct
 struct|struct
 name|vm_page
@@ -34,7 +125,8 @@ block|{
 name|queue_chain_t
 name|pageq
 decl_stmt|;
-comment|/* queue info for FIFO 					 * queue or free list (P) */
+comment|/* queue info for FIFO */
+comment|/* queue or free list (P) */
 name|queue_chain_t
 name|hashq
 decl_stmt|;
@@ -54,111 +146,17 @@ comment|/* offset into that object (O,P) */
 name|unsigned
 name|int
 name|wire_count
-range|:
-literal|16
-decl_stmt|,
-comment|/* how many wired down maps use me? 					   (P) */
-name|inactive
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in inactive list (P) */
-name|active
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in active list (P) */
-name|laundry
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is being cleaned now (P)*/
-name|clean
-range|:
-literal|1
-decl_stmt|,
-comment|/* page has not been modified */
-name|busy
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in transit (O) */
-name|wanted
-range|:
-literal|1
-decl_stmt|,
-comment|/* someone is waiting for page (O) */
-name|tabled
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is in VP table (O) */
-name|copy_on_write
-range|:
-literal|1
-decl_stmt|,
-comment|/* page must be copied before being 					   changed (O) */
-name|fictitious
-range|:
-literal|1
-decl_stmt|,
-comment|/* physical page doesn't exist (O) */
-name|absent
-range|:
-literal|1
-decl_stmt|,
-comment|/* virtual page doesn't exist (O) */
-name|fake
-range|:
-literal|1
-decl_stmt|,
-comment|/* page is a placeholder for page-in 					   (O) */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|pagerowned
-range|:
-literal|1
-decl_stmt|,
-comment|/* async paging op in progress */
-name|ptpage
-range|:
-literal|1
-decl_stmt|,
-comment|/* is a user page table page */
-endif|#
-directive|endif
-range|:
-literal|0
 decl_stmt|;
-comment|/* (force to 'long' boundary) */
-ifdef|#
-directive|ifdef
-name|ns32000
+comment|/* how many wired down maps use me? */
+name|unsigned
 name|int
-name|pad
+name|flags
 decl_stmt|;
-comment|/* extra space for ns32000 bit ops */
-endif|#
-directive|endif
-comment|/* ns32000 */
+comment|/* bit encoded flags */
 name|vm_offset_t
 name|phys_addr
 decl_stmt|;
 comment|/* physical address of page */
-ifdef|#
-directive|ifdef
-name|PAGER_PAGE_LOCKING
-name|vm_prot_t
-name|page_lock
-decl_stmt|;
-comment|/* Uses prohibited by data manager */
-name|vm_prot_t
-name|unlock_request
-decl_stmt|;
-comment|/* Outstanding unlock request */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -185,7 +183,7 @@ name|VM_PAGE_CHECK
 parameter_list|(
 name|mem
 parameter_list|)
-value|{ \ 		if ( (((unsigned int) mem)< ((unsigned int)&vm_page_array[0])) || \ 		     (((unsigned int) mem)> ((unsigned int)&vm_page_array[last_page-first_page])) || \ 		     (mem->active&& mem->inactive) \ 		    ) panic("vm_page_check: not valid!"); \ 		}
+value|{ \ 		if ( (((unsigned int) mem)< ((unsigned int)&vm_page_array[0])) || \ 		     (((unsigned int) mem)> ((unsigned int)&vm_page_array[last_page-first_page])) || \ 		     ((mem->flags& PG_ACTIVE)&& (mem->flags& PG_INACTIVE)) \ 		    ) panic("vm_page_check: not valid!"); \ 		}
 end_define
 
 begin_else
@@ -501,13 +499,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_init
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_free
 parameter_list|()
 function_decl|;
@@ -589,7 +580,7 @@ name|m
 parameter_list|,
 name|interruptible
 parameter_list|)
-value|{ \ 				(m)->wanted = TRUE; \ 				assert_wait((int) (m), (interruptible)); \ 			}
+value|{ \ 				(m)->flags |= PG_WANTED; \ 				assert_wait((int) (m), (interruptible)); \ 			}
 end_define
 
 begin_define
@@ -599,7 +590,7 @@ name|PAGE_WAKEUP
 parameter_list|(
 name|m
 parameter_list|)
-value|{ \ 				(m)->busy = FALSE; \ 				if ((m)->wanted) { \ 					(m)->wanted = FALSE; \ 					thread_wakeup((int) (m)); \ 				} \ 			}
+value|{ \ 				(m)->flags&= ~PG_BUSY; \ 				if ((m)->flags& PG_WANTED) { \ 					(m)->flags&= ~PG_WANTED; \ 					thread_wakeup((int) (m)); \ 				} \ 			}
 end_define
 
 begin_define
@@ -625,7 +616,7 @@ name|vm_page_set_modified
 parameter_list|(
 name|m
 parameter_list|)
-value|{ (m)->clean = FALSE; }
+value|{ (m)->flags&= ~PG_CLEAN; }
 end_define
 
 begin_comment
