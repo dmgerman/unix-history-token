@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -49,11 +49,11 @@ begin_struct
 struct|struct
 name|timespec
 block|{
-name|int32_t
+name|time_t
 name|ts_sec
 decl_stmt|;
 comment|/* seconds */
-name|int32_t
+name|long
 name|ts_nsec
 decl_stmt|;
 comment|/* and nanoseconds */
