@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.11 1996/07/03 05:03:07 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.12 1996/09/17 19:50:23 phk Exp $  *  */
 end_comment
 
 begin_comment
-comment|/*  * Defining EXTRA_SANITY will enable some checks which are related  * to internal conditions and consistency in malloc.c  */
+comment|/*  * Defining EXTRA_SANITY will enable extra checks which are related  * to internal conditions and consistency in malloc.c. This has a  * noticeable runtime performance hit, and generally will not do you  * any good unless you fiddle with the internals of malloc or want  * to catch random pointer corruption as early as possible.  */
 end_comment
 
 begin_undef
@@ -54,7 +54,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * What to use for Junk  */
+comment|/*  * What to use for Junk.  This is the byte value we use to fill with  * when the 'J' option is enabled.  */
 end_comment
 
 begin_define
@@ -69,7 +69,7 @@ comment|/* as in "Duh" :-) */
 end_comment
 
 begin_comment
-comment|/*  * If these weren't defined here, they would be calculated on the fly,  * at a considerable cost in performance.  */
+comment|/*  * If these weren't defined here, they would be calculated on the fly,  * with a noticeable performance hit.  */
 end_comment
 
 begin_if
@@ -123,6 +123,10 @@ begin_comment
 comment|/* __i386__&& __FreeBSD__ */
 end_comment
 
+begin_comment
+comment|/*  * No user serviceable parts behind this point.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -170,29 +174,6 @@ include|#
 directive|include
 file|<sys/mman.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread_private.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This structure describes a page worth of chunks.  */
@@ -358,7 +339,7 @@ block|{
 name|int
 name|result
 decl_stmt|;
-asm|asm("bsfl %1,%0" : "=r" (result) : "r" (input));
+asm|asm("bsfl %1, %0" : "=r" (result) : "r" (input));
 return|return
 name|result
 operator|+
@@ -387,7 +368,7 @@ block|{
 name|int
 name|result
 decl_stmt|;
-asm|asm("bsrl %1,%0" : "=r" (result) : "r" (input));
+asm|asm("bsrl %1, %0" : "=r" (result) : "r" (input));
 return|return
 name|result
 operator|+
@@ -418,7 +399,7 @@ name|int
 name|bit
 parameter_list|)
 block|{
-asm|asm("btsl %0,(%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
+asm|asm("btsl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
 block|}
 end_function
 
@@ -444,7 +425,7 @@ name|int
 name|bit
 parameter_list|)
 block|{
-asm|asm("btcl %0,(%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
+asm|asm("btcl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
 block|}
 end_function
 
@@ -495,7 +476,7 @@ comment|/* malloc_pagesize */
 end_comment
 
 begin_comment
-comment|/*  * A mask for the offset inside a page.  */
+comment|/* A mask for the offset inside a page.  */
 end_comment
 
 begin_define
@@ -526,7 +507,7 @@ value|(((u_long)(foo)>> malloc_pageshift)-malloc_origo)
 end_define
 
 begin_comment
-comment|/*  * malloc_pagesize == 1<< malloc_pageshift  */
+comment|/* malloc_pagesize == 1<< malloc_pageshift */
 end_comment
 
 begin_ifndef
@@ -604,33 +585,22 @@ comment|/* malloc_maxsize */
 end_comment
 
 begin_comment
-comment|/*  * The minimum size (in bytes) of the free page cache.  */
+comment|/* The minimum size (in bytes) of the free page cache.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|malloc_cache
-end_ifndef
 
 begin_decl_stmt
 specifier|static
 name|unsigned
 name|malloc_cache
+init|=
+literal|16
+operator|<<
+name|malloc_pageshift
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* malloc_cache */
-end_comment
-
-begin_comment
-comment|/*  * The offset from pagenumber to index into the page directory  */
+comment|/* The offset from pagenumber to index into the page directory */
 end_comment
 
 begin_decl_stmt
@@ -641,7 +611,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The last index in the page directory we care about  */
+comment|/* The last index in the page directory we care about */
 end_comment
 
 begin_decl_stmt
@@ -652,7 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Pointer to page directory.  * Allocated "as if with" malloc  */
+comment|/* Pointer to page directory. Allocated "as if with" malloc */
 end_comment
 
 begin_decl_stmt
@@ -666,7 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * How many slots in the page directory  */
+comment|/* How many slots in the page directory */
 end_comment
 
 begin_decl_stmt
@@ -677,7 +647,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Free pages line up here  */
+comment|/* Free pages line up here */
 end_comment
 
 begin_decl_stmt
@@ -689,7 +659,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Abort() if we fail to get VM ?  */
+comment|/* Abort(), user doesn't handle problems.  */
 end_comment
 
 begin_decl_stmt
@@ -700,7 +670,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Are we trying to die ?  */
+comment|/* Are we trying to die ?  */
 end_comment
 
 begin_decl_stmt
@@ -717,7 +687,7 @@ name|MALLOC_STATS
 end_ifdef
 
 begin_comment
-comment|/*  * dump statistics  */
+comment|/* dump statistics */
 end_comment
 
 begin_decl_stmt
@@ -737,7 +707,7 @@ comment|/* MALLOC_STATS */
 end_comment
 
 begin_comment
-comment|/*  * always realloc ?  */
+comment|/* always realloc ?  */
 end_comment
 
 begin_decl_stmt
@@ -748,7 +718,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * zero fill ?  */
+comment|/* pass the kernel a hint on free pages ?  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_hint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero fill ?  */
 end_comment
 
 begin_decl_stmt
@@ -759,7 +740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * junk fill ?  */
+comment|/* junk fill ?  */
 end_comment
 
 begin_decl_stmt
@@ -770,7 +751,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * my last break.  */
+comment|/* utrace ?  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_utrace
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|ut
+block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
+name|size_t
+name|s
+decl_stmt|;
+name|void
+modifier|*
+name|r
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|UTRACE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|if (malloc_utrace) \ 		{struct ut u; u.p=a; u.s = b; u.r=c; utrace(&u, sizeof u);}
+end_define
+
+begin_comment
+comment|/* my last break. */
 end_comment
 
 begin_decl_stmt
@@ -782,7 +808,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * one location cache for free-list holders  */
+comment|/* one location cache for free-list holders */
 end_comment
 
 begin_decl_stmt
@@ -791,6 +817,17 @@ name|struct
 name|pgfree
 modifier|*
 name|px
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* compile-time options */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|malloc_options
 decl_stmt|;
 end_decl_stmt
 
@@ -805,6 +842,46 @@ name|extend_pgdir
 parameter_list|(
 name|u_long
 name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+modifier|*
+name|imalloc
+parameter_list|(
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ifree
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+modifier|*
+name|irealloc
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1239,6 +1316,14 @@ begin_comment
 comment|/* MALLOC_STATS */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|malloc_func
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1268,6 +1353,18 @@ argument_list|,
 name|strlen
 argument_list|(
 name|q
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|malloc_func
+argument_list|,
+name|strlen
+argument_list|(
+name|malloc_func
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1338,6 +1435,18 @@ argument_list|,
 name|strlen
 argument_list|(
 name|q
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|malloc_func
+argument_list|,
+name|strlen
+argument_list|(
+name|malloc_func
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1483,7 +1592,7 @@ directive|ifdef
 name|EXTRA_SANITY
 name|wrterror
 argument_list|(
-literal|"(internal): map_pages fails\n"
+literal|"(ES): map_pages fails\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1915,6 +2024,20 @@ block|{
 name|char
 modifier|*
 name|p
+decl_stmt|,
+name|b
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|struct
+name|ut
+name|u
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1928,12 +2051,89 @@ directive|endif
 comment|/* EXTRA_SANITY */
 for|for
 control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+name|j
+operator|=
+name|readlink
+argument_list|(
+literal|"/etc/malloc.conf"
+argument_list|,
+name|b
+argument_list|,
+sizeof|sizeof
+name|b
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|<=
+literal|0
+condition|)
+continue|continue;
+name|b
+index|[
+name|j
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|p
+operator|=
+name|b
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+literal|1
+condition|)
+block|{
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"MALLOC_OPTIONS"
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+literal|2
+condition|)
+block|{
+name|p
+operator|=
+name|malloc_options
+expr_stmt|;
+block|}
+for|for
+control|(
 init|;
 name|p
 operator|&&
@@ -1950,6 +2150,22 @@ operator|*
 name|p
 condition|)
 block|{
+case|case
+literal|'>'
+case|:
+name|malloc_cache
+operator|<<=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'<'
+case|:
+name|malloc_cache
+operator|>>=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -1989,6 +2205,22 @@ endif|#
 directive|endif
 comment|/* MALLOC_STATS */
 case|case
+literal|'h'
+case|:
+name|malloc_hint
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+name|malloc_hint
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|malloc_realloc
@@ -2021,6 +2253,22 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'u'
+case|:
+name|malloc_utrace
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|malloc_utrace
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'z'
 case|:
 name|malloc_zero
@@ -2037,18 +2285,36 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|wrtwarning
-argument_list|(
-literal|"(Init): Unknown char in MALLOC_OPTIONS\n"
-argument_list|)
+name|j
+operator|=
+name|malloc_abort
 expr_stmt|;
-name|p
+name|malloc_abort
 operator|=
 literal|0
+expr_stmt|;
+name|wrtwarning
+argument_list|(
+literal|"unknown char in MALLOC_OPTIONS\n"
+argument_list|)
+expr_stmt|;
+name|malloc_abort
+operator|=
+name|j
 expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
+name|UTRACE
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/*      * We want junk in the entire allocation, and zero only in the part      * the user asked for.      */
 if|if
 condition|(
@@ -2126,18 +2392,6 @@ block|}
 endif|#
 directive|endif
 comment|/* malloc_pageshift */
-ifndef|#
-directive|ifndef
-name|malloc_cache
-name|malloc_cache
-operator|=
-literal|100
-operator|<<
-name|malloc_pageshift
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* malloc_cache */
 ifndef|#
 directive|ifndef
 name|malloc_minsize
@@ -2261,7 +2515,7 @@ literal|1
 condition|)
 name|wrterror
 argument_list|(
-literal|"(Init) my first mmap failed.  (check limits ?)\n"
+literal|"mmap(2) failed, check limits.\n"
 argument_list|)
 expr_stmt|;
 comment|/*      * We need a maximum of malloc_pageshift buckets, steal these from the      * front of the page_directory;      */
@@ -2309,7 +2563,7 @@ expr|struct
 name|pgfree
 operator|*
 operator|)
-name|malloc
+name|imalloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -2696,7 +2950,7 @@ operator|=
 name|delay_free
 expr_stmt|;
 else|else
-name|free
+name|ifree
 argument_list|(
 name|delay_free
 argument_list|)
@@ -2824,7 +3078,7 @@ expr|struct
 name|pginfo
 operator|*
 operator|)
-name|malloc
+name|imalloc
 argument_list|(
 name|l
 argument_list|)
@@ -3201,7 +3455,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 modifier|*
 name|imalloc
@@ -3259,7 +3512,7 @@ name|result
 condition|)
 name|wrterror
 argument_list|(
-literal|"malloc(): returns NULL\n"
+literal|"allocation failed.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3287,7 +3540,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 modifier|*
 name|irealloc
@@ -3328,42 +3580,12 @@ return|;
 if|if
 condition|(
 operator|!
-name|ptr
-condition|)
-comment|/* Bounce to malloc() */
-return|return
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-return|;
-if|if
-condition|(
-operator|!
 name|initialized
 condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): malloc() never got called.\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-if|if
-condition|(
-name|ptr
-operator|&&
-operator|!
-name|size
-condition|)
-block|{
-comment|/* Bounce to free() */
-name|free
-argument_list|(
-name|ptr
+literal|"malloc() has never been called.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3386,7 +3608,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): junk pointer (too low)\n"
+literal|"junk pointer, too low to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3402,7 +3624,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): junk pointer (too high)\n"
+literal|"junk pointer, too high to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3439,7 +3661,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): modified page pointer.\n"
+literal|"modified (page-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3525,7 +3747,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): modified chunk pointer.\n"
+literal|"modified (chunk-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3565,7 +3787,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): already free chunk.\n"
+literal|"chunk is already free.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3617,7 +3839,7 @@ else|else
 block|{
 name|wrtwarning
 argument_list|(
-literal|"realloc(): wrong page pointer.\n"
+literal|"pointer to wrong page.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3626,7 +3848,7 @@ return|;
 block|}
 name|p
 operator|=
-name|malloc
+name|imalloc
 argument_list|(
 name|size
 argument_list|)
@@ -3662,7 +3884,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|free
+name|ifree
 argument_list|(
 name|ptr
 argument_list|)
@@ -3726,7 +3948,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): already free page.\n"
+literal|"page is already free.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3740,7 +3962,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): freeing wrong page.\n"
+literal|"pointer to wrong page.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3757,7 +3979,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): modified page pointer.\n"
+literal|"modified (page-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3803,6 +4025,19 @@ name|i
 operator|<<
 name|malloc_pageshift
 expr_stmt|;
+if|if
+condition|(
+name|malloc_hint
+condition|)
+name|madvise
+argument_list|(
+name|ptr
+argument_list|,
+name|l
+argument_list|,
+name|MADV_FREE
+argument_list|)
+expr_stmt|;
 name|tail
 operator|=
 name|ptr
@@ -3817,7 +4052,7 @@ name|px
 condition|)
 name|px
 operator|=
-name|malloc
+name|imalloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -4116,7 +4351,7 @@ else|else
 block|{
 name|wrterror
 argument_list|(
-literal|"messed up free list"
+literal|"freelist is destroyed.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4223,7 +4458,7 @@ if|if
 condition|(
 name|pt
 condition|)
-name|free
+name|ifree
 argument_list|(
 name|pt
 argument_list|)
@@ -4303,7 +4538,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): modified pointer.\n"
+literal|"modified (chunk-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4320,7 +4555,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): already free chunk.\n"
+literal|"chunk is already free.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4500,12 +4735,12 @@ operator|*
 operator|)
 name|info
 condition|)
-name|free
+name|ifree
 argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
-name|free
+name|ifree
 argument_list|(
 name|vp
 argument_list|)
@@ -4515,7 +4750,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|ifree
 parameter_list|(
@@ -4547,7 +4781,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): malloc() never got called.\n"
+literal|"malloc() has never been called.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4574,7 +4808,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): junk pointer (too low)\n"
+literal|"junk pointer, too low to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4588,7 +4822,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"free(): junk pointer (too high)\n"
+literal|"junk pointer, too high to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4629,6 +4863,82 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * These are the public exported interface routines.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pthread_private.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+value|_thread_kern_sig_block(&malloc_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+value|_thread_kern_sig_unblock(&malloc_lock);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|malloc_active
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 modifier|*
@@ -4638,23 +4948,38 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|int
-name|status
-decl_stmt|;
 specifier|register
 name|void
 modifier|*
 name|r
 decl_stmt|;
-name|_thread_kern_sig_block
+name|malloc_func
+operator|=
+literal|"malloc():"
+expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|malloc_active
+operator|++
+condition|)
+block|{
+name|wrtwarning
 argument_list|(
-operator|&
-name|status
+literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
+name|malloc_active
+operator|--
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|r
 operator|=
 name|imalloc
@@ -4662,24 +4987,26 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-name|_thread_kern_sig_unblock
+name|UTRACE
 argument_list|(
-name|status
+literal|0
+argument_list|,
+name|size
+argument_list|,
+name|r
 argument_list|)
 expr_stmt|;
+name|malloc_active
+operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
+operator|(
 name|r
+operator|)
 return|;
-else|#
-directive|else
-return|return
-name|imalloc
-argument_list|(
-name|size
-argument_list|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4692,37 +5019,49 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|int
-name|status
-decl_stmt|;
-name|_thread_kern_sig_block
+name|malloc_func
+operator|=
+literal|"free():"
+expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|malloc_active
+operator|++
+condition|)
+block|{
+name|wrtwarning
 argument_list|(
-operator|&
-name|status
+literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
+name|malloc_active
+operator|--
+expr_stmt|;
+return|return;
+block|}
 name|ifree
 argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|ifree
+name|UTRACE
 argument_list|(
 name|ptr
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|malloc_active
+operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -4740,23 +5079,73 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|int
-name|status
-decl_stmt|;
 specifier|register
 name|void
 modifier|*
 name|r
 decl_stmt|;
-name|_thread_kern_sig_block
+name|malloc_func
+operator|=
+literal|"realloc():"
+expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|malloc_active
+operator|++
+condition|)
+block|{
+name|wrtwarning
 argument_list|(
-operator|&
-name|status
+literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
+name|malloc_active
+operator|--
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|ptr
+condition|)
+block|{
+name|r
+operator|=
+name|imalloc
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ptr
+operator|&&
+operator|!
+name|size
+condition|)
+block|{
+name|ifree
+argument_list|(
+name|ptr
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|r
 operator|=
 name|irealloc
@@ -4766,26 +5155,27 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|_thread_kern_sig_unblock
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-return|return
-name|r
-return|;
-else|#
-directive|else
-return|return
-name|irealloc
+block|}
+name|UTRACE
 argument_list|(
 name|ptr
 argument_list|,
 name|size
+argument_list|,
+name|r
 argument_list|)
+expr_stmt|;
+name|malloc_active
+operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|r
+operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
