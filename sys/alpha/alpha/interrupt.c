@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -1794,14 +1800,18 @@ name|it_vector
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * It seems that we need to return from an interrupt back to PAL 	 * on the same CPU that received the interrupt, so pin the interrupted 	 * thread to the current CPU until we return from the interrupt. 	 */
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|ithread_schedule
 argument_list|(
 name|ithd
 argument_list|,
-literal|0
-comment|/* !cold */
+operator|!
+name|cold
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1814,6 +1824,9 @@ operator|(
 literal|"got an impossible stray interrupt"
 operator|)
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 block|}
 end_function
