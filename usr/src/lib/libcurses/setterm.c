@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.14 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -857,7 +857,7 @@ literal|'\0'
 expr_stmt|;
 name|namp
 operator|=
-literal|"ambsdadbeohchzinmimsncnsosulxbxnxtxsxx"
+literal|"ambsdaeohchzinmimsncnsosulxbxnxtxsxx"
 expr_stmt|;
 name|fp
 operator|=
