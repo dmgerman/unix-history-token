@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.11 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1856,7 +1856,8 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+operator|-
+literal|1
 operator|||
 operator|(
 operator|*
