@@ -1132,9 +1132,8 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-name|callout_init
+name|usb_callout_init
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|sc_bus
