@@ -8,7 +8,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|ydict_sccsid
 index|[]
 init|=
 literal|"@(#)ydict.c	4.2	(Berkeley)	82/11/06"
