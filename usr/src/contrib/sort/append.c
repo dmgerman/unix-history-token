@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)append.c	5.1 (Berkeley) %G%"
+literal|"@(#)append.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,16 @@ decl_stmt|,
 modifier|*
 name|prec
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|keylist
+operator|==
+literal|'\0'
+operator|&&
+name|UNIQUE
+condition|)
+return|return;
 name|wts1
 operator|=
 name|wts
