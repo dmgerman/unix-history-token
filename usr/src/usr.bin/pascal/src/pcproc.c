@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.7 %G%"
+literal|"@(#)pcproc.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1714,6 +1714,35 @@ name|typ
 condition|)
 block|{
 case|case
+name|TPTR
+case|:
+name|warning
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
+condition|)
+block|{
+name|standard
+argument_list|()
+expr_stmt|;
+block|}
+name|error
+argument_list|(
+literal|"Writing %ss to text files is non-standard"
+argument_list|,
+name|clnames
+index|[
+name|typ
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* and fall through */
+case|case
 name|TINT
 case|:
 if|if
@@ -1812,7 +1841,12 @@ expr_stmt|;
 block|}
 name|error
 argument_list|(
-literal|"Writing scalars to text files is non-standard"
+literal|"Writing %ss to text files is non-standard"
+argument_list|,
+name|clnames
+index|[
+name|typ
+index|]
 argument_list|)
 expr_stmt|;
 case|case
@@ -3272,6 +3306,9 @@ name|typ
 condition|)
 block|{
 case|case
+name|TPTR
+case|:
+case|case
 name|TCHAR
 case|:
 case|case
@@ -3439,6 +3476,13 @@ argument_list|(
 name|P2LISTOP
 argument_list|,
 name|P2INT
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"fmt3"
 argument_list|)
 expr_stmt|;
 break|break;
