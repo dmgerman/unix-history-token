@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -43,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -185,7 +185,7 @@ name|proc
 modifier|*
 name|checkstate_curproc
 index|[
-name|NCPUS
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -194,7 +194,7 @@ begin_decl_stmt
 name|int
 name|checkstate_cpustate
 index|[
-name|NCPUS
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -203,7 +203,7 @@ begin_decl_stmt
 name|u_long
 name|checkstate_pc
 index|[
-name|NCPUS
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -263,7 +263,7 @@ name|globaldata
 modifier|*
 name|cpuid_to_globaldata
 index|[
-name|NCPUS
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
