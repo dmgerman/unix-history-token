@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)names.h	4.1	(Berkeley)	82/11/06  */
+comment|/*  *	@(#)names.h	4.2	(Berkeley)	82/11/06  */
 end_comment
 
 begin_define
@@ -134,6 +134,13 @@ define|#
 directive|define
 name|NOUN
 value|'N'
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOM
+value|'m'
 end_define
 
 begin_define
@@ -281,6 +288,20 @@ define|#
 directive|define
 name|INTER
 value|'i'
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNOUN
+value|'s'
+end_define
+
+begin_define
+define|#
+directive|define
+name|MVERB
+value|'v'
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)conp.h	4.1	(Berkeley)	82/11/06  */
+comment|/*  *	@(#)conp.h	4.2	(Berkeley)	82/11/06  */
 end_comment
 
 begin_define
@@ -57,6 +57,13 @@ extern|j
 operator|,
 extern|i;
 end_extern
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsleng
+decl_stmt|;
+end_decl_stmt
 
 begin_extern
 extern|extern question;
