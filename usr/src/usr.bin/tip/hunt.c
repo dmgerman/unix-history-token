@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hunt.c	5.2 (Berkeley) %G%"
+literal|"@(#)hunt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,21 +148,14 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|mlock
+name|uu_lock
 argument_list|(
 name|uucplock
 argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|delock
-argument_list|(
-name|uucplock
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 comment|/* 		 * Straight through call units, such as the BIZCOMP, 		 * VADIC and the DF, must indicate they're hardwired in 		 *  order to get an open file descriptor placed in FD. 		 * Otherwise, as for a DN-11, the open will have to 		 *  be done in the "open" routine. 		 */
 if|if
 condition|(
@@ -257,7 +250,10 @@ name|cp
 operator|)
 return|;
 block|}
-name|delock
+operator|(
+name|void
+operator|)
+name|uu_unlock
 argument_list|(
 name|uucplock
 argument_list|)

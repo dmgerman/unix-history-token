@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cu.c	5.5 (Berkeley) %G%"
+literal|"@(#)cu.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +428,10 @@ argument_list|(
 literal|"link down\n"
 argument_list|)
 expr_stmt|;
-name|delock
+operator|(
+name|void
+operator|)
+name|uu_unlock
 argument_list|(
 name|uucplock
 argument_list|)
@@ -496,7 +499,10 @@ expr_stmt|;
 name|daemon_uid
 argument_list|()
 expr_stmt|;
-name|delock
+operator|(
+name|void
+operator|)
+name|uu_unlock
 argument_list|(
 name|uucplock
 argument_list|)
