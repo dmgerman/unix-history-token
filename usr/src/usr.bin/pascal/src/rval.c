@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.16 %G%"
+literal|"@(#)rval.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4327,6 +4327,27 @@ name|NIL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|p
+operator|!=
+name|nl
+operator|+
+name|TNIL
+operator|&&
+name|p1
+operator|!=
+name|nl
+operator|+
+name|TNIL
+operator|&&
+name|p
+operator|!=
+name|p1
+condition|)
+goto|goto
+name|nonident
+goto|;
 break|break;
 case|case
 name|TSTR
