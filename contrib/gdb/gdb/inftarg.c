@@ -2011,10 +2011,10 @@ name|TARGET_OBJECT_DIRTY
 case|:
 ifndef|#
 directive|ifndef
-name|TARGET_XFER_DIRTY
+name|NATIVE_XFER_DIRTY
 define|#
 directive|define
-name|TARGET_XFER_DIRTY
+name|NATIVE_XFER_DIRTY
 parameter_list|(
 name|OPS
 parameter_list|,
@@ -2034,7 +2034,7 @@ value|(-1)
 endif|#
 directive|endif
 return|return
-name|TARGET_XFER_DIRTY
+name|NATIVE_XFER_DIRTY
 argument_list|(
 name|ops
 argument_list|,

@@ -65,7 +65,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|TARGET_XFER_DIRTY
+name|NATIVE_XFER_DIRTY
 value|ia64_fbsd_xfer_dirty
 end_define
 
