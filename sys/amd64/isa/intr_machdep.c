@@ -146,18 +146,18 @@ end_if
 begin_include
 include|#
 directive|include
-file|<machine/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/smptests.h>
 end_include
 
 begin_comment
 comment|/** FAST_HI */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
 
 begin_include
 include|#
