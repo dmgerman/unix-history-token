@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4742,6 +4742,26 @@ goto|goto
 name|gotit
 goto|;
 block|}
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_nrpos
+operator|<=
+literal|1
+operator|||
+name|fs
+operator|->
+name|fs_cpc
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Block layout information is not available. 		 * Leaving bpref unchanged means we take the 		 * next available free block following the one  		 * we just allocated. Hopefully this will at 		 * least hit a track cache on drives of unknown 		 * geometry (e.g. SCSI). 		 */
+goto|goto
+name|norot
+goto|;
+block|}
 comment|/* 	 * check for a block available on the same cylinder 	 */
 name|cylno
 operator|=
@@ -4767,20 +4787,6 @@ condition|)
 goto|goto
 name|norot
 goto|;
-if|if
-condition|(
-name|fs
-operator|->
-name|fs_cpc
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * Block layout information is not available. 		 * Leaving bpref unchanged means we take the 		 * next available free block following the one  		 * we just allocated. Hopefully this will at 		 * least hit a track cache on drives of unknown 		 * geometry (e.g. SCSI). 		 */
-goto|goto
-name|norot
-goto|;
-block|}
 comment|/* 	 * check the summary information to see if a block is  	 * available in the requested cylinder starting at the 	 * requested rotational position and proceeding around. 	 */
 name|cylbp
 operator|=
