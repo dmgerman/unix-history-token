@@ -2277,7 +2277,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tbeg: cyl %d/ sector %d/ head %d;\n\tend: cyl %d/ sector %d/ head %d\n"
+literal|"\tbeg: cyl %d/ head %d/ sector %d;\n\tend: cyl %d/ head %d/ sector %d\n"
 argument_list|,
 name|DPCYL
 argument_list|(
@@ -2290,16 +2290,16 @@ operator|->
 name|dp_ssect
 argument_list|)
 argument_list|,
+name|partp
+operator|->
+name|dp_shd
+argument_list|,
 name|DPSECT
 argument_list|(
 name|partp
 operator|->
 name|dp_ssect
 argument_list|)
-argument_list|,
-name|partp
-operator|->
-name|dp_shd
 argument_list|,
 name|DPCYL
 argument_list|(
@@ -2312,16 +2312,16 @@ operator|->
 name|dp_esect
 argument_list|)
 argument_list|,
+name|partp
+operator|->
+name|dp_ehd
+argument_list|,
 name|DPSECT
 argument_list|(
 name|partp
 operator|->
 name|dp_esect
 argument_list|)
-argument_list|,
-name|partp
-operator|->
-name|dp_ehd
 argument_list|)
 expr_stmt|;
 block|}
@@ -2859,18 +2859,18 @@ argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"beginning sector"
+literal|"beginning head"
 argument_list|,
-name|tsec
+name|thd
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"beginning head"
+literal|"beginning sector"
 argument_list|,
-name|thd
+name|tsec
 argument_list|,
 name|tmp
 argument_list|)
@@ -2940,18 +2940,18 @@ argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"ending sector"
+literal|"ending head"
 argument_list|,
-name|tsec
+name|thd
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
 name|Decimal
 argument_list|(
-literal|"ending head"
+literal|"ending sector"
 argument_list|,
-name|thd
+name|tsec
 argument_list|,
 name|tmp
 argument_list|)
