@@ -1955,9 +1955,16 @@ operator|&
 name|KB_CONF_FAIL_IF_NO_KBD
 operator|)
 condition|)
+block|{
+name|kbd_unregister
+argument_list|(
+name|kbd
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|atkbd_ioctl
 argument_list|(
 name|kbd
