@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|ELINK_ID_PORT
-value|0x110
+value|0x100
 end_define
 
 begin_endif
@@ -52,6 +52,13 @@ define|#
 directive|define
 name|ELINK_509_POLY
 value|0xcf
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLINK_619_POLY
+value|0x63
 end_define
 
 begin_function_decl

@@ -10,7 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -59,6 +77,21 @@ name|ELINK_RESET
 argument_list|)
 expr_stmt|;
 block|}
+name|outb
+argument_list|(
+name|ELINK_ID_PORT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|ELINK_ID_PORT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -129,6 +162,48 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|elink_mod
+init|=
+block|{
+literal|"elink"
+block|,
+comment|/* module name */
+name|NULL
+block|,
+comment|/* event handler */
+literal|0
+comment|/* extra data */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|elink
+argument_list|,
+name|elink_mod
+argument_list|,
+name|SI_SUB_PSEUDO
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|elink
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
