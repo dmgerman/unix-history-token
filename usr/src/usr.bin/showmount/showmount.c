@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)showmount.c	8.1 (Berkeley) %G%"
+literal|"@(#)showmount.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
