@@ -5079,18 +5079,6 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"rl%d: out of mbufs, tried to "
-literal|"copy %d bytes\n"
-argument_list|,
-name|sc
-operator|->
-name|rl_unit
-argument_list|,
-name|wrap
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5151,18 +5139,6 @@ name|ifp
 operator|->
 name|if_ierrors
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"rl%d: out of mbufs, tried to "
-literal|"copy %d bytes\n"
-argument_list|,
-name|sc
-operator|->
-name|rl_unit
-argument_list|,
-name|total_len
-argument_list|)
 expr_stmt|;
 block|}
 name|cur_rx
