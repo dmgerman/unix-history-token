@@ -14,24 +14,77 @@ name|AUTOHUNT
 end_define
 
 begin_comment
-comment|/*	FULLCONFIG	Allows up to four host interface boards for a 			total of 16 drives.  If disabled, only a single 			host interface (of any type) is allowed.  The 			additional driver size is insignificant. 			Leaving FULLCONFIG enabled is the recommended setting. */
+comment|/*	NUMCTRLRS	Configures support for between one and four 			host interfaces, for up to 16 drives. 			The number of entries in the kernel config 			file is used by default, but this may be changed 			to a specific value if desired.  			Leaving NUMCTRLRS based on NMATCD is the 			recommended setting. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NMATCD
+operator|>=
+literal|4
+end_if
+
+begin_define
+define|#
+directive|define
+name|NUMCTRLRS
+value|4
+end_define
+
+begin_comment
+comment|/*Limit driver to four host interfaces*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*NMATCD*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FULLCONFIG
+name|NUMCTRLRS
+value|NMATCD
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*NMATCD*/
+end_comment
 
 begin_comment
 comment|/*	FULLDRIVER	If not set, the audio, non-data functions and 			some error recovery functions are eliminated from 			the compiled driver.  The resulting driver will be 			smaller and may help a kernel fit on a boot floppy. 			Leaving FULLDRIVER enabled is the recommended setting. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTMFS
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|FULLDRIVER
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*BOOTMFS*/
+end_comment
 
 begin_comment
 comment|/*	RESETONBOOT	causes the driver to reset the drive(s) to be 			reset during probing.  This causes any audio 			playback to be aborted and the drives will close 			their trays if they are open. 			Leaving RESETONBOOT enabled is the recommended setting. */
@@ -93,7 +146,7 @@ comment|/*#define KRYTEN*/
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- 	This structure contains the hints for where we should look for the 	host adapter.  If you want to change where we search or reduce the 	places we search to avoid confusing some other device, either 	specify explicit addresses in the kernel config file (preferred) 	or change this array.  	If the kernel config file has multiple ? entries, the probe routines 	will use this table multiple times and will eliminate each failed 	entry that probe tries.  	WARNING:  The number of controller entries for this driver in config 	must be less than or equal to the number of hints if hints are used.  	If you add entries to the table, add them immediately before 	the -1 end-of-table marker.  The values already present are 	the ones found on standard SoundBlaster 16 and standalone cards. ---------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- 	This structure contains the hints for where we should look for the 	host adapter.  If you want to change where we search or reduce the 	places we search to avoid confusing some other device, either 	specify explicit addresses in the kernel config file (preferred) 	or change this array.  	If the kernel config file has multiple ? entries, the probe routines 	will use this table multiple times and will eliminate each failed 	entry that probe tries.  	WARNING:  The number of controller entries for this driver in config 	must be less than or equal to the number of hints if hints are used.  	If you add entries to the table, add them immediately before 	the -1 end-of-table marker.  The values already present are 	the ones used by Creative Labs boards and those of a few 	other vendors.  	Each additional entry increases the boot time by four seconds, 	and can increase the chance of accessing some other device. 	Therefore, the list should be kept to a minimum.  Once the 	devices have been correctly located, the kernel should be 	configured so that it looks only at the correct location from 	that point on.  	Be sure to search devices located below 0x3ff BEFORE scanning 	higher locations.  Some boards don't decode all I/O address lines, 	so 0x230 and 0x630 appear identical. ---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -110,14 +163,48 @@ init|=
 block|{
 literal|0x230
 block|,
+comment|/*SB Pro& SB16*/
 literal|0x240
 block|,
-comment|/*Ports SB audio boards can use*/
+comment|/*SB Pro& SB16*/
 literal|0x250
 block|,
+comment|/*Creative omniCD standalone boards*/
 literal|0x260
 block|,
-comment|/*Ports standalone CD/IF board can*/
+comment|/*Creative omniCD standalone boards*/
+literal|0x340
+block|,
+comment|/*Laser Mate*/
+literal|0x360
+block|,
+comment|/*Laser Mate*/
+literal|0x630
+block|,
+comment|/*IBM*/
+if|#
+directive|if
+literal|0
+comment|/*	These locations are alternate settings for LaserMate and IBM 	boards, but they usually conflict with network and SCSI cards. 	I recommend against probing these randomly. */
+block|0x310,
+comment|/*Laser Mate*/
+block|0x320,
+comment|/*Laser Mate*/
+block|0x330,
+comment|/*Laser Mate*/
+block|0x350,
+comment|/*Laser Mate*/
+block|0x370,
+comment|/*Laser Mate*/
+block|0x650,
+comment|/*IBM*/
+block|0x670,
+comment|/*IBM*/
+block|0x690,
+comment|/*IBM*/
+endif|#
+directive|endif
+comment|/*0*/
 operator|-
 literal|1
 block|}
