@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1598,6 +1598,8 @@ operator|->
 name|p_pgrp
 argument_list|,
 name|SIGTTOU
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2371,6 +2373,29 @@ name|t
 operator|->
 name|c_oflag
 expr_stmt|;
+comment|/* 		 * Make the EXTPROC bit read only. 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_lflag
+operator|&
+name|EXTPROC
+condition|)
+name|t
+operator|->
+name|c_lflag
+operator||=
+name|EXTPROC
+expr_stmt|;
+else|else
+name|t
+operator|->
+name|c_lflag
+operator|&=
+operator|~
+name|EXTPROC
+expr_stmt|;
 name|tp
 operator|->
 name|t_lflag
@@ -2577,6 +2602,8 @@ operator|->
 name|t_pgrp
 argument_list|,
 name|SIGWINCH
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4193,6 +4220,19 @@ name|c
 operator|&=
 literal|0177
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_lflag
+operator|&
+name|EXTPROC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* 	 * Check for literal nexting very first 	 */
 if|if
 condition|(
@@ -4466,6 +4506,8 @@ operator|->
 name|t_pgrp
 argument_list|,
 name|SIGTSTP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4629,6 +4671,7 @@ name|c
 operator|=
 literal|'\r'
 expr_stmt|;
+block|}
 comment|/* 	 * Non canonical mode, don't process line editing 	 * characters; check high water mark for wakeup. 	 *  	 *  	 */
 if|if
 condition|(
@@ -4730,6 +4773,19 @@ goto|goto
 name|endcase
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_lflag
+operator|&
+name|EXTPROC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* 	 * From here on down canonical mode character 	 * processing takes place. 	 */
 comment|/*  	 * Oldstyle quoting of erase, kill, and eof chars. 	 * 	 * Historically is '\' , but can be changed (read: disabled) 	 * with the VQUOTE subscript. 	 */
 comment|/* 	 * erase (^H / ^?) 	 */
@@ -4875,13 +4931,7 @@ goto|goto
 name|endcase
 goto|;
 block|}
-end_block
-
-begin_comment
 comment|/* 	 * word erase (^W) 	 */
-end_comment
-
-begin_expr_stmt
 name|c
 operator|=
 name|unputc
@@ -4892,11 +4942,12 @@ operator|->
 name|t_rawq
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-begin_expr_stmt
-unit|} while
-operator|(
+begin_while
+while|while
+condition|(
 name|c
 operator|!=
 literal|' '
@@ -4904,9 +4955,9 @@ operator|&&
 name|c
 operator|!=
 literal|'\t'
-operator|)
-expr_stmt|;
-end_expr_stmt
+condition|)
+empty_stmt|;
+end_while
 
 begin_expr_stmt
 operator|(
@@ -5010,6 +5061,8 @@ operator|->
 name|t_pgrp
 argument_list|,
 name|SIGINFO
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -5034,12 +5087,13 @@ block|}
 end_if
 
 begin_comment
+unit|}
 comment|/* 	 * Check for input buffer overflow 	 */
 end_comment
 
-begin_if
-if|if
-condition|(
+begin_expr_stmt
+unit|if
+operator|(
 name|tp
 operator|->
 name|t_rawq
@@ -5053,7 +5107,7 @@ operator|.
 name|c_cc
 operator|>=
 name|TTYHOG
-condition|)
+operator|)
 block|{
 if|if
 condition|(
@@ -5089,6 +5143,9 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 name|ttyflush
 argument_list|(
@@ -5099,19 +5156,22 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+end_else
+
+begin_goto
 goto|goto
 name|endcase
 goto|;
-block|}
-end_if
+end_goto
 
 begin_comment
+unit|}
 comment|/* 	 * Put data char in q for user and 	 * wakeup on seeing a line delimiter. 	 */
 end_comment
 
-begin_if
-if|if
-condition|(
+begin_expr_stmt
+unit|if
+operator|(
 name|putc
 argument_list|(
 name|c
@@ -5123,7 +5183,7 @@ name|t_rawq
 argument_list|)
 operator|>=
 literal|0
-condition|)
+operator|)
 block|{
 if|if
 condition|(
@@ -5158,6 +5218,9 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_elseif
 elseif|else
 if|if
 condition|(
@@ -5176,6 +5239,9 @@ name|tp
 operator|->
 name|t_col
 expr_stmt|;
+end_elseif
+
+begin_if
 if|if
 condition|(
 name|CCEQ
@@ -5200,7 +5266,13 @@ name|t_state
 operator||=
 name|TS_QUOT
 expr_stmt|;
+end_if
+
+begin_comment
 comment|/* '\' escape */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|tp
@@ -5230,12 +5302,18 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|i
 operator|=
 name|tp
 operator|->
 name|t_col
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ttyecho
 argument_list|(
 name|c
@@ -5243,6 +5321,9 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|CCEQ
@@ -5296,15 +5377,10 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-block|}
 end_if
 
-begin_label
-name|endcase
-label|:
-end_label
-
 begin_comment
+unit|} endcase:
 comment|/* 	 * IXANY means allow any character to restart output. 	 */
 end_comment
 
@@ -5474,7 +5550,7 @@ name|c
 operator|&=
 literal|0377
 expr_stmt|;
-comment|/* 	 * Turn tabs to spaces as required 	 */
+comment|/* 	 * Turn tabs to spaces as required 	 * 	 * Special case if we have external processing, we don't 	 * do the tab expansion because we'll probably get it 	 * wrong.  If tab expansion needs to be done, let it 	 * happen externally. 	 */
 if|if
 condition|(
 name|c
@@ -6197,6 +6273,8 @@ operator|->
 name|p_pgrp
 argument_list|,
 name|SIGTTIN
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -6416,6 +6494,8 @@ operator|->
 name|t_pgrp
 argument_list|,
 name|SIGTSTP
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -7016,6 +7096,8 @@ operator|->
 name|p_pgrp
 argument_list|,
 name|SIGTTOU
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -8481,6 +8563,8 @@ operator|->
 name|t_pgrp
 argument_list|,
 name|SIGIO
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|wakeup
