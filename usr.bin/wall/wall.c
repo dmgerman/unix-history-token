@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wall.c,v 1.3.2.3 1998/01/29 12:36:07 ache Exp $"
+literal|"$Id: wall.c,v 1.3.2.4 1998/12/13 16:26:18 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|printf
+name|snprintf
 argument_list|(
 name|tmpname
 argument_list|,
