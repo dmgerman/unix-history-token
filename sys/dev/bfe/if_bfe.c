@@ -6786,6 +6786,10 @@ name|NULL
 decl_stmt|;
 name|int
 name|idx
+decl_stmt|,
+name|queued
+init|=
+literal|0
 decl_stmt|;
 name|sc
 operator|=
@@ -6907,6 +6911,9 @@ name|IFF_OACTIVE
 expr_stmt|;
 break|break;
 block|}
+name|queued
+operator|++
+expr_stmt|;
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
 name|BPF_MTAP
 argument_list|(
@@ -6916,6 +6923,11 @@ name|m_head
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|queued
+condition|)
+block|{
 name|sc
 operator|->
 name|bfe_tx_prod
@@ -6953,13 +6965,14 @@ name|bfe_desc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
+comment|/* 		 * Set a timeout in case the chip goes out to lunch. 		 */
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|5
 expr_stmt|;
+block|}
 name|BFE_UNLOCK
 argument_list|(
 name|sc
