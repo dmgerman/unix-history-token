@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tipout.c	4.9 (Berkeley) %G%"
+literal|"@(#)tipout.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,16 +467,9 @@ operator|==
 name|EIO
 condition|)
 block|{
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s) - 1))
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGTERM
 argument_list|)
@@ -492,7 +485,7 @@ block|}
 define|#
 directive|define
 name|ALLSIGS
-value|mask(SIGEMT)|mask(SIGTERM)|mask(SIGIOT)|mask(SIGSYS)
+value|sigmask(SIGEMT)|sigmask(SIGTERM)|sigmask(SIGIOT)|sigmask(SIGSYS)
 name|omask
 operator|=
 name|sigblock
