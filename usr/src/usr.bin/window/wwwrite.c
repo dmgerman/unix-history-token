@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.14 83/12/02"
+literal|"@(#)wwwrite.c	3.15 83/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -1244,13 +1244,16 @@ name|ww_w
 operator|.
 name|t
 operator|+
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 operator|*
 name|p
 operator|++
 operator|-
 literal|' '
-operator|)
+argument_list|)
 operator|%
 name|w
 operator|->
@@ -1280,13 +1283,16 @@ name|ww_w
 operator|.
 name|l
 operator|+
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 operator|*
 name|p
 operator|++
 operator|-
 literal|' '
-operator|)
+argument_list|)
 operator|%
 name|w
 operator|->
