@@ -209,21 +209,21 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|msdos
+name|MSDOS
 argument_list|)
 comment|/* 4A */
 literal|'\\'
 block|,
 else|#
 directive|else
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 comment|/* 4A */
 literal|'\233'
 block|,
 comment|/* PC cent sign */
 endif|#
 directive|endif
-comment|/* !defined(msdos) */
+comment|/* !defined(MSDOS) */
 comment|/* 4B */
 literal|'.'
 block|,
