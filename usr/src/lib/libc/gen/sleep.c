@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	5.3 (Berkeley) %G%"
+literal|"@(#)sleep.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -43,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_define
@@ -69,24 +72,24 @@ end_decl_stmt
 begin_macro
 name|sleep
 argument_list|(
-argument|n
+argument|seconds
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|unsigned
-name|n
+name|int
+name|seconds
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|sleepx
-parameter_list|()
-function_decl|;
-name|long
-name|omask
+specifier|register
+name|struct
+name|itimerval
+modifier|*
+name|itp
 decl_stmt|;
 name|struct
 name|itimerval
@@ -94,26 +97,28 @@ name|itv
 decl_stmt|,
 name|oitv
 decl_stmt|;
-specifier|register
-name|struct
-name|itimerval
-modifier|*
-name|itp
-init|=
-operator|&
-name|itv
-decl_stmt|;
 name|struct
 name|sigvec
 name|vec
 decl_stmt|,
 name|ovec
 decl_stmt|;
+name|long
+name|omask
+decl_stmt|;
+name|void
+name|sleephandler
+parameter_list|()
+function_decl|;
+name|itp
+operator|=
+operator|&
+name|itv
+expr_stmt|;
 if|if
 condition|(
-name|n
-operator|==
-literal|0
+operator|!
+name|seconds
 condition|)
 return|return;
 name|timerclear
@@ -153,7 +158,7 @@ name|it_value
 operator|.
 name|tv_sec
 operator|=
-name|n
+name|seconds
 expr_stmt|;
 if|if
 condition|(
@@ -205,7 +210,7 @@ name|oitv
 operator|.
 name|it_value
 expr_stmt|;
-comment|/* 			 * This is a hack, but we must have time to 			 * return from the setitimer after the alarm 			 * or else it'll be restarted.  And, anyway, 			 * sleep never did anything more than this before. 			 */
+comment|/* 			 * This is a hack, but we must have time to return 			 * from the setitimer after the alarm or else it'll 			 * be restarted.  And, anyway, sleep never did 			 * anything more than this before. 			 */
 name|oitv
 operator|.
 name|it_value
@@ -228,7 +233,7 @@ name|setvec
 argument_list|(
 name|vec
 argument_list|,
-name|sleepx
+name|sleephandler
 argument_list|)
 expr_stmt|;
 operator|(
@@ -339,16 +344,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|sleepx
-argument_list|()
+name|void
+name|sleephandler
+parameter_list|()
 block|{
 name|ringring
 operator|=
 literal|1
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
