@@ -1061,13 +1061,13 @@ name|ucred
 modifier|*
 name|active_cred
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-name|int
-name|flags
 decl_stmt|;
 block|{
 return|return
