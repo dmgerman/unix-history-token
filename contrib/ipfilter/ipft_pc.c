@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -184,7 +184,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_pc.c,v 2.2 2000/03/13 22:10:24 darrenr Exp $"
+literal|"@(#)$Id: ipft_pc.c,v 2.2.2.2 2001/06/26 10:43:18 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|DLT_MAX
-value|10
+value|14
 end_define
 
 begin_decl_stmt
@@ -333,7 +333,34 @@ literal|0
 block|,
 literal|0
 block|}
+block|,
 comment|/* DLT_FDDI */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* DLT_ATMRFC1483 */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* DLT_LOOP */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+comment|/* DLT_ENC */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -701,7 +728,7 @@ operator|||
 name|ph
 operator|.
 name|pc_type
-operator|>
+operator|>=
 name|DLT_MAX
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: kmem.h,v 2.2 2000/03/13 22:10:25 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * $Id: kmem.h,v 2.2.2.2 2001/06/26 10:43:19 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -69,7 +69,8 @@ name|openkmem
 name|__P
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

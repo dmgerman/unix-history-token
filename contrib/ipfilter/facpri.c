@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -84,6 +84,23 @@ directive|include
 file|"facpri.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -101,7 +118,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: facpri.c,v 1.3 2000/03/13 22:10:18 darrenr Exp $"
+literal|"@(#)$Id: facpri.c,v 1.3.2.4 2001/07/15 22:06:12 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,6 +286,17 @@ block|{
 literal|"cron2"
 block|,
 name|LOG_CRON2
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LOG_SECURITY
+block|{
+literal|"security"
+block|,
+name|LOG_SECURITY
 block|}
 block|,
 endif|#
