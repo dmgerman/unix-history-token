@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.13 (Berkeley) %G%"
+literal|"@(#)util.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1153,6 +1153,10 @@ condition|)
 return|return;
 if|if
 condition|(
+name|p
+operator|>
+name|line
+operator|&&
 name|p
 index|[
 operator|-

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.23 (Berkeley) %G%"
+literal|"@(#)main.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2529,7 +2529,6 @@ operator|*
 name|p
 argument_list|)
 condition|;
-operator|*
 name|p
 operator|++
 control|)
