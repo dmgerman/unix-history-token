@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_lookup.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../ufs/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../ufs/inode.h"
 end_include
 
@@ -64,22 +70,20 @@ begin_comment
 comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|ufs_lookup
 argument_list|(
-argument|vp
+name|vdp
 argument_list|,
-argument|ndp
+name|ndp
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+specifier|register
+expr|struct
 name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|vdp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|register
@@ -92,13 +96,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|vdp
-decl_stmt|;
-comment|/* vnode copy of dp */
 specifier|register
 name|struct
 name|inode
@@ -208,7 +205,7 @@ name|ndp
 operator|->
 name|ni_dvp
 operator|=
-name|vp
+name|vdp
 expr_stmt|;
 name|ndp
 operator|->
@@ -220,7 +217,7 @@ name|dp
 operator|=
 name|VTOI
 argument_list|(
-name|vp
+name|vdp
 argument_list|)
 expr_stmt|;
 name|fs
@@ -279,11 +276,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|iaccess
+name|ufs_access
 argument_list|(
-name|dp
+name|vdp
 argument_list|,
-name|IEXEC
+name|VEXEC
 argument_list|,
 name|ndp
 operator|->
@@ -323,7 +320,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|vp
+name|vdp
 operator|==
 name|ndp
 operator|->
@@ -452,6 +449,13 @@ expr_stmt|;
 name|dp
 operator|=
 name|pdp
+expr_stmt|;
+name|vdp
+operator|=
+name|ITOV
+argument_list|(
+name|dp
+argument_list|)
 expr_stmt|;
 name|ndp
 operator|->
@@ -1087,11 +1091,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|iaccess
+name|ufs_access
 argument_list|(
-name|dp
+name|vdp
 argument_list|,
-name|IWRITE
+name|VWRITE
 argument_list|,
 name|ndp
 operator|->
@@ -1322,11 +1326,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|iaccess
+name|ufs_access
 argument_list|(
-name|dp
+name|vdp
 argument_list|,
-name|IWRITE
+name|VWRITE
 argument_list|,
 name|ndp
 operator|->
@@ -1372,13 +1376,6 @@ name|ni_offset
 operator|-
 name|prevoff
 expr_stmt|;
-name|vdp
-operator|=
-name|ITOV
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -1397,9 +1394,18 @@ argument_list|(
 name|vdp
 argument_list|)
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|vdp
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|error
@@ -1423,14 +1429,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|vdp
-operator|=
-name|ITOV
-argument_list|(
-name|tdp
-argument_list|)
-expr_stmt|;
-comment|/* 			 * If directory is "sticky", then user must own 			 * the directory, or the file in it, else he 			 * may not delete it (unless he's root). This 			 * implements append-only directories. 			 */
+comment|/* 		 * If directory is "sticky", then user must own 		 * the directory, or the file in it, else she 		 * may not delete it (unless she's root). This 		 * implements append-only directories. 		 */
 if|if
 condition|(
 operator|(
@@ -1481,6 +1480,15 @@ name|EPERM
 operator|)
 return|;
 block|}
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|ITOV
+argument_list|(
+name|tdp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1490,13 +1498,6 @@ name|IUNLOCK
 argument_list|(
 name|dp
 argument_list|)
-expr_stmt|;
-block|}
-name|ndp
-operator|->
-name|ni_vp
-operator|=
-name|vdp
 expr_stmt|;
 return|return
 operator|(
@@ -1525,11 +1526,11 @@ if|if
 condition|(
 name|error
 operator|=
-name|iaccess
+name|ufs_access
 argument_list|(
-name|dp
+name|vdp
 argument_list|,
-name|IWRITE
+name|VWRITE
 argument_list|,
 name|ndp
 operator|->
@@ -1695,13 +1696,6 @@ operator|.
 name|d_ino
 condition|)
 block|{
-name|vdp
-operator|=
-name|ITOV
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
 name|VREF
 argument_list|(
 name|vdp
@@ -2508,6 +2502,9 @@ name|ICHG
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|error
+operator|&&
 name|ndp
 operator|->
 name|ni_endoff
