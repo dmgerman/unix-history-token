@@ -118,6 +118,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * We need to retain binary compatibility for a while.  So pretend  * that _lock is part of FILE * even though it is dereferenced off  * _extra now.  When we stop encoding the size of FILE into binaries  * this can be changed in stdio.h.  This will reduce the amount of  * code that has to change in the future (just remove this comment  * and #define).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_lock
+value|_extra->_mtlock
+end_define
+
+begin_comment
 comment|/*  * Allocate and initialize a file lock.  */
 end_comment
 

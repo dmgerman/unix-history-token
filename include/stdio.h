@@ -117,6 +117,30 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/* hold a buncha junk that would grow the ABI */
+end_comment
+
+begin_struct
+struct|struct
+name|__sFILEX
+block|{
+name|struct
+name|__file_lock
+modifier|*
+name|_mtlock
+decl_stmt|;
+comment|/* used for MT-safety */
+name|unsigned
+name|char
+modifier|*
+name|_up
+decl_stmt|;
+comment|/* saved _p when _p is doing ungetc data */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * stdio state variables.  *  * The following always hold:  *  *	if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),  *		_lbfsize is -_bf._size, else _lbfsize is 0  *	if _flags&__SRD, _w is 0  *	if _flags&__SWR, _r is 0  *  * This ensures that the getc and putc macros (or inline functions) never  * try to write or read from a file that is in `read' or `write' mode.  * (Moreover, they can, and do, automatically switch from read mode to  * write mode, and back, on "r+" and "w+" files.)  *  * _lbfsize is used only to make the inline line-buffered output stream  * code as compact as possible.  *  * _ub, _up, and _ur are used when ungetc() pushes back more characters  * than fit in the current _bf, or when ungetc() pushes back a character  * that does not match the previous one in _bf.  When this happens,  * _ub._base becomes non-nil (i.e., a stream has ungetc() data iff  * _ub._base!=NULL) and _up and _ur save the current values of _p and _r.  *  * NB: see WARNING above before changing the layout of this structure!  */
 end_comment
 
@@ -231,12 +255,12 @@ name|__sbuf
 name|_ub
 decl_stmt|;
 comment|/* ungetc buffer */
-name|unsigned
-name|char
+name|struct
+name|__sFILEX
 modifier|*
-name|_up
+name|_extra
 decl_stmt|;
-comment|/* saved _p when _p is doing ungetc data */
+comment|/* additions to FILE to not break ABI */
 name|int
 name|_ur
 decl_stmt|;
@@ -273,12 +297,6 @@ name|fpos_t
 name|_offset
 decl_stmt|;
 comment|/* current lseek offset (see WARNING) */
-name|struct
-name|__file_lock
-modifier|*
-name|_lock
-decl_stmt|;
-comment|/* used for MT-safety */
 block|}
 name|FILE
 typedef|;
@@ -288,21 +306,8 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
 name|FILE
-name|__stdin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-name|__stdout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-name|__stderr
+name|__sF
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -478,15 +483,15 @@ directive|endif
 define|#
 directive|define
 name|stdin
-value|(&__stdin)
+value|(&__sF[0])
 define|#
 directive|define
 name|stdout
-value|(&__stdout)
+value|(&__sF[1])
 define|#
 directive|define
 name|stderr
-value|(&__stderr)
+value|(&__sF[2])
 comment|/*  * Functions defined in ANSI C standard.  */
 name|__BEGIN_DECLS
 name|void

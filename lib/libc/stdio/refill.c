@@ -340,6 +340,8 @@ name|_p
 operator|=
 name|fp
 operator|->
+name|_extra
+operator|->
 name|_up
 expr_stmt|;
 return|return
