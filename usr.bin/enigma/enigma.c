@@ -3,31 +3,19 @@ begin_comment
 comment|/*  *	"enigma.c" is in file cbw.tar from  *	anonymous FTP host watmsg.waterloo.edu: pub/crypt/cbw.tar.Z  *  *	A one-rotor machine designed along the lines of Enigma  *	but considerably trivialized.  *  *	A public-domain replacement for the UNIX "crypt" command.  *  *	Upgraded to function properly on 64-bit machines.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

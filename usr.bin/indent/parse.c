@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char sccsid[] = "@(#)parse.c	8.1 (Berkeley) 6/6/93"; static const char rcsid[] =   "$FreeBSD$";
+unit|static char sccsid[] = "@(#)parse.c	8.1 (Berkeley) 6/6/93";
 endif|#
 directive|endif
 end_endif
@@ -29,6 +29,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsvfs - list loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $FreeBSD$  */
+comment|/*  * lsvfs - list loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
