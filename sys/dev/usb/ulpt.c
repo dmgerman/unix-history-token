@@ -1983,6 +1983,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * There was a mistake in the USB printer 1.0 spec that gave the 	 * request type as UT_WRITE_CLASS_OTHER; it should have been 	 * UT_WRITE_CLASS_INTERFACE.  Many printers use the old one, 	 * so we try both. 	 */
+name|req
+operator|.
+name|bmRequestType
+operator|=
+name|UT_WRITE_CLASS_OTHER
+expr_stmt|;
 if|if
 condition|(
 name|usbd_do_request
