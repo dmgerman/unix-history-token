@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	5.1 (Berkeley) %G%"
+literal|"@(#)update.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -911,6 +911,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -1009,6 +1012,9 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bp
@@ -1072,6 +1078,9 @@ name|altitude
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bp
@@ -1116,6 +1125,9 @@ name|pp
 operator|->
 name|dir
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bp
@@ -1145,6 +1157,9 @@ name|pp
 operator|->
 name|delayd
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bp
