@@ -954,13 +954,10 @@ specifier|static
 name|int
 name|ParseFindKeyword
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* String to find */
+parameter_list|)
 block|{
 name|int
 name|start
@@ -1199,20 +1196,14 @@ specifier|static
 name|int
 name|ParseLinkSrc
 parameter_list|(
+name|void
+modifier|*
 name|pgnp
 parameter_list|,
+name|void
+modifier|*
 name|cgnp
 parameter_list|)
-name|void
-modifier|*
-name|pgnp
-decl_stmt|;
-comment|/* The parent node */
-name|void
-modifier|*
-name|cgnp
-decl_stmt|;
-comment|/* The child node */
 block|{
 name|GNode
 modifier|*
@@ -1316,20 +1307,14 @@ specifier|static
 name|int
 name|ParseDoOp
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|opp
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* The node to which the operator is to be 				 * applied */
-name|void
-modifier|*
-name|opp
-decl_stmt|;
-comment|/* The operator to apply */
 block|{
 name|GNode
 modifier|*
@@ -1534,18 +1519,14 @@ specifier|static
 name|int
 name|ParseAddDep
 parameter_list|(
+name|void
+modifier|*
 name|pp
 parameter_list|,
+name|void
+modifier|*
 name|sp
 parameter_list|)
-name|void
-modifier|*
-name|pp
-decl_stmt|;
-name|void
-modifier|*
-name|sp
-decl_stmt|;
 block|{
 name|GNode
 modifier|*
@@ -1631,25 +1612,16 @@ specifier|static
 name|void
 name|ParseDoSrc
 parameter_list|(
-name|tOp
-parameter_list|,
-name|src
-parameter_list|,
-name|allsrc
-parameter_list|)
 name|int
 name|tOp
-decl_stmt|;
-comment|/* operator (if any) from special targets */
+parameter_list|,
 name|char
 modifier|*
 name|src
-decl_stmt|;
-comment|/* name of the source to handle */
+parameter_list|,
 name|Lst
 name|allsrc
-decl_stmt|;
-comment|/* List of all sources to wait for */
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -2017,19 +1989,15 @@ specifier|static
 name|int
 name|ParseFindMain
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* Node to examine */
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|GNode
 modifier|*
@@ -2073,10 +2041,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|1
-else|:
 literal|1
 operator|)
 return|;
@@ -2085,10 +2049,6 @@ else|else
 block|{
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -2105,18 +2065,14 @@ specifier|static
 name|int
 name|ParseAddDir
 parameter_list|(
+name|void
+modifier|*
 name|path
 parameter_list|,
+name|void
+modifier|*
 name|name
 parameter_list|)
-name|void
-modifier|*
-name|path
-decl_stmt|;
-name|void
-modifier|*
-name|name
-decl_stmt|;
 block|{
 name|Dir_AddDir
 argument_list|(
@@ -2149,18 +2105,15 @@ specifier|static
 name|int
 name|ParseClearPath
 parameter_list|(
+name|void
+modifier|*
 name|path
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|path
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|Dir_ClearPath
 argument_list|(
@@ -2172,10 +2125,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -2191,13 +2140,10 @@ specifier|static
 name|void
 name|ParseDoDependency
 parameter_list|(
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
-comment|/* the line to parse */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3945,13 +3891,10 @@ begin_function
 name|Boolean
 name|Parse_IsVar
 parameter_list|(
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
-comment|/* the line to check */
+parameter_list|)
 block|{
 name|Boolean
 name|wasSpace
@@ -4155,20 +4098,14 @@ begin_function
 name|void
 name|Parse_DoVar
 parameter_list|(
-name|line
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
-comment|/* a line guaranteed to be a variable 				 * assignment. This reduces error checks */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* Context in which to do the assignment */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4643,20 +4580,14 @@ specifier|static
 name|int
 name|ParseAddCmd
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|cmd
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* the node to which the command is to be added */
-name|void
-modifier|*
-name|cmd
-decl_stmt|;
-comment|/* the command to add */
 block|{
 name|GNode
 modifier|*
@@ -4721,13 +4652,10 @@ specifier|static
 name|void
 name|ParseHasCommands
 parameter_list|(
-name|gnp
-parameter_list|)
 name|void
 modifier|*
 name|gnp
-decl_stmt|;
-comment|/* Node to examine */
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -4768,13 +4696,10 @@ begin_function
 name|void
 name|Parse_AddIncludeDir
 parameter_list|(
-name|dir
-parameter_list|)
 name|char
 modifier|*
 name|dir
-decl_stmt|;
-comment|/* The name of the directory to add */
+parameter_list|)
 block|{
 name|Dir_AddDir
 argument_list|(
@@ -4795,13 +4720,10 @@ specifier|static
 name|void
 name|ParseDoError
 parameter_list|(
-name|errmsg
-parameter_list|)
 name|char
 modifier|*
 name|errmsg
-decl_stmt|;
-comment|/* error message */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4887,13 +4809,10 @@ specifier|static
 name|void
 name|ParseDoInclude
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
-comment|/* file specification */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5419,12 +5338,10 @@ begin_function
 name|void
 name|Parse_FromString
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|IFile
 modifier|*
@@ -5551,13 +5468,10 @@ specifier|static
 name|void
 name|ParseTraditionalInclude
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
-comment|/* file specification */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5969,11 +5883,9 @@ specifier|static
 name|int
 name|ParseEOF
 parameter_list|(
-name|opened
-parameter_list|)
 name|int
 name|opened
-decl_stmt|;
+parameter_list|)
 block|{
 name|IFile
 modifier|*
@@ -6087,7 +5999,9 @@ begin_function
 specifier|static
 name|int
 name|ParseReadc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6130,11 +6044,9 @@ specifier|static
 name|void
 name|ParseUnreadc
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6171,7 +6083,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ParseSkipLine():  *	Grab the next line  */
+comment|/* ParseSkipLine():  *	Grab the next line unless it begins with a dot (`.') and we're told to  *	ignore such lines.  */
 end_comment
 
 begin_function
@@ -6180,12 +6092,9 @@ name|char
 modifier|*
 name|ParseSkipLine
 parameter_list|(
-name|skip
-parameter_list|)
 name|int
 name|skip
-decl_stmt|;
-comment|/* Skip lines that don't start with . */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6399,7 +6308,9 @@ specifier|static
 name|char
 modifier|*
 name|ParseReadLine
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Buffer
 name|buf
@@ -7081,7 +6992,9 @@ begin_function
 specifier|static
 name|void
 name|ParseFinishLine
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7128,20 +7041,14 @@ begin_function
 name|void
 name|Parse_File
 parameter_list|(
-name|name
-parameter_list|,
-name|stream
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* the name of the file being read */
+parameter_list|,
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
-comment|/* Stream open to makefile to parse */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -7789,7 +7696,9 @@ end_comment
 begin_function
 name|void
 name|Parse_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|mainNode
 operator|=
@@ -7829,7 +7738,9 @@ end_function
 begin_function
 name|void
 name|Parse_End
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
@@ -7891,7 +7802,9 @@ end_comment
 begin_function
 name|Lst
 name|Parse_MainName
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst
 name|listmain

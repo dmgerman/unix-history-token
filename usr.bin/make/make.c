@@ -155,20 +155,14 @@ begin_function
 name|int
 name|Make_TimeStamp
 parameter_list|(
+name|GNode
+modifier|*
 name|pgn
 parameter_list|,
+name|GNode
+modifier|*
 name|cgn
 parameter_list|)
-name|GNode
-modifier|*
-name|pgn
-decl_stmt|;
-comment|/* the current parent */
-name|GNode
-modifier|*
-name|cgn
-decl_stmt|;
-comment|/* the child we've just examined */
 block|{
 if|if
 condition|(
@@ -203,20 +197,14 @@ specifier|static
 name|int
 name|MakeTimeStamp
 parameter_list|(
+name|void
+modifier|*
 name|pgn
 parameter_list|,
+name|void
+modifier|*
 name|cgn
 parameter_list|)
-name|void
-modifier|*
-name|pgn
-decl_stmt|;
-comment|/* the current parent */
-name|void
-modifier|*
-name|cgn
-decl_stmt|;
-comment|/* the child we've just examined */
 block|{
 return|return
 name|Make_TimeStamp
@@ -248,13 +236,10 @@ begin_function
 name|Boolean
 name|Make_OODate
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* the node to check */
+parameter_list|)
 block|{
 name|Boolean
 name|oodate
@@ -646,20 +631,14 @@ specifier|static
 name|int
 name|MakeAddChild
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|lp
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* the node to add */
-name|void
-modifier|*
-name|lp
-decl_stmt|;
-comment|/* the list to which to add it */
 block|{
 name|GNode
 modifier|*
@@ -730,20 +709,14 @@ begin_function
 name|int
 name|Make_HandleUse
 parameter_list|(
+name|GNode
+modifier|*
 name|cgn
 parameter_list|,
+name|GNode
+modifier|*
 name|pgn
 parameter_list|)
-name|GNode
-modifier|*
-name|cgn
-decl_stmt|;
-comment|/* The .USE node */
-name|GNode
-modifier|*
-name|pgn
-decl_stmt|;
-comment|/* The target of the .USE node */
 block|{
 name|GNode
 modifier|*
@@ -943,20 +916,14 @@ specifier|static
 name|int
 name|MakeHandleUse
 parameter_list|(
+name|void
+modifier|*
 name|pgn
 parameter_list|,
+name|void
+modifier|*
 name|cgn
 parameter_list|)
-name|void
-modifier|*
-name|pgn
-decl_stmt|;
-comment|/* the current parent */
-name|void
-modifier|*
-name|cgn
-decl_stmt|;
-comment|/* the child we've just examined */
 block|{
 return|return
 name|Make_HandleUse
@@ -988,13 +955,10 @@ begin_function
 name|void
 name|Make_Update
 parameter_list|(
-name|cgn
-parameter_list|)
 name|GNode
 modifier|*
 name|cgn
-decl_stmt|;
-comment|/* the child node */
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -1491,21 +1455,14 @@ specifier|static
 name|int
 name|MakeAddAllSrc
 parameter_list|(
+name|void
+modifier|*
 name|cgnp
 parameter_list|,
+name|void
+modifier|*
 name|pgnp
 parameter_list|)
-name|void
-modifier|*
-name|cgnp
-decl_stmt|;
-comment|/* The child to add */
-name|void
-modifier|*
-name|pgnp
-decl_stmt|;
-comment|/* The parent to whose ALLSRC variable it should be */
-comment|/* added */
 block|{
 name|GNode
 modifier|*
@@ -1697,12 +1654,10 @@ begin_function
 name|void
 name|Make_DoAllVar
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
+parameter_list|)
 block|{
 name|Lst_ForEach
 argument_list|(
@@ -1811,7 +1766,9 @@ begin_function
 specifier|static
 name|Boolean
 name|MakeStartJobs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -2039,7 +1996,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * MakePrintStatus --  *	Print the status of a top-level node, viz. it being up-to-date  *	already or not created due to an error in a lower level.  *	Callback function for Make_Run via Lst_ForEach.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	A message may be printed.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * MakePrintStatus --  *	Print the status of a top-level node, viz. it being up-to-date  *	already or not created due to an error in a lower level.  *	Callback function for Make_Run via Lst_ForEach.  If gn->unmade is  *	nonzero and that is meant to imply a cycle in the graph, then  *	cycle is TRUE.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	A message may be printed.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2047,20 +2004,14 @@ specifier|static
 name|int
 name|MakePrintStatus
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|cyclep
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* Node to examine */
-name|void
-modifier|*
-name|cyclep
-decl_stmt|;
-comment|/* True if gn->unmade being non-zero implies 			     * a cycle in the graph, not an error in an 			     * inferior */
 block|{
 name|GNode
 modifier|*
@@ -2235,12 +2186,9 @@ begin_function
 name|Boolean
 name|Make_Run
 parameter_list|(
-name|targs
-parameter_list|)
 name|Lst
 name|targs
-decl_stmt|;
-comment|/* the initial list of targets */
+parameter_list|)
 block|{
 name|GNode
 modifier|*

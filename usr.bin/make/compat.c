@@ -222,11 +222,9 @@ specifier|static
 name|void
 name|CompatInterrupt
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -381,12 +379,10 @@ specifier|static
 name|int
 name|shellneed
 parameter_list|(
-name|cmd
-parameter_list|)
 name|char
 modifier|*
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -458,7 +454,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CompatRunCommand --  *	Execute the next command for a target. If the command returns an  *	error, the node's made field is set to ERROR and creation stops.  *  * Results:  *	0 if the command succeeded, 1 if an error occurred.  *  * Side Effects:  *	The node's 'made' field may be set to ERROR.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * CompatRunCommand --  *	Execute the next command for a target. If the command returns an  *	error, the node's made field is set to ERROR and creation stops.  *	The node from which the command came is also given.  *  * Results:  *	0 if the command succeeded, 1 if an error occurred.  *  * Side Effects:  *	The node's 'made' field may be set to ERROR.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -466,20 +462,14 @@ specifier|static
 name|int
 name|CompatRunCommand
 parameter_list|(
+name|void
+modifier|*
 name|cmdp
 parameter_list|,
+name|void
+modifier|*
 name|gnp
 parameter_list|)
-name|void
-modifier|*
-name|cmdp
-decl_stmt|;
-comment|/* Command to execute */
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* Node from which the command came */
 block|{
 name|char
 modifier|*
@@ -1330,7 +1320,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CompatMake --  *	Make a target.  *  * Results:  *	0  *  * Side Effects:  *	If an error is detected and not being ignored, the process exits.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * CompatMake --  *	Make a target, given the parent, to abort if necessary.  *  * Results:  *	0  *  * Side Effects:  *	If an error is detected and not being ignored, the process exits.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1338,20 +1328,14 @@ specifier|static
 name|int
 name|CompatMake
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|pgnp
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* The node to make */
-name|void
-modifier|*
-name|pgnp
-decl_stmt|;
-comment|/* Parent to abort if necessary */
 block|{
 name|GNode
 modifier|*
@@ -2012,19 +1996,16 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Compat_Run --  *	Initialize this mode and start making.  *  * Results:  *	None.  *  * Side Effects:  *	Guess what?  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Compat_Run --  *	Start making again, given a list of target nodes.  *  * Results:  *	None.  *  * Side Effects:  *	Guess what?  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Compat_Run
 parameter_list|(
-name|targs
-parameter_list|)
 name|Lst
 name|targs
-decl_stmt|;
-comment|/* List of target nodes to re-create */
+parameter_list|)
 block|{
 name|char
 modifier|*

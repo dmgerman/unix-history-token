@@ -677,20 +677,14 @@ specifier|static
 name|int
 name|VarCmp
 parameter_list|(
+name|void
+modifier|*
 name|v
 parameter_list|,
+name|void
+modifier|*
 name|name
 parameter_list|)
-name|void
-modifier|*
-name|v
-decl_stmt|;
-comment|/* VAR structure to compare */
-name|void
-modifier|*
-name|name
-decl_stmt|;
-comment|/* name to look for */
 block|{
 return|return
 operator|(
@@ -726,19 +720,15 @@ specifier|static
 name|void
 name|VarPossiblyExpand
 parameter_list|(
-name|name
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -781,7 +771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarFind --  *	Find the given variable in the given context and any other contexts  *	indicated.  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NULL if the variable does not exist.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarFind --  *	Find the given variable in the given context and any other contexts  *	indicated.  *  *	Flags:  *		FIND_GLOBAL	set means look in the VAR_GLOBAL context too  *		FIND_CMD	set means to look in the VAR_CMD context too  *		FIND_ENV	set means to look in the environment  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NULL if the variable does not exist.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -790,26 +780,17 @@ name|Var
 modifier|*
 name|VarFind
 parameter_list|(
-name|name
-parameter_list|,
-name|ctxt
-parameter_list|,
-name|flags
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name to find */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* context in which to find it */
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-comment|/* FIND_GLOBAL set means to look in the 				 * VAR_GLOBAL context as well. 				 * FIND_CMD set means to look in the VAR_CMD 				 * context also. 				 * FIND_ENV set means to look in the 				 * environment */
+parameter_list|)
 block|{
 name|Boolean
 name|localCheckEnvFirst
@@ -1342,7 +1323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarAdd  --  *	Add a new variable of name name and value val to the given context  *  * Results:  *	None  *  * Side Effects:  *	The new variable is placed at the front of the given context  *	The name and val arguments are duplicated so they may  *	safely be freed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarAdd  --  *	Add a new variable of name name and value val to the given context.  *  * Results:  *	None  *  * Side Effects:  *	The new variable is placed at the front of the given context  *	The name and val arguments are duplicated so they may  *	safely be freed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1350,27 +1331,18 @@ specifier|static
 name|void
 name|VarAdd
 parameter_list|(
-name|name
-parameter_list|,
-name|val
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name of variable to add */
+parameter_list|,
 name|char
 modifier|*
 name|val
-decl_stmt|;
-comment|/* value to set it to */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* context in which to set it */
+parameter_list|)
 block|{
 name|Var
 modifier|*
@@ -1504,12 +1476,10 @@ specifier|static
 name|void
 name|VarDelete
 parameter_list|(
-name|vp
-parameter_list|)
 name|void
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|Var
 modifier|*
@@ -1553,18 +1523,14 @@ begin_function
 name|void
 name|Var_Delete
 parameter_list|(
-name|name
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -1669,27 +1635,18 @@ begin_function
 name|void
 name|Var_Set
 parameter_list|(
-name|name
-parameter_list|,
-name|val
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name of variable to set */
+parameter_list|,
 name|char
 modifier|*
 name|val
-decl_stmt|;
-comment|/* value to give to the variable */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* context in which to set it */
+parameter_list|)
 block|{
 name|Var
 modifier|*
@@ -1822,27 +1779,18 @@ begin_function
 name|void
 name|Var_Append
 parameter_list|(
-name|name
-parameter_list|,
-name|val
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* Name of variable to modify */
+parameter_list|,
 name|char
 modifier|*
 name|val
-decl_stmt|;
-comment|/* String to append to it */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* Context in which this should occur */
+parameter_list|)
 block|{
 name|Var
 modifier|*
@@ -2008,20 +1956,14 @@ begin_function
 name|Boolean
 name|Var_Exists
 parameter_list|(
-name|name
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* Variable to find */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* Context in which to start search */
+parameter_list|)
 block|{
 name|Var
 modifier|*
@@ -2125,27 +2067,19 @@ name|char
 modifier|*
 name|Var_Value
 parameter_list|(
-name|name
-parameter_list|,
-name|ctxt
-parameter_list|,
-name|frp
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name to find */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* context in which to search for it */
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|frp
-decl_stmt|;
+parameter_list|)
 block|{
 name|Var
 modifier|*
@@ -2275,31 +2209,21 @@ specifier|static
 name|Boolean
 name|VarHead
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|dummy
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to trim */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* True if need to add a space to the buffer 				 * before sticking in the head */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2411,10 +2335,6 @@ block|}
 block|}
 return|return
 operator|(
-name|dummy
-condition|?
-name|TRUE
-else|:
 name|TRUE
 operator|)
 return|;
@@ -2430,31 +2350,21 @@ specifier|static
 name|Boolean
 name|VarTail
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|dummy
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to trim */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to stick a space in the 				 * buffer before adding the tail */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2548,10 +2458,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|dummy
-condition|?
-name|TRUE
-else|:
 name|TRUE
 operator|)
 return|;
@@ -2567,31 +2473,21 @@ specifier|static
 name|Boolean
 name|VarSuffix
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|dummy
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to trim */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space before placing 				 * the suffix in the buffer */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2670,10 +2566,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|dummy
-condition|?
-name|addSpace
-else|:
 name|addSpace
 operator|)
 return|;
@@ -2689,31 +2581,21 @@ specifier|static
 name|Boolean
 name|VarRoot
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|dummy
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to trim */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space to the buffer 				 * before placing the root in it */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2803,10 +2685,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|dummy
-condition|?
-name|TRUE
-else|:
 name|TRUE
 operator|)
 return|;
@@ -2814,7 +2692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	A space will be added if requested.  A pattern is supplied  *	which the word must match.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2822,32 +2700,20 @@ specifier|static
 name|Boolean
 name|VarMatch
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|pattern
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to examine */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space to the 				 * buffer before adding the word, if it 				 * matches */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|pattern
-decl_stmt|;
-comment|/* Pattern the word must match */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2915,7 +2781,7 @@ name|SYSVVARSUB
 end_ifdef
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  A space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2923,32 +2789,20 @@ specifier|static
 name|Boolean
 name|VarSYSVMatch
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|patp
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to examine */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space to the 				 * buffer before adding the word, if it 				 * matches */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|patp
-decl_stmt|;
-comment|/* Pattern the word must match */
+parameter_list|)
 block|{
 name|int
 name|len
@@ -3049,7 +2903,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  A  *	space is added if requested.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3057,32 +2911,20 @@ specifier|static
 name|Boolean
 name|VarNoMatch
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|pattern
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to examine */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space to the 				 * buffer before adding the word, if it 				 * matches */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer in which to store it */
+parameter_list|,
 name|void
 modifier|*
 name|pattern
-decl_stmt|;
-comment|/* Pattern the word must match */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3145,7 +2987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSubstitute --  *	Perform a string-substitution on the given word, placing the  *	result in the passed buffer.  *  * Results:  *	TRUE if a space is needed before more characters are added.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarSubstitute --  *	Perform a string-substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3153,32 +2995,20 @@ specifier|static
 name|Boolean
 name|VarSubstitute
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|patternp
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to modify */
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
-comment|/* True if space should be added before 				     * other characters */
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
-comment|/* Buffer for result */
+parameter_list|,
 name|void
 modifier|*
 name|patternp
-decl_stmt|;
-comment|/* Pattern for substitution */
+parameter_list|)
 block|{
 name|int
 name|wordLen
@@ -3827,24 +3657,18 @@ specifier|static
 name|void
 name|VarREError
 parameter_list|(
-name|err
-parameter_list|,
-name|pat
-parameter_list|,
-name|str
-parameter_list|)
 name|int
 name|err
-decl_stmt|;
+parameter_list|,
 name|regex_t
 modifier|*
 name|pat
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3902,7 +3726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarRESubstitute --  *	Perform a regex substitution on the given word, placing the  *	result in the passed buffer.  *  * Results:  *	TRUE if a space is needed before more characters are added.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarRESubstitute --  *	Perform a regex substitution on the given word, placing the  *	result in the passed buffer.  A space is added if requested.  *  * Results:  *	TRUE if a space is needed before more characters are added.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3910,28 +3734,20 @@ specifier|static
 name|Boolean
 name|VarRESubstitute
 parameter_list|(
-name|word
-parameter_list|,
-name|addSpace
-parameter_list|,
-name|buf
-parameter_list|,
-name|patternp
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
+parameter_list|,
 name|Boolean
 name|addSpace
-decl_stmt|;
+parameter_list|,
 name|Buffer
 name|buf
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|patternp
-decl_stmt|;
+parameter_list|)
 block|{
 name|VarREPattern
 modifier|*
@@ -4553,33 +4369,16 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarModify --  *	Modify each of the words of the passed string using the given  *	function. Used to implement all modifiers.  *  * Results:  *	A string of all the words modified appropriately.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|char
 modifier|*
 name|VarModify
-argument_list|(
-name|str
-argument_list|,
-name|modProc
-argument_list|,
-name|datum
-argument_list|)
+parameter_list|(
 name|char
 modifier|*
 name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* String whose words should be trimmed */
-end_comment
-
-begin_comment
-comment|/* Function to use to modify them */
-end_comment
-
-begin_function_decl
+parameter_list|,
 name|Boolean
 function_decl|(
 modifier|*
@@ -4596,21 +4395,11 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 name|datum
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Datum to pass it */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 name|Buffer
 name|buf
@@ -4723,7 +4512,7 @@ name|str
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarGetPattern --  *	Pass through the tstr looking for 1) escaped delimiters,  *	'$'s and backslashes (place the escaped character in  *	uninterpreted) and 2) unescaped $'s that aren't before  *	the delimiter (expand the variable substitution unless flags  *	has VAR_NOSUBST set).  *	Return the expanded string or NULL if the delimiter was missing  *	If pattern is specified, handle escaped ampersands, and replace  *	unescaped ampersands with the lhs of the pattern.  *  * Results:  *	A string of all the words modified appropriately.  *	If length is specified, return the string length of the buffer  *	If flags is specified and the last character of the pattern is a  *	$ set the VAR_MATCH_END bit of flags.  *  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
@@ -4735,47 +4524,33 @@ name|char
 modifier|*
 name|VarGetPattern
 parameter_list|(
-name|ctxt
-parameter_list|,
-name|err
-parameter_list|,
-name|tstr
-parameter_list|,
-name|delim
-parameter_list|,
-name|flags
-parameter_list|,
-name|length
-parameter_list|,
-name|pattern
-parameter_list|)
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
+parameter_list|,
 name|int
 name|err
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|tstr
-decl_stmt|;
+parameter_list|,
 name|int
 name|delim
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|flags
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|length
-decl_stmt|;
+parameter_list|,
 name|VarPattern
 modifier|*
 name|pattern
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5245,12 +5020,10 @@ name|char
 modifier|*
 name|VarQuote
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|Buffer
 name|buf
@@ -5363,40 +5136,25 @@ name|char
 modifier|*
 name|Var_Parse
 parameter_list|(
-name|str
-parameter_list|,
-name|ctxt
-parameter_list|,
-name|err
-parameter_list|,
-name|lengthPtr
-parameter_list|,
-name|freePtr
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* The string to parse */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* The context for the variable */
+parameter_list|,
 name|Boolean
 name|err
-decl_stmt|;
-comment|/* TRUE if undefined variables are an error */
+parameter_list|,
 name|int
 modifier|*
 name|lengthPtr
-decl_stmt|;
-comment|/* OUT: The length of the specification */
+parameter_list|,
 name|Boolean
 modifier|*
 name|freePtr
-decl_stmt|;
-comment|/* OUT: TRUE if caller should free result */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -9027,33 +8785,21 @@ name|char
 modifier|*
 name|Var_Subst
 parameter_list|(
-name|var
-parameter_list|,
-name|str
-parameter_list|,
-name|ctxt
-parameter_list|,
-name|undefErr
-parameter_list|)
 name|char
 modifier|*
 name|var
-decl_stmt|;
-comment|/* Named variable || NULL for all */
+parameter_list|,
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* the string in which to substitute */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* the context wherein to find variables */
+parameter_list|,
 name|Boolean
 name|undefErr
-decl_stmt|;
-comment|/* TRUE if undefineds are an error */
+parameter_list|)
 block|{
 name|Buffer
 name|buf
@@ -9605,13 +9351,10 @@ name|char
 modifier|*
 name|Var_GetTail
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
-comment|/* Filename to modify */
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -9641,13 +9384,10 @@ name|char
 modifier|*
 name|Var_GetHead
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
-comment|/* Filename to manipulate */
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -9675,7 +9415,9 @@ end_comment
 begin_function
 name|void
 name|Var_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|VAR_GLOBAL
 operator|=
@@ -9704,7 +9446,9 @@ end_function
 begin_function
 name|void
 name|Var_End
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
@@ -9725,18 +9469,15 @@ specifier|static
 name|int
 name|VarPrintVar
 parameter_list|(
+name|void
+modifier|*
 name|vp
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|vp
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|Var
 modifier|*
@@ -9776,10 +9517,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -9794,12 +9531,10 @@ begin_function
 name|void
 name|Var_Dump
 parameter_list|(
-name|ctxt
-parameter_list|)
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
+parameter_list|)
 block|{
 name|Lst_ForEach
 argument_list|(

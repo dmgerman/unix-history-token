@@ -1171,20 +1171,14 @@ specifier|static
 name|int
 name|JobCondPassSig
 parameter_list|(
+name|void
+modifier|*
 name|jobp
 parameter_list|,
+name|void
+modifier|*
 name|signop
 parameter_list|)
-name|void
-modifier|*
-name|jobp
-decl_stmt|;
-comment|/* Job to biff */
-name|void
-modifier|*
-name|signop
-decl_stmt|;
-comment|/* Signal to send it */
 block|{
 name|Job
 modifier|*
@@ -1285,12 +1279,9 @@ specifier|static
 name|void
 name|JobPassSig
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
-comment|/* The signal number we've received */
+parameter_list|)
 block|{
 name|sigset_t
 name|nmask
@@ -1554,20 +1545,14 @@ specifier|static
 name|int
 name|JobCmpPid
 parameter_list|(
+name|void
+modifier|*
 name|job
 parameter_list|,
+name|void
+modifier|*
 name|pid
 parameter_list|)
-name|void
-modifier|*
-name|job
-decl_stmt|;
-comment|/* job to examine */
-name|void
-modifier|*
-name|pid
-decl_stmt|;
-comment|/* process id desired */
 block|{
 return|return
 operator|*
@@ -1605,20 +1590,14 @@ specifier|static
 name|int
 name|JobCmpRmtID
 parameter_list|(
+name|void
+modifier|*
 name|job
 parameter_list|,
+name|void
+modifier|*
 name|rmtID
 parameter_list|)
-name|void
-modifier|*
-name|job
-decl_stmt|;
-comment|/* job to examine */
-name|void
-modifier|*
-name|rmtID
-decl_stmt|;
-comment|/* remote id desired */
 block|{
 return|return
 operator|(
@@ -1656,20 +1635,14 @@ specifier|static
 name|int
 name|JobPrintCommand
 parameter_list|(
+name|void
+modifier|*
 name|cmdp
 parameter_list|,
+name|void
+modifier|*
 name|jobp
 parameter_list|)
-name|void
-modifier|*
-name|cmdp
-decl_stmt|;
-comment|/* command string to print */
-name|void
-modifier|*
-name|jobp
-decl_stmt|;
-comment|/* job for which to print it */
 block|{
 name|Boolean
 name|noSpecials
@@ -2229,18 +2202,14 @@ specifier|static
 name|int
 name|JobSaveCommand
 parameter_list|(
+name|void
+modifier|*
 name|cmd
 parameter_list|,
+name|void
+modifier|*
 name|gn
 parameter_list|)
-name|void
-modifier|*
-name|cmd
-decl_stmt|;
-name|void
-modifier|*
-name|gn
-decl_stmt|;
 block|{
 name|cmd
 operator|=
@@ -2296,12 +2265,10 @@ specifier|static
 name|void
 name|JobClose
 parameter_list|(
-name|job
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2413,20 +2380,14 @@ specifier|static
 name|void
 name|JobFinish
 parameter_list|(
-name|job
-parameter_list|,
-name|status
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
-comment|/* job to finish */
+parameter_list|,
 name|int
 modifier|*
 name|status
-decl_stmt|;
-comment|/* sub-why job went away */
+parameter_list|)
 block|{
 name|Boolean
 name|done
@@ -3452,26 +3413,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Touch --  *	Touch the given target. Called by JobStart when the -t flag was  *	given  *  * Results:  *	None  *  * Side Effects:  *	The data modification of the file is changed. In addition, if the  *	file did not exist, it is created.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Job_Touch --  *	Touch the given target. Called by JobStart when the -t flag was  *	given.  Prints messages unless told to be silent.  *  * Results:  *	None  *  * Side Effects:  *	The data modification of the file is changed. In addition, if the  *	file did not exist, it is created.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Job_Touch
 parameter_list|(
-name|gn
-parameter_list|,
-name|silent
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* the node of the file to touch */
+parameter_list|,
 name|Boolean
 name|silent
-decl_stmt|;
-comment|/* TRUE if should not print messages */
+parameter_list|)
 block|{
 name|int
 name|streamID
@@ -3724,25 +3679,14 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Job_CheckCommands --  *	Make sure the given node has all the commands it needs.  *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|Boolean
 name|Job_CheckCommands
-argument_list|(
-name|gn
-argument_list|,
-name|abortProc
-argument_list|)
+parameter_list|(
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The target whose commands need 				     * verifying */
-end_comment
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -3755,14 +3699,7 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Function to abort with message */
-end_comment
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3985,7 +3922,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -4006,19 +3943,13 @@ specifier|static
 name|void
 name|JobLocalInput
 parameter_list|(
-name|stream
-parameter_list|,
-name|job
-parameter_list|)
 name|int
 name|stream
-decl_stmt|;
-comment|/* Stream that's ready (ignored) */
+parameter_list|,
 name|Job
 modifier|*
 name|job
-decl_stmt|;
-comment|/* Job to which the stream belongs */
+parameter_list|)
 block|{
 name|JobDoOutput
 argument_list|(
@@ -4048,20 +3979,15 @@ specifier|static
 name|void
 name|JobExec
 parameter_list|(
-name|job
-parameter_list|,
-name|argv
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
-comment|/* Job to execute */
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cpid
@@ -4806,19 +4732,15 @@ specifier|static
 name|void
 name|JobMakeArgv
 parameter_list|(
-name|job
-parameter_list|,
-name|argv
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|argc
@@ -5034,13 +4956,10 @@ specifier|static
 name|void
 name|JobRestart
 parameter_list|(
-name|job
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
-comment|/* Job to restart */
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -5878,26 +5797,17 @@ unit|static
 name|int
 name|JobStart
 parameter_list|(
-name|gn
-parameter_list|,
-name|flags
-parameter_list|,
-name|previous
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* target to create */
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-comment|/* flags for the job to override normal ones. 			       * e.g. JOB_SPECIAL or JOB_IGNDOTS */
+parameter_list|,
 name|Job
 modifier|*
 name|previous
-decl_stmt|;
-comment|/* The previous Job structure for this node, 			       * if any. */
+parameter_list|)
 block|{
 name|Job
 modifier|*
@@ -6960,34 +6870,21 @@ name|char
 modifier|*
 name|JobOutput
 parameter_list|(
-name|job
-parameter_list|,
-name|cp
-parameter_list|,
-name|endp
-parameter_list|,
-name|msg
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|endp
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -7144,7 +7041,7 @@ return|return
 name|cp
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * JobDoOutput  --  *	This function is called at different times depending on  *	whether the user has specified that output is to be collected  *	via pipes or temporary files. In the former case, we are called  *	whenever there is something to read on the pipe. We collect more  *	output from the given job and store it in the job's outBuf. If  *	this makes up a line, we print it tagged by the job's identifier,  *	as necessary.  *	If output has been collected in a temporary file, we open the  *	file and read it line by line, transfering it to our own  *	output channel until the file is empty. At which point we  *	remove the temporary file.  *	In both cases, however, we keep our figurative eye out for the  *	'noPrint' line for the shell from which the output came. If  *	we recognize a line, we don't print it. If the command is not  *	alone on the line (the character after it is not \0 or \n), we  *	do print whatever follows it.  *  * Results:  *	None  *  * Side Effects:  *	curPos may be shifted as may the contents of outBuf.  *-----------------------------------------------------------------------  */
@@ -7155,19 +7052,13 @@ name|STATIC
 name|void
 name|JobDoOutput
 parameter_list|(
-name|job
-parameter_list|,
-name|finish
-parameter_list|)
 name|Job
 modifier|*
 name|job
-decl_stmt|;
-comment|/* the job whose output needs printing */
+parameter_list|,
 name|Boolean
 name|finish
-decl_stmt|;
-comment|/* TRUE if this is the last time we'll be 				   * called for this job */
+parameter_list|)
 block|{
 name|Boolean
 name|gotNL
@@ -7817,12 +7708,9 @@ begin_function
 name|void
 name|Job_CatchChildren
 parameter_list|(
-name|block
-parameter_list|)
 name|Boolean
 name|block
-decl_stmt|;
-comment|/* TRUE if should block on the wait. */
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -8096,7 +7984,9 @@ end_comment
 begin_function
 name|void
 name|Job_CatchOutput
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|nfds
@@ -8443,12 +8333,10 @@ begin_function
 name|void
 name|Job_Make
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -8466,25 +8354,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Init --  *	Initialize the process module  *  * Results:  *	none  *  * Side Effects:  *	lists and counters are initialized  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Job_Init --  *	Initialize the process module, given a maximum number of jobs, and  *	a maximum number of local jobs.  *  * Results:  *	none  *  * Side Effects:  *	lists and counters are initialized  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Job_Init
 parameter_list|(
+name|int
 name|maxproc
 parameter_list|,
+name|int
 name|maxlocal
 parameter_list|)
-name|int
-name|maxproc
-decl_stmt|;
-comment|/* the greatest number of jobs which may be 			     * running at one time */
-name|int
-name|maxlocal
-decl_stmt|;
-comment|/* the greatest number of local jobs which may 			     * be running at once. */
 block|{
 name|GNode
 modifier|*
@@ -8924,7 +8806,9 @@ end_comment
 begin_function
 name|Boolean
 name|Job_Full
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -8943,7 +8827,9 @@ end_comment
 begin_function
 name|Boolean
 name|Job_Empty
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -9008,13 +8894,10 @@ name|Shell
 modifier|*
 name|JobMatchShell
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* Final component of shell path */
+parameter_list|)
 block|{
 name|Shell
 modifier|*
@@ -9166,13 +9049,10 @@ begin_function
 name|ReturnStatus
 name|Job_ParseShell
 parameter_list|(
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
-comment|/* The shell spec */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -9854,18 +9734,12 @@ specifier|static
 name|void
 name|JobInterrupt
 parameter_list|(
+name|int
 name|runINTERRUPT
 parameter_list|,
+name|int
 name|signo
 parameter_list|)
-name|int
-name|runINTERRUPT
-decl_stmt|;
-comment|/* Non-zero if commands for the .INTERRUPT 				 * target should be executed */
-name|int
-name|signo
-decl_stmt|;
-comment|/* signal received */
 block|{
 name|LstNode
 name|ln
@@ -10382,7 +10256,9 @@ end_comment
 begin_function
 name|int
 name|Job_Finish
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -10461,7 +10337,9 @@ end_comment
 begin_function
 name|void
 name|Job_Wait
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|aborting
 operator|=
@@ -10504,7 +10382,9 @@ end_comment
 begin_function
 name|void
 name|Job_AbortAll
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -10664,19 +10544,16 @@ name|REMOTE
 end_ifdef
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobFlagForMigration --  *	Handle the eviction of a child. Called from RmtStatusChange.  *	Flags the child as remigratable and then suspends it.  *  * Results:  *	none.  *  * Side Effects:  *	The job descriptor is flagged for remigration.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobFlagForMigration --  *	Handle the eviction of a child. Called from RmtStatusChange.  *	Flags the child as remigratable and then suspends it.  Takes  *	the ID of the host we used, for matching children.  *  * Results:  *	none.  *  * Side Effects:  *	The job descriptor is flagged for remigration.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|JobFlagForMigration
 parameter_list|(
-name|hostID
-parameter_list|)
 name|int
 name|hostID
-decl_stmt|;
-comment|/* ID of host we used, for matching children. */
+parameter_list|)
 block|{
 name|Job
 modifier|*
@@ -10823,7 +10700,9 @@ begin_function
 specifier|static
 name|void
 name|JobRestartJobs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 while|while
 condition|(

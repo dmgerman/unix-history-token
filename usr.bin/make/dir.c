@@ -239,7 +239,9 @@ end_comment
 begin_function
 name|void
 name|Dir_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|dirSearchPath
 operator|=
@@ -316,7 +318,9 @@ end_comment
 begin_function
 name|void
 name|Dir_End
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|dot
 operator|->
@@ -375,20 +379,14 @@ specifier|static
 name|int
 name|DirFindName
 parameter_list|(
+name|void
+modifier|*
 name|p
 parameter_list|,
+name|void
+modifier|*
 name|dname
 parameter_list|)
-name|void
-modifier|*
-name|p
-decl_stmt|;
-comment|/* Current name */
-name|void
-modifier|*
-name|dname
-decl_stmt|;
-comment|/* Desired name */
 block|{
 return|return
 operator|(
@@ -416,20 +414,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_HasWildcards  --  *	see if the given name has any wildcard characters in it  *  * Results:  *	returns TRUE if the word should be expanded, FALSE otherwise  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_HasWildcards  --  *	See if the given name has any wildcard characters in it.  *  * Results:  *	returns TRUE if the word should be expanded, FALSE otherwise  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|Boolean
 name|Dir_HasWildcards
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name to check */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -541,26 +536,17 @@ specifier|static
 name|int
 name|DirMatchFiles
 parameter_list|(
-name|pattern
-parameter_list|,
-name|p
-parameter_list|,
-name|expansions
-parameter_list|)
 name|char
 modifier|*
 name|pattern
-decl_stmt|;
-comment|/* Pattern to look for */
+parameter_list|,
 name|Path
 modifier|*
 name|p
-decl_stmt|;
-comment|/* Directory to search */
+parameter_list|,
 name|Lst
 name|expansions
-decl_stmt|;
-comment|/* Place to store the results */
+parameter_list|)
 block|{
 name|Hash_Search
 name|search
@@ -705,7 +691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * DirExpandCurly --  *	Expand curly braces like the C shell. Does this recursively.  *	Note the special case: if after the piece of the curly brace is  *	done there are no wildcard characters in the result, the result is  *	placed on the list WITHOUT CHECKING FOR ITS EXISTENCE.  *  * Results:  *	None.  *  * Side Effects:  *	The given list is filled with the expansions...  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * DirExpandCurly --  *	Expand curly braces like the C shell. Does this recursively.  *	Note the special case: if after the piece of the curly brace is  *	done there are no wildcard characters in the result, the result is  *	placed on the list WITHOUT CHECKING FOR ITS EXISTENCE.  The  *	given arguments are the entire word to expand, the first curly  *	brace in the word, the search path, and the list to store the  *	expansions in.  *  * Results:  *	None.  *  * Side Effects:  *	The given list is filled with the expansions...  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -713,32 +699,20 @@ specifier|static
 name|void
 name|DirExpandCurly
 parameter_list|(
+name|char
+modifier|*
 name|word
 parameter_list|,
+name|char
+modifier|*
 name|brace
 parameter_list|,
+name|Lst
 name|path
 parameter_list|,
+name|Lst
 name|expansions
 parameter_list|)
-name|char
-modifier|*
-name|word
-decl_stmt|;
-comment|/* Entire word to expand */
-name|char
-modifier|*
-name|brace
-decl_stmt|;
-comment|/* First curly brace in it */
-name|Lst
-name|path
-decl_stmt|;
-comment|/* Search path to use */
-name|Lst
-name|expansions
-decl_stmt|;
-comment|/* Place to store the expansions */
 block|{
 name|char
 modifier|*
@@ -1099,7 +1073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * DirExpandInt --  *	Internal expand routine. Passes through the directories in the  *	path one by one, calling DirMatchFiles for each. NOTE: This still  *	doesn't handle patterns in directories...  *  * Results:  *	None.  *  * Side Effects:  *	Things are added to the expansions list.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * DirExpandInt --  *	Internal expand routine. Passes through the directories in the  *	path one by one, calling DirMatchFiles for each. NOTE: This still  *	doesn't handle patterns in directories...  Works given a word to  *	expand, a path to look in, and a list to store expansions in.  *  * Results:  *	None.  *  * Side Effects:  *	Things are added to the expansions list.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1107,25 +1081,16 @@ specifier|static
 name|void
 name|DirExpandInt
 parameter_list|(
-name|word
-parameter_list|,
-name|path
-parameter_list|,
-name|expansions
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to expand */
+parameter_list|,
 name|Lst
 name|path
-decl_stmt|;
-comment|/* Path on which to look */
+parameter_list|,
 name|Lst
 name|expansions
-decl_stmt|;
-comment|/* Place to store the result */
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -1199,18 +1164,15 @@ specifier|static
 name|int
 name|DirPrintWord
 parameter_list|(
+name|void
+modifier|*
 name|word
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|word
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|DEBUGF
 argument_list|(
@@ -1229,10 +1191,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -1240,32 +1198,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_Expand  --  *	Expand the given word into a list of words by globbing it looking  *	in the directories on the given search path.  *  * Results:  *	A list of words consisting of the files which exist along the search  *	path matching the given pattern.  *  * Side Effects:  *	Directories may be opened. Who knows?  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_Expand  --  *	Expand the given word into a list of words by globbing it looking  *	in the directories on the given search path.  *  * Results:  *	A list of words consisting of the files which exist along the search  *	path matching the given pattern is placed in expansions.  *  * Side Effects:  *	Directories may be opened. Who knows?  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Dir_Expand
 parameter_list|(
-name|word
-parameter_list|,
-name|path
-parameter_list|,
-name|expansions
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* the word to expand */
+parameter_list|,
 name|Lst
 name|path
-decl_stmt|;
-comment|/* the list of directories in which to find 			 * the resulting files */
+parameter_list|,
 name|Lst
 name|expansions
-decl_stmt|;
-comment|/* the list on which to place the results */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1625,19 +1574,13 @@ name|char
 modifier|*
 name|Dir_FindFile
 parameter_list|(
-name|name
-parameter_list|,
-name|path
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* the file to find */
+parameter_list|,
 name|Lst
 name|path
-decl_stmt|;
-comment|/* the Lst of directories to search */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2667,13 +2610,10 @@ begin_function
 name|int
 name|Dir_MTime
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* the file whose modification time is 			       * desired */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2933,19 +2873,13 @@ begin_function
 name|void
 name|Dir_AddDir
 parameter_list|(
-name|path
-parameter_list|,
-name|name
-parameter_list|)
 name|Lst
 name|path
-decl_stmt|;
-comment|/* the path to which the directory should be 			       * added */
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* the name of the directory to add */
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -3260,12 +3194,10 @@ name|void
 modifier|*
 name|Dir_CopyDir
 parameter_list|(
-name|p
-parameter_list|)
 name|void
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 operator|(
@@ -3300,19 +3232,13 @@ name|char
 modifier|*
 name|Dir_MakeFlags
 parameter_list|(
-name|flag
-parameter_list|,
-name|path
-parameter_list|)
 name|char
 modifier|*
 name|flag
-decl_stmt|;
-comment|/* flag which should precede each directory */
+parameter_list|,
 name|Lst
 name|path
-decl_stmt|;
-comment|/* list of directories */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3424,13 +3350,10 @@ begin_function
 name|void
 name|Dir_Destroy
 parameter_list|(
-name|pp
-parameter_list|)
 name|void
 modifier|*
 name|pp
-decl_stmt|;
-comment|/* The directory descriptor to nuke */
+parameter_list|)
 block|{
 name|Path
 modifier|*
@@ -3515,12 +3438,9 @@ begin_function
 name|void
 name|Dir_ClearPath
 parameter_list|(
-name|path
-parameter_list|)
 name|Lst
 name|path
-decl_stmt|;
-comment|/* Path to clear */
+parameter_list|)
 block|{
 name|Path
 modifier|*
@@ -3567,18 +3487,12 @@ begin_function
 name|void
 name|Dir_Concat
 parameter_list|(
+name|Lst
 name|path1
 parameter_list|,
+name|Lst
 name|path2
 parameter_list|)
-name|Lst
-name|path1
-decl_stmt|;
-comment|/* Dest */
-name|Lst
-name|path2
-decl_stmt|;
-comment|/* Source */
 block|{
 name|LstNode
 name|ln
@@ -3667,7 +3581,9 @@ end_comment
 begin_function
 name|void
 name|Dir_PrintDirectories
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -3790,18 +3706,15 @@ specifier|static
 name|int
 name|DirPrintDir
 parameter_list|(
+name|void
+modifier|*
 name|p
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|p
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -3820,10 +3733,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -3834,11 +3743,9 @@ begin_function
 name|void
 name|Dir_PrintPath
 parameter_list|(
-name|path
-parameter_list|)
 name|Lst
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 name|Lst_ForEach
 argument_list|(

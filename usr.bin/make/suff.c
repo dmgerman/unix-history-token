@@ -614,20 +614,14 @@ name|char
 modifier|*
 name|SuffStrIsPrefix
 parameter_list|(
+name|char
+modifier|*
 name|pref
 parameter_list|,
+name|char
+modifier|*
 name|str
 parameter_list|)
-name|char
-modifier|*
-name|pref
-decl_stmt|;
-comment|/* possible prefix */
-name|char
-modifier|*
-name|str
-decl_stmt|;
-comment|/* string to check */
 block|{
 while|while
 condition|(
@@ -671,20 +665,14 @@ name|char
 modifier|*
 name|SuffSuffIsSuffix
 parameter_list|(
-name|s
-parameter_list|,
-name|str
-parameter_list|)
 name|Suff
 modifier|*
 name|s
-decl_stmt|;
-comment|/* possible suffix */
+parameter_list|,
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* string to examine */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -759,18 +747,14 @@ specifier|static
 name|int
 name|SuffSuffIsSuffixP
 parameter_list|(
+name|void
+modifier|*
 name|s
 parameter_list|,
+name|void
+modifier|*
 name|str
 parameter_list|)
-name|void
-modifier|*
-name|s
-decl_stmt|;
-name|void
-modifier|*
-name|str
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -803,20 +787,14 @@ specifier|static
 name|int
 name|SuffSuffHasNameP
 parameter_list|(
+name|void
+modifier|*
 name|s
 parameter_list|,
+name|void
+modifier|*
 name|sname
 parameter_list|)
-name|void
-modifier|*
-name|s
-decl_stmt|;
-comment|/* Suffix to check */
-name|void
-modifier|*
-name|sname
-decl_stmt|;
-comment|/* Desired name */
 block|{
 return|return
 operator|(
@@ -852,20 +830,14 @@ specifier|static
 name|int
 name|SuffSuffIsPrefix
 parameter_list|(
+name|void
+modifier|*
 name|s
 parameter_list|,
+name|void
+modifier|*
 name|str
 parameter_list|)
-name|void
-modifier|*
-name|s
-decl_stmt|;
-comment|/* suffix to compare */
-name|void
-modifier|*
-name|str
-decl_stmt|;
-comment|/* string to examine */
 block|{
 return|return
 operator|(
@@ -907,20 +879,14 @@ specifier|static
 name|int
 name|SuffGNHasNameP
 parameter_list|(
+name|void
+modifier|*
 name|gn
 parameter_list|,
+name|void
+modifier|*
 name|name
 parameter_list|)
-name|void
-modifier|*
-name|gn
-decl_stmt|;
-comment|/* current node we're looking at */
-name|void
-modifier|*
-name|name
-decl_stmt|;
-comment|/* name we're looking for */
 block|{
 return|return
 operator|(
@@ -960,12 +926,10 @@ specifier|static
 name|void
 name|SuffFree
 parameter_list|(
-name|sp
-parameter_list|)
 name|void
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|Suff
 modifier|*
@@ -1057,17 +1021,13 @@ specifier|static
 name|void
 name|SuffRemove
 parameter_list|(
-name|l
-parameter_list|,
-name|s
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
+parameter_list|,
 name|Suff
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -1118,19 +1078,13 @@ specifier|static
 name|void
 name|SuffInsert
 parameter_list|(
-name|l
-parameter_list|,
-name|s
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
-comment|/* the list where in s should be inserted */
+parameter_list|,
 name|Suff
 modifier|*
 name|s
-decl_stmt|;
-comment|/* the suffix to insert */
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -1374,7 +1328,9 @@ end_comment
 begin_function
 name|void
 name|Suff_ClearSuffixes
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst_Concat
 argument_list|(
@@ -1431,29 +1387,20 @@ specifier|static
 name|Boolean
 name|SuffParseTransform
 parameter_list|(
-name|str
-parameter_list|,
-name|srcPtr
-parameter_list|,
-name|targPtr
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* String being parsed */
+parameter_list|,
 name|Suff
 modifier|*
 modifier|*
 name|srcPtr
-decl_stmt|;
-comment|/* Place to store source of trans. */
+parameter_list|,
 name|Suff
 modifier|*
 modifier|*
 name|targPtr
-decl_stmt|;
-comment|/* Place to store target of trans. */
+parameter_list|)
 block|{
 name|LstNode
 name|srcLn
@@ -1679,13 +1626,10 @@ begin_function
 name|Boolean
 name|Suff_IsTransform
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* string to check */
+parameter_list|)
 block|{
 name|Suff
 modifier|*
@@ -1720,13 +1664,10 @@ name|GNode
 modifier|*
 name|Suff_AddTransform
 parameter_list|(
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
-comment|/* name of transformation to add */
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -1914,20 +1855,15 @@ begin_function
 name|int
 name|Suff_EndTransform
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-comment|/* Node for transformation */
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
-comment|/* Node for transformation */
 block|{
 name|GNode
 modifier|*
@@ -2051,10 +1987,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -2070,20 +2002,14 @@ specifier|static
 name|int
 name|SuffRebuildGraph
 parameter_list|(
+name|void
+modifier|*
 name|transformp
 parameter_list|,
+name|void
+modifier|*
 name|sp
 parameter_list|)
-name|void
-modifier|*
-name|transformp
-decl_stmt|;
-comment|/* Transformation to test */
-name|void
-modifier|*
-name|sp
-decl_stmt|;
-comment|/* Suffix to rebuild */
 block|{
 name|GNode
 modifier|*
@@ -2348,13 +2274,10 @@ begin_function
 name|void
 name|Suff_AddSuffix
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
-comment|/* the name of the suffix to add */
+parameter_list|)
 block|{
 name|Suff
 modifier|*
@@ -2515,12 +2438,10 @@ begin_function
 name|Lst
 name|Suff_GetPath
 parameter_list|(
-name|sname
-parameter_list|)
 name|char
 modifier|*
 name|sname
-decl_stmt|;
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -2588,7 +2509,9 @@ end_comment
 begin_function
 name|void
 name|Suff_DoPaths
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Suff
 modifier|*
@@ -2827,13 +2750,10 @@ begin_function
 name|void
 name|Suff_AddInclude
 parameter_list|(
-name|sname
-parameter_list|)
 name|char
 modifier|*
 name|sname
-decl_stmt|;
-comment|/* Name of suffix to mark */
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -2893,13 +2813,10 @@ begin_function
 name|void
 name|Suff_AddLib
 parameter_list|(
-name|sname
-parameter_list|)
 name|char
 modifier|*
 name|sname
-decl_stmt|;
-comment|/* Name of suffix to mark */
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -2964,20 +2881,14 @@ specifier|static
 name|int
 name|SuffAddSrc
 parameter_list|(
+name|void
+modifier|*
 name|sp
 parameter_list|,
+name|void
+modifier|*
 name|lsp
 parameter_list|)
-name|void
-modifier|*
-name|sp
-decl_stmt|;
-comment|/* suffix for which to create a Src structure */
-name|void
-modifier|*
-name|lsp
-decl_stmt|;
-comment|/* list and parent for the new Src */
 block|{
 name|Suff
 modifier|*
@@ -3348,19 +3259,13 @@ specifier|static
 name|void
 name|SuffAddLevel
 parameter_list|(
-name|l
-parameter_list|,
-name|targ
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
-comment|/* list to which to add the new level */
+parameter_list|,
 name|Src
 modifier|*
 name|targ
-decl_stmt|;
-comment|/* Src structure to use as the parent */
+parameter_list|)
 block|{
 name|LstSrc
 name|ls
@@ -3407,11 +3312,9 @@ specifier|static
 name|int
 name|SuffRemoveSrc
 parameter_list|(
-name|l
-parameter_list|)
 name|Lst
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -3693,17 +3596,12 @@ name|Src
 modifier|*
 name|SuffFindThem
 parameter_list|(
+name|Lst
 name|srcs
 parameter_list|,
+name|Lst
 name|slst
 parameter_list|)
-name|Lst
-name|srcs
-decl_stmt|;
-comment|/* list of Src structures to search through */
-name|Lst
-name|slst
-decl_stmt|;
 block|{
 name|Src
 modifier|*
@@ -3903,18 +3801,13 @@ name|Src
 modifier|*
 name|SuffFindCmds
 parameter_list|(
-name|targ
-parameter_list|,
-name|slst
-parameter_list|)
 name|Src
 modifier|*
 name|targ
-decl_stmt|;
-comment|/* Src structure to play with */
+parameter_list|,
 name|Lst
 name|slst
-decl_stmt|;
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -4275,20 +4168,14 @@ specifier|static
 name|int
 name|SuffExpandChildren
 parameter_list|(
+name|void
+modifier|*
 name|cgnp
 parameter_list|,
+name|void
+modifier|*
 name|pgnp
 parameter_list|)
-name|void
-modifier|*
-name|cgnp
-decl_stmt|;
-comment|/* Child to examine */
-name|void
-modifier|*
-name|pgnp
-decl_stmt|;
-comment|/* Parent node being processed */
 block|{
 name|GNode
 modifier|*
@@ -5136,34 +5023,22 @@ specifier|static
 name|Boolean
 name|SuffApplyTransform
 parameter_list|(
+name|GNode
+modifier|*
 name|tGn
 parameter_list|,
+name|GNode
+modifier|*
 name|sGn
 parameter_list|,
+name|Suff
+modifier|*
 name|t
 parameter_list|,
+name|Suff
+modifier|*
 name|s
 parameter_list|)
-name|GNode
-modifier|*
-name|tGn
-decl_stmt|;
-comment|/* Target node */
-name|GNode
-modifier|*
-name|sGn
-decl_stmt|;
-comment|/* Source node */
-name|Suff
-modifier|*
-name|t
-decl_stmt|;
-comment|/* Target suffix */
-name|Suff
-modifier|*
-name|s
-decl_stmt|;
-comment|/* Source suffix */
 block|{
 name|LstNode
 name|ln
@@ -5515,18 +5390,13 @@ specifier|static
 name|void
 name|SuffFindArchiveDeps
 parameter_list|(
-name|gn
-parameter_list|,
-name|slst
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* Node for which to locate dependencies */
+parameter_list|,
 name|Lst
 name|slst
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5931,18 +5801,13 @@ specifier|static
 name|void
 name|SuffFindNormalDeps
 parameter_list|(
-name|gn
-parameter_list|,
-name|slst
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* Node for which to find sources */
+parameter_list|,
 name|Lst
 name|slst
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -7291,12 +7156,10 @@ begin_function
 name|void
 name|Suff_FindDeps
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
+parameter_list|)
 block|{
 name|SuffFindDeps
 argument_list|(
@@ -7321,18 +7184,13 @@ specifier|static
 name|void
 name|SuffFindDeps
 parameter_list|(
-name|gn
-parameter_list|,
-name|slst
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* node we're dealing with */
+parameter_list|,
 name|Lst
 name|slst
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7522,13 +7380,10 @@ begin_function
 name|void
 name|Suff_SetNull
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* Name of null suffix */
+parameter_list|)
 block|{
 name|Suff
 modifier|*
@@ -7623,7 +7478,9 @@ end_comment
 begin_function
 name|void
 name|Suff_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sufflist
 operator|=
@@ -7763,7 +7620,9 @@ end_comment
 begin_function
 name|void
 name|Suff_End
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
@@ -7814,18 +7673,15 @@ specifier|static
 name|int
 name|SuffPrintName
 parameter_list|(
+name|void
+modifier|*
 name|s
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|s
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -7844,10 +7700,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -7859,18 +7711,15 @@ specifier|static
 name|int
 name|SuffPrintSuff
 parameter_list|(
+name|void
+modifier|*
 name|sp
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|sp
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|Suff
 modifier|*
@@ -8072,10 +7921,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -8087,18 +7932,15 @@ specifier|static
 name|int
 name|SuffPrintTrans
 parameter_list|(
+name|void
+modifier|*
 name|tp
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|tp
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|GNode
 modifier|*
@@ -8157,10 +7999,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -8170,7 +8008,9 @@ end_function
 begin_function
 name|void
 name|Suff_PrintAll
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(

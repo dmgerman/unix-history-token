@@ -155,7 +155,9 @@ end_comment
 begin_function
 name|void
 name|Targ_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|allTargets
 operator|=
@@ -182,7 +184,9 @@ end_comment
 begin_function
 name|void
 name|Targ_End
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
@@ -220,13 +224,10 @@ name|GNode
 modifier|*
 name|Targ_NewGN
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* the name to stick in the new node */
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -457,12 +458,10 @@ specifier|static
 name|void
 name|TargFreeGN
 parameter_list|(
-name|gnp
-parameter_list|)
 name|void
 modifier|*
 name|gnp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -577,19 +576,13 @@ name|GNode
 modifier|*
 name|Targ_FindNode
 parameter_list|(
-name|name
-parameter_list|,
-name|flags
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* the name to find */
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-comment|/* flags governing events when target not 				 * found */
+parameter_list|)
 block|{
 name|GNode
 modifier|*
@@ -717,18 +710,12 @@ begin_function
 name|Lst
 name|Targ_FindList
 parameter_list|(
-name|names
-parameter_list|,
-name|flags
-parameter_list|)
 name|Lst
 name|names
-decl_stmt|;
-comment|/* list of names to find */
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-comment|/* flags used if no node is found for a given 				 * name */
+parameter_list|)
 block|{
 name|Lst
 name|nodes
@@ -889,13 +876,10 @@ begin_function
 name|Boolean
 name|Targ_Ignore
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* node to check for */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -933,13 +917,10 @@ begin_function
 name|Boolean
 name|Targ_Silent
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* node to check for */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -977,13 +958,10 @@ begin_function
 name|Boolean
 name|Targ_Precious
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* the node to check */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1043,13 +1021,10 @@ begin_function
 name|void
 name|Targ_SetMain
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* The main target we'll create */
+parameter_list|)
 block|{
 name|mainTarg
 operator|=
@@ -1063,18 +1038,14 @@ specifier|static
 name|int
 name|TargPrintName
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|ppath
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-name|void
-modifier|*
-name|ppath
-decl_stmt|;
 block|{
 name|GNode
 modifier|*
@@ -1153,18 +1124,15 @@ begin_function
 name|int
 name|Targ_PrintCmd
 parameter_list|(
+name|void
+modifier|*
 name|cmd
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|cmd
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -1179,10 +1147,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -1198,11 +1162,9 @@ name|char
 modifier|*
 name|Targ_FmtTime
 parameter_list|(
-name|modtime
-parameter_list|)
 name|time_t
 name|modtime
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|tm
@@ -1264,11 +1226,9 @@ begin_function
 name|void
 name|Targ_PrintType
 parameter_list|(
-name|type
-parameter_list|)
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tbit
@@ -1408,18 +1368,14 @@ specifier|static
 name|int
 name|TargPrintNode
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|passp
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-name|void
-modifier|*
-name|passp
-decl_stmt|;
 block|{
 name|GNode
 modifier|*
@@ -1851,18 +1807,15 @@ specifier|static
 name|int
 name|TargPrintOnlySrc
 parameter_list|(
+name|void
+modifier|*
 name|gnp
 parameter_list|,
+name|void
+modifier|*
 name|dummy
+name|__unused
 parameter_list|)
-name|void
-modifier|*
-name|gnp
-decl_stmt|;
-name|void
-modifier|*
-name|dummy
-decl_stmt|;
 block|{
 name|GNode
 modifier|*
@@ -1906,10 +1859,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|dummy
-condition|?
-literal|0
-else|:
 literal|0
 operator|)
 return|;
@@ -1917,19 +1866,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_PrintGraph --  *	print the entire graph. heh heh  *  * Results:  *	none  *  * Side Effects:  *	lots o' output  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Targ_PrintGraph --  *	Print the entire graph.  *  * Results:  *	none  *  * Side Effects:  *	lots o' output  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Targ_PrintGraph
 parameter_list|(
-name|pass
-parameter_list|)
 name|int
 name|pass
-decl_stmt|;
-comment|/* Which pass this is. 1 => no processing 			 * 2 => processing done */
+parameter_list|)
 block|{
 name|printf
 argument_list|(

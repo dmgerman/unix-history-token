@@ -584,18 +584,14 @@ specifier|static
 name|void
 name|MainParseArgs
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1530,13 +1526,10 @@ begin_function
 name|void
 name|Main_ParseArgLine
 parameter_list|(
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
-comment|/* Line to fracture */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1601,18 +1594,14 @@ name|char
 modifier|*
 name|chdir_verify_path
 parameter_list|(
+name|char
+modifier|*
 name|path
 parameter_list|,
+name|char
+modifier|*
 name|obpath
 parameter_list|)
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|char
-modifier|*
-name|obpath
-decl_stmt|;
 block|{
 name|struct
 name|stat
@@ -1687,18 +1676,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|Lst
 name|targs
@@ -3506,25 +3491,19 @@ specifier|static
 name|Boolean
 name|ReadMakefile
 parameter_list|(
-name|p
-parameter_list|,
-name|q
-parameter_list|)
 name|void
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|q
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
 name|fname
-init|=
-name|p
 decl_stmt|;
 comment|/* makefile to read */
 name|FILE
@@ -3547,6 +3526,10 @@ decl_stmt|;
 name|int
 name|setMAKEFILE
 decl_stmt|;
+name|fname
+operator|=
+name|p
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3859,74 +3842,59 @@ unit|char
 operator|*
 name|Cmd_Exec
 argument_list|(
-argument|cmd
+argument|char *cmd
 argument_list|,
-argument|error
+argument|char **error
 argument_list|)
-name|char
-operator|*
-name|cmd
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|error
-decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
-modifier|*
+operator|*
 name|args
 index|[
 literal|4
 index|]
-decl_stmt|;
+block|;
 comment|/* Args for invoking the shell */
 name|int
 name|fds
 index|[
 literal|2
 index|]
-decl_stmt|;
+block|;
 comment|/* Pipe streams */
 name|int
 name|cpid
-decl_stmt|;
+block|;
 comment|/* Child PID */
 name|int
 name|pid
-decl_stmt|;
+block|;
 comment|/* PID from wait() */
 name|char
-modifier|*
+operator|*
 name|res
-decl_stmt|;
+block|;
 comment|/* result */
 name|int
 name|status
-decl_stmt|;
+block|;
 comment|/* command exit status */
 name|Buffer
 name|buf
-decl_stmt|;
+block|;
 comment|/* buffer to store the result */
 name|char
-modifier|*
+operator|*
 name|cp
-decl_stmt|;
+block|;
 name|int
 name|cc
-decl_stmt|;
+block|;
 operator|*
 name|error
 operator|=
 name|NULL
-expr_stmt|;
+block|;
 comment|/*      * Set up arguments for shell      */
 name|args
 index|[
@@ -3934,28 +3902,28 @@ literal|0
 index|]
 operator|=
 literal|"sh"
-expr_stmt|;
+block|;
 name|args
 index|[
 literal|1
 index|]
 operator|=
 literal|"-c"
-expr_stmt|;
+block|;
 name|args
 index|[
 literal|2
 index|]
 operator|=
 name|cmd
-expr_stmt|;
+block|;
 name|args
 index|[
 literal|3
 index|]
 operator|=
 name|NULL
-expr_stmt|;
+block|;
 comment|/*      * Open a pipe for fetching its output      */
 if|if
 condition|(
@@ -3977,7 +3945,13 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/*      * Fork      */
+end_comment
+
+begin_switch
 switch|switch
 condition|(
 name|cpid
@@ -4323,11 +4297,20 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+end_switch
+
+begin_return
 return|return
 name|res
 return|;
+end_return
+
+begin_label
 name|bad
 label|:
+end_label
+
+begin_expr_stmt
 name|res
 operator|=
 name|emalloc
@@ -4335,18 +4318,24 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|res
 operator|=
 literal|'\0'
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|res
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/*-  * Debug --  *	Print a debugging message given its format.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
 end_comment
 
@@ -4354,17 +4343,17 @@ begin_comment
 comment|/* VARARGS */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|Debug
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|const char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|va_list
 name|ap
@@ -4402,7 +4391,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*-  * Error --  *	Print an error message given its format.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
@@ -4653,7 +4642,9 @@ end_comment
 begin_function
 name|void
 name|DieHorribly
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4684,19 +4675,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit.  *  * Results:  *	None  *  * Side Effects:  *	The program exits  */
+comment|/*  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit, with the number of errors encountered in Make_Make.  *  * Results:  *	None  *  * Side Effects:  *	The program exits  */
 end_comment
 
 begin_function
 name|void
 name|Finish
 parameter_list|(
-name|errors
-parameter_list|)
 name|int
 name|errors
-decl_stmt|;
-comment|/* number of errors encountered in Make_Make */
+parameter_list|)
 block|{
 name|Fatal
 argument_list|(
@@ -4725,11 +4713,9 @@ name|void
 modifier|*
 name|emalloc
 parameter_list|(
-name|len
-parameter_list|)
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -4768,13 +4754,11 @@ name|char
 modifier|*
 name|estrdup
 parameter_list|(
-name|str
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4813,17 +4797,13 @@ name|void
 modifier|*
 name|erealloc
 parameter_list|(
-name|ptr
-parameter_list|,
-name|size
-parameter_list|)
 name|void
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4858,7 +4838,9 @@ end_comment
 begin_function
 name|void
 name|enomem
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|err
 argument_list|(
@@ -4878,13 +4860,11 @@ begin_function
 name|int
 name|eunlink
 parameter_list|(
-name|file
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -4943,7 +4923,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -4973,19 +4955,15 @@ begin_function
 name|int
 name|PrintAddr
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 name|void
 modifier|*
 name|a
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|b
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf
 argument_list|(

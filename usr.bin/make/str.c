@@ -51,7 +51,9 @@ end_comment
 begin_function
 name|void
 name|str_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -108,7 +110,9 @@ end_comment
 begin_function
 name|void
 name|str_end
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -157,28 +161,17 @@ name|char
 modifier|*
 name|str_concat
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|flags
-parameter_list|)
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|len1
@@ -314,7 +307,7 @@ name|result
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*-  * brk_string --  *	Fracture a string into an array of words (as delineated by tabs or  *	spaces) taking quotation marks into account.  Leading tabs/spaces  *	are ignored.  *  * returns --  *	Pointer to the array of pointers to the words.  To make life easier,  *	the first word is always the value of the .MAKE variable.  */
@@ -326,23 +319,17 @@ modifier|*
 modifier|*
 name|brk_string
 parameter_list|(
-name|str
-parameter_list|,
-name|store_argc
-parameter_list|,
-name|expand
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|store_argc
-decl_stmt|;
+parameter_list|,
 name|Boolean
 name|expand
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|argc
@@ -787,7 +774,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Str_FindSubstring -- See if a string contains a particular substring.  *  * Results: If string contains substring, the return value is the location of  * the first matching instance of substring in string.  If string doesn't  * contain substring, the return value is NULL.  Matching is done on an exact  * character-for-character basis with no wildcards or special characters.  *  * Side effects: None.  */
+comment|/*  * Str_FindSubstring -- See if a string contains a particular substring.  *  * Results: If string contains substring, the return value is the location of  * the first matching instance of substring in string.  If string doesn't  * contain substring, the return value is NULL.  Matching is done on an exact  * character-for-character basis with no wildcards or special characters.  *  * Side effects: None.  *  * XXX should be strstr(3).  */
 end_comment
 
 begin_function
@@ -795,20 +782,14 @@ name|char
 modifier|*
 name|Str_FindSubstring
 parameter_list|(
+name|char
+modifier|*
 name|string
 parameter_list|,
+name|char
+modifier|*
 name|substring
 parameter_list|)
-name|char
-modifier|*
-name|string
-decl_stmt|;
-comment|/* String to search. */
-name|char
-modifier|*
-name|substring
-decl_stmt|;
-comment|/* Substring to find in string */
 block|{
 name|char
 modifier|*
@@ -902,20 +883,14 @@ begin_function
 name|int
 name|Str_Match
 parameter_list|(
+name|char
+modifier|*
 name|string
 parameter_list|,
+name|char
+modifier|*
 name|pattern
 parameter_list|)
-name|char
-modifier|*
-name|string
-decl_stmt|;
-comment|/* String */
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-comment|/* Pattern */
 block|{
 name|char
 name|c2
@@ -1230,27 +1205,18 @@ name|char
 modifier|*
 name|Str_SYSVMatch
 parameter_list|(
-name|word
-parameter_list|,
-name|pattern
-parameter_list|,
-name|len
-parameter_list|)
 name|char
 modifier|*
 name|word
-decl_stmt|;
-comment|/* Word to examine */
+parameter_list|,
 name|char
 modifier|*
 name|pattern
-decl_stmt|;
-comment|/* Pattern to examine against */
+parameter_list|,
 name|int
 modifier|*
 name|len
-decl_stmt|;
-comment|/* Number of characters to substitute */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1432,28 +1398,20 @@ begin_function
 name|void
 name|Str_SYSVSubst
 parameter_list|(
-name|buf
-parameter_list|,
-name|pat
-parameter_list|,
-name|src
-parameter_list|,
-name|len
-parameter_list|)
 name|Buffer
 name|buf
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|pat
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*

@@ -261,12 +261,10 @@ specifier|static
 name|void
 name|ArchFree
 parameter_list|(
-name|ap
-parameter_list|)
 name|void
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|Arch
 modifier|*
@@ -352,34 +350,25 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list.  *  * Results:  *	SUCCESS if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list, given the pointer to the start of the  *	specification, a Lst on which to place the nodes, and a context  *	in which to expand variables.  *  * Results:  *	SUCCESS if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|ReturnStatus
 name|Arch_ParseArchive
 parameter_list|(
-name|linePtr
-parameter_list|,
-name|nodeLst
-parameter_list|,
-name|ctxt
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|linePtr
-decl_stmt|;
-comment|/* Pointer to start of specification */
+parameter_list|,
 name|Lst
 name|nodeLst
-decl_stmt|;
-comment|/* Lst on which to place the nodes */
+parameter_list|,
 name|GNode
 modifier|*
 name|ctxt
-decl_stmt|;
-comment|/* Context in which to expand variables */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1248,7 +1237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * ArchFindArchive --  *	See if the given archive is the one we are looking for. Called  *	From ArchStatMember and ArchFindMember via Lst_Find.  *  * Results:  *	0 if it is, non-zero if it isn't.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * ArchFindArchive --  *	See if the given archive is the one we are looking for. Called  *	From ArchStatMember and ArchFindMember via Lst_Find with the  *	current list element and the name we want.  *  * Results:  *	0 if it is, non-zero if it isn't.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1256,20 +1245,14 @@ specifier|static
 name|int
 name|ArchFindArchive
 parameter_list|(
+name|void
+modifier|*
 name|ar
 parameter_list|,
+name|void
+modifier|*
 name|archName
 parameter_list|)
-name|void
-modifier|*
-name|ar
-decl_stmt|;
-comment|/* Current list element */
-name|void
-modifier|*
-name|archName
-decl_stmt|;
-comment|/* Name we want */
 block|{
 return|return
 operator|(
@@ -1297,7 +1280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * ArchStatMember --  *	Locate a member of an archive, given the path of the archive and  *	the path of the desired member.  *  * Results:  *	A pointer to the current struct ar_hdr structure for the member. Note  *	That no position is returned, so this is not useful for touching  *	archive members. This is mostly because we have no assurances that  *	The archive will remain constant after we read all the headers, so  *	there's not much point in remembering the position...  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * ArchStatMember --  *	Locate a member of an archive, given the path of the archive and  *	the path of the desired member, and a boolean representing whether  *	or not the archive should be hashed (if not already hashed).  *  * Results:  *	A pointer to the current struct ar_hdr structure for the member. Note  *	That no position is returned, so this is not useful for touching  *	archive members. This is mostly because we have no assurances that  *	The archive will remain constant after we read all the headers, so  *	there's not much point in remembering the position...  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1307,26 +1290,17 @@ name|ar_hdr
 modifier|*
 name|ArchStatMember
 parameter_list|(
-name|archive
-parameter_list|,
-name|member
-parameter_list|,
-name|hash
-parameter_list|)
 name|char
 modifier|*
 name|archive
-decl_stmt|;
-comment|/* Path to the archive */
+parameter_list|,
 name|char
 modifier|*
 name|member
-decl_stmt|;
-comment|/* Name of member. If it is a path, only the 			       * last component is used. */
+parameter_list|,
 name|Boolean
 name|hash
-decl_stmt|;
-comment|/* TRUE if archive should be hashed if not     			       * already so. */
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -2243,29 +2217,21 @@ specifier|static
 name|int
 name|ArchSVR4Entry
 parameter_list|(
-name|ar
-parameter_list|,
-name|name
-parameter_list|,
-name|size
-parameter_list|,
-name|arch
-parameter_list|)
 name|Arch
 modifier|*
 name|ar
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|arch
-decl_stmt|;
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -2618,7 +2584,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * ArchFindMember --  *	Locate a member of an archive, given the path of the archive and  *	the path of the desired member. If the archive is to be modified,  *	the mode should be "r+", if not, it should be "r".  *  * Results:  *	An FILE *, opened for reading and writing, positioned at the  *	start of the member's struct ar_hdr, or NULL if the member was  *	nonexistent. The current struct ar_hdr for member.  *  * Side Effects:  *	The passed struct ar_hdr structure is filled in.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * ArchFindMember --  *	Locate a member of an archive, given the path of the archive and  *	the path of the desired member. If the archive is to be modified,  *	the mode should be "r+", if not, it should be "r".  arhPtr is a  *	poitner to the header structure to fill in.  *  * Results:  *	An FILE *, opened for reading and writing, positioned at the  *	start of the member's struct ar_hdr, or NULL if the member was  *	nonexistent. The current struct ar_hdr for member.  *  * Side Effects:  *	The passed struct ar_hdr structure is filled in.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2627,35 +2593,23 @@ name|FILE
 modifier|*
 name|ArchFindMember
 parameter_list|(
-name|archive
-parameter_list|,
-name|member
-parameter_list|,
-name|arhPtr
-parameter_list|,
-name|mode
-parameter_list|)
 name|char
 modifier|*
 name|archive
-decl_stmt|;
-comment|/* Path to the archive */
+parameter_list|,
 name|char
 modifier|*
 name|member
-decl_stmt|;
-comment|/* Name of member. If it is a path, only the 			       * last component is used. */
+parameter_list|,
 name|struct
 name|ar_hdr
 modifier|*
 name|arhPtr
-decl_stmt|;
-comment|/* Pointer to header structure to be filled in */
+parameter_list|,
 name|char
 modifier|*
 name|mode
-decl_stmt|;
-comment|/* The mode for opening the stream */
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -3206,13 +3160,10 @@ begin_function
 name|void
 name|Arch_Touch
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* Node of member to touch */
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -3339,13 +3290,10 @@ begin_function
 name|void
 name|Arch_TouchLib
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* The node of the library to touch */
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -3464,20 +3412,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_MTime --  *	Return the modification time of a member of an archive.  *  * Results:  *	The modification time (seconds).  *  * Side Effects:  *	The mtime field of the given node is filled in with the value  *	returned by the function.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_MTime --  *	Return the modification time of a member of an archive, given its  *	name.  *  * Results:  *	The modification time (seconds).  *  * Side Effects:  *	The mtime field of the given node is filled in with the value  *	returned by the function.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|int
 name|Arch_MTime
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* Node describing archive member */
+parameter_list|)
 block|{
 name|struct
 name|ar_hdr
@@ -3586,12 +3531,10 @@ begin_function
 name|int
 name|Arch_MemMTime
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
+parameter_list|)
 block|{
 name|LstNode
 name|ln
@@ -3759,26 +3702,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_FindLib --  *	Search for a library along the given search path.  *  * Results:  *	None.  *  * Side Effects:  *	The node's 'path' field is set to the found path (including the  *	actual file name, not -l...). If the system can handle the -L  *	flag when linking (or we cannot find the library), we assume that  *	the user has placed the .LIBRARIES variable in the final linking  *	command (or the linker will know where to find it) and set the  *	TARGET variable for this node to be the node's name. Otherwise,  *	we set the TARGET variable to be the full path of the library,  *	as returned by Dir_FindFile.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_FindLib --  *	Search for a named library along the given search path.  *  * Results:  *	None.  *  * Side Effects:  *	The node's 'path' field is set to the found path (including the  *	actual file name, not -l...). If the system can handle the -L  *	flag when linking (or we cannot find the library), we assume that  *	the user has placed the .LIBRARIES variable in the final linking  *	command (or the linker will know where to find it) and set the  *	TARGET variable for this node to be the node's name. Otherwise,  *	we set the TARGET variable to be the full path of the library,  *	as returned by Dir_FindFile.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|void
 name|Arch_FindLib
 parameter_list|(
-name|gn
-parameter_list|,
-name|path
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* Node of library to find */
+parameter_list|,
 name|Lst
 name|path
-decl_stmt|;
-comment|/* Search path */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3887,20 +3824,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *	    	  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *	    	  make began (i.e. it's been modified in the course  *	    	  of the make, probably by archiving).  *	    The modification time of one of its sources is greater than  *		  the one of its RANLIBMAG member (i.e. its table of contents  *	    	  is out-of-date). We don't compare of the archive time  *		  vs. TOC time because they can be too close. In my  *		  opinion we should not bother with the TOC at all since  *		  this is used by 'ar' rules that affect the data contents  *		  of the archive, not by ranlib rules, which affect the  *		  TOC.  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier, with the library's  *	graph node.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *	    	  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *	    	  make began (i.e. it's been modified in the course  *	    	  of the make, probably by archiving).  *	    The modification time of one of its sources is greater than  *		  the one of its RANLIBMAG member (i.e. its table of contents  *	    	  is out-of-date). We don't compare of the archive time  *		  vs. TOC time because they can be too close. In my  *		  opinion we should not bother with the TOC at all since  *		  this is used by 'ar' rules that affect the data contents  *		  of the archive, not by ranlib rules, which affect the  *		  TOC.  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|Boolean
 name|Arch_LibOODate
 parameter_list|(
-name|gn
-parameter_list|)
 name|GNode
 modifier|*
 name|gn
-decl_stmt|;
-comment|/* The library's graph node */
+parameter_list|)
 block|{
 name|Boolean
 name|oodate
@@ -4101,7 +4035,9 @@ end_comment
 begin_function
 name|void
 name|Arch_Init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|archives
 operator|=
@@ -4120,7 +4056,9 @@ end_comment
 begin_function
 name|void
 name|Arch_End
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
