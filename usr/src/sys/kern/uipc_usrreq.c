@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.38 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3909,6 +3909,15 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|f_msgcount
+operator|==
+literal|0
+condition|)
+return|return;
 name|fp
 operator|->
 name|f_msgcount
