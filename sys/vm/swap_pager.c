@@ -6866,14 +6866,14 @@ argument_list|,
 name|sw_list
 argument_list|)
 expr_stmt|;
+name|nswapdev
+operator|++
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|sw_dev_mtx
 argument_list|)
-expr_stmt|;
-name|nswapdev
-operator|++
 expr_stmt|;
 name|swap_pager_avail
 operator|+=
@@ -7269,6 +7269,9 @@ argument_list|,
 name|sw_list
 argument_list|)
 expr_stmt|;
+name|nswapdev
+operator|--
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7284,9 +7287,6 @@ condition|)
 name|swdevhd
 operator|=
 name|NULL
-expr_stmt|;
-name|nswapdev
-operator|--
 expr_stmt|;
 name|blist_destroy
 argument_list|(
