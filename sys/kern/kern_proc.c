@@ -483,7 +483,10 @@ name|td
 operator|->
 name|td_last_kse
 operator|=
-name|NULL
+operator|&
+name|p
+operator|->
+name|p_kse
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
