@@ -125,57 +125,6 @@ begin_macro
 name|__END_DECLS
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|cimag
-parameter_list|(
-name|z
-parameter_list|)
-value|(__imag__ (z))
-end_define
-
-begin_define
-define|#
-directive|define
-name|cimagf
-parameter_list|(
-name|z
-parameter_list|)
-value|(__imag__ (z))
-end_define
-
-begin_define
-define|#
-directive|define
-name|creal
-parameter_list|(
-name|z
-parameter_list|)
-value|(__real__ (z))
-end_define
-
-begin_define
-define|#
-directive|define
-name|crealf
-parameter_list|(
-name|z
-parameter_list|)
-value|(__real__ (z))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
