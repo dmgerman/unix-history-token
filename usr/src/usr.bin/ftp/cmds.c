@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.25 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,7 +129,7 @@ specifier|extern
 name|char
 modifier|*
 modifier|*
-name|glob
+name|ftpglob
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2478,7 +2478,7 @@ continue|continue;
 block|}
 name|gargs
 operator|=
-name|glob
+name|ftpglob
 argument_list|(
 name|argv
 index|[
@@ -7478,7 +7478,7 @@ operator|)
 return|;
 name|globbed
 operator|=
-name|glob
+name|ftpglob
 argument_list|(
 operator|*
 name|cpp
