@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *      @(#)mount_cd9660.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *      @(#)mount_cd9660.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_cd9660.c	8.2 (Berkeley) %G%"
+literal|"@(#)mount_cd9660.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -77,6 +71,36 @@ directive|include
 file|<sys/mount.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -93,7 +117,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_iso bdev dir\n"
+literal|"usage: mount_cd9660 [-F fsoptions] [-norrip] [-gen] [-extattr] special node\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -134,14 +158,11 @@ name|iso_args
 name|args
 decl_stmt|;
 name|int
-name|c
-decl_stmt|;
-name|int
-name|opts
+name|mntflags
 init|=
 literal|0
 decl_stmt|,
-name|mntflags
+name|opts
 init|=
 literal|0
 decl_stmt|;
@@ -378,9 +399,19 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"mount"
+name|stderr
+argument_list|,
+literal|"mount_cd9660: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
