@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chmod.c	4.3 %G%"
+literal|"@(#)chmod.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,7 +326,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|p
 argument_list|,
@@ -445,7 +445,7 @@ parameter_list|,
 name|sbuf
 parameter_list|)
 define|\
-value|if (lstat(name, sbuf)< 0) {\ 		fprintf(stderr, "chmod: can't access %s\n", dp->d_name);\ 		return(1);\ 	}
+value|if (stat(name, sbuf)< 0) {\ 		fprintf(stderr, "chmod: can't access %s\n", dp->d_name);\ 		return(1);\ 	}
 specifier|register
 name|DIR
 modifier|*
@@ -1132,6 +1132,13 @@ case|:
 name|m
 operator||=
 name|EXEC
+expr_stmt|;
+continue|continue;
+case|case
+literal|'X'
+case|:
+name|Xflag
+operator|++
 expr_stmt|;
 continue|continue;
 case|case
