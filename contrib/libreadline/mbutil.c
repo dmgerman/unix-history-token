@@ -849,6 +849,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* shorted to compose multibyte char */
+if|if
+condition|(
+name|ps
+condition|)
 name|memset
 argument_list|(
 name|ps
@@ -882,6 +886,10 @@ condition|)
 block|{
 comment|/* invalid to compose multibyte char */
 comment|/* initialize the conversion state */
+if|if
+condition|(
+name|ps
+condition|)
 name|memset
 argument_list|(
 name|ps
@@ -945,31 +953,25 @@ parameter_list|)
 name|char
 modifier|*
 name|buf1
-decl_stmt|,
-decl|*
-name|buf2
 decl_stmt|;
-end_function
-
-begin_decl_stmt
+name|int
+name|pos1
+decl_stmt|;
 name|mbstate_t
 modifier|*
 name|ps1
-decl_stmt|,
+decl_stmt|;
+name|char
+modifier|*
+name|buf2
+decl_stmt|;
+name|int
+name|pos2
+decl_stmt|;
+name|mbstate_t
 modifier|*
 name|ps2
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|pos1
-decl_stmt|,
-name|pos2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1071,7 +1073,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* adjust pointed byte and find mbstate of the point of string.    adjusted point will be point<= adjusted_point, and returns    differences of the byte(adjusted_point - point).    if point is invalied (point< 0 || more than string length),    it returns -1 */
@@ -1195,6 +1197,10 @@ name|pos
 operator|++
 expr_stmt|;
 comment|/* clear the state of the byte sequence, because 	     in this case effect of mbstate is undefined  */
+if|if
+condition|(
+name|ps
+condition|)
 name|memset
 argument_list|(
 name|ps
@@ -1208,6 +1214,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|tmp
+operator|==
+literal|0
+condition|)
+name|pos
+operator|++
+expr_stmt|;
 else|else
 name|pos
 operator|+=
