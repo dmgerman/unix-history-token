@@ -118,7 +118,7 @@ literal|0x100000
 operator|+
 operator|(
 name|extkb
-operator|+
+operator|*
 literal|1024
 operator|)
 operator|)
