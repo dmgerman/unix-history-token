@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)scb.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)scb.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,11 +14,11 @@ block|{
 name|int
 function_decl|(
 modifier|*
-name|scb_stray
+name|scb_passiverel
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* reserved */
+comment|/* BI passive release */
 name|int
 function_decl|(
 modifier|*
@@ -177,6 +177,11 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* SBI silo compare */
+define|#
+directive|define
+name|scb_bierr
+value|scb_sbisilo
+comment|/*=BI error (8200) */
 name|int
 function_decl|(
 modifier|*
@@ -196,7 +201,7 @@ comment|/* SBI alert */
 name|int
 function_decl|(
 modifier|*
-name|scb_sbiflt
+name|scb_sbifault
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -209,12 +214,25 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* memory write timeout */
+define|#
+directive|define
+name|scb_sbierr
+value|scb_wtime
+comment|/*=SBI error (8600) */
+name|int
+function_decl|(
+modifier|*
+name|scb_sbifail
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* SBI fail (8600) */
 name|int
 function_decl|(
 modifier|*
 name|scb_stray4
 index|[
-literal|8
+literal|7
 index|]
 function_decl|)
 parameter_list|()
@@ -242,12 +260,57 @@ name|int
 function_decl|(
 modifier|*
 name|scb_stray5
-index|[
-literal|7
-index|]
 function_decl|)
 parameter_list|()
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|scb_cn1rint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* console terminal 1 rcv (8200) */
+name|int
+function_decl|(
+modifier|*
+name|scb_cn1xint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* console terminal 1 xmt (8200) */
+name|int
+function_decl|(
+modifier|*
+name|scb_cn2rint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* console 2 rcv (8200) */
+name|int
+function_decl|(
+modifier|*
+name|scb_cn2xint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* console 2 xmt (8200) */
+name|int
+function_decl|(
+modifier|*
+name|scb_cn3rint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* console 3 rcv (8200) */
+name|int
+function_decl|(
+modifier|*
+name|scb_cn3xint
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* console 3 xmt (8200) */
 name|int
 function_decl|(
 modifier|*
@@ -334,28 +397,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/*   "		"    IPL 17 */
-name|int
-function_decl|(
-modifier|*
-name|scb_ubaint
-index|[
-literal|128
-index|]
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Unibus device intr */
-name|int
-function_decl|(
-modifier|*
-name|scb_uba1int
-index|[
-literal|128
-index|]
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Unibus 1 device intr */
+comment|/* 	 * On the 8600, this is followed by a second copy of the SCB. 	 * On the 750, this is followed by 128 uba0 device interrupts, 	 * then 128 uba1 device interrupts. 	 */
 block|}
 struct|;
 end_struct
@@ -371,12 +413,9 @@ specifier|extern
 name|struct
 name|scb
 name|scb
+index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* scb.scb_ubaint is the same as UNIvec */
-end_comment
 
 begin_endif
 endif|#

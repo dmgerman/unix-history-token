@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ka630.h	7.1 (Berkeley) %G%  *  * Definitions specific to the ka630 uvax2 cpu card. Includes the tod  * clock chip and the cpu registers.  */
+comment|/*  *	@(#)ka630.h	7.2 (Berkeley) %G%  *  * Definitions specific to the ka630 uvax2 cpu card. Includes the tod  * clock chip and the cpu registers.  */
 end_comment
 
 begin_ifdef
@@ -262,7 +262,7 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|cldevice
+name|ka630clock
 block|{
 name|u_short
 name|sec

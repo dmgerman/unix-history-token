@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtpr.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtpr.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -194,6 +194,52 @@ begin_comment
 comment|/* software interrupt summary */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX8200
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPIR
+value|0x16
+end_define
+
+begin_comment
+comment|/* interprocessor interrupt register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+operator|||
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|MCSR
+value|0x17
+end_define
+
+begin_comment
+comment|/* machine check status register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -227,6 +273,20 @@ begin_comment
 comment|/* interval count */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX8600
+operator|||
+name|VAX8200
+operator|||
+name|VAX780
+operator|||
+name|VAX750
+operator|||
+name|VAX730
+end_if
+
 begin_define
 define|#
 directive|define
@@ -237,6 +297,68 @@ end_define
 begin_comment
 comment|/* time of year (day) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+operator|||
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|CSRS
+value|0x1c
+end_define
+
+begin_comment
+comment|/* console storage receive status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSRD
+value|0x1d
+end_define
+
+begin_comment
+comment|/* console storage receive data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSTS
+value|0x1e
+end_define
+
+begin_comment
+comment|/* console storage transmit status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSTD
+value|0x1f
+end_define
+
+begin_comment
+comment|/* console storage transmit data register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -282,6 +404,284 @@ begin_comment
 comment|/* console transmitter data buffer */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX8200
+operator|||
+name|VAX750
+operator|||
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|TBDR
+value|0x24
+end_define
+
+begin_comment
+comment|/* translation buffer disable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CADR
+value|0x25
+end_define
+
+begin_comment
+comment|/* cache disable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCESR
+value|0x26
+end_define
+
+begin_comment
+comment|/* machine check error summary register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+operator|||
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|CAER
+value|0x27
+end_define
+
+begin_comment
+comment|/* cache error */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ACCS
+value|0x28
+end_define
+
+begin_comment
+comment|/* accelerator control and status */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACCR
+value|0x29
+end_define
+
+begin_comment
+comment|/* accelerator maintenance */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8200
+operator|||
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|WCSA
+value|0x2c
+end_define
+
+begin_comment
+comment|/* WCS address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WCSD
+value|0x2d
+end_define
+
+begin_comment
+comment|/* WCS data */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8200
+end_if
+
+begin_define
+define|#
+directive|define
+name|WCSL
+value|0x2e
+end_define
+
+begin_comment
+comment|/* WCS load */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8600
+operator|||
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|SBIFS
+value|0x30
+end_define
+
+begin_comment
+comment|/* SBI fault and status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBIS
+value|0x31
+end_define
+
+begin_comment
+comment|/* SBI silo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBISC
+value|0x32
+end_define
+
+begin_comment
+comment|/* SBI silo comparator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBIMT
+value|0x33
+end_define
+
+begin_comment
+comment|/* SBI maintenance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBIER
+value|0x34
+end_define
+
+begin_comment
+comment|/* SBI error register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBITA
+value|0x35
+end_define
+
+begin_comment
+comment|/* SBI timeout address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBIQC
+value|0x36
+end_define
+
+begin_comment
+comment|/* SBI quadword clear */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+operator|||
+name|VAX730
+operator|||
+name|VAX630
+end_if
+
+begin_define
+define|#
+directive|define
+name|IUR
+value|0x37
+end_define
+
+begin_comment
+comment|/* init unibus (Qbus on 630) register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -315,6 +715,52 @@ begin_comment
 comment|/* translation buffer invalidate single */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|VAX750
+operator|||
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|TB
+value|0x3b
+end_define
+
+begin_comment
+comment|/* translation buffer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|MBRK
+value|0x3c
+end_define
+
+begin_comment
+comment|/* micro-program breakpoint */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -340,40 +786,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
+name|VAX8600
 operator|||
-name|defined
-argument_list|(
-name|VAX8600
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ACCS
-value|0x28
-end_define
-
-begin_comment
-comment|/* accelerator control and status */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX8600
-argument_list|)
+name|VAX8200
 end_if
 
 begin_define
@@ -386,6 +801,17 @@ end_define
 begin_comment
 comment|/* Translation Buffer Check */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
 
 begin_define
 define|#
@@ -560,295 +986,155 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
+name|VAX8200
 end_if
 
 begin_define
 define|#
 directive|define
-name|ACCR
-value|0x29
+name|RXCS1
+value|0x50
 end_define
 
 begin_comment
-comment|/* accelerator maintenance */
+comment|/* receive csr, console line 1 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WCSA
-value|0x2c
+name|RXDB1
+value|0x51
 end_define
 
 begin_comment
-comment|/* WCS address */
+comment|/* receive data buffer, console line 1 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WCSD
-value|0x2d
+name|TXCS1
+value|0x52
 end_define
 
 begin_comment
-comment|/* WCS data */
+comment|/* transmit csr, console line 1 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SBIFS
-value|0x30
+name|TXDB1
+value|0x53
 end_define
 
 begin_comment
-comment|/* SBI fault and status */
+comment|/* transmit data buffer, console line 1 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SBIS
-value|0x31
+name|RXCS2
+value|0x54
 end_define
 
 begin_comment
-comment|/* SBI silo */
+comment|/* etc */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SBISC
-value|0x32
+name|RXDB2
+value|0x55
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXCS2
+value|0x56
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXDB2
+value|0x57
+end_define
+
+begin_define
+define|#
+directive|define
+name|RXCS3
+value|0x58
+end_define
+
+begin_define
+define|#
+directive|define
+name|RXDB3
+value|0x59
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXCS3
+value|0x5a
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXDB3
+value|0x5b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RXCD
+value|0x5c
 end_define
 
 begin_comment
-comment|/* SBI silo comparator */
+comment|/* receive console data register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SBIMT
-value|0x33
+name|CACHEX
+value|0x5d
 end_define
 
 begin_comment
-comment|/* SBI maintenance */
+comment|/* cache invalidate register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SBIER
-value|0x34
+name|BINID
+value|0x5e
 end_define
 
 begin_comment
-comment|/* SBI error register */
+comment|/* VAXBI node ID register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SBITA
-value|0x35
+name|BISTOP
+value|0x5f
 end_define
 
 begin_comment
-comment|/* SBI timeout address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SBIQC
-value|0x36
-end_define
-
-begin_comment
-comment|/* SBI quadword clear */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBRK
-value|0x3c
-end_define
-
-begin_comment
-comment|/* micro-program breakpoint */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX730
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MCSR
-value|0x17
-end_define
-
-begin_comment
-comment|/* machine check status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSRS
-value|0x1c
-end_define
-
-begin_comment
-comment|/* console storage receive status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSRD
-value|0x1d
-end_define
-
-begin_comment
-comment|/* console storage receive data register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSTS
-value|0x1e
-end_define
-
-begin_comment
-comment|/* console storage transmit status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSTD
-value|0x1f
-end_define
-
-begin_comment
-comment|/* console storage transmit data register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TBDR
-value|0x24
-end_define
-
-begin_comment
-comment|/* translation buffer disable register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CADR
-value|0x25
-end_define
-
-begin_comment
-comment|/* cache disable register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCESR
-value|0x26
-end_define
-
-begin_comment
-comment|/* machine check error summary register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAER
-value|0x27
-end_define
-
-begin_comment
-comment|/* cache error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TB
-value|0x3b
-end_define
-
-begin_comment
-comment|/* translation buffer */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX730
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX630
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|IUR
-value|0x37
-end_define
-
-begin_comment
-comment|/* init unibus register */
+comment|/* VAXBI stop register */
 end_comment
 
 begin_endif

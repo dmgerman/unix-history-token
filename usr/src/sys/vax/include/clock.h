@@ -119,5 +119,83 @@ begin_comment
 comment|/*  * Software clock is software interrupt level 8,  * implemented as mtpr(SIRR, 0x8) in asm.sed.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_comment
+comment|/*  * 8200s and 630s have a clock chip like those found in digital alarm  * clocks and watches.  Converting this to and from system times is  * painful, so we do it in only one place.  The routine chiptotime()  * converts a chiptime to the right value for time.tv_sec, and  * timetochip converts time.tv_sec back.  */
+end_comment
+
+begin_struct
+struct|struct
+name|chiptime
+block|{
+name|int
+name|sec
+decl_stmt|;
+name|int
+name|min
+decl_stmt|;
+name|int
+name|hour
+decl_stmt|;
+name|int
+name|day
+decl_stmt|;
+name|int
+name|mon
+decl_stmt|;
+name|int
+name|year
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Clock read routine return values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLKREAD_OK
+value|0
+end_define
+
+begin_comment
+comment|/* success, time.tv_sec set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLKREAD_WARN
+value|1
+end_define
+
+begin_comment
+comment|/* clock appears wrong but time set anyway */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLKREAD_BAD
+value|2
+end_define
+
+begin_comment
+comment|/* clock is bad, no time available */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

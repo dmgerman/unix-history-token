@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -114,6 +114,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dkbad.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"nexus.h"
 end_include
 
@@ -121,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|"ioa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ka630.h"
 end_include
 
 begin_include
@@ -149,6 +155,9 @@ begin_decl_stmt
 name|struct
 name|scb
 name|scb
+index|[
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +270,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"4.2 BSD UNIX ...."
+literal|"4.3 BSD UNIX ...."
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +292,14 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
+end_if
 
 begin_macro
 name|Xmba3int
@@ -319,6 +336,11 @@ end_macro
 begin_block
 block|{ }
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|lowinit
@@ -360,16 +382,6 @@ name|struct
 name|domain
 name|unixdomain
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PUP
-specifier|extern
-name|struct
-name|domain
-name|pupdomain
-decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INET
@@ -417,22 +429,6 @@ operator|=
 operator|&
 name|unixdomain
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PUP
-name|pupdomain
-operator|.
-name|dom_next
-operator|=
-name|domains
-expr_stmt|;
-name|domains
-operator|=
-operator|&
-name|pupdomain
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INET
@@ -522,8 +518,14 @@ operator|=
 name|rpb
 expr_stmt|;
 name|scb
+index|[
+literal|0
+index|]
 operator|=
 name|scb
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|maxmem
 operator|=
@@ -645,6 +647,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|VAX8200
+comment|/* XXX wrong conditional */
+name|bi_buserr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX8200
+name|rxcdintr
+argument_list|()
+expr_stmt|;
+name|rx50intr
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|hardclock
 argument_list|(
 operator|(
@@ -716,6 +740,102 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|machinecheck
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|memerr
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Miscellaneous routines called from configurable 	 * drivers. 	 */
+name|ubapurge
+argument_list|(
+operator|(
+expr|struct
+name|uba_ctlr
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|ubattydma
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ubamem
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|16
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|isbad
+argument_list|(
+operator|(
+expr|struct
+name|dkbad
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|disksort
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|uwritec
+argument_list|(
+operator|(
+expr|struct
+name|uio
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|todr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vmemall
@@ -741,17 +861,6 @@ argument_list|)
 condition|)
 return|return;
 comment|/* use value */
-name|machinecheck
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-name|memerr
-argument_list|()
-expr_stmt|;
 name|boothowto
 operator|=
 literal|0
@@ -763,6 +872,14 @@ expr_stmt|;
 name|dumpflag
 operator|=
 name|dumpflag
+expr_stmt|;
+name|bootesym
+operator|=
+literal|0
+expr_stmt|;
+name|bootesym
+operator|=
+name|bootesym
 expr_stmt|;
 if|#
 directive|if
@@ -840,10 +957,10 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
+name|quad
 name|catcher
 index|[
-literal|256
+literal|128
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -919,6 +1036,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
+
 begin_decl_stmt
 name|struct
 name|pte
@@ -933,6 +1056,11 @@ name|NBPG
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -1194,21 +1322,21 @@ name|struct
 name|pte
 name|kmempt
 index|[
-literal|100
+literal|200
 index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VAX630
-end_ifdef
+begin_if
+if|#
+directive|if
+name|VAX8200
+end_if
 
 begin_decl_stmt
 name|struct
 name|pte
-name|Clockmap
+name|RX50map
 index|[
 literal|1
 index|]
@@ -1217,10 +1345,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|cldevice
-name|cldevice
+name|pte
+name|Ka820map
+index|[
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX630
+end_if
 
 begin_decl_stmt
 name|struct
@@ -1229,13 +1371,6 @@ name|Ka630map
 index|[
 literal|1
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ka630cpu
-name|ka630cpu
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,19 +1387,20 @@ name|kmemlimit
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unneeded
-end_ifdef
+begin_if
+if|#
+directive|if
+name|VAX8200
+operator|||
+name|VAX630
+end_if
 
 begin_decl_stmt
-name|char
-name|caspace
+name|struct
+name|pte
+name|Clockmap
 index|[
-literal|32
-operator|*
-name|NBPG
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2518,6 +2654,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VAX630
+end_ifndef
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -2566,6 +2708,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*ARGSUSED*/

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cons.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cons.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -669,7 +669,7 @@ name|cons
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KDB
+name|KADB
 if|if
 condition|(
 operator|!
@@ -1294,14 +1294,22 @@ end_block
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
-name|KDB
+name|KADB
 argument_list|)
 operator|||
 name|defined
 argument_list|(
 name|GENERIC
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
 argument_list|)
 end_if
 
@@ -1388,7 +1396,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KDB
+name|KADB
 end_ifdef
 
 begin_macro

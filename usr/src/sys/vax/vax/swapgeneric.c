@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -212,6 +212,14 @@ name|udadriver
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uba_driver
+name|kdbdriver
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|genericconf
@@ -351,6 +359,23 @@ argument_list|)
 block|,	}
 block|,
 block|{
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|kdbdriver
+block|,
+literal|"kra"
+block|,
+name|makedev
+argument_list|(
+literal|16
+argument_list|,
+literal|0
+argument_list|)
+block|, }
+block|,
+block|{
 literal|0
 block|}
 block|, }
@@ -364,12 +389,19 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
 specifier|register
 name|struct
 name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|struct
 name|uba_device
@@ -386,6 +418,9 @@ specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|gp
 decl_stmt|;
 name|int
 name|unit
@@ -441,38 +476,43 @@ condition|;
 name|gc
 operator|++
 control|)
+for|for
+control|(
+name|cp
+operator|=
+name|name
+operator|,
+name|gp
+operator|=
+name|gc
+operator|->
+name|gc_name
+init|;
+operator|*
+name|cp
+operator|==
+operator|*
+name|gp
+condition|;
+name|cp
+operator|++
+operator|,
+name|gp
+operator|++
+control|)
 if|if
 condition|(
-name|gc
-operator|->
-name|gc_name
-index|[
-literal|0
-index|]
+operator|*
+name|gp
 operator|==
-name|name
-index|[
 literal|0
-index|]
-operator|&&
-name|gc
-operator|->
-name|gc_name
-index|[
-literal|1
-index|]
-operator|==
-name|name
-index|[
-literal|1
-index|]
 condition|)
 goto|goto
 name|gotit
 goto|;
 name|printf
 argument_list|(
-literal|"use hp%%d, up%%d, ra%%d, rb%%d, rl%%d or hk%%d\n"
+literal|"use hp%%d, up%%d, ra%%d, rb%%d, rl%%d, hk%%d or kra%%d\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -480,12 +520,6 @@ name|retry
 goto|;
 name|gotit
 label|:
-name|cp
-operator|=
-name|name
-operator|+
-literal|2
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -565,6 +599,11 @@ name|gc
 operator|++
 control|)
 block|{
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
 for|for
 control|(
 name|mi
@@ -626,6 +665,8 @@ name|found
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|ui
