@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.77		%G%"
+literal|"@(#)sendmail.h	3.78		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -850,6 +850,17 @@ end_define
 
 begin_comment
 comment|/* this field contains addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_FROM
+value|00400
+end_define
+
+begin_comment
+comment|/* this is a from-type field */
 end_comment
 
 begin_escape
@@ -2187,12 +2198,23 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|jmp_buf
-name|TickFrame
+name|TopFrame
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* frame for clock ticks to jump to */
+comment|/* branch-to-top-of-loop-on-error frame */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|QuickAbort
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  .... but only if we want a quick abort */
 end_comment
 
 begin_decl_stmt
