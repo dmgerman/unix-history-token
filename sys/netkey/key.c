@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key.c,v 1.190 2001/06/04 22:35:10 itojun Exp $	*/
+comment|/*	$KAME: key.c,v 1.191 2001/06/27 10:46:49 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -2133,19 +2133,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|struct
 name|mbuf
 modifier|*
 name|key_setsadbxsa2
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|u_int8_t
-parameter_list|,
+operator|,
 name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|,
+name|u_int32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -15072,6 +15077,18 @@ name|mode
 argument_list|,
 name|sav
 operator|->
+name|replay
+condition|?
+name|sav
+operator|->
+name|replay
+operator|->
+name|count
+else|:
+literal|0
+argument_list|,
+name|sav
+operator|->
 name|sah
 operator|->
 name|saidx
@@ -16199,12 +16216,16 @@ name|key_setsadbxsa2
 parameter_list|(
 name|mode
 parameter_list|,
+name|seq
+parameter_list|,
 name|reqid
 parameter_list|)
 name|u_int8_t
 name|mode
 decl_stmt|;
 name|u_int32_t
+name|seq
+decl_stmt|,
 name|reqid
 decl_stmt|;
 block|{
@@ -16316,9 +16337,9 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|sadb_x_sa2_reserved3
+name|sadb_x_sa2_sequence
 operator|=
-literal|0
+name|seq
 expr_stmt|;
 name|p
 operator|->
@@ -28534,6 +28555,18 @@ operator|->
 name|saidx
 operator|.
 name|mode
+argument_list|,
+name|sav
+operator|->
+name|replay
+condition|?
+name|sav
+operator|->
+name|replay
+operator|->
+name|count
+else|:
+literal|0
 argument_list|,
 name|sav
 operator|->
