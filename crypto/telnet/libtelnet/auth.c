@@ -933,7 +933,7 @@ if|if
 condition|(
 name|AUTHTYPE_NAME
 argument_list|(
-name|x
+literal|0
 argument_list|)
 operator|&&
 operator|!
