@@ -9588,10 +9588,6 @@ directive|ifdef
 name|PMAP_REMOVE_PAGES_CURPROC_ONLY
 if|if
 condition|(
-operator|!
-name|curthread
-operator|||
-operator|(
 name|pmap
 operator|!=
 name|vmspace_pmap
@@ -9602,7 +9598,6 @@ name|td_proc
 operator|->
 name|p_vmspace
 argument_list|)
-operator|)
 condition|)
 block|{
 name|printf
