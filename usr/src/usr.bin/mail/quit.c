@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	2.2 %G%"
+literal|"@(#)quit.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,8 @@ decl_stmt|,
 name|anystat
 decl_stmt|,
 name|holdbit
+decl_stmt|,
+name|nohold
 decl_stmt|;
 name|FILE
 modifier|*
@@ -318,6 +320,30 @@ name|MPRESERVE
 else|:
 name|MBOX
 expr_stmt|;
+name|nohold
+operator|=
+name|MBOX
+operator||
+name|MSAVED
+operator||
+name|MDELETED
+operator||
+name|MPRESERVE
+expr_stmt|;
+if|if
+condition|(
+name|value
+argument_list|(
+literal|"keepsave"
+argument_list|)
+operator|!=
+name|NOSTR
+condition|)
+name|nohold
+operator|&=
+operator|~
+name|MSAVED
+expr_stmt|;
 for|for
 control|(
 name|mp
@@ -399,15 +425,7 @@ name|mp
 operator|->
 name|m_flag
 operator|&
-operator|(
-name|MBOX
-operator||
-name|MSAVED
-operator||
-name|MDELETED
-operator||
-name|MPRESERVE
-operator|)
+name|nohold
 operator|)
 operator|==
 literal|0
