@@ -1753,6 +1753,7 @@ specifier|const
 expr|struct
 name|hent
 operator|*
+specifier|const
 operator|*
 operator|)
 name|a
@@ -1765,6 +1766,7 @@ specifier|const
 expr|struct
 name|hent
 operator|*
+specifier|const
 operator|*
 operator|)
 name|b
