@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.26 1998/09/16 18:20:23 dillon Exp $"
+literal|"$Id: vmstat.c,v 1.27 1998/09/20 00:11:17 ken Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5105,15 +5105,6 @@ name|sym
 decl_stmt|;
 if|if
 condition|(
-name|namelist
-index|[
-name|nlx
-index|]
-operator|.
-name|n_type
-operator|==
-literal|0
-operator|||
 name|namelist
 index|[
 name|nlx
