@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.7 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
 end_include
 
 begin_include
@@ -74,12 +86,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<kvm.h>
 end_include
 
 begin_include
@@ -290,14 +296,9 @@ name|fscale
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: fscale: %s\n"
+literal|"fscale: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -325,14 +326,9 @@ name|mempages
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: avail_start: %s\n"
+literal|"avail_start: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -357,14 +353,9 @@ name|tmp
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: avail_end: %s\n"
+literal|"avail_end: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -395,14 +386,9 @@ name|mempages
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: ecmx: %s\n"
+literal|"ecmx: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -429,14 +415,9 @@ name|ccpu
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: ccpu: %s\n"
+literal|"ccpu: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
