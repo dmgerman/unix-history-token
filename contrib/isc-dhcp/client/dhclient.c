@@ -1222,14 +1222,14 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"Usage: %s [-c] [-p<port>] [-lf lease-file]"
+literal|"Usage: %s [-D] [-d] [-p<port>] [-lf lease-file]"
 argument_list|,
 name|appname
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"       [-pf pidfile] [-1] [interface]"
+literal|"       [-pf pidfile] [-q] [-1] [interface]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5299,7 +5299,7 @@ condition|)
 block|{
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|note
