@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.60
+literal|3.61
 operator|%
 name|G
 operator|%
@@ -3086,7 +3086,7 @@ name|char
 name|SentDate
 index|[]
 decl_stmt|;
-comment|/* 	**  Output "From" line unless supressed 	** 	**>>>>>>>>>>	One of the ugliest hacks seen by human eyes is 	**>>>>>>>>>>	contained herein: UUCP wants those stupid 	**>> NOTE>>	"remote from<host>" lines.  Why oh why does a 	**>>>>>>>>>>	well-meaning programmer such as myself have to 	**>>>>>>>>>>	deal with this kind of antique garbage???? 	*/
+comment|/* 	**  Output "From" line unless supressed 	** 	**>>>>>>>>>>	One of the ugliest hacks seen by human eyes is 	**>>>>>>>>>>	contained herein: UUCP wants those stupid 	**>>>>>>>>>>	"remote from<host>" lines.  Why oh why does a 	**>> NOTE>>	well-meaning programmer such as myself have to 	**>>>>>>>>>>	deal with this kind of antique garbage???? 	**>>>>>>>>>>  This even depends on the local UUCP host name 	**>>>>>>>>>>  being in the $U macro!!!! 	*/
 if|if
 condition|(
 operator|!
@@ -3147,7 +3147,7 @@ name|void
 operator|)
 name|expand
 argument_list|(
-literal|"From $f  $d remote from $h"
+literal|"From $f  $d remote from $U"
 argument_list|,
 name|buf
 argument_list|,
