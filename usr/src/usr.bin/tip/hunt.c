@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hunt.c	5.4 (Berkeley) %G%"
+literal|"@(#)hunt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,12 +66,10 @@ name|deadfl
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|dead
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|deadfl
 operator|=
@@ -85,7 +83,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|hunt
@@ -108,13 +106,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|f
 operator|=
 name|signal

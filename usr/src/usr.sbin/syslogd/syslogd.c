@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.33 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,7 +888,13 @@ decl_stmt|;
 specifier|extern
 name|int
 name|optind
-decl_stmt|,
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+name|void
 name|die
 argument_list|()
 decl_stmt|,
@@ -897,11 +903,6 @@ argument_list|()
 decl_stmt|,
 name|reapchild
 argument_list|()
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 while|while
 condition|(
@@ -4150,12 +4151,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|reapchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|union
 name|wait
@@ -4182,7 +4181,7 @@ literal|0
 condition|)
 empty_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return a printable representation of a host address.  */
@@ -4340,12 +4339,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|domark
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -4470,7 +4467,7 @@ name|TIMERINTVL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print syslogd errors some place.  */
@@ -4585,14 +4582,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|(
-argument|sig
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|sig
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -4692,7 +4687,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  INIT -- Initialize syslogd from configuration table  */

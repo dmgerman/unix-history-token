@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.9 (Berkeley) %G%"
+literal|"@(#)tip.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,21 +127,21 @@ comment|/* tip normally runs this way */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|intprompt
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|timeout
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|cleanup
 parameter_list|()
 function_decl|;
@@ -889,12 +889,10 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|daemon_uid
 argument_list|()
@@ -931,7 +929,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Muck with user ID's.  We are setuid to the owner of the lock  * directory when we start.  user_uid() reverses real and effective  * ID's after startup, to run with the user's permissions.  * daemon_uid() switches back to the privileged uid for unlocking.  * Finally, to avoid running a shell with the wrong real uid,  * shell_uid() sets real and effective uid's to the user's real ID.  */
@@ -1210,18 +1208,10 @@ name|b
 init|=
 name|p
 decl_stmt|;
-name|int
-argument_list|(
-operator|*
+name|sig_t
 name|oint
-argument_list|)
-argument_list|()
 decl_stmt|,
-argument_list|(
-operator|*
 name|oquit
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|stoprompt
 operator|=
@@ -1322,12 +1312,10 @@ begin_comment
 comment|/*  * Interrupt service routine during prompting  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|intprompt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -1353,7 +1341,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ****TIPIN   TIPIN****  */

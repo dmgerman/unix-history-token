@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)biz31.c	5.2 (Berkeley) %G%"
+literal|"@(#)biz31.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 function_decl|;
@@ -530,7 +530,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 block|{
@@ -561,16 +561,12 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+name|sig_t
+name|f
+decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-function_decl|;
 name|f
 operator|=
 name|signal
@@ -674,16 +670,12 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+name|sig_t
+name|f
+decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-function_decl|;
 name|f
 operator|=
 name|signal

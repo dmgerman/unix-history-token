@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cu.c	5.7 (Berkeley) %G%"
+literal|"@(#)cu.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,15 +35,8 @@ file|"tip.h"
 end_include
 
 begin_function_decl
-name|int
+name|void
 name|cleanup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|timeout
 parameter_list|()
 function_decl|;
 end_function_decl

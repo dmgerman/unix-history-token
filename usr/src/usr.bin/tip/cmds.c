@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.10 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ comment|/* argument vector for take and put */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|timeout
 parameter_list|()
 function_decl|;
@@ -110,7 +110,7 @@ comment|/* timeout function called on alarm */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|stopsnd
 parameter_list|()
 function_decl|;
@@ -121,18 +121,7 @@ comment|/* SIGINT handler during file transfers */
 end_comment
 
 begin_function_decl
-name|int
-name|intprompt
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* used in handling SIG_INT during prompt */
-end_comment
-
-begin_function_decl
-name|int
+name|void
 name|intcopy
 parameter_list|()
 function_decl|;
@@ -469,13 +458,9 @@ decl_stmt|;
 name|time_t
 name|start
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|pwrite
 argument_list|(
 name|FD
@@ -1058,12 +1043,10 @@ begin_comment
 comment|/*  * Interrupt service routine for FTP  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|stopsnd
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|stop
 operator|=
@@ -1077,7 +1060,7 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FTP - local ==> remote  *  send local file to remote host  *  terminate transmission with pseudo EOF sequence  */
@@ -1266,13 +1249,9 @@ name|start_t
 decl_stmt|,
 name|stop_t
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|kill
 argument_list|(
 name|pid
@@ -2199,12 +2178,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|timeout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -2218,7 +2195,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stolen from consh() -- puts a remote file on the output of a local command.  *	Identical to consh() except for where stdout goes.  */
@@ -3235,12 +3212,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|intcopy
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|raw
 argument_list|()
@@ -3257,7 +3232,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|execute

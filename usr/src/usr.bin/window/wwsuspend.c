@@ -53,13 +53,9 @@ end_macro
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|oldsig
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|oldsig
 operator|=
 name|signal

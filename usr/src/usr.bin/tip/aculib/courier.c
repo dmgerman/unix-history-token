@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)courier.c	5.3 (Berkeley) %G%"
+literal|"@(#)courier.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 function_decl|;
@@ -459,7 +459,7 @@ end_block
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 block|{
@@ -495,16 +495,12 @@ modifier|*
 name|match
 decl_stmt|;
 block|{
+name|sig_t
+name|f
+decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-function_decl|;
 name|f
 operator|=
 name|signal
@@ -723,13 +719,9 @@ name|baud_msg
 modifier|*
 name|bm
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 if|if
 condition|(
 name|cour_swallow
@@ -1601,7 +1593,7 @@ end_macro
 begin_block
 block|{
 specifier|static
-name|int
+name|void
 name|cour_napx
 parameter_list|()
 function_decl|;
@@ -1808,16 +1800,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|cour_napx
-argument_list|()
+parameter_list|()
 block|{
 name|ringring
 operator|=
 literal|1
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

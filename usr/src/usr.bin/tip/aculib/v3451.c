@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v3451.c	5.2 (Berkeley) %G%"
+literal|"@(#)v3451.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,14 +68,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|sig_t
+name|func
+decl_stmt|;
 name|int
 name|ok
-decl_stmt|,
-argument_list|(
-operator|*
-name|func
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|int
 name|slow
