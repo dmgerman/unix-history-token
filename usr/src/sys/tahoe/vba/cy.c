@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.14	87/06/30	*/
+comment|/*	cy.c	1.15	88/05/14	*/
 end_comment
 
 begin_include
@@ -1576,7 +1576,7 @@ block|{
 comment|/* not on-line */
 name|uprintf
 argument_list|(
-literal|"yc%d: not online\n"
+literal|"cy%d: not online\n"
 argument_list|,
 name|ycunit
 argument_list|)
@@ -1612,7 +1612,7 @@ condition|)
 block|{
 name|uprintf
 argument_list|(
-literal|"yc%d: no write ring\n"
+literal|"cy%d: no write ring\n"
 argument_list|,
 name|ycunit
 argument_list|)
@@ -1749,7 +1749,17 @@ name|dev
 argument_list|,
 name|CY_WEOF
 argument_list|,
-literal|2
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* can't use count with WEOF */
+name|cycommand
+argument_list|(
+name|dev
+argument_list|,
+name|CY_WEOF
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|cycommand
@@ -3932,19 +3942,30 @@ block|}
 comment|/* 		 * If error is not hard, and this was an i/o operation 		 * retry up to 8 times. 		 */
 if|if
 condition|(
-operator|(
-operator|(
-literal|1
-operator|<<
-name|err
-operator|)
-operator|&
-name|CYER_SOFT
-operator|)
-operator|&&
 name|state
 operator|==
 name|SIO
+operator|&&
+operator|(
+name|CYMASK
+argument_list|(
+name|err
+argument_list|)
+operator|&
+operator|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+condition|?
+name|CYER_RSOFT
+else|:
+name|CYER_WSOFT
+operator|)
+operator|)
 condition|)
 block|{
 if|if
