@@ -394,10 +394,22 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+name|EXTERN
 name|OIA
 name|OperatorInformationArea
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|oia_modified
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Has the oia been modified */
+end_comment
 
 begin_endif
 endif|#
