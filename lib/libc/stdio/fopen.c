@@ -93,12 +93,10 @@ modifier|*
 name|mode
 decl_stmt|;
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|f
 decl_stmt|;
