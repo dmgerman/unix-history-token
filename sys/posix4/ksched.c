@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<posix4/posix4.h>
 end_include
 
@@ -106,7 +112,7 @@ name|tv_nsec
 operator|=
 literal|1000000000L
 operator|/
-name|roundrobin_interval
+name|sched_rr_interval
 argument_list|()
 expr_stmt|;
 operator|*

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -1202,18 +1208,11 @@ argument_list|,
 argument|kg
 argument_list|)
 block|{
-name|kg
-operator|->
-name|kg_nice
-operator|=
-name|n
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|resetpriority
+name|sched_nice
 argument_list|(
 name|kg
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 block|}

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -1360,7 +1366,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|schedclock
+name|sched_clock
 argument_list|(
 name|ke
 operator|->

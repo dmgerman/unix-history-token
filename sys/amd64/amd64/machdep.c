@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -4122,7 +4128,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Note that we have to be careful here to avoid a race between checking  * kserunnable() and actually halting.  If we don't do this, we may waste  * the time between calling hlt and the next interrupt even though there  * is a runnable process.  */
+comment|/*  * Note that we have to be careful here to avoid a race between checking  * sched_runnable() and actually halting.  If we don't do this, we may waste  * the time between calling hlt and the next interrupt even though there  * is a runnable process.  */
 end_comment
 
 begin_function
@@ -4142,7 +4148,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|kserunnable
+name|sched_runnable
 argument_list|()
 condition|)
 block|{

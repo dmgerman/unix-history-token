@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -4153,24 +4159,14 @@ argument_list|,
 argument|kg
 argument_list|)
 block|{
-name|kg
-operator|->
-name|kg_estcpu
-operator|=
-literal|0
-expr_stmt|;
-name|kg
-operator|->
-name|kg_nice
-operator|=
-name|PRIO_MIN
-expr_stmt|;
-comment|/* XXXKSE ??? */
-name|resetpriority
+name|sched_nice
 argument_list|(
 name|kg
+argument_list|,
+name|PRIO_MIN
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE ??? */
 block|}
 name|mtx_unlock_spin
 argument_list|(

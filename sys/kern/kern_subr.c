@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2664,15 +2670,16 @@ expr_stmt|;
 name|DROP_GIANT
 argument_list|()
 expr_stmt|;
+name|sched_prio
+argument_list|(
 name|td
-operator|->
-name|td_priority
-operator|=
+argument_list|,
 name|td
 operator|->
 name|td_ksegrp
 operator|->
 name|kg_user_pri
+argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 name|td

@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -401,7 +407,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * If on run queue move to new run queue, and quit. 		 * XXXKSE this gets a lot more complicated under threads 		 * but try anyhow. 		 * We should have a special call to do this more efficiently. 		 */
+comment|/* 		 * If on run queue move to new run queue, and quit. 		 * XXXKSE this gets a lot more complicated under threads 		 * but try anyhow. 		 */
 if|if
 condition|(
 name|TD_ON_RUNQ
@@ -419,20 +425,11 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|remrunqueue
+name|sched_prio
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_priority
-operator|=
+argument_list|,
 name|pri
-expr_stmt|;
-name|setrunqueue
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 return|return;

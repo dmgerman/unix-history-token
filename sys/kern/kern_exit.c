@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -2096,7 +2102,7 @@ operator|==
 name|PRS_ZOMBIE
 condition|)
 block|{
-comment|/* 			 * charge childs scheduling cpu usage to parent 			 * XXXKSE assume only one thread& kse& ksegrp 			 * keep estcpu in each ksegrp 			 * so charge it to the ksegrp that did the wait 			 * since process estcpu is sum of all ksegrps, 			 * this is strictly as expected. 			 * Assume that the child process aggregated all  			 * tke estcpu into the 'build-in' ksegrp. 			 * XXXKSE 			 */
+comment|/* 			 * Allow the scheduler to adjust the priority of the 			 * parent when a kseg is exiting. 			 */
 if|if
 condition|(
 name|curthread
@@ -2114,26 +2120,16 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_estcpu
-operator|=
-name|ESTCPULIM
+name|sched_exit
 argument_list|(
 name|curthread
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_estcpu
-operator|+
+argument_list|,
 name|FIRST_KSEGRP_IN_PROC
 argument_list|(
 name|p
 argument_list|)
-operator|->
-name|kg_estcpu
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

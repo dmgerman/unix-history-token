@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syscall.h>
 end_include
 
@@ -2105,6 +2111,16 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allow the scheduler to adjust the priority of the child and 	 * parent while we hold the sched_lock. 	 */
+name|sched_fork
+argument_list|(
+name|td
+operator|->
+name|td_ksegrp
+argument_list|,
+name|kg2
+argument_list|)
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -2643,17 +2659,6 @@ operator|->
 name|p_pfsflags
 expr_stmt|;
 block|}
-comment|/* 	 * set priority of child to be that of parent. 	 * XXXKSE this needs redefining.. 	 */
-name|kg2
-operator|->
-name|kg_estcpu
-operator|=
-name|td
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_estcpu
-expr_stmt|;
 comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
 name|_PHOLD
 argument_list|(

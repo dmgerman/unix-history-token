@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -407,7 +413,7 @@ name|count
 operator|>=
 literal|0
 operator|&&
-name|kserunnable
+name|sched_runnable
 argument_list|()
 operator|==
 literal|0
@@ -417,7 +423,7 @@ else|#
 directive|else
 while|while
 condition|(
-name|kserunnable
+name|sched_runnable
 argument_list|()
 operator|==
 literal|0

@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -559,7 +565,7 @@ name|pages
 operator|>
 name|idlezero_maxrun
 operator|||
-name|kserunnable
+name|sched_runnable
 argument_list|()
 condition|)
 block|{
