@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_tcp.c,v 1.2 1995/05/30 05:41:18 rgrimes Exp $"
+literal|"$Id: clnt_tcp.c,v 1.3 1995/10/22 14:51:19 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,7 +691,7 @@ name|cb_vers
 operator|=
 name|vers
 expr_stmt|;
-comment|/* 	 * pre-serialize the staic part of the call msg and stash it away 	 */
+comment|/* 	 * pre-serialize the static part of the call msg and stash it away 	 */
 name|xdrmem_create
 argument_list|(
 operator|&

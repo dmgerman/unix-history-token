@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_raw.c,v 1.2 1995/05/30 05:41:16 rgrimes Exp $"
+literal|"$Id: clnt_raw.c,v 1.3 1995/10/22 14:51:16 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,7 +269,7 @@ operator|=
 name|clp
 expr_stmt|;
 block|}
-comment|/* 	 * pre-serialize the staic part of the call msg and stash it away 	 */
+comment|/* 	 * pre-serialize the static part of the call msg and stash it away 	 */
 name|call_msg
 operator|.
 name|rm_direction
