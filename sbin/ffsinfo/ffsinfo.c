@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/ffsinfo/ffsinfo.c,v 1.3 2000/12/09 15:12:31 tomsoft Exp $  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/ffsinfo/ffsinfo.c,v 1.4 2000/12/12 19:30:55 tomsoft Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_ifndef
@@ -74,19 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -116,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -141,24 +123,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
 end_include
 
 begin_include
@@ -336,8 +300,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -436,23 +399,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|33
 argument_list|,
-literal|"seek error: %ld\n"
+literal|"rdfs: seek error: %ld"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bno
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|33
-argument_list|,
-literal|"rdfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -477,23 +433,16 @@ operator|!=
 name|size
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|34
 argument_list|,
-literal|"read error: %ld\n"
+literal|"rdfs: read error: %ld"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bno
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|34
-argument_list|,
-literal|"rdfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -529,9 +478,6 @@ argument_list|(
 literal|"main"
 argument_list|)
 name|char
-modifier|*
-name|a0
-decl_stmt|,
 modifier|*
 name|device
 decl_stmt|,
@@ -630,12 +576,21 @@ argument_list|(
 literal|"/var/tmp/ffsinfo"
 argument_list|)
 expr_stmt|;
-name|a0
-operator|=
-operator|*
-name|argv
+if|if
+condition|(
+name|out_file
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup failed"
+argument_list|)
 expr_stmt|;
-comment|/* save argv[0] for usage() */
+block|}
 while|while
 condition|(
 operator|(
@@ -687,9 +642,7 @@ literal|1
 condition|)
 block|{
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -711,9 +664,7 @@ literal|0
 condition|)
 block|{
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -739,9 +690,7 @@ literal|0x3ff
 condition|)
 block|{
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -760,6 +709,21 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|out_file
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup failed"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'?'
@@ -767,9 +731,7 @@ case|:
 comment|/* FALLTHROUGH */
 default|default:
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -789,9 +751,7 @@ literal|1
 condition|)
 block|{
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|device
@@ -856,6 +816,21 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|special
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+block|}
 name|snprintf
 argument_list|(
 name|special
@@ -976,24 +951,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|device
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1117,17 +1081,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown device\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"unknown device"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1141,17 +1099,11 @@ operator|<
 literal|1
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"partition is unavailable\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"partition is unavailable"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1164,17 +1116,11 @@ operator|!=
 name|FS_BSDFFS
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"partition not 4.2BSD\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"partition not 4.2BSD"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1214,17 +1160,11 @@ operator|!=
 name|FS_MAGIC
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"superblock not recognized\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"superblock not recognized"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1356,6 +1296,21 @@ operator|.
 name|fs_cssize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fscs
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"calloc failed"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Get the cylinder summary into the memory ... 		 */
 for|for
 control|(
@@ -2520,17 +2475,11 @@ operator|!
 name|lab
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"malloc failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2552,11 +2501,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"DIOCGDINFO failed\n"
+literal|"DIOCGDINFO failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2588,62 +2537,28 @@ begin_function
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
-name|name
+name|void
 parameter_list|)
 block|{
 name|DBG_FUNC
 argument_list|(
 literal|"usage"
 argument_list|)
-name|char
-modifier|*
-name|basename
-decl_stmt|;
 name|DBG_ENTER
 expr_stmt|;
-name|basename
-operator|=
-name|strrchr
-argument_list|(
-name|name
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|basename
-condition|)
-block|{
-name|basename
-operator|=
-name|name
-expr_stmt|;
-block|}
-else|else
-block|{
-name|basename
-operator|++
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s\t[-L] [-g cylgrp] [-i inode] [-l level] [-o outfile]\n"
-literal|"\t\t< special | file>\n"
-argument_list|,
-name|basename
+literal|"usage: ffsinfo [-L] [-g cylgrp] [-i inode] [-l level] "
+literal|"[-o outfile]\n"
+literal|"               special | file\n"
 argument_list|)
 expr_stmt|;
 name|DBG_LEAVE
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2655,7 +2570,7 @@ comment|/* ************************************************************ ginode *
 end_comment
 
 begin_comment
-comment|/*  * This function provides access to an individual inode. We find out in which  * block  the  requested inode is located, read it from disk if  needed,  and  * return  the pointer into that block. We maintain a cache of one  block  to  * not  read  the same block again and again if we iterate lineary  over  all  * inodes.  */
+comment|/*  * This function provides access to an individual inode. We find out in which  * block  the  requested inode is located, read it from disk if  needed,  and  * return  the pointer into that block. We maintain a cache of one  block  to  * not  read the same block again and again if we iterate linearly  over  all  * inodes.  */
 end_comment
 
 begin_function

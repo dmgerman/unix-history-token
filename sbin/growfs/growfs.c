@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/growfs/growfs.c,v 1.4 2000/12/09 15:12:33 tomsoft Exp $  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 2000 Christoph Herrmann, Thomas-Henning von Kamptz  * Copyright (c) 1980, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Christoph Herrmann and Thomas-Henning von Kamptz, Munich and Frankfurt.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors, as well as Christoph  *      Herrmann and Thomas-Henning von Kamptz.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $TSHeader: src/sbin/growfs/growfs.c,v 1.5 2000/12/12 19:31:00 tomsoft Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_ifndef
@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -111,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -153,12 +141,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
 end_include
 
 begin_include
@@ -506,8 +488,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -731,7 +712,7 @@ comment|/* ************************************************************ growfs *
 end_comment
 
 begin_comment
-comment|/*  * Here  we actually start growing the filesystem. We basically  read  the  * cylinder  summary from the first cylinder group as we wan't  to  update  * this  on  the fly during our various operations. First  we  handle  the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder  groups.  Now  we handle the  cylinder  group  containing  the  * cylinder  summary  which  might result in a  relocation  of  the  whole  * structure.  In the end we write back the updated cylinder summary,  the  * new superblock, and slightly patched versions of the super block  * copies.  */
+comment|/*  * Here  we actually start growing the filesystem. We basically  read  the  * cylinder  summary  from the first cylinder group as we want  to  update  * this  on  the fly during our various operations. First  we  handle  the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder  groups.  Now  we handle the  cylinder  group  containing  the  * cylinder  summary  which  might result in a  relocation  of  the  whole  * structure.  In the end we write back the updated cylinder summary,  the  * new superblock, and slightly patched versions of the super block  * copies.  */
 end_comment
 
 begin_function
@@ -832,6 +813,21 @@ operator|.
 name|fs_cssize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fscs
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"calloc failed"
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1999,16 +1995,11 @@ name|fs_cgsize
 condition|)
 block|{
 comment|/* 		 * XXX This should never happen as we would have had that panic 		 *     already on filesystem creation 		 */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Panic: cylinder group too big\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|37
+argument_list|,
+literal|"panic: cylinder group too big"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4545,16 +4536,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"growfs: panic, not enough space\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"panic: not enough space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5827,6 +5813,21 @@ name|gfs_bpp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+block|}
 name|memset
 argument_list|(
 operator|(
@@ -7273,11 +7274,9 @@ name|fs_frag
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"error: %d refs found for block %d.\n"
+literal|"error: %d refs found for block %d."
 argument_list|,
 name|bp
 index|[
@@ -7415,23 +7414,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|33
 argument_list|,
-literal|"seek error: %ld\n"
+literal|"rdfs: seek error: %ld"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bno
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|33
-argument_list|,
-literal|"rdfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7456,23 +7448,16 @@ operator|!=
 name|size
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|34
 argument_list|,
-literal|"read error: %ld\n"
+literal|"rdfs: read error: %ld"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bno
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|34
-argument_list|,
-literal|"rdfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7549,23 +7534,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|35
 argument_list|,
-literal|"seek error: %ld\n"
+literal|"wtfs: seek error: %ld"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bno
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|35
-argument_list|,
-literal|"wtfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7590,23 +7568,16 @@ operator|!=
 name|size
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|36
 argument_list|,
-literal|"write error: %ld\n"
+literal|"wtfs: write error: %ld"
 argument_list|,
 operator|(
 name|long
 operator|)
 name|bno
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|36
-argument_list|,
-literal|"wtfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7672,11 +7643,9 @@ operator|!=
 name|CG_MAGIC
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"acg: bad magic number\n"
+literal|"acg: bad magic number"
 argument_list|)
 expr_stmt|;
 name|DBG_LEAVE
@@ -7698,11 +7667,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"error: cylinder group ran out of space\n"
+literal|"error: cylinder group ran out of space"
 argument_list|)
 expr_stmt|;
 name|DBG_LEAVE
@@ -8015,11 +7982,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"internal error: couldn't find promised block in cg\n"
+literal|"internal error: couldn't find promised block in cg"
 argument_list|)
 expr_stmt|;
 name|DBG_LEAVE
@@ -8076,7 +8041,7 @@ argument_list|,
 name|blkno
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We  possibly have split a cluster here, so we have  to  do 		 * recalculate the sizes of the remaining cluster halfes now, 		 * and use them for updating the cluster summary information. 		 * 		 * Lets start with the blocks before our allocated block ... 		 */
+comment|/* 		 * We  possibly have split a cluster here, so we have  to  do 		 * recalculate the sizes of the remaining cluster halves now, 		 * and use them for updating the cluster summary information. 		 * 		 * Lets start with the blocks before our allocated block ... 		 */
 for|for
 control|(
 name|lcs1
@@ -8596,11 +8561,9 @@ operator|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"clrblock bad fs_frag %d\n"
+literal|"clrblock bad fs_frag %d"
 argument_list|,
 name|fs
 operator|->
@@ -8738,11 +8701,9 @@ operator|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"setblock bad fs_frag %d\n"
+literal|"setblock bad fs_frag %d"
 argument_list|,
 name|fs
 operator|->
@@ -8762,7 +8723,7 @@ comment|/* ************************************************************ ginode *
 end_comment
 
 begin_comment
-comment|/*  * This function provides access to an individual inode. We find out in which  * block  the  requested inode is located, read it from disk if  needed,  and  * return  the pointer into that block. We maintain a cache of one  block  to  * not  read  the same block again and again if we iterate lineary  over  all  * inodes.  */
+comment|/*  * This function provides access to an individual inode. We find out in which  * block  the  requested inode is located, read it from disk if  needed,  and  * return  the pointer into that block. We maintain a cache of one  block  to  * not  read the same block again and again if we iterate linearly  over  all  * inodes.  */
 end_comment
 
 begin_function
@@ -9033,7 +8994,7 @@ comment|/* ************************************************************** main *
 end_comment
 
 begin_comment
-comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs filesystem. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old file system size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewere available for the snapshots. If  we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the filesystem to make sure, that in case of a desaster  * fsck(8) is still able to restore any lost data.  * The  forseen  last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() systemcall  to  provide  * userland access to the file system locking facility.  */
+comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs filesystem. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old file system size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the filesystem to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The  foreseen last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() system call to  provide  * userland access to the file system locking facility.  */
 end_comment
 
 begin_function
@@ -9054,9 +9015,6 @@ argument_list|(
 literal|"main"
 argument_list|)
 name|char
-modifier|*
-name|a0
-decl_stmt|,
 modifier|*
 name|device
 decl_stmt|,
@@ -9124,12 +9082,6 @@ directive|endif
 comment|/* FSMAXSNAP */
 name|DBG_ENTER
 expr_stmt|;
-name|a0
-operator|=
-operator|*
-name|argv
-expr_stmt|;
-comment|/* save argv[0] for usage() */
 while|while
 condition|(
 operator|(
@@ -9183,9 +9135,7 @@ literal|1
 condition|)
 block|{
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -9208,9 +9158,7 @@ case|:
 comment|/* FALLTHROUGH */
 default|default:
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -9230,9 +9178,7 @@ literal|1
 condition|)
 block|{
 name|usage
-argument_list|(
-name|a0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|device
@@ -9284,6 +9230,21 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|special
+operator|==
+name|NULL
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+block|}
 name|snprintf
 argument_list|(
 name|special
@@ -9417,24 +9378,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|device
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9456,24 +9406,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|device
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9567,17 +9506,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown device\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"unknown device"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9591,17 +9524,11 @@ operator|<
 literal|1
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"partition is unavailable\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"partition is unavailable"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9614,17 +9541,11 @@ operator|!=
 name|FS_BSDFFS
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"partition not 4.2BSD\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"partition not 4.2BSD"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9663,17 +9584,11 @@ operator|!=
 name|FS_MAGIC
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"superblock not recognized\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"superblock not recognized"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9744,23 +9659,17 @@ operator|->
 name|p_size
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"There is not enough space (%d< %ld)\n"
+literal|"There is not enough space (%d< %ld)"
 argument_list|,
 name|pp
 operator|->
 name|p_size
 argument_list|,
 name|size
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9789,11 +9698,11 @@ operator|.
 name|fs_size
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"we are not growing (%d->%d)\n"
+literal|"we are not growing (%d->%d)"
 argument_list|,
 name|osblock
 operator|.
@@ -9802,12 +9711,6 @@ argument_list|,
 name|sblock
 operator|.
 name|fs_size
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9846,19 +9749,13 @@ name|j
 index|]
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"active snapshot found in filesystem\n"
 literal|"	please remove all snapshots before "
 literal|"using growfs\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -10243,17 +10140,11 @@ operator|.
 name|fs_size
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"not enough new space\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"not enough new space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10461,17 +10352,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"DIOCWDINFO failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"DIOCWDINFO failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10540,17 +10425,11 @@ operator|!
 name|lab
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"malloc failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10572,17 +10451,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"DIOCGDINFO failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"DIOCGDINFO failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10609,61 +10482,26 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
-name|name
+name|void
 parameter_list|)
 block|{
 name|DBG_FUNC
 argument_list|(
 literal|"usage"
 argument_list|)
-name|char
-modifier|*
-name|basename
-decl_stmt|;
 name|DBG_ENTER
 expr_stmt|;
-name|basename
-operator|=
-name|strrchr
-argument_list|(
-name|name
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|basename
-condition|)
-block|{
-name|basename
-operator|=
-name|name
-expr_stmt|;
-block|}
-else|else
-block|{
-name|basename
-operator|++
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-Ny] [-s size] special_file\n"
-argument_list|,
-name|basename
+literal|"usage: growfs [-Ny] [-s size] special\n"
 argument_list|)
 expr_stmt|;
 name|DBG_LEAVE
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
