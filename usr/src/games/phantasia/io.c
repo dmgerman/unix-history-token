@@ -924,12 +924,10 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: catchalarm() / / FUNCTION: catch timer when waiting for input / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: longjmp() / / GLOBAL INPUTS: Timeoenv[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Come here when the alarm expires while waiting for input. /	Simply longjmp() into getanswer(). / /************************************************************************/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|catchalarm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -939,7 +937,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

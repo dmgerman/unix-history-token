@@ -539,7 +539,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|catchalarm
 parameter_list|()
 function_decl|;
