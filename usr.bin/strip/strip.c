@@ -753,6 +753,9 @@ name|sb
 operator|.
 name|st_size
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|SIZE_T_MAX
 condition|)
 block|{
