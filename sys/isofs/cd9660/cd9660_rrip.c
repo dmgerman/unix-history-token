@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_rrip.c	8.2 (Berkeley) 1/23/94  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_rrip.c	8.6 (Berkeley) 12/5/94  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -117,11 +123,11 @@ name|inode
 operator|.
 name|iso_mode
 operator|=
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|mode_l
+name|mode
 argument_list|)
 expr_stmt|;
 name|ana
@@ -132,14 +138,11 @@ name|inode
 operator|.
 name|iso_uid
 operator|=
-operator|(
-name|uid_t
-operator|)
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|uid_l
+name|uid
 argument_list|)
 expr_stmt|;
 name|ana
@@ -150,14 +153,11 @@ name|inode
 operator|.
 name|iso_gid
 operator|=
-operator|(
-name|gid_t
-operator|)
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|gid_l
+name|gid
 argument_list|)
 expr_stmt|;
 name|ana
@@ -168,11 +168,11 @@ name|inode
 operator|.
 name|iso_links
 operator|=
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|links_l
+name|links
 argument_list|)
 expr_stmt|;
 name|ana
@@ -1086,8 +1086,7 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|ptime
 decl_stmt|;
@@ -1168,7 +1167,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|timeval
+name|timespec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1318,7 +1317,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|timeval
+name|timespec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1477,7 +1476,7 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-name|unsigned
+name|u_int
 name|high
 decl_stmt|,
 name|low
@@ -1488,7 +1487,7 @@ name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|dev_t_high_l
+name|dev_t_high
 argument_list|)
 expr_stmt|;
 name|low
@@ -1497,7 +1496,7 @@ name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|dev_t_low_l
+name|dev_t_low
 argument_list|)
 expr_stmt|;
 if|if
@@ -1506,7 +1505,6 @@ name|high
 operator|==
 literal|0
 condition|)
-block|{
 name|ana
 operator|->
 name|inop
@@ -1528,9 +1526,7 @@ name|low
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ana
 operator|->
 name|inop
@@ -1549,7 +1545,6 @@ name|low
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|ana
 operator|->
 name|fields
@@ -1706,13 +1701,6 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-comment|/* stop analyzing */
-name|ana
-operator|->
-name|fields
-operator|=
-literal|0
-expr_stmt|;
 return|return
 name|ISO_SUSP_STOP
 return|;
@@ -2082,6 +2070,37 @@ name|fields
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|result
+operator|&
+name|ISO_SUSP_STOP
+condition|)
+block|{
+name|result
+operator|&=
+operator|~
+name|ISO_SUSP_STOP
+expr_stmt|;
+break|break;
+block|}
+comment|/* plausibility check */
+if|if
+condition|(
+name|isonum_711
+argument_list|(
+name|phead
+operator|->
+name|length
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|phead
+argument_list|)
+condition|)
+break|break;
 comment|/* 			 * move to next SUSP 			 * Hopefully this works with newer versions, too 			 */
 name|phead
 operator|=
@@ -2153,14 +2172,16 @@ argument_list|,
 name|ana
 operator|->
 name|iso_ce_blk
-operator|*
+operator|<<
+operator|(
 name|ana
 operator|->
 name|imp
 operator|->
-name|logical_block_size
-operator|/
-name|DEV_BSIZE
+name|im_bshift
+operator|-
+name|DEV_BSHIFT
+operator|)
 argument_list|,
 name|ana
 operator|->
@@ -2185,9 +2206,7 @@ operator|)
 operator|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|ana
 operator|->
@@ -2225,7 +2244,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we don't find the Basic SUSP stuffs, just set default value 	 *   ( attribute/time stamp ) 	 */
+comment|/* 	 * If we don't find the Basic SUSP stuffs, just set default value 	 *   (attribute/time stamp) 	 */
 for|for
 control|(
 name|ptable
@@ -2264,6 +2283,10 @@ name|result
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Get Attributes.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2411,7 +2434,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get Alternate Name from 'AL' record   * If either no AL record or 0 length,   *    it will be return the translated ISO9660 name,  */
+comment|/*   * Get Alternate Name.  */
 end_comment
 
 begin_decl_stmt
@@ -2654,7 +2677,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get Symbolic Name from 'SL' record   *  * Note: isodir should contains SL record!  */
+comment|/*   * Get Symbolic Link.  */
 end_comment
 
 begin_decl_stmt
@@ -2862,7 +2885,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check for Rock Ridge Extension and return offset of its fields.  * Note: We require the ER field.  */
+comment|/*  * Check for Rock Ridge Extension and return offset of its fields.  * Note: We insist on the ER field.  */
 end_comment
 
 begin_function
