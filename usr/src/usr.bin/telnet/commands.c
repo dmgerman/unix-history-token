@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.5 (Berkeley) %G%"
+literal|"@(#)commands.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -992,7 +992,7 @@ begin_escape
 end_escape
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|send_esc
 name|P
@@ -2844,7 +2844,7 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|togglehelp
 name|P
@@ -6967,7 +6967,7 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|slc_help
 parameter_list|()
@@ -7370,7 +7370,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|env_help
 name|P
 argument_list|(
@@ -8828,7 +8833,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|auth_help
 name|P
 argument_list|(
@@ -9296,7 +9306,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|EncryptHelp
 name|P
 argument_list|(
@@ -11231,20 +11246,6 @@ block|}
 block|}
 else|else
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|htons
-argument_list|)
-name|u_short
-name|htons
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* !defined(htons) */
 name|sin
 operator|.
 name|sin_port
@@ -11978,7 +11979,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|int
 name|help
 parameter_list|()
