@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.8 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,7 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/param.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -104,12 +104,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -481,12 +475,10 @@ operator|=
 name|t
 operator|.
 name|tv_sec
-operator|-
+operator|<
 name|su
 operator|->
 name|su_lastmod
-operator|<
-literal|0
 condition|?
 literal|0
 else|:
@@ -648,11 +640,6 @@ name|int
 name|opt
 decl_stmt|,
 name|cmd_err
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 name|cmd_err
 operator|=
@@ -2257,31 +2244,31 @@ block|{
 name|cleaner_stats
 operator|.
 name|blocks_read
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 name|cleaner_stats
 operator|.
 name|blocks_written
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 name|cleaner_stats
 operator|.
 name|segs_cleaned
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 name|cleaner_stats
 operator|.
 name|segs_empty
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 name|cleaner_stats
 operator|.
 name|segs_error
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 block|}
