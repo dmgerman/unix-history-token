@@ -1733,7 +1733,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 comment|/* give us a nice name.. */
 name|name
@@ -3275,7 +3275,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 name|intrptr
@@ -4027,7 +4027,7 @@ if|if
 condition|(
 name|toffs
 operator|==
-name|NULL
+literal|0L
 condition|)
 return|return
 operator|(

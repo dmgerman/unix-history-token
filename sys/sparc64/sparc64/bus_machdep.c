@@ -2440,7 +2440,7 @@ if|if
 condition|(
 name|vaddr
 operator|!=
-name|NULL
+literal|0L
 condition|)
 name|sva
 operator|=
@@ -2464,7 +2464,7 @@ name|size
 argument_list|)
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|panic
 argument_list|(
