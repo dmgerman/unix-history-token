@@ -4213,6 +4213,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* leave from all multicast groups joined */
+if|if
+condition|(
+name|udbinfo
+operator|.
+name|listhead
+operator|!=
+name|NULL
+condition|)
 name|in6_pcbpurgeif0
 argument_list|(
 name|LIST_FIRST
@@ -4225,6 +4233,14 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ripcbinfo
+operator|.
+name|listhead
+operator|!=
+name|NULL
+condition|)
 name|in6_pcbpurgeif0
 argument_list|(
 name|LIST_FIRST
