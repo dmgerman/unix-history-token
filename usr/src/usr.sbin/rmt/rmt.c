@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	4.1 82/04/02"
+literal|"@(#)rmt.c	4.2 82/04/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,8 +67,12 @@ begin_define
 define|#
 directive|define
 name|MAXRECSIZ
-value|(60*1024)
+value|(10*1024)
 end_define
+
+begin_comment
+comment|/* small enuf for pdp-11's too */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -178,7 +182,7 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|long
+name|int
 name|rval
 decl_stmt|;
 name|char
@@ -787,6 +791,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"rmtd: A %d\n"
+argument_list|,
+name|rval
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -925,6 +942,24 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
+argument_list|(
+name|debug
+argument_list|,
+literal|"rmtd: E %d (%s)\n"
+argument_list|,
+name|num
+argument_list|,
+name|sys_errlist
+index|[
+name|num
+index|]
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
