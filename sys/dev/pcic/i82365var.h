@@ -341,9 +341,6 @@ name|void
 modifier|*
 name|intr_est
 decl_stmt|;
-name|pccard_chipset_tag_t
-name|pct
-decl_stmt|;
 comment|/* this needs to be large enough to hold PCIC_MEM_PAGES bits */
 name|int
 name|subregionmask
@@ -430,19 +427,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|pcic_attach_sockets
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -679,6 +672,58 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * bus/device/etc routines  */
+end_comment
+
+begin_function_decl
+name|int
+name|pcic_activate_resource
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|rid
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pcic_deactivate_resource
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|rid
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

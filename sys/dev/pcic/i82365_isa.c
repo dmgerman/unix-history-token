@@ -688,16 +688,6 @@ literal|1
 expr_stmt|;
 name|sc
 operator|->
-name|pct
-operator|=
-operator|(
-name|pccard_chipset_tag_t
-operator|)
-operator|&
-name|pcic_isa_functions
-expr_stmt|;
-name|sc
-operator|->
 name|irq_rid
 operator|=
 literal|0
@@ -803,7 +793,7 @@ if|#
 directive|if
 literal|0
 comment|/* Not yet */
-block|pcic_attach(dev);  	pcic_isa_bus_width_probe (dev, sc->iot, sc->ioh, 	    rman_get_start(sc->port_res),  	    rman_get_end(sc->port_res) - rman_get_end(sc->port_res) + 1);  	pcic_attach_sockets(sc);
+block|pcic_attach(dev);  	pcic_isa_bus_width_probe (dev, sc->iot, sc->ioh, 	    rman_get_start(sc->port_res),  	    rman_get_end(sc->port_res) - rman_get_end(sc->port_res) + 1);  	pcic_attach_sockets(dev);
 endif|#
 directive|endif
 return|return
@@ -924,6 +914,72 @@ argument_list|,
 name|pcic_isa_detach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_shutdown
+argument_list|,
+name|bus_generic_shutdown
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_suspend
+argument_list|,
+name|bus_generic_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|bus_generic_resume
+argument_list|)
+block|,
+comment|/* Bus Interface */
+name|DEVMETHOD
+argument_list|(
+name|bus_driver_added
+argument_list|,
+name|bus_generic_driver_added
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_activate_resource
+argument_list|,
+name|pcic_activate_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_deactivate_resource
+argument_list|,
+name|pcic_deactivate_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_setup_intr
+argument_list|,
+name|bus_generic_setup_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_teardown_intr
+argument_list|,
+name|bus_generic_teardown_intr
+argument_list|)
+block|,
+if|#
+directive|if
+literal|0
+comment|/* pccard/cardbus interface */
+block|DEVMETHOD(card_set_resource_attribute, pcic_set_resource_attribute), 	DEVMETHOD(card_get_resource_attribute, pcic_get_resource_attribute),
+comment|/* Power Interface */
+comment|/* Not yet */
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
