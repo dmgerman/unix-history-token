@@ -98,7 +98,7 @@ name|m_comp
 range|:
 literal|1
 decl_stmt|;
-comment|/* op. performs comparision */
+comment|/* op. performs comparison */
 name|u_int
 name|m_enumop
 range|:

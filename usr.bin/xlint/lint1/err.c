@@ -1,32 +1,69 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: err.c,v 1.8 1995/10/02 17:37:00 jpo Exp $	*/
+comment|/*	$NetBSD: err.c,v 1.16 2001/12/13 23:56:00 augustss Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: err.c,v 1.8 1995/10/02 17:37:00 jpo Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RCSID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: err.c,v 1.16 2001/12/13 23:56:00 augustss Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lint1.h"
+end_include
 
 begin_comment
 comment|/* number of errors found */
@@ -48,92 +85,43 @@ name|sytxerr
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"lint1.h"
-end_include
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|basename
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|verror
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vwarning
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|const
@@ -629,7 +617,7 @@ comment|/* 160 */
 literal|"constant in conditional context"
 block|,
 comment|/* 161 */
-literal|"comparision of %s with %s, op %s"
+literal|"comparison of %s with %s, op %s"
 block|,
 comment|/* 162 */
 literal|"a cast does not yield an lvalue"
@@ -833,7 +821,7 @@ comment|/* 228 */
 literal|"questionable conversion of function pointer"
 block|,
 comment|/* 229 */
-literal|"nonportable character comparision, op %s"
+literal|"nonportable character comparison, op %s"
 block|,
 comment|/* 230 */
 literal|"argument %s unused in function %s"
@@ -872,7 +860,7 @@ comment|/* 241 */
 literal|"combination of '%s' and '%s', op %s"
 block|,
 comment|/* 242 */
-literal|"dubious comparision of enums, op %s"
+literal|"dubious comparison of enums, op %s"
 block|,
 comment|/* 243 */
 literal|"illegal structure pointer combination"
@@ -965,7 +953,7 @@ comment|/* 272 */
 literal|"bit-field type '%s' invalid in ANSI C"
 block|,
 comment|/* 273 */
-literal|"ANSI C forbids comparision of %s with %s"
+literal|"ANSI C forbids comparison of %s with %s"
 block|,
 comment|/* 274 */
 literal|"cast discards 'const' from pointer target type"
@@ -1073,9 +1061,71 @@ comment|/* 308 */
 literal|"extra bits set to 0 in conversion of '%s' to '%s', op %s"
 block|,
 comment|/* 309 */
+literal|"symbol renaming can't be used on function arguments"
+block|,
+comment|/* 310 */
+literal|"symbol renaming can't be used on automatic variables"
+block|,
+comment|/* 311 */
+literal|"%s C does not support // comments"
+block|,
+comment|/* 312 */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * print a list of the messages with their ids  */
+end_comment
+
+begin_function
+name|void
+name|msglist
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|msgs
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|msgs
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%d\t%s\n"
+argument_list|,
+name|i
+argument_list|,
+name|msgs
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * If Fflag is not set basename() returns a pointer to the last  * component of the path, otherwise it returns the argument.  */
@@ -1088,13 +1138,11 @@ name|char
 modifier|*
 name|basename
 parameter_list|(
-name|path
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1171,22 +1219,29 @@ specifier|static
 name|void
 name|verror
 parameter_list|(
-name|n
-parameter_list|,
-name|ap
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|,
 name|va_list
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
 modifier|*
 name|fn
 decl_stmt|;
+if|if
+condition|(
+name|ERR_ISSET
+argument_list|(
+name|n
+argument_list|,
+operator|&
+name|msgset
+argument_list|)
+condition|)
+return|return;
 name|fn
 operator|=
 name|basename
@@ -1228,7 +1283,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n"
+literal|" [%d]\n"
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 name|nerr
@@ -1242,22 +1299,29 @@ specifier|static
 name|void
 name|vwarning
 parameter_list|(
-name|n
-parameter_list|,
-name|ap
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|,
 name|va_list
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
 modifier|*
 name|fn
 decl_stmt|;
+if|if
+condition|(
+name|ERR_ISSET
+argument_list|(
+name|n
+argument_list|,
+operator|&
+name|msgset
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|nowarn
@@ -1305,54 +1369,34 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n"
+literal|" [%d]\n"
+argument_list|,
+name|n
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wflag
+condition|)
+name|nerr
+operator|++
 expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|error
-argument_list|(
+parameter_list|(
 name|int
 name|n
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|error
-argument_list|(
-name|n
-argument_list|,
-name|va_alist
-argument_list|)
-name|int
-name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|va_list
 name|ap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1360,15 +1404,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|verror
 argument_list|(
 name|n
@@ -1382,13 +1417,10 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|lerror
 parameter_list|(
 specifier|const
@@ -1398,22 +1430,6 @@ name|msg
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|lerror
-parameter_list|(
-name|msg
-parameter_list|,
-name|va_alist
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -1423,9 +1439,6 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1433,15 +1446,6 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|fn
 operator|=
 name|basename
@@ -1502,48 +1506,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|warning
-argument_list|(
+parameter_list|(
 name|int
 name|n
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|warning
-argument_list|(
-name|n
-argument_list|,
-name|va_alist
-argument_list|)
-name|int
-name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|va_list
 name|ap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1551,15 +1526,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vwarning
 argument_list|(
 name|n
@@ -1573,13 +1539,10 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|message
 parameter_list|(
 name|int
@@ -1587,20 +1550,6 @@ name|n
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|message
-parameter_list|(
-name|n
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -1610,9 +1559,17 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
+if|if
+condition|(
+name|ERR_ISSET
+argument_list|(
+name|n
+argument_list|,
+operator|&
+name|msgset
+argument_list|)
+condition|)
+return|return;
 name|va_start
 argument_list|(
 name|ap
@@ -1620,15 +1577,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|fn
 operator|=
 name|basename
@@ -1670,7 +1618,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n"
+literal|" [%d]\n"
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 name|va_end
@@ -1683,9 +1633,6 @@ end_function
 
 begin_function
 name|int
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|gnuism
 parameter_list|(
 name|int
@@ -1693,20 +1640,6 @@ name|n
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|gnuism
-parameter_list|(
-name|n
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|ap
@@ -1714,9 +1647,6 @@ decl_stmt|;
 name|int
 name|msg
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1724,15 +1654,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sflag

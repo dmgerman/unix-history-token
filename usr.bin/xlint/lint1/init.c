@@ -1,27 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: init.c,v 1.4 1995/10/02 17:21:37 jpo Exp $	*/
+comment|/*	$NetBSD: init.c,v 1.9 2001/09/18 18:15:54 wiz Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: init.c,v 1.4 1995/10/02 17:21:37 jpo Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RCSID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: init.c,v 1.9 2001/09/18 18:15:54 wiz Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -41,7 +54,7 @@ file|"lint1.h"
 end_include
 
 begin_comment
-comment|/*  * initerr is set as soon as a fatal error occured in an initialisation.  * The effect is that the rest of the initialisation is ignored (parsed  * by yacc, expression trees built, but no initialisation takes place).  */
+comment|/*  * initerr is set as soon as a fatal error occurred in an initialisation.  * The effect is that the rest of the initialisation is ignored (parsed  * by yacc, expression trees built, but no initialisation takes place).  */
 end_comment
 
 begin_decl_stmt
@@ -72,84 +85,66 @@ name|initstk
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|popi2
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|popinit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|pushinit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|testinit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nextinit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|strginit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|tnode_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Initialize the initialisation stack by putting an entry for the variable  * which is to be initialized on it.  */
@@ -158,7 +153,9 @@ end_comment
 begin_function
 name|void
 name|prepinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|istk_t
 modifier|*
@@ -257,7 +254,9 @@ begin_function
 specifier|static
 name|void
 name|popi2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|istk_t
 modifier|*
@@ -389,11 +388,9 @@ specifier|static
 name|void
 name|popinit
 parameter_list|(
-name|brace
-parameter_list|)
 name|int
 name|brace
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -454,7 +451,9 @@ begin_function
 specifier|static
 name|void
 name|pushinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|istk_t
 modifier|*
@@ -845,7 +844,9 @@ begin_function
 specifier|static
 name|void
 name|testinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|istk_t
 modifier|*
@@ -924,11 +925,9 @@ specifier|static
 name|void
 name|nextinit
 parameter_list|(
-name|brace
-parameter_list|)
 name|int
 name|brace
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1070,7 +1069,9 @@ end_function
 begin_function
 name|void
 name|initlbr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1138,7 +1139,9 @@ end_function
 begin_function
 name|void
 name|initrbr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1157,12 +1160,10 @@ begin_function
 name|void
 name|mkinit
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 name|ptrdiff_t
 name|offs
@@ -1205,7 +1206,7 @@ name|initsym
 operator|->
 name|s_scl
 expr_stmt|;
-comment|/* 	 * Do not test for automatic aggregat initialisation. If the 	 * initalizer starts with a brace we have the warning already. 	 * If not, an error will be printed that the initializer must 	 * be enclosed by braces. 	 */
+comment|/* 	 * Do not test for automatic aggregat initialisation. If the 	 * initializer starts with a brace we have the warning already. 	 * If not, an error will be printed that the initializer must 	 * be enclosed by braces. 	 */
 comment|/* 	 * Local initialisation of non-array-types with only one expression 	 * without braces is done by ASSIGN 	 */
 if|if
 condition|(
@@ -1596,12 +1597,10 @@ specifier|static
 name|int
 name|strginit
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 name|tspec_t
 name|t

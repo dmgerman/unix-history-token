@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lint1.h,v 1.6 1995/10/02 17:31:41 jpo Exp $	*/
+comment|/* $NetBSD: lint1.h,v 1.12 2002/01/31 19:33:27 tv Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1996 Christopher G. Demetriou.  All Rights Reserved.  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,6 +18,31 @@ include|#
 directive|include
 file|"op.h"
 end_include
+
+begin_comment
+comment|/* XXX - works for most systems, but the whole ALIGN thing needs to go away */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ALIGN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ALIGN
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + 7)& ~7)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Describes the position of a declaration or anything else.  */
@@ -35,10 +60,29 @@ name|char
 modifier|*
 name|p_file
 decl_stmt|;
+name|int
+name|p_uniq
+decl_stmt|;
+comment|/* uniquifier */
 block|}
 name|pos_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Copies curr_pos, keeping things unique. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNIQUE_CURR_POS
+parameter_list|(
+name|pos
+parameter_list|)
+define|\
+value|do {								\     	STRUCT_ASSIGN((pos), curr_pos);					\ 	curr_pos.p_uniq++;						\ 	if (curr_pos.p_file == csrc_pos.p_file)				\ 	    csrc_pos.p_uniq++;						\     } while (0)
+end_define
 
 begin_comment
 comment|/*  * Strings cannot be referenced to simply by a pointer to its first  * char. This is because strings can contain NUL characters other than the  * trailing NUL.  *  * Strings are stored with a trailing NUL.  */
@@ -122,7 +166,7 @@ decl_stmt|;
 comment|/* set if an integer constant is 					   unsigned in ANSI C */
 union|union
 block|{
-name|quad_t
+name|int64_t
 name|_v_quad
 decl_stmt|;
 comment|/* integers */
@@ -319,6 +363,9 @@ modifier|*
 name|_t_args
 decl_stmt|;
 comment|/* arguments (if t_proto) */
+block|}
+name|t_u
+union|;
 struct|struct
 block|{
 name|u_int
@@ -334,11 +381,8 @@ literal|24
 decl_stmt|;
 comment|/* offset of bit-field */
 block|}
-name|_t_u
+name|t_b
 struct|;
-block|}
-name|t_u
-union|;
 name|struct
 name|type
 modifier|*
@@ -389,14 +433,14 @@ begin_define
 define|#
 directive|define
 name|t_flen
-value|t_u._t_u._t_flen
+value|t_b._t_flen
 end_define
 
 begin_define
 define|#
 directive|define
 name|t_foffs
-value|t_u._t_u._t_foffs
+value|t_b._t_foffs
 end_define
 
 begin_comment
@@ -494,6 +538,12 @@ modifier|*
 name|s_name
 decl_stmt|;
 comment|/* name */
+specifier|const
+name|char
+modifier|*
+name|s_rename
+decl_stmt|;
+comment|/* renamed symbol's given name */
 name|pos_t
 name|s_dpos
 decl_stmt|;
@@ -1209,6 +1259,101 @@ include|#
 directive|include
 file|"externs1.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|ERR_SETSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|__NERRBITS
+value|(sizeof(unsigned int))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|err_set
+block|{
+name|unsigned
+name|int
+name|errs_bits
+index|[
+operator|(
+name|ERR_SETSIZE
+operator|+
+name|__NERRBITS
+operator|-
+literal|1
+operator|)
+operator|/
+name|__NERRBITS
+index|]
+decl_stmt|;
+block|}
+name|err_set
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ERR_SET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((p)->errs_bits[(n)/__NERRBITS] |= (1<< ((n) % __NERRBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_CLR
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((p)->errs_bits[(n)/__NERRBITS]&= ~(1<< ((n) % __NERRBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_ISSET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((p)->errs_bits[(n)/__NERRBITS]& (1<< ((n) % __NERRBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|(void)memset((p), 0, sizeof(*(p)))
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|err_set
+name|msgset
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

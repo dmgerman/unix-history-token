@@ -1,27 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mem2.c,v 1.3 1995/10/02 17:27:11 jpo Exp $	*/
+comment|/*	$NetBSD: mem2.c,v 1.6 2002/01/21 19:49:52 tv Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: mem2.c,v 1.3 1995/10/02 17:27:11 jpo Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RCSID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: mem2.c,v 1.6 2002/01/21 19:49:52 tv Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -56,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -107,7 +114,9 @@ end_decl_stmt
 begin_function
 name|void
 name|initmem
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|pgsz
@@ -149,11 +158,9 @@ name|void
 modifier|*
 name|xalloc
 parameter_list|(
-name|sz
-parameter_list|)
 name|size_t
 name|sz
-decl_stmt|;
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -164,12 +171,17 @@ name|prot
 decl_stmt|,
 name|flags
 decl_stmt|;
+comment|/* Align to at least 8 bytes. */
 name|sz
 operator|=
-name|ALIGN
-argument_list|(
+operator|(
 name|sz
-argument_list|)
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|7L
 expr_stmt|;
 if|if
 condition|(
@@ -230,28 +242,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"can't map memory"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ALIGN
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|mbuf
-argument_list|)
-operator|!=
-operator|(
-name|u_long
-operator|)
-name|mbuf
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"mapped address is not aligned"
 argument_list|)
 expr_stmt|;
 operator|(

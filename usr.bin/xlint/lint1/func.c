@@ -1,27 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: func.c,v 1.7 1995/10/02 17:31:40 jpo Exp $	*/
+comment|/*	$NetBSD: func.c,v 1.16 2002/01/03 04:25:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: func.c,v 1.7 1995/10/02 17:31:40 jpo Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RCSID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: func.c,v 1.16 2002/01/03 04:25:15 thorpej Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -49,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"y.tab.h"
+file|"cgram.h"
 end_include
 
 begin_comment
@@ -219,6 +232,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Nonzero if bitfield type errors are suppressed by a BITFIELDTYPE  * directive.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|bitfieldtype_ok
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Nonzero if complaints about use of "long long" are suppressed in  * the next statement or declaration.  */
 end_comment
 
@@ -236,11 +259,9 @@ begin_function
 name|void
 name|pushctrl
 parameter_list|(
-name|env
-parameter_list|)
 name|int
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|cstk_t
 modifier|*
@@ -285,11 +306,9 @@ begin_function
 name|void
 name|popctrl
 parameter_list|(
-name|env
-parameter_list|)
 name|int
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|cstk_t
 modifier|*
@@ -383,7 +402,9 @@ end_comment
 begin_function
 name|void
 name|chkreach
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -416,12 +437,10 @@ begin_function
 name|void
 name|funcdef
 parameter_list|(
-name|fsym
-parameter_list|)
 name|sym_t
 modifier|*
 name|fsym
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -855,7 +874,7 @@ name|dcs
 operator|->
 name|d_notyp
 condition|)
-comment|/* return value is implizitly declared to be int */
+comment|/* return value is implicitly declared to be int */
 name|fsym
 operator|->
 name|s_rimpl
@@ -876,7 +895,9 @@ end_comment
 begin_function
 name|void
 name|funcend
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sym_t
 modifier|*
@@ -1004,7 +1025,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * write the information about the function definition to the 	 * output file 	 * inline functions explicitely declared extern are written as 	 * declarations only. 	 */
+comment|/* 	 * write the information about the function definition to the 	 * output file 	 * inline functions explicitly declared extern are written as 	 * declarations only. 	 */
 if|if
 condition|(
 name|dcs
@@ -1098,23 +1119,17 @@ begin_function
 name|void
 name|label
 parameter_list|(
-name|typ
-parameter_list|,
-name|sym
-parameter_list|,
-name|tn
-parameter_list|)
 name|int
 name|typ
-decl_stmt|;
+parameter_list|,
 name|sym_t
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 name|cstk_t
 modifier|*
@@ -1127,8 +1142,8 @@ decl_stmt|;
 name|val_t
 modifier|*
 name|v
-decl_stmt|,
-modifier|*
+decl_stmt|;
+name|val_t
 name|nv
 decl_stmt|;
 name|tspec_t
@@ -1194,7 +1209,7 @@ name|ci
 operator|->
 name|c_nxt
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|ci
@@ -1352,16 +1367,18 @@ argument_list|(
 name|tn
 argument_list|)
 expr_stmt|;
-name|nv
-operator|=
-name|xcalloc
+operator|(
+name|void
+operator|)
+name|memset
 argument_list|(
-literal|1
+operator|&
+name|nv
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
-argument_list|(
-name|val_t
-argument_list|)
+name|nv
 argument_list|)
 expr_stmt|;
 name|cvtcon
@@ -1374,6 +1391,7 @@ name|ci
 operator|->
 name|c_swtype
 argument_list|,
+operator|&
 name|nv
 argument_list|,
 name|v
@@ -1413,7 +1431,7 @@ operator|.
 name|v_quad
 operator|==
 name|nv
-operator|->
+operator|.
 name|v_quad
 condition|)
 break|break;
@@ -1427,7 +1445,7 @@ operator|&&
 name|isutyp
 argument_list|(
 name|nv
-operator|->
+operator|.
 name|v_tspec
 argument_list|)
 condition|)
@@ -1441,7 +1459,7 @@ operator|(
 name|u_long
 operator|)
 name|nv
-operator|->
+operator|.
 name|v_quad
 argument_list|)
 expr_stmt|;
@@ -1463,7 +1481,7 @@ operator|(
 name|long
 operator|)
 name|nv
-operator|->
+operator|.
 name|v_quad
 argument_list|)
 expr_stmt|;
@@ -1489,7 +1507,6 @@ name|cl
 operator|->
 name|cl_val
 argument_list|,
-operator|*
 name|nv
 argument_list|)
 expr_stmt|;
@@ -1538,7 +1555,7 @@ name|ci
 operator|->
 name|c_nxt
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|ci
@@ -1614,12 +1631,10 @@ begin_function
 name|void
 name|if1
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1675,7 +1690,9 @@ end_comment
 begin_function
 name|void
 name|if2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|cstk
 operator|->
@@ -1702,11 +1719,9 @@ begin_function
 name|void
 name|if3
 parameter_list|(
-name|els
-parameter_list|)
 name|int
 name|els
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1743,12 +1758,10 @@ begin_function
 name|void
 name|switch1
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 name|tspec_t
 name|t
@@ -1971,12 +1984,18 @@ end_comment
 begin_function
 name|void
 name|switch2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|nenum
+init|=
+literal|0
 decl_stmt|,
 name|nclab
+init|=
+literal|0
 decl_stmt|;
 name|sym_t
 modifier|*
@@ -2163,12 +2182,10 @@ begin_function
 name|void
 name|while1
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2329,7 +2346,9 @@ end_comment
 begin_function
 name|void
 name|while2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * The end of the loop can be reached if it is no endless loop 	 * or there was a break statement which was reached. 	 */
 name|reached
@@ -2362,7 +2381,9 @@ end_comment
 begin_function
 name|void
 name|do1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2403,12 +2424,10 @@ begin_function
 name|void
 name|do2
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * If there was a continue statement the expression controlling the 	 * loop is reached. 	 */
 if|if
@@ -2574,25 +2593,18 @@ begin_function
 name|void
 name|for1
 parameter_list|(
-name|tn1
-parameter_list|,
-name|tn2
-parameter_list|,
-name|tn3
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|tnode_t
+modifier|*
 name|tn2
-decl_stmt|,
+parameter_list|,
+name|tnode_t
 modifier|*
 name|tn3
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 comment|/* 	 * If there is no initialisation expression it is possible that 	 * it is intended not to enter the loop at top. 	 */
 if|if
@@ -2818,7 +2830,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * for_exprs stmnt  * for_exprs error  */
@@ -2827,7 +2839,9 @@ end_comment
 begin_function
 name|void
 name|for2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|pos_t
 name|cpos
@@ -2984,12 +2998,10 @@ begin_function
 name|void
 name|dogoto
 parameter_list|(
-name|lab
-parameter_list|)
 name|sym_t
 modifier|*
 name|lab
-decl_stmt|;
+parameter_list|)
 block|{
 name|setuflg
 argument_list|(
@@ -3019,7 +3031,9 @@ end_comment
 begin_function
 name|void
 name|dobreak
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|cstk_t
 modifier|*
@@ -3101,7 +3115,9 @@ end_comment
 begin_function
 name|void
 name|docont
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|cstk_t
 modifier|*
@@ -3128,7 +3144,7 @@ name|ci
 operator|->
 name|c_nxt
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|ci
@@ -3172,12 +3188,10 @@ begin_function
 name|void
 name|doreturn
 parameter_list|(
-name|tn
-parameter_list|)
 name|tnode_t
 modifier|*
 name|tn
-decl_stmt|;
+parameter_list|)
 block|{
 name|tnode_t
 modifier|*
@@ -3211,7 +3225,7 @@ name|ci
 operator|->
 name|c_nxt
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|tn
@@ -3483,11 +3497,9 @@ begin_function
 name|void
 name|glclup
 parameter_list|(
-name|silent
-parameter_list|)
 name|int
 name|silent
-decl_stmt|;
+parameter_list|)
 block|{
 name|pos_t
 name|cpos
@@ -3667,11 +3679,9 @@ begin_function
 name|void
 name|argsused
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3742,11 +3752,9 @@ begin_function
 name|void
 name|varargs
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3817,11 +3825,9 @@ begin_function
 name|void
 name|printflike
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3892,11 +3898,9 @@ begin_function
 name|void
 name|scanflike
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3971,11 +3975,9 @@ begin_function
 name|void
 name|constcond
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|ccflg
 operator|=
@@ -3996,11 +3998,9 @@ begin_function
 name|void
 name|fallthru
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|ftflg
 operator|=
@@ -4021,11 +4021,9 @@ begin_function
 name|void
 name|notreach
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|reached
 operator|=
@@ -4046,11 +4044,9 @@ begin_function
 name|void
 name|lintlib
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4094,13 +4090,70 @@ begin_function
 name|void
 name|linted
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"%s, %d: nowarn = 1\n"
+argument_list|,
+name|curr_pos
+operator|.
+name|p_file
+argument_list|,
+name|curr_pos
+operator|.
+name|p_line
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|nowarn
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Suppress bitfield type errors on the current line.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|void
+name|bitfieldtype
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"%s, %d: bitfieldtype_ok = 1\n"
+argument_list|,
+name|curr_pos
+operator|.
+name|p_file
+argument_list|,
+name|curr_pos
+operator|.
+name|p_line
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bitfieldtype_ok
 operator|=
 literal|1
 expr_stmt|;
@@ -4115,11 +4168,9 @@ begin_function
 name|void
 name|protolib
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4165,11 +4216,9 @@ begin_function
 name|void
 name|longlong
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|quadflg
 operator|=
