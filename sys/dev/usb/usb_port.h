@@ -316,7 +316,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int \ __CONCAT(dname,_match)(parent, match, aux) \ 	struct device *parent; \ 	struct cfdata *match; \ 	void *aux;
+value|int __CONCAT(dname,_match)(struct device *parent, struct cfdata *match, void *aux)
 end_define
 
 begin_define
@@ -350,7 +350,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|void \ __CONCAT(dname,_attach)(parent, self, aux) \ 	struct device *parent; \ 	struct device *self; \ 	void *aux;
+value|void __CONCAT(dname,_attach)(struct device *parent, struct device *self, void *aux)
 end_define
 
 begin_define
@@ -401,7 +401,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int \ __CONCAT(dname,_detach)(self, flags) \ 	struct device *self; \ 	int flags;
+value|int __CONCAT(dname,_detach)(struct device *self, int flags)
 end_define
 
 begin_define
@@ -429,7 +429,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
+value|if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (sc == NULL) \ 		return (ENXIO)
 end_define
 
 begin_define
@@ -920,7 +920,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
+value|if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (sc == NULL) \ 		return (ENXIO)
 end_define
 
 begin_define
@@ -1462,7 +1462,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|sc = devclass_get_softc(__CONCAT(dname,_devclass), unit); \ 	if (!sc) \ 		return (ENXIO)
+value|sc = devclass_get_softc(__CONCAT(dname,_devclass), unit); \ 	if (sc == NULL) \ 		return (ENXIO)
 end_define
 
 begin_define
