@@ -2496,14 +2496,6 @@ name|USRSTACK
 operator|-
 name|maxssiz
 decl_stmt|;
-name|vm_map_t
-name|map
-init|=
-operator|&
-name|vmspace
-operator|->
-name|vm_map
-decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|imgp
@@ -2571,7 +2563,10 @@ argument_list|)
 expr_stmt|;
 name|vm_map_remove
 argument_list|(
-name|map
+operator|&
+name|vmspace
+operator|->
+name|vm_map
 argument_list|,
 literal|0
 argument_list|,
@@ -2595,13 +2590,6 @@ operator|->
 name|proc
 operator|->
 name|p_vmspace
-expr_stmt|;
-name|map
-operator|=
-operator|&
-name|vmspace
-operator|->
-name|vm_map
 expr_stmt|;
 block|}
 comment|/* Allocate a new stack */
