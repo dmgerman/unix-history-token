@@ -38,6 +38,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"opt_compat_oldisa.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -46,6 +52,12 @@ end_endif
 begin_comment
 comment|/*  * ISA Bus Autoconfiguration  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDISA
+end_ifdef
 
 begin_comment
 comment|/*  * Per device structure.  */
@@ -229,6 +241,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_OLDISA */
+end_comment
 
 begin_endif
 endif|#

@@ -488,30 +488,21 @@ name|pcih2cfgregs
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* PCI bus attach definitions (there could be multiple PCI bus *trees* ... */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|pciattach
-block|{
-name|int
-name|unit
-decl_stmt|;
-name|int
-name|pcibushigh
-decl_stmt|;
-name|struct
-name|pciattach
-modifier|*
-name|next
-decl_stmt|;
-block|}
-name|pciattach
-typedef|;
-end_typedef
+begin_endif
+unit|typedef struct pciattach {     int		unit;     int		pcibushigh;     struct pciattach *next; } pciattach;
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1063,6 +1054,27 @@ directive|ifdef
 name|PCI_COMPAT
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_compat_oldpci.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* all this is going some day */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|pcicfgregs
@@ -1100,6 +1112,12 @@ end_define
 begin_comment
 comment|/* just copied from old PCI code for now ... */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDPCI
+end_ifdef
 
 begin_struct
 struct|struct
@@ -1155,6 +1173,11 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1330,6 +1353,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDPCI
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|module
@@ -1364,6 +1393,11 @@ parameter_list|)
 define|\
 value|static moduledata_t name##_mod = {					\ 	#name,								\ 	compat_pci_handler,						\&pcidata							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_ANY)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

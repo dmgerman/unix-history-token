@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_compat_oldpci.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3636,6 +3642,19 @@ directive|include
 file|"pci_if.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|pci_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDPCI
+end_ifdef
+
 begin_comment
 comment|/*  * A simple driver to wrap the old pci driver mechanism for back-compat.  */
 end_comment
@@ -3886,13 +3905,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pci_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Create a new style driver around each old pci driver.  */
 end_comment
@@ -4030,6 +4042,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * New style pci driver.  Parent device is either a pci-host-bridge or a  * pci-pci-bridge.  Both kinds are represented by instances of pcib.  */
