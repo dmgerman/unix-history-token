@@ -3788,6 +3788,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|sleep
 argument_list|(
 name|repeat
