@@ -397,12 +397,6 @@ name|inpcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (*inpcb.list.le_prev != prev) { 			printf("???\n"); 			break; 		}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
