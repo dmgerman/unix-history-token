@@ -6079,11 +6079,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|BPFD_LOCK
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|opromisc
 operator|=
 name|d
@@ -6100,6 +6095,11 @@ argument_list|(
 name|d
 argument_list|,
 name|bp
+argument_list|)
+expr_stmt|;
+name|BPFD_LOCK
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 name|reset_d
