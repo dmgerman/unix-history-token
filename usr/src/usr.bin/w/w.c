@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.9 (Berkeley) %G%"
+literal|"@(#)w.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ directive|define
 name|X_NPROC
 value|7
 block|{
-literal|0
+literal|""
 block|}
 block|, }
 decl_stmt|;
@@ -584,21 +584,33 @@ name|mproc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_union
+union|union
+block|{
 name|struct
 name|user
-name|up
+name|U_up
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
-name|fill
+name|pad
 index|[
-literal|512
+name|NBPG
+index|]
+index|[
+name|UPAGES
 index|]
 decl_stmt|;
-end_decl_stmt
+block|}
+name|Up
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|up
+value|Up.U_up
+end_define
 
 begin_function
 name|main
@@ -1901,7 +1913,10 @@ block|{
 comment|/* print CPU time for all processes& children */
 name|prttime
 argument_list|(
+name|DIV60
+argument_list|(
 name|jobtime
+argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
@@ -1909,7 +1924,10 @@ expr_stmt|;
 comment|/* print cpu time for interesting process */
 name|prttime
 argument_list|(
+name|DIV60
+argument_list|(
 name|proctime
+argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
@@ -2575,11 +2593,12 @@ block|{
 comment|/* not in memory - get from swap device */
 name|addr
 operator|=
+name|dtob
+argument_list|(
 name|mproc
 operator|.
 name|p_swaddr
-operator|<<
-literal|9
+argument_list|)
 expr_stmt|;
 name|lseek
 argument_list|(
@@ -2859,7 +2878,7 @@ index|]
 operator|.
 name|w_lastpg
 operator|=
-name|ctob
+name|dtob
 argument_list|(
 name|db
 operator|.
@@ -3767,6 +3786,20 @@ name|dmp
 operator|->
 name|dm_map
 decl_stmt|;
+name|vsbase
+operator|=
+name|ctod
+argument_list|(
+name|vsbase
+argument_list|)
+expr_stmt|;
+name|vssize
+operator|=
+name|ctod
+argument_list|(
+name|vssize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vsbase
