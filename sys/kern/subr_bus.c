@@ -469,7 +469,7 @@ name|PDEBUG
 parameter_list|(
 name|a
 parameter_list|)
-value|if (bus_debug) {printf("%s:%d: ", __func__, __LINE__), printf a, printf("\n");}
+value|if (bus_debug) {printf("%s:%d: ", __func__, __LINE__), printf a; printf("\n");}
 end_define
 
 begin_define
@@ -5604,6 +5604,17 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|dev
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"device_get_ivars(NULL, ...)"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dev
@@ -5626,19 +5637,23 @@ modifier|*
 name|ivars
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
+name|KASSERT
+argument_list|(
 name|dev
-condition|)
-return|return;
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"device_set_ivars(NULL, ...)"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dev
 operator|->
 name|ivars
 operator|=
 name|ivars
 expr_stmt|;
-return|return;
 block|}
 end_function
 
