@@ -66,12 +66,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<wchar.h>
 end_include
 
