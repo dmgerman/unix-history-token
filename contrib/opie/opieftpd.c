@@ -2637,7 +2637,9 @@ directive|if
 name|DOTITLE
 argument|snprintf(proctitle, sizeof(proctitle),
 literal|"%s: anonymous/%s"
-argument|, remotehost, 	passwd);     setproctitle(proctitle);
+argument|, remotehost, 	passwd);     setproctitle(
+literal|"%s"
+argument|, proctitle);
 endif|#
 directive|endif
 comment|/* DOTITLE */
@@ -2657,7 +2659,9 @@ directive|if
 name|DOTITLE
 argument|snprintf(proctitle, sizeof(proctitle),
 literal|"%s: %s"
-argument|, remotehost, pw->pw_name);     setproctitle(proctitle);
+argument|, remotehost, pw->pw_name);     setproctitle(
+literal|"%s"
+argument|, proctitle);
 endif|#
 directive|endif
 comment|/* DOTITLE */
@@ -3256,7 +3260,9 @@ directive|if
 name|DOTITLE
 argument|snprintf(proctitle, sizeof(proctitle),
 literal|"%s: connected"
-argument|, remotehost);   setproctitle(proctitle);
+argument|, remotehost);   setproctitle(
+literal|"%s"
+argument|, proctitle);
 endif|#
 directive|endif
 comment|/* DOTITLE */
