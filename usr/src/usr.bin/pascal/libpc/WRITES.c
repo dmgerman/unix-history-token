@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)WRITES.c 1.3 %G%"
+literal|"@(#)WRITES.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_expr_stmt
@@ -81,7 +75,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EWRITEIT
+literal|"%s: Attempt to write, but open for reading\n"
 argument_list|,
 name|curfile
 operator|->
@@ -111,9 +105,9 @@ name|fbuf
 argument_list|)
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|EWRITE
+literal|"Could not write to "
 argument_list|,
 name|curfile
 operator|->

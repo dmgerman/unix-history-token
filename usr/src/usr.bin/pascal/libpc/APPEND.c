@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)APPEND.c 1.1 %G%"
+literal|"@(#)APPEND.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_expr_stmt
@@ -75,9 +69,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|EOPEN
+literal|"Could not open "
 argument_list|,
 name|filep
 operator|->

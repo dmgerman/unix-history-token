@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)TEOF.c 1.2 %G%"
+literal|"@(#)TEOF.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_function
@@ -58,7 +52,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ENOFILE
+literal|"Reference to an inactive file\n"
 argument_list|,
 literal|0
 argument_list|)

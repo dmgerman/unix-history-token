@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ARGV.c 1.2 %G%"
+literal|"@(#)ARGV.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_macro
@@ -90,7 +84,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EARGV
+literal|"Argument to argv of %D is out of range\n"
 argument_list|,
 name|subscript
 argument_list|)

@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RSNG4.c 1.2 %G%"
+literal|"@(#)RSNG4.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_function
 name|long
@@ -47,7 +41,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ERANGE
+literal|"Value of %D is out of range\n"
 argument_list|,
 name|value
 argument_list|)

@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)UNPACK.c 1.2 %G%"
+literal|"@(#)UNPACK.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_comment
 comment|/*  * unpack(z,a,i)  *  * with:	z and a as in pack  *  * semantics:	for j := u to v do  *			a[j-u+i] := z[j]  */
@@ -155,7 +149,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EPACK
+literal|"i = %D: Bad i to unpack(z,a,i)\n"
 argument_list|,
 name|i
 argument_list|)

@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PACK.c 1.2 %G%"
+literal|"@(#)PACK.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_comment
 comment|/*  * pack(a,i,z)  *  * with:	a: array[m..n] of t  *	z: packed array[u..v] of t  *  * semantics:	for j := u to v do  *			z[j] := a[j-u+i];  *  * need to check:  *	1. i>= m  *	2. i+(v-u)<= n		(i.e. i-m<= (n-m)-(v-u))  *  * on stack:	lv(z), lv(a), rv(i) (len 4)  *  * move w(t)*(v-u+1) bytes from lv(a)+w(t)*(i-m) to lv(z)  */
@@ -155,7 +149,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EPACK
+literal|"i = %D: Bad i to pack(a,i,z)\n"
 argument_list|,
 name|i
 argument_list|)

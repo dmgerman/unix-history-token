@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SQRT.c 1.2 %G%"
+literal|"@(#)SQRT.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_include
 include|#
@@ -44,7 +38,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ESQRT
+literal|"Negative argument of %e to sqrt\n"
 argument_list|,
 name|value
 argument_list|)

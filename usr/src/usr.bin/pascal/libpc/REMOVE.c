@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)REMOVE.c 1.2 %G%"
+literal|"@(#)REMOVE.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_macro
@@ -104,7 +98,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ENAMESIZE
+literal|"%s: File name too long\n"
 argument_list|,
 name|name
 argument_list|)
@@ -155,9 +149,9 @@ name|namebuf
 argument_list|)
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|EREMOVE
+literal|"Could not remove "
 argument_list|,
 name|namebuf
 argument_list|)

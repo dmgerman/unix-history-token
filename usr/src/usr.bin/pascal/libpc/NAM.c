@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)NAM.c 1.2 %G%"
+literal|"@(#)NAM.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_function
@@ -77,7 +71,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ENAMRNG
+literal|"Enumerated type value of %D is out of range on output\n"
 argument_list|,
 name|val
 argument_list|)

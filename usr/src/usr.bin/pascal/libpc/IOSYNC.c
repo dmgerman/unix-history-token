@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)IOSYNC.c 1.4 %G%"
+literal|"@(#)IOSYNC.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_comment
@@ -62,7 +56,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EREADIT
+literal|"%s: Attempt to read, but open for writing\n"
 argument_list|,
 name|curfile
 operator|->
@@ -97,7 +91,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EPASTEOF
+literal|"%s: Tried to read past end of file\n"
 argument_list|,
 name|curfile
 operator|->
@@ -173,7 +167,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EPASTEOF
+literal|"%s: Tried to read past end of file\n"
 argument_list|,
 name|curfile
 operator|->

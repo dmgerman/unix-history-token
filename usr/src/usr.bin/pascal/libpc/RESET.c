@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RESET.c 1.3 %G%"
+literal|"@(#)RESET.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_expr_stmt
@@ -102,9 +96,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|ESEEK
+literal|"Could not reset "
 argument_list|,
 name|filep
 operator|->
@@ -190,9 +184,9 @@ operator|)
 expr_stmt|;
 return|return;
 block|}
-name|ERROR
+name|PERROR
 argument_list|(
-name|EOPEN
+literal|"Could not open "
 argument_list|,
 name|filep
 operator|->

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.6 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.7 %G%"; */
 end_comment
 
 begin_include
@@ -247,21 +247,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|errentry
-block|{
-name|long
-function_decl|(
-modifier|*
-name|entryaddr
-function_decl|)
-parameter_list|()
-function_decl|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * program variables  */
 end_comment
@@ -372,21 +357,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* pxp buffer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|errentry
-name|_entry
-index|[
-name|MAXERRS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* error entry catches */
 end_comment
 
 begin_comment

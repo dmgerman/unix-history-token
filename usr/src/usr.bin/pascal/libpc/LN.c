@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)LN.c 1.3 %G%"
+literal|"@(#)LN.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<math.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_function
@@ -44,7 +38,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ELN
+literal|"Non-positive argument of %e to ln\n"
 argument_list|,
 name|value
 argument_list|)

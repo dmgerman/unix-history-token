@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCLOSE.c 1.3 %G%"
+literal|"@(#)PCLOSE.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_macro
@@ -134,7 +128,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ECLOSE
+literal|"%s: Close failed\n"
 argument_list|,
 name|next
 operator|->
@@ -164,9 +158,9 @@ name|pfname
 argument_list|)
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|EREMOVE
+literal|"Could not remove "
 argument_list|,
 name|next
 operator|->

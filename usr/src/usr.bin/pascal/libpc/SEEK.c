@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SEEK.c 1.1 %G%"
+literal|"@(#)SEEK.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_comment
@@ -75,9 +69,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|ESEEK
+literal|"Could not reset "
 argument_list|,
 name|curfile
 operator|->

@@ -9,15 +9,16 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ASRT.c 1.1 %G%"
+literal|"@(#)ASRT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
+end_define
 
 begin_macro
 name|ASRT
@@ -48,13 +49,33 @@ condition|(
 name|cond
 condition|)
 return|return;
+if|if
+condition|(
+name|stmt
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ERROR
 argument_list|(
-name|EASRT
+literal|"Assertion failed: %s\n"
 argument_list|,
 name|stmt
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+else|else
+block|{
+name|ERROR
+argument_list|(
+literal|"Assertion failed\n"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 end_block
 

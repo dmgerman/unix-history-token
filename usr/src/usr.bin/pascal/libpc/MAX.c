@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)MAX.c 1.3 %G%"
+literal|"@(#)MAX.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_function
@@ -58,7 +52,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EFMTSIZE
+literal|"Non-positive format width: %D\n"
 argument_list|,
 name|width
 argument_list|)

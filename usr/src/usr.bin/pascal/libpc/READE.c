@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READE.c 1.4 %G%"
+literal|"@(#)READE.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_function
@@ -85,7 +79,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EREADIT
+literal|"%s: Attempt to read, but open for writing\n"
 argument_list|,
 name|curfile
 operator|->
@@ -121,7 +115,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EPASTEOF
+literal|"%s: Tried to read past end of file\n"
 argument_list|,
 name|curfile
 operator|->
@@ -136,16 +130,9 @@ name|retval
 operator|==
 literal|0
 condition|)
-block|{
-name|ERROR
-argument_list|(
-name|ENUMNTFD
-argument_list|,
-name|namebuf
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+goto|goto
+name|ename
+goto|;
 name|curfile
 operator|->
 name|funit
@@ -266,9 +253,11 @@ operator|--
 name|cnt
 condition|)
 do|;
+name|ename
+label|:
 name|ERROR
 argument_list|(
-name|ENUMNTFD
+literal|"Unknown name \"%s\" found on enumerated type read\n"
 argument_list|,
 name|namebuf
 argument_list|)

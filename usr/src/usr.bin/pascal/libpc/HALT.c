@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)HALT.c 1.1 %G%"
+literal|"@(#)HALT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_macro
 name|HALT
@@ -28,8 +22,13 @@ begin_block
 block|{
 name|ERROR
 argument_list|(
-name|EHALT
+literal|"Call to procedure halt\n"
 argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|PCEXIT
+argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;

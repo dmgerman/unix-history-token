@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)STLIM.c 1.1 %G%"
+literal|"@(#)STLIM.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_macro
@@ -49,7 +43,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ESTLIM
+literal|"Statement count limit of %D exceeded\n"
 argument_list|,
 name|_stcnt
 argument_list|)

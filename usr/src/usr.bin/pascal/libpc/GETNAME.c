@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.5 %G%"
+literal|"@(#)GETNAME.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_comment
@@ -341,7 +335,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ECLOSE
+literal|"%s: Close failed\n"
 argument_list|,
 name|filep
 operator|->
@@ -376,9 +370,9 @@ name|pfname
 argument_list|)
 condition|)
 block|{
-name|ERROR
+name|PERROR
 argument_list|(
-name|EREMOVE
+literal|"Could not remove "
 argument_list|,
 name|filep
 operator|->
@@ -507,7 +501,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ENAMESIZE
+literal|"%s: File name too long\n"
 argument_list|,
 name|name
 argument_list|)

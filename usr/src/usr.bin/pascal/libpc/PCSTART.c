@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCSTART.c 1.4 %G%"
+literal|"@(#)PCSTART.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,16 +124,6 @@ name|char
 operator|*
 operator|)
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|errentry
-name|_entry
-index|[
-name|MAXERRS
-index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)NEW.c 1.2 %G%"
+literal|"@(#)NEW.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_macro
@@ -87,7 +81,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|EOUTOFMEM
+literal|"Ran out of memory\n"
 argument_list|,
 literal|0
 argument_list|)

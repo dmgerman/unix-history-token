@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)LLIMIT.c 1.2 %G%"
+literal|"@(#)LLIMIT.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_expr_stmt
@@ -77,7 +71,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ELLIMIT
+literal|"%s: Line limit exceeded\n"
 argument_list|,
 name|curfile
 operator|->

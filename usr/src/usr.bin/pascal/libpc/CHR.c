@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CHR.c 1.2 %G%"
+literal|"@(#)CHR.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_function
 name|char
@@ -42,7 +36,7 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ECHR
+literal|"Argument to chr of %D is out of range\n"
 argument_list|,
 name|value
 argument_list|)

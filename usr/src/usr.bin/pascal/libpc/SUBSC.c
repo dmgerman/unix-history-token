@@ -9,15 +9,9 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SUBSC.c 1.2 %G%"
+literal|"@(#)SUBSC.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
-end_include
 
 begin_function
 name|long
@@ -50,11 +44,12 @@ condition|)
 block|{
 name|ERROR
 argument_list|(
-name|ESUBSC
+literal|"Subscript value of %D is out of range\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 return|return
 name|i

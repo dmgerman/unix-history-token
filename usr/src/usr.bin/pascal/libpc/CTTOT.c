@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CTTOT.c 1.3 %G%"
+literal|"@(#)CTTOT.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_decl_stmt
