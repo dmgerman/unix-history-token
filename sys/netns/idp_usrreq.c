@@ -1982,7 +1982,7 @@ argument_list|(
 name|nsp
 argument_list|)
 expr_stmt|;
-name|sofree
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)
@@ -1992,6 +1992,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* XXX huh, called after sofree()? */
 break|break;
 case|case
 name|PRU_SOCKADDR

@@ -1814,7 +1814,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|sofree
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)

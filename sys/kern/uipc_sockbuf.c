@@ -702,7 +702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When an attempt at a new connection is noted on a socket  * which accepts connections, sonewconn is called.  If the  * connection is possible (subject to space constraints, etc.)  * then we allocate a new structure, propoerly linked into the  * data structure of the original socket, and return this.  * Connstatus may be 0, or SO_ISCONFIRMING, or SO_ISCONNECTED.  */
+comment|/*  * When an attempt at a new connection is noted on a socket  * which accepts connections, sonewconn is called.  If the  * connection is possible (subject to space constraints, etc.)  * then we allocate a new structure, propoerly linked into the  * data structure of the original socket, and return this.  * Connstatus may be 0, or SO_ISCONFIRMING, or SO_ISCONNECTED.  *  * note: the ref count on the socket is 0 on return  */
 end_comment
 
 begin_function
@@ -948,7 +948,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|sodealloc
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)

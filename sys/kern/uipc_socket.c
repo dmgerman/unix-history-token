@@ -394,12 +394,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|numopensockets
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|numopensockets
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|numopensockets
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of open sockets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  */
 end_comment
 
 begin_comment
-comment|/*  * Get a socket structure from our zone, and initialize it.  * We don't implement `waitok' yet (see comments in uipc_domain.c).  * Note that it would probably be better to allocate socket  * and PCB at the same time, but I'm not convinced that all  * the protocols can be easily modified to do this.  */
+comment|/*  * Get a socket structure from our zone, and initialize it.  * We don't implement `waitok' yet (see comments in uipc_domain.c).  * Note that it would probably be better to allocate socket  * and PCB at the same time, but I'm not convinced that all  * the protocols can be easily modified to do this.  *  * soalloc() returns a socket with a ref count of 0.  */
 end_comment
 
 begin_function
@@ -454,6 +482,7 @@ name|so_zone
 operator|=
 name|socket_zone
 expr_stmt|;
+comment|/* sx_init(&so->so_sxlock, "socket sxlock"); */
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -462,12 +491,19 @@ operator|->
 name|so_aiojobq
 argument_list|)
 expr_stmt|;
+operator|++
+name|numopensockets
+expr_stmt|;
 block|}
 return|return
 name|so
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * socreate returns a socket with a ref count of 1.  The socket should be  * closed with soclose().  */
+end_comment
 
 begin_function
 name|int
@@ -683,6 +719,11 @@ name|so_proto
 operator|=
 name|prp
 expr_stmt|;
+name|soref
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -712,7 +753,7 @@ name|so_state
 operator||=
 name|SS_NOFDREF
 expr_stmt|;
-name|sofree
+name|sorele
 argument_list|(
 name|so
 argument_list|)
@@ -805,17 +846,33 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sodealloc
 parameter_list|(
-name|so
-parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_count
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"sodealloc(): so_count %d"
+operator|,
+name|so
+operator|->
+name|so_count
+operator|)
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_gencnt
@@ -970,6 +1027,7 @@ operator|->
 name|so_cred
 argument_list|)
 expr_stmt|;
+comment|/* sx_destroy(&so->so_sxlock); */
 name|zfree
 argument_list|(
 name|so
@@ -978,6 +1036,9 @@ name|so_zone
 argument_list|,
 name|so
 argument_list|)
+expr_stmt|;
+operator|--
+name|numopensockets
 expr_stmt|;
 block|}
 end_function
@@ -1122,6 +1183,21 @@ name|so
 operator|->
 name|so_head
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_count
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"socket %p so_count not 0"
+operator|,
+name|so
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -1237,7 +1313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close a socket on last file table reference removal.  * Initiate disconnect if connected.  * Free socket when disconnect complete.  */
+comment|/*  * Close a socket on last file table reference removal.  * Initiate disconnect if connected.  * Free socket when disconnect complete.  *  * This function will sorele() the socket.  Note that soclose() may be  * called prior to the ref count reaching zero.  The actual socket  * structure will not be freed until the ref count reaches zero.  */
 end_comment
 
 begin_function
@@ -1578,7 +1654,7 @@ name|so_state
 operator||=
 name|SS_NOFDREF
 expr_stmt|;
-name|sofree
+name|sorele
 argument_list|(
 name|so
 argument_list|)
@@ -1636,11 +1712,12 @@ condition|(
 name|error
 condition|)
 block|{
-name|sofree
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* note: does not decrement the ref count */
 return|return
 name|error
 return|;

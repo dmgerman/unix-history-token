@@ -28,6 +28,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_comment
+comment|/* SX locks */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -62,6 +72,10 @@ modifier|*
 name|so_zone
 decl_stmt|;
 comment|/* zone we were allocated from */
+name|int
+name|so_count
+decl_stmt|;
+comment|/* reference count */
 name|short
 name|so_type
 decl_stmt|;
@@ -701,6 +715,40 @@ parameter_list|(
 name|sb
 parameter_list|)
 value|{ \ 	(sb)->sb_flags&= ~SB_LOCK; \ 	if ((sb)->sb_flags& SB_WANT) { \ 		(sb)->sb_flags&= ~SB_WANT; \ 		wakeup((caddr_t)&(sb)->sb_flags); \ 	} \ }
+end_define
+
+begin_comment
+comment|/*  * soref()/sorele() ref-count the socket structure.  Note that you must  * still explicitly close the socket, but the last ref count will free  * the structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|soref
+parameter_list|(
+name|so
+parameter_list|)
+value|do {			\ 				++so->so_count; \ 			} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sorele
+parameter_list|(
+name|so
+parameter_list|)
+value|do {				\ 				if (so->so_count<= 0)	\ 					panic("sorele");\ 				if (--so->so_count == 0)\ 					sofree(so);	\ 			} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sotryfree
+parameter_list|(
+name|so
+parameter_list|)
+value|do {				\ 				if (so->so_count == 0)	\ 					sofree(so);	\ 			} while(0)
 end_define
 
 begin_define
@@ -1794,21 +1842,6 @@ expr|struct
 name|thread
 operator|*
 name|td
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|sodealloc
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-name|so
 operator|)
 argument_list|)
 decl_stmt|;

@@ -430,7 +430,7 @@ argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
-name|sofree
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)
@@ -440,6 +440,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* XXX huh? called after the sofree()? */
 return|return
 literal|0
 return|;

@@ -2273,7 +2273,7 @@ name|so_pcb
 operator|=
 literal|0
 expr_stmt|;
-name|sofree
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)

@@ -870,6 +870,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * API socket close on file pointer.  We call soclose() to close the   * socket (including initiating closing protocols).  soclose() will  * sorele() the file reference but the actual socket will not go away  * until the socket's ref count hits 0.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -897,6 +901,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
 name|fp
 operator|->
 name|f_ops
@@ -906,14 +915,9 @@ name|badfileops
 expr_stmt|;
 if|if
 condition|(
-name|fp
-operator|->
-name|f_data
-condition|)
-name|error
+operator|(
+name|so
 operator|=
-name|soclose
-argument_list|(
 operator|(
 expr|struct
 name|socket
@@ -922,14 +926,25 @@ operator|)
 name|fp
 operator|->
 name|f_data
-argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|fp
 operator|->
 name|f_data
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
+name|error
+operator|=
+name|soclose
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error

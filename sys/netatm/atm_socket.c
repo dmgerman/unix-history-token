@@ -403,7 +403,7 @@ name|so_pcb
 operator|=
 name|NULL
 expr_stmt|;
-name|sofree
+name|sotryfree
 argument_list|(
 name|so
 argument_list|)
