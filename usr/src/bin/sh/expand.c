@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	5.9 (Berkeley) %G%"
+literal|"@(#)expand.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1886,6 +1886,8 @@ name|in
 operator|.
 name|jp
 condition|)
+name|exitstatus
+operator|=
 name|waitforjob
 argument_list|(
 name|in
