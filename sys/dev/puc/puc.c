@@ -1414,11 +1414,6 @@ name|puc_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"puc_intr\n"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 operator|(
