@@ -349,6 +349,7 @@ directive|endif
 name|mlen
 operator|=
 sizeof|sizeof
+expr|*
 name|mbstat
 expr_stmt|;
 if|if
@@ -697,6 +698,12 @@ goto|goto
 name|err
 goto|;
 block|}
+name|mlen
+operator|=
+sizeof|sizeof
+expr|*
+name|mbstat
+expr_stmt|;
 if|if
 condition|(
 name|sysctlbyname
@@ -900,11 +907,28 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|sysctlbyname
+argument_list|(
+literal|"hw.ncpu"
+argument_list|,
+operator|&
+name|ncpu
+argument_list|,
+operator|&
+name|mlen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|warn
 argument_list|(
-literal|"sysctl: retrieving kern.smp.cpus"
+literal|"sysctl: retrieving number of cpus"
 argument_list|)
 expr_stmt|;
 goto|goto
