@@ -2481,6 +2481,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2516,6 +2519,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 name|VM_PAGER_OK
 return|;
@@ -2636,6 +2642,9 @@ literal|1
 operator|)
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2669,6 +2678,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|reqblkno
@@ -2772,6 +2784,9 @@ name|a_reqpage
 operator|-
 name|pbackwards
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2794,6 +2809,9 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * pforwards is the number of pages that are contiguous 	 * after the current page. 	 */
@@ -2830,6 +2848,9 @@ operator|)
 operator|)
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2858,6 +2879,9 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|pcount
 operator|=
