@@ -1229,6 +1229,10 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'\020'
+case|:
+comment|/* ^P */
+case|case
 name|KEY_UP
 case|:
 if|if
@@ -1241,6 +1245,10 @@ name|startline
 operator|--
 expr_stmt|;
 break|break;
+case|case
+literal|'\016'
+case|:
+comment|/* ^N */
 case|case
 name|KEY_DOWN
 case|:

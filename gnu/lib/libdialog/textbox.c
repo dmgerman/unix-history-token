@@ -1335,6 +1335,10 @@ case|case
 literal|'k'
 case|:
 case|case
+literal|'\020'
+case|:
+comment|/* ^P */
+case|case
 name|KEY_UP
 case|:
 if|if
@@ -1564,6 +1568,10 @@ comment|/* Next line */
 case|case
 literal|'j'
 case|:
+case|case
+literal|'\016'
+case|:
+comment|/* ^N */
 case|case
 name|KEY_DOWN
 case|:
