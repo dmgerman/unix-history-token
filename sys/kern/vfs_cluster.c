@@ -3723,11 +3723,19 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|tbp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_WRITE
+expr_stmt|;
 name|buf_start
 argument_list|(
 name|tbp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 			 * If the IO is via the VM then we do some 			 * special VM hackery (yuck).  Since the buffer's 			 * block size may not be page-aligned it is possible 			 * for a page to be shared between two buffers.  We 			 * have to get rid of the duplication when building 			 * the cluster. 			 */
 if|if
 condition|(
