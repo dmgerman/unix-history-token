@@ -1863,7 +1863,7 @@ case|:
 name|ip6lifetime
 operator|++
 expr_stmt|;
-comment|/* print IPv6 adress lifetime */
+comment|/* print IPv6 address lifetime */
 break|break;
 endif|#
 directive|endif
