@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -669,6 +669,14 @@ name|sillyrename
 modifier|*
 name|sp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|extern
 name|int
 name|prtactive
@@ -726,6 +734,26 @@ name|sp
 condition|)
 block|{
 comment|/* 		 * Remove the silly file that was rename'd earlier 		 */
+operator|(
+name|void
+operator|)
+name|nfs_vinvalbuf
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|sp
+operator|->
+name|s_cred
+argument_list|,
+name|p
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|nfs_removeit
 argument_list|(
 name|sp
@@ -765,7 +793,13 @@ name|np
 operator|->
 name|n_flag
 operator|&=
+operator|(
 name|NMODIFIED
+operator||
+name|NFLUSHINPROG
+operator||
+name|NFLUSHWANT
+operator|)
 expr_stmt|;
 return|return
 operator|(
@@ -1027,6 +1061,7 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
+comment|/* 	 * Ugh, another place where interruptible mounts will get hung. 	 * If you make this sleep interruptible, then you have to fix all 	 * the VOP_LOCK() calls to expect interruptibility. 	 */
 while|while
 condition|(
 name|vp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5555,17 +5555,20 @@ operator|&
 name|NQNFSEVICTED
 condition|)
 block|{
-name|NFS_VINVBUF
+operator|(
+name|void
+operator|)
+name|nfs_vinvalbuf
 argument_list|(
-name|np
-argument_list|,
 name|vp
 argument_list|,
-name|TRUE
+name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|np
@@ -5588,13 +5591,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|np
-operator|->
-name|n_flag
-operator|&=
-operator|~
-name|NMODIFIED
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5608,6 +5604,13 @@ name|MNT_WAIT
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|n_flag
+operator|&=
+operator|~
+name|NMODIFIED
 expr_stmt|;
 block|}
 block|}
@@ -5818,8 +5821,8 @@ name|argp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|ncd
+expr|struct
+name|nfsd_cargs
 argument_list|)
 argument_list|)
 condition|)
