@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: SYS.h,v 1.1.1.1 1998/03/09 06:34:40 jb Exp $ */
 end_comment
 
 begin_comment
@@ -112,6 +112,115 @@ comment|/* XXX # of args? */
 value|\ 	CALLSYS_NOERROR(name);					\ 	RET;							\ END(label);
 end_define
 
+begin_comment
+comment|/*  * Design note:  *  * The macros PSYSCALL() and PRSYSCALL() are intended for use where a  * syscall needs to be renamed in the threaded library. When building  * a normal library, they default to the traditional SYSCALL() and  * RSYSCALL(). This avoids the need to #ifdef _THREAD_SAFE everywhere  * that the renamed function needs to be called.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
+begin_comment
+comment|/*  * For the thread_safe versions, we prepend _thread_sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCALL
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|CALL(___CONCAT(_thread_sys_,name))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLEAF
+parameter_list|(
+name|name
+parameter_list|,
+name|args
+parameter_list|)
+define|\
+value|LEAF(___CONCAT(_thread_sys_,name),args)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PEND
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|END(___CONCAT(_thread_sys_,name))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSYSCALL
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|PLEAF(name,0);
+comment|/* XXX # of args? */
+value|\ 	CALLSYS_ERROR(name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRSYSCALL
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|PLEAF(name,0);
+comment|/* XXX # of args? */
+value|\ 	CALLSYS_ERROR(name)					\ 	RET;							\ PEND(name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPSEUDO
+parameter_list|(
+name|label
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|PLEAF(label,0);
+comment|/* XXX # of args? */
+value|\ 	CALLSYS_ERROR(name);					\ 	RET;							\ PEND(label)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * The non-threaded library defaults to traditional syscalls where  * the function name matches the syscall name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSYSCALL
+parameter_list|(
+name|x
+parameter_list|)
+value|SYSCALL(x)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -133,6 +242,43 @@ name|y
 parameter_list|)
 value|PSEUDO(x,y)
 end_define
+
+begin_define
+define|#
+directive|define
+name|PLEAF
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|LEAF(x,y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PEND
+parameter_list|(
+name|x
+parameter_list|)
+value|END(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCALL
+parameter_list|(
+name|x
+parameter_list|)
+value|CALL(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
