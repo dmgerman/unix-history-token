@@ -73,6 +73,7 @@ begin_function
 name|void
 name|conff
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -699,6 +700,7 @@ begin_function
 name|void
 name|sdumpf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file

@@ -446,6 +446,7 @@ name|g_geom
 modifier|*
 name|g_simdisk_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -566,10 +567,12 @@ name|g_geom
 modifier|*
 name|g_simdisk_new
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -678,6 +681,7 @@ begin_function
 name|void
 name|g_simdisk_destroy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -971,6 +975,7 @@ begin_function
 name|void
 name|g_simdisk_stop
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1037,6 +1042,7 @@ begin_function
 name|void
 name|g_simdisk_restart
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

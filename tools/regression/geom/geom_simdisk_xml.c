@@ -109,10 +109,12 @@ begin_function
 name|void
 name|g_simdisk_xml_save
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1245,10 +1247,12 @@ name|g_geom
 modifier|*
 name|g_simdisk_xml_load
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file

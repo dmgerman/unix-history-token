@@ -211,6 +211,7 @@ name|g_consumer
 modifier|*
 name|g_dev_opendev
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -231,6 +232,7 @@ begin_function_decl
 name|int
 name|g_dev_request
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -373,6 +375,7 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -600,6 +603,7 @@ begin_function_decl
 name|void
 name|g_simdisk_destroy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -612,9 +616,11 @@ name|g_geom
 modifier|*
 name|g_simdisk_new
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -627,10 +633,12 @@ name|g_geom
 modifier|*
 name|g_simdisk_xml_load
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -642,10 +650,12 @@ begin_function_decl
 name|void
 name|g_simdisk_xml_save
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -657,6 +667,7 @@ begin_function_decl
 name|void
 name|g_simdisk_stop
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -668,6 +679,7 @@ begin_function_decl
 name|void
 name|g_simdisk_restart
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -758,6 +770,7 @@ begin_function_decl
 name|void
 name|dumpf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -769,6 +782,7 @@ begin_function_decl
 name|void
 name|conff
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -780,6 +794,7 @@ begin_function_decl
 name|void
 name|sdumpf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file

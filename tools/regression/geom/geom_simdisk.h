@@ -115,6 +115,7 @@ name|g_geom
 modifier|*
 name|g_simdisk_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

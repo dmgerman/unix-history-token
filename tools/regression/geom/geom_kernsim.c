@@ -615,6 +615,7 @@ modifier|*
 name|arg
 parameter_list|)
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -672,7 +673,10 @@ name|tp
 operator|->
 name|name
 operator|=
+name|strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(

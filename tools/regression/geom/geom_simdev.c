@@ -322,6 +322,7 @@ name|g_geom
 modifier|*
 name|g_dev_findg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -386,6 +387,7 @@ name|g_consumer
 modifier|*
 name|g_dev_opendev
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -519,6 +521,7 @@ begin_function
 name|int
 name|g_dev_request
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
