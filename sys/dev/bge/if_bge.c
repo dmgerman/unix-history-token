@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|BGE_CSUM_FEATURES
-value|(CSUM_IP | CSUM_TCP | CSUM_UDP | CSUM_IP_FRAGS)
+value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
 end_define
 
 begin_expr_stmt
