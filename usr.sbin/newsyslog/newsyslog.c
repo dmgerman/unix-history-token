@@ -193,41 +193,6 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|kbytes
-parameter_list|(
-name|size
-parameter_list|)
-value|(((size) + 1023)>> 10)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IBMR2
-end_ifdef
-
-begin_comment
-comment|/* Calculates (db * DEV_BSIZE) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|dbtob
-parameter_list|(
-name|db
-parameter_list|)
-value|((unsigned)(db)<< UBSHIFT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Bit-values for the 'flags' parsed from a config-file entry.  */
 end_comment
@@ -320,6 +285,38 @@ end_define
 begin_comment
 comment|/* name of the log is file name pattern. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_PID
+value|5
+end_define
+
+begin_comment
+comment|/* Don't touch pids lower than this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_PID
+value|99999
+end_define
+
+begin_comment
+comment|/* was lower, see /usr/include/sys/proc.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|kbytes
+parameter_list|(
+name|size
+parameter_list|)
+value|(((size) + 1023)>> 10)
+end_define
 
 begin_struct
 struct|struct
@@ -535,24 +532,6 @@ name|timenow
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MIN_PID
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_PID
-value|99999
-end_define
-
-begin_comment
-comment|/* was lower, see /usr/include/sys/proc.h */
-end_comment
-
 begin_decl_stmt
 name|char
 name|hostname
@@ -715,7 +694,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|PRS
+name|parse_args
 parameter_list|(
 name|int
 name|argc
@@ -982,7 +961,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PRS
+name|parse_args
 argument_list|(
 name|argc
 argument_list|,
@@ -2174,7 +2153,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|PRS
+name|parse_args
 parameter_list|(
 name|int
 name|argc
@@ -2186,7 +2165,7 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|c
+name|ch
 decl_stmt|;
 name|char
 modifier|*
@@ -2196,11 +2175,7 @@ name|timenow
 operator|=
 name|time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2255,19 +2230,19 @@ argument_list|,
 literal|'.'
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
-block|{
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 comment|/* Parse command line options. */
 while|while
 condition|(
 operator|(
-name|c
+name|ch
 operator|=
 name|getopt
 argument_list|(
@@ -2284,7 +2259,7 @@ literal|1
 condition|)
 switch|switch
 condition|(
-name|c
+name|ch
 condition|)
 block|{
 case|case
@@ -2357,6 +2332,10 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'m'
+case|:
+comment|/* Used by OpenBSD for "monitor mode" */
 default|default:
 name|usage
 argument_list|()
@@ -3052,7 +3031,7 @@ decl_stmt|;
 name|struct
 name|passwd
 modifier|*
-name|pass
+name|pwd
 decl_stmt|;
 name|struct
 name|group
@@ -3411,7 +3390,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|pass
+name|pwd
 operator|=
 name|getpwnam
 argument_list|(
@@ -3434,7 +3413,7 @@ name|working
 operator|->
 name|uid
 operator|=
-name|pass
+name|pwd
 operator|->
 name|pw_uid
 expr_stmt|;
@@ -4086,6 +4065,7 @@ break|break;
 case|case
 literal|'c'
 case|:
+comment|/* Used by NetBSD  for "CE_CREATE" */
 comment|/* 				 * netbsd uses 'c' for "create".  We will 				 * temporarily accept it for 'g', because 				 * earlier freebsd versions had a typo 				 * of ('G' || 'c')... 				 */
 name|warnx
 argument_list|(
@@ -4149,6 +4129,18 @@ case|case
 literal|'-'
 case|:
 break|break;
+case|case
+literal|'f'
+case|:
+comment|/* Used by OpenBSD for "CE_FOLLOW" */
+case|case
+literal|'m'
+case|:
+comment|/* Used by OpenBSD for "CE_MONITOR" */
+case|case
+literal|'p'
+case|:
+comment|/* Used by NetBSD  for "CE_PLAIN0" */
 default|default:
 name|errx
 argument_list|(
@@ -5384,13 +5376,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Now move the new log file into place */
 if|if
 condition|(
 name|noaction
 condition|)
 name|printf
 argument_list|(
-literal|"Start new log..."
+literal|"Start new log...\n"
 argument_list|)
 expr_stmt|;
 else|else
