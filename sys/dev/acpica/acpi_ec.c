@@ -94,7 +94,7 @@ file|<dev/acpica/acpivar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure */
 end_comment
 
 begin_define
@@ -426,16 +426,12 @@ decl_stmt|;
 name|int
 name|ec_glkhandle
 decl_stmt|;
-name|struct
-name|sx
-name|ec_sxlock
-decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * XXX  * I couldn't find it in the spec but other implementations also use a  * value of 1 ms for the time to acquire global lock.  */
+comment|/*  * XXX njl  * I couldn't find it in the spec but other implementations also use a  * value of 1 ms for the time to acquire global lock.  */
 end_comment
 
 begin_define
@@ -500,6 +496,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|ec
+argument_list|,
+literal|"ACPI embedded controller"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -514,16 +520,15 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|status
-init|=
-name|AE_OK
 decl_stmt|;
-comment|/* Always acquire this EC's mutex. */
-name|sx_xlock
+comment|/* Always acquire the exclusive lock. */
+name|status
+operator|=
+name|AE_OK
+expr_stmt|;
+name|ACPI_SERIAL_BEGIN
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
+name|ec
 argument_list|)
 expr_stmt|;
 comment|/* If _GLK is non-zero, also acquire the global lock. */
@@ -553,12 +558,9 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-name|sx_xunlock
+name|ACPI_SERIAL_END
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
+name|ec
 argument_list|)
 expr_stmt|;
 block|}
@@ -595,12 +597,9 @@ operator|->
 name|ec_glkhandle
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
+name|ACPI_SERIAL_END
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
+name|ec
 argument_list|)
 expr_stmt|;
 block|}
@@ -1747,16 +1746,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
-argument_list|,
-literal|"ACPI embedded controller"
-argument_list|)
-expr_stmt|;
 comment|/* Retrieve previously probed values via device ivars. */
 name|sc
 operator|->
@@ -2219,14 +2208,6 @@ argument_list|,
 name|sc
 operator|->
 name|ec_data_res
-argument_list|)
-expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2884,6 +2865,25 @@ name|Status
 operator|=
 name|AE_ERROR
 expr_stmt|;
+name|Status
+operator|=
+name|EcLock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 comment|/* Perform the transaction(s), based on width. */
 for|for
 control|(
@@ -2903,21 +2903,6 @@ name|EcAddr
 operator|++
 control|)
 block|{
-name|Status
-operator|=
-name|EcLock
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-break|break;
 switch|switch
 condition|(
 name|Function
@@ -3006,11 +2991,6 @@ name|AE_BAD_PARAMETER
 expr_stmt|;
 break|break;
 block|}
-name|EcUnlock
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -3020,6 +3000,11 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|EcUnlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -3063,14 +3048,9 @@ specifier|static
 name|int
 name|EcDbgMaxDelay
 decl_stmt|;
-name|sx_assert
+name|ACPI_SERIAL_ASSERT
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
-argument_list|,
-name|SX_XLOCKED
+name|ec
 argument_list|)
 expr_stmt|;
 name|Status
@@ -3333,14 +3313,9 @@ decl_stmt|;
 name|EC_EVENT
 name|Event
 decl_stmt|;
-name|sx_assert
+name|ACPI_SERIAL_ASSERT
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
-argument_list|,
-name|SX_XLOCKED
+name|ec
 argument_list|)
 expr_stmt|;
 comment|/* Decide what to wait for based on command type. */
@@ -3472,14 +3447,9 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|sx_assert
+name|ACPI_SERIAL_ASSERT
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
-argument_list|,
-name|SX_XLOCKED
+name|ec
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3633,14 +3603,9 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|sx_assert
+name|ACPI_SERIAL_ASSERT
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|ec_sxlock
-argument_list|,
-name|SX_XLOCKED
+name|ec
 argument_list|)
 expr_stmt|;
 ifdef|#
