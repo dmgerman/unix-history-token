@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"indent_globs.h"
 end_include
 
@@ -124,8 +130,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"indent.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|bakcopy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -164,40 +180,24 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|usage
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|extern
 name|int
 name|found_err
 decl_stmt|;
-comment|/* flag set in diag() on error */
+comment|/* flag set in diagN() on error */
 name|int
 name|dec_ind
 decl_stmt|;
@@ -219,6 +219,8 @@ decl_stmt|;
 comment|/* when true, code must be broken */
 name|int
 name|hd_type
+init|=
+literal|0
 decl_stmt|;
 comment|/* used to store type of stmt for if (...), 				 * for (...), etc */
 specifier|register
@@ -1166,10 +1168,11 @@ init|=
 name|buf_ptr
 decl_stmt|;
 specifier|register
+name|int
 name|col
-operator|=
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 literal|1
@@ -1508,7 +1511,7 @@ operator|)
 condition|)
 block|{
 comment|/* check for temp buffer 								 * overflow */
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -1560,6 +1563,7 @@ name|true
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|type_code
 operator|==
 name|sp_paren
@@ -1574,7 +1578,9 @@ operator|&&
 name|ps
 operator|.
 name|else_if
+operator|)
 operator|||
+operator|(
 name|type_code
 operator|==
 name|sp_nparen
@@ -1595,6 +1601,7 @@ literal|1
 index|]
 operator|==
 literal|'}'
+operator|)
 condition|)
 name|force_nl
 operator|=
@@ -1652,7 +1659,7 @@ operator|!
 name|flushed_nl
 condition|)
 comment|/* print error msg if the line 						 * was not already broken */
-name|diag
+name|diag2
 argument_list|(
 literal|0
 argument_list|,
@@ -1821,7 +1828,7 @@ operator|>
 literal|1
 condition|)
 comment|/* check for balanced braces */
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -1928,7 +1935,7 @@ operator|&&
 operator|!
 name|flushed_nl
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|0
 argument_list|,
@@ -2465,7 +2472,7 @@ name|p_l_follow
 operator|=
 literal|0
 expr_stmt|;
-name|diag
+name|diag3
 argument_list|(
 literal|0
 argument_list|,
@@ -3221,7 +3228,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * This should be true iff there were unbalanced parens in the 		 * stmt.  It is a bit complicated, because the semicolon might 		 * be in a for stmt 		 */
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -3419,7 +3426,7 @@ literal|0
 condition|)
 block|{
 comment|/* check for preceding unbalanced 					 * parens */
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -3600,7 +3607,7 @@ name|p_l_follow
 condition|)
 block|{
 comment|/* check for unclosed if, for, else. */
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -3646,7 +3653,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|0
 argument_list|,
@@ -3881,7 +3888,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|0
 argument_list|,
@@ -3928,7 +3935,7 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|0
 argument_list|,
@@ -4163,6 +4170,7 @@ name|ps
 operator|.
 name|block_init
 condition|)
+block|{
 if|if
 condition|(
 name|troff
@@ -4199,6 +4207,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -4218,6 +4227,8 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 else|else
@@ -5000,8 +5011,9 @@ name|blanklines_around_conditional_compilation
 condition|)
 block|{
 specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|prefix_blankline_requested
 operator|++
 expr_stmt|;
@@ -5061,7 +5073,7 @@ name|ps
 expr_stmt|;
 block|}
 else|else
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -5089,7 +5101,7 @@ name|ifdef_level
 operator|<=
 literal|0
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -5138,7 +5150,7 @@ name|ifdef_level
 operator|<=
 literal|0
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|1
 argument_list|,
@@ -5180,7 +5192,7 @@ sizeof|sizeof
 name|ps
 argument_list|)
 condition|)
-name|diag
+name|diag2
 argument_list|(
 literal|0
 argument_list|,
@@ -5209,7 +5221,7 @@ comment|/* subsequent processing of the newline 				 * character will cause the 
 case|case
 name|comment
 case|:
-comment|/* we have gotten a /*  this is a biggie */
+comment|/* we have gotten a / followed by * this is a biggie */
 if|if
 condition|(
 name|flushed_nl
@@ -5272,37 +5284,17 @@ comment|/* end of main while (1) loop */
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|usage
-parameter_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: indent [ file [ outfile ] ] [ options ]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * copy input file to backup file if in_name is /blah/blah/blah/file, then  * backup file will be ".Bfile" then make the backup file the input and  * original input file the output  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|bakcopy
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|n
@@ -5398,6 +5390,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 name|read
@@ -5412,6 +5405,9 @@ argument_list|,
 sizeof|sizeof
 name|buff
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 if|if
 condition|(
@@ -5518,7 +5514,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

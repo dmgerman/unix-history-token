@@ -81,6 +81,12 @@ directive|include
 file|"indent_globs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"indent.h"
+end_include
+
 begin_comment
 comment|/* profile types */
 end_comment
@@ -203,6 +209,17 @@ begin_comment
 comment|/* type (keyword) */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|scan_profile
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -247,6 +264,7 @@ name|pro
 index|[]
 init|=
 block|{
+block|{
 literal|"T"
 block|,
 name|PRO_SPECIAL
@@ -256,7 +274,9 @@ block|,
 name|KEY
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"bacc"
 block|,
 name|PRO_BOOL
@@ -267,7 +287,9 @@ name|ON
 block|,
 operator|&
 name|blanklines_around_conditional_compilation
+block|}
 block|,
+block|{
 literal|"badp"
 block|,
 name|PRO_BOOL
@@ -278,7 +300,9 @@ name|ON
 block|,
 operator|&
 name|blanklines_after_declarations_at_proctop
+block|}
 block|,
+block|{
 literal|"bad"
 block|,
 name|PRO_BOOL
@@ -289,7 +313,9 @@ name|ON
 block|,
 operator|&
 name|blanklines_after_declarations
+block|}
 block|,
+block|{
 literal|"bap"
 block|,
 name|PRO_BOOL
@@ -300,7 +326,9 @@ name|ON
 block|,
 operator|&
 name|blanklines_after_procs
+block|}
 block|,
+block|{
 literal|"bbb"
 block|,
 name|PRO_BOOL
@@ -311,7 +339,9 @@ name|ON
 block|,
 operator|&
 name|blanklines_before_blockcomments
+block|}
 block|,
+block|{
 literal|"bc"
 block|,
 name|PRO_BOOL
@@ -324,7 +354,9 @@ operator|&
 name|ps
 operator|.
 name|leave_comma
+block|}
 block|,
+block|{
 literal|"bl"
 block|,
 name|PRO_BOOL
@@ -335,7 +367,9 @@ name|OFF
 block|,
 operator|&
 name|btype_2
+block|}
 block|,
+block|{
 literal|"br"
 block|,
 name|PRO_BOOL
@@ -346,7 +380,9 @@ name|ON
 block|,
 operator|&
 name|btype_2
+block|}
 block|,
+block|{
 literal|"bs"
 block|,
 name|PRO_BOOL
@@ -357,7 +393,9 @@ name|ON
 block|,
 operator|&
 name|Bill_Shannon
+block|}
 block|,
+block|{
 literal|"cdb"
 block|,
 name|PRO_BOOL
@@ -368,7 +406,9 @@ name|ON
 block|,
 operator|&
 name|comment_delimiter_on_blankline
+block|}
 block|,
+block|{
 literal|"cd"
 block|,
 name|PRO_INT
@@ -381,7 +421,9 @@ operator|&
 name|ps
 operator|.
 name|decl_com_ind
+block|}
 block|,
+block|{
 literal|"ce"
 block|,
 name|PRO_BOOL
@@ -392,7 +434,9 @@ name|ON
 block|,
 operator|&
 name|cuddle_else
+block|}
 block|,
+block|{
 literal|"ci"
 block|,
 name|PRO_INT
@@ -403,7 +447,9 @@ literal|0
 block|,
 operator|&
 name|continuation_indent
+block|}
 block|,
+block|{
 literal|"cli"
 block|,
 name|PRO_SPECIAL
@@ -413,7 +459,9 @@ block|,
 name|CLI
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"c"
 block|,
 name|PRO_INT
@@ -426,7 +474,9 @@ operator|&
 name|ps
 operator|.
 name|com_ind
+block|}
 block|,
+block|{
 literal|"di"
 block|,
 name|PRO_INT
@@ -439,7 +489,9 @@ operator|&
 name|ps
 operator|.
 name|decl_indent
+block|}
 block|,
+block|{
 literal|"dj"
 block|,
 name|PRO_BOOL
@@ -452,7 +504,9 @@ operator|&
 name|ps
 operator|.
 name|ljust_decl
+block|}
 block|,
+block|{
 literal|"d"
 block|,
 name|PRO_INT
@@ -465,7 +519,9 @@ operator|&
 name|ps
 operator|.
 name|unindent_displace
+block|}
 block|,
+block|{
 literal|"eei"
 block|,
 name|PRO_BOOL
@@ -476,7 +532,9 @@ name|ON
 block|,
 operator|&
 name|extra_expression_indent
+block|}
 block|,
+block|{
 literal|"ei"
 block|,
 name|PRO_BOOL
@@ -489,7 +547,9 @@ operator|&
 name|ps
 operator|.
 name|else_if
+block|}
 block|,
+block|{
 literal|"fbc"
 block|,
 name|PRO_FONT
@@ -504,7 +564,9 @@ operator|*
 operator|)
 operator|&
 name|blkcomf
+block|}
 block|,
+block|{
 literal|"fbx"
 block|,
 name|PRO_FONT
@@ -519,7 +581,9 @@ operator|*
 operator|)
 operator|&
 name|boxcomf
+block|}
 block|,
+block|{
 literal|"fb"
 block|,
 name|PRO_FONT
@@ -534,7 +598,9 @@ operator|*
 operator|)
 operator|&
 name|bodyf
+block|}
 block|,
+block|{
 literal|"fc1"
 block|,
 name|PRO_BOOL
@@ -545,7 +611,9 @@ name|ON
 block|,
 operator|&
 name|format_col1_comments
+block|}
 block|,
+block|{
 literal|"fcb"
 block|,
 name|PRO_BOOL
@@ -556,7 +624,9 @@ name|ON
 block|,
 operator|&
 name|format_block_comments
+block|}
 block|,
+block|{
 literal|"fc"
 block|,
 name|PRO_FONT
@@ -571,7 +641,9 @@ operator|*
 operator|)
 operator|&
 name|scomf
+block|}
 block|,
+block|{
 literal|"fk"
 block|,
 name|PRO_FONT
@@ -586,7 +658,9 @@ operator|*
 operator|)
 operator|&
 name|keywordf
+block|}
 block|,
+block|{
 literal|"fs"
 block|,
 name|PRO_FONT
@@ -601,7 +675,9 @@ operator|*
 operator|)
 operator|&
 name|stringf
+block|}
 block|,
+block|{
 literal|"ip"
 block|,
 name|PRO_BOOL
@@ -614,7 +690,9 @@ operator|&
 name|ps
 operator|.
 name|indent_parameters
+block|}
 block|,
+block|{
 literal|"i"
 block|,
 name|PRO_INT
@@ -627,7 +705,9 @@ operator|&
 name|ps
 operator|.
 name|ind_size
+block|}
 block|,
+block|{
 literal|"lc"
 block|,
 name|PRO_INT
@@ -638,7 +718,9 @@ literal|0
 block|,
 operator|&
 name|block_comment_max_col
+block|}
 block|,
+block|{
 literal|"lp"
 block|,
 name|PRO_BOOL
@@ -649,7 +731,9 @@ name|ON
 block|,
 operator|&
 name|lineup_to_parens
+block|}
 block|,
+block|{
 literal|"l"
 block|,
 name|PRO_INT
@@ -660,7 +744,9 @@ literal|0
 block|,
 operator|&
 name|max_col
+block|}
 block|,
+block|{
 literal|"nbacc"
 block|,
 name|PRO_BOOL
@@ -671,7 +757,9 @@ name|OFF
 block|,
 operator|&
 name|blanklines_around_conditional_compilation
+block|}
 block|,
+block|{
 literal|"nbadp"
 block|,
 name|PRO_BOOL
@@ -682,7 +770,9 @@ name|OFF
 block|,
 operator|&
 name|blanklines_after_declarations_at_proctop
+block|}
 block|,
+block|{
 literal|"nbad"
 block|,
 name|PRO_BOOL
@@ -693,7 +783,9 @@ name|OFF
 block|,
 operator|&
 name|blanklines_after_declarations
+block|}
 block|,
+block|{
 literal|"nbap"
 block|,
 name|PRO_BOOL
@@ -704,7 +796,9 @@ name|OFF
 block|,
 operator|&
 name|blanklines_after_procs
+block|}
 block|,
+block|{
 literal|"nbbb"
 block|,
 name|PRO_BOOL
@@ -715,7 +809,9 @@ name|OFF
 block|,
 operator|&
 name|blanklines_before_blockcomments
+block|}
 block|,
+block|{
 literal|"nbc"
 block|,
 name|PRO_BOOL
@@ -728,7 +824,9 @@ operator|&
 name|ps
 operator|.
 name|leave_comma
+block|}
 block|,
+block|{
 literal|"nbs"
 block|,
 name|PRO_BOOL
@@ -739,7 +837,9 @@ name|OFF
 block|,
 operator|&
 name|Bill_Shannon
+block|}
 block|,
+block|{
 literal|"ncdb"
 block|,
 name|PRO_BOOL
@@ -750,7 +850,9 @@ name|OFF
 block|,
 operator|&
 name|comment_delimiter_on_blankline
+block|}
 block|,
+block|{
 literal|"nce"
 block|,
 name|PRO_BOOL
@@ -761,7 +863,9 @@ name|OFF
 block|,
 operator|&
 name|cuddle_else
+block|}
 block|,
+block|{
 literal|"ndj"
 block|,
 name|PRO_BOOL
@@ -774,7 +878,9 @@ operator|&
 name|ps
 operator|.
 name|ljust_decl
+block|}
 block|,
+block|{
 literal|"neei"
 block|,
 name|PRO_BOOL
@@ -785,7 +891,9 @@ name|OFF
 block|,
 operator|&
 name|extra_expression_indent
+block|}
 block|,
+block|{
 literal|"nei"
 block|,
 name|PRO_BOOL
@@ -798,7 +906,9 @@ operator|&
 name|ps
 operator|.
 name|else_if
+block|}
 block|,
+block|{
 literal|"nfc1"
 block|,
 name|PRO_BOOL
@@ -809,7 +919,9 @@ name|OFF
 block|,
 operator|&
 name|format_col1_comments
+block|}
 block|,
+block|{
 literal|"nfcb"
 block|,
 name|PRO_BOOL
@@ -820,7 +932,9 @@ name|OFF
 block|,
 operator|&
 name|format_block_comments
+block|}
 block|,
+block|{
 literal|"nip"
 block|,
 name|PRO_BOOL
@@ -833,7 +947,9 @@ operator|&
 name|ps
 operator|.
 name|indent_parameters
+block|}
 block|,
+block|{
 literal|"nlp"
 block|,
 name|PRO_BOOL
@@ -844,7 +960,9 @@ name|OFF
 block|,
 operator|&
 name|lineup_to_parens
+block|}
 block|,
+block|{
 literal|"npcs"
 block|,
 name|PRO_BOOL
@@ -855,7 +973,9 @@ name|OFF
 block|,
 operator|&
 name|proc_calls_space
+block|}
 block|,
+block|{
 literal|"npro"
 block|,
 name|PRO_SPECIAL
@@ -865,7 +985,9 @@ block|,
 name|IGN
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"npsl"
 block|,
 name|PRO_BOOL
@@ -876,7 +998,9 @@ name|OFF
 block|,
 operator|&
 name|procnames_start_line
+block|}
 block|,
+block|{
 literal|"nps"
 block|,
 name|PRO_BOOL
@@ -887,7 +1011,9 @@ name|OFF
 block|,
 operator|&
 name|pointer_as_binop
+block|}
 block|,
+block|{
 literal|"nsc"
 block|,
 name|PRO_BOOL
@@ -898,7 +1024,9 @@ name|OFF
 block|,
 operator|&
 name|star_comment_cont
+block|}
 block|,
+block|{
 literal|"nsob"
 block|,
 name|PRO_BOOL
@@ -909,7 +1037,9 @@ name|OFF
 block|,
 operator|&
 name|swallow_optional_blanklines
+block|}
 block|,
+block|{
 literal|"nv"
 block|,
 name|PRO_BOOL
@@ -920,7 +1050,9 @@ name|OFF
 block|,
 operator|&
 name|verbose
+block|}
 block|,
+block|{
 literal|"pcs"
 block|,
 name|PRO_BOOL
@@ -931,7 +1063,9 @@ name|ON
 block|,
 operator|&
 name|proc_calls_space
+block|}
 block|,
+block|{
 literal|"psl"
 block|,
 name|PRO_BOOL
@@ -942,7 +1076,9 @@ name|ON
 block|,
 operator|&
 name|procnames_start_line
+block|}
 block|,
+block|{
 literal|"ps"
 block|,
 name|PRO_BOOL
@@ -953,7 +1089,9 @@ name|ON
 block|,
 operator|&
 name|pointer_as_binop
+block|}
 block|,
+block|{
 literal|"sc"
 block|,
 name|PRO_BOOL
@@ -964,7 +1102,9 @@ name|ON
 block|,
 operator|&
 name|star_comment_cont
+block|}
 block|,
+block|{
 literal|"sob"
 block|,
 name|PRO_BOOL
@@ -975,7 +1115,9 @@ name|ON
 block|,
 operator|&
 name|swallow_optional_blanklines
+block|}
 block|,
+block|{
 literal|"st"
 block|,
 name|PRO_SPECIAL
@@ -985,7 +1127,9 @@ block|,
 name|STDIN
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"troff"
 block|,
 name|PRO_BOOL
@@ -996,7 +1140,9 @@ name|ON
 block|,
 operator|&
 name|troff
+block|}
 block|,
+block|{
 literal|"v"
 block|,
 name|PRO_BOOL
@@ -1007,8 +1153,10 @@ name|ON
 block|,
 operator|&
 name|verbose
+block|}
 block|,
 comment|/* whew! */
+block|{
 literal|0
 block|,
 literal|0
@@ -1019,6 +1167,7 @@ literal|0
 block|,
 literal|0
 block|}
+block|}
 struct|;
 end_struct
 
@@ -1026,12 +1175,12 @@ begin_comment
 comment|/*  * set_profile reads $HOME/.indent.pro and ./.indent.pro and handles arguments  * given in these files.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|set_profile
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|FILE
@@ -1134,21 +1283,18 @@ operator|=
 literal|"Command line"
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|scan_profile
-argument_list|(
-name|f
-argument_list|)
+parameter_list|(
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|f
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1240,7 +1386,7 @@ condition|)
 return|return;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
@@ -1249,29 +1395,19 @@ name|param_start
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|int
 name|eqin
-argument_list|(
-name|s1
-argument_list|,
-name|s2
-argument_list|)
-specifier|register
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|s1
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
+parameter_list|,
 name|char
 modifier|*
 name|s2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -1305,18 +1441,18 @@ name|true
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set the defaults.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|set_defaults
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1369,21 +1505,16 @@ operator|->
 name|p_default
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|set_option
-argument_list|(
-name|arg
-argument_list|)
-specifier|register
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|arg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1391,11 +1522,6 @@ name|pro
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|double
-name|atof
-parameter_list|()
-function_decl|;
 name|arg
 operator|++
 expr_stmt|;
@@ -1680,7 +1806,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

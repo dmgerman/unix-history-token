@@ -3,34 +3,20 @@ begin_comment
 comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)pr_comment.c	8.1 (Berkeley) 6/6/93"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char sccsid[] = "@(#)pr_comment.c	8.1 (Berkeley) 6/6/93"; static const char rcsid[] =   "$FreeBSD$";
 endif|#
 directive|endif
 end_endif
@@ -38,6 +24,11 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -57,6 +48,12 @@ directive|include
 file|"indent_globs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"indent.h"
+end_include
+
 begin_comment
 comment|/*  * NAME:  *	pr_comment  *  * FUNCTION:  *	This routine takes care of scanning and printing comments.  *  * ALGORITHM:  *	1) Decide where the comment should be aligned, and if lines should  *	   be broken.  *	2) If lines should not be broken and filled, just copy up to end of  *	   comment.  *	3) If lines should be filled, then scan thru input_buffer copying  *	   characters to com_buf.  Remember where the last blank, tab, or  *	   newline was.  When line is filled, print up to last blank and  *	   continue copying.  *  * HISTORY:  *	November 1976	D A Willcox of CAC	Initial coding  *	12/6/76		D A Willcox of CAC	Modification to handle  *						UNIX-style comments  *  */
 end_comment
@@ -68,12 +65,12 @@ begin_comment
 comment|/*  * this routine processes comments.  It makes an attempt to keep comments from  * going over the max line length.  If a line is too long, it moves everything  * from the last blank to the next comment line.  Blanks and tabs from the  * beginning of the input line are removed  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pr_comment
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|now_col
@@ -96,7 +93,7 @@ comment|/* used for moving string */
 name|int
 name|unix_comment
 decl_stmt|;
-comment|/* tri-state variable used to decide if it is 				 * a unix-style comment. 0 means only blanks 				 * since /*, 1 means regular style comment, 2 				 * means unix style comment */
+comment|/* tri-state variable used to decide if it is 				 * a unix-style comment. 0 means only blanks 				 * since /+*, 1 means regular style comment, 2 				 * means unix style comment */
 name|int
 name|break_delim
 init|=
@@ -109,7 +106,7 @@ name|ps
 operator|.
 name|just_saw_decl
 decl_stmt|;
-comment|/*      * int         ps.last_nl = 0;	/* true iff the last significant thing      * weve seen is a newline      */
+comment|/*      * int         ps.last_nl = 0;	 true iff the last significant thing      * weve seen is a newline      */
 name|int
 name|one_liner
 init|=
@@ -205,7 +202,7 @@ name|box_com
 operator|=
 name|true
 expr_stmt|;
-comment|/* A comment with a '-' or '*' immediately 				 * after the /* is assumed to be a boxed 				 * comment. A comment with a newline 				 * immediately after the /* is assumed to 				 * be a block comment and is treated as a 				 * box comment unless format_block_comments 				 * is nonzero (the default). */
+comment|/* A comment with a '-' or '*' immediately 				 * after the /+* is assumed to be a boxed 				 * comment. A comment with a newline 				 * immediately after the /+* is assumed to 				 * be a block comment and is treated as a 				 * box comment unless format_block_comments 				 * is nonzero (the default). */
 name|break_delim
 operator|=
 literal|0
@@ -274,8 +271,9 @@ block|}
 else|else
 block|{
 specifier|register
+name|int
 name|target_col
-expr_stmt|;
+decl_stmt|;
 name|break_delim
 operator|=
 literal|0
@@ -459,7 +457,7 @@ operator|++
 operator|=
 literal|'/'
 expr_stmt|;
-comment|/* put '/*' into buffer */
+comment|/* put '/' followed by '*' into buffer */
 operator|*
 name|e_com
 operator|++
@@ -1674,7 +1672,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
