@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.13 (Berkeley) %G%"
+literal|"@(#)init.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1761,9 +1761,10 @@ index|[
 literal|2
 index|]
 decl_stmt|,
-name|len
-decl_stmt|,
 name|curlevel
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 specifier|extern
 name|int
