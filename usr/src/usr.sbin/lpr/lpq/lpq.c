@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpq.c	8.2 (Berkeley) %G%"
+literal|"@(#)lpq.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,20 @@ end_decl_stmt
 begin_comment
 comment|/* # of users in user array */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ckqueue
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -443,7 +457,9 @@ block|{
 if|if
 condition|(
 name|ckqueue
-argument_list|()
+argument_list|(
+name|buf
+argument_list|)
 operator|<=
 literal|0
 condition|)
@@ -530,12 +546,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|ckqueue
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|cap
+parameter_list|)
+name|char
+modifier|*
+name|cap
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -555,7 +576,7 @@ if|if
 condition|(
 name|cgetstr
 argument_list|(
-name|bp
+name|cap
 argument_list|,
 literal|"sd"
 argument_list|,
@@ -648,7 +669,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

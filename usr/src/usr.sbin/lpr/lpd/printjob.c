@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	8.6 (Berkeley) %G%"
+literal|"@(#)printjob.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7083,9 +7083,16 @@ name|resp
 decl_stmt|,
 name|port
 decl_stmt|;
+name|char
+name|save_ch
+decl_stmt|;
+name|save_ch
+operator|=
 operator|*
 name|cp
-operator|++
+expr_stmt|;
+operator|*
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -7093,7 +7100,7 @@ name|port
 operator|=
 name|atoi
 argument_list|(
-name|cp
+name|LP
 argument_list|)
 expr_stmt|;
 if|if
@@ -7111,7 +7118,7 @@ literal|"%s: bad port number: %s"
 argument_list|,
 name|printer
 argument_list|,
-name|cp
+name|LP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -7120,6 +7127,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|cp
+operator|++
+operator|=
+name|save_ch
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7149,7 +7162,7 @@ name|pfd
 operator|=
 name|getport
 argument_list|(
-name|LP
+name|cp
 argument_list|,
 name|port
 argument_list|)
@@ -7223,20 +7236,11 @@ name|pstatus
 argument_list|(
 literal|"sending to %s port %d"
 argument_list|,
-name|LP
+name|cp
 argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-operator|--
-name|cp
-operator|)
-operator|=
-literal|'@'
-expr_stmt|;
-comment|/* restore LP parameter in case we are called again */
 block|}
 end_function
 

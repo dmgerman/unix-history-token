@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	8.6 (Berkeley) %G%"
+literal|"@(#)lpd.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,6 +276,20 @@ argument_list|(
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ckqueue
+name|__P
+argument_list|(
+operator|(
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -1979,7 +1993,9 @@ block|{
 if|if
 condition|(
 name|ckqueue
-argument_list|()
+argument_list|(
+name|buf
+argument_list|)
 operator|<=
 literal|0
 condition|)
@@ -2094,12 +2110,17 @@ begin_comment
 comment|/*  * Make sure there's some work to do before forking off a child  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|ckqueue
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|cap
+parameter_list|)
+name|char
+modifier|*
+name|cap
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2119,7 +2140,7 @@ if|if
 condition|(
 name|cgetstr
 argument_list|(
-name|bp
+name|cap
 argument_list|,
 literal|"sd"
 argument_list|,
@@ -2212,7 +2233,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
