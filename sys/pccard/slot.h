@@ -154,6 +154,11 @@ name|int
 name|irqs
 decl_stmt|;
 comment|/* IRQ's that are allowed */
+name|u_int
+modifier|*
+name|imask
+decl_stmt|;
+comment|/* IRQ mask for the PCIC controller */
 name|char
 modifier|*
 name|name

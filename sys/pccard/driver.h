@@ -57,7 +57,7 @@ name|pccard_alloc_intr
 name|__P
 argument_list|(
 operator|(
-name|int
+name|u_int
 name|imask
 operator|,
 name|inthand2_t
@@ -67,9 +67,13 @@ operator|,
 name|int
 name|unit
 operator|,
-name|int
+name|u_int
 operator|*
 name|maskp
+operator|,
+name|u_int
+operator|*
+name|pcic_imask
 operator|)
 argument_list|)
 decl_stmt|;

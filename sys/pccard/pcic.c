@@ -2181,6 +2181,13 @@ name|irqs
 operator|=
 name|free_irqs
 expr_stmt|;
+name|cinfo
+operator|.
+name|pcic_imask
+operator|=
+operator|&
+name|pcic_imask
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LKM
