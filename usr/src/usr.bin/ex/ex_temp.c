@@ -1736,6 +1736,20 @@ condition|)
 goto|goto
 name|oops
 goto|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * This will insure that exrecover gets as much 	 * back after a crash as is absolutely possible, 	 * but can result in pregnant pauses between commands 	 * when the TSYNC call is made, so... 	 */
+operator|(
+name|void
+operator|)
+name|fsync
+argument_list|(
+name|tfile
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
