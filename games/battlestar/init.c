@@ -97,6 +97,14 @@ argument_list|(
 name|uname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|startup
+condition|)
+name|location
+operator|=
+name|dayfile
+expr_stmt|;
 name|wiz
 operator|=
 name|wizard
@@ -112,10 +120,6 @@ condition|(
 name|startup
 condition|)
 block|{
-name|location
-operator|=
-name|dayfile
-expr_stmt|;
 name|direction
 operator|=
 name|NORTH
@@ -405,6 +409,13 @@ argument_list|,
 name|uname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|location
+operator|!=
+name|NULL
+condition|)
+block|{
 name|CUMBER
 operator|=
 literal|3
@@ -470,6 +481,7 @@ name|ELF
 argument_list|)
 expr_stmt|;
 comment|/* closet */
+block|}
 return|return
 literal|0
 return|;
