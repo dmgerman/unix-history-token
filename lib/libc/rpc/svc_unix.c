@@ -1732,9 +1732,13 @@ case|case
 operator|-
 literal|1
 case|:
-name|FD_ZERO
+name|memset
 argument_list|(
 name|fds
+argument_list|,
+literal|0
+argument_list|,
+name|bytes
 argument_list|)
 expr_stmt|;
 if|if
