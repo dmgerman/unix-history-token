@@ -1,11 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: md-static-funcs.c,v 1.2 1994/02/13 20:42:06 jkh Exp $  *  * Called by ld.so when onanating.  * This *must* be a static function, so it is not called through a jmpslot.  */
+comment|/*  *	$Id: md-static-funcs.c,v 1.3 1995/11/02 18:47:55 nate Exp $  *  * Called by ld.so when onanating.  * This *must* be a static function, so it is not called through a jmpslot.  */
 end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|md_relocate_simple
 parameter_list|(
@@ -28,6 +27,12 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|r
+operator|->
+name|r_relative
+condition|)
 operator|*
 operator|(
 name|long
