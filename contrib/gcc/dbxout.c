@@ -4,6 +4,10 @@ comment|/* Output dbx-format symbol table information from GNU compiler.    Copy
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Output dbx-format symbol table data.    This consists of many symbol table entries, each of them    a .stabs assembler pseudo-op with four operands:    a "name" which is really a description of one symbol and its type,    a "code", which is a symbol defined in stab.h whose name starts with N_,    an unused operand always 0,    and a "value" which is an address or an offset.    The name is enclosed in doublequote characters.     Each function, variable, typedef, and structure tag    has a symbol table entry to define it.    The beginning and end of each level of name scoping within    a function are also marked by special symbol table entries.     The "name" consists of the symbol name, a colon, a kind-of-symbol letter,    and a data type number.  The data type number may be followed by    "=" and a type definition; normally this will happen the first time    the type number is mentioned.  The type definition may refer to    other types by number, and those type numbers may be followed    by "=" and nested definitions.     This can make the "name" quite long.    When a name is more than 80 characters, we split the .stabs pseudo-op    into two .stabs pseudo-ops, both sharing the same "code" and "value".    The first one is marked as continued with a double-backslash at the    end of its "name".     The kind-of-symbol letter distinguished function names from global    variables from file-scope variables from parameters from auto    variables in memory from typedef names from register variables.    See `dbxout_symbol'.     The "code" is mostly redundant with the kind-of-symbol letter    that goes in the "name", but not entirely: for symbols located    in static storage, the "code" says which segment the address is in,    which controls how it is relocated.     The "value" for a symbol in static storage    is the core address of the symbol (actually, the assembler    label for the symbol).  For a symbol located in a stack slot    it is the stack offset; for one in a register, the register number.    For a typedef symbol, it is zero.     If DEBUG_SYMS_TEXT is defined, all debugging symbols must be    output while in the text section.     For more on data type definitions, see `dbxout_type'.  */
 end_comment
 
@@ -403,20 +407,42 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If there is a system stabs.h, use it.  Otherwise, use our own.  */
+comment|/* If there is a system stab.h, use it.  Otherwise, use our own.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_STABS_H
-end_ifndef
+begin_comment
+comment|/* ??? This is supposed to describe the target's stab format, so using    the host HAVE_STAB_H appears to be wrong.  For now, we use our own file    when cross compiling.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STAB_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CROSS_COMPILE
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|"gstab.h"
 end_include
+
+begin_comment
+comment|/* If doing DBX on sysV, use our own stab.h.  */
+end_comment
 
 begin_else
 else|#
@@ -1756,6 +1782,7 @@ parameter_list|)
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -2095,10 +2122,12 @@ parameter_list|)
 name|FILE
 modifier|*
 name|file
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -7670,7 +7699,7 @@ directive|ifdef
 name|LEAF_REG_REMAP
 if|if
 condition|(
-name|leaf_function
+name|current_function_uses_only_leaf_regs
 condition|)
 name|leaf_renumber_regs_insn
 argument_list|(
@@ -8582,6 +8611,7 @@ name|decl
 parameter_list|)
 name|tree
 name|decl
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
@@ -8823,7 +8853,7 @@ directive|ifdef
 name|LEAF_REG_REMAP
 if|if
 condition|(
-name|leaf_function
+name|current_function_uses_only_leaf_regs
 condition|)
 block|{
 name|leaf_renumber_regs_insn
@@ -10487,6 +10517,7 @@ name|decl
 parameter_list|)
 name|tree
 name|decl
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 ifdef|#
