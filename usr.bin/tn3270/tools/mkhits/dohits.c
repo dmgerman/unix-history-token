@@ -294,6 +294,17 @@ expr|*
 name|this
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+expr|*
+name|this
+argument_list|)
+expr_stmt|;
 name|this
 operator|->
 name|next
