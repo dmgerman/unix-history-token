@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -641,7 +641,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|off_t
+name|daddr_t
 name|lbprev
 decl_stmt|;
 end_decl_stmt
@@ -1318,7 +1318,7 @@ argument_list|,
 name|bprev
 argument_list|,
 operator|(
-name|off_t
+name|long
 operator|)
 name|osize
 argument_list|)
@@ -1343,7 +1343,7 @@ name|nsize
 argument_list|)
 argument_list|,
 call|(
-name|off_t
+name|long
 call|)
 argument_list|(
 name|request
@@ -4762,7 +4762,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
+name|long
 name|size
 decl_stmt|;
 end_decl_stmt
