@@ -935,7 +935,7 @@ decl_stmt|;
 name|u_int32_t
 name|flags
 decl_stmt|;
-name|bus_dmamap_sync_t
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 name|SGE_CHAIN32
@@ -1372,7 +1372,7 @@ decl_stmt|;
 name|u_int32_t
 name|flags
 decl_stmt|;
-name|bus_dmamap_sync_t
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 name|mpt_req
@@ -4171,7 +4171,7 @@ operator|!=
 name|CAM_DIR_NONE
 condition|)
 block|{
-name|bus_dmamap_sync_t
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 if|if
