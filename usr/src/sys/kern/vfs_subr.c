@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3979,9 +3979,6 @@ name|vnode
 modifier|*
 name|vx
 decl_stmt|;
-name|long
-name|count
-decl_stmt|;
 comment|/* 	 * If a vgone (or vclean) is already in progress, 	 * wait until it is done and return. 	 */
 if|if
 condition|(
@@ -4164,9 +4161,9 @@ operator|&
 name|VALIASED
 condition|)
 block|{
-name|count
+name|vx
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -4205,9 +4202,11 @@ operator|->
 name|v_type
 condition|)
 continue|continue;
-name|count
-operator|++
-expr_stmt|;
+if|if
+condition|(
+name|vx
+condition|)
+break|break;
 name|vx
 operator|=
 name|vq
@@ -4215,9 +4214,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|count
+name|vx
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -4226,9 +4225,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|count
+name|vq
 operator|==
-literal|1
+name|NULL
 condition|)
 name|vx
 operator|->
