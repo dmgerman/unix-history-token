@@ -1840,6 +1840,9 @@ empty_stmt|;
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Waiting for fixit shell to exit.  Go to VTY4 now by\n"
@@ -2936,6 +2939,9 @@ return|;
 block|}
 block|}
 comment|/* BOGON #1: Resurrect /dev after bin distribution screws it up */
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Remaking all devices.. Please wait!"
@@ -2956,8 +2962,13 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Resurrecting /dev entries for slices.."
@@ -3072,6 +3083,9 @@ operator|==
 name|freebsd
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Making slice entries for %s"
@@ -3104,6 +3118,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 block|}
@@ -3167,6 +3183,8 @@ comment|/* Do all the last ugly work-arounds here */
 block|}
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -3193,6 +3211,9 @@ literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Fixing permissions in XFree86 tree.."
@@ -3217,6 +3238,9 @@ literal|"/usr/X11R6/lib/X11/pkgreg.tar.gz"
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Installing package metainfo.."
@@ -3231,6 +3255,8 @@ block|}
 block|}
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -3443,6 +3469,10 @@ argument_list|(
 name|dname
 argument_list|)
 condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Added %s as initial swap device"
@@ -3450,7 +3480,9 @@ argument_list|,
 name|dname
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|msgConfirm
 argument_list|(
 literal|"WARNING!  Unable to swap to %s: %s\n"
@@ -3465,6 +3497,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -3518,6 +3551,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -3565,6 +3600,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Making a new root filesystem on %s"
@@ -3602,6 +3640,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 block|}
@@ -3620,6 +3660,9 @@ literal|"that you have the appropriate device entries already in /dev."
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Checking integrity of existing %s filesystem."
@@ -3682,6 +3725,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 block|}
@@ -3753,6 +3798,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -4031,6 +4078,10 @@ condition|(
 operator|!
 name|i
 condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Added %s as an additional swap device"
@@ -4038,7 +4089,9 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to add %s as a swap device: %s"
@@ -4051,6 +4104,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -4120,6 +4174,9 @@ condition|(
 name|RunningAsInit
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Copying initial device files.."
@@ -4152,6 +4209,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 block|}
@@ -4166,6 +4225,8 @@ argument_list|()
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
