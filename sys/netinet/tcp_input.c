@@ -1101,9 +1101,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|tcp_reass_qsize
-operator|++
-expr_stmt|;
 comment|/* 	 * Allocate a new queue entry. If we can't, or hit the zone limit 	 * just drop the pkt. 	 */
 name|te
 operator|=
@@ -1137,6 +1134,9 @@ literal|0
 operator|)
 return|;
 block|}
+name|tcp_reass_qsize
+operator|++
+expr_stmt|;
 comment|/* 	 * Find a segment which begins after this one does. 	 */
 name|LIST_FOREACH
 argument_list|(
