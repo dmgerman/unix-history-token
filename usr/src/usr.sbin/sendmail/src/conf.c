@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	2.5	%G%"
+literal|"@(#)conf.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,6 +431,51 @@ begin_endif
 endif|#
 directive|endif
 endif|CORY
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ONYX
+end_ifdef
+
+begin_expr_stmt
+specifier|static
+name|char
+operator|*
+name|BerkLocal
+index|[
+index|[]
+operator|=
+block|{
+literal|"x"
+block|,
+literal|"onyx"
+block|,
+name|NULL
+block|}
+expr|;
+name|char
+operator|*
+name|MyLocName
+operator|=
+literal|"Onyx"
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|DaemonName
+init|=
+literal|"Onyx:~MAILER~DAEMON~"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|ONYX
 end_endif
 
 begin_ifdef
