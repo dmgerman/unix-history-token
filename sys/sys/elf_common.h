@@ -1680,7 +1680,18 @@ value|30
 end_define
 
 begin_comment
-comment|/* Object specific flag values. #define	DT_ENCODING	32	/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', even == 'd_val' 				   or none */
+comment|/* Object specific flag values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_ENCODING
+value|32
+end_define
+
+begin_comment
+comment|/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', even == 'd_val' 				   or none */
 end_comment
 
 begin_define
