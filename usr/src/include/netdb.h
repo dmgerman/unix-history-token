@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)netdb.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)netdb.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -32,9 +32,15 @@ decl_stmt|;
 comment|/* length of address */
 name|char
 modifier|*
-name|h_addr
+modifier|*
+name|h_addr_list
 decl_stmt|;
-comment|/* address */
+comment|/* list of addresses from name server */
+define|#
+directive|define
+name|h_addr
+value|h_addr_list[0];
+comment|/* address, for backward compatiblity */
 block|}
 struct|;
 end_struct
