@@ -65,6 +65,77 @@ name|NG_TEE_HOOK_LEFT2RIGHT
 value|"left2right"
 end_define
 
+begin_comment
+comment|/* Statistics structure for one hook */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_tee_hookstat
+block|{
+name|u_int64_t
+name|inOctets
+decl_stmt|;
+name|u_int64_t
+name|inFrames
+decl_stmt|;
+name|u_int64_t
+name|outOctets
+decl_stmt|;
+name|u_int64_t
+name|outFrames
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Statistics structure returned by NGM_TEE_GET_STATS */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_tee_stats
+block|{
+name|struct
+name|ng_tee_hookstat
+name|right
+decl_stmt|;
+name|struct
+name|ng_tee_hookstat
+name|left
+decl_stmt|;
+name|struct
+name|ng_tee_hookstat
+name|right2left
+decl_stmt|;
+name|struct
+name|ng_tee_hookstat
+name|left2right
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Netgraph commands */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_TEE_GET_STATS
+init|=
+literal|1
+block|,
+comment|/* get stats */
+name|NGM_TEE_CLR_STATS
+block|,
+comment|/* clear stats */
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif
