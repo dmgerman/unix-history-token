@@ -1007,7 +1007,7 @@ if|if
 condition|(
 name|rn
 operator|->
-name|rn_b
+name|rn_bit
 operator|<
 literal|0
 condition|)
@@ -1051,14 +1051,14 @@ name|bootpboot_p_tree
 argument_list|(
 name|rn
 operator|->
-name|rn_l
+name|rn_left
 argument_list|)
 expr_stmt|;
 name|bootpboot_p_tree
 argument_list|(
 name|rn
 operator|->
-name|rn_r
+name|rn_right
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5910,7 +5910,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|procp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5991,7 +5991,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|procp
 argument_list|)
 expr_stmt|;
 if|if
