@@ -4679,6 +4679,12 @@ operator|>>
 name|FSHIFT
 expr_stmt|;
 block|}
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|ke
 operator|->
 name|ke_proc
@@ -4692,6 +4698,12 @@ operator|-
 name|ke
 operator|->
 name|ke_ftick
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
