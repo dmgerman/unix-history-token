@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)assyms.h 4.1 %G%" */
+comment|/* "@(#)assyms.h 4.2 %G%" */
 end_comment
 
 begin_comment
@@ -170,19 +170,6 @@ index|[
 name|SYMDALLOP
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-name|char
-name|symnames
-index|[
-name|SYMDALLOP
-operator|*
-name|NCPS
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

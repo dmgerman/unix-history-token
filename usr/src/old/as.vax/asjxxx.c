@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.1 %G%"
+literal|"@(#)asjxxx.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -152,13 +146,13 @@ name|lastjxxx
 expr_stmt|;
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXACTIVE
 expr_stmt|;
 name|jumpfrom
 operator|->
-name|jxbump
+name|s_jxbump
 operator|=
 literal|0
 expr_stmt|;
@@ -170,14 +164,14 @@ name|JBR
 condition|)
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|=
 name|JBRFSIZE
 expr_stmt|;
 else|else
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|=
 name|JXXXFSIZE
 expr_stmt|;
@@ -194,22 +188,22 @@ argument_list|)
 expr_stmt|;
 name|jumpfrom
 operator|->
-name|dest
+name|s_dest
 operator|=
 name|lastnam
 expr_stmt|;
 name|jumpfrom
 operator|->
-name|type
+name|s_type
 operator|=
 name|dotp
 operator|->
-name|xtype
+name|e_xtype
 expr_stmt|;
 comment|/*only TEXT or DATA*/
 name|jumpfrom
 operator|->
-name|index
+name|s_index
 operator|=
 name|dotp
 operator|-
@@ -218,11 +212,11 @@ expr_stmt|;
 comment|/* 		 *	value ALWAYS (ALWAYS!!!) indexes the next instruction 		 *	after the jump, even in the jump must be exploded 		 *	(bumped) 		 */
 name|jumpfrom
 operator|->
-name|value
+name|s_value
 operator|=
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 expr_stmt|;
 name|njxxx
 operator|++
@@ -266,20 +260,20 @@ name|xp
 operator|=
 name|aplast
 operator|->
-name|xp
+name|a_xp
 expr_stmt|;
 if|if
 condition|(
 name|lastjxxx
 operator|->
-name|tag
+name|s_tag
 operator|==
 name|JXTUNNEL
 condition|)
 block|{
 name|lastjxxx
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXINACTIVE
 expr_stmt|;
@@ -287,15 +281,15 @@ name|tunnel
 operator|=
 name|lastjxxx
 operator|->
-name|dest
+name|s_dest
 expr_stmt|;
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|=
 name|tunnel
 operator|->
-name|value
+name|s_value
 comment|/*index of instruction following*/
 operator|-
 literal|3
@@ -306,7 +300,7 @@ operator|(
 operator|(
 name|tunnel
 operator|->
-name|jxfear
+name|s_jxfear
 operator|==
 name|JBRFSIZE
 operator|)
@@ -314,7 +308,7 @@ operator|&&
 operator|(
 name|tunnel
 operator|->
-name|jxbump
+name|s_jxbump
 operator|==
 literal|0
 operator|)
@@ -331,7 +325,7 @@ if|if
 condition|(
 name|lastjxxx
 operator|->
-name|jxbump
+name|s_jxbump
 operator|==
 literal|0
 condition|)
@@ -361,15 +355,15 @@ name|oxvalue
 operator|=
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 expr_stmt|;
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|=
 name|lastjxxx
 operator|->
-name|value
+name|s_value
 expr_stmt|;
 name|putins
 argument_list|(
@@ -384,7 +378,7 @@ argument_list|)
 expr_stmt|;
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|=
 name|oxvalue
 expr_stmt|;
@@ -441,19 +435,19 @@ if|if
 condition|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|!=
 name|XABS
 operator|||
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<
 literal|0
 operator|||
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>
 literal|16
 condition|)
@@ -481,35 +475,35 @@ condition|)
 block|{
 name|sp
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXALIGN
 expr_stmt|;
 name|sp
 operator|->
-name|jxfear
+name|s_jxfear
 operator|=
 operator|(
 literal|1
 operator|<<
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|)
 operator|-
 literal|1
 expr_stmt|;
 name|sp
 operator|->
-name|type
+name|s_type
 operator|=
 name|dotp
 operator|->
-name|xtype
+name|e_xtype
 expr_stmt|;
 name|sp
 operator|->
-name|index
+name|s_index
 operator|=
 name|dotp
 operator|-
@@ -518,17 +512,17 @@ expr_stmt|;
 comment|/* 		 *	We guess that the align will take up at least one 		 *	byte in the code output.  We will correct for this 		 *	initial high guess when we explode (bump) aligns 		 *	when we fix the jxxxes.  We must do this guess 		 *	so that the symbol table is sorted correctly 		 *	and labels declared to fall before the align 		 *	really get their, instead of guessing zero size 		 *	and have the label (incorrectly) fall after the jxxx. 		 *	This is a quirk of our requirement that indices into 		 *	the code stream point to the next byte following 		 *	the logical entry in the symbol table 		 */
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|1
 expr_stmt|;
 name|sp
 operator|->
-name|value
+name|s_value
 operator|=
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 expr_stmt|;
 name|njxxx
 operator|++
@@ -543,7 +537,7 @@ literal|1
 operator|<<
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|)
 operator|-
 literal|1
@@ -552,7 +546,7 @@ while|while
 condition|(
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|&
 name|mask
 condition|)
@@ -586,7 +580,7 @@ literal|0
 expr_stmt|;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|1
 expr_stmt|;
@@ -773,7 +767,7 @@ name|tag
 operator|=
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 expr_stmt|;
 if|if
 condition|(
@@ -802,7 +796,7 @@ if|if
 condition|(
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|==
 name|JBRFSIZE
 comment|/*unconditional*/
@@ -816,7 +810,7 @@ operator|&&
 operator|(
 name|jumpfrom
 operator|->
-name|jxbump
+name|s_jxbump
 operator|!=
 literal|0
 operator|)
@@ -837,17 +831,17 @@ name|dest
 operator|=
 name|jumpfrom
 operator|->
-name|dest
+name|s_dest
 expr_stmt|;
 if|if
 condition|(
 name|jumpfrom
 operator|->
-name|index
+name|s_index
 operator|!=
 name|dest
 operator|->
-name|index
+name|s_index
 condition|)
 block|{
 name|yyerror
@@ -861,11 +855,11 @@ name|displ
 operator|=
 name|dest
 operator|->
-name|value
+name|s_value
 operator|-
 name|jumpfrom
 operator|->
-name|value
+name|s_value
 expr_stmt|;
 if|if
 condition|(
@@ -884,7 +878,7 @@ condition|(
 operator|(
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|>
 name|JBRFSIZE
 operator|)
@@ -896,31 +890,31 @@ operator|&&
 operator|(
 name|tunnel
 operator|->
-name|dest
+name|s_dest
 operator|==
 name|jumpfrom
 operator|->
-name|dest
+name|s_dest
 operator|)
 operator|&&
 operator|(
 name|tunnel
 operator|->
-name|index
+name|s_index
 operator|==
 name|jumpfrom
 operator|->
-name|index
+name|s_index
 operator|)
 operator|&&
 operator|(
 name|tunnel
 operator|->
-name|value
+name|s_value
 operator|-
 name|jumpfrom
 operator|->
-name|value
+name|s_value
 operator|>=
 name|MINBYTE
 operator|+
@@ -931,14 +925,14 @@ block|{
 comment|/* 						 *	tunnelling is OK 						 */
 name|jumpfrom
 operator|->
-name|dest
+name|s_dest
 operator|=
 name|tunnel
 expr_stmt|;
 comment|/* 						 * no bumping needed, this 						 * is now effectively inactive 						 * but must be remembered 						 */
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXTUNNEL
 expr_stmt|;
@@ -955,7 +949,7 @@ literal|"Tunnel from %s from line %d\n"
 argument_list|,
 name|jumpfrom
 operator|->
-name|name
+name|s_name
 argument_list|,
 name|lineno
 argument_list|)
@@ -974,7 +968,7 @@ name|jumpfrom
 expr_stmt|;
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXNOTYET
 expr_stmt|;
@@ -1015,11 +1009,11 @@ if|if
 condition|(
 name|intdest
 operator|->
-name|value
+name|s_value
 operator|>
 name|dest
 operator|->
-name|value
+name|s_value
 condition|)
 break|break;
 comment|/* beyond destination */
@@ -1027,7 +1021,7 @@ if|if
 condition|(
 name|intdest
 operator|->
-name|tag
+name|s_tag
 operator|<=
 name|JXQUESTIONABLE
 condition|)
@@ -1037,14 +1031,14 @@ if|if
 condition|(
 name|intdest
 operator|->
-name|tag
+name|s_tag
 operator|==
 name|JXALIGN
 condition|)
 block|{
 name|jumpfrom
 operator|->
-name|jxoveralign
+name|s_jxoveralign
 operator|=
 literal|1
 expr_stmt|;
@@ -1057,7 +1051,7 @@ name|displ
 operator|+=
 name|intdest
 operator|->
-name|jxfear
+name|s_jxfear
 expr_stmt|;
 block|}
 if|if
@@ -1070,7 +1064,7 @@ block|{
 comment|/* 					 *	the worst possible conditions 					 *	can't hurt us, so forget about 					 *	this jump 					 */
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXINACTIVE
 expr_stmt|;
@@ -1107,11 +1101,11 @@ if|if
 condition|(
 name|intdest
 operator|->
-name|value
+name|s_value
 operator|<=
 name|dest
 operator|->
-name|value
+name|s_value
 condition|)
 break|break;
 comment|/* beyond destination */
@@ -1119,7 +1113,7 @@ if|if
 condition|(
 name|intdest
 operator|->
-name|tag
+name|s_tag
 operator|<=
 name|JXQUESTIONABLE
 condition|)
@@ -1129,14 +1123,14 @@ if|if
 condition|(
 name|intdest
 operator|->
-name|tag
+name|s_tag
 operator|==
 name|JXALIGN
 condition|)
 block|{
 name|jumpfrom
 operator|->
-name|jxoveralign
+name|s_jxoveralign
 operator|=
 literal|1
 expr_stmt|;
@@ -1148,7 +1142,7 @@ name|displ
 operator|-=
 name|intdest
 operator|->
-name|jxfear
+name|s_jxfear
 expr_stmt|;
 block|}
 if|if
@@ -1160,7 +1154,7 @@ condition|)
 block|{
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXINACTIVE
 expr_stmt|;
@@ -1209,14 +1203,14 @@ if|if
 condition|(
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|==
 name|JXACTIVE
 condition|)
 block|{
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|badjxalign
 condition|?
@@ -1268,7 +1262,7 @@ if|if
 condition|(
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|==
 name|JXALIGN
 condition|)
@@ -1279,7 +1273,7 @@ operator|=
 operator|(
 name|jumpfrom
 operator|->
-name|value
+name|s_value
 operator|-
 literal|1
 operator|)
@@ -1289,7 +1283,7 @@ name|unsigned
 operator|)
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 expr_stmt|;
 if|if
 condition|(
@@ -1301,7 +1295,7 @@ block|{
 comment|/*no virtual displacement*/
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|=
 operator|-
 literal|1
@@ -1311,24 +1305,24 @@ else|else
 block|{
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|=
 operator|(
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|+
 literal|1
 operator|)
 operator|-
 name|displ
 expr_stmt|;
-comment|/* 					 *	assert jumpfrom->jxfear> 0 					 */
+comment|/* 					 *	assert jumpfrom->s_jxfear> 0 					 */
 if|if
 condition|(
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|==
 literal|1
 condition|)
@@ -1336,19 +1330,19 @@ block|{
 comment|/*our prediction was correct*/
 continue|continue;
 block|}
-comment|/* 					 *	assert jumpfrom->jxfear> 1 					 */
+comment|/* 					 *	assert jumpfrom->s_jxfear> 1 					 */
 name|jumpfrom
 operator|->
-name|jxfear
+name|s_jxfear
 operator|-=
 literal|1
 expr_stmt|;
 comment|/*correct guess*/
 block|}
-comment|/* 				 *	assert jumpfrom->jxfear = -1, +1...2**n-1 				 */
+comment|/* 				 *	assert jumpfrom->s_jxfear = -1, +1...2**n-1 				 */
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXNOTYET
 expr_stmt|;
@@ -1362,7 +1356,7 @@ argument_list|)
 expr_stmt|;
 name|jumpfrom
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXINACTIVE
 expr_stmt|;
@@ -1480,7 +1474,7 @@ name|tag
 operator|=
 name|sp
 operator|->
-name|tag
+name|s_tag
 expr_stmt|;
 if|if
 condition|(
@@ -1501,7 +1495,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|dest
+name|s_dest
 operator|!=
 literal|0
 condition|)
@@ -1511,9 +1505,9 @@ literal|"Explode jump to %s on line %d\n"
 argument_list|,
 name|sp
 operator|->
-name|dest
+name|s_dest
 operator|->
-name|name
+name|s_name
 argument_list|,
 name|lineno
 argument_list|)
@@ -1529,13 +1523,13 @@ endif|#
 directive|endif
 name|sp
 operator|->
-name|tag
+name|s_tag
 operator|=
 name|JXINACTIVE
 expr_stmt|;
 name|sp
 operator|->
-name|jxbump
+name|s_jxbump
 operator|=
 literal|1
 expr_stmt|;
@@ -1543,7 +1537,7 @@ name|cum_bump
 operator|+=
 name|sp
 operator|->
-name|jxfear
+name|s_jxfear
 expr_stmt|;
 block|}
 comment|/* 		 *	Only bump labels and jxxxes. Ignored entries can 		 *	be incremented, as they are thrown away later on. 		 *	Stabds are given their final value in the second  		 *	pass. 		 */
@@ -1556,7 +1550,7 @@ condition|)
 comment|/*only bump labels and jxxxes and floating stabs*/
 name|sp
 operator|->
-name|value
+name|s_value
 operator|+=
 name|cum_bump
 expr_stmt|;
@@ -1566,7 +1560,7 @@ index|[
 name|segno
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 operator|+=
 name|cum_bump
 expr_stmt|;

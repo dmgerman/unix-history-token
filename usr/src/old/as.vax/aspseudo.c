@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aspseudo.c 4.1 %G%"
+literal|"@(#)aspseudo.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -55,7 +49,7 @@ parameter_list|,
 name|arg6
 parameter_list|)
 define|\
-value|{ \ 		name,(nargs==0 ? INST0:INSTn), opcode,nargs, \ 		arg1,arg2,arg3,arg4,arg5,arg6 \ 	}
+value|{ \ 		name, opcode, nargs, arg1, arg2, arg3, arg4, arg5, arg6, \ 		(nargs == 0 ? INST0:INSTn) \ 	}
 end_define
 
 begin_define
@@ -70,13 +64,13 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|{ \ 		name, tag, type \ 	}
+value|{ \ 		name, type, 0,   0, 0, 0, 0, 0, 0, \ 		tag \ 	}
 end_define
 
 begin_decl_stmt
 name|readonly
 name|struct
-name|instab
+name|Instab
 name|instab
 index|[]
 init|=

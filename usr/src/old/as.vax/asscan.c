@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan.c 4.2 %G%"
+literal|"@(#)asscan.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -581,6 +575,17 @@ begin_comment
 comment|/*global communication with parser*/
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|Lastjxxx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*this ONLY shuts up cc; see below*/
+end_comment
+
 begin_function
 name|toktype
 name|yylex
@@ -669,14 +674,14 @@ name|glong
 argument_list|(
 name|locxp
 operator|->
-name|xvalue
+name|e_xvalue
 argument_list|,
 name|bufptr
 argument_list|)
 expr_stmt|;
 name|locxp
 operator|->
-name|yvalue
+name|e_yvalue
 operator|=
 literal|0
 expr_stmt|;
@@ -684,19 +689,19 @@ name|makevalue
 label|:
 name|locxp
 operator|->
-name|xtype
+name|e_xtype
 operator|=
 name|XABS
 expr_stmt|;
 name|locxp
 operator|->
-name|xloc
+name|e_xloc
 operator|=
 literal|0
 expr_stmt|;
 name|locxp
 operator|->
-name|xname
+name|e_xname
 operator|=
 name|NULL
 expr_stmt|;
@@ -779,7 +784,7 @@ name|glong
 argument_list|(
 name|locxp
 operator|->
-name|xvalue
+name|e_xvalue
 argument_list|,
 name|bufptr
 argument_list|)
@@ -788,7 +793,7 @@ name|glong
 argument_list|(
 name|locxp
 operator|->
-name|yvalue
+name|e_yvalue
 argument_list|,
 name|bufptr
 argument_list|)
@@ -852,12 +857,22 @@ argument_list|,
 name|bufptr
 argument_list|)
 expr_stmt|;
+comment|/* We can't cast Lastjxxx into (int *) here.. */
 name|gptr
 argument_list|(
-name|lastjxxx
+name|Lastjxxx
 argument_list|,
 name|bufptr
 argument_list|)
+expr_stmt|;
+name|lastjxxx
+operator|=
+operator|(
+expr|struct
+name|symtab
+operator|*
+operator|)
+name|Lastjxxx
 expr_stmt|;
 break|break;
 case|case
@@ -1033,7 +1048,7 @@ operator|)
 name|yylval
 operator|)
 operator|->
-name|xvalue
+name|e_xvalue
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1053,7 +1068,7 @@ operator|)
 name|yylval
 operator|)
 operator|->
-name|xvalue
+name|e_xvalue
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1073,7 +1088,7 @@ operator|)
 name|yylval
 operator|)
 operator|->
-name|xvalue
+name|e_xvalue
 argument_list|,
 operator|(
 operator|(
@@ -1084,7 +1099,7 @@ operator|)
 name|yylval
 operator|)
 operator|->
-name|yvalue
+name|e_yvalue
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1124,7 +1139,7 @@ operator|)
 name|yylval
 operator|)
 operator|->
-name|name
+name|s_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1159,7 +1174,7 @@ operator|&
 name|yylval
 index|]
 operator|->
-name|name
+name|s_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4055,7 +4070,7 @@ literal|1
 argument_list|)
 operator|)
 operator|->
-name|tag
+name|s_tag
 expr_stmt|;
 if|if
 condition|(
@@ -4077,13 +4092,13 @@ operator|)
 name|op
 operator|)
 operator|->
-name|opcode
+name|i_opcode
 expr_stmt|;
 name|val
 operator|=
 name|op
 operator|->
-name|tag
+name|s_tag
 expr_stmt|;
 goto|goto
 name|ret

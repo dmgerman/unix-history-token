@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)asexpr.h 4.1 %G%" */
+comment|/* "@(#)asexpr.h 4.2 %G%" */
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ value|04
 end_define
 
 begin_comment
-comment|/*NAME, INSTn, INST0, REG, DOT*/
+comment|/*NAME, INSTn, INST0, REG, BFINT*/
 end_comment
 
 begin_define

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)as.h 4.2 %G%" */
+comment|/* "@(#)as.h 4.3 %G%" */
 end_comment
 
 begin_ifdef
@@ -26,6 +26,108 @@ directive|define
 name|VAX
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VMS
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNIX
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stab.h>
+end_include
+
+begin_else
+else|#
+directive|else
+else|not FLEXNAMES
+end_else
+
+begin_include
+include|#
+directive|include
+file|<olda.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stab.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|FLEXNAMES
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|UNIX
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMS
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNIXDEVEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
+end_include
+
+begin_else
+else|#
+directive|else
+else|not UNIXDEVEL
+end_else
+
+begin_include
+include|#
+directive|include
+file|<aout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|not UNIXDEVEL
+end_endif
 
 begin_endif
 endif|#
@@ -847,103 +949,270 @@ file|"astoks.h"
 end_include
 
 begin_comment
-comment|/*  *	The structure for one symbol table entry.  *	Symbol table entries are used for both user defined symbols,  *	and symbol slots generated to create the jxxx jump from  *	slots.  */
+comment|/*  *	The structure for one symbol table entry.  *	Symbol table entries are used for both user defined symbols,  *	and symbol slots generated to create the jxxx jump from  *	slots.  *	Caution: the instructions are stored in a shorter version  *	of the struct symtab, using all fields in sym_nm and  *	tag.  The fields used in sym_nm are carefully redeclared  *	in struct Instab and struct instab (see below).  *	If struct nlist gets changed, then Instab and instab may  *	have to be changed.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|symfirstfields
-value|char	*name;	unsigned char tag, type
-end_define
 
 begin_struct
 struct|struct
 name|symtab
 block|{
-name|symfirstfields
-expr_stmt|;
+name|struct
+name|nlist
+name|s_nm
+decl_stmt|;
+name|u_char
+name|s_tag
+decl_stmt|;
+comment|/* assembler tag */
+name|u_char
+name|s_ptype
+decl_stmt|;
+comment|/* if tag == NAME */
+name|u_char
+name|s_jxoveralign
+decl_stmt|;
+comment|/* if a JXXX, jumped over align */
 name|short
-name|___hole
+name|s_index
 decl_stmt|;
-name|char
-name|ptype
-decl_stmt|;
-comment|/*tag == NAME*/
-define|#
-directive|define
-name|jxbump
-value|ptype
-comment|/*tag == JX..., how far to expand*/
-name|char
-name|other
-decl_stmt|;
-comment|/*for stab info*/
-name|short
-name|desc
-decl_stmt|;
-comment|/*tag == NAME*/
-define|#
-directive|define
-name|jxfear
-value|desc
-comment|/*how far needs to be bumped*/
-name|long
-name|value
-decl_stmt|;
-comment|/*address in the segment*/
-name|char
-name|jxoveralign
-decl_stmt|;
-comment|/*if a JXXX, jumped over an align*/
-name|short
-name|index
-decl_stmt|;
-comment|/*which segment*/
+comment|/* which segment */
 name|struct
 name|symtab
 modifier|*
-name|dest
+name|s_dest
 decl_stmt|;
-comment|/*if JXXX, where going to*/
+comment|/* if JXXX, where going to */
 ifdef|#
 directive|ifdef
 name|DJXXX
 name|short
-name|jxline
+name|s_jxline
 decl_stmt|;
-comment|/*source line of the jump from*/
+comment|/* source line of the jump from */
 endif|#
 directive|endif
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  *	Redefinitions of the fields in symtab for  *	use when the symbol table entry marks a jxxx instruction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_jxbump
+value|s_ptype
+end_define
+
+begin_comment
+comment|/* tag == JX..., how far to expand */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_jxfear
+value|s_desc
+end_define
+
+begin_comment
+comment|/* how far needs to be bumped */
+end_comment
+
+begin_comment
+comment|/*  *	Redefinitions of fields in the struct nlist for symbols so that  *	one saves typing, and so that they conform   *	with the old naming conventions.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|s_name
+value|s_nm.n_un.n_name
+end_define
+
+begin_comment
+comment|/* name pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_nmx
+value|s_nm.n_un.n_strx
+end_define
+
+begin_comment
+comment|/* string table index */
+end_comment
+
+begin_else
+else|#
+directive|else
+else|not FLEXNAMES
+end_else
+
+begin_define
+define|#
+directive|define
+name|s_name
+value|s_nm.n_name
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|s_type
+value|s_nm.n_type
+end_define
+
+begin_comment
+comment|/* type of the symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_other
+value|s_nm.n_other
+end_define
+
+begin_comment
+comment|/* other information for sdb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_desc
+value|s_nm.n_desc
+end_define
+
+begin_comment
+comment|/* type descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|s_value
+value|s_nm.n_value
+end_define
+
+begin_comment
+comment|/* value of the symbol, or sdb delta */
+end_comment
+
 begin_struct
 struct|struct
 name|instab
 block|{
-name|symfirstfields
-expr_stmt|;
-define|#
-directive|define
-name|opcode
-value|type
-comment|/*use the same field as symtab.type*/
-name|char
-name|nargs
+name|struct
+name|nlist
+name|s_nm
 decl_stmt|;
-comment|/*how many arguments*/
+comment|/* instruction name, type (opcode) */
+name|u_char
+name|s_tag
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  *	The fields nm.n_desc and nm.n_value total 6 bytes; this is  *	just enough for the 6 bytes describing the argument types.  *	We use a macro to define access to these 6 bytes, assuming that  *	they are allocated adjacently.  *	IF THE FORMAT OF STRUCT nlist CHANGES, THESE MAY HAVE TO BE CHANGED.  *  *	Instab is cleverly declared to look very much the combination of  *	a struct symtab and a struct nlist.  */
+end_comment
+
+begin_struct
+struct|struct
+name|Instab
+block|{
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
 name|char
-name|argtype
+modifier|*
+name|I_name
+decl_stmt|;
+else|#
+directive|else
+else|not FLEXNAMES
+name|char
+name|I_name
+index|[
+name|NCPS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+name|u_char
+name|I_opcode
+decl_stmt|;
+name|char
+name|I_nargs
+decl_stmt|;
+name|char
+name|I_args
 index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/*argument type info*/
+name|u_char
+name|I_s_tag
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  *	Redefinitions of fields in the struct nlist for instructions so that  *	one saves typing, and conforms to the old naming conventions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|i_opcode
+value|s_nm.n_type
+end_define
+
+begin_comment
+comment|/* use the same field as symtab.type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|i_nargs
+value|s_nm.n_other
+end_define
+
+begin_comment
+comment|/* number of arguments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|fetcharg
+parameter_list|(
+name|ptr
+parameter_list|,
+name|n
+parameter_list|)
+value|((struct Instab *)ptr)->I_args[n]
+end_define
 
 begin_struct
 struct|struct
@@ -951,22 +1220,22 @@ name|arg
 block|{
 comment|/*one argument to an instruction*/
 name|char
-name|atype
+name|a_atype
 decl_stmt|;
 name|char
-name|areg1
+name|a_areg1
 decl_stmt|;
 name|char
-name|areg2
+name|a_areg2
 decl_stmt|;
 name|char
-name|dispsize
+name|a_dispsize
 decl_stmt|;
 comment|/*usually d124, unless have B^, etc*/
 name|struct
 name|exp
 modifier|*
-name|xp
+name|a_xp
 decl_stmt|;
 block|}
 struct|;
@@ -977,23 +1246,23 @@ struct|struct
 name|exp
 block|{
 name|long
-name|xvalue
+name|e_xvalue
 decl_stmt|;
 comment|/* MUST be the first field (look at union Double) */
 name|long
-name|yvalue
+name|e_yvalue
 decl_stmt|;
 comment|/* MUST be second field; least sig word of a double */
 name|char
-name|xtype
+name|e_xtype
 decl_stmt|;
 name|char
-name|xloc
+name|e_xloc
 decl_stmt|;
 name|struct
 name|symtab
 modifier|*
-name|xname
+name|e_xname
 decl_stmt|;
 block|}
 struct|;
@@ -1003,14 +1272,14 @@ begin_define
 define|#
 directive|define
 name|doub_MSW
-value|xvalue
+value|e_xvalue
 end_define
 
 begin_define
 define|#
 directive|define
 name|doub_LSW
-value|yvalue
+value|e_yvalue
 end_define
 
 begin_union
@@ -1548,7 +1817,7 @@ comment|/*maps opcodes to instructions*/
 end_comment
 
 begin_extern
-extern|extern  readonly struct instab instab[];
+extern|extern  readonly struct Instab instab[];
 end_extern
 
 begin_decl_stmt
@@ -1603,7 +1872,7 @@ name|outb
 parameter_list|(
 name|val
 parameter_list|)
-value|{dotp->xvalue++; if (passno==2) bputc((val), (txtfil));}
+value|{dotp->e_xvalue++; if (passno==2) bputc((val), (txtfil));}
 end_define
 
 begin_define
@@ -1615,7 +1884,7 @@ name|cp
 parameter_list|,
 name|lg
 parameter_list|)
-value|dotp->xvalue += (lg); if (passno == 2) bwrite((cp), (lg), (txtfil))
+value|dotp->e_xvalue += (lg); if (passno == 2) bwrite((cp), (lg), (txtfil))
 end_define
 
 begin_comment

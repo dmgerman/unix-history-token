@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.1 %G%"
+literal|"@(#)asmain.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,19 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
 end_include
 
 begin_include
@@ -77,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V3.0"
+value|"VAX/UNIX Assembler Vasmain.c"
 end_define
 
 begin_endif
@@ -95,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|vms_lang_name
-value|"VAX/VMS C assembler V1.00"
+value|"VAX/VMS C Assembler V1.00"
 end_define
 
 begin_endif
@@ -1133,7 +1121,7 @@ index|[
 name|locindex
 index|]
 operator|.
-name|xtype
+name|e_xtype
 operator|=
 name|XTEXT
 expr_stmt|;
@@ -1144,7 +1132,7 @@ operator|+
 name|locindex
 index|]
 operator|.
-name|xtype
+name|e_xtype
 operator|=
 name|XDATA
 expr_stmt|;
@@ -1153,7 +1141,7 @@ index|[
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 operator|=
 literal|0
 expr_stmt|;
@@ -1164,7 +1152,7 @@ operator|+
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 operator|=
 literal|0
 expr_stmt|;
@@ -1173,7 +1161,7 @@ index|[
 name|locindex
 index|]
 operator|.
-name|yvalue
+name|e_yvalue
 operator|=
 literal|0
 expr_stmt|;
@@ -1184,7 +1172,7 @@ operator|+
 name|locindex
 index|]
 operator|.
-name|yvalue
+name|e_yvalue
 operator|=
 literal|0
 expr_stmt|;
@@ -1622,7 +1610,7 @@ index|[
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 argument_list|,
 name|FW
 argument_list|)
@@ -1632,7 +1620,7 @@ index|[
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 operator|=
 name|tsize
 expr_stmt|;
@@ -1754,7 +1742,7 @@ operator|+
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 argument_list|,
 name|FW
 argument_list|)
@@ -1766,7 +1754,7 @@ operator|+
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 operator|=
 name|datbase
 operator|+
@@ -2140,7 +2128,7 @@ index|[
 name|locindex
 index|]
 operator|.
-name|xvalue
+name|e_xvalue
 operator|&
 name|FW
 condition|)

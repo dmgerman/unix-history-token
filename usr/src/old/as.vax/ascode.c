@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.1 %G%"
+literal|"@(#)ascode.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,18 +17,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
 end_include
 
 begin_include
@@ -121,7 +109,7 @@ name|nexp
 operator|=
 name|ip
 operator|->
-name|nargs
+name|i_nargs
 expr_stmt|;
 if|if
 condition|(
@@ -175,12 +163,12 @@ argument_list|(
 operator|--
 name|ap2
 argument_list|,
+name|fetcharg
+argument_list|(
 name|ip
-operator|->
-name|argtype
-index|[
+argument_list|,
 name|i
-index|]
+argument_list|)
 argument_list|,
 name|i
 operator|+
@@ -254,7 +242,7 @@ name|at
 operator|=
 name|act
 operator|->
-name|atype
+name|a_atype
 expr_stmt|;
 name|atm
 operator|=
@@ -363,7 +351,7 @@ if|if
 condition|(
 name|act
 operator|->
-name|areg2
+name|a_areg2
 operator|==
 literal|017
 condition|)
@@ -428,11 +416,11 @@ operator|&&
 operator|(
 name|act
 operator|->
-name|areg1
+name|a_areg1
 operator|==
 name|act
 operator|->
-name|areg2
+name|a_areg2
 operator|)
 condition|)
 block|{
@@ -550,7 +538,7 @@ name|PASS2
 goto|;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 name|n
 operator|+
@@ -575,15 +563,11 @@ operator|++
 control|)
 block|{
 comment|/* some args take more than 1 byte */
-name|xtrab
-operator|=
-literal|0
-expr_stmt|;
 name|a
 operator|=
 name|ap
 operator|->
-name|atype
+name|a_atype
 expr_stmt|;
 if|if
 condition|(
@@ -593,7 +577,7 @@ name|AINDX
 condition|)
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|++
 expr_stmt|;
 switch|switch
@@ -613,15 +597,15 @@ name|AEXP
 case|:
 name|a
 operator|=
+name|fetcharg
+argument_list|(
 name|itab
 index|[
 name|op
 index|]
-operator|->
-name|argtype
-index|[
+argument_list|,
 name|i
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -643,22 +627,19 @@ condition|)
 block|{
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|++
 expr_stmt|;
 break|break;
 block|}
 comment|/* 			 *	Reduces to PC relative 			 */
-name|xtrab
-operator|++
-expr_stmt|;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 name|ap
 operator|->
-name|dispsize
+name|a_dispsize
 expr_stmt|;
 break|break;
 case|case
@@ -668,14 +649,14 @@ name|xp
 operator|=
 name|ap
 operator|->
-name|xp
+name|a_xp
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XTYPE
 operator|)
@@ -684,18 +665,18 @@ name|XABS
 operator|||
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XFORW
 condition|)
 block|{
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 name|ap
 operator|->
-name|dispsize
+name|a_dispsize
 expr_stmt|;
 break|break;
 block|}
@@ -703,7 +684,7 @@ if|if
 condition|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|==
 literal|0
 operator|&&
@@ -717,7 +698,7 @@ condition|)
 break|break;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|++
 expr_stmt|;
 if|if
@@ -725,7 +706,7 @@ condition|(
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<
 name|MINBYTE
 operator|)
@@ -733,14 +714,14 @@ operator|||
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>
 name|MAXBYTE
 operator|)
 condition|)
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|++
 expr_stmt|;
 if|if
@@ -748,7 +729,7 @@ condition|(
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<
 name|MINWORD
 operator|)
@@ -756,14 +737,14 @@ operator|||
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>
 name|MAXWORD
 operator|)
 condition|)
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|2
 expr_stmt|;
@@ -775,7 +756,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|atype
+name|a_atype
 operator|&
 name|ASTAR
 condition|)
@@ -787,15 +768,15 @@ else|else
 block|{
 name|a
 operator|=
+name|fetcharg
+argument_list|(
 name|itab
 index|[
 name|op
 index|]
-operator|->
-name|argtype
-index|[
+argument_list|,
 name|i
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -816,7 +797,7 @@ name|xp
 operator|=
 name|ap
 operator|->
-name|xp
+name|a_xp
 expr_stmt|;
 if|if
 condition|(
@@ -824,7 +805,7 @@ operator|(
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XTYPE
 operator|)
@@ -837,7 +818,7 @@ operator|!
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XFORW
 operator|)
@@ -846,7 +827,7 @@ operator|&&
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>=
 literal|0
 operator|)
@@ -854,7 +835,7 @@ operator|&&
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<=
 literal|63
 operator|)
@@ -862,7 +843,7 @@ operator|&&
 operator|(
 name|xp
 operator|->
-name|yvalue
+name|e_yvalue
 operator|==
 literal|0
 operator|)
@@ -900,7 +881,7 @@ operator|(
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XTYPE
 operator|)
@@ -913,7 +894,7 @@ operator|!
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XFORW
 operator|)
@@ -931,7 +912,7 @@ block|{
 comment|/* it is NOT short */
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 operator|(
 operator|(
@@ -952,7 +933,7 @@ name|TYPQ
 case|:
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|8
 expr_stmt|;
@@ -962,7 +943,7 @@ name|TYPL
 case|:
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|4
 expr_stmt|;
@@ -972,7 +953,7 @@ name|TYPW
 case|:
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|2
 expr_stmt|;
@@ -982,7 +963,7 @@ name|TYPB
 case|:
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|1
 expr_stmt|;
@@ -1029,7 +1010,7 @@ name|op
 expr_stmt|;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|1
 expr_stmt|;
@@ -1058,13 +1039,13 @@ name|a
 operator|=
 name|ap
 operator|->
-name|atype
+name|a_atype
 expr_stmt|;
 name|xp
 operator|=
 name|ap
 operator|->
-name|xp
+name|a_xp
 expr_stmt|;
 name|xtrab
 operator|=
@@ -1087,7 +1068,7 @@ literal|0x40
 operator||
 name|ap
 operator|->
-name|areg2
+name|a_areg2
 argument_list|)
 expr_stmt|;
 block|}
@@ -1114,12 +1095,12 @@ literal|0x40
 operator||
 name|ap
 operator|->
-name|areg2
+name|a_areg2
 operator|)
 expr_stmt|;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|1
 expr_stmt|;
@@ -1142,7 +1123,7 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0x10
 expr_stmt|;
@@ -1163,7 +1144,7 @@ case|:
 comment|/* %r */
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0x50
 expr_stmt|;
@@ -1174,7 +1155,7 @@ case|:
 comment|/* (%r) */
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0x60
 expr_stmt|;
@@ -1185,7 +1166,7 @@ case|:
 comment|/* -(%r) */
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0x70
 expr_stmt|;
@@ -1196,7 +1177,7 @@ case|:
 comment|/* (%r) */
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0x80
 expr_stmt|;
@@ -1207,15 +1188,15 @@ case|:
 comment|/* expr */
 name|a
 operator|=
+name|fetcharg
+argument_list|(
 name|itab
 index|[
 name|op
 index|]
-operator|->
-name|argtype
-index|[
+argument_list|,
 name|i
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1228,18 +1209,18 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|=
 name|a
 operator|=
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|-
 operator|(
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+
 literal|1
 operator|)
@@ -1272,23 +1253,23 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|=
 name|a
 operator|=
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|-=
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+
 literal|2
 expr_stmt|;
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|=
 name|XABS
 expr_stmt|;
@@ -1309,7 +1290,7 @@ argument_list|)
 expr_stmt|;
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|=
 name|a
 operator|>>
@@ -1324,7 +1305,7 @@ block|}
 comment|/* reduces to expr(pc) mode */
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 operator|(
 literal|0xAF
@@ -1333,7 +1314,7 @@ name|mod124
 index|[
 name|ap
 operator|->
-name|dispsize
+name|a_dispsize
 index|]
 operator|)
 expr_stmt|;
@@ -1343,7 +1324,7 @@ name|len124
 index|[
 name|ap
 operator|->
-name|dispsize
+name|a_dispsize
 index|]
 operator|+
 name|PCREL
@@ -1355,7 +1336,7 @@ case|:
 comment|/* expr(%r) */
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0xA0
 expr_stmt|;
@@ -1364,7 +1345,7 @@ condition|(
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XTYPE
 operator|)
@@ -1373,20 +1354,20 @@ name|XABS
 operator|||
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XFORW
 condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|+=
 name|mod124
 index|[
 name|ap
 operator|->
-name|dispsize
+name|a_dispsize
 index|]
 expr_stmt|;
 name|xtrab
@@ -1395,7 +1376,7 @@ name|len124
 index|[
 name|ap
 operator|->
-name|dispsize
+name|a_dispsize
 index|]
 expr_stmt|;
 break|break;
@@ -1404,7 +1385,7 @@ if|if
 condition|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|==
 literal|0
 operator|&&
@@ -1412,7 +1393,7 @@ operator|!
 operator|(
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|&
 literal|0x10
 operator|)
@@ -1420,7 +1401,7 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|^=
 literal|0xC0
 expr_stmt|;
@@ -1435,7 +1416,7 @@ condition|(
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<
 name|MINBYTE
 operator|)
@@ -1443,7 +1424,7 @@ operator|||
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>
 name|MAXBYTE
 operator|)
@@ -1451,7 +1432,7 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|+=
 literal|0x20
 expr_stmt|;
@@ -1465,7 +1446,7 @@ condition|(
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<
 name|MINWORD
 operator|)
@@ -1473,7 +1454,7 @@ operator|||
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>
 name|MAXWORD
 operator|)
@@ -1481,7 +1462,7 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|+=
 literal|0x20
 expr_stmt|;
@@ -1499,7 +1480,7 @@ if|if
 condition|(
 name|ap
 operator|->
-name|atype
+name|a_atype
 operator|&
 name|ASTAR
 condition|)
@@ -1511,15 +1492,15 @@ else|else
 block|{
 name|a
 operator|=
+name|fetcharg
+argument_list|(
 name|itab
 index|[
 name|op
 index|]
-operator|->
-name|argtype
-index|[
+argument_list|,
 name|i
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1542,7 +1523,7 @@ operator|(
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XTYPE
 operator|)
@@ -1554,7 +1535,7 @@ operator|!
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XFORW
 operator|)
@@ -1562,7 +1543,7 @@ operator|&&
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|>=
 literal|0
 operator|)
@@ -1570,7 +1551,7 @@ operator|&&
 operator|(
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|<=
 literal|63
 operator|)
@@ -1578,7 +1559,7 @@ operator|&&
 operator|(
 name|xp
 operator|->
-name|yvalue
+name|e_yvalue
 operator|==
 literal|0
 operator|)
@@ -1598,18 +1579,18 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|=
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 expr_stmt|;
 break|break;
 block|}
 block|}
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator||=
 literal|0x8F
 expr_stmt|;
@@ -1630,7 +1611,7 @@ operator|(
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XTYPE
 operator|)
@@ -1643,7 +1624,7 @@ operator|!
 operator|(
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 operator|&
 name|XFORW
 operator|)
@@ -1659,7 +1640,7 @@ condition|)
 block|{
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 operator|=
 name|extlitflt
 argument_list|(
@@ -1727,7 +1708,7 @@ name|outb
 argument_list|(
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1753,12 +1734,12 @@ call|)
 argument_list|(
 name|ap
 operator|->
-name|areg1
+name|a_areg1
 argument_list|)
 expr_stmt|;
 name|dotp
 operator|->
-name|xvalue
+name|e_xvalue
 operator|+=
 literal|1
 expr_stmt|;
@@ -1804,17 +1785,17 @@ argument_list|(
 operator|&
 name|xp
 operator|->
-name|xvalue
+name|e_xvalue
 argument_list|,
 name|xtrab
 argument_list|,
 name|xp
 operator|->
-name|xtype
+name|e_xtype
 argument_list|,
 name|xp
 operator|->
-name|xname
+name|e_xname
 argument_list|)
 expr_stmt|;
 block|}
