@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.48 1995/10/20 22:48:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.49 1995/10/21 14:06:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1386,7 +1386,7 @@ name|cp
 operator|=
 name|variable_get
 argument_list|(
-name|DIST_SETS
+name|VAR_DIST_SETS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1430,7 +1430,7 @@ literal|"Warning:  A %s variable was configured which did not set all\n"
 literal|"distributions explicitly.  Some distributions will default to\n"
 literal|"unselected as a result."
 argument_list|,
-name|DIST_SETS
+name|VAR_DIST_SETS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2778,70 +2778,70 @@ block|{
 comment|/* Set default startup options */
 name|variable_set2
 argument_list|(
-literal|"routedflags"
+name|VAR_ROUTEDFLAGS
 argument_list|,
 literal|"-q"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|RELNAME
+name|VAR_RELNAME
 argument_list|,
 name|RELEASE_NAME
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|CPIO_VERBOSITY_LEVEL
+name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"high"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|TAPE_BLOCKSIZE
+name|VAR_TAPE_BLOCKSIZE
 argument_list|,
 name|DEFAULT_TAPE_BLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|FTP_USER
+name|VAR_FTP_USER
 argument_list|,
 literal|"ftp"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|BROWSER_PACKAGE
+name|VAR_BROWSER_PACKAGE
 argument_list|,
 literal|"lynx-2.4.2"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|BROWSER_BINARY
+name|VAR_BROWSER_BINARY
 argument_list|,
 literal|"/usr/local/bin/lynx"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|CONFIG_FILE
+name|VAR_CONFIG_FILE
 argument_list|,
 literal|"freebsd.cfg"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|OPT_FTP_STATE
+name|VAR_FTP_STATE
 argument_list|,
 literal|"passive"
 argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
-name|OPT_FTP_ONERROR
+name|VAR_FTP_ONERROR
 argument_list|,
 literal|"abort"
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.17 1995/10/21 14:06:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.19 1995/10/21 18:28:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -806,7 +806,7 @@ name|cp
 operator|=
 name|variable_get
 argument_list|(
-name|FTP_PATH
+name|VAR_FTP_PATH
 argument_list|)
 operator|)
 operator|)
@@ -829,7 +829,7 @@ name|cp
 operator|=
 name|variable_get
 argument_list|(
-name|FTP_PATH
+name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
 block|}
@@ -843,7 +843,7 @@ name|msgConfirm
 argument_list|(
 literal|"%s not set!  Not setting an FTP installation path, OK?"
 argument_list|,
-name|FTP_PATH
+name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
 return|return
@@ -864,7 +864,7 @@ condition|)
 block|{
 name|variable_set2
 argument_list|(
-name|FTP_PATH
+name|VAR_FTP_PATH
 argument_list|,
 literal|"ftp://"
 argument_list|)
@@ -873,7 +873,7 @@ name|cp
 operator|=
 name|variable_get_value
 argument_list|(
-name|FTP_PATH
+name|VAR_FTP_PATH
 argument_list|,
 literal|"Please specify the URL of a FreeBSD distribution on a\n"
 literal|"remote ftp site.  This site must accept either anonymous\n"
@@ -1007,7 +1007,7 @@ parameter_list|)
 block|{
 name|variable_set2
 argument_list|(
-name|OPT_FTP_STATE
+name|VAR_FTP_STATE
 argument_list|,
 literal|"active"
 argument_list|)
@@ -1032,7 +1032,7 @@ parameter_list|)
 block|{
 name|variable_set2
 argument_list|(
-name|OPT_FTP_STATE
+name|VAR_FTP_STATE
 argument_list|,
 literal|"passive"
 argument_list|)
@@ -1082,7 +1082,7 @@ name|val
 operator|=
 name|variable_get
 argument_list|(
-name|UFS_PATH
+name|VAR_UFS_PATH
 argument_list|)
 operator|)
 operator|)
@@ -1092,7 +1092,7 @@ name|val
 operator|=
 name|variable_get_value
 argument_list|(
-name|UFS_PATH
+name|VAR_UFS_PATH
 argument_list|,
 literal|"Enter a fully qualified pathname for the directory\n"
 literal|"containing the FreeBSD distribution files:"
@@ -1202,7 +1202,7 @@ name|cp
 operator|=
 name|variable_get
 argument_list|(
-name|NFS_PATH
+name|VAR_NFS_PATH
 argument_list|)
 operator|)
 operator|)
@@ -1212,7 +1212,7 @@ name|cp
 operator|=
 name|variable_get_value
 argument_list|(
-name|NFS_PATH
+name|VAR_NFS_PATH
 argument_list|,
 literal|"Please enter the full NFS file specification for the remote\n"
 literal|"host and directory containing the FreeBSD distribution files.\n"
@@ -1611,7 +1611,7 @@ literal|"/stand/cpio"
 argument_list|,
 literal|"-idum"
 argument_list|,
-name|CPIO_VERBOSITY
+name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"--block-size"
 argument_list|,
@@ -2024,7 +2024,7 @@ literal|"/stand/cpio"
 argument_list|,
 literal|"-idum"
 argument_list|,
-name|CPIO_VERBOSITY
+name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"--block-size"
 argument_list|,
@@ -2243,7 +2243,7 @@ name|cp
 init|=
 name|variable_get
 argument_list|(
-name|OPT_FTP_ONERROR
+name|VAR_FTP_ONERROR
 argument_list|)
 decl_stmt|;
 if|if
@@ -2275,7 +2275,7 @@ argument_list|)
 condition|)
 name|variable_set2
 argument_list|(
-name|OPT_FTP_ONERROR
+name|VAR_FTP_ONERROR
 argument_list|,
 literal|"retry"
 argument_list|)
@@ -2293,7 +2293,7 @@ argument_list|)
 condition|)
 name|variable_set2
 argument_list|(
-name|OPT_FTP_ONERROR
+name|VAR_FTP_ONERROR
 argument_list|,
 literal|"reselect"
 argument_list|)
@@ -2302,7 +2302,7 @@ else|else
 comment|/* must be "reselect" - wrap around */
 name|variable_set2
 argument_list|(
-name|OPT_FTP_ONERROR
+name|VAR_FTP_ONERROR
 argument_list|,
 literal|"abort"
 argument_list|)
@@ -2338,7 +2338,7 @@ if|if
 condition|(
 name|variable_get_value
 argument_list|(
-name|FTP_USER
+name|VAR_FTP_USER
 argument_list|,
 literal|"Please enter the username you wish to login as:"
 argument_list|)
@@ -2347,7 +2347,7 @@ name|pass
 operator|=
 name|variable_get_value
 argument_list|(
-name|FTP_PASS
+name|VAR_FTP_PASS
 argument_list|,
 literal|"Please enter the password for this user:"
 argument_list|)
@@ -2389,7 +2389,7 @@ name|cp
 init|=
 name|variable_get
 argument_list|(
-name|CPIO_VERBOSITY_LEVEL
+name|VAR_CPIO_VERBOSITY
 argument_list|)
 decl_stmt|;
 if|if
@@ -2421,7 +2421,7 @@ argument_list|)
 condition|)
 name|variable_set2
 argument_list|(
-name|CPIO_VERBOSITY_LEVEL
+name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"medium"
 argument_list|)
@@ -2439,7 +2439,7 @@ argument_list|)
 condition|)
 name|variable_set2
 argument_list|(
-name|CPIO_VERBOSITY_LEVEL
+name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"high"
 argument_list|)
@@ -2448,7 +2448,7 @@ else|else
 comment|/* must be "high" - wrap around */
 name|variable_set2
 argument_list|(
-name|CPIO_VERBOSITY_LEVEL
+name|VAR_CPIO_VERBOSITY
 argument_list|,
 literal|"low"
 argument_list|)
