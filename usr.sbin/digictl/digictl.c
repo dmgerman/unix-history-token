@@ -114,7 +114,8 @@ name|char
 modifier|*
 name|prog
 decl_stmt|;
-name|digiModel_t
+name|enum
+name|digi_model
 name|model
 decl_stmt|;
 name|int
