@@ -243,12 +243,8 @@ begin_define
 define|#
 directive|define
 name|MASTER_MODE
-value|(2 | 1)
+value|(ICW4_8086 | ICW4_AEOI)
 end_define
-
-begin_comment
-comment|/* Auto EOI, 8086 mode */
-end_comment
 
 begin_else
 else|#
@@ -259,12 +255,8 @@ begin_define
 define|#
 directive|define
 name|MASTER_MODE
-value|1
+value|ICW4_8086
 end_define
-
-begin_comment
-comment|/* 8086 mode */
-end_comment
 
 begin_endif
 endif|#
@@ -281,12 +273,8 @@ begin_define
 define|#
 directive|define
 name|SLAVE_MODE
-value|(2 | 1)
+value|(ICW4_8086 | ICW4_AEOI)
 end_define
-
-begin_comment
-comment|/* Auto EOI, 8086 mode */
-end_comment
 
 begin_else
 else|#
@@ -297,12 +285,8 @@ begin_define
 define|#
 directive|define
 name|SLAVE_MODE
-value|1
+value|ICW4_8086
 end_define
-
-begin_comment
-comment|/* 8086 mode */
-end_comment
 
 begin_endif
 endif|#
@@ -1355,6 +1339,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_MCA
+comment|/* MCA uses level triggered interrupts. */
 if|if
 condition|(
 name|MCA_system
@@ -1365,7 +1350,11 @@ name|pic
 operator|->
 name|at_ioaddr
 argument_list|,
-literal|0x19
+name|ICW1_RESET
+operator||
+name|ICW1_IC4
+operator||
+name|ICW1_LTIM
 argument_list|)
 expr_stmt|;
 else|else
@@ -1377,7 +1366,9 @@ name|pic
 operator|->
 name|at_ioaddr
 argument_list|,
-literal|0x11
+name|ICW1_RESET
+operator||
+name|ICW1_IC4
 argument_list|)
 expr_stmt|;
 name|imr_addr
@@ -1458,13 +1449,15 @@ name|pic
 operator|->
 name|at_ioaddr
 argument_list|,
-literal|0x0a
+name|OCW3_SEL
+operator||
+name|OCW3_RR
 argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PC98
-comment|/* Set priority order to 3-7, 0-2 (com2 first). */
+comment|/* OCW2_L1 sets priority order to 3-7, 0-2 (com2 first). */
 if|if
 condition|(
 operator|!
@@ -1476,13 +1469,11 @@ name|pic
 operator|->
 name|at_ioaddr
 argument_list|,
-literal|0xc0
+name|OCW2_R
 operator||
-operator|(
-literal|3
-operator|-
-literal|1
-operator|)
+name|OCW2_SL
+operator||
+name|OCW2_L1
 argument_list|)
 expr_stmt|;
 endif|#
