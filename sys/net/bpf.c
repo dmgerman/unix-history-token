@@ -4013,7 +4013,7 @@ operator|=
 name|events
 operator|&
 operator|(
-name|POLLIN
+name|POLLOUT
 operator||
 name|POLLWRNORM
 operator|)
