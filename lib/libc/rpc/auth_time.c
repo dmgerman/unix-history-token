@@ -1072,12 +1072,13 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
+name|socklen_t
+name|len
+decl_stmt|;
 name|int
 name|s
 init|=
 name|RPC_ANYSOCK
-decl_stmt|,
-name|len
 decl_stmt|;
 name|int
 name|type

@@ -204,7 +204,7 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|;
-name|int
+name|socklen_t
 name|fromlen
 decl_stmt|;
 name|int
