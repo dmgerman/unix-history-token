@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.16 (Berkeley) %G%"
+literal|"@(#)local.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1188,7 +1188,7 @@ name|in
 operator|.
 name|type
 operator|=
-name|UNSIGNED
+name|UCHAR
 expr_stmt|;
 else|else
 name|p
@@ -1201,7 +1201,7 @@ name|in
 operator|.
 name|type
 operator|=
-name|INT
+name|CHAR
 expr_stmt|;
 block|}
 break|break;
@@ -1467,6 +1467,10 @@ comment|/* generate initialization code for assigning a constant c 		to a field 
 comment|/* we assume that the proper alignment has been obtained */
 comment|/* inoff is updated to have the proper final value */
 comment|/* we also assume sz< SZINT */
+name|inoff
+operator|+=
+name|sz
+expr_stmt|;
 if|if
 condition|(
 name|nerrors
@@ -1520,10 +1524,6 @@ name|inwd
 operator|+=
 name|sz
 expr_stmt|;
-name|inoff
-operator|+=
-name|sz
-expr_stmt|;
 if|if
 condition|(
 name|inoff
@@ -1573,9 +1573,9 @@ comment|/* inoff is updated to have the proper final value */
 comment|/* on the target machine, write it out in octal! */
 if|if
 condition|(
+operator|!
 name|nerrors
 condition|)
-return|return;
 name|printf
 argument_list|(
 literal|"	%s	0%c%.20e\n"
@@ -1807,16 +1807,16 @@ operator|<=
 literal|0
 condition|)
 return|return;
+name|inoff
+operator|+=
+name|n
+expr_stmt|;
 if|if
 condition|(
 name|nerrors
 condition|)
 return|return;
 name|inwd
-operator|+=
-name|n
-expr_stmt|;
-name|inoff
 operator|+=
 name|n
 expr_stmt|;
