@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1980, 1993 .\"	 The Regents of the University of California.  All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)twinkle2.c	6.4 (Berkeley) %G% .\" extern int	_putchar();  main() { 	reg char	*sp;  	srand(getpid());		/* initialize random sequence */  	if (isatty(0)) { 	       gettmode(); 	       if ((sp = getenv("
+literal|" Copyright (c) 1980, 1993 .\"	 The Regents of the University of California.  All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)twinkle2.c	8.1 (Berkeley) %G% .\" extern int	_putchar();  main() { 	reg char	*sp;  	srand(getpid());		/* initialize random sequence */  	if (isatty(0)) { 	       gettmode(); 	       if ((sp = getenv("
 name|TERM
 literal|")) != NULL) 		       setterm(sp); 		signal(SIGINT, die); 	} 	else { 		printf("
 name|Need
