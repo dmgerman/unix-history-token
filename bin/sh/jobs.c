@@ -299,7 +299,7 @@ comment|/* most recently used job list */
 end_comment
 
 begin_decl_stmt
-name|int
+name|pid_t
 name|initialpgrp
 decl_stmt|;
 end_decl_stmt
@@ -410,7 +410,7 @@ end_function_decl
 
 begin_function_decl
 name|STATIC
-name|int
+name|pid_t
 name|dowait
 parameter_list|(
 name|int
@@ -445,7 +445,7 @@ end_endif
 
 begin_function_decl
 name|STATIC
-name|int
+name|pid_t
 name|waitproc
 parameter_list|(
 name|int
@@ -892,7 +892,7 @@ name|job
 operator|*
 name|jp
 block|;
-name|int
+name|pid_t
 name|pgrp
 block|;
 name|int
@@ -1542,6 +1542,9 @@ name|out1fmt
 argument_list|(
 literal|"%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ps
 operator|->
 name|pid
@@ -1680,6 +1683,9 @@ literal|64
 argument_list|,
 literal|"%d "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ps
 operator|->
 name|pid
@@ -2458,6 +2464,9 @@ name|out1fmt
 argument_list|(
 literal|"%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|jp
 operator|->
 name|ps
@@ -2516,7 +2525,7 @@ decl_stmt|,
 modifier|*
 name|jp
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int
@@ -2916,6 +2925,9 @@ condition|)
 block|{
 name|pid
 operator|=
+operator|(
+name|pid_t
+operator|)
 name|number
 argument_list|(
 name|name
@@ -3671,7 +3683,7 @@ comment|/*  * Fork of a subshell.  If we are doing job control, give the subshel
 end_comment
 
 begin_function
-name|int
+name|pid_t
 name|forkshell
 parameter_list|(
 name|struct
@@ -3688,10 +3700,10 @@ name|int
 name|mode
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
-name|int
+name|pid_t
 name|pgrp
 decl_stmt|;
 name|TRACE
@@ -3772,6 +3784,9 @@ argument_list|(
 operator|(
 literal|"Child shell %d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 operator|)
@@ -4222,6 +4237,9 @@ argument_list|(
 operator|(
 literal|"In parent shell:  child = %d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|pid
 operator|)
 argument_list|)
@@ -4253,7 +4271,7 @@ block|{
 if|#
 directive|if
 name|JOBS
-name|int
+name|pid_t
 name|mypgrp
 init|=
 name|getpgrp
@@ -4484,7 +4502,7 @@ end_comment
 
 begin_function
 name|STATIC
-name|int
+name|pid_t
 name|dowait
 parameter_list|(
 name|int
@@ -4496,7 +4514,7 @@ modifier|*
 name|job
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int
@@ -4558,6 +4576,9 @@ argument_list|(
 operator|(
 literal|"wait returns %d, status=%d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|pid
 operator|,
 name|status
@@ -4704,6 +4725,9 @@ argument_list|(
 operator|(
 literal|"Changing status of proc %d from 0x%x to 0x%x\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|pid
 operator|,
 name|sp
@@ -5065,7 +5089,7 @@ end_endif
 
 begin_function
 name|STATIC
-name|int
+name|pid_t
 name|waitproc
 parameter_list|(
 name|int
