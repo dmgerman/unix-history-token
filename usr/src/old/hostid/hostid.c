@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hostid.c	5.2 (Berkeley) %G%"
+literal|"@(#)hostid.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|long
+name|gethostid
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -112,7 +120,7 @@ decl_stmt|;
 name|u_long
 name|addr
 decl_stmt|;
-name|int
+name|long
 name|hostid
 decl_stmt|;
 name|struct
@@ -150,34 +158,18 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|isxdigit
-argument_list|(
-name|id
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|index
-argument_list|(
-name|id
-argument_list|,
-literal|'.'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
+operator|(
 name|hostid
 operator|=
-operator|(
-name|int
-operator|)
 name|inet_addr
 argument_list|(
 name|id
 argument_list|)
-expr_stmt|;
-else|else
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
 block|{
 if|if
 condition|(
