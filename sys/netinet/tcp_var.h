@@ -689,7 +689,7 @@ define|#
 directive|define
 name|TOF_SIGLEN
 value|0x0080
-comment|/* sigature length valid (RFC2385) */
+comment|/* signature length valid (RFC2385) */
 name|u_int32_t
 name|to_tsval
 decl_stmt|;
