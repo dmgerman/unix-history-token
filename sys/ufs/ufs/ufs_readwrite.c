@@ -969,7 +969,20 @@ name|b_flags
 operator||=
 name|B_DIRECT
 expr_stmt|;
-comment|/* 		 * We should only get non-zero b_resid when an I/O error 		 * has occurred, which should cause us to break above. 		 * However, if the short read did not cause an error, 		 * then we want to ensure that we do not uiomove bad 		 * or uninitialized data. 		 */
+comment|/* 		 * We should only get non-zero b_resid when an I/O error 		 * has occurred, which should cause us to break above. 		 * However, if the short read did not cause an error, 		 * then we want to ensure that we do not uiomove bad 		 * or uninitialized data. 		 * 		 * XXX b_resid is only valid when an actual I/O has occured 		 * and may be incorrect if the buffer is B_CACHE or if the 		 * last op on the buffer was a failed write.  This KASSERT 		 * is a precursor to removing it from the UFS code. 		 */
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_resid
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"bp->b_resid != 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|size
 operator|-=
 name|bp
