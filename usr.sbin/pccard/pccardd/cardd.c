@@ -1186,13 +1186,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|dumpcis
-argument_list|(
-name|sp
-operator|->
-name|cis
-argument_list|)
-expr_stmt|;
+comment|/* 	dumpcis(sp->cis); */
 for|for
 control|(
 name|cp
@@ -2502,6 +2496,10 @@ name|config
 operator|->
 name|index
 expr_stmt|;
+name|c
+operator||=
+literal|0x40
+expr_stmt|;
 name|write
 argument_list|(
 name|sp
@@ -2522,9 +2520,14 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Setting config reg at offs 0x%x to 0x%x\n"
+literal|"Setting config reg at offs 0x%x"
 argument_list|,
 name|offs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" to 0x%x\n"
 argument_list|,
 name|c
 argument_list|)
@@ -2722,6 +2725,8 @@ operator|.
 name|flags
 operator||
 name|MDF_ACTIVE
+operator||
+name|MDF_16BITS
 expr_stmt|;
 name|mem
 operator|.
