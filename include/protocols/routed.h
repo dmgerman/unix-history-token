@@ -27,7 +27,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-empty|#ident "$Revision: 1.7 $"
+empty|#ident "$Revision: 1.8 $"
 comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
 define|#
 directive|define
@@ -301,16 +301,6 @@ directive|define
 name|GARBAGE_TIME
 value|240
 comment|/* time to garbage collect */
-comment|/* It is good to continue advertising bad routes this long so other  * routers notice.  This is fairly cheap, so it can be long.  It  * should be long to combat bogus holddowns implemented by major  * router vendors.  */
-define|#
-directive|define
-name|POISON_TIME
-value|120
-comment|/* Do not switch to a new route for this long after a route has gone  * bad, to ensure that the new route is not a remanent of the old route.  */
-define|#
-directive|define
-name|HOLD_TIME
-value|(MAX_WAITTIME*2)
 ifdef|#
 directive|ifdef
 name|__cplusplus
