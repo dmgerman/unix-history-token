@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.6	%G%	*/
+comment|/*	buf.h	4.7	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Each buffer in the pool is usually doubly linked into 2 lists:  * the device with which it is currently associated (always)  * and also on a list of blocks available for allocation  * for other use (usually).  * The latter list is kept in last-used order, and the two  * lists are doubly linked to make it easy to remove  * a buffer from one list when it was found by  * looking through the other.  * A buffer is on the available list, and is liable  * to be reassigned to another disk block, if and only  * if it is not marked BUSY.  When a buffer is busy, the  * available-list pointers can be used for other purposes.  * Most drivers use the forward ptr as a link in their I/O  * active queue.  * A buffer header contains all the information required  * to perform I/O.  * Most of the routines which manipulate these things  * are in bio.c.  */
+comment|/*  * The header for buffers in the buffer pool and otherwise used  * to describe a block i/o request is given here.  The routines  * which manipulate these things are given in bio.c.  *  * Each buffer in the pool is usually doubly linked into 2 lists:  * hashed into a chain by<dev,blkno> so it can be located in the cache,  * and (usually) on (one of several) queues.  These lists are circular and  * doubly linked for easy removal.  *  * There are currently three queues for buffers:  *	one for buffers which must be kept permanently (super blocks)  * 	one for buffers containing ``useful'' information (the cache)  *	one for buffers containing ``non-useful'' information  *		(and empty buffers, pushed onto the front)  * The latter two queues contain the buffers which are available for  * reallocation, are kept in lru order.  When not on one of these queues,  * the buffers are ``checked out'' to drivers which use the available list  * pointers to keep track of them in their i/o active queues.  */
+end_comment
+
+begin_comment
+comment|/*  * Bufhd structures used at the head of the hashed buffer queues.  * We only need three words for these, so this abbreviated  * definition saves some space.  */
 end_comment
 
 begin_struct
@@ -19,14 +23,11 @@ name|struct
 name|buf
 modifier|*
 name|b_forw
-decl_stmt|;
-comment|/* headed by d_tab of conf.c */
-name|struct
-name|buf
+decl_stmt|,
 modifier|*
 name|b_back
 decl_stmt|;
-comment|/*  "  */
+comment|/* fwd/bkwd pointer in chain */
 block|}
 struct|;
 end_struct
@@ -38,39 +39,52 @@ block|{
 name|long
 name|b_flags
 decl_stmt|;
-comment|/* see defines below */
+comment|/* too much goes here to describe */
 name|struct
 name|buf
 modifier|*
 name|b_forw
-decl_stmt|;
-comment|/* headed by d_tab of conf.c */
-name|struct
-name|buf
+decl_stmt|,
 modifier|*
 name|b_back
 decl_stmt|;
-comment|/*  "  */
+comment|/* hash chain (2 way street) */
 name|struct
 name|buf
 modifier|*
 name|av_forw
-decl_stmt|;
-comment|/* position on free list, */
-name|struct
-name|buf
+decl_stmt|,
 modifier|*
 name|av_back
 decl_stmt|;
-comment|/*     if not BUSY*/
+comment|/* position on free list if not BUSY */
+define|#
+directive|define
+name|b_actf
+value|av_forw
+comment|/* alternate names for driver queue */
+define|#
+directive|define
+name|b_actl
+value|av_back
+comment|/*    head - isn't history wonderful */
+name|long
+name|b_bcount
+decl_stmt|;
+comment|/* transfer count */
+define|#
+directive|define
+name|b_active
+value|b_bcount
+comment|/* driver queue head: drive active */
+name|short
+name|b_error
+decl_stmt|;
+comment|/* returned after I/O */
 name|dev_t
 name|b_dev
 decl_stmt|;
 comment|/* major+minor device name */
-name|unsigned
-name|b_bcount
-decl_stmt|;
-comment|/* transfer count */
 union|union
 block|{
 name|caddr_t
@@ -106,29 +120,26 @@ name|daddr_t
 name|b_blkno
 decl_stmt|;
 comment|/* block # on device */
-name|char
-name|b_xmem
-decl_stmt|;
-comment|/* high order core address */
-name|char
-name|b_error
-decl_stmt|;
-comment|/* returned after I/O */
-name|short
-name|b_hlink
-decl_stmt|;
-comment|/* hash links for buffer cache */
-name|unsigned
-name|int
+name|long
 name|b_resid
 decl_stmt|;
 comment|/* words not transferred after error */
+define|#
+directive|define
+name|b_errcnt
+value|b_resid
+comment|/* while i/o in progress: # retries */
+define|#
+directive|define
+name|b_pfcent
+value|b_resid
+comment|/* garbage: don't ask */
 name|struct
 name|proc
 modifier|*
 name|b_proc
 decl_stmt|;
-comment|/* process doing physical or swap I/O */
+comment|/* proc doing physical or swap I/O */
 block|}
 struct|;
 end_struct
@@ -193,7 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The buffer pool itself */
+comment|/* the buffer pool itself */
 end_comment
 
 begin_decl_stmt
@@ -399,12 +410,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_MAP
+name|B_XXX
 value|0x00020
 end_define
 
 begin_comment
-comment|/* UNIBUS map allocated */
+comment|/* was B_MAP, alloc UNIBUS on pdp-11 */
 end_comment
 
 begin_define
@@ -525,7 +536,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* does not contain valid info (if not BUSY) */
+comment|/* does not contain valid info  */
 end_comment
 
 begin_define
@@ -536,7 +547,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* this buffer locked in core (not reusable) */
+comment|/* locked in core (not reusable) */
 end_comment
 
 begin_define
@@ -547,47 +558,8 @@ value|0x40000
 end_define
 
 begin_comment
-comment|/* this is a buffer header, not a buffer */
+comment|/* a buffer header, not a buffer */
 end_comment
-
-begin_comment
-comment|/*  * special redeclarations for  * the head of the queue per  * device driver.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|b_actf
-value|av_forw
-end_define
-
-begin_define
-define|#
-directive|define
-name|b_actl
-value|av_back
-end_define
-
-begin_define
-define|#
-directive|define
-name|b_active
-value|b_bcount
-end_define
-
-begin_define
-define|#
-directive|define
-name|b_errcnt
-value|b_resid
-end_define
-
-begin_define
-define|#
-directive|define
-name|b_pfcent
-value|b_resid
-end_define
 
 end_unit
 
