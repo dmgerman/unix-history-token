@@ -6193,6 +6193,8 @@ name|linker_reference_module
 argument_list|(
 name|modfile
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|lf
 argument_list|)
@@ -6200,15 +6202,35 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|res
+operator|==
+name|ENOENT
+operator|&&
+name|rootdev
+operator|==
+name|NODEV
+condition|)
 name|printf
 argument_list|(
-literal|"%s: Failed %d to load module\n"
+literal|"%s: Failed to autoload module: No filesystem\n"
+argument_list|,
+name|modfile
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%s: Failed %d to autoload module\n"
 argument_list|,
 name|modfile
 argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|modfile

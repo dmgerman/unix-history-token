@@ -52,6 +52,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|mod_depend
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Object representing a file which has been loaded by the linker.  */
 end_comment
@@ -342,6 +348,11 @@ specifier|const
 name|char
 modifier|*
 name|_modname
+parameter_list|,
+name|struct
+name|mod_depend
+modifier|*
+name|_verinfo
 parameter_list|,
 name|linker_file_t
 modifier|*
