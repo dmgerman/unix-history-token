@@ -10,13 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
