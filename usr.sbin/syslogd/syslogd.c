@@ -20,9 +20,32 @@ literal|"@(#) Copyright (c) 1983, 1988, 1993, 1994\n\ 	The Regents of the Univer
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* static char sccsid[] = "@(#)syslogd.c	8.3 (Berkeley) 4/4/94"; */
+comment|/* not lint */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)syslogd.c	8.3 (Berkeley) 4/4/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -31,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.12.2.7 1997/08/17 14:41:32 joerg Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +229,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1247,6 +1276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -2480,6 +2510,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -2488,8 +2519,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
 literal|"usage: syslogd [-ds] [-a allowed_peer] [-f config_file]"
-literal|" [-m mark_interval]\n                [-p log_socket]\n"
+argument_list|,
+literal|"               [-m mark_interval] [-p log_socket]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3706,9 +3740,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|msgret
-decl_stmt|;
-name|dq_t
-name|q
 decl_stmt|;
 name|v
 operator|=
