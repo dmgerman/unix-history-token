@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_re.c	7.2	%G%"
+literal|"@(#)ex_re.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3767,7 +3767,7 @@ if|if
 condition|(
 name|lp
 operator|==
-name|expbuf
+name|linebuf
 condition|)
 continue|continue;
 if|if
