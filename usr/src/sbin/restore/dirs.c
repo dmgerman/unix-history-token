@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	8.4 (Berkeley) %G%"
+literal|"@(#)dirs.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1172,12 +1172,6 @@ condition|(
 name|dp
 operator|!=
 name|NULL
-operator|&&
-name|dp
-operator|->
-name|d_ino
-operator|!=
-literal|0
 condition|)
 block|{
 name|locname
@@ -1273,21 +1267,6 @@ name|dirp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dp
-operator|==
-name|NULL
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"corrupted directory: %s.\n"
-argument_list|,
-name|locname
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1505,12 +1484,6 @@ condition|(
 name|dp
 operator|==
 name|NULL
-operator|||
-name|dp
-operator|->
-name|d_ino
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -2512,10 +2485,14 @@ name|d_name
 argument_list|,
 literal|"/"
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-continue|continue;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 if|if
 condition|(
 name|dp
