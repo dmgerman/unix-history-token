@@ -786,7 +786,9 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"passwd read: %m"
+literal|"passwd for '%s' read: %m"
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
 name|_exit
