@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.1 (Berkeley) %G%"
+literal|"@(#)lex.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,9 +401,20 @@ operator|==
 name|sp0
 condition|)
 break|break;
-name|printf
+if|if
+condition|(
+name|sp
+operator|->
+name|word
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|putchar
 argument_list|(
-literal|" "
+literal|' '
 argument_list|)
 expr_stmt|;
 block|}
