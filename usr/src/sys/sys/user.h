@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)user.h 2.1 3/25/82 */
-end_comment
-
-begin_comment
-comment|/*	user.h	4.14	82/07/16	*/
+comment|/*	user.h	4.15	82/08/08	*/
 end_comment
 
 begin_ifdef
@@ -189,7 +185,7 @@ name|inode
 modifier|*
 name|u_cdir
 decl_stmt|;
-comment|/* pointer to inode of current directory */
+comment|/* current directory */
 name|struct
 name|inode
 modifier|*
@@ -219,7 +215,7 @@ index|[
 name|NOFILE
 index|]
 decl_stmt|;
-comment|/* pointers to file structures of open files */
+comment|/* file structures for open files */
 name|char
 name|u_pofile
 index|[
@@ -232,6 +228,16 @@ directive|define
 name|EXCLOSE
 value|01
 comment|/* auto-close on exec */
+define|#
+directive|define
+name|RDLOCK
+value|02
+comment|/* read lock present */
+define|#
+directive|define
+name|WRLOCK
+value|04
+comment|/* write lock present */
 name|label_t
 name|u_ssav
 decl_stmt|;
@@ -451,13 +457,6 @@ decl_stmt|,
 name|u_ossize
 decl_stmt|;
 comment|/* for (clumsy) expansion swaps */
-name|size_t
-name|u_vrpages
-index|[
-name|NOFILE
-index|]
-decl_stmt|;
-comment|/* number vread pages hanging on fd */
 name|int
 name|u_limit
 index|[
@@ -484,10 +483,6 @@ name|int
 name|u_qflags
 decl_stmt|;
 comment|/* per process quota flags */
-name|int
-name|u_pflags
-decl_stmt|;
-comment|/* per process other sorts of flags */
 name|int
 name|u_stack
 index|[
