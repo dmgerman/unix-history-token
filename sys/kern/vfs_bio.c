@@ -4295,7 +4295,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|nblock
