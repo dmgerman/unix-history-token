@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.3 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -130,13 +130,17 @@ name|rindex
 argument_list|()
 decl_stmt|,
 modifier|*
+name|strncat
+argument_list|()
+decl_stmt|,
+modifier|*
 name|sprintf
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* VARARGS 1 */
+comment|/*VARARGS1*/
 end_comment
 
 begin_function_decl
@@ -146,15 +150,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|reapchild
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * remote execute server:  *	username\0  *	password\0  *	command\0  *	data  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -236,35 +237,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_macro
-name|reapchild
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|union
-name|wait
-name|status
-decl_stmt|;
-while|while
-condition|(
-name|wait3
-argument_list|(
-operator|&
-name|status
-argument_list|,
-name|WNOHANG
-argument_list|,
-literal|0
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
-block|}
-end_block
 
 begin_decl_stmt
 name|char
@@ -673,8 +645,6 @@ argument_list|(
 operator|*
 name|fromp
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -976,10 +946,23 @@ argument_list|,
 operator|&
 name|ready
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1179,6 +1162,19 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+operator|(
+name|gid_t
+operator|)
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
 name|initgroups
 argument_list|(
 name|pwd
@@ -1193,18 +1189,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|setgid
-argument_list|(
-name|pwd
-operator|->
-name|pw_gid
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|setuid
 argument_list|(
+operator|(
+name|uid_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -1318,7 +1307,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* VARARGS 1 */
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro
