@@ -1074,7 +1074,7 @@ name|_MEXT_ALLOC_CNT
 parameter_list|(
 name|m_cnt
 parameter_list|)
-value|MBUFLOCK(				\ 	union mext_refcnt *__mcnt;					\ 									\ 	__mcnt = mext_refcnt_free;					\ 	if ((__mcnt == NULL)&& (m_alloc_ref(1) == 0))			\ 		panic("mbuf subsystem: out of ref counts!");		\ 	mext_refcnt_free = __mcnt->next_ref;				\ 	__mcnt->next_ref = NULL;					\ 	(m_cnt) = __mcnt;						\ 	mbstat.m_refree--;						\ )
+value|MBUFLOCK(				\ 	union mext_refcnt *__mcnt;					\ 									\ 	__mcnt = mext_refcnt_free;					\ 	if (__mcnt == NULL) {						\ 		if (m_alloc_ref(1) != 0)				\ 			__mcnt = mext_refcnt_free;			\ 		else							\ 			panic("mbuf subsystem: out of ref counts!");	\ 	}								\ 	mext_refcnt_free = __mcnt->next_ref;				\ 	__mcnt->next_ref = NULL;					\ 	(m_cnt) = __mcnt;						\ 	mbstat.m_refree--;						\ )
 end_define
 
 begin_define
