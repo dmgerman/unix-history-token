@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.12 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -821,8 +821,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|OLD_NEWDB
 call|(
 name|void
@@ -896,8 +896,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|OLD_NEWDB
 call|(
 name|void
