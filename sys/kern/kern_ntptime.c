@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-1998			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name	       *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
+comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-1999			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name	       *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
 end_comment
 
 begin_comment
@@ -193,11 +193,11 @@ value|((v)< 0 ? -(-(v)>> 32) : (v)>> 32)
 end_define
 
 begin_comment
-comment|/*  * Generic NTP kernel interface  *  * These routines constitute the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. The ntp_gettime() routine  * provides the time, maximum error (synch distance) and estimated error  * (dispersion) to client user application programs. The ntp_adjtime()  * routine is used by the NTP daemon to adjust the system clock to an  * externally derived time. The time offset and related variables set by  * this routine are used by other routines in this module to adjust the  * phase and frequency of the clock discipline loop which controls the  * system clock.  *  * When the kernel time is reckoned directly in nanoseconds (NANO  * defined), the time at each tick interrupt is derived directly from  * the kernel time variable. When the kernel time is reckoned in  * microseconds, (NANO undefined), the time is derived from the kernel  * time variable together with a variable representing the leftover  * nanoseconds at the last tick interrupt. In either case, the current  * nanosecond time is reckoned from these values plus an interpolated  * value derived by the clock routines in another architecture-specific  * module. The interpolation can use either a dedicated counter or a  * processor cycle counter (PCC) implemented in some architectures.  *  * Note that all routines must run at priority splclock or higher.  */
+comment|/*  * Generic NTP kernel interface  *  * These routines constitute the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. The ntp_gettime() routine  * provides the time, maximum error (synch distance) and estimated error  * (dispersion) to client user application programs. The ntp_adjtime()  * routine is used by the NTP daemon to adjust the system clock to an  * externally derived time. The time offset and related variables set by  * this routine are used by other routines in this module to adjust the  * phase and frequency of the clock discipline loop which controls the  * system clock.  *  * When the kernel time is reckoned directly in nanoseconds (NTP_NANO  * defined), the time at each tick interrupt is derived directly from  * the kernel time variable. When the kernel time is reckoned in  * microseconds, (NTP_NANO undefined), the time is derived from the  * kernel time variable together with a variable representing the  * leftover nanoseconds at the last tick interrupt. In either case, the  * current nanosecond time is reckoned from these values plus an  * interpolated value derived by the clock routines in another  * architecture-specific module. The interpolation can use either a  * dedicated counter or a processor cycle counter (PCC) implemented in  * some architectures.  *  * Note that all routines must run at priority splclock or higher.  */
 end_comment
 
 begin_comment
-comment|/*  * Phase/frequency-lock loop (PLL/FLL) definitions  *  * The nanosecond clock discipline uses two variable types, time  * variables and frequency variables. Both types are represented as 64-  * bit fixed-point quantities with the decimal point between two 32-bit  * halves. On a 32-bit machine, each half is represented as a single  * word and mathematical operations are done using multiple-precision  * arithmetic. On a 64-bit machine, ordinary computer arithmetic is  * used.  *  * A time variable is a signed 64-bit fixed-point number in ns and  * fraction. It represents the remaining time offset to be amortized  * over succeeding tick interrupts. The maximum time offset is about  * 0.512 s and the resolution is about 2.3e-10 ns.  *  *			1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |s s s|			 ns				   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |			    fraction				   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * A frequency variable is a signed 64-bit fixed-point number in ns/s  * and fraction. It represents the ns and fraction to be added to the  * kernel time variable at each second. The maximum frequency offset is  * about +-512000 ns/s and the resolution is about 2.3e-10 ns/s.  *  *			1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |s s s s s s s s s s s s s|	          ns/s			   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |			    fraction				   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
+comment|/*  * Phase/frequency-lock loop (PLL/FLL) definitions  *  * The nanosecond clock discipline uses two variable types, time  * variables and frequency variables. Both types are represented as 64-  * bit fixed-point quantities with the decimal point between two 32-bit  * halves. On a 32-bit machine, each half is represented as a single  * word and mathematical operations are done using multiple-precision  * arithmetic. On a 64-bit machine, ordinary computer arithmetic is  * used.  *  * A time variable is a signed 64-bit fixed-point number in ns and  * fraction. It represents the remaining time offset to be amortized  * over succeeding tick interrupts. The maximum time offset is about  * 0.5 s and the resolution is about 2.3e-10 ns.  *  *			1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |s s s|			 ns				   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |			    fraction				   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * A frequency variable is a signed 64-bit fixed-point number in ns/s  * and fraction. It represents the ns and fraction to be added to the  * kernel time variable at each second. The maximum frequency offset is  * about +-500000 ns/s and the resolution is about 2.3e-10 ns/s.  *  *			1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |s s s s s s s s s s s s s|	          ns/s			   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |			    fraction				   |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
 
 begin_comment
@@ -350,6 +350,18 @@ begin_comment
 comment|/* frequency offset (ns/s) */
 end_comment
 
+begin_decl_stmt
+name|int
+name|ntp_mult
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ntp_div
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -375,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|PPS_FAVGMAX
-value|7
+value|8
 end_define
 
 begin_comment
@@ -471,17 +483,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|long
-name|pps_fcount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* frequency accumulator */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|l_fp
 name|pps_freq
 decl_stmt|;
@@ -500,6 +501,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* offset accumulator */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|pps_fcount
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* frequency accumulator */
 end_comment
 
 begin_decl_stmt
@@ -857,6 +869,48 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ntp_pll
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mult
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ntp_mult
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ntp_pll
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|div
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ntp_div
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ntp_adjtime() - NTP daemon application interface  *  * See the timex.h header file for synopsis and API description.  */
 end_comment
@@ -905,6 +959,10 @@ name|timex
 name|ntv
 decl_stmt|;
 comment|/* temporary structure */
+name|long
+name|freq
+decl_stmt|;
+comment|/* frequency ns/s) */
 name|int
 name|modes
 decl_stmt|;
@@ -996,17 +1054,54 @@ operator|&
 name|MOD_FREQUENCY
 condition|)
 block|{
-name|time_freq
+name|freq
 operator|=
 operator|(
 name|ntv
 operator|.
 name|freq
 operator|*
-literal|1000LL
+literal|1000
 operator|)
 operator|<<
 literal|16
+expr_stmt|;
+if|if
+condition|(
+name|freq
+operator|>
+name|MAXFREQ
+condition|)
+name|L_LINT
+argument_list|(
+name|time_freq
+argument_list|,
+name|MAXFREQ
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|freq
+operator|<
+operator|-
+name|MAXFREQ
+condition|)
+name|L_LINT
+argument_list|(
+name|time_freq
+argument_list|,
+operator|-
+name|MAXFREQ
+argument_list|)
+expr_stmt|;
+else|else
+name|L_LINT
+argument_list|(
+name|time_freq
+argument_list|,
+name|freq
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1070,12 +1165,40 @@ name|modes
 operator|&
 name|MOD_TIMECONST
 condition|)
+block|{
+if|if
+condition|(
+name|ntv
+operator|.
+name|constant
+operator|<
+literal|0
+condition|)
+name|time_constant
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ntv
+operator|.
+name|constant
+operator|>
+name|MAXTC
+condition|)
+name|time_constant
+operator|=
+name|MAXTC
+expr_stmt|;
+else|else
 name|time_constant
 operator|=
 name|ntv
 operator|.
 name|constant
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|modes
@@ -1188,8 +1311,8 @@ name|time_freq
 operator|/
 literal|1000
 operator|)
-operator|*
-literal|65536
+operator|<<
+literal|16
 argument_list|)
 expr_stmt|;
 name|ntv
@@ -1210,37 +1333,11 @@ name|status
 operator|=
 name|time_status
 expr_stmt|;
-if|if
-condition|(
 name|ntv
 operator|.
 name|constant
-operator|<
-literal|0
-condition|)
-name|time_constant
 operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ntv
-operator|.
-name|constant
-operator|>
-name|MAXTC
-condition|)
 name|time_constant
-operator|=
-name|MAXTC
-expr_stmt|;
-else|else
-name|time_constant
-operator|=
-name|ntv
-operator|.
-name|constant
 expr_stmt|;
 if|if
 condition|(
@@ -1291,8 +1388,8 @@ name|pps_freq
 operator|/
 literal|1000
 operator|)
-operator|*
-literal|65536
+operator|<<
+literal|16
 argument_list|)
 expr_stmt|;
 name|ntv
@@ -1804,10 +1901,6 @@ name|nsec
 operator|=
 literal|0
 expr_stmt|;
-name|pps_fcount
-operator|=
-literal|0
-expr_stmt|;
 name|pps_tf
 index|[
 literal|0
@@ -1824,6 +1917,10 @@ literal|2
 index|]
 operator|=
 name|pps_filt
+expr_stmt|;
+name|pps_fcount
+operator|=
+literal|0
 expr_stmt|;
 name|L_CLR
 argument_list|(
@@ -2655,6 +2752,57 @@ name|pps_lastsec
 expr_stmt|;
 if|if
 condition|(
+name|ntp_div
+operator|&&
+name|ntp_mult
+condition|)
+block|{
+name|L_LINT
+argument_list|(
+name|ftemp
+argument_list|,
+operator|(
+name|pps_filt
+operator|.
+name|nsec
+operator|)
+argument_list|)
+expr_stmt|;
+name|L_RSHIFT
+argument_list|(
+name|ftemp
+argument_list|,
+name|ntp_div
+argument_list|)
+expr_stmt|;
+name|L_MPY
+argument_list|(
+name|ftemp
+argument_list|,
+name|ntp_mult
+argument_list|)
+expr_stmt|;
+name|L_ADD
+argument_list|(
+name|pps_freq
+argument_list|,
+name|ftemp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|time_status
+operator|&
+name|STA_PPSFREQ
+condition|)
+name|time_freq
+operator|=
+name|pps_freq
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|u_sec
 operator|<
 operator|(
@@ -2894,7 +3042,7 @@ name|L_RSHIFT
 argument_list|(
 name|ftemp
 argument_list|,
-literal|1
+name|PPS_FAVG
 argument_list|)
 expr_stmt|;
 name|L_ADD

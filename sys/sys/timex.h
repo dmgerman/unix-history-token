@@ -21,7 +21,19 @@ begin_define
 define|#
 directive|define
 name|_SYS_TIMEX_H_
+value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|NTP_API
+value|3
+end_define
+
+begin_comment
+comment|/* NTP API version */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -89,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|MAXSEC
-value|1600
+value|2048
 end_define
 
 begin_comment
@@ -130,7 +142,7 @@ comment|/* max time constant in PLL mode */
 end_comment
 
 begin_comment
-comment|/*  * The following defines and structures define the user interface for  * the ntp_gettime() and ntp_adjtime() syscalls.  *  * Control mode codes (timex.modes and nanotimex.modes)  */
+comment|/*  * The following defines and structures define the user interface for  * the ntp_gettime() and ntp_adjtime() syscalls.  *  * Control mode codes (timex.modes)  */
 end_comment
 
 begin_define
@@ -534,7 +546,7 @@ name|struct
 name|timespec
 name|time
 decl_stmt|;
-comment|/* current time (ns/us) (ro) */
+comment|/* current time (ns) (ro) */
 name|long
 name|maxerror
 decl_stmt|;
