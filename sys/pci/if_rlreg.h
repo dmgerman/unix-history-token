@@ -1588,8 +1588,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_TX_EARLYTHRESH
-value|(256<< 11)
+name|RL_TXTHRESH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TX_THRESH_INIT
+value|96
 end_define
 
 begin_define
@@ -1897,6 +1907,9 @@ name|rl_autoneg
 decl_stmt|;
 name|u_int8_t
 name|rl_stats_no_timeout
+decl_stmt|;
+name|int
+name|rl_txthresh
 decl_stmt|;
 name|struct
 name|rl_chain_data

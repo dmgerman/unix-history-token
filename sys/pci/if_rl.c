@@ -5699,6 +5699,15 @@ operator|.
 name|rl_rx_buf
 argument_list|)
 expr_stmt|;
+name|m_pullup
+argument_list|(
+name|m
+argument_list|,
+name|MHLEN
+operator|-
+name|RL_ETHER_ALIGN
+argument_list|)
+expr_stmt|;
 block|}
 name|cur_rx
 operator|=
@@ -6038,6 +6047,9 @@ operator|++
 expr_stmt|;
 else|else
 block|{
+name|int
+name|oldthresh
+decl_stmt|;
 name|ifp
 operator|->
 name|if_oerrors
@@ -6066,6 +6078,39 @@ argument_list|,
 name|RL_TXCFG_CONFIG
 argument_list|)
 expr_stmt|;
+name|oldthresh
+operator|=
+name|sc
+operator|->
+name|rl_txthresh
+expr_stmt|;
+comment|/* error recovery */
+name|rl_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|rl_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If there was a transmit underrun, 			 * bump the TX threshold. 			 */
+if|if
+condition|(
+name|txstat
+operator|&
+name|RL_TXSTAT_TX_UNDERRUN
+condition|)
+name|sc
+operator|->
+name|rl_txthresh
+operator|=
+name|oldthresh
+operator|+
+literal|32
+expr_stmt|;
+return|return;
 block|}
 name|RL_INC
 argument_list|(
@@ -6301,13 +6346,11 @@ name|ifq_head
 operator|!=
 name|NULL
 condition|)
-block|{
 name|rl_start
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 end_function
@@ -6666,7 +6709,12 @@ argument_list|(
 name|sc
 argument_list|)
 argument_list|,
-name|RL_TX_EARLYTHRESH
+name|RL_TXTHRESH
+argument_list|(
+name|sc
+operator|->
+name|rl_txthresh
+argument_list|)
 operator||
 name|RL_CUR_TXMBUF
 argument_list|(
@@ -6996,6 +7044,13 @@ name|RL_IMR
 argument_list|,
 name|RL_INTRS
 argument_list|)
+expr_stmt|;
+comment|/* Set initial TX threshold */
+name|sc
+operator|->
+name|rl_txthresh
+operator|=
+name|RL_TX_THRESH_INIT
 expr_stmt|;
 comment|/* Start RX/TX process. */
 name|CSR_WRITE_4
