@@ -708,7 +708,7 @@ name|reg
 operator||=
 name|PCR_LED4MODE
 expr_stmt|;
-comment|/* 		 * Make sure Carrier Intgrity Monitor function is 		 * disabled (normal for Node operation, but sometimes 		 * it's not set?!) 		 */
+comment|/* 		 * Make sure Carrier Integrity Monitor function is 		 * disabled (normal for Node operation, but sometimes 		 * it's not set?!) 		 */
 name|reg
 operator||=
 name|PCR_CIMDIS
