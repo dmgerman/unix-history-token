@@ -607,6 +607,15 @@ argument_list|(
 literal|"IDLE  "
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-*s"
+argument_list|,
+name|UT_HOSTSIZE
+argument_list|,
+literal|"FROM"
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
