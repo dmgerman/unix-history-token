@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_glue.c	7.8 (Berkeley) 5/15/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00137  * --------------------         -----   ----------------------  *  * 08 Apr 93	Bruce Evans		Several VM system fixes  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_glue.c	7.8 (Berkeley) 5/15/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: /usr/bill/working/sys/vm/RCS/vm_glue.c,v 1.2 92/01/21 21:58:21 william Exp $"
-decl_stmt|;
-end_decl_stmt
 
 begin_include
 include|#
@@ -270,33 +260,33 @@ operator|(
 name|vm_offset_t
 operator|)
 name|addr
-operator|>=
-name|VM_MAXUSER_ADDRESS
-operator|+
-name|UPAGES
-operator|*
-name|NBPG
-operator|||
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-operator|+
-name|len
 operator|>
 name|VM_MAXUSER_ADDRESS
-operator|+
-name|UPAGES
-operator|*
-name|NBPG
 operator|||
 operator|(
 name|vm_offset_t
 operator|)
 name|addr
 operator|+
+operator|(
 name|len
-operator|<=
+operator|-
+literal|1
+operator|)
+operator|>
+name|VM_MAXUSER_ADDRESS
+operator|||
+operator|(
+name|vm_offset_t
+operator|)
+name|addr
+operator|+
+operator|(
+name|len
+operator|-
+literal|1
+operator|)
+operator|<
 operator|(
 name|vm_offset_t
 operator|)
@@ -870,6 +860,22 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* protect from the user area from user accesses. :-) 	   addr -> addr + UPAGES*NBPG don't seem to be protected without 	   this; the rest seems to be OK, and doesn't like being protected 	   - andrew@werple.apana.org.au */
+name|vm_protect
+argument_list|(
+name|vp
+argument_list|,
+name|addr
+argument_list|,
+name|UPAGES
+operator|*
+name|NBPG
+argument_list|,
+name|FALSE
+argument_list|,
+name|VM_PROT_NONE
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -891,20 +897,18 @@ begin_comment
 comment|/*  * Set default limits for VM system.  * Called for proc 0, and then inherited by all others.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vm_init_limits
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 comment|/* 	 * Set up the initial limits on process VM. 	 * Set the maximum resident set size to be all 	 * of (reasonably) available memory.  This causes 	 * any single, large process to start random page 	 * replacement once it fills memory. 	 */
 name|p
@@ -975,7 +979,7 @@ name|vm_page_free_count
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_include
 include|#
@@ -1035,12 +1039,10 @@ begin_comment
 comment|/*  * Brutally simple:  *	1. Attempt to swapin every swaped-out, runnable process in  *	   order of priority.  *	2. If not enough memory, wake the pageout daemon and let it  *	   clear some space.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sched
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1391,7 +1393,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
