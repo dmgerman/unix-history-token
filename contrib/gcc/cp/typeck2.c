@@ -1300,7 +1300,9 @@ argument_list|)
 expr_stmt|;
 name|ack
 argument_list|(
-literal|"See<URL:http://www.gnu.org/software/gcc/faq.html#bugreport> for instructions."
+literal|"See %s for instructions."
+argument_list|,
+name|GCCBUGURL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1345,7 +1347,9 @@ argument_list|)
 expr_stmt|;
 name|fatal
 argument_list|(
-literal|"See<URL:http://www.gnu.org/software/gcc/faq.html#bugreport> for instructions."
+literal|"See %s for instructions."
+argument_list|,
+name|GCCBUGURL
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,6 +16,17 @@ name|__GCC_SYSTEM_H__
 end_define
 
 begin_comment
+comment|/* This is the location of the online document giving information how    to report bugs. If you change this string, also check for strings    not under control of the preprocessor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCCBUGURL
+value|"<URL:http://www.gnu.org/software/gcc/bugs.html>"
+end_define
+
+begin_comment
 comment|/* We must include stdarg.h/varargs.h before stdio.h. */
 end_comment
 
@@ -1971,7 +1982,7 @@ define|#
 directive|define
 name|abort
 parameter_list|()
-value|fatal ("Internal compiler error in `%s', at %s:%d\n"	\   "Please submit a full bug report.\n"	\   "See<URL:http://www.gnu.org/software/gcc/faq.html#bugreport> for instructions.", \   __PRETTY_FUNCTION__, trim_filename (__FILE__), __LINE__)
+value|fatal ("Internal compiler error in `%s', at %s:%d\n"	\   "Please submit a full bug report.\n"	\   "See %s for instructions.", \   __PRETTY_FUNCTION__, trim_filename (__FILE__), __LINE__, GCCBUGURL)
 end_define
 
 begin_endif
