@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: do_command.c,v 1.10 1997/02/22 16:04:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,22 +282,10 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
-init|=
-name|getpwuid
-argument_list|(
-name|e
-operator|->
-name|uid
-argument_list|)
 decl_stmt|;
 name|login_cap_t
 modifier|*
 name|lc
-init|=
-name|login_getclass
-argument_list|(
-name|pwd
-argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
@@ -707,6 +695,38 @@ argument_list|(
 name|LOGIN_CAP
 argument_list|)
 comment|/* Set user's entire context, but skip the environment 		 * as cron provides a separate interface for this 		 */
+name|pwd
+operator|=
+name|getpwuid
+argument_list|(
+name|e
+operator|->
+name|uid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pwd
+condition|)
+name|lc
+operator|=
+name|login_getclass
+argument_list|(
+name|pwd
+argument_list|)
+expr_stmt|;
+else|else
+name|lc
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|lc
+operator|&&
+name|pwd
+condition|)
+block|{
 name|setusercontext
 argument_list|(
 name|lc
@@ -732,9 +752,13 @@ argument_list|(
 name|lc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* set our directory, uid and gid.  Set gid first, since once 		 * we set uid, we've lost root privledges. 		 */
+block|}
+else|else
+block|{
+comment|/* fall back to the old method */
+endif|#
+directive|endif
+comment|/* set our directory, uid and gid.  Set gid first, 			 * since once we set uid, we've lost root privledges. 			 */
 name|setgid
 argument_list|(
 name|e
@@ -778,7 +802,14 @@ operator|->
 name|uid
 argument_list|)
 expr_stmt|;
-comment|/* we aren't root after this... */
+comment|/* we aren't root after this..*/
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOGIN_CAP
+argument_list|)
+block|}
 endif|#
 directive|endif
 name|chdir
