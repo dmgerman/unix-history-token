@@ -1904,18 +1904,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|tty
-modifier|*
-name|scdevtotty
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef

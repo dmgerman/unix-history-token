@@ -320,19 +320,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|tty
-modifier|*
-name|cn_tp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* physical console tty struct */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|dev_t
 name|condev_t
 decl_stmt|;
@@ -618,20 +605,6 @@ name|d_open
 operator|=
 name|cnopen
 expr_stmt|;
-name|cn_tp
-operator|=
-call|(
-modifier|*
-name|cdp
-operator|->
-name|d_devtotty
-call|)
-argument_list|(
-name|cn_tab
-operator|->
-name|cn_dev
-argument_list|)
-expr_stmt|;
 name|cn_dev_t
 operator|=
 name|cn_tab
@@ -695,10 +668,6 @@ operator|=
 name|cn_phys_open
 expr_stmt|;
 name|cn_phys_open
-operator|=
-name|NULL
-expr_stmt|;
-name|cn_tp
 operator|=
 name|NULL
 expr_stmt|;
@@ -1030,6 +999,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|dev
+operator|->
+name|si_tty
+operator|=
+name|physdev
+operator|->
+name|si_tty
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1069,6 +1046,11 @@ block|{
 name|dev_t
 name|cndev
 decl_stmt|;
+name|struct
+name|tty
+modifier|*
+name|cn_tp
+decl_stmt|;
 if|if
 condition|(
 name|cn_tab
@@ -1085,6 +1067,12 @@ operator|=
 name|cn_tab
 operator|->
 name|cn_dev
+expr_stmt|;
+name|cn_tp
+operator|=
+name|cndev
+operator|->
+name|si_tty
 expr_stmt|;
 comment|/* 	 * act appropriatly depending on whether it's /dev/console 	 * or the pysical device (e.g. /dev/sio) that's being closed. 	 * in either case, don't actually close the device unless 	 * both are closed. 	 */
 if|if

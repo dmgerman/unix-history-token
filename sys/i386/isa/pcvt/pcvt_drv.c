@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (c) 1993 Charles Hannum.  *  * All rights reserved.  *  * Parts of this code regarding the NetBSD interface were written  * by Charles Hannum.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Scott Turner  *	and Charles Hannum.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_drv.c, 3.20, Last Edit-Date: [Mon Apr 19 17:10:09 1999]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (c) 1993 Charles Hannum.  *  * All rights reserved.  *  * Parts of this code regarding the NetBSD interface were written  * by Charles Hannum.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Scott Turner  *	and Charles Hannum.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_drv.c, 3.20, Last Edit-Date: [Mon Apr 19 17:10:09 1999]  *  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -295,13 +295,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_devtotty_t
-name|pcdevtotty
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_mmap_t
 name|pcmmap
 decl_stmt|;
@@ -343,10 +336,10 @@ comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|pcdevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|pcmmap
@@ -381,42 +374,6 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|205
-end_if
-
-begin_function
-name|struct
-name|tty
-modifier|*
-name|pcdevtotty
-parameter_list|(
-name|Dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-name|get_pccons
-argument_list|(
-name|dev
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCVT_FREEBSD> 205 */
-end_comment
 
 begin_if
 if|#
@@ -1588,6 +1545,12 @@ condition|)
 return|return
 name|ENXIO
 return|;
+name|dev
+operator|->
+name|si_tty
+operator|=
+name|tp
+expr_stmt|;
 if|#
 directive|if
 name|PCVT_EMU_MOUSE

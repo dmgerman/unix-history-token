@@ -405,13 +405,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|siodevtotty
-value|cydevtotty
-end_define
-
-begin_define
-define|#
-directive|define
 name|siodriver
 value|cydriver
 end_define
@@ -496,7 +489,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|siostop
+name|comstop
 value|cystop
 end_define
 
@@ -677,7 +670,7 @@ value|(((mynor)>> 16) * CY_MAX_PORTS \ 				 | (((mynor)& 0xff)& ~MINOR_MAGIC_MAS
 end_define
 
 begin_comment
-comment|/*  * com state bits.  * (CS_BUSY | CS_TTGO) and (CS_BUSY | CS_TTGO | CS_ODEVREADY) must be higher  * than the other bits so that they can be tested as a group without masking  * off the low bits.  *  * The following com and tty flags correspond closely:  *	CS_BUSY		= TS_BUSY (maintained by comstart(), siopoll() and  *				   siostop())  *	CS_TTGO		= ~TS_TTSTOP (maintained by comparam() and comstart())  *	CS_CTS_OFLOW	= CCTS_OFLOW (maintained by comparam())  *	CS_RTS_IFLOW	= CRTS_IFLOW (maintained by comparam())  * TS_FLUSH is not used.  * XXX I think TIOCSETA doesn't clear TS_TTSTOP when it clears IXON.  * XXX CS_*FLOW should be CF_*FLOW in com->flags (control flags not state).  */
+comment|/*  * com state bits.  * (CS_BUSY | CS_TTGO) and (CS_BUSY | CS_TTGO | CS_ODEVREADY) must be higher  * than the other bits so that they can be tested as a group without masking  * off the low bits.  *  * The following com and tty flags correspond closely:  *	CS_BUSY		= TS_BUSY (maintained by comstart(), siopoll() and  *				   comstop())  *	CS_TTGO		= ~TS_TTSTOP (maintained by comparam() and comstart())  *	CS_CTS_OFLOW	= CCTS_OFLOW (maintained by comparam())  *	CS_RTS_IFLOW	= CRTS_IFLOW (maintained by comparam())  * TS_FLUSH is not used.  * XXX I think TIOCSETA doesn't clear TS_TTSTOP when it clears IXON.  * XXX CS_*FLOW should be CF_*FLOW in com->flags (control flags not state).  */
 end_comment
 
 begin_define
@@ -1518,6 +1511,25 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|comstop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|,
+name|int
+name|rw
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|timeout_t
 name|comwakeup
 decl_stmt|;
@@ -1659,20 +1671,6 @@ name|sioioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|d_stop_t
-name|siostop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_devtotty_t
-name|siodevtotty
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1703,16 +1701,16 @@ comment|/* ioctl */
 name|sioioctl
 block|,
 comment|/* stop */
-name|siostop
+name|nostop
 block|,
 comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|siodevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|nommap
@@ -3143,6 +3141,12 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
+name|dev
+operator|->
+name|si_tty
+operator|=
+name|tp
+expr_stmt|;
 name|s
 operator|=
 name|spltty
@@ -3309,6 +3313,12 @@ operator|->
 name|t_oproc
 operator|=
 name|comstart
+expr_stmt|;
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|comstop
 expr_stmt|;
 name|tp
 operator|->
@@ -3789,7 +3799,7 @@ argument_list|,
 name|com
 argument_list|)
 expr_stmt|;
-name|siostop
+name|comstop
 argument_list|(
 name|tp
 argument_list|,
@@ -10600,7 +10610,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|siostop
+name|comstop
 parameter_list|(
 name|tp
 parameter_list|,
@@ -10823,76 +10833,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|struct
-name|tty
-modifier|*
-name|siodevtotty
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-name|int
-name|mynor
-decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-name|mynor
-operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mynor
-operator|&
-name|CONTROL_MASK
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|unit
-operator|=
-name|MINOR_TO_UNIT
-argument_list|(
-name|mynor
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|u_int
-operator|)
-name|unit
-operator|>=
-name|NSIO
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-return|return
-operator|(
-operator|&
-name|sio_tty
-index|[
-name|unit
-index|]
-operator|)
-return|;
 block|}
 end_function
 

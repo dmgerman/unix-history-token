@@ -145,6 +145,25 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|ptsstop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|,
+name|int
+name|rw
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|ptcwakeup
 name|__P
 argument_list|(
@@ -207,20 +226,6 @@ begin_decl_stmt
 specifier|static
 name|d_ioctl_t
 name|ptyioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_stop_t
-name|ptsstop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_devtotty_t
-name|ptydevtotty
 decl_stmt|;
 end_decl_stmt
 
@@ -289,16 +294,16 @@ comment|/* ioctl */
 name|ptyioctl
 block|,
 comment|/* stop */
-name|ptsstop
+name|nostop
 block|,
 comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|ptydevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|nommap
@@ -370,7 +375,7 @@ comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|ptydevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
 name|ptcpoll
@@ -1718,6 +1723,12 @@ operator|->
 name|t_oproc
 operator|=
 name|ptsstart
+expr_stmt|;
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|ptsstop
 expr_stmt|;
 call|(
 name|void
@@ -3270,42 +3281,6 @@ block|}
 goto|goto
 name|again
 goto|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|struct
-name|tty
-modifier|*
-name|ptydevtotty
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-operator|~
-literal|0xff
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-return|return
-name|dev
-operator|->
-name|si_tty
-return|;
 block|}
 end_function
 

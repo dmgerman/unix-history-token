@@ -1487,10 +1487,10 @@ comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|scdevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|scmmap
@@ -2506,26 +2506,6 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|tty
-modifier|*
-name|scdevtotty
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dev
-operator|->
-name|si_tty
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|scdevtounit
@@ -2766,6 +2746,12 @@ operator|->
 name|t_param
 operator|=
 name|scparam
+expr_stmt|;
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|nostop
 expr_stmt|;
 name|tp
 operator|->

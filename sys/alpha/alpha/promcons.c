@@ -201,20 +201,6 @@ name|promioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|d_stop_t
-name|promstop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_devtotty_t
-name|promdevtotty
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -245,16 +231,16 @@ comment|/* ioctl */
 name|promioctl
 block|,
 comment|/* stop */
-name|promstop
+name|nostop
 block|,
 comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|promdevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|nommap
@@ -367,6 +353,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|promstop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|promopen
@@ -444,6 +446,12 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+name|dev
+operator|->
+name|si_tty
+operator|=
+name|tp
+expr_stmt|;
 name|tp
 operator|->
 name|t_oproc
@@ -455,6 +463,12 @@ operator|->
 name|t_param
 operator|=
 name|promparam
+expr_stmt|;
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|promstop
 expr_stmt|;
 name|tp
 operator|->
@@ -1081,6 +1095,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+name|int
+name|flag
+decl_stmt|;
 block|{
 name|int
 name|s
@@ -1199,42 +1216,6 @@ argument_list|,
 name|polltime
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|struct
-name|tty
-modifier|*
-name|promdevtotty
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"promtty: bogus"
-argument_list|)
-expr_stmt|;
-return|return
-operator|&
-name|prom_tty
-index|[
-literal|0
-index|]
-return|;
 block|}
 end_function
 

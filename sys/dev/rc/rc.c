@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995 by Pavel Antonov, Moscow, Russia.  * Copyright (C) 1995 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995 by Pavel Antonov, Moscow, Russia.  * Copyright (C) 1995 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -328,20 +328,6 @@ name|rcioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|d_stop_t
-name|rcstop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_devtotty_t
-name|rcdevtotty
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -372,16 +358,16 @@ comment|/* ioctl */
 name|rcioctl
 block|,
 comment|/* stop */
-name|rcstop
+name|nostop
 block|,
 comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|rcdevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|nommap
@@ -923,6 +909,24 @@ operator|(
 expr|struct
 name|tty
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|rc_stop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|,
+name|int
+name|rw
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3989,7 +3993,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|rcstop
+name|rc_stop
 parameter_list|(
 name|tp
 parameter_list|,
@@ -4034,7 +4038,7 @@ directive|ifdef
 name|RCDEBUG
 name|printf
 argument_list|(
-literal|"rc%d/%d: rcstop %s%s\n"
+literal|"rc%d/%d: rc_stop %s%s\n"
 argument_list|,
 name|rc
 operator|->
@@ -4293,6 +4297,12 @@ name|rc
 operator|->
 name|rc_tp
 expr_stmt|;
+name|dev
+operator|->
+name|si_tty
+operator|=
+name|tp
+expr_stmt|;
 name|nec
 operator|=
 name|rc
@@ -4497,6 +4507,12 @@ operator|->
 name|t_param
 operator|=
 name|rc_param
+expr_stmt|;
+name|tp
+operator|->
+name|t_stop
+operator|=
+name|rc_stop
 expr_stmt|;
 name|tp
 operator|->
@@ -4884,7 +4900,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-name|rcstop
+name|rc_stop
 argument_list|(
 name|tp
 argument_list|,
@@ -8216,52 +8232,6 @@ end_endif
 begin_comment
 comment|/* RCDEBUG */
 end_comment
-
-begin_function
-specifier|static
-name|struct
-name|tty
-modifier|*
-name|rcdevtotty
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-name|int
-name|unit
-decl_stmt|;
-name|unit
-operator|=
-name|GET_UNIT
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NRC
-operator|*
-name|CD180_NCHAN
-condition|)
-return|return
-name|NULL
-return|;
-return|return
-operator|(
-operator|&
-name|rc_tty
-index|[
-name|unit
-index|]
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static

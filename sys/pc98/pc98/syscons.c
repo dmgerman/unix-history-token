@@ -1484,10 +1484,10 @@ comment|/* reset */
 name|noreset
 block|,
 comment|/* devtotty */
-name|scdevtotty
+name|nodevtotty
 block|,
 comment|/* poll */
-name|ttpoll
+name|ttypoll
 block|,
 comment|/* mmap */
 name|scmmap
@@ -2508,26 +2508,6 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|tty
-modifier|*
-name|scdevtotty
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dev
-operator|->
-name|si_tty
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|scdevtounit
@@ -3091,10 +3071,9 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|scdevtotty
-argument_list|(
 name|dev
-argument_list|)
+operator|->
+name|si_tty
 decl_stmt|;
 name|struct
 name|scr_stat
@@ -3445,10 +3424,9 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|scdevtotty
-argument_list|(
 name|dev
-argument_list|)
+operator|->
+name|si_tty
 decl_stmt|;
 name|sc_touch_scrn_saver
 argument_list|()
@@ -3499,10 +3477,9 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|scdevtotty
-argument_list|(
 name|dev
-argument_list|)
+operator|->
+name|si_tty
 decl_stmt|;
 return|return
 operator|(
@@ -3997,10 +3974,9 @@ name|s
 decl_stmt|;
 name|tp
 operator|=
-name|scdevtotty
-argument_list|(
 name|dev
-argument_list|)
+operator|->
+name|si_tty
 expr_stmt|;
 comment|/* If there is a user_ioctl function call that first */
 if|if

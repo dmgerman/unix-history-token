@@ -173,10 +173,9 @@ name|mode
 decl_stmt|;
 name|tp
 operator|=
-name|scdevtotty
-argument_list|(
 name|dev
-argument_list|)
+operator|->
+name|si_tty
 expr_stmt|;
 if|if
 condition|(
