@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.72	82/12/17	*/
+comment|/*	machdep.c	4.73	83/01/12	*/
 end_comment
 
 begin_include
@@ -3888,6 +3888,16 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* pageout daemon doesn't wait for pushed pages */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DIRTY
+condition|)
+return|return;
 name|s
 operator|=
 name|spl6
