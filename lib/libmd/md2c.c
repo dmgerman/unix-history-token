@@ -69,6 +69,7 @@ index|[
 literal|16
 index|]
 operator|,
+specifier|const
 name|unsigned
 name|char
 index|[
@@ -821,6 +822,7 @@ modifier|*
 name|context
 decl_stmt|;
 comment|/* context */
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1120,6 +1122,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 name|block

@@ -73,6 +73,7 @@ parameter_list|(
 name|MD5_CTX
 modifier|*
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -126,6 +127,7 @@ name|char
 modifier|*
 name|MD5Data
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

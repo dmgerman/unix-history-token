@@ -74,6 +74,7 @@ parameter_list|(
 name|MD2_CTX
 modifier|*
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -127,6 +128,7 @@ name|char
 modifier|*
 name|MD2Data
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -73,6 +73,7 @@ parameter_list|(
 name|MD4_CTX
 modifier|*
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -126,6 +127,7 @@ name|char
 modifier|*
 name|MD4Data
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

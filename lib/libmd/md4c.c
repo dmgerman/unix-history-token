@@ -150,6 +150,7 @@ index|[
 literal|4
 index|]
 operator|,
+specifier|const
 name|unsigned
 name|char
 index|[
@@ -191,6 +192,7 @@ operator|(
 name|UINT4
 operator|*
 operator|,
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -564,6 +566,7 @@ modifier|*
 name|context
 decl_stmt|;
 comment|/* context */
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -939,6 +942,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 name|block
@@ -2122,6 +2126,7 @@ name|UINT4
 modifier|*
 name|output
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

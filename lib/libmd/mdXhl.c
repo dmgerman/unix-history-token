@@ -276,6 +276,7 @@ name|char
 modifier|*
 name|MDXData
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
