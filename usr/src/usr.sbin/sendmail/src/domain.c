@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sendmail.h>
+file|"sendmail.h"
 end_include
 
 begin_ifndef
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.20 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.21 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.20 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.21 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sendmail.h>
+file|"sendmail.h"
 end_include
 
 begin_include
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.32 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.33 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.32 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.33 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
