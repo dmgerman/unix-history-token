@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -214,6 +214,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Don't Generate error packets in response to multicasts. 	 */
+if|if
+condition|(
+name|oip
+operator|->
+name|idp_dna
+operator|.
+name|x_host
+operator|.
+name|c_host
+index|[
+literal|0
+index|]
+operator|&
+literal|1
+condition|)
+goto|goto
+name|free
+goto|;
 name|ns_errstat
 operator|.
 name|ns_es_error
@@ -791,6 +810,17 @@ name|ep
 operator|->
 name|ns_err_param
 argument_list|)
+expr_stmt|;
+name|ns_errstat
+operator|.
+name|ns_es_inhist
+index|[
+name|ns_err_x
+argument_list|(
+name|type
+argument_list|)
+index|]
+operator|++
 expr_stmt|;
 ifdef|#
 directive|ifdef
