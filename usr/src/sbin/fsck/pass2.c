@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.17 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/fs.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_define
@@ -55,7 +49,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ufs/dir.h>
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_undef
@@ -63,6 +57,12 @@ undef|#
 directive|undef
 name|KERNEL
 end_undef
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
 
 begin_include
 include|#
