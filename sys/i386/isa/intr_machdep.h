@@ -228,17 +228,6 @@ value|(ICU_OFFSET +  48)
 end_define
 
 begin_comment
-comment|/* IPI to signal the CPU holding the ISR lock that another IRQ has appeared */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XFORWARD_IRQ_OFFSET
-value|(ICU_OFFSET +  49)
-end_define
-
-begin_comment
 comment|/* IPI to signal CPUs to stop and wait for another CPU to restart them */
 end_comment
 
@@ -772,9 +761,6 @@ directive|endif
 name|Xcpuast
 decl_stmt|,
 comment|/* Additional software trap on other cpu */
-name|Xforward_irq
-decl_stmt|,
-comment|/* Forward irq to cpu holding ISR lock */
 name|Xcpustop
 decl_stmt|,
 comment|/* CPU stops& waits for another CPU to restart it */
