@@ -1154,6 +1154,8 @@ block|,
 name|ngmn_rcvdata
 block|,
 name|ngmn_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
