@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -1242,7 +1236,6 @@ name|a_flags
 operator|&
 name|LK_INTERLOCK
 condition|)
-block|{
 name|simple_unlock
 argument_list|(
 operator|&
@@ -1253,7 +1246,6 @@ operator|->
 name|v_interlock
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
