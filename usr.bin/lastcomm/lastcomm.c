@@ -743,7 +743,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-7s %-*s %-*s "
+literal|"%-*.*s %-7s %-*s %-*s"
 argument_list|,
 name|AC_COMM_LEN
 argument_list|,
@@ -794,7 +794,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6.2f secs "
+literal|" %6.2f secs"
 argument_list|,
 operator|(
 name|expand
@@ -829,7 +829,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6.2f us "
+literal|" %6.2f us"
 argument_list|,
 name|expand
 argument_list|(
@@ -855,7 +855,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6.2f sy "
+literal|" %6.2f sy"
 argument_list|,
 name|expand
 argument_list|(
@@ -881,7 +881,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8.2f es "
+literal|" %8.2f es"
 argument_list|,
 name|expand
 argument_list|(
@@ -907,7 +907,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%.16s "
+literal|" %.16s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -954,7 +954,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%.16s "
+literal|" %.16s"
 argument_list|,
 name|ctime
 argument_list|(
