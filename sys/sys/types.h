@@ -176,7 +176,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-specifier|const
+name|__const
 name|char
 modifier|*
 name|c_caddr_t
@@ -189,7 +189,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-specifier|volatile
+name|__volatile
 name|char
 modifier|*
 name|v_caddr_t
