@@ -3020,6 +3020,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 name|NULL
@@ -3068,6 +3071,9 @@ name|svc_getargs
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_dir
 argument_list|,
 name|rpcpath
@@ -3294,6 +3300,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_long
 argument_list|,
 operator|(
@@ -3404,6 +3413,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_long
 argument_list|,
 operator|(
@@ -3439,6 +3451,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_fhs
 argument_list|,
 operator|(
@@ -3527,6 +3542,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_long
 argument_list|,
 operator|(
@@ -3564,6 +3582,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_mlist
 argument_list|,
 operator|(
@@ -3629,6 +3650,9 @@ name|svc_getargs
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_dir
 argument_list|,
 name|rpcpath
@@ -3683,6 +3707,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -3768,6 +3795,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -3826,6 +3856,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_explist
 argument_list|,
 operator|(
@@ -3841,6 +3874,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_explist_brief
 argument_list|,
 operator|(
