@@ -214,8 +214,6 @@ operator|=
 name|malloc
 argument_list|(
 name|sz
-operator|+
-literal|8
 argument_list|)
 expr_stmt|;
 if|if
