@@ -12282,7 +12282,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* keep-state rules used to limit number of connections. */
+comment|/* dyn. rule used to limit number of connections. */
 name|rule
 operator|.
 name|fw_flg
@@ -12383,21 +12383,6 @@ break|break ;
 block|}
 if|if
 condition|(
-name|rule
-operator|.
-name|limit_mask
-operator|==
-literal|0
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"missing limit mask"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|ac
 operator|<
 literal|1
@@ -12432,6 +12417,21 @@ argument_list|(
 name|EX_USAGE
 argument_list|,
 literal|"limit: limit must be>0"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rule
+operator|.
+name|limit_mask
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"missing limit mask"
 argument_list|)
 expr_stmt|;
 name|av
