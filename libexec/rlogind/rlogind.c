@@ -2867,9 +2867,14 @@ name|syserr
 condition|)
 name|len
 operator|=
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"rlogind: %s: %s.\r\n"
 argument_list|,
@@ -2884,9 +2889,14 @@ expr_stmt|;
 else|else
 name|len
 operator|=
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"rlogind: %s.\r\n"
 argument_list|,
