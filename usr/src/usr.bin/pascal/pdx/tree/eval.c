@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.5 %G%"
+literal|"@(#)eval.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1047,6 +1047,9 @@ name|SYM
 modifier|*
 name|b
 decl_stmt|;
+name|ADDRESS
+name|addr
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -1086,14 +1089,45 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|r0
+name|addr
 operator|=
-name|srcline
-argument_list|(
 name|firstline
 argument_list|(
 name|b
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"\"%s\" is empty"
+argument_list|,
+name|name
+argument_list|(
+name|b
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|skimsource
+argument_list|(
+name|srcfilename
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|r0
+operator|=
+name|srcline
+argument_list|(
+name|addr
 argument_list|)
 expr_stmt|;
 name|r1
