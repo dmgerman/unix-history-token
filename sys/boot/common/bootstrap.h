@@ -747,6 +747,12 @@ name|preloaded_file
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|mod_depend
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|kernel_module
@@ -756,6 +762,10 @@ modifier|*
 name|m_name
 decl_stmt|;
 comment|/* module name */
+name|int
+name|m_version
+decl_stmt|;
+comment|/* module version */
 comment|/*    char			*m_args;*/
 comment|/* arguments for the module */
 name|struct
@@ -902,6 +912,11 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+name|struct
+name|mod_depend
+modifier|*
+name|verinfo
+parameter_list|,
 name|int
 name|argc
 parameter_list|,
@@ -924,6 +939,26 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mod_loadkld
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1019,6 +1054,9 @@ parameter_list|,
 name|char
 modifier|*
 name|modname
+parameter_list|,
+name|int
+name|version
 parameter_list|,
 name|struct
 name|kernel_module

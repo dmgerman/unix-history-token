@@ -171,7 +171,7 @@ block|}
 comment|/* find/load the kernel module */
 if|if
 condition|(
-name|mod_load
+name|mod_loadkld
 argument_list|(
 name|argv
 index|[
@@ -1449,7 +1449,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|mod_load
+name|mod_loadkld
 argument_list|(
 name|cp
 argument_list|,

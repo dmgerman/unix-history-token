@@ -709,6 +709,17 @@ begin_comment
 comment|/* depends on */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINKER_HINTS_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* linker.hints file version */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
