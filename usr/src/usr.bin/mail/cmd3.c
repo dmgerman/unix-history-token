@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.25 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1950,7 +1950,7 @@ operator|->
 name|v_value
 argument_list|)
 expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 operator|(
 name|char
@@ -2005,7 +2005,7 @@ operator|->
 name|v_value
 argument_list|)
 expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 operator|(
 name|char
@@ -3225,7 +3225,7 @@ name|altnames
 operator|!=
 literal|0
 condition|)
-name|cfree
+name|free
 argument_list|(
 operator|(
 name|char
