@@ -7565,7 +7565,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|patterns
+name|num_patterns
 operator|==
 literal|0
 operator|)
