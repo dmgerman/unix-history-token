@@ -239,6 +239,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|pflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* no incoming port flag */
+end_comment
+
+begin_decl_stmt
+name|int
 name|from_remote
 decl_stmt|;
 end_decl_stmt
@@ -512,7 +522,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dl"
+literal|"dlp"
 argument_list|)
 operator|)
 operator|!=
@@ -536,6 +546,13 @@ case|case
 literal|'l'
 case|:
 name|lflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|pflag
 operator|++
 expr_stmt|;
 break|break;
@@ -1174,6 +1191,13 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pflag
+operator|==
+literal|0
+condition|)
+block|{
 name|finet
 operator|=
 name|socket
@@ -1197,9 +1221,7 @@ condition|(
 name|options
 operator|&
 name|SO_DEBUG
-condition|)
-if|if
-condition|(
+operator|&&
 name|setsockopt
 argument_list|(
 name|finet
@@ -1307,6 +1329,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Main loop: accept, do a request, continue. 	 */
 name|memset
@@ -1444,7 +1467,13 @@ name|fromlen
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|pflag
+operator|==
+literal|0
+condition|)
 comment|/* if (FD_ISSET(finet,&readfds)) */
 block|{
 name|domain
@@ -1569,6 +1598,13 @@ argument_list|(
 name|funix
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pflag
+operator|==
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1577,6 +1613,7 @@ argument_list|(
 name|finet
 argument_list|)
 expr_stmt|;
+block|}
 name|dup2
 argument_list|(
 name|s
@@ -2994,7 +3031,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-dl] [port#]\n"
+literal|"usage: lpd [-dlp] [port#]\n"
 argument_list|)
 expr_stmt|;
 name|exit
