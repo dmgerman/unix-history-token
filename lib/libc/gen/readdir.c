@@ -437,9 +437,10 @@ name|entry
 argument_list|,
 name|dp
 argument_list|,
-sizeof|sizeof
-expr|*
-name|entry
+name|_GENERIC_DIRSIZ
+argument_list|(
+name|dp
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
