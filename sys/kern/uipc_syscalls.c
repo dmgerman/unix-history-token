@@ -8637,6 +8637,8 @@ condition|)
 block|{
 name|int
 name|bsize
+decl_stmt|,
+name|resid
 decl_stmt|;
 comment|/* 			 * Ensure that our page is still around when the I/O  			 * completes. 			 */
 name|vm_page_io_start
@@ -8708,7 +8710,8 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-name|NULL
+operator|&
+name|resid
 argument_list|,
 name|td
 argument_list|)
