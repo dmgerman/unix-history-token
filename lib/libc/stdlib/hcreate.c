@@ -89,12 +89,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"namespace.h"
-end_include
-
 begin_comment
 comment|/*  * DO NOT MAKE THIS STRUCTURE LARGER THAN 32 BYTES (4 ptrs on 64-bit  * ptr machine) without adjusting MAX_BUCKETS_LG2 below.  */
 end_comment
