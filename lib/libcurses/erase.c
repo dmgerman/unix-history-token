@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1981, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erase.c	5.4 (Berkeley) 6/1/90"
+literal|"@(#)erase.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,36 +31,33 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine erases everything on the window.  *  */
+comment|/*  * werase --  *	Erases everything on the window.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|werase
-argument_list|(
-argument|win
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|reg
+specifier|register
 name|int
+name|minx
+decl_stmt|,
 name|y
 decl_stmt|;
-name|reg
-name|chtype
+specifier|register
+name|__LDATA
 modifier|*
 name|sp
 decl_stmt|,
@@ -73,18 +70,12 @@ decl_stmt|,
 modifier|*
 name|maxx
 decl_stmt|;
-name|reg
-name|int
-name|minx
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__CTRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"WERASE(%0.2o)\n"
+literal|"werase: (%0.2o)\n"
 argument_list|,
 name|win
 argument_list|)
@@ -101,7 +92,7 @@ name|y
 operator|<
 name|win
 operator|->
-name|_maxy
+name|maxy
 condition|;
 name|y
 operator|++
@@ -109,16 +100,19 @@ control|)
 block|{
 name|minx
 operator|=
-name|_NOCHANGE
+operator|-
+literal|1
 expr_stmt|;
 name|start
 operator|=
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
+operator|->
+name|line
 expr_stmt|;
 name|end
 operator|=
@@ -127,7 +121,7 @@ name|start
 index|[
 name|win
 operator|->
-name|_maxx
+name|maxx
 index|]
 expr_stmt|;
 for|for
@@ -145,10 +139,17 @@ operator|++
 control|)
 if|if
 condition|(
-operator|*
 name|sp
+operator|->
+name|ch
 operator|!=
 literal|' '
+operator|||
+name|sp
+operator|->
+name|attr
+operator|!=
+literal|0
 condition|)
 block|{
 name|maxx
@@ -159,7 +160,8 @@ if|if
 condition|(
 name|minx
 operator|==
-name|_NOCHANGE
+operator|-
+literal|1
 condition|)
 name|minx
 operator|=
@@ -167,19 +169,27 @@ name|sp
 operator|-
 name|start
 expr_stmt|;
-operator|*
 name|sp
+operator|->
+name|ch
 operator|=
 literal|' '
+expr_stmt|;
+name|sp
+operator|->
+name|attr
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|minx
 operator|!=
-name|_NOCHANGE
+operator|-
+literal|1
 condition|)
-name|touchline
+name|__touchline
 argument_list|(
 name|win
 argument_list|,
@@ -191,25 +201,24 @@ name|maxx
 operator|-
 name|win
 operator|->
-name|_y
+name|lines
 index|[
 name|y
 index|]
+operator|->
+name|line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|win
-operator|->
-name|_curx
-operator|=
-name|win
-operator|->
-name|_cury
-operator|=
-literal|0
-expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

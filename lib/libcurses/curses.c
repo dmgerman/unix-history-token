@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1981, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	5.7 (Berkeley) 6/1/90"
+literal|"@(#)curses.c	8.2 (Berkeley) 1/2/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,131 +28,60 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * Define global variables  *  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"curses.h"
+file|<curses.h>
 end_include
 
-begin_decl_stmt
-name|bool
-name|_echoit
-init|=
-name|TRUE
-decl_stmt|,
-comment|/* set if stty indicates ECHO		*/
-name|_rawmode
-init|=
-name|FALSE
-decl_stmt|,
-comment|/* set if stty indicates RAW mode	*/
-name|My_term
-init|=
-name|FALSE
-decl_stmt|,
-comment|/* set if user specifies terminal type	*/
-name|_endwin
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* set if endwin has been called	*/
-end_comment
-
-begin_decl_stmt
-name|char
-name|ttytype
-index|[
-literal|50
-index|]
-decl_stmt|,
-comment|/* long name of tty			*/
-modifier|*
-name|Def_term
-init|=
-literal|"unknown"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default terminal type	*/
+comment|/* Private. */
 end_comment
 
 begin_decl_stmt
 name|int
-name|_tty_ch
+name|__echoit
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If stty indicates ECHO. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__pfast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__rawmode
 init|=
 literal|0
-decl_stmt|,
-comment|/* file channel which is a tty		*/
-name|LINES
-decl_stmt|,
-comment|/* number of lines allowed on screen	*/
-name|COLS
-decl_stmt|,
-comment|/* number of columns allowed on screen	*/
-name|_res_flg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sgtty flags for reseting later	*/
+comment|/* If stty indicates RAW mode. */
 end_comment
 
 begin_decl_stmt
-name|WINDOW
-modifier|*
-name|stdscr
+name|int
+name|__noqch
 init|=
-name|NULL
-decl_stmt|,
-modifier|*
-name|curscr
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|outf
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* debug output file			*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|SGTTY
-name|_tty
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tty modes				*/
+comment|/*  					 * If terminal doesn't have  					 * insert/delete line capabilities  					 * for quick change on refresh. 					 */
 end_comment
 
 begin_decl_stmt
-name|bool
+name|char
 name|AM
 decl_stmt|,
 name|BS
@@ -161,13 +90,9 @@ name|CA
 decl_stmt|,
 name|DA
 decl_stmt|,
-name|DB
-decl_stmt|,
 name|EO
 decl_stmt|,
 name|HC
-decl_stmt|,
-name|HZ
 decl_stmt|,
 name|IN
 decl_stmt|,
@@ -180,6 +105,8 @@ decl_stmt|,
 name|NS
 decl_stmt|,
 name|OS
+decl_stmt|,
+name|PC
 decl_stmt|,
 name|UL
 decl_stmt|,
@@ -366,6 +293,18 @@ modifier|*
 name|VE
 decl_stmt|,
 modifier|*
+name|al
+decl_stmt|,
+modifier|*
+name|dl
+decl_stmt|,
+modifier|*
+name|sf
+decl_stmt|,
+modifier|*
+name|sr
+decl_stmt|,
+modifier|*
 name|AL_PARM
 decl_stmt|,
 modifier|*
@@ -385,29 +324,106 @@ name|RIGHT_PARM
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Public.  *  * XXX  * UPPERCASE isn't used by libcurses, and is left for backward  * compatibility only.  */
+end_comment
+
 begin_decl_stmt
-name|char
-name|PC
+name|WINDOW
+modifier|*
+name|curscr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * From the tty modes...  */
+comment|/* Current screen. */
 end_comment
 
 begin_decl_stmt
-name|bool
-name|GT
-decl_stmt|,
-name|NONL
-decl_stmt|,
-name|UPPERCASE
-decl_stmt|,
-name|normtty
-decl_stmt|,
-name|_pfast
+name|WINDOW
+modifier|*
+name|stdscr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Standard screen. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|COLS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Columns on the screen. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|LINES
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Lines on the screen. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|My_term
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use Def_term regardless. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Def_term
+init|=
+literal|"unknown"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Default terminal type. */
+end_comment
+
+begin_decl_stmt
+name|char
+name|GT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Gtty indicates tabs. */
+end_comment
+
+begin_decl_stmt
+name|char
+name|NONL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Term can't hack LF doing a CR. */
+end_comment
+
+begin_decl_stmt
+name|char
+name|UPPERCASE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terminal is uppercase only. */
+end_comment
 
 end_unit
 
