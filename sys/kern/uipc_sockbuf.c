@@ -1468,7 +1468,7 @@ name|arg1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_long
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1496,7 +1496,7 @@ name|arg1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_long
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4272,7 +4272,7 @@ name|KIPC_MAXSOCKBUF
 argument_list|,
 name|maxsockbuf
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -4283,7 +4283,7 @@ literal|0
 argument_list|,
 name|sysctl_handle_sb_max
 argument_list|,
-literal|"I"
+literal|"LU"
 argument_list|,
 literal|"Maximum socket buffer size"
 argument_list|)
@@ -4312,7 +4312,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern_ipc
 argument_list|,
