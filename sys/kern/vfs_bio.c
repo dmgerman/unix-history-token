@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.116 1997/05/19 14:36:36 dfr Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.117 1997/05/30 22:25:35 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -2014,7 +2014,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, so the B_INVAL flag is used to *invalidate* the buffer, 	 * but the VM object is kept around.  The B_NOCACHE flag is used to 	 * invalidate the pages in the VM object. 	 * 	 * If the buffer is a partially filled NFS buffer, keep it 	 * since invalidating it now will lose informatio.  The valid 	 * flags in the vm_pages have only DEV_BSIZE resolution but 	 * the b_validoff, b_validend fields have byte resolution. 	 * This can avoid unnecessary re-reads of the buffer. 	 */
+comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, so the B_INVAL flag is used to *invalidate* the buffer, 	 * but the VM object is kept around.  The B_NOCACHE flag is used to 	 * invalidate the pages in the VM object. 	 * 	 * If the buffer is a partially filled NFS buffer, keep it 	 * since invalidating it now will lose informatio.  The valid 	 * flags in the vm_pages have only DEV_BSIZE resolution but 	 * the b_validoff, b_validend fields have byte resolution. 	 * This can avoid unnecessary re-reads of the buffer. 	 * XXX this seems to cause performance problems. 	 */
 if|if
 condition|(
 operator|(
@@ -2024,6 +2024,9 @@ name|b_flags
 operator|&
 name|B_VMIO
 operator|)
+ifdef|#
+directive|ifdef
+name|notdef
 operator|&&
 operator|(
 name|bp
@@ -2070,6 +2073,8 @@ operator|->
 name|b_bufsize
 operator|)
 operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|vm_ooffset_t
