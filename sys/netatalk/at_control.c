@@ -1131,12 +1131,6 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-comment|/* 	 * refs goes from 1->0 if no external refs. note..  	 * This will not free it ... looks for -1. 	 */
-name|IFAFREE
-argument_list|(
-name|ifa0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Now remove the at_ifaddr from the parallel structure 	 * as well, or we'd be in deep trouble 	 */
 name|aa0
 operator|=
@@ -1210,7 +1204,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Now dump the memory we were using. 	 * Decrement the reference count. 	 * This should probably be the last reference 	 * as the count will go from 0 to -1. 	 * (unless there is still a route referencing this) 	 */
+comment|/* 	 * Now reclaim the reference. 	 */
 name|IFAFREE
 argument_list|(
 name|ifa0
