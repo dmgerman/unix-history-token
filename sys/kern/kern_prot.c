@@ -5180,6 +5180,52 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Claim another referernce to a ucred structure  */
+end_comment
+
+begin_function
+name|void
+name|crhold
+parameter_list|(
+name|cr
+parameter_list|)
+name|struct
+name|ucred
+modifier|*
+name|cr
+decl_stmt|;
+block|{
+name|mtx_enter
+argument_list|(
+operator|&
+name|cr
+operator|->
+name|cr_mtx
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|cr
+operator|->
+name|cr_ref
+operator|++
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+operator|(
+name|cr
+operator|)
+operator|->
+name|cr_mtx
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Free a cred structure.  * Throws away space when ref count gets to 0.  */
 end_comment
 
