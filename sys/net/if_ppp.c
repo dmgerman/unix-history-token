@@ -3990,13 +3990,7 @@ directive|endif
 comment|/* PPP_FILTER */
 block|}
 comment|/*      * See if bpf wants to look at the packet.      */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -6941,15 +6935,7 @@ directive|endif
 comment|/* PPP_FILTER */
 block|}
 comment|/* See if bpf wants to look at the packet. */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_bpf
-condition|)
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 operator|&
 name|sc

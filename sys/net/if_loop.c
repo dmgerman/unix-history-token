@@ -1313,7 +1313,7 @@ operator|&
 name|m0
 expr_stmt|;
 block|}
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

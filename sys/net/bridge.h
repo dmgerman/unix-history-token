@@ -279,11 +279,6 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|struct
-name|ether_header
-modifier|*
-specifier|const
-parameter_list|,
-name|struct
 name|ifnet
 modifier|*
 parameter_list|)

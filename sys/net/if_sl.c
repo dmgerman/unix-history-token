@@ -2864,7 +2864,7 @@ argument_list|,
 name|CHDR_LEN
 argument_list|)
 expr_stmt|;
-name|bpf_tap
+name|BPF_TAP
 argument_list|(
 operator|&
 name|sc
@@ -3919,7 +3919,7 @@ argument_list|,
 name|CHDR_LEN
 argument_list|)
 expr_stmt|;
-name|bpf_tap
+name|BPF_TAP
 argument_list|(
 operator|&
 name|sc

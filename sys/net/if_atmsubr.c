@@ -1289,6 +1289,12 @@ name|if_output
 operator|=
 name|atm_output
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ifp->if_input = atm_input;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_snd

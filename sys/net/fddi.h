@@ -419,25 +419,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fddi_input
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|fddi_header
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fddi_ioctl
 parameter_list|(

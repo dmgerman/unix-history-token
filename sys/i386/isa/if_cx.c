@@ -2415,15 +2415,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|->
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|c
 operator|->
@@ -4204,15 +4196,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
-if|if
-condition|(
-name|c
-operator|->
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_tap
+name|BPF_TAP
 argument_list|(
 name|c
 operator|->

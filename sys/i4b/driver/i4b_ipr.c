@@ -3399,7 +3399,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 operator|&
 name|sc
@@ -3618,7 +3618,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 operator|&
 name|sc

@@ -1760,7 +1760,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_OLD_BPF
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -3001,7 +3001,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_OLD_BPF
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,

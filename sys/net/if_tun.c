@@ -2476,7 +2476,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -3982,7 +3982,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -4046,7 +4046,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
