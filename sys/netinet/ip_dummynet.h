@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.h,v 1.1 1998/05/10 01:30:23 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.h,v 1.1 1998/09/12 22:03:20 luigi Exp $  */
 end_comment
 
 begin_ifndef
@@ -188,6 +188,17 @@ comment|/* which can send or receive */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The following is used to define a new mbuf type that is  * prepended to the packet when it comes out of a pipe. The definition  * ought to go in /sys/sys/mbuf.h but here it is less intrusive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_DUMMYNET
+value|MT_CONTROL
+end_define
 
 begin_comment
 comment|/*  * what to do of a packet when it comes out of a pipe  */
