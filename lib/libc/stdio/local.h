@@ -13,6 +13,12 @@ begin_comment
 comment|/* for off_t */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
 begin_comment
 comment|/*  * Information local to this implementation of stdio,  * in particular, macros and private variables.  */
 end_comment
@@ -332,6 +338,36 @@ name|int
 name|__sdidinit
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* hold a buncha junk that would grow the ABI */
+end_comment
+
+begin_struct
+struct|struct
+name|__sFILEX
+block|{
+name|unsigned
+name|char
+modifier|*
+name|_up
+decl_stmt|;
+comment|/* saved _p when _p is doing ungetc data */
+name|pthread_mutex_t
+name|fl_mutex
+decl_stmt|;
+comment|/* used for MT-safety */
+name|pthread_t
+name|fl_owner
+decl_stmt|;
+comment|/* current owner */
+name|int
+name|fl_count
+decl_stmt|;
+comment|/* recursive lock count */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Return true iff the given FILE cannot be written now.  */
