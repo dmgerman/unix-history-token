@@ -1681,7 +1681,7 @@ comment|/* Buffer for the new string */
 name|Boolean
 name|addSpace
 decl_stmt|;
-comment|/* TRUE if need to add a space to the 				     * buffer before adding the trimmed 				     * word */
+comment|/* TRUE if need to add a space to the buffer 				 * before adding the trimmed word */
 name|char
 modifier|*
 modifier|*
@@ -1690,7 +1690,8 @@ decl_stmt|;
 comment|/* word list [first word does not count] */
 name|int
 name|ac
-decl_stmt|,
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 name|buf
