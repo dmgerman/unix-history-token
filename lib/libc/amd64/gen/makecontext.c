@@ -237,7 +237,7 @@ name|uint64_t
 operator|)
 name|sp
 operator|&
-operator|-
+operator|~
 literal|15UL
 operator|)
 expr_stmt|;
@@ -350,10 +350,7 @@ name|uc_mcontext
 operator|.
 name|mc_rbp
 operator|=
-operator|(
-name|register_t
-operator|)
-name|sp
+literal|0
 expr_stmt|;
 name|ucp
 operator|->
