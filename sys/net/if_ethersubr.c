@@ -3191,7 +3191,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* First chunk of an mbuf contains good junk */
+comment|/* First chunk of an mbuf contains good entropy */
 if|if
 condition|(
 name|harvest
