@@ -1825,7 +1825,8 @@ literal|"/dev/mouse"
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+name|buf
 argument_list|)
 operator|==
 operator|-

@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_APACHE
-value|"apache-1.1.1"
+value|"apache-1.2b4"
 end_define
 
 begin_define

@@ -31,10 +31,6 @@ name|Variable
 modifier|*
 name|vp
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* Trim leading and trailing whitespace */
 name|var
 operator|=
