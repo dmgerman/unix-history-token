@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.9 %G%"
+literal|"@(#)cmd3.c	1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1005,11 +1005,14 @@ argument_list|)
 expr_stmt|;
 name|replyto
 operator|=
+name|skin
+argument_list|(
 name|hfield
 argument_list|(
 literal|"reply-to"
 argument_list|,
 name|mp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -3157,7 +3160,7 @@ name|nameof
 argument_list|(
 name|mp
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 argument_list|)
 operator|+
@@ -3224,7 +3227,7 @@ name|nameof
 argument_list|(
 name|mp
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 argument_list|,
 name|cp
