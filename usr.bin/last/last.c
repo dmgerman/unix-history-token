@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -357,6 +363,13 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|d_first
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|snapfound
 init|=
 literal|0
@@ -604,6 +617,18 @@ name|LC_TIME
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
 expr_stmt|;
 name|maxrec
 operator|=
@@ -1643,11 +1668,23 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
+name|d_first
+condition|?
+operator|(
 name|yflag
 condition|?
-literal|"%a %Ef %Y %R"
+literal|"%a %e %b %Y %R"
 else|:
-literal|"%a %Ef %R"
+literal|"%a %e %b %R"
+operator|)
+else|:
+operator|(
+name|yflag
+condition|?
+literal|"%a %b %e %Y %R"
+else|:
+literal|"%a %b %e %R"
+operator|)
 argument_list|,
 name|tm
 argument_list|)
@@ -2720,20 +2757,20 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%a %e %b %R"
+else|:
+literal|"%a %b %e %R"
 argument_list|,
 name|tm
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ninterrupted %10.10s %5.5s \n"
+literal|"\ninterrupted %s\n"
 argument_list|,
 name|ct
-argument_list|,
-name|ct
-operator|+
-literal|11
 argument_list|)
 expr_stmt|;
 if|if
