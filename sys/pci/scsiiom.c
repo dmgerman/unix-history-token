@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/***********************************************************************  *	FILE NAME : SCSIIOM.C					       *  *	     BY   : C.L. Huang	  (ching@tekram.com.tw) 	       *  *	Description: Device Driver for Tekram DC-390 (T) PCI SCSI      *  *		     Bus Master Host Adapter			       *  ***********************************************************************/
 end_comment
 
