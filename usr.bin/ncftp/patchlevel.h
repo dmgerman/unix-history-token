@@ -1,10 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 name|v1
-literal|.9.1
+literal|.9.2
 operator|-
 name|January
-literal|1
+literal|20
+operator|,
+literal|1995.
+name|Another
+name|passive
+name|mode
+name|fix
+name|with
+name|the
+name|SOCKS
+name|library
+operator|.
+name|Trying
+name|to
+name|avoid
+name|going
+name|into
+name|the
+name|interactive
+name|shell
+end_expr_stmt
+
+begin_if
+if|if colon-mode fails.  v1.9.1 - January 1
 operator|,
 literal|1995.
 name|Passive
@@ -68,7 +91,7 @@ name|little
 operator|.
 name|More
 name|defs
-end_expr_stmt
+end_if
 
 begin_for
 for|for linux in sys.h.   Not updating a recent entry unless you were fully logged in.    v1.6.5 - January 6
