@@ -389,7 +389,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"ifconfig %s %s"
+literal|"ifconfig %s %s\n"
 argument_list|,
 name|dev
 operator|->
@@ -459,7 +459,7 @@ else|else
 block|{
 name|msgDebug
 argument_list|(
-literal|"Adding default route to %s."
+literal|"Adding default route to %s.\n"
 argument_list|,
 name|rp
 argument_list|)
@@ -624,7 +624,7 @@ condition|)
 return|return;
 name|msgDebug
 argument_list|(
-literal|"ifconfig %s down"
+literal|"ifconfig %s down\n"
 argument_list|,
 name|dev
 operator|->
@@ -669,7 +669,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Deleting default route."
+literal|"Deleting default route.\n"
 argument_list|)
 expr_stmt|;
 name|vsystem
