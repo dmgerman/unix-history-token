@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.5 (Berkeley) %G%"
+literal|"@(#)var.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +545,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -780,7 +780,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -4023,7 +4023,7 @@ condition|)
 block|{
 name|str
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 operator|*
 name|lengthPtr
@@ -4082,7 +4082,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -4372,7 +4372,7 @@ block|{
 comment|/* 			 * Need to compress the \:'s out of the pattern, so 			 * allocate enough room to hold the uncompressed 			 * pattern (note that cp started at tstr+1, so 			 * cp - tstr takes the null byte into account) and 			 * compress the pattern into the space. 			 */
 name|pattern
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 name|cp
 operator|-
@@ -5903,7 +5903,7 @@ condition|)
 block|{
 name|str
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 operator|*
 name|lengthPtr
