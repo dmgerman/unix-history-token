@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.10 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,29 +755,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|RETURNPATH_I
+name|TO_I
 value|headers[6].h_info
 end_define
 
 begin_define
 define|#
 directive|define
-name|TO_I
+name|CC_I
 value|headers[7].h_info
 end_define
 
 begin_define
 define|#
 directive|define
-name|CC_I
-value|headers[8].h_info
-end_define
-
-begin_define
-define|#
-directive|define
 name|FIX
-value|headers[11]
+value|headers[10]
 end_define
 
 begin_struct
@@ -815,8 +808,6 @@ block|,
 name|H_REQ
 operator||
 name|H_SAV
-operator||
-name|H_HDR
 block|,
 literal|0
 block|,
@@ -845,14 +836,6 @@ block|,
 literal|0
 block|,
 literal|"Reply-To"
-block|,
-name|H_SAV
-operator||
-name|H_HDR
-block|,
-literal|0
-block|,
-literal|"Return-Path"
 block|,
 name|H_SAV
 operator||
@@ -3435,16 +3418,6 @@ name|BUGS_NAME
 argument_list|,
 name|BUGS_HOME
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|RETURNPATH_I
-operator|!=
-name|NULL
-condition|)
-name|to
-operator|=
-name|RETURNPATH_I
 expr_stmt|;
 if|if
 condition|(
