@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.6 1996/06/17 23:16:04 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.7 1996/06/22 21:43:54 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -733,6 +733,35 @@ expr_stmt|;
 return|return
 name|SUCCESS
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ftpVerbose
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+block|{
+name|FTP_t
+name|ftp
+init|=
+name|fcookie
+argument_list|(
+name|fp
+argument_list|)
+decl_stmt|;
+name|ftp
+operator|->
+name|is_verbose
+operator|=
+name|status
+expr_stmt|;
 block|}
 end_function
 
@@ -1947,6 +1976,12 @@ name|FALSE
 expr_stmt|;
 name|ftp
 operator|->
+name|is_verbose
+operator|=
+name|FALSE
+expr_stmt|;
+name|ftp
+operator|->
 name|errno
 operator|=
 literal|0
@@ -2338,6 +2373,23 @@ name|i
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|ftp
+operator|->
+name|is_verbose
+operator|==
+name|TRUE
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|buf
+operator|+
+literal|4
+argument_list|)
 expr_stmt|;
 return|return
 name|buf
