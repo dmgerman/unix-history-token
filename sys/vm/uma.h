@@ -743,17 +743,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMA_SLAB_KMAP
-value|0x04
-end_define
-
-begin_comment
-comment|/* Slab alloced from kernel_map */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UMA_SLAB_PRIV
 value|0x08
 end_define
