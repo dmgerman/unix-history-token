@@ -1601,7 +1601,7 @@ name|bsp
 operator|->
 name|bs710
 operator|.
-name|bsPBP
+name|bsBPB
 expr_stmt|;
 ifndef|#
 directive|ifndef
