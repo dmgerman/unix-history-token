@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.139 1996/04/11 21:18:49 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.140 1996/04/13 14:55:18 bde Exp $  */
 end_comment
 
 begin_include
@@ -225,10 +225,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* NCRD> 0 */
-end_comment
 
 begin_define
 define|#
@@ -1871,13 +1867,13 @@ comment|/* Attributes - presently unused */
 operator|&
 name|tty_imask
 comment|/* Interrupt mask for device */
-comment|/* This should also include net_imask?? */
+comment|/* XXX - Should this also include net_imask? */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Called when a power down is wanted. Shuts down the  * device and configures the device as unavailable (but  * still loaded...). A resume is done by calling  * sioinit with first=0. This is called when the user suspends  * the system, or the APM code suspends the system.  */
+comment|/*  *	Called when a power down is requested. Shuts down the  *	device and configures the device as unavailable (but  *	still loaded...). A resume is done by calling  *	sioinit with first=0. This is called when the user suspends  *	the system, or the APM code suspends the system.  */
 end_comment
 
 begin_function
@@ -1906,7 +1902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Initialize the device - called from Slot manager.  *	if first is set, then initially check for  *	the device's existence before initialising it.  *	Once initialised, the device table may be set up.  */
+comment|/*  *	Initialize the device - called from Slot manager.  *	If first is set, then check for the device's existence  *	before initializing it.  Once initialized, the device table may  *	be set up.  */
 end_comment
 
 begin_function
@@ -1922,7 +1918,7 @@ name|int
 name|first
 parameter_list|)
 block|{
-comment|/*  *	validate unit number.  */
+comment|/* validate unit number. */
 if|if
 condition|(
 name|first
@@ -1943,7 +1939,7 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/*  *	Make sure it isn't already probed.  */
+comment|/* Make sure it isn't already probed. */
 if|if
 condition|(
 name|com_addr
@@ -1960,7 +1956,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/*  *	Probe the device. If a value is returned, the  *	device was found at the location.  */
+comment|/* 		 * Probe the device. If a value is returned, the 		 * device was found at the location. 		 */
 if|if
 condition|(
 name|sioprobe
@@ -1996,7 +1992,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*  *	XXX TODO:  *	If it was already inited before, the device structure  *	should be already initialised. Here we should  *	reset (and possibly restart) the hardware, but  *	I am not sure of the best way to do this...  */
+comment|/* 	 * XXX TODO: 	 * If it was initialized before, the device structure 	 * should also be initialized.  We should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 return|return
 operator|(
 literal|0
@@ -2006,7 +2002,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	siounload - unload the driver and clear the table.  *	XXX TODO:  *	This is called usually when the card is ejected, but  *	can be caused by the modunload of a controller driver.  *	The idea is reset the driver's view of the device  *	and ensure that any driver entry points such as  *	read and write do not hang.  */
+comment|/*  *	siounload - unload the driver and clear the table.  *	XXX TODO:  *	This is usually called when the card is ejected, but  *	can be caused by a modunload of a controller driver.  *	The idea is to reset the driver's view of the device  *	and ensure that any driver entry points such as  *	read and write do not hang.  */
 end_comment
 
 begin_function
@@ -2458,7 +2454,7 @@ directive|if
 name|NCRD
 operator|>
 literal|0
-comment|/*  *	If PC-Card probe required, then register driver with  *	slot manager.  */
+comment|/* 		 * If PC-Card probe required, then register driver with 		 * slot manager. 		 */
 name|pccard_add_driver
 argument_list|(
 operator|&
@@ -2467,7 +2463,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NCRD> 0 */
 name|already_init
 operator|=
 name|TRUE

@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.12 1996/03/17 08:36:36 jkh Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.13 1996/04/07 17:50:09 bde Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -306,20 +306,10 @@ directive|include
 file|<pccard/driver.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/laptops.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* NCRD> 0 */
-end_comment
 
 begin_include
 include|#
@@ -1369,13 +1359,13 @@ comment|/* Attributes - presently unused */
 operator|&
 name|net_imask
 comment|/* Interrupt mask for device */
-comment|/* This should also include net_imask?? */
+comment|/* XXX - Should this also include net_imask? */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Called when a power down is requested. Shuts down the  * device and configures the device as unavailable (but  * still loaded...). A resume is done by calling  * feinit with first=0. This is called when the user suspends  * the system, or the APM code suspends the system.  */
+comment|/*  *	Called when a power down is requested. Shuts down the  *	device and configures the device as unavailable (but  *	still loaded...). A resume is done by calling  *	feinit with first=0. This is called when the user suspends  *	the system, or the APM code suspends the system.  */
 end_comment
 
 begin_function
@@ -1421,12 +1411,7 @@ name|int
 name|first
 parameter_list|)
 block|{
-comment|/*  *      validate unit number.  */
-name|struct
-name|fe_softc
-modifier|*
-name|sc
-decl_stmt|;
+comment|/* validate unit number. */
 if|if
 condition|(
 name|first
@@ -1447,7 +1432,7 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/*  *      Probe the device. If a value is returned, the  *      device was found at the location.  */
+comment|/* 		 * Probe the device. If a value is returned, 		 * the device was found at the location. 		 */
 if|#
 directive|if
 name|FE_DEBUG
@@ -1507,7 +1492,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*  *      XXX TODO:  *      If it was already init'ed before, the device structure  *      should be already initialized. Here we should  *      reset (and possibly restart) the hardware, but  *      I am not sure of the best way to do this...  */
+comment|/* 	 * XXX TODO: 	 * If it was initialized before, the device structure 	 * should also be initialized.  We should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 return|return
 operator|(
 literal|0
@@ -1517,7 +1502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *      feunload - unload the driver and clear the table.  *      XXX TODO:  *      This is called usually when the card is ejected, but  *      can be caused by the modunload of a controller driver.  *      The idea is reset the driver's view of the device  *      and ensure that any driver entry points such as  *      read and write do not hang.  */
+comment|/*  *	feunload - unload the driver and clear the table.  *	XXX TODO:  *	This is usually called when the card is ejected, but  *	can be caused by a modunload of a controller driver.  *	The idea is to reset the driver's view of the device  *	and ensure that any driver entry points such as  *	read and write do not hang.  */
 end_comment
 
 begin_function
@@ -1555,7 +1540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *      card_intr - Shared interrupt called from  *      front end of PC-Card handler.  */
+comment|/*  *	fe_card_intr - Shared interrupt called from  *	 front end of PC-Card handler.  */
 end_comment
 
 begin_function
@@ -1805,7 +1790,6 @@ name|fe_already_init
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* NCRD> 0 */
 name|struct
 name|fe_softc
 modifier|*
@@ -1878,7 +1862,7 @@ directive|if
 name|NCRD
 operator|>
 literal|0
-comment|/*  *      If PC-Card probe required, then register driver with  *      slot manager.  */
+comment|/* 	 * If PC-Card probe required, then register driver with 	 * slot manager. 	 */
 if|if
 condition|(
 name|fe_already_init
@@ -1903,7 +1887,6 @@ name|fe_already_init
 operator|=
 literal|1
 expr_stmt|;
-comment|/*		return ( 0 );  */
 block|}
 endif|#
 directive|endif
@@ -5139,7 +5122,7 @@ operator|>
 literal|0
 specifier|static
 name|int
-name|alredy_ifatch
+name|already_ifattach
 index|[
 name|NFE
 index|]
@@ -5392,7 +5375,7 @@ literal|2048
 expr_stmt|;
 break|break;
 block|}
-comment|/* Attach and stop the interface.  */
+comment|/* Attach and stop the interface. */
 if|#
 directive|if
 name|NCRD
@@ -5400,7 +5383,7 @@ operator|>
 literal|0
 if|if
 condition|(
-name|alredy_ifatch
+name|already_ifattach
 index|[
 name|dev
 operator|->
@@ -5418,7 +5401,7 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
-name|alredy_ifatch
+name|already_ifattach
 index|[
 name|dev
 operator|->
