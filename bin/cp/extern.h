@@ -69,6 +69,7 @@ begin_function_decl
 name|int
 name|copy_file
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 parameter_list|,
@@ -81,6 +82,7 @@ begin_function_decl
 name|int
 name|copy_link
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 parameter_list|,

@@ -878,6 +878,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|copy
 parameter_list|(
@@ -1860,6 +1861,7 @@ comment|/*  * mastercmp --  *	The comparison function for the copy order.  The o
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mastercmp
 parameter_list|(

@@ -137,6 +137,7 @@ begin_function
 name|int
 name|copy_file
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 name|entp
@@ -819,6 +820,7 @@ begin_function
 name|int
 name|copy_link
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 name|p
