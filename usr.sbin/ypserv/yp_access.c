@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_access.c,v 1.15 1997/10/29 07:25:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,12 +455,28 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|linebuf
 index|[
 literal|0
 index|]
 operator|==
 literal|'#'
+operator|)
+operator|||
+operator|(
+name|strspn
+argument_list|(
+name|linebuf
+argument_list|,
+literal|" \t\r\n"
+argument_list|)
+operator|==
+name|strlen
+argument_list|(
+name|linebuf
+argument_list|)
+operator|)
 condition|)
 continue|continue;
 if|if
