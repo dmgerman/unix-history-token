@@ -274,7 +274,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate memory for and initalise a new object.  */
+comment|/*  * Allocate memory for and initialise a new object.  */
 end_comment
 
 begin_function_decl

@@ -918,7 +918,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Random initalise finish\n"
+literal|"Random initialise finish\n"
 argument_list|)
 expr_stmt|;
 name|mtx_exit
@@ -957,7 +957,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Random deinitalise\n"
+literal|"Random deinitialise\n"
 argument_list|)
 expr_stmt|;
 name|mtx_exit
@@ -987,7 +987,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Random deinitalise waiting for thread to terminate\n"
+literal|"Random deinitialise waiting for thread to terminate\n"
 argument_list|)
 expr_stmt|;
 name|mtx_exit
@@ -1060,7 +1060,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Random deinitalise removing mutexes\n"
+literal|"Random deinitialise removing mutexes\n"
 argument_list|)
 expr_stmt|;
 name|mtx_exit
@@ -1101,7 +1101,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Random deinitalise finish\n"
+literal|"Random deinitialise finish\n"
 argument_list|)
 expr_stmt|;
 name|mtx_exit
