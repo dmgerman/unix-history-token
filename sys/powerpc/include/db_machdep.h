@@ -38,6 +38,13 @@ name|DB_ELFSIZE
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|BYTE_MSF
+value|(1)
+end_define
+
 begin_typedef
 typedef|typedef
 name|vm_offset_t
