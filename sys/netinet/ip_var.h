@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_var.h	8.2 (Berkeley) 1/9/95  *	$Id: ip_var.h,v 1.43 1998/07/13 12:20:07 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_var.h	8.2 (Berkeley) 1/9/95  *	$Id: ip_var.h,v 1.44 1998/08/23 03:07:14 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -23,14 +23,11 @@ begin_struct
 struct|struct
 name|ipovly
 block|{
-name|caddr_t
-name|ih_next
-decl_stmt|,
-name|ih_prev
-decl_stmt|;
-comment|/* for protocol sequence q's */
 name|u_char
 name|ih_x1
+index|[
+literal|9
+index|]
 decl_stmt|;
 comment|/* (unused) */
 name|u_char
@@ -85,12 +82,9 @@ name|ipq_id
 decl_stmt|;
 comment|/* sequence id for reassembly */
 name|struct
-name|ipasfrag
+name|mbuf
 modifier|*
-name|ipq_next
-decl_stmt|,
-modifier|*
-name|ipq_prev
+name|ipq_frags
 decl_stmt|;
 comment|/* to ip headers of fragments */
 name|struct
@@ -112,84 +106,6 @@ decl_stmt|;
 comment|/* divert protocol cookie */
 endif|#
 directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Ip header, when holding a fragment.  *  * Note: ipf_next must be at same offset as ipq_next above  */
-end_comment
-
-begin_struct
-struct|struct
-name|ipasfrag
-block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-name|u_int
-name|ip_hl
-range|:
-literal|4
-decl_stmt|,
-name|ip_v
-range|:
-literal|4
-decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int
-name|ip_v
-range|:
-literal|4
-decl_stmt|,
-name|ip_hl
-range|:
-literal|4
-decl_stmt|;
-endif|#
-directive|endif
-name|u_char
-name|ipf_mff
-decl_stmt|;
-comment|/* XXX overlays ip_tos: use low bit 					 * to avoid destroying tos; 					 * copied from (ip_off&IP_MF) */
-name|u_short
-name|ip_len
-decl_stmt|;
-name|u_short
-name|ip_id
-decl_stmt|;
-name|u_short
-name|ip_off
-decl_stmt|;
-name|u_char
-name|ip_ttl
-decl_stmt|;
-name|u_char
-name|ip_p
-decl_stmt|;
-name|u_short
-name|ip_sum
-decl_stmt|;
-name|struct
-name|ipasfrag
-modifier|*
-name|ipf_next
-decl_stmt|;
-comment|/* next fragment */
-name|struct
-name|ipasfrag
-modifier|*
-name|ipf_prev
-decl_stmt|;
-comment|/* previous fragment */
 block|}
 struct|;
 end_struct
