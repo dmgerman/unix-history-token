@@ -9765,7 +9765,7 @@ case|:
 case|case
 name|O_IP_DSTPORT
 case|:
-comment|/* XXX artificial limit, 15 port pairs */
+comment|/* XXX artificial limit, 30 port pairs */
 if|if
 condition|(
 name|cmdlen
@@ -9774,7 +9774,7 @@ literal|2
 operator|||
 name|cmdlen
 operator|>
-literal|15
+literal|31
 condition|)
 goto|goto
 name|bad_size
@@ -11025,8 +11025,8 @@ name|layer3_chain
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"IP packet filtering initialized, divert %s, "
-literal|"rule-based forwarding %s, default to %s, logging "
+literal|"ipfw2 initialized, divert %s, "
+literal|"rule-based forwarding enabled, default to %s, logging "
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -11039,8 +11039,6 @@ literal|"disabled"
 argument_list|,
 endif|#
 directive|endif
-literal|"enabled"
-argument_list|,
 name|default_rule
 operator|.
 name|cmd
@@ -11075,11 +11073,6 @@ name|IPFIREWALL_VERBOSE_LIMIT
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
-argument_list|(
-literal|"logging "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fw_verbose
