@@ -629,17 +629,12 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_set_short
-argument_list|(
-operator|&
 name|object
 operator|->
 name|flags
-argument_list|,
+operator||=
 name|bits
-argument_list|)
 expr_stmt|;
-comment|/* object->flags |= bits; */
 block|}
 end_function
 
@@ -656,17 +651,13 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_clear_short
-argument_list|(
-operator|&
 name|object
 operator|->
 name|flags
-argument_list|,
+operator|&=
+operator|~
 name|bits
-argument_list|)
 expr_stmt|;
-comment|/* object->flags&= ~bits; */
 block|}
 end_function
 
@@ -683,17 +674,12 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_add_short
-argument_list|(
-operator|&
 name|object
 operator|->
 name|paging_in_progress
-argument_list|,
+operator|+=
 name|i
-argument_list|)
 expr_stmt|;
-comment|/* object->paging_in_progress += i; */
 block|}
 end_function
 
@@ -710,17 +696,12 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_subtract_short
-argument_list|(
-operator|&
 name|object
 operator|->
 name|paging_in_progress
-argument_list|,
+operator|-=
 name|i
-argument_list|)
 expr_stmt|;
-comment|/* object->paging_in_progress -= i; */
 block|}
 end_function
 
@@ -734,17 +715,11 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
-name|atomic_subtract_short
-argument_list|(
-operator|&
 name|object
 operator|->
 name|paging_in_progress
-argument_list|,
-literal|1
-argument_list|)
+operator|--
 expr_stmt|;
-comment|/* object->paging_in_progress--; */
 if|if
 condition|(
 operator|(
@@ -795,15 +770,11 @@ if|if
 condition|(
 name|i
 condition|)
-name|atomic_subtract_short
-argument_list|(
-operator|&
 name|object
 operator|->
 name|paging_in_progress
-argument_list|,
+operator|-=
 name|i
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
