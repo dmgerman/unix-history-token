@@ -1044,10 +1044,6 @@ name|VM_ALLOC_WIRED
 value|0x20
 end_define
 
-begin_comment
-comment|/* vm_page_alloc() only */
-end_comment
-
 begin_define
 define|#
 directive|define
