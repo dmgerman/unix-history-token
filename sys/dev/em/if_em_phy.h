@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************* ************************************************************************** Copyright (c) 2001 Intel Corporation  All rights reserved.   Redistribution and use in source and binary forms of the Software, with or  without modification, are permitted provided that the following conditions  are met:    1. Redistributions of source code of the Software may retain the above      copyright notice, this list of conditions and the following disclaimer.    2. Redistributions in binary form of the Software may reproduce the above      copyright notice, this list of conditions and the following disclaimer      in the documentation and/or other materials provided with the      distribution.    3. Neither the name of the Intel Corporation nor the names of its      contributors shall be used to endorse or promote products derived from      this Software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  SUCH DAMAGE. *************************************************************************** **************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
 comment|/*$FreeBSD$*/
+end_comment
+
+begin_comment
+comment|/* if_em_phy.h  * Structures, enums, and macros for the PHY  */
 end_comment
 
 begin_ifndef
@@ -19,43 +23,37 @@ directive|define
 name|_EM_PHY_H_
 end_define
 
-begin_comment
-comment|/* * Workfile: phy.h  * Date: 9/25/01 2:40p  * Revision: 9  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PHY_
-end_define
-
 begin_include
 include|#
 directive|include
 file|<dev/em/if_em_osdep.h>
 end_include
 
+begin_comment
+comment|/* PHY status info structure and supporting enums */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PXN_PSSR_CABLE_LENGTH_50
+name|em_cable_length_50
 init|=
 literal|0
 block|,
-name|PXN_PSSR_CABLE_LENGTH_50_80
+name|em_cable_length_50_80
 block|,
-name|PXN_PSSR_CABLE_LENGTH_80_110
+name|em_cable_length_80_110
 block|,
-name|PXN_PSSR_CABLE_LENGTH_110_140
+name|em_cable_length_110_140
 block|,
-name|PXN_PSSR_CABLE_LENGTH_140
+name|em_cable_length_140
 block|,
-name|PXN_PSSR_CABLE_LENGTH_UNDEFINED
+name|em_cable_length_undefined
 init|=
 literal|0xFF
 block|}
-name|PXN_PSSR_CABLE_LENGTH_ENUM
+name|em_cable_length
 typedef|;
 end_typedef
 
@@ -63,17 +61,17 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE_NORMAL
+name|em_10bt_ext_dist_enable_normal
 init|=
 literal|0
 block|,
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE_LOWER
+name|em_10bt_ext_dist_enable_lower
 block|,
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE_UNDEFINED
+name|em_10bt_ext_dist_enable_undefined
 init|=
 literal|0xFF
 block|}
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE_ENUM
+name|em_10bt_ext_dist_enable
 typedef|;
 end_typedef
 
@@ -81,17 +79,17 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PXN_PSSR_REV_POLARITY_NORMAL
+name|em_rev_polarity_normal
 init|=
 literal|0
 block|,
-name|PXN_PSSR_REV_POLARITY_REVERSED
+name|em_rev_polarity_reversed
 block|,
-name|PXN_PSSR_REV_POLARITY_UNDEFINED
+name|em_rev_polarity_undefined
 init|=
 literal|0xFF
 block|}
-name|PXN_PSSR_REV_POLARITY_ENUM
+name|em_rev_polarity
 typedef|;
 end_typedef
 
@@ -99,17 +97,17 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PXN_PSCR_POLARITY_REVERSAL_ENABLED
+name|em_polarity_reversal_enabled
 init|=
 literal|0
 block|,
-name|PXN_PSCR_POLARITY_REVERSAL_DISABLED
+name|em_polarity_reversal_disabled
 block|,
-name|PXN_PSCR_POLARITY_REVERSAL_UNDEFINED
+name|em_polarity_reversal_undefined
 init|=
 literal|0xFF
 block|}
-name|PXN_PSCR_POLARITY_REVERSAL_ENUM
+name|em_polarity_reversal
 typedef|;
 end_typedef
 
@@ -117,17 +115,17 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PXN_EPSCR_DOWN_NO_IDLE_NO_DETECT
+name|em_down_no_idle_no_detect
 init|=
 literal|0
 block|,
-name|PXN_EPSCR_DOWN_NO_IDLE_DETECT
+name|em_down_no_idle_detect
 block|,
-name|PXN_EPSCR_DOWN_NO_IDLE_UNDEFINED
+name|em_down_no_idle_undefined
 init|=
 literal|0xFF
 block|}
-name|PXN_EPSCR_DOWN_NO_IDLE_ENUM
+name|em_down_no_idle
 typedef|;
 end_typedef
 
@@ -135,21 +133,21 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|PXN_PSCR_AUTO_X_MODE_MANUAL_MDI
+name|em_auto_x_mode_manual_mdi
 init|=
 literal|0
 block|,
-name|PXN_PSCR_AUTO_X_MODE_MANUAL_MDIX
+name|em_auto_x_mode_manual_mdix
 block|,
-name|PXN_PSCR_AUTO_X_MODE_AUTO_1
+name|em_auto_x_mode_auto1
 block|,
-name|PXN_PSCR_AUTO_X_MODE_AUTO_2
+name|em_auto_x_mode_auto2
 block|,
-name|PXN_PSCR_AUTO_X_MODE_UNDEFINED
+name|em_auto_x_mode_undefined
 init|=
 literal|0xFF
 block|}
-name|PXN_PSCR_AUTO_X_MODE_ENUM
+name|em_auto_x_mode
 typedef|;
 end_typedef
 
@@ -157,263 +155,247 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|SR_1000T_RX_STATUS_NOT_OK
+name|em_1000t_rx_status_not_ok
 init|=
 literal|0
 block|,
-name|SR_1000T_RX_STATUS_OK
+name|em_1000t_rx_status_ok
 block|,
-name|SR_1000T_RX_STATUS_UNDEFINED
+name|em_1000t_rx_status_undefined
 init|=
 literal|0xFF
 block|}
-name|SR_1000T_RX_STATUS_ENUM
+name|em_1000t_rx_status
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|em_phy_info
 block|{
-name|PXN_PSSR_CABLE_LENGTH_ENUM
-name|CableLength
+name|em_cable_length
+name|cable_length
 decl_stmt|;
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE_ENUM
-name|Extended10BTDistance
+name|em_10bt_ext_dist_enable
+name|extended_10bt_distance
 decl_stmt|;
-name|PXN_PSSR_REV_POLARITY_ENUM
-name|CablePolarity
+name|em_rev_polarity
+name|cable_polarity
 decl_stmt|;
-name|PXN_PSCR_POLARITY_REVERSAL_ENUM
-name|PolarityCorrection
+name|em_polarity_reversal
+name|polarity_correction
 decl_stmt|;
-name|PXN_EPSCR_DOWN_NO_IDLE_ENUM
-name|LinkReset
+name|em_down_no_idle
+name|link_reset
 decl_stmt|;
-name|PXN_PSCR_AUTO_X_MODE_ENUM
-name|MDIXMode
+name|em_auto_x_mode
+name|mdix_mode
 decl_stmt|;
-name|SR_1000T_RX_STATUS_ENUM
-name|LocalRx
+name|em_1000t_rx_status
+name|local_rx
 decl_stmt|;
-name|SR_1000T_RX_STATUS_ENUM
-name|RemoteRx
+name|em_1000t_rx_status
+name|remote_rx
 decl_stmt|;
 block|}
-name|phy_status_info_struct
-typedef|;
-end_typedef
+struct|;
+end_struct
+
+begin_comment
+comment|/* Function Prototypes */
+end_comment
 
 begin_function_decl
-name|u16
-name|em_read_phy_register
+name|uint16_t
+name|em_read_phy_reg
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|,
-name|u32
-name|RegAddress
-parameter_list|,
-name|u32
-name|PhyAddress
+name|uint32_t
+name|reg_addr
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|em_write_phy_register
+name|em_write_phy_reg
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|,
-name|u32
-name|RegAddress
+name|uint32_t
+name|reg_addr
 parameter_list|,
-name|u32
-name|PhyAddress
-parameter_list|,
-name|u16
-name|Data
+name|uint16_t
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|em_phy_hardware_reset
+name|em_phy_hw_reset
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u8
+name|boolean_t
 name|em_phy_reset
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u8
+name|boolean_t
 name|em_phy_setup
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|,
-name|u32
-name|DeviceControlReg
+name|uint32_t
+name|ctrl_reg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|em_phy_setup_autoneg
+parameter_list|(
+name|struct
+name|em_shared_adapter
+modifier|*
+name|shared
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|em_configure_mac_to_phy_settings
+name|em_config_mac_to_phy
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|,
-name|u16
-name|MiiRegisterData
+name|uint16_t
+name|mii_reg
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|em_configure_collision_distance
+name|em_config_collision_dist
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|em_display_mii_contents
+name|em_display_mii
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|em_detect_gig_phy
+parameter_list|(
+name|struct
+name|em_shared_adapter
+modifier|*
+name|shared
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|em_phy_reset_dsp
+parameter_list|(
+name|struct
+name|em_shared_adapter
+modifier|*
+name|shared
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|em_wait_autoneg
+parameter_list|(
+name|struct
+name|em_shared_adapter
+modifier|*
+name|shared
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|em_phy_get_info
+parameter_list|(
+name|struct
+name|em_shared_adapter
+modifier|*
+name|shared
 parameter_list|,
-name|u8
-name|PhyAddress
+name|struct
+name|em_phy_info
+modifier|*
+name|phy_status_info
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u32
-name|em_auto_detect_gigabit_phy
+name|boolean_t
+name|em_validate_mdi_setting
 parameter_list|(
 name|struct
-name|adapter
+name|em_shared_adapter
 modifier|*
-name|Adapter
+name|shared
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|em_pxn_phy_reset_dsp
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|Adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|PxnIntegratedPhyLoopback
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|Adapter
-parameter_list|,
-name|u16
-name|Speed
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|PxnPhyEnableReceiver
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|Adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|PxnPhyDisableReceiver
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|Adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u8
-name|em_wait_for_auto_neg
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|Adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u8
-name|em_phy_get_status_info
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|Adapter
-parameter_list|,
-name|phy_status_info_struct
-modifier|*
-name|PhyStatusInfo
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Bit definitions for the Management Data IO (MDIO) and Management Data  * Clock (MDC) pins in the Device Control Register.  */
+end_comment
 
 begin_define
 define|#
@@ -461,148 +443,225 @@ begin_define
 define|#
 directive|define
 name|E1000_CTRL_PHY_RESET_DIR4
-value|E1000_EXCTRL_SWDPIO4
+value|E1000_CTRL_EXT_SDP4_DIR
 end_define
 
 begin_define
 define|#
 directive|define
 name|E1000_CTRL_PHY_RESET4
-value|E1000_EXCTRL_SWDPIN4
+value|E1000_CTRL_EXT_SDP4_DATA
 end_define
+
+begin_comment
+comment|/* PHY 1000 MII Register/Bit Definitions */
+end_comment
+
+begin_comment
+comment|/* PHY Registers defined by IEEE */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY_MII_CTRL_REG
+name|PHY_CTRL
 value|0x00
 end_define
 
+begin_comment
+comment|/* Control Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_MII_STATUS_REG
+name|PHY_STATUS
 value|0x01
 end_define
 
+begin_comment
+comment|/* Status Regiser */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_PHY_ID_REG1
+name|PHY_ID1
 value|0x02
 end_define
 
+begin_comment
+comment|/* Phy Id Reg (word 1) */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_PHY_ID_REG2
+name|PHY_ID2
 value|0x03
 end_define
 
+begin_comment
+comment|/* Phy Id Reg (word 2) */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_AUTONEG_ADVERTISEMENT
+name|PHY_AUTONEG_ADV
 value|0x04
 end_define
 
+begin_comment
+comment|/* Autoneg Advertisement */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_AUTONEG_LP_BPA
+name|PHY_LP_ABILITY
 value|0x05
 end_define
 
+begin_comment
+comment|/* Link Partner Ability (Base Page) */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_AUTONEG_EXPANSION_REG
+name|PHY_AUTONEG_EXP
 value|0x06
 end_define
 
+begin_comment
+comment|/* Autoneg Expansion Reg */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_AUTONEG_NEXT_PAGE_TX
+name|PHY_NEXT_PAGE_TX
 value|0x07
 end_define
 
+begin_comment
+comment|/* Next Page TX */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_AUTONEG_LP_RX_NEXT_PAGE
+name|PHY_LP_NEXT_PAGE
 value|0x08
 end_define
 
+begin_comment
+comment|/* Link Partner Next Page */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_1000T_CTRL_REG
+name|PHY_1000T_CTRL
 value|0x09
 end_define
 
+begin_comment
+comment|/* 1000Base-T Control Reg */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_1000T_STATUS_REG
+name|PHY_1000T_STATUS
 value|0x0A
 end_define
 
+begin_comment
+comment|/* 1000Base-T Status Reg */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_IEEE_EXT_STATUS_REG
+name|PHY_EXT_STATUS
 value|0x0F
 end_define
 
+begin_comment
+comment|/* Extended Status Reg */
+end_comment
+
+begin_comment
+comment|/* M88E1000 Specific Registers */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PHY_SPEC_CTRL_REG
+name|M88E1000_PHY_SPEC_CTRL
 value|0x10
 end_define
 
+begin_comment
+comment|/* PHY Specific Control Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PHY_SPEC_STAT_REG
+name|M88E1000_PHY_SPEC_STATUS
 value|0x11
 end_define
 
+begin_comment
+comment|/* PHY Specific Status Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_INT_ENABLE_REG
+name|M88E1000_INT_ENABLE
 value|0x12
 end_define
 
+begin_comment
+comment|/* Interrupt Enable Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_INT_STATUS_REG
+name|M88E1000_INT_STATUS
 value|0x13
 end_define
 
+begin_comment
+comment|/* Interrupt Status Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_EXT_PHY_SPEC_CTRL_REG
+name|M88E1000_EXT_PHY_SPEC_CTRL
 value|0x14
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_RX_ERROR_COUNTER
-value|0x15
-end_define
+begin_comment
+comment|/* Extended PHY Specific Control */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_LED_CTRL_REG
-value|0x18
+name|M88E1000_RX_ERR_CNTR
+value|0x15
 end_define
+
+begin_comment
+comment|/* Receive Error Counter */
+end_comment
 
 begin_define
 define|#
@@ -611,12 +670,24 @@ name|MAX_PHY_REG_ADDRESS
 value|0x1F
 end_define
 
+begin_comment
+comment|/* 5 bit address bus (0-0x1F) */
+end_comment
+
+begin_comment
+comment|/* PHY Control Register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_CR_SPEED_SELECT_MSB
 value|0x0040
 end_define
+
+begin_comment
+comment|/* bits 6,13: 10=1000, 01=100, 00=10 */
+end_comment
 
 begin_define
 define|#
@@ -625,12 +696,20 @@ name|MII_CR_COLL_TEST_ENABLE
 value|0x0080
 end_define
 
+begin_comment
+comment|/* Collision test enable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_CR_FULL_DUPLEX
 value|0x0100
 end_define
+
+begin_comment
+comment|/* FDX =1, half duplex =0 */
+end_comment
 
 begin_define
 define|#
@@ -639,12 +718,20 @@ name|MII_CR_RESTART_AUTO_NEG
 value|0x0200
 end_define
 
+begin_comment
+comment|/* Restart auto negotiation */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_CR_ISOLATE
 value|0x0400
 end_define
+
+begin_comment
+comment|/* Isolate PHY from MII */
+end_comment
 
 begin_define
 define|#
@@ -653,12 +740,20 @@ name|MII_CR_POWER_DOWN
 value|0x0800
 end_define
 
+begin_comment
+comment|/* Power down */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_CR_AUTO_NEG_EN
 value|0x1000
 end_define
+
+begin_comment
+comment|/* Auto Neg Enable */
+end_comment
 
 begin_define
 define|#
@@ -667,12 +762,20 @@ name|MII_CR_SPEED_SELECT_LSB
 value|0x2000
 end_define
 
+begin_comment
+comment|/* bits 6,13: 10=1000, 01=100, 00=10 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_CR_LOOPBACK
 value|0x4000
 end_define
+
+begin_comment
+comment|/* 0 = normal, 1 = loopback */
+end_comment
 
 begin_define
 define|#
@@ -681,12 +784,24 @@ name|MII_CR_RESET
 value|0x8000
 end_define
 
+begin_comment
+comment|/* 0 = normal, 1 = PHY reset */
+end_comment
+
+begin_comment
+comment|/* PHY Status Register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_EXTENDED_CAPS
 value|0x0001
 end_define
+
+begin_comment
+comment|/* Extended register capabilities */
+end_comment
 
 begin_define
 define|#
@@ -695,12 +810,20 @@ name|MII_SR_JABBER_DETECT
 value|0x0002
 end_define
 
+begin_comment
+comment|/* Jabber Detected */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_LINK_STATUS
 value|0x0004
 end_define
+
+begin_comment
+comment|/* Link Status 1 = link */
+end_comment
 
 begin_define
 define|#
@@ -709,12 +832,20 @@ name|MII_SR_AUTONEG_CAPS
 value|0x0008
 end_define
 
+begin_comment
+comment|/* Auto Neg Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_REMOTE_FAULT
 value|0x0010
 end_define
+
+begin_comment
+comment|/* Remote Fault Detect */
+end_comment
 
 begin_define
 define|#
@@ -723,12 +854,20 @@ name|MII_SR_AUTONEG_COMPLETE
 value|0x0020
 end_define
 
+begin_comment
+comment|/* Auto Neg Complete */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_PREAMBLE_SUPPRESS
 value|0x0040
 end_define
+
+begin_comment
+comment|/* Preamble may be suppressed */
+end_comment
 
 begin_define
 define|#
@@ -737,12 +876,20 @@ name|MII_SR_EXTENDED_STATUS
 value|0x0100
 end_define
 
+begin_comment
+comment|/* Ext. status info in Reg 0x0F */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_100T2_HD_CAPS
 value|0x0200
 end_define
+
+begin_comment
+comment|/* 100T2 Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -751,12 +898,20 @@ name|MII_SR_100T2_FD_CAPS
 value|0x0400
 end_define
 
+begin_comment
+comment|/* 100T2 Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_10T_HD_CAPS
 value|0x0800
 end_define
+
+begin_comment
+comment|/* 10T   Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -765,12 +920,20 @@ name|MII_SR_10T_FD_CAPS
 value|0x1000
 end_define
 
+begin_comment
+comment|/* 10T   Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_100X_HD_CAPS
 value|0x2000
 end_define
+
+begin_comment
+comment|/* 100X  Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -779,12 +942,24 @@ name|MII_SR_100X_FD_CAPS
 value|0x4000
 end_define
 
+begin_comment
+comment|/* 100X  Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MII_SR_100T4_CAPS
 value|0x8000
 end_define
+
+begin_comment
+comment|/* 100T4 Capable */
+end_comment
+
+begin_comment
+comment|/* Autoneg Advertisement Register */
+end_comment
 
 begin_define
 define|#
@@ -793,12 +968,20 @@ name|NWAY_AR_SELECTOR_FIELD
 value|0x0001
 end_define
 
+begin_comment
+comment|/* indicates IEEE 802.3 CSMA/CD */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_AR_10T_HD_CAPS
 value|0x0020
 end_define
+
+begin_comment
+comment|/* 10T   Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -807,12 +990,20 @@ name|NWAY_AR_10T_FD_CAPS
 value|0x0040
 end_define
 
+begin_comment
+comment|/* 10T   Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_AR_100TX_HD_CAPS
 value|0x0080
 end_define
+
+begin_comment
+comment|/* 100TX Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -821,12 +1012,20 @@ name|NWAY_AR_100TX_FD_CAPS
 value|0x0100
 end_define
 
+begin_comment
+comment|/* 100TX Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_AR_100T4_CAPS
 value|0x0200
 end_define
+
+begin_comment
+comment|/* 100T4 Capable */
+end_comment
 
 begin_define
 define|#
@@ -835,12 +1034,20 @@ name|NWAY_AR_PAUSE
 value|0x0400
 end_define
 
+begin_comment
+comment|/* Pause operation desired */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_AR_ASM_DIR
 value|0x0800
 end_define
+
+begin_comment
+comment|/* Asymmetric Pause Direction bit */
+end_comment
 
 begin_define
 define|#
@@ -849,12 +1056,24 @@ name|NWAY_AR_REMOTE_FAULT
 value|0x2000
 end_define
 
+begin_comment
+comment|/* Remote Fault detected */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_AR_NEXT_PAGE
 value|0x8000
 end_define
+
+begin_comment
+comment|/* Next Page ability supported */
+end_comment
+
+begin_comment
+comment|/* Link Partner Ability Register (Base Page) */
+end_comment
 
 begin_define
 define|#
@@ -863,12 +1082,20 @@ name|NWAY_LPAR_SELECTOR_FIELD
 value|0x0000
 end_define
 
+begin_comment
+comment|/* LP protocol selector field */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_LPAR_10T_HD_CAPS
 value|0x0020
 end_define
+
+begin_comment
+comment|/* LP is 10T   Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -877,12 +1104,20 @@ name|NWAY_LPAR_10T_FD_CAPS
 value|0x0040
 end_define
 
+begin_comment
+comment|/* LP is 10T   Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_LPAR_100TX_HD_CAPS
 value|0x0080
 end_define
+
+begin_comment
+comment|/* LP is 100TX Half Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -891,12 +1126,20 @@ name|NWAY_LPAR_100TX_FD_CAPS
 value|0x0100
 end_define
 
+begin_comment
+comment|/* LP is 100TX Full Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_LPAR_100T4_CAPS
 value|0x0200
 end_define
+
+begin_comment
+comment|/* LP is 100T4 Capable */
+end_comment
 
 begin_define
 define|#
@@ -905,12 +1148,20 @@ name|NWAY_LPAR_PAUSE
 value|0x0400
 end_define
 
+begin_comment
+comment|/* LP Pause operation desired */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_LPAR_ASM_DIR
 value|0x0800
 end_define
+
+begin_comment
+comment|/* LP Asymmetric Pause Direction bit */
+end_comment
 
 begin_define
 define|#
@@ -919,12 +1170,20 @@ name|NWAY_LPAR_REMOTE_FAULT
 value|0x2000
 end_define
 
+begin_comment
+comment|/* LP has detected Remote Fault */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_LPAR_ACKNOWLEDGE
 value|0x4000
 end_define
+
+begin_comment
+comment|/* LP has rx'd link code word */
+end_comment
 
 begin_define
 define|#
@@ -933,12 +1192,24 @@ name|NWAY_LPAR_NEXT_PAGE
 value|0x8000
 end_define
 
+begin_comment
+comment|/* Next Page ability supported */
+end_comment
+
+begin_comment
+comment|/* Autoneg Expansion Register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_ER_LP_NWAY_CAPS
 value|0x0001
 end_define
+
+begin_comment
+comment|/* LP has Auto Neg Capability */
+end_comment
 
 begin_define
 define|#
@@ -947,12 +1218,20 @@ name|NWAY_ER_PAGE_RXD
 value|0x0002
 end_define
 
+begin_comment
+comment|/* LP is 10T   Half Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_ER_NEXT_PAGE_CAPS
 value|0x0004
 end_define
+
+begin_comment
+comment|/* LP is 10T   Full Duplex Capable */
+end_comment
 
 begin_define
 define|#
@@ -961,12 +1240,24 @@ name|NWAY_ER_LP_NEXT_PAGE_CAPS
 value|0x0008
 end_define
 
+begin_comment
+comment|/* LP is 100TX Half Duplex Capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NWAY_ER_PAR_DETECT_FAULT
 value|0x0100
 end_define
+
+begin_comment
+comment|/* LP is 100TX Full Duplex Capable */
+end_comment
+
+begin_comment
+comment|/* Next Page TX Register */
+end_comment
 
 begin_define
 define|#
@@ -975,12 +1266,20 @@ name|NPTX_MSG_CODE_FIELD
 value|0x0001
 end_define
 
+begin_comment
+comment|/* NP msg code or unformatted data */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NPTX_TOGGLE
 value|0x0800
 end_define
+
+begin_comment
+comment|/* Toggles between exchanges                                     * of different NP                                     */
+end_comment
 
 begin_define
 define|#
@@ -989,12 +1288,20 @@ name|NPTX_ACKNOWLDGE2
 value|0x1000
 end_define
 
+begin_comment
+comment|/* 1 = will comply with msg                                     * 0 = cannot comply with msg                                     */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NPTX_MSG_PAGE
 value|0x2000
 end_define
+
+begin_comment
+comment|/* formatted(1)/unformatted(0) pg */
+end_comment
 
 begin_define
 define|#
@@ -1003,12 +1310,24 @@ name|NPTX_NEXT_PAGE
 value|0x8000
 end_define
 
+begin_comment
+comment|/* 1 = addition NP will follow                                      * 0 = sending last NP                                     */
+end_comment
+
+begin_comment
+comment|/* Link Partner Next Page Register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LP_RNPR_MSG_CODE_FIELD
 value|0x0001
 end_define
+
+begin_comment
+comment|/* NP msg code or unformatted data */
+end_comment
 
 begin_define
 define|#
@@ -1017,12 +1336,20 @@ name|LP_RNPR_TOGGLE
 value|0x0800
 end_define
 
+begin_comment
+comment|/* Toggles between exchanges                                        * of different NP                                        */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LP_RNPR_ACKNOWLDGE2
 value|0x1000
 end_define
+
+begin_comment
+comment|/* 1 = will comply with msg                                         * 0 = cannot comply with msg                                        */
+end_comment
 
 begin_define
 define|#
@@ -1031,12 +1358,20 @@ name|LP_RNPR_MSG_PAGE
 value|0x2000
 end_define
 
+begin_comment
+comment|/* formatted(1)/unformatted(0) pg */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LP_RNPR_ACKNOWLDGE
 value|0x4000
 end_define
+
+begin_comment
+comment|/* 1 = ACK / 0 = NO ACK */
+end_comment
 
 begin_define
 define|#
@@ -1045,12 +1380,24 @@ name|LP_RNPR_NEXT_PAGE
 value|0x8000
 end_define
 
+begin_comment
+comment|/* 1 = addition NP will follow                                         * 0 = sending last NP                                          */
+end_comment
+
+begin_comment
+comment|/* 1000BASE-T Control Register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CR_1000T_ASYM_PAUSE
 value|0x0080
 end_define
+
+begin_comment
+comment|/* Advertise asymmetric pause bit */
+end_comment
 
 begin_define
 define|#
@@ -1059,12 +1406,20 @@ name|CR_1000T_HD_CAPS
 value|0x0100
 end_define
 
+begin_comment
+comment|/* Advertise 1000T HD capability */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CR_1000T_FD_CAPS
 value|0x0200
 end_define
+
+begin_comment
+comment|/* Advertise 1000T FD capability  */
+end_comment
 
 begin_define
 define|#
@@ -1073,12 +1428,28 @@ name|CR_1000T_REPEATER_DTE
 value|0x0400
 end_define
 
+begin_comment
+comment|/* 1=Repeater/switch device port */
+end_comment
+
+begin_comment
+comment|/* 0=DTE device */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CR_1000T_MS_VALUE
 value|0x0800
 end_define
+
+begin_comment
+comment|/* 1=Configure PHY as Master */
+end_comment
+
+begin_comment
+comment|/* 0=Configure PHY as Slave */
+end_comment
 
 begin_define
 define|#
@@ -1087,12 +1458,24 @@ name|CR_1000T_MS_ENABLE
 value|0x1000
 end_define
 
+begin_comment
+comment|/* 1=Master/Slave manual config value */
+end_comment
+
+begin_comment
+comment|/* 0=Automatic Master/Slave config */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CR_1000T_TEST_MODE_NORMAL
 value|0x0000
 end_define
+
+begin_comment
+comment|/* Normal Operation */
+end_comment
 
 begin_define
 define|#
@@ -1101,12 +1484,20 @@ name|CR_1000T_TEST_MODE_1
 value|0x2000
 end_define
 
+begin_comment
+comment|/* Transmit Waveform test */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CR_1000T_TEST_MODE_2
 value|0x4000
 end_define
+
+begin_comment
+comment|/* Master Transmit Jitter test */
+end_comment
 
 begin_define
 define|#
@@ -1115,12 +1506,24 @@ name|CR_1000T_TEST_MODE_3
 value|0x6000
 end_define
 
+begin_comment
+comment|/* Slave Transmit Jitter test */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CR_1000T_TEST_MODE_4
 value|0x8000
 end_define
+
+begin_comment
+comment|/* Transmitter Distortion test */
+end_comment
+
+begin_comment
+comment|/* 1000BASE-T Status Register */
+end_comment
 
 begin_define
 define|#
@@ -1129,12 +1532,20 @@ name|SR_1000T_IDLE_ERROR_CNT
 value|0x00FF
 end_define
 
+begin_comment
+comment|/* Num idle errors since last read */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SR_1000T_ASYM_PAUSE_DIR
 value|0x0100
 end_define
+
+begin_comment
+comment|/* LP asymmetric pause direction bit */
+end_comment
 
 begin_define
 define|#
@@ -1143,12 +1554,20 @@ name|SR_1000T_LP_HD_CAPS
 value|0x0400
 end_define
 
+begin_comment
+comment|/* LP is 1000T HD capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SR_1000T_LP_FD_CAPS
 value|0x0800
 end_define
+
+begin_comment
+comment|/* LP is 1000T FD capable */
+end_comment
 
 begin_define
 define|#
@@ -1157,12 +1576,20 @@ name|SR_1000T_REMOTE_RX_STATUS
 value|0x1000
 end_define
 
+begin_comment
+comment|/* Remote receiver OK */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SR_1000T_LOCAL_RX_STATUS
 value|0x2000
 end_define
+
+begin_comment
+comment|/* Local receiver OK */
+end_comment
 
 begin_define
 define|#
@@ -1171,12 +1598,20 @@ name|SR_1000T_MS_CONFIG_RES
 value|0x4000
 end_define
 
+begin_comment
+comment|/* 1=Local TX is Master, 0=Slave */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SR_1000T_MS_CONFIG_FAULT
 value|0x8000
 end_define
+
+begin_comment
+comment|/* Master/Slave config fault */
+end_comment
 
 begin_define
 define|#
@@ -1192,12 +1627,20 @@ name|SR_1000T_LOCAL_RX_STATUS_SHIFT
 value|13
 end_define
 
+begin_comment
+comment|/* Extended Status Register */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IEEE_ESR_1000T_HD_CAPS
 value|0x1000
 end_define
+
+begin_comment
+comment|/* 1000T HD capable */
+end_comment
 
 begin_define
 define|#
@@ -1206,12 +1649,20 @@ name|IEEE_ESR_1000T_FD_CAPS
 value|0x2000
 end_define
 
+begin_comment
+comment|/* 1000T FD capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IEEE_ESR_1000X_HD_CAPS
 value|0x4000
 end_define
+
+begin_comment
+comment|/* 1000X HD capable */
+end_comment
 
 begin_define
 define|#
@@ -1220,12 +1671,20 @@ name|IEEE_ESR_1000X_FD_CAPS
 value|0x8000
 end_define
 
+begin_comment
+comment|/* 1000X FD capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PHY_TX_POLARITY_MASK
 value|0x0100
 end_define
+
+begin_comment
+comment|/* register 10h bit 8 (polarity bit) */
+end_comment
 
 begin_define
 define|#
@@ -1234,6 +1693,10 @@ name|PHY_TX_NORMAL_POLARITY
 value|0
 end_define
 
+begin_comment
+comment|/* register 10h bit 8 (normal polarity) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1241,607 +1704,437 @@ name|AUTO_POLARITY_DISABLE
 value|0x0010
 end_define
 
+begin_comment
+comment|/* register 11h bit 4 */
+end_comment
+
+begin_comment
+comment|/* (0=enable, 1=disable) */
+end_comment
+
+begin_comment
+comment|/* M88E1000 PHY Specific Control Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_JABBER_DISABLE
+name|M88E1000_PSCR_JABBER_DISABLE
 value|0x0001
 end_define
 
+begin_comment
+comment|/* 1=Jabber Function disabled */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_POLARITY_REVERSAL
+name|M88E1000_PSCR_POLARITY_REVERSAL
 value|0x0002
 end_define
 
+begin_comment
+comment|/* 1=Polarity Reversal enabled */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_SQE_TEST
+name|M88E1000_PSCR_SQE_TEST
 value|0x0004
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_INT_FIFO_DISABLE
-value|0x0008
-end_define
+begin_comment
+comment|/* 1=SQE Test enabled */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_CLK125_DISABLE
+name|M88E1000_PSCR_CLK125_DISABLE
 value|0x0010
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_MDI_MANUAL_MODE
-value|0x0000
-end_define
+begin_comment
+comment|/* 1=CLK125 low,                                                  * 0=CLK125 toggling                                                 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_MDIX_MANUAL_MODE
+name|M88E1000_PSCR_MDI_MANUAL_MODE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* MDI Crossover Mode bits 6:5 */
+end_comment
+
+begin_comment
+comment|/* Manual MDI configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PSCR_MDIX_MANUAL_MODE
 value|0x0020
 end_define
 
+begin_comment
+comment|/* Manual MDIX configuration */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_AUTO_X_1000T
+name|M88E1000_PSCR_AUTO_X_1000T
 value|0x0040
 end_define
 
+begin_comment
+comment|/* 1000BASE-T: Auto crossover,                                                 *  100BASE-TX/10BASE-T:                                                  *  MDI Mode                                                 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_AUTO_X_MODE
+name|M88E1000_PSCR_AUTO_X_MODE
 value|0x0060
 end_define
 
+begin_comment
+comment|/* Auto crossover enabled                                                  * all speeds.                                                  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE
+name|M88E1000_PSCR_10BT_EXT_DIST_ENABLE
 value|0x0080
 end_define
 
+begin_comment
+comment|/* 1=Enable Extended 10BASE-T distance                                          * (Lower 10BASE-T RX Threshold)                                          * 0=Normal 10BASE-T RX Threshold */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_MII_5BIT_ENABLE
+name|M88E1000_PSCR_MII_5BIT_ENABLE
 value|0x0100
 end_define
 
+begin_comment
+comment|/* 1=5-Bit interface in 100BASE-TX                                          * 0=MII interface in 100BASE-TX */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_SCRAMBLER_DISABLE
+name|M88E1000_PSCR_SCRAMBLER_DISABLE
 value|0x0200
 end_define
 
+begin_comment
+comment|/* 1=Scrambler disable */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_FORCE_LINK_GOOD
+name|M88E1000_PSCR_FORCE_LINK_GOOD
 value|0x0400
 end_define
 
+begin_comment
+comment|/* 1=Force link good */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_ASSERT_CRS_ON_TX
+name|M88E1000_PSCR_ASSERT_CRS_ON_TX
 value|0x0800
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_RX_FIFO_DEPTH_6
-value|0x0000
-end_define
+begin_comment
+comment|/* 1=Assert CRS on Transmit */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_RX_FIFO_DEPTH_8
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_RX_FIFO_DEPTH_10
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_RX_FIFO_DEPTH_12
-value|0x3000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_TXFR_FIFO_DEPTH_6
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_TXFR_FIFO_DEPTH_8
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_TXFR_FIFO_DEPTH_10
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_TXFR_FIFO_DEPTH_12
-value|0xC000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_PSCR_POLARITY_REVERSAL_SHIFT
+name|M88E1000_PSCR_POLARITY_REVERSAL_SHIFT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_AUTO_X_MODE_SHIFT
+name|M88E1000_PSCR_AUTO_X_MODE_SHIFT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|PXN_PSCR_10BT_EXT_DIST_ENABLE_SHIFT
+name|M88E1000_PSCR_10BT_EXT_DIST_ENABLE_SHIFT
 value|7
 end_define
 
+begin_comment
+comment|/* M88E1000 PHY Specific Status Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_JABBER
+name|M88E1000_PSSR_JABBER
 value|0x0001
 end_define
 
+begin_comment
+comment|/* 1=Jabber */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_REV_POLARITY
+name|M88E1000_PSSR_REV_POLARITY
 value|0x0002
 end_define
 
+begin_comment
+comment|/* 1=Polarity reversed */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_MDIX
+name|M88E1000_PSSR_MDIX
 value|0x0040
 end_define
 
+begin_comment
+comment|/* 1=MDIX; 0=MDI */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_CABLE_LENGTH
+name|M88E1000_PSSR_CABLE_LENGTH
 value|0x0380
 end_define
 
+begin_comment
+comment|/* 0=<50M;1=50-80M;2=80-110M;                                             * 3=110-140M;4=>140M */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_LINK
+name|M88E1000_PSSR_LINK
 value|0x0400
 end_define
 
+begin_comment
+comment|/* 1=Link up, 0=Link down */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_SPD_DPLX_RESOLVED
+name|M88E1000_PSSR_SPD_DPLX_RESOLVED
 value|0x0800
 end_define
 
+begin_comment
+comment|/* 1=Speed& Duplex resolved */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_PAGE_RCVD
+name|M88E1000_PSSR_PAGE_RCVD
 value|0x1000
 end_define
 
+begin_comment
+comment|/* 1=Page received */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_DPLX
+name|M88E1000_PSSR_DPLX
 value|0x2000
 end_define
 
+begin_comment
+comment|/* 1=Duplex 0=Half Duplex */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_SPEED
+name|M88E1000_PSSR_SPEED
 value|0xC000
 end_define
 
+begin_comment
+comment|/* Speed, bits 14:15 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_10MBS
+name|M88E1000_PSSR_10MBS
 value|0x0000
 end_define
 
+begin_comment
+comment|/* 00=10Mbs */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_100MBS
+name|M88E1000_PSSR_100MBS
 value|0x4000
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_PSSR_1000MBS
-value|0x8000
-end_define
+begin_comment
+comment|/* 01=100Mbs */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_REV_POLARITY_SHIFT
+name|M88E1000_PSSR_1000MBS
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 10=1000Mbs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PSSR_REV_POLARITY_SHIFT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PXN_PSSR_CABLE_LENGTH_SHIFT
+name|M88E1000_PSSR_MDIX_SHIFT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PSSR_CABLE_LENGTH_SHIFT
 value|7
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_IER_JABBER
-value|0x0001
-end_define
+begin_comment
+comment|/* M88E1000 Extended PHY Specific Control Register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_IER_POLARITY_CHANGE
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_MDIX_CHANGE
-value|0x0040
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_FIFO_OVER_UNDERUN
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_FALSE_CARRIER
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_SYMBOL_ERROR
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_LINK_STAT_CHANGE
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_AUTO_NEG_COMPLETE
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_PAGE_RECEIVED
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_DUPLEX_CHANGED
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_IER_SPEED_CHANGED
+name|M88E1000_EPSCR_FIBER_LOOPBACK
 value|0x4000
 end_define
 
+begin_comment
+comment|/* 1=Fiber loopback */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_IER_AUTO_NEG_ERR
+name|M88E1000_EPSCR_DOWN_NO_IDLE
 value|0x8000
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_ISR_JABBER
-value|0x0001
-end_define
+begin_comment
+comment|/* 1=Lost lock detect enabled.                                               * Will assert lost lock and bring                                               * link down if idle not seen                                               * within 1ms in 1000BASE-T                                                */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_ISR_POLARITY_CHANGE
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_MDIX_CHANGE
-value|0x0040
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_FIFO_OVER_UNDERUN
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_FALSE_CARRIER
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_SYMBOL_ERROR
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_LINK_STAT_CHANGE
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_AUTO_NEG_COMPLETE
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_PAGE_RECEIVED
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_DUPLEX_CHANGED
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_SPEED_CHANGED
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_ISR_AUTO_NEG_ERR
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_EPSCR_FIBER_LOOPBACK
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_EPSCR_DOWN_NO_IDLE
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_EPSCR_TX_CLK_2_5
+name|M88E1000_EPSCR_TX_CLK_2_5
 value|0x0060
 end_define
 
+begin_comment
+comment|/* 2.5 MHz TX_CLK */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_EPSCR_TX_CLK_25
+name|M88E1000_EPSCR_TX_CLK_25
 value|0x0070
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_EPSCR_TX_CLK_0
-value|0x0000
-end_define
+begin_comment
+comment|/* 25  MHz TX_CLK */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PXN_EPSCR_DOWN_NO_IDLE_SHIFT
+name|M88E1000_EPSCR_TX_CLK_0
+value|0x0000
+end_define
+
+begin_comment
+comment|/* NO  TX_CLK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_EPSCR_DOWN_NO_IDLE_SHIFT
 value|15
 end_define
 
+begin_comment
+comment|/* Bit definitions for valid PHY IDs. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PXN_LCR_LED_TX
-value|0x0001
+name|M88E1000_12_PHY_ID
+value|0x01410C50
 end_define
 
 begin_define
 define|#
 directive|define
-name|PXN_LCR_LED_RX
-value|0x0002
+name|M88E1000_14_PHY_ID
+value|0x01410C40
 end_define
 
 begin_define
 define|#
 directive|define
-name|PXN_LCR_LED_DUPLEX
-value|0x0004
+name|M88E1000_I_PHY_ID
+value|0x01410C30
 end_define
 
-begin_define
-define|#
-directive|define
-name|PXN_LCR_LINK
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_BLINK_RATE_42MS
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_BLINK_RATE_84MS
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_BLINK_RATE_170MS
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_BLINK_RATE_340MS
-value|0x0300
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_BLINK_RATE_670MS
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_OFF
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_21_42MS
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_42_84MS
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_84_170MS
-value|0x3000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_170_340MS
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_340_670MS
-value|0x5000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_670_13S
-value|0x6000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXN_LCR_PULSE_STRETCH_13_26S
-value|0x7000
-end_define
+begin_comment
+comment|/* Miscellaneous PHY bit definitions. */
+end_comment
 
 begin_define
 define|#
@@ -1916,37 +2209,24 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_10MB_PHY_ADDRESS
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
 name|PHY_AUTO_NEG_TIME
 value|45
 end_define
 
-begin_define
-define|#
-directive|define
-name|PAXSON_PHY_88E1000
-value|0x01410C50
-end_define
+begin_comment
+comment|/* 4.5 Seconds */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PAXSON_PHY_88E1000S
-value|0x01410C40
+name|PHY_FORCE_TIME
+value|20
 end_define
 
-begin_define
-define|#
-directive|define
-name|PAXSON_PHY_INTEGRATED
-value|0x01410C30
-end_define
+begin_comment
+comment|/* 2.0 Seconds */
+end_comment
 
 begin_define
 define|#
@@ -1958,16 +2238,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUTONEG_ADVERTISE_SPEED_DEFAULT
-value|0x002F
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEVICE_SPEED_MASK
 value|0x00000300
 end_define
+
+begin_comment
+comment|/* Device Ctrl Reg Speed Mask */
+end_comment
 
 begin_define
 define|#
@@ -2024,6 +2301,17 @@ directive|define
 name|ADVERTISE_1000_FULL
 value|0x0020
 end_define
+
+begin_define
+define|#
+directive|define
+name|AUTONEG_ADVERTISE_SPEED_DEFAULT
+value|0x002F
+end_define
+
+begin_comment
+comment|/* Everything but 1000-Half */
+end_comment
 
 begin_endif
 endif|#
