@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.20 1995/05/20 10:33:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.21 1995/05/20 13:36:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -484,7 +484,7 @@ block|,
 block|{
 literal|"Russian"
 block|,
-literal|"Russian language and character set (CP866)"
+literal|"Russian language and character set (KOI8-R)"
 block|,
 comment|/* R */
 name|DMENU_CALL
@@ -3028,6 +3028,94 @@ name|void
 operator|*
 operator|)
 name|installCommit
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MBR type menu */
+end_comment
+
+begin_decl_stmt
+name|DMenu
+name|MenuMBRType
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Chose boot manager type"
+block|,
+comment|/* title */
+literal|"FreeBSD comes with a boot selector that allows you to easily\n\ select between FreeBSD and other operating systems on your machine\n\ at boot time.  If you have more than one drive and wish to boot\n\ from other than the first, the boot selector will also allow you\n\ to do so (limitations in the PC boot-BIOS usually prevent this\n\ otherwise).  If you do not want a boot selector, or wish to replace\n\ an existing one, select \"standard\".  If you would prefer your master\n\ boot record to be untouched, then select \"none\"."
+block|,
+literal|"Press F1 to read the installation guide"
+block|,
+literal|"install.hlp"
+block|,
+block|{
+block|{
+literal|"BootMgr"
+block|,
+literal|"Install the FreeBSD Boot Manager (\"Booteasy\")"
+block|,
+comment|/* B */
+name|DMENU_SET_VARIABLE
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"bootManager=bteasy"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Standard"
+block|,
+literal|"Use a standard MBR (no boot manager)"
+block|,
+comment|/* S */
+name|DMENU_SET_VARIABLE
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"bootManager=mbr"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"None"
+block|,
+literal|"Leave the Master Boot Record untouched"
+block|,
+comment|/* N */
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|diskPartitionEditor
 block|,
 literal|0
 block|,
