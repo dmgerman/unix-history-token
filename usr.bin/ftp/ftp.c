@@ -1953,10 +1953,6 @@ block|{
 comment|/* result for EPSV */
 name|pflag
 operator|=
-literal|1
-expr_stmt|;
-name|pflag
-operator|=
 literal|100
 expr_stmt|;
 break|break;
