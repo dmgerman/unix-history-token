@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cu.c	5.1 (Berkeley) %G%"
+literal|"@(#)cu.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,16 +436,38 @@ expr_stmt|;
 name|loginit
 argument_list|()
 expr_stmt|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setgid
-argument_list|(
+name|gid
+operator|=
 name|getgid
 argument_list|()
+expr_stmt|;
+name|egid
+operator|=
+name|getegid
+argument_list|()
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|setregid
+argument_list|(
+name|egid
+argument_list|,
+name|gid
+argument_list|)
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|euid
+argument_list|,
+name|uid
 argument_list|)
 expr_stmt|;
 name|vinit
@@ -487,6 +509,20 @@ block|{
 name|printf
 argument_list|(
 literal|"Connect failed\n"
+argument_list|)
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|uid
+argument_list|,
+name|euid
+argument_list|)
+expr_stmt|;
+name|setregid
+argument_list|(
+name|gid
+argument_list|,
+name|egid
 argument_list|)
 expr_stmt|;
 name|delock

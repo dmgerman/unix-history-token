@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.2 (Berkeley) %G%"
+literal|"@(#)tip.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,16 +215,16 @@ literal|"cu"
 argument_list|)
 condition|)
 block|{
+name|cumode
+operator|=
+literal|1
+expr_stmt|;
 name|cumain
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
-expr_stmt|;
-name|cumode
-operator|=
-literal|1
 expr_stmt|;
 goto|goto
 name|cucommon
@@ -582,19 +582,6 @@ expr_stmt|;
 name|loginit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Now that we have the logfile and the ACU open 	 *  return to the real uid and gid.  These things will 	 *  be closed on exit.  Note that we can't run as root, 	 *  because locking mechanism on the tty and the accounting 	 *  will be bypassed. 	 */
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Kludge, their's no easy way to get the initialization 	 *   in the right order, so force it here 	 */
 if|if
 condition|(
@@ -667,6 +654,41 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Now that we have the logfile and the ACU open 	 *  return to the real uid and gid.  These things will 	 *  be closed on exit.  Swap real and effective uid's 	 *  so we can get the original permissions back 	 *  for removing the uucp lock. 	 */
+name|gid
+operator|=
+name|getgid
+argument_list|()
+expr_stmt|;
+name|egid
+operator|=
+name|getegid
+argument_list|()
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|setregid
+argument_list|(
+name|egid
+argument_list|,
+name|gid
+argument_list|)
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|euid
+argument_list|,
+name|uid
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Hardwired connections require the 	 *  line speed set before they make any transmissions 	 *  (this is particularly true of things like a DF03-AC) 	 */
 if|if
 condition|(
@@ -690,6 +712,20 @@ argument_list|(
 literal|"\07%s\n[EOT]\n"
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|uid
+argument_list|,
+name|euid
+argument_list|)
+expr_stmt|;
+name|setregid
+argument_list|(
+name|gid
+argument_list|,
+name|egid
 argument_list|)
 expr_stmt|;
 name|delock
@@ -877,6 +913,29 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|uid
+operator|!=
+name|getuid
+argument_list|()
+condition|)
+block|{
+name|setreuid
+argument_list|(
+name|uid
+argument_list|,
+name|euid
+argument_list|)
+expr_stmt|;
+name|setregid
+argument_list|(
+name|gid
+argument_list|,
+name|egid
+argument_list|)
+expr_stmt|;
+block|}
 name|delock
 argument_list|(
 name|uucplock

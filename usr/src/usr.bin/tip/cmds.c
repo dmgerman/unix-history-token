@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.2 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3125,6 +3125,20 @@ argument_list|(
 name|pid
 argument_list|,
 name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|setreuid
+argument_list|(
+name|euid
+argument_list|,
+name|euid
+argument_list|)
+expr_stmt|;
+name|setregid
+argument_list|(
+name|egid
+argument_list|,
+name|egid
 argument_list|)
 expr_stmt|;
 name|disconnect
