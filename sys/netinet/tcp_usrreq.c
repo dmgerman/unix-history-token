@@ -4477,6 +4477,11 @@ operator|!=
 name|IPPROTO_TCP
 condition|)
 block|{
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -4509,11 +4514,6 @@ argument_list|(
 name|so
 argument_list|,
 name|sopt
-argument_list|)
-expr_stmt|;
-name|INP_UNLOCK
-argument_list|(
-name|inp
 argument_list|)
 expr_stmt|;
 name|splx
