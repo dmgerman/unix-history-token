@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.14 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,19 @@ argument_list|(
 name|unix
 argument_list|)
 end_if
+
+begin_decl_stmt
+name|int
+name|HaveInput
+decl_stmt|,
+comment|/* There is input available to scan */
+name|sigiocount
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of times we got a SIGIO */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -240,6 +253,23 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+name|HaveInput
+operator|=
+literal|0
+expr_stmt|;
+name|sigiocount
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(unix) */
 name|Sent3270TerminalType
 operator|=
 literal|0
@@ -547,6 +577,9 @@ block|{
 name|HaveInput
 operator|=
 literal|1
+expr_stmt|;
+name|sigiocount
+operator|++
 expr_stmt|;
 block|}
 end_function
@@ -1140,7 +1173,8 @@ directive|endif
 comment|/* defined(sun) */
 if|if
 condition|(
-name|TTYBYTES
+operator|!
+name|TTYROOM
 argument_list|()
 condition|)
 block|{
