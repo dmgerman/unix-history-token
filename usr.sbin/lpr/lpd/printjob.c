@@ -1064,6 +1064,14 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+comment|/* 	 * At initial lpd startup, printjob may be called with various 	 * signal handlers in effect.  After that initial startup, any 	 * calls to printjob will have a *different* set of signal-handlers 	 * in effect.  Make sure all handlers are the ones we want. 	 */
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
@@ -1794,6 +1802,25 @@ operator|!=
 name|ofilter
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: after kill(of=%d), wait() returned: %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|ofilter
+argument_list|)
+expr_stmt|;
 name|ofilter
 operator|=
 literal|0
@@ -4307,6 +4334,24 @@ condition|)
 empty_stmt|;
 if|if
 condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: after stopping 'of', wait3() returned: %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|status
 operator|.
 name|w_stopval
@@ -4327,11 +4372,13 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"%s: output filter died "
-literal|"(retcode=%d termsig=%d)"
+literal|"(pid=%d retcode=%d termsig=%d)"
 argument_list|,
 name|pp
 operator|->
 name|printer
+argument_list|,
+name|ofilter
 argument_list|,
 name|status
 operator|.
@@ -4463,6 +4510,7 @@ operator|=
 literal|100
 expr_stmt|;
 else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -4486,6 +4534,34 @@ operator|!=
 name|child
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|status
+operator|.
+name|w_retcode
+operator|=
+literal|100
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: after execv(%s), wait() returned: %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|child
 operator|=
 literal|0
@@ -5745,6 +5821,7 @@ operator|=
 literal|100
 expr_stmt|;
 else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -5768,6 +5845,39 @@ operator|!=
 name|ifilter
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+block|{
+name|status
+operator|.
+name|w_retcode
+operator|=
+literal|100
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: after execv(%s), wait() returned: %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|pp
+operator|->
+name|filters
+index|[
+name|LPF_INPUT
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Copy the filter's output to "lf" logfile */
 if|if
 condition|(
@@ -6059,6 +6169,23 @@ operator|!=
 name|ofilter
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: after closing 'of', wait() returned: %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|)
+expr_stmt|;
 name|ofilter
 operator|=
 literal|0
