@@ -1329,6 +1329,36 @@ define|\
 value|(((vp)->v_flag& (VFREE|VTBFREE))&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
 end_define
 
+begin_define
+define|#
+directive|define
+name|VI_LOCK
+parameter_list|(
+name|vp
+parameter_list|)
+value|simple_lock(&(vp)->v_interlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_TRYLOCK
+parameter_list|(
+name|vp
+parameter_list|)
+value|simple_lock_try(&(vp)->v_interlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_UNLOCK
+parameter_list|(
+name|vp
+parameter_list|)
+value|simple_unlock(&(vp)->v_interlock)
+end_define
+
 begin_endif
 endif|#
 directive|endif
