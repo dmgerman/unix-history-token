@@ -164,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PKGS
-value|20
+value|200
 end_define
 
 begin_decl_stmt
