@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.36 1998/05/04 03:01:37 dyson Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.37 1998/05/04 17:12:47 dyson Exp $ */
 end_comment
 
 begin_comment
@@ -2697,22 +2697,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|vm_object_clear_flag
+argument_list|(
 name|shm_handle
 operator|->
 name|shm_object
-operator|->
-name|flags
-operator|&=
-operator|~
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
+name|vm_object_set_flag
+argument_list|(
 name|shm_handle
 operator|->
 name|shm_object
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_NOSPLIT
+argument_list|)
 expr_stmt|;
 name|shmseg
 operator|->

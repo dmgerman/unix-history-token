@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.132 1998/07/14 12:14:58 bde Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.133 1998/08/06 08:33:19 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -1724,21 +1724,22 @@ literal|0
 operator|)
 condition|)
 block|{
+name|vm_object_clear_flag
+argument_list|(
 name|object
-operator|->
-name|flags
-operator|&=
-operator|~
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_object_set_flag
+argument_list|(
 name|object
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2761,7 +2762,7 @@ parameter_list|,
 name|startaddr
 parameter_list|)
 define|\
-value|{ \ 	if (startaddr> entry->start) \ 		_vm_map_clip_start(map, entry, startaddr); \ 	else if (entry->object.vm_object&& (entry->object.vm_object->ref_count == 1)) \ 		entry->object.vm_object->flags |= OBJ_ONEMAPPING; \ }
+value|{ \ 	if (startaddr> entry->start) \ 		_vm_map_clip_start(map, entry, startaddr); \ 	else if (entry->object.vm_object&& (entry->object.vm_object->ref_count == 1)) \ 		vm_object_set_flag(entry->object.vm_object, OBJ_ONEMAPPING); \ }
 end_define
 
 begin_comment
@@ -2925,15 +2926,16 @@ name|ref_count
 operator|==
 literal|1
 condition|)
+name|vm_object_set_flag
+argument_list|(
 name|new_entry
 operator|->
 name|object
 operator|.
 name|vm_object
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 name|vm_object_reference
 argument_list|(
@@ -2964,7 +2966,7 @@ parameter_list|,
 name|endaddr
 parameter_list|)
 define|\
-value|{ \ 	if (endaddr< entry->end) \ 		_vm_map_clip_end(map, entry, endaddr); \ 	else if (entry->object.vm_object&& (entry->object.vm_object->ref_count == 1)) \ 		entry->object.vm_object->flags |= OBJ_ONEMAPPING; \ }
+value|{ \ 	if (endaddr< entry->end) \ 		_vm_map_clip_end(map, entry, endaddr); \ 	else if (entry->object.vm_object&& (entry->object.vm_object->ref_count == 1)) \ 		vm_object_set_flag(entry->object.vm_object, OBJ_ONEMAPPING); \ }
 end_define
 
 begin_comment
@@ -3117,15 +3119,16 @@ name|ref_count
 operator|==
 literal|1
 condition|)
+name|vm_object_set_flag
+argument_list|(
 name|new_entry
 operator|->
 name|object
 operator|.
 name|vm_object
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 name|vm_object_reference
 argument_list|(
@@ -6420,11 +6423,12 @@ operator|==
 literal|0
 operator|)
 condition|)
+name|vm_object_set_flag
+argument_list|(
 name|object
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -7194,12 +7198,12 @@ argument_list|,
 name|shadow_list
 argument_list|)
 expr_stmt|;
+name|vm_object_clear_flag
+argument_list|(
 name|source
-operator|->
-name|flags
-operator|&=
-operator|~
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 name|new_object
 operator|->
@@ -7274,11 +7278,12 @@ operator|&
 name|PG_BUSY
 condition|)
 block|{
+name|PAGE_SET_FLAG
+argument_list|(
 name|m
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|PG_WANTED
+argument_list|)
 expr_stmt|;
 name|tsleep
 argument_list|(
@@ -7295,11 +7300,12 @@ goto|goto
 name|retry
 goto|;
 block|}
+name|PAGE_SET_FLAG
+argument_list|(
 name|m
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|PG_BUSY
+argument_list|)
 expr_stmt|;
 name|vm_page_protect
 argument_list|(
@@ -7323,11 +7329,12 @@ name|dirty
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
+name|PAGE_SET_FLAG
+argument_list|(
 name|m
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|PG_BUSY
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -7615,12 +7622,12 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
+name|vm_object_clear_flag
+argument_list|(
 name|src_object
-operator|->
-name|flags
-operator|&=
-operator|~
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 name|dst_entry
 operator|->
@@ -7987,12 +7994,12 @@ operator|.
 name|vm_object
 expr_stmt|;
 block|}
+name|vm_object_clear_flag
+argument_list|(
 name|object
-operator|->
-name|flags
-operator|&=
-operator|~
+argument_list|,
 name|OBJ_ONEMAPPING
+argument_list|)
 expr_stmt|;
 comment|/* 			 * Clone the entry, referencing the sharing map. 			 */
 name|new_entry
@@ -9396,11 +9403,12 @@ name|srcobject
 condition|)
 block|{
 comment|/*    				* Set the object optimization hint flag    				*/
+name|vm_object_set_flag
+argument_list|(
 name|srcobject
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_OPT
+argument_list|)
 expr_stmt|;
 name|vm_object_reference
 argument_list|(
@@ -9595,11 +9603,12 @@ name|srcobject
 condition|)
 block|{
 comment|/*    				* Set the object optimization hint flag    				*/
+name|vm_object_set_flag
+argument_list|(
 name|srcobject
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_OPT
+argument_list|)
 expr_stmt|;
 name|vm_object_reference
 argument_list|(
@@ -9688,11 +9697,12 @@ comment|/*  * Otherwise, we have to do a logical mmap.  */
 block|}
 else|else
 block|{
+name|vm_object_set_flag
+argument_list|(
 name|srcobject
-operator|->
-name|flags
-operator||=
+argument_list|,
 name|OBJ_OPT
+argument_list|)
 expr_stmt|;
 name|vm_object_reference
 argument_list|(
@@ -10231,12 +10241,12 @@ name|robject
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_object_clear_flag
+argument_list|(
 name|object
-operator|->
-name|flags
-operator|&=
-operator|~
+argument_list|,
 name|OBJ_OPT
+argument_list|)
 expr_stmt|;
 block|}
 end_function
