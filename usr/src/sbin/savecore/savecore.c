@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980,1986 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.7 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/syslog.h>
 end_include
 
 begin_define
@@ -450,6 +450,13 @@ name|Verbose
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -602,6 +609,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+name|dirname
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1061,6 +1082,23 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"/vmunix: %s not in namelist"
+argument_list|,
+name|current_nl
+index|[
+name|cursyms
+index|[
+name|i
+index|]
+index|]
+operator|.
+name|n_name
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1116,6 +1154,25 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s not in namelist"
+argument_list|,
+name|dump_sys
+argument_list|,
+name|dump_nl
+index|[
+name|dumpsyms
+index|[
+name|i
+index|]
+index|]
+operator|.
+name|n_name
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1368,6 +1425,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+name|ddname
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1443,6 +1514,17 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Warning: vmunix version mismatch:\n\t%sand\n\t%s"
+argument_list|,
+name|vers
+argument_list|,
+name|core_vers
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Warning: vmunix version mismatch: %s and %s"
 argument_list|,
 name|vers
 argument_list|,
@@ -1795,6 +1877,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+name|dirname
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1896,6 +1992,11 @@ literal|"minfree"
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Dump omitted, not enough space on device"
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -1923,6 +2024,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Dump performed, but free space threshold crossed"
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -1930,6 +2037,7 @@ argument_list|,
 literal|"Dump performed, but free space threshold crossed"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -2244,6 +2352,19 @@ argument_list|,
 name|bounds
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Saving %d bytes of image in vmcore.%d\n"
+argument_list|,
+name|NBPG
+operator|*
+name|dumpsize
+argument_list|,
+name|bounds
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|dumpsize
@@ -2279,9 +2400,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"WARNING: vmcore may be incomplete\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"WARNING: core may be incomplete\n"
+literal|"WARNING: vmcore may be incomplete\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2395,6 +2523,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -2467,6 +2609,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+literal|"read"
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -2529,6 +2685,20 @@ operator|-
 literal|1
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+literal|"lseek"
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -2594,6 +2764,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -2659,6 +2843,20 @@ operator|<
 name|size
 condition|)
 block|{
+name|int
+name|oerrno
+init|=
+name|errno
+decl_stmt|;
+name|perror
+argument_list|(
+literal|"write"
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|oerrno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
