@@ -228,29 +228,32 @@ decl_stmt|;
 comment|/*      * Try for a generic match based on class/subclass.      */
 if|if
 condition|(
-operator|(
 name|pci_get_class
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|PCIC_BRIDGE
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|pci_get_subclass
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|PCIS_BRIDGE_ISA
-operator|)
 condition|)
+block|{
 name|matched
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * Some bridges don't report the ISA bus correctly.      * (Note that some of the devices listed here probably do, we will      *  kvetch about this below and request updates.)      */
+block|}
+else|else
+block|{
+comment|/* 	     * These are devices that we *know* are PCI:ISA bridges.  	     * Sometimes, however, they don't report themselves as 	     * such.  Check in case one of them is pretending to be 	     * something else. 	     */
 switch|switch
 condition|(
 name|pci_get_devid
@@ -272,9 +275,13 @@ literal|0x70008086
 case|:
 comment|/* Intel 82371SB */
 case|case
+literal|0x71108086
+case|:
+comment|/* Intel 82371AB */
+case|case
 literal|0x71988086
 case|:
-comment|/* Intel 82443MX */
+comment|/* Intel 82371MX */
 case|case
 literal|0x24108086
 case|:
@@ -283,6 +290,10 @@ case|case
 literal|0x24208086
 case|:
 comment|/* Intel 82801AB (ICH0) */
+case|case
+literal|0x24408086
+case|:
+comment|/* Intel 82801AB (ICH2) */
 case|case
 literal|0x00061004
 case|:
@@ -294,10 +305,11 @@ comment|/* VIA 82C586 */
 case|case
 literal|0x05961106
 case|:
-comment|/* VIA 82C596 PCI-ISA */
-comment|/* AcerLabs -- vendor 0x10b9 */
-comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
-comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
+comment|/* VIA 82C596 */
+case|case
+literal|0x06861106
+case|:
+comment|/* VIA 82C686 */
 case|case
 literal|0x153310b9
 case|:
@@ -342,51 +354,29 @@ case|case
 literal|0x02001166
 case|:
 comment|/* ServerWorks IB6566 PCI */
-name|matched
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 	 * Report redundant matches (debugging) 	 */
 if|if
 condition|(
-operator|(
-name|pci_get_class
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIC_BRIDGE
-operator|)
-operator|&&
-operator|(
+literal|"PCI-ISA bridge with incorrect subclass 0x%x\n"
+argument_list|,
 name|pci_get_subclass
 argument_list|(
 name|dev
 argument_list|)
-operator|==
-name|PCIS_BRIDGE_ISA
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"** REDUNDANT ISA BRIDGE MATCH FOR DEVICE 0x%08x\n"
-argument_list|,
-name|pci_get_devid
-argument_list|(
-name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"** Please report to msmith@freebsd.org\n"
-argument_list|)
+name|matched
+operator|=
+literal|1
 expr_stmt|;
-block|}
 break|break;
 default|default:
 break|break;
+block|}
+block|}
 block|}
 if|if
 condition|(
