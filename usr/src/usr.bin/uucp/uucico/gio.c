@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gio.c	5.4 (Berkeley) %G%"
+literal|"@(#)gio.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -993,8 +993,24 @@ return|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+end_if
+
 begin_comment
-comment|/* call ultouch every TC calls to either grdblk or gwrblk -- rti!trt */
+comment|/* call ultouch every TC calls to either grdblk or gwrblk */
 end_comment
 
 begin_define
@@ -1012,6 +1028,12 @@ init|=
 name|TC
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
+end_endif
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -1047,6 +1069,19 @@ name|i
 decl_stmt|,
 name|ret
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
 comment|/* call ultouch occasionally */
 if|if
 condition|(
@@ -1064,6 +1099,9 @@ name|ultouch
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
 for|for
 control|(
 name|i
@@ -1143,11 +1181,20 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|ret
-decl_stmt|;
-comment|/* call ultouch occasionally -- rti!trt */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+comment|/* call ultouch occasionally */
 if|if
 condition|(
 operator|--
@@ -1164,8 +1211,10 @@ name|ultouch
 argument_list|()
 expr_stmt|;
 block|}
-name|ret
-operator|=
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
+return|return
 name|pkwrite
 argument_list|(
 name|Pk
@@ -1174,9 +1223,6 @@ name|blk
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_block
