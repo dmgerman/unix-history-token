@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.34 (Berkeley) %G%"
+literal|"@(#)err.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,18 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OSERR

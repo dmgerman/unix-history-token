@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.74 (Berkeley) %G%"
+literal|"@(#)util.c	8.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,11 +190,8 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Out of memory!!"
+literal|"!Out of memory!!"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 comment|/* exit(EX_UNAVAILABLE); */
 block|}
