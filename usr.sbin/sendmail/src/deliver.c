@@ -3337,9 +3337,7 @@ literal|0
 expr_stmt|;
 name|CurHostName
 operator|=
-name|m
-operator|->
-name|m_mailer
+name|host
 expr_stmt|;
 comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	**  We also handle a debug version that just talks to stdin/out. 	*/
 name|curhost
