@@ -1033,7 +1033,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|captain
 argument_list|,
@@ -1202,7 +1202,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|message
 argument_list|,

@@ -237,7 +237,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|message
 argument_list|,
@@ -997,7 +997,7 @@ empty_stmt|;
 name|a
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|p
 expr_stmt|;
@@ -1222,7 +1222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|a
 decl_stmt|,
 name|b

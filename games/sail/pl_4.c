@@ -268,7 +268,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|buf
 argument_list|,
