@@ -306,7 +306,18 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* Used for internal vm datastructures */
+comment|/* 					 * Used for internal vm datastructures 					 * only. 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_HASH
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 					 * Use a hash table instead of caching 					 * information in the vm_page. 					 */
 end_comment
 
 begin_comment
@@ -604,7 +615,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Finishes starting up the allocator.  This should  * be called when kva is ready for normal allocs.  *  * Arguments:  *	hash   An area of memory that will become the malloc hash  *	elems  The number of elements in this array  *  * Returns:  *	Nothing  *  * Discussion:  *	uma_startup2 is called by kmeminit() to prepare the malloc  *	hash bucket, and enable use of uma for malloc ops.  */
+comment|/*  * Finishes starting up the allocator.  This should  * be called when kva is ready for normal allocs.  *  * Arguments:  *	None  *  * Returns:  *	Nothing  *  * Discussion:  *	uma_startup2 is called by kmeminit() to enable us of uma for malloc.  */
 end_comment
 
 begin_function_decl
@@ -612,11 +623,6 @@ name|void
 name|uma_startup2
 parameter_list|(
 name|void
-modifier|*
-name|hash
-parameter_list|,
-name|u_long
-name|elems
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -809,6 +809,17 @@ begin_comment
 comment|/* special queue marker page */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PG_SLAB
+value|0x2000
+end_define
+
+begin_comment
+comment|/* object pointer is actually a slab */
+end_comment
+
 begin_comment
 comment|/*  * Misc constants.  */
 end_comment
