@@ -1502,6 +1502,8 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|cgetustr
 argument_list|(
 name|defs
@@ -1511,7 +1513,9 @@ argument_list|,
 operator|&
 name|cp
 argument_list|)
-expr_stmt|;
+operator|>=
+literal|0
+condition|)
 name|l_nocom
 operator|=
 name|convexp
