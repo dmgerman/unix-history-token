@@ -125,6 +125,14 @@ name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|pcm_veto_load
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2761,6 +2769,24 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|pcm_veto_load
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"disabled due to an error while initialising: %d\n"
+argument_list|,
+name|pcm_veto_load
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 name|d
 operator|->
 name|lock

@@ -60,6 +60,8 @@ name|struct
 name|pcm_feederdesc
 modifier|*
 name|desc
+decl_stmt|,
+name|desc_static
 decl_stmt|;
 name|void
 modifier|*

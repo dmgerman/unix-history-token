@@ -49,6 +49,9 @@ name|snd_dbuf
 modifier|*
 name|sndbuf_create
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|char
 modifier|*
 name|drv

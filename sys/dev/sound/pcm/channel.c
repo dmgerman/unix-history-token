@@ -3151,6 +3151,10 @@ name|sndbuf_create
 argument_list|(
 name|c
 operator|->
+name|dev
+argument_list|,
+name|c
+operator|->
 name|name
 argument_list|,
 literal|"primary"
@@ -3169,6 +3173,10 @@ name|bs
 operator|=
 name|sndbuf_create
 argument_list|(
+name|c
+operator|->
+name|dev
+argument_list|,
 name|c
 operator|->
 name|name
@@ -5095,6 +5103,9 @@ name|flags
 decl_stmt|,
 name|hwfmt
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|CHN_LOCKASSERT
 argument_list|(
 name|c
@@ -5154,27 +5165,19 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|fc
-operator|==
+operator|!=
 name|NULL
-condition|)
-block|{
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"can't find root feeder\n"
-argument_list|)
+argument_list|,
+operator|(
+literal|"can't find root feeder"
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-if|if
-condition|(
+name|err
+operator|=
 name|chn_addfeeder
 argument_list|(
 name|c
@@ -5183,18 +5186,24 @@ name|fc
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 block|{
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"can't add root feeder\n"
+literal|"can't add root feeder, err %d\n"
+argument_list|,
+name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|err
 return|;
 block|}
 name|c
@@ -5262,11 +5271,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|EOPNOTSUPP
 return|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|chn_addfeeder
 argument_list|(
 name|c
@@ -5276,18 +5285,24 @@ argument_list|,
 operator|&
 name|desc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 block|{
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"can't add vchan feeder\n"
+literal|"can't add vchan feeder, err %d\n"
+argument_list|,
+name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|err
 return|;
 block|}
 block|}
@@ -5297,40 +5312,11 @@ name|c
 operator|->
 name|feederflags
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|c
-operator|->
-name|flags
-operator|&
-name|CHN_F_MAPPED
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"can't build feeder chain on mapped channel\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"not mapped, flags %x\n"
+literal|"not mapped, feederflags %x\n"
 argument_list|,
 name|flags
 argument_list|)
@@ -5431,7 +5417,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|EOPNOTSUPP
 return|;
 block|}
 if|if
@@ -5512,7 +5498,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|ENODEV
 return|;
 block|}
 name|DEB
@@ -5524,8 +5510,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|err
+operator|=
 name|chn_addfeeder
 argument_list|(
 name|c
@@ -5536,13 +5522,17 @@ name|fc
 operator|->
 name|desc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 block|{
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"can't add feeder %p, output %x\n"
+literal|"can't add feeder %p, output %x, err %d\n"
 argument_list|,
 name|fc
 argument_list|,
@@ -5551,11 +5541,13 @@ operator|->
 name|desc
 operator|->
 name|out
+argument_list|,
+name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|err
 return|;
 block|}
 name|DEB
@@ -5672,7 +5664,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|EINVAL
+name|ENODEV
 return|;
 name|sndbuf_setfmt
 argument_list|(

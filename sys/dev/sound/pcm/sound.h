@@ -822,6 +822,13 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|int
+name|pcm_veto_load
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|snd_unit
 decl_stmt|;
 end_decl_stmt

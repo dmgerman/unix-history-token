@@ -46,6 +46,9 @@ begin_struct
 struct|struct
 name|snd_dbuf
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|u_int8_t
 modifier|*
 name|buf
@@ -135,6 +138,9 @@ name|snd_dbuf
 modifier|*
 name|sndbuf_create
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
 name|char
 modifier|*
 name|drv
@@ -180,6 +186,12 @@ name|drv
 argument_list|,
 name|desc
 argument_list|)
+expr_stmt|;
+name|b
+operator|->
+name|dev
+operator|=
+name|dev
 expr_stmt|;
 return|return
 name|b
@@ -244,9 +256,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcm: setmap %lx, %lx; "
+name|b
+operator|->
+name|dev
+argument_list|,
+literal|"sndbuf_setmap %lx, %lx; "
 argument_list|,
 operator|(
 name|unsigned
@@ -624,6 +640,23 @@ operator|)
 condition|)
 return|return
 name|EINVAL
+return|;
+if|if
+condition|(
+name|blkcnt
+operator|==
+name|b
+operator|->
+name|blkcnt
+operator|&&
+name|blksz
+operator|==
+name|b
+operator|->
+name|blksz
+condition|)
+return|return
+literal|0
 return|;
 name|b
 operator|->
