@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.11 (Berkeley) 6/19/95  * $Id: mfs_vfsops.c,v 1.46 1998/10/08 23:34:44 jkh Exp $  */
+comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.11 (Berkeley) 6/19/95  * $Id: mfs_vfsops.c,v 1.48 1998/10/09 06:21:12 jkh Exp $  */
 end_comment
 
 begin_include
@@ -403,7 +403,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* load it from module area */
+comment|/* load it from preload area */
 end_comment
 
 begin_function
@@ -424,7 +424,7 @@ name|q
 decl_stmt|;
 name|p
 operator|=
-name|module_search_by_type
+name|preload_search_by_type
 argument_list|(
 literal|"mfs_root"
 argument_list|)
@@ -443,7 +443,7 @@ operator|(
 name|vm_offset_t
 operator|*
 operator|)
-name|module_search_info
+name|preload_search_info
 argument_list|(
 name|p
 argument_list|,
@@ -458,10 +458,6 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* XXX this needs to change to the appropriate function or macro */
-ifdef|#
-directive|ifdef
-name|__alpha__
 return|return
 operator|(
 name|u_char
@@ -470,20 +466,6 @@ operator|)
 operator|*
 name|q
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|*
-name|q
-operator|+
-literal|0xf0000000
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -610,7 +592,7 @@ name|mfs_root
 expr_stmt|;
 else|#
 directive|else
-comment|/* Get it from module area */
+comment|/* Get it from preload area */
 name|base
 operator|=
 name|mfs_getimage
