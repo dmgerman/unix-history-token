@@ -155,14 +155,55 @@ name|dev_unit
 operator|)
 argument_list|)
 expr_stmt|;
-name|sc_print_start
+comment|/* Print _sane_ probe info! */
+name|printf
+argument_list|(
+literal|"%s%d at scbus%d target %d lun %d\n"
+argument_list|,
+name|sc_link
+operator|->
+name|device
+operator|->
+name|name
+argument_list|,
+name|sc_link
+operator|->
+name|dev_unit
+argument_list|,
+name|sc_link
+operator|->
+name|scsibus
+argument_list|,
+name|sc_link
+operator|->
+name|target
+argument_list|,
+name|sc_link
+operator|->
+name|lun
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SCSIDEBUG
+name|scsi_print_info
 argument_list|(
 name|sc_link
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
-literal|"%s "
+literal|"%s%d: %s "
+argument_list|,
+name|device
+operator|->
+name|name
+argument_list|,
+name|sc_link
+operator|->
+name|dev_unit
 argument_list|,
 name|device
 operator|->
@@ -235,9 +276,6 @@ name|sc_link
 operator|)
 else|:
 literal|0
-expr_stmt|;
-name|sc_print_finish
-argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(

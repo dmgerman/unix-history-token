@@ -4891,55 +4891,41 @@ name|sc_link
 operator|->
 name|dev_unit
 argument_list|,
-literal|""
+literal|" at "
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sc_link
-operator|->
-name|adapter
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"(noadapter:"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"(%s"
-argument_list|,
-name|sc_link
-operator|->
-name|adapter
-operator|->
-name|name
+literal|"scbus"
 argument_list|)
 expr_stmt|;
 name|id_put
 argument_list|(
 name|sc_link
 operator|->
-name|adapter_unit
+name|scsibus
 argument_list|,
-literal|":"
+literal|" "
 argument_list|)
 expr_stmt|;
-block|}
+name|printf
+argument_list|(
+literal|"target "
+argument_list|)
+expr_stmt|;
 name|id_put
 argument_list|(
 name|sc_link
 operator|->
 name|target
 argument_list|,
-literal|":"
+literal|" "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"lun "
 argument_list|)
 expr_stmt|;
 name|id_put
@@ -4948,7 +4934,7 @@ name|sc_link
 operator|->
 name|lun
 argument_list|,
-literal|"): "
+literal|": "
 argument_list|)
 expr_stmt|;
 block|}
