@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_sym.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_sym.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|/*  * Initialize the symbol table.  */
 end_comment
 
 begin_macro
-name|setsym
+name|kdbsetsym
 argument_list|(
 argument|sym
 argument_list|,
@@ -57,7 +57,7 @@ name|nlist
 modifier|*
 name|sp
 decl_stmt|;
-name|symtab
+name|kdbsymtab
 operator|=
 operator|(
 expr|struct
@@ -66,7 +66,7 @@ operator|*
 operator|)
 name|sym
 operator|,
-name|esymtab
+name|kdbesymtab
 operator|=
 operator|(
 expr|struct
@@ -79,11 +79,11 @@ for|for
 control|(
 name|sp
 operator|=
-name|symtab
+name|kdbsymtab
 init|;
 name|sp
 operator|<
-name|esymtab
+name|kdbesymtab
 condition|;
 name|sp
 operator|++
@@ -108,7 +108,7 @@ operator|>
 name|strsize
 condition|)
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"setsym: Bad string table index (%d)\n"
 argument_list|,
@@ -156,7 +156,7 @@ begin_function
 name|struct
 name|nlist
 modifier|*
-name|lookup
+name|kdblookup
 parameter_list|(
 name|symstr
 parameter_list|)
@@ -171,23 +171,23 @@ name|nlist
 modifier|*
 name|sp
 decl_stmt|;
-name|cursym
+name|kdbcursym
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|symtab
+name|kdbsymtab
 condition|)
 for|for
 control|(
 name|sp
 operator|=
-name|symtab
+name|kdbsymtab
 init|;
 name|sp
 operator|<
-name|esymtab
+name|kdbesymtab
 condition|;
 name|sp
 operator|++
@@ -205,7 +205,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|eqsym
+name|kdbeqsym
 argument_list|(
 name|sp
 operator|->
@@ -220,7 +220,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cursym
+name|kdbcursym
 operator|=
 name|sp
 operator|)
@@ -238,7 +238,7 @@ comment|/*  * Find the closest symbol to val, and return  * the difference betwe
 end_comment
 
 begin_expr_stmt
-name|findsym
+name|kdbfindsym
 argument_list|(
 name|val
 argument_list|,
@@ -267,7 +267,7 @@ name|nlist
 modifier|*
 name|sp
 decl_stmt|;
-name|cursym
+name|kdbcursym
 operator|=
 literal|0
 expr_stmt|;
@@ -281,7 +281,7 @@ name|type
 operator|==
 name|NSYM
 operator|||
-name|symtab
+name|kdbsymtab
 operator|==
 literal|0
 condition|)
@@ -294,11 +294,11 @@ for|for
 control|(
 name|sp
 operator|=
-name|symtab
+name|kdbsymtab
 init|;
 name|sp
 operator|<
-name|esymtab
+name|kdbesymtab
 condition|;
 name|sp
 operator|++
@@ -348,7 +348,7 @@ name|sp
 operator|->
 name|n_value
 expr_stmt|;
-name|cursym
+name|kdbcursym
 operator|=
 name|sp
 expr_stmt|;
@@ -374,7 +374,7 @@ comment|/*  * Advance cursym to the next local variable.  * Leave its value in l
 end_comment
 
 begin_macro
-name|localsym
+name|kdblocalsym
 argument_list|(
 argument|cframe
 argument_list|)
@@ -400,18 +400,18 @@ name|sp
 decl_stmt|;
 if|if
 condition|(
-name|cursym
+name|kdbcursym
 condition|)
 for|for
 control|(
 name|sp
 operator|=
-name|cursym
+name|kdbcursym
 init|;
 operator|++
 name|sp
 operator|<
-name|esymtab
+name|kdbesymtab
 condition|;
 control|)
 block|{
@@ -472,13 +472,13 @@ name|N_BSS
 operator||
 name|N_EXT
 case|:
-name|localval
+name|kdblocalval
 operator|=
 name|sp
 operator|->
 name|n_value
 expr_stmt|;
-name|cursym
+name|kdbcursym
 operator|=
 name|sp
 expr_stmt|;
@@ -490,7 +490,7 @@ return|;
 case|case
 name|N_LSYM
 case|:
-name|localval
+name|kdblocalval
 operator|=
 name|cframe
 operator|-
@@ -498,7 +498,7 @@ name|sp
 operator|->
 name|n_value
 expr_stmt|;
-name|cursym
+name|kdbcursym
 operator|=
 name|sp
 expr_stmt|;
@@ -513,7 +513,7 @@ case|:
 case|case
 name|N_ABS
 case|:
-name|localval
+name|kdblocalval
 operator|=
 name|cframe
 operator|+
@@ -521,7 +521,7 @@ name|sp
 operator|->
 name|n_value
 expr_stmt|;
-name|cursym
+name|kdbcursym
 operator|=
 name|sp
 expr_stmt|;
@@ -532,7 +532,7 @@ operator|)
 return|;
 block|}
 block|}
-name|cursym
+name|kdbcursym
 operator|=
 literal|0
 expr_stmt|;
@@ -549,7 +549,7 @@ comment|/*  * Print value v and then the string s.  * If v is not zero, then we 
 end_comment
 
 begin_expr_stmt
-name|psymoff
+name|kdbpsymoff
 argument_list|(
 name|v
 argument_list|,
@@ -587,7 +587,7 @@ name|v
 condition|)
 name|w
 operator|=
-name|findsym
+name|kdbfindsym
 argument_list|(
 name|v
 argument_list|,
@@ -602,9 +602,9 @@ literal|0
 operator|||
 name|w
 operator|>=
-name|maxoff
+name|kdbmaxoff
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 name|LPRMODE
 argument_list|,
@@ -613,11 +613,11 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|cursym
+name|kdbcursym
 operator|->
 name|n_un
 operator|.
@@ -628,7 +628,7 @@ if|if
 condition|(
 name|w
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 name|OFFMODE
 argument_list|,
@@ -636,7 +636,7 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|kdbprintf
 argument_list|(
 name|s
 argument_list|)
@@ -649,7 +649,7 @@ comment|/*  * Print value v symbolically if it has a reasonable  * interpretatio
 end_comment
 
 begin_macro
-name|valpr
+name|kdbvalpr
 argument_list|(
 argument|v
 argument_list|,
@@ -671,7 +671,7 @@ name|d
 decl_stmt|;
 name|d
 operator|=
-name|findsym
+name|kdbfindsym
 argument_list|(
 name|v
 argument_list|,
@@ -682,14 +682,14 @@ if|if
 condition|(
 name|d
 operator|>=
-name|maxoff
+name|kdbmaxoff
 condition|)
 return|return;
-name|printf
+name|kdbprintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|cursym
+name|kdbcursym
 operator|->
 name|n_un
 operator|.
@@ -700,7 +700,7 @@ if|if
 condition|(
 name|d
 condition|)
-name|printf
+name|kdbprintf
 argument_list|(
 name|OFFMODE
 argument_list|,
