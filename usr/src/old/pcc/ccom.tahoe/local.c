@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local.c	1.3 (Berkeley) %G%"
+literal|"@(#)local.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,15 +522,9 @@ name|op
 operator|==
 name|SCONV
 operator|&&
-operator|(
-name|ml
-operator|==
-name|FLOAT
-operator|||
 name|ml
 operator|==
 name|DOUBLE
-operator|)
 operator|&&
 name|p
 operator|->
@@ -1672,6 +1666,10 @@ name|ISPTR
 argument_list|(
 name|t
 argument_list|)
+operator|||
+name|t
+operator|==
+name|FLOAT
 condition|)
 return|return
 operator|(
