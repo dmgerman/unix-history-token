@@ -3190,6 +3190,23 @@ block|}
 end_function
 
 begin_function
+name|uint64_t
+name|ia64_get_hcdp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bootinfo
+operator|.
+name|bi_hcdp
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|bzero
 parameter_list|(

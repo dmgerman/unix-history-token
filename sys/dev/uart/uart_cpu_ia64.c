@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bootinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -51,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<machine/dig64.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -178,16 +178,22 @@ decl_stmt|;
 name|bus_addr_t
 name|addr
 decl_stmt|;
+name|uint64_t
+name|hcdp
+decl_stmt|;
 name|unsigned
 name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Use the DIG64 HCDP table if present. 	 */
+name|hcdp
+operator|=
+name|ia64_get_hcdp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|bootinfo
-operator|.
-name|bi_hcdp
+name|hcdp
 operator|!=
 literal|0
 condition|)
@@ -200,9 +206,7 @@ operator|*
 operator|)
 name|IA64_PHYS_TO_RR7
 argument_list|(
-name|bootinfo
-operator|.
-name|bi_hcdp
+name|hcdp
 argument_list|)
 expr_stmt|;
 for|for

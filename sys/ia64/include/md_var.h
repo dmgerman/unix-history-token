@@ -331,6 +331,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|ia64_get_hcdp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ia64_highfp_drop
 parameter_list|(
