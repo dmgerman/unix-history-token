@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uniq.c	5.4 (Berkeley) %G%"
+literal|"@(#)uniq.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,9 +500,28 @@ argument_list|(
 name|MAXLINELEN
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|prevline
+operator|==
+name|NULL
+operator|||
+name|thisline
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|prevline
@@ -510,6 +529,13 @@ argument_list|,
 name|MAXLINELEN
 argument_list|,
 name|ifp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 while|while
