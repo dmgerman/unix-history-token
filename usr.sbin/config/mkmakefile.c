@@ -3521,7 +3521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create the makerules for each file  * which is part of the system.  * Devices are processed with the special c2 option -i  * which avoids any problem areas with i/o addressing  * (e.g. for the VAX); assembler files are processed by as.  */
+comment|/*  * Create the makerules for each file  * which is part of the system.  */
 end_comment
 
 begin_function
