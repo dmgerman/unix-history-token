@@ -3,9 +3,9 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|SCCS_ID
+name|sccsid
 init|=
-literal|"@(#)more.c	4.2 (Berkeley) 3/27/81"
+literal|"@(#)more.c	4.3 (Berkeley) 81/04/02"
 decl_stmt|;
 end_decl_stmt
 
