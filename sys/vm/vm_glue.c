@@ -2874,34 +2874,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|FOREACH_THREAD_IN_PROC
-argument_list|(
-argument|p
-argument_list|,
-argument|td
-argument_list|)
-comment|/* shouldn't be possible, but..... */
-if|if
-condition|(
-name|TD_ON_RUNQ
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-comment|/* XXXKSE */
-name|panic
-argument_list|(
-literal|"swapping out runnable process"
-argument_list|)
-expr_stmt|;
-name|remrunqueue
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-comment|/* XXXKSE */
-block|}
 name|p
 operator|->
 name|p_sflag
