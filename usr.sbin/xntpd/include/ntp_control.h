@@ -367,6 +367,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTL_SST_TS_PPS
+value|0x20
+end_define
+
+begin_comment
+comment|/* time source is PPS signal */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTL_SYS_MAXEVENTS
 value|15
 end_define

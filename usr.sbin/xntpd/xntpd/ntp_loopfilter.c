@@ -334,37 +334,31 @@ name|RSH_FRAC_TO_FREQ
 value|(CLOCK_FREQ + CLOCK_ADJ - RSH_DRIFT_TO_FRAC)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PPS_MAXAGE
+value|120
+end_define
+
 begin_comment
-comment|/*  * Imported from the ntp_proto module  */
+comment|/* pps signal timeout (s) */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|sys_stratum
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|PPS_MAXUPDATE
+value|600
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|s_fp
-name|sys_rootdelay
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* pps update timeout (s) */
+end_comment
 
-begin_decl_stmt
-specifier|extern
-name|u_fp
-name|sys_rootdispersion
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|s_char
-name|sys_precision
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Program variables  */
+end_comment
 
 begin_decl_stmt
 name|l_fp
@@ -384,7 +378,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* clock adjust register (fraction only) */
+comment|/* clock adjust (fraction only) */
 end_comment
 
 begin_decl_stmt
@@ -447,7 +441,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set to 1 if waiting for first adjustment */
+comment|/* 1 if waiting for first adjustment */
 end_comment
 
 begin_decl_stmt
@@ -462,13 +456,36 @@ comment|/* time-constant hold counter */
 end_comment
 
 begin_decl_stmt
-name|int
-name|pll_control
+specifier|static
+name|l_fp
+name|pps_offset
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set nonzero if pll implemented in kernel */
+comment|/* filtered pps offset */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_fp
+name|pps_dispersion
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pps dispersion */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|U_LONG
+name|pps_time
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last pps sample time */
 end_comment
 
 begin_decl_stmt
@@ -478,7 +495,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set nonzero if pps signal valid */
+comment|/* true if working pps signal */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pll_control
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if working kernel pll */
 end_comment
 
 begin_decl_stmt
@@ -564,99 +591,47 @@ begin_comment
 comment|/* default serial port speed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PPS_MAXAGE
-value|120
-end_define
-
-begin_comment
-comment|/* seconds after which we disbelieve pps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPS_MAXUPDATE
-value|600
-end_define
-
-begin_comment
-comment|/* seconds after which we disbelieve timecode */
-end_comment
-
-begin_define
+begin_expr_stmt
+name|timecode
+operator|*
+operator|/
 define|#
 directive|define
 name|PPS_DEV
 value|"/dev/pps"
-end_define
-
-begin_comment
 comment|/* pps port */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PPS_FAC
 value|3
-end_define
-
-begin_comment
 comment|/* pps shift (log2 trimmed samples) */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PPS_TRIM
 value|6
-end_define
-
-begin_comment
 comment|/* samples trimmed from median filter */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NPPS
 value|((1<< PPS_FAC) + 2 * PPS_TRIM)
-end_define
-
-begin_comment
 comment|/* pps filter size */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PPS_XCPT
 value|"\377"
-end_define
-
-begin_comment
 comment|/* intercept character */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|PPSCLK
 argument_list|)
-end_if
-
-begin_decl_stmt
 specifier|static
-name|struct
+expr|struct
 name|refclockio
 name|io
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* given to the I/O handler */
@@ -684,39 +659,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|l_fp
-name|pps_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* filtered pps offset */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_fp
-name|pps_maxd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pps dispersion */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|U_LONG
-name|pps_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last pps sample time */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|U_LONG
 name|nsamples
 decl_stmt|;
@@ -740,6 +682,47 @@ begin_comment
 comment|/* median filter for pps samples */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PPS || PPSCLK || PPSPPS */
+end_comment
+
+begin_comment
+comment|/*  * Imported from the ntp_proto module  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|sys_stratum
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|s_fp
+name|sys_rootdelay
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_fp
+name|sys_rootdispersion
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|s_char
+name|sys_precision
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Imported from ntp_io.c  */
 end_comment
@@ -752,15 +735,6 @@ modifier|*
 name|loopback_interface
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PPS || PPSCLK || PPSPPS */
-end_comment
 
 begin_comment
 comment|/*  * Imported from ntpd module  */
@@ -809,6 +783,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|u_char
+name|sys_leap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system leap bits */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|l_fp
 name|sys_refskew
 decl_stmt|;
@@ -827,6 +812,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* max dispersion of survivor list */
+end_comment
+
+begin_comment
+comment|/*  * Imported from leap module  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|leapbits
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sanitized leap bits */
 end_comment
 
 begin_comment
@@ -916,6 +916,13 @@ name|KERNEL_PLL
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|MOD_BITS
+value|(MOD_OFFSET | MOD_MAXERROR | MOD_ESTERROR | \     MOD_STATUS | MOD_TIMECONST)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -966,6 +973,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pll_status
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* status bits for kernel pll */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1741,7 +1759,7 @@ name|lfptoa
 argument_list|(
 name|fp_offset
 argument_list|,
-literal|9
+literal|6
 argument_list|)
 argument_list|,
 name|ntoa
@@ -1839,7 +1857,7 @@ operator|=
 operator|*
 name|fp_offset
 expr_stmt|;
-comment|/* 	 * If the magnitude of the offset is greater than CLOCK.MAX, step 	 * the time and reset the registers. 	 */
+comment|/* 	 * If the magnitude of the offset is greater than CLOCK.MAX, 	 * step the time and reset the registers. 	 */
 if|if
 condition|(
 name|tmp_ui
@@ -1871,114 +1889,51 @@ name|CLOCK_MINSTEP
 condition|)
 block|{
 comment|/* Mustn't step yet, pretend we adjusted. */
-ifdef|#
-directive|ifdef
-name|SLEWALWAYS
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"adjust: SLEW dropped (%s offset %s)\n"
-argument_list|,
-name|ntoa
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|)
+literal|"clock correction %s too large (ignored)\n"
 argument_list|,
 name|lfptoa
 argument_list|(
 name|fp_offset
 argument_list|,
-literal|9
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"adjust: STEP dropped (%s offset %s)\n"
-argument_list|,
-name|ntoa
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|)
-argument_list|,
-name|lfptoa
-argument_list|(
-name|fp_offset
-argument_list|,
-literal|9
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"clock reset (%s) %s\n"
+argument_list|,
 ifdef|#
 directive|ifdef
 name|SLEWALWAYS
-name|syslog
-argument_list|(
-name|LOG_NOTICE
+literal|"slew"
 argument_list|,
-literal|" ** adjust: SLEW %s offset %s **\n"
-argument_list|,
-name|ntoa
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|)
-argument_list|,
-name|lfptoa
-argument_list|(
-name|fp_offset
-argument_list|,
-literal|9
-argument_list|)
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
-name|syslog
-argument_list|(
-name|LOG_NOTICE
+literal|"step"
 argument_list|,
-literal|" ** adjust: STEP %s offset %s **\n"
-argument_list|,
-name|ntoa
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|)
-argument_list|,
+endif|#
+directive|endif
 name|lfptoa
 argument_list|(
 name|fp_offset
 argument_list|,
-literal|9
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|step_systime
 argument_list|(
 name|fp_offset
@@ -2007,23 +1962,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Here we've got an offset small enough to slew.  Note that 	 * since the offset is small we don't have to carry the damned 	 * high order longword in our calculations. 	 * 	 * The time constant and sample interval are approximated with 	 * shifts, as in Section 5 of the v3 spec. The spec procedure 	 * looks strange, as an interval of 64 to 127 seconds seems to 	 * cause multiplication with 128 (and so on). This code lowers 	 * the multiplier by one bit. 	 * 	 * The time constant update goes after adjust and skew updates, 	 * as in appendix G. 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PPS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PPSCLK
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|PPSPPS
-argument_list|)
-comment|/* 	 * If pps samples are valid, update offset, root delay and 	 * root dispersion. This may be a dramatic surprise to high- 	 * stratum clients, since all of a sudden this server looks 	 * like a stratum-1 clock. 	 */
+comment|/* 	 * If pps samples are valid, update offset, root delay and 	 * root dispersion. Also, set the system stratum to 1, even if 	 * the source of approximate time runs at a higher stratum. This 	 * may be a dramatic surprise to high-stratum clients, since all 	 * of a sudden this server looks like a stratum-1 clock. 	 */
 if|if
 condition|(
 name|pps_control
@@ -2035,7 +1974,7 @@ name|pps_offset
 expr_stmt|;
 name|sys_maxd
 operator|=
-name|pps_maxd
+name|pps_dispersion
 expr_stmt|;
 name|sys_stratum
 operator|=
@@ -2045,21 +1984,39 @@ name|sys_rootdelay
 operator|=
 literal|0
 expr_stmt|;
+name|offset
+operator|=
+name|LFPTOFP
+argument_list|(
+operator|&
+name|pps_offset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|offset
+operator|<
+literal|0
+condition|)
+name|offset
+operator|=
+operator|-
+name|offset
+expr_stmt|;
 name|sys_rootdispersion
 operator|=
-name|pps_maxd
+name|offset
+operator|+
+name|pps_dispersion
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PPS || PPSCLK || PPSPPS */
-comment|/* 	 * The pll_control is active when the phase-lock code is 	 * implemented in the kernel, which at present is only in the 	 * (modified) SunOS 4.1.x, Ultrix 4.3 and OSF/1 kernels. In the 	 * case of the DECstation 5000/240 and Alpha AXP, additional 	 * kernal modifications provide a true microsecond clock. We 	 * know the scaling of the frequency variable (s_fp) is the 	 * same as the kernel variable (1<< SHIFT_USEC = 16). 	 * 	 * In the case of stock kernels the phase-lock loop is 	 * implemented the hard way and the clock_adjust and drift_comp 	 * computed as required. 	 */
 name|offset
 operator|=
 name|last_offset
 operator|.
 name|l_f
 expr_stmt|;
+comment|/* 	 * The pll_control is active when the phase-lock code is 	 * implemented in the kernel, which at present is only in the 	 * (modified) SunOS 4.1.x, Ultrix 4.3 and OSF/1 kernels. In the 	 * case of the DECstation 5000/240 and Alpha AXP, additional 	 * kernal modifications provide a true microsecond clock. We 	 * know the scaling of the frequency variable (s_fp) is the 	 * same as the kernel variable (1<< SHIFT_USEC = 16). 	 * 	 * For kernels with the PPS discipline, the current offset and 	 * dispersion are set from kernel variables to maintain 	 * beauteous displays, but don't do much of anything. 	 * 	 * In the case of stock kernels the phase-lock loop is 	 * implemented the hard way and the clock_adjust and drift_comp 	 * computed as required. 	 */
 if|if
 condition|(
 name|pll_control
@@ -2071,17 +2028,26 @@ name|defined
 argument_list|(
 name|KERNEL_PLL
 argument_list|)
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ntv
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|ntv
+argument_list|)
+expr_stmt|;
 name|ntv
 operator|.
-name|mode
+name|modes
 operator|=
-name|ADJ_OFFSET
-operator||
-name|ADJ_TIMECONST
-operator||
-name|ADJ_MAXERROR
-operator||
-name|ADJ_ESTERROR
+name|MOD_BITS
 expr_stmt|;
 if|if
 condition|(
@@ -2122,33 +2088,91 @@ operator|.
 name|offset
 expr_stmt|;
 block|}
-name|ntv
-operator|.
-name|maxerror
-operator|=
+name|TSFTOTVU
+argument_list|(
 name|sys_rootdispersion
 operator|+
 name|sys_rootdelay
 operator|/
 literal|2
+argument_list|,
+name|ntv
+operator|.
+name|maxerror
+argument_list|)
 expr_stmt|;
+name|TSFTOTVU
+argument_list|(
+name|sys_rootdispersion
+argument_list|,
 name|ntv
 operator|.
 name|esterror
-operator|=
-name|sys_rootdispersion
+argument_list|)
 expr_stmt|;
 name|ntv
 operator|.
-name|time_constant
+name|status
 operator|=
-name|time_constant
+name|pll_status
+expr_stmt|;
+if|if
+condition|(
+name|pps_update
+condition|)
+name|ntv
+operator|.
+name|status
+operator||=
+name|STA_PPSTIME
+expr_stmt|;
+if|if
+condition|(
+name|sys_leap
+operator|&
+name|LEAP_ADDSECOND
+operator|&&
+name|sys_leap
+operator|&
+name|LEAP_DELSECOND
+condition|)
+name|ntv
+operator|.
+name|status
+operator||=
+name|STA_UNSYNC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sys_leap
+operator|&
+name|LEAP_ADDSECOND
+condition|)
+name|ntv
+operator|.
+name|status
+operator||=
+name|STA_INS
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sys_leap
+operator|&
+name|LEAP_DELSECOND
+condition|)
+name|ntv
+operator|.
+name|status
+operator||=
+name|STA_DEL
 expr_stmt|;
 name|ntv
 operator|.
-name|shift
+name|constant
 operator|=
-literal|0
+name|time_constant
 expr_stmt|;
 operator|(
 name|void
@@ -2163,208 +2187,134 @@ name|drift_comp
 operator|=
 name|ntv
 operator|.
-name|frequency
+name|freq
 expr_stmt|;
 if|if
 condition|(
 name|ntv
 operator|.
+name|status
+operator|&
+name|STA_PPSTIME
+operator|&&
+name|ntv
+operator|.
+name|status
+operator|&
+name|STA_PPSSIGNAL
+operator|&&
+name|ntv
+operator|.
 name|shift
-operator|!=
+condition|)
+block|{
+if|if
+condition|(
+name|ntv
+operator|.
+name|offset
+operator|>=
 literal|0
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pps_freq=%s"
-argument_list|,
-name|fptoa
+name|TVUTOTSF
 argument_list|(
 name|ntv
 operator|.
-name|ybar
+name|offset
 argument_list|,
-literal|3
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
-operator||
-name|DEF
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pps_disp=%s"
-argument_list|,
-name|fptoa
-argument_list|(
-name|ntv
-operator|.
-name|disp
-argument_list|,
-literal|3
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
-operator||
-name|DEF
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pps_interval=%ld"
-argument_list|,
-literal|1
-operator|<<
-name|ntv
-operator|.
-name|shift
-argument_list|)
-expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pps_intervals=%ld"
-argument_list|,
-name|ntv
-operator|.
-name|calcnt
-argument_list|)
-expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pps_jitterexceeded=%ld"
-argument_list|,
-name|ntv
-operator|.
-name|jitcnt
-argument_list|)
-expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"pps_dispersionexceeded=%ld"
-argument_list|,
-name|ntv
-operator|.
-name|discnt
-argument_list|)
-expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
+name|offset
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|TVUTOTSF
+argument_list|(
+operator|-
+name|ntv
+operator|.
+name|offset
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|offset
+operator|=
+operator|-
+name|offset
+expr_stmt|;
+block|}
+name|pps_offset
+operator|.
+name|l_i
+operator|=
+name|pps_offset
+operator|.
+name|l_f
+operator|=
+literal|0
+expr_stmt|;
+name|M_ADDF
+argument_list|(
+name|pps_offset
+operator|.
+name|l_i
+argument_list|,
+name|pps_offset
+operator|.
+name|l_f
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|TVUTOTSF
+argument_list|(
+name|ntv
+operator|.
+name|jitter
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+name|pps_dispersion
+operator|=
+operator|(
+name|tmp
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
+expr_stmt|;
+name|pps_time
+operator|=
+name|current_time
+expr_stmt|;
+name|record_peer_stats
+argument_list|(
+operator|&
+name|loopback_interface
+operator|->
+name|sin
+argument_list|,
+name|ctlsysstatus
+argument_list|()
+argument_list|,
+operator|&
+name|pps_offset
+argument_list|,
+literal|0
+argument_list|,
+name|pps_dispersion
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|pps_time
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* KERNEL_PLL */
@@ -2400,7 +2350,7 @@ operator|>>
 name|time_constant
 expr_stmt|;
 block|}
-comment|/* 		 * Calculate the new frequency error. The factor given in the 		 * spec gives the adjustment per 2**CLOCK_ADJ seconds, but we 		 * want it as a (scaled) pure ratio, so we include that factor 		 * now and remove it later. 		 */
+comment|/* 		 * Calculate the new frequency error. The factor given 		 * in the spec gives the adjustment per 2**CLOCK_ADJ 		 * seconds, but we want it as a (scaled) pure ratio, so 		 * we include that factor now and remove it later. 		 */
 if|if
 condition|(
 name|first_adjustment
@@ -2413,7 +2363,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Clamp the integration interval to maxpoll. 			 * The bitcounting in Section 5 gives (n+1)-6 for 2**n, 			 * but has a factor 2**6 missing from CLOCK_FREQ. 			 * We make 2**n give n instead. If watchdog_timer is 			 * zero, pretend it's one. 			 */
 name|tmp
 operator|=
 name|peer
@@ -2455,7 +2404,7 @@ operator|<<=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 			 * We apply the frequency scaling at the same time as 			 * the sample interval; this ensures a safe right-shift. 			 * (as long as it keeps below 31 bits, which current 			 *  parameters should ensure. 			 */
+comment|/* 			 * We apply the frequency scaling at the same 			 * time as the sample interval; this ensures a 			 * safe right-shift. (as long as it keeps below 			 * 31 bits, which current parameters should 			 * ensure. 			 */
 name|tmp
 operator|=
 operator|(
@@ -2529,6 +2478,15 @@ expr_stmt|;
 comment|/* 	 * Determine when to adjust the time constant and poll interval. 	 */
 if|if
 condition|(
+name|pps_control
+condition|)
+name|time_constant
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|current_time
 operator|-
 name|tcadj_time
@@ -2538,6 +2496,9 @@ literal|1
 operator|<<
 name|sys_poll
 operator|)
+operator|&&
+operator|!
+name|pps_control
 condition|)
 block|{
 name|tcadj_time
@@ -2693,14 +2654,14 @@ operator|)
 argument_list|,
 name|clock_adjust
 argument_list|,
-literal|9
+literal|6
 argument_list|)
 argument_list|,
 name|fptoa
 argument_list|(
 name|drift_comp
 argument_list|,
-literal|9
+literal|6
 argument_list|)
 argument_list|,
 name|time_constant
@@ -2945,11 +2906,12 @@ block|}
 endif|#
 directive|endif
 comment|/* PPSPPS */
+endif|#
+directive|endif
+comment|/* PPS || PPSCLK || PPSPPS */
 if|if
 condition|(
 name|pps_time
-operator|!=
-literal|0
 operator|&&
 name|current_time
 operator|-
@@ -2964,8 +2926,6 @@ expr_stmt|;
 if|if
 condition|(
 name|pps_update
-operator|!=
-literal|0
 operator|&&
 name|current_time
 operator|-
@@ -2980,12 +2940,8 @@ expr_stmt|;
 if|if
 condition|(
 name|pps_time
-operator|!=
-literal|0
 operator|&&
 name|pps_update
-operator|!=
-literal|0
 condition|)
 block|{
 if|if
@@ -2997,7 +2953,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"pps synch"
+literal|"PPS synch"
 argument_list|)
 expr_stmt|;
 name|pps_control
@@ -3015,7 +2971,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"pps synch lost"
+literal|"PPS synch lost"
 argument_list|)
 expr_stmt|;
 name|pps_control
@@ -3023,9 +2979,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PPS || PPSCLK || PPSPPS */
 comment|/* 	 * Resist the following code if the phase-lock loop has been 	 * implemented in the kernel. 	 */
 if|if
 condition|(
@@ -3185,7 +3138,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"loop_config: skew compensation %s too large"
+literal|"loop_config: frequency offset %s in ntp.conf file is too large"
 argument_list|,
 name|fptoa
 argument_list|(
@@ -3198,12 +3151,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|char
-name|var
-index|[
-literal|40
-index|]
-decl_stmt|;
 name|drift_comp
 operator|=
 name|tmp
@@ -3214,38 +3161,62 @@ name|defined
 argument_list|(
 name|KERNEL_PLL
 argument_list|)
-comment|/* 			 * If the phase-lock code is implemented in the kernel, 			 * give the time_constant and saved frequency offset 			 * to the kernel. If not, no harm is done. 	 		 */
+comment|/* 			 * If the phase-lock code is implemented in the 			 * kernel, give the time_constant and saved 			 * frequency offset to the kernel. If not, no 			 * harm is done. 	 		 */
 name|pll_control
 operator|=
 literal|1
 expr_stmt|;
+name|pll_status
+operator|=
+name|STA_PLL
+operator||
+name|STA_PPSFREQ
+expr_stmt|;
 name|ntv
 operator|.
-name|mode
+name|modes
 operator|=
-name|ADJ_FREQUENCY
+name|MOD_BITS
 operator||
-name|ADJ_STATUS
-operator||
-name|ADJ_TIMECONST
+name|MOD_FREQUENCY
+expr_stmt|;
+name|ntv
+operator|.
+name|offset
+operator|=
+literal|0
+expr_stmt|;
+name|ntv
+operator|.
+name|freq
+operator|=
+name|drift_comp
+expr_stmt|;
+name|ntv
+operator|.
+name|maxerror
+operator|=
+name|NTP_MAXDISPERSE
+expr_stmt|;
+name|ntv
+operator|.
+name|esterror
+operator|=
+name|NTP_MAXDISPERSE
 expr_stmt|;
 name|ntv
 operator|.
 name|status
 operator|=
-name|TIME_BAD
+name|pll_status
+operator||
+name|STA_UNSYNC
 expr_stmt|;
 name|ntv
 operator|.
-name|time_constant
+name|constant
 operator|=
 name|time_constant
-expr_stmt|;
-name|ntv
-operator|.
-name|frequency
-operator|=
-name|drift_comp
 expr_stmt|;
 name|newsigsys
 operator|.
@@ -3322,67 +3293,29 @@ argument_list|,
 literal|"sigvec() fails to restore SIGSYS trap: %m\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pll_control
+condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"%susing kernel phase-lock loop"
+literal|"using kernel phase-lock loop %04x"
 argument_list|,
-operator|(
-name|pll_control
-operator|)
-condition|?
-literal|""
-else|:
-literal|"Not "
+name|ntv
+operator|.
+name|status
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+else|else
+name|syslog
 argument_list|(
-name|var
+name|LOG_NOTICE
 argument_list|,
-literal|"kernel_pll=%s"
-argument_list|,
-name|pll_control
-condition|?
-literal|"true"
-else|:
-literal|"false"
+literal|"using xntpd phase-lock loop"
 argument_list|)
 expr_stmt|;
-name|set_sys_var
-argument_list|(
-name|var
-argument_list|,
-name|strlen
-argument_list|(
-name|var
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|RO
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"pll_control %d\n"
-argument_list|,
-name|pll_control
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* KERNEL_PLL */
@@ -3565,7 +3498,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * _trap - trap processor for undefined syscalls  *  * This nugget is called by the kernel when the SYS_ntp_adjtime()  * syscall bombs because the silly thing has not been implemented int  * the kernel. In this case the phase-lock loop is emulated by  * the stock adjtime() syscall and a lot of indelicate abuse.  */
+comment|/*  * _trap - trap processor for undefined syscalls  *  * This nugget is called by the kernel when the SYS_ntp_adjtime()  * syscall bombs because the silly thing has not been implemented in  * the kernel. In this case the phase-lock loop is emulated by  * the stock adjtime() syscall and a lot of indelicate abuse.  */
 end_comment
 
 begin_function
@@ -3789,7 +3722,7 @@ name|LONG
 name|ltemp
 decl_stmt|;
 comment|/* long temp */
-comment|/* 	 * Note the seconds offset is already in the low-order timestamp 	 * doubleword, so all we have to do is sign-extend and invert it. 	 * The resulting offset is believed only if within CLOCK_MAX. 	 */
+comment|/* 	 * Note the seconds offset is already in the low-order timestamp 	 * doubleword, so all we have to do is sign-extend and invert 	 * it. The resulting offset is believed only if within 	 * CLOCK_MAX. 	 */
 name|ts
 operator|=
 operator|*
@@ -4098,37 +4031,7 @@ index|[
 name|PPS_TRIM
 index|]
 expr_stmt|;
-name|pps_maxd
-operator|=
-name|LFPTOFP
-argument_list|(
-operator|&
-name|lftemp
-argument_list|)
-expr_stmt|;
-name|lftemp
-operator|.
-name|l_i
-operator|=
-literal|0
-expr_stmt|;
-name|lftemp
-operator|.
-name|l_f
-operator|=
-name|sort
-index|[
-name|NPPS
-operator|-
-literal|1
-index|]
-operator|-
-name|sort
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|utemp
+name|pps_dispersion
 operator|=
 name|LFPTOFP
 argument_list|(
@@ -4175,7 +4078,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-comment|/* 	 * Note the peerstats file will contain the gross dispersion in 	 * the delay field. Temporaty hack. 	 */
 name|record_peer_stats
 argument_list|(
 operator|&
@@ -4189,9 +4091,9 @@ argument_list|,
 operator|&
 name|pps_offset
 argument_list|,
-name|utemp
+literal|0
 argument_list|,
-name|pps_maxd
+name|pps_dispersion
 argument_list|)
 expr_stmt|;
 return|return

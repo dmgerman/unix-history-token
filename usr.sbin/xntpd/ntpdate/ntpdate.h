@@ -141,6 +141,28 @@ begin_comment
 comment|/*  * ntpdate will make a LONG adjustment using adjtime() if the times  * are close, or step the time if the times are farther apart.  The  * following defines what is "close".  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NTPDATE_THRESHOLD
+value|(FP_SECOND / 8)
+end_define
+
+begin_comment
+comment|/* 1/8 second */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -151,6 +173,11 @@ end_define
 begin_comment
 comment|/* 1/2 second */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * When doing adjustments, ntpdate actually overadjusts (currently  * by 50%, though this may change).  While this will make it take longer  * to reach a steady state condition, it will typically result in  * the clock keeping more accurate time, on average.  The amount of  * overshoot is limited.  */

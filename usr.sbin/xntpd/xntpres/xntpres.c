@@ -183,6 +183,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ce_ttl
+value|ce_config.ttl
+end_define
+
+begin_define
+define|#
+directive|define
 name|ce_keyid
 value|ce_config.keyid
 end_define
@@ -359,15 +366,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|TOK_KEYID
+name|TOK_TTL
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUMTOK
+name|TOK_KEYID
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUMTOK
+value|8
 end_define
 
 begin_define
@@ -518,6 +532,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|,
@@ -1308,6 +1324,8 @@ name|maxpoll
 parameter_list|,
 name|flags
 parameter_list|,
+name|ttl
+parameter_list|,
 name|keyid
 parameter_list|)
 name|char
@@ -1328,6 +1346,9 @@ name|maxpoll
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|ttl
 decl_stmt|;
 name|U_LONG
 name|keyid
@@ -1447,6 +1468,15 @@ operator|(
 name|u_char
 operator|)
 name|flags
+expr_stmt|;
+name|ce
+operator|->
+name|ce_ttl
+operator|=
+operator|(
+name|u_char
+operator|)
+name|ttl
 expr_stmt|;
 name|ce
 operator|->
@@ -3188,6 +3218,14 @@ name|TOK_MAXPOLL
 index|]
 argument_list|,
 name|flags
+argument_list|,
+operator|(
+name|int
+operator|)
+name|intval
+index|[
+name|TOK_TTL
+index|]
 argument_list|,
 name|intval
 index|[
