@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -49,6 +49,136 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * file system statistics  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNAMELEN
+value|90
+end_define
+
+begin_comment
+comment|/* length of buffer for returned name */
+end_comment
+
+begin_struct
+struct|struct
+name|statfs
+block|{
+name|short
+name|f_type
+decl_stmt|;
+comment|/* type of filesystem (see below) */
+name|short
+name|f_flags
+decl_stmt|;
+comment|/* copy of mount flags */
+name|long
+name|f_fsize
+decl_stmt|;
+comment|/* fundamental file system block size */
+name|long
+name|f_bsize
+decl_stmt|;
+comment|/* optimal transfer block size */
+name|long
+name|f_blocks
+decl_stmt|;
+comment|/* total data blocks in file system */
+name|long
+name|f_bfree
+decl_stmt|;
+comment|/* free blocks in fs */
+name|long
+name|f_bavail
+decl_stmt|;
+comment|/* free blocks avail to non-superuser */
+name|long
+name|f_files
+decl_stmt|;
+comment|/* total file nodes in file system */
+name|long
+name|f_ffree
+decl_stmt|;
+comment|/* free file nodes in fs */
+name|fsid_t
+name|f_fsid
+decl_stmt|;
+comment|/* file system id */
+name|long
+name|f_spare
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* spare for later */
+name|char
+name|f_mntonname
+index|[
+name|MNAMELEN
+index|]
+decl_stmt|;
+comment|/* directory on which mounted */
+name|char
+name|f_mntfromname
+index|[
+name|MNAMELEN
+index|]
+decl_stmt|;
+comment|/* mounted filesystem */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * File system types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUNT_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_UFS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_NFS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_MFS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_PC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_MAXTYPE
+value|4
+end_define
+
+begin_comment
 comment|/*  * Structure per mounted file system.  * Each mounted file system has an array of  * operations and an instance record.  * The file systems are put on a doubly linked list.  */
 end_comment
 
@@ -90,22 +220,15 @@ name|int
 name|m_flag
 decl_stmt|;
 comment|/* flags */
-name|long
-name|m_fsize
-decl_stmt|;
-comment|/* fundamental block size */
-name|long
-name|m_bsize
-decl_stmt|;
-comment|/* optimal transfer size */
-name|fsid_t
-name|m_fsid
-decl_stmt|;
-comment|/* identifier */
 name|uid_t
 name|m_exroot
 decl_stmt|;
 comment|/* exported mapping for uid 0 */
+name|struct
+name|statfs
+name|m_stat
+decl_stmt|;
+comment|/* cache of filesystem stats */
 name|qaddr_t
 name|m_data
 decl_stmt|;
@@ -444,7 +567,7 @@ value|(*(VP)->v_mount->m_op->vfs_vptofh)(VP, FIDP)
 end_define
 
 begin_comment
-comment|/*  * forcibly flags for vfs_umount().  * waitfor flags to vfs_sync()  */
+comment|/*  * Flags for various system call interfaces.  *  * forcibly flags for vfs_umount().  * waitfor flags to vfs_sync() and getfsstat()  */
 end_comment
 
 begin_define
@@ -473,136 +596,6 @@ define|#
 directive|define
 name|MNT_NOWAIT
 value|2
-end_define
-
-begin_comment
-comment|/*  * file system statistics  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNAMELEN
-value|90
-end_define
-
-begin_comment
-comment|/* length of buffer for returned name */
-end_comment
-
-begin_struct
-struct|struct
-name|statfs
-block|{
-name|short
-name|f_type
-decl_stmt|;
-comment|/* type of filesystem (see below) */
-name|short
-name|f_flags
-decl_stmt|;
-comment|/* copy of mount flags */
-name|long
-name|f_fsize
-decl_stmt|;
-comment|/* fundamental file system block size */
-name|long
-name|f_bsize
-decl_stmt|;
-comment|/* optimal transfer block size */
-name|long
-name|f_blocks
-decl_stmt|;
-comment|/* total data blocks in file system */
-name|long
-name|f_bfree
-decl_stmt|;
-comment|/* free blocks in fs */
-name|long
-name|f_bavail
-decl_stmt|;
-comment|/* free blocks avail to non-superuser */
-name|long
-name|f_files
-decl_stmt|;
-comment|/* total file nodes in file system */
-name|long
-name|f_ffree
-decl_stmt|;
-comment|/* free file nodes in fs */
-name|fsid_t
-name|f_fsid
-decl_stmt|;
-comment|/* file system id */
-name|long
-name|f_spare
-index|[
-literal|9
-index|]
-decl_stmt|;
-comment|/* spare for later */
-name|char
-name|f_mntonname
-index|[
-name|MNAMELEN
-index|]
-decl_stmt|;
-comment|/* directory on which mounted */
-name|char
-name|f_mntfromname
-index|[
-name|MNAMELEN
-index|]
-decl_stmt|;
-comment|/* mounted filesystem */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * File system types.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUNT_NONE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUNT_UFS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUNT_NFS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUNT_MFS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUNT_PC
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUNT_MAXTYPE
-value|4
 end_define
 
 begin_comment
