@@ -27,56 +27,14 @@ begin_define
 define|#
 directive|define
 name|FD_ROOT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_DEVFD
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_STDIN
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_STDOUT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_STDERR
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_CTTY
-value|7
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FD_DESC
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_MAX
-value|12
+value|3
 end_define
 
 begin_typedef
@@ -85,13 +43,7 @@ enum|enum
 block|{
 name|Froot
 block|,
-name|Fdevfd
-block|,
 name|Fdesc
-block|,
-name|Flink
-block|,
-name|Fctty
 block|}
 name|fdntype
 typedef|;
@@ -122,11 +74,6 @@ name|unsigned
 name|fd_fd
 decl_stmt|;
 comment|/* Fd to be dup'ed */
-name|char
-modifier|*
-name|fd_link
-decl_stmt|;
-comment|/* Link to fd/n */
 name|int
 name|fd_ix
 decl_stmt|;
@@ -154,13 +101,6 @@ name|vp
 parameter_list|)
 value|((struct fdescnode *)(vp)->v_data)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|dev_t
-name|devctty
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -215,6 +155,10 @@ operator|,
 expr|struct
 name|vnode
 operator|*
+operator|*
+operator|,
+expr|struct
+name|proc
 operator|*
 operator|)
 argument_list|)
