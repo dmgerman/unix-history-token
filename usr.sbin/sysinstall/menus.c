@@ -2148,6 +2148,68 @@ end_decl_stmt
 
 begin_decl_stmt
 name|DMenu
+name|MenuXF86Config
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Please select the XFree86 configuration tool you want to use."
+block|,
+literal|"The first tool, XF86Setup, is fully graphical and requires the\n"
+literal|"VGA16 server in order to work (should have been selected by\n"
+literal|"default, but if you de-selected it then you won't be able to\n"
+literal|"use this fancy setup tool).  The second tool, xf86config, is\n"
+literal|"a more simplistic shell-script based tool and less friendly to\n"
+literal|"new users, but it may work in situations where the fancier one\n"
+literal|"does not."
+block|,
+literal|"Press F1 to read the XFree86 release notes for FreeBSD"
+block|,
+literal|"XF86"
+block|,
+block|{
+block|{
+literal|"XF86Setup"
+block|,
+literal|"Use the fully graphical XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=XF86Setup"
+block|}
+block|,
+block|{
+literal|"xf86config"
+block|,
+literal|"Use the shell-script based XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=xf86config"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
 name|MenuMediaCDROM
 init|=
 block|{

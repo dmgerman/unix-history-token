@@ -657,6 +657,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_XF86_CONFIG
+value|"xf86config"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_TAPE_BLOCKSIZE
 value|"20"
 end_define
@@ -2036,6 +2043,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Fixit floppy/CDROM/shell menu		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXF86Config
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Select XFree86 configuration type		*/
 end_comment
 
 begin_comment
