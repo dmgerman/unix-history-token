@@ -16444,30 +16444,10 @@ case|:
 ifndef|#
 directive|ifndef
 name|SC_NO_CUTPASTE
-comment|/* XXX need to set MOUSE_VISIBLE flag 'cause sc_mouse_paste() */
-comment|/* and sc_paste() will not operate without it. */
-name|i
-operator|=
-name|scp
-operator|->
-name|status
-expr_stmt|;
-name|scp
-operator|->
-name|status
-operator||=
-name|MOUSE_VISIBLE
-expr_stmt|;
 name|sc_mouse_paste
 argument_list|(
 name|scp
 argument_list|)
-expr_stmt|;
-name|scp
-operator|->
-name|status
-operator|=
-name|i
 expr_stmt|;
 endif|#
 directive|endif
@@ -17903,15 +17883,6 @@ name|u_char
 modifier|*
 name|rmap
 decl_stmt|;
-if|if
-condition|(
-name|scp
-operator|->
-name|status
-operator|&
-name|MOUSE_VISIBLE
-condition|)
-block|{
 name|tp
 operator|=
 name|VIRTUAL_TTY
@@ -17981,7 +17952,6 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -3215,14 +3215,6 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-if|if
-condition|(
-name|scp
-operator|->
-name|status
-operator|&
-name|MOUSE_VISIBLE
-condition|)
 name|sc_paste
 argument_list|(
 name|scp
