@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)memreg.c	7.3 (Berkeley) %G%  *  * from: $Header: memreg.c,v 1.4 92/06/17 05:22:17 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)memreg.c	7.4 (Berkeley) %G%  *  * from: $Header: memreg.c,v 1.7 92/11/26 03:05:04 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sparc/sparc/ctlreg.h>
+file|<machine/ctlreg.h>
 end_include
 
 begin_include
@@ -32,6 +32,28 @@ include|#
 directive|include
 file|<sparc/sparc/memreg.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|memregmatch
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|,
+expr|struct
+name|cfdata
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -61,11 +83,11 @@ name|cfdriver
 name|memregcd
 init|=
 block|{
-name|NULL
+literal|0
 block|,
-literal|"memory-error"
+literal|"memreg"
 block|,
-name|matchbyname
+name|memregmatch
 block|,
 name|memregattach
 block|,
@@ -79,6 +101,60 @@ operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The OPENPROM calls this "memory-error".  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|memregmatch
+parameter_list|(
+name|parent
+parameter_list|,
+name|cf
+parameter_list|,
+name|aux
+parameter_list|)
+name|struct
+name|device
+modifier|*
+name|parent
+decl_stmt|;
+name|struct
+name|cfdata
+modifier|*
+name|cf
+decl_stmt|;
+name|void
+modifier|*
+name|aux
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|strcmp
+argument_list|(
+literal|"memory-error"
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|romaux
+operator|*
+operator|)
+name|aux
+operator|)
+operator|->
+name|ra_name
+argument_list|)
+operator|==
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
