@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This defines a structure for a receive or send ring buffer.  *  * The circular buffer actually has three parts:  *(((  *	full, sent, not acked:	[ack, send)  *	full, not sent:		[send, add)  *	empty:			[add, ack)  *]]]  *  * Any given byte will go through "empty" -> "send" -> "ack" -> "empty"  * as data is moved through it.  The transition from "ack" to "empty"  * may occur instantaneously (as in the case of sending data up to another  * process).  */
+comment|/*  * This defines a structure for a ring buffer.  *  * The circular buffer has two parts:  *(((  *	full:	[consume, supply)  *	empty:	[supply, consume)  *]]]  *  */
 end_comment
 
 begin_typedef
@@ -9,15 +9,11 @@ struct|struct
 block|{
 name|char
 modifier|*
-name|ack
-decl_stmt|,
-comment|/* where you can't add at */
-modifier|*
-name|send
+name|consume
 decl_stmt|,
 comment|/* where data comes out of */
 modifier|*
-name|add
+name|supply
 decl_stmt|,
 comment|/* where data comes in to */
 modifier|*
@@ -33,13 +29,10 @@ name|size
 decl_stmt|;
 comment|/* size in bytes of buffer */
 name|u_long
-name|acktime
-decl_stmt|,
-comment|/* the relations between these clocks */
-name|sendtime
+name|consumetime
 decl_stmt|,
 comment|/* help us keep straight full, empty, etc. */
-name|addtime
+name|supplytime
 decl_stmt|;
 block|}
 name|Ring
@@ -89,7 +82,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
-name|ring_add_data
+name|ring_supply_data
 argument_list|(
 name|Ring
 operator|*
@@ -103,7 +96,7 @@ name|int
 name|count
 argument_list|)
 decl_stmt|,
-name|ring_send_data
+name|ring_consume_data
 argument_list|(
 name|Ring
 operator|*
@@ -126,7 +119,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
-name|ring_added
+name|ring_supplied
 argument_list|(
 name|Ring
 operator|*
@@ -136,27 +129,7 @@ name|int
 name|count
 argument_list|)
 decl_stmt|,
-name|ring_sent
-argument_list|(
-name|Ring
-operator|*
-name|ring
-argument_list|,
-name|int
-name|count
-argument_list|)
-decl_stmt|,
-name|ring_acked
-argument_list|(
-name|Ring
-operator|*
-name|ring
-argument_list|,
-name|int
-name|count
-argument_list|)
-decl_stmt|,
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 name|Ring
 operator|*
@@ -189,21 +162,14 @@ operator|*
 name|ring
 argument_list|)
 decl_stmt|,
-name|ring_unsent_count
+name|ring_full_count
 argument_list|(
 name|Ring
 operator|*
 name|ring
 argument_list|)
 decl_stmt|,
-name|ring_unsent_consecutive
-argument_list|(
-name|Ring
-operator|*
-name|ring
-argument_list|)
-decl_stmt|,
-name|ring_unacked_count
+name|ring_full_consecutive
 argument_list|(
 name|Ring
 operator|*

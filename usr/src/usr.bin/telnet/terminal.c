@@ -116,7 +116,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 argument_list|(
 operator|&
 name|ttyoring
@@ -146,7 +146,7 @@ name|tout
 argument_list|,
 name|ttyoring
 operator|.
-name|send
+name|consume
 argument_list|,
 name|n
 argument_list|)
@@ -160,7 +160,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|ttyoring

@@ -1672,7 +1672,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-name|ring_add_data
+name|ring_supply_data
 argument_list|(
 operator|&
 name|netoring
@@ -1940,7 +1940,7 @@ condition|(
 name|count
 condition|)
 block|{
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|netiring
@@ -1961,11 +1961,11 @@ name|sbp
 operator|=
 name|netiring
 operator|.
-name|send
+name|consume
 expr_stmt|;
 name|scc
 operator|=
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 argument_list|(
 operator|&
 name|netiring
@@ -2758,7 +2758,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|netiring
@@ -2838,7 +2838,7 @@ condition|(
 name|count
 condition|)
 block|{
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|ttyiring
@@ -2859,11 +2859,11 @@ name|tbp
 operator|=
 name|ttyiring
 operator|.
-name|send
+name|consume
 expr_stmt|;
 name|tcc
 operator|=
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 argument_list|(
 operator|&
 name|ttyiring
@@ -3121,7 +3121,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|ttyiring
@@ -3881,7 +3881,7 @@ name|net
 argument_list|,
 name|netiring
 operator|.
-name|add
+name|supply
 argument_list|,
 name|canread
 argument_list|,
@@ -3931,13 +3931,13 @@ literal|'<'
 argument_list|,
 name|netiring
 operator|.
-name|add
+name|supply
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
 block|}
-name|ring_added
+name|ring_supplied
 argument_list|(
 operator|&
 name|netiring
@@ -4010,7 +4010,7 @@ name|tin
 argument_list|,
 name|ttyiring
 operator|.
-name|add
+name|supply
 argument_list|,
 name|ring_empty_consecutive
 argument_list|(
@@ -4060,7 +4060,7 @@ comment|/* must be an EOF... */
 operator|*
 name|ttyiring
 operator|.
-name|add
+name|supply
 operator|=
 name|termEofChar
 expr_stmt|;
@@ -4085,7 +4085,7 @@ literal|1
 return|;
 block|}
 block|}
-name|ring_added
+name|ring_supplied
 argument_list|(
 operator|&
 name|ttyiring
@@ -4107,7 +4107,7 @@ name|TN3270
 argument_list|)
 if|if
 condition|(
-name|ring_unsent_count
+name|ring_full_count
 argument_list|(
 operator|&
 name|ttyiring
@@ -4127,7 +4127,7 @@ name|ttyiring
 operator|.
 name|send
 argument_list|,
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 argument_list|(
 operator|&
 name|ttyiring
@@ -4144,7 +4144,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|ttyiring
@@ -4226,7 +4226,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ring_unsent_count
+name|ring_full_count
 argument_list|(
 operator|&
 name|netiring

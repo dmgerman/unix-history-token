@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This defines a structure for a receive or send ring buffer.  *  * The circular buffer actually has three parts:  *(((  *	full, sent, not acked:	[ack, send)  *	full, not sent:		[send, add)  *	empty:			[add, ack)  *]]]  *  * Any given byte will go through "empty" -> "send" -> "ack" -> "empty"  * as data is moved through it.  The transition from "ack" to "empty"  * may occur instantaneously (as in the case of sending data up to another  * process).  */
+comment|/*  * This defines a structure for a ring buffer.  *  * The circular buffer has two parts:  *(((  *	full:	[consume, supply)  *	empty:	[supply, consume)  *]]]  *  */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ value|(((a)+(c)< (d)->top)? \ 					(a)+(c) : (((a)+(c))-(d)->size))
 end_define
 
 begin_comment
-comment|/*  * The following is a clock, used to determine full, empty, etc.  *  * There is some trickiness here.  Since the ring buffers are initialized  * to ZERO on allocation, we need to make sure, when interpreting the  * clock, that when the times are EQUAL, then the buffer is FULL, all  * bytes have been SENT, no bytes are waiting to be ACKED, etc.  */
+comment|/*  * The following is a clock, used to determine full, empty, etc.  *  * There is some trickiness here.  Since the ring buffers are initialized  * to ZERO on allocation, we need to make sure, when interpreting the  * clock, that when the times are EQUAL, then the buffer is FULL.  */
 end_comment
 
 begin_decl_stmt
@@ -141,31 +141,21 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|ring_add_all
+name|ring_empty
 parameter_list|(
 name|d
 parameter_list|)
-value|(((d)->ack == (d)->add)&& \ 				((d)->acktime>= (d)->addtime))
+value|(((d)->consume == (d)->supply)&& \ 				((d)->consumetime>= (d)->supplytime))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ring_send_all
+name|ring_full
 parameter_list|(
 name|d
 parameter_list|)
-value|(((d)->add == (d)->send)&& \ 				((d)->addtime> (d)->sendtime))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ring_ack_all
-parameter_list|(
-name|d
-parameter_list|)
-value|(((d)->send == (d)->ack)&& \ 				((d)->sendtime> (d)->acktime))
+value|(((d)->supply == (d)->consume)&& \ 				((d)->supplytime> (d)->consumetime))
 end_define
 
 begin_comment
@@ -228,15 +218,11 @@ name|count
 expr_stmt|;
 name|ring
 operator|->
-name|add
+name|supply
 operator|=
 name|ring
 operator|->
-name|send
-operator|=
-name|ring
-operator|->
-name|ack
+name|consume
 operator|=
 name|ring
 operator|->
@@ -268,7 +254,7 @@ end_comment
 
 begin_function
 name|void
-name|ring_added
+name|ring_supplied
 parameter_list|(
 name|ring
 parameter_list|,
@@ -284,7 +270,7 @@ decl_stmt|;
 block|{
 name|ring
 operator|->
-name|add
+name|supply
 operator|=
 name|ring_increment
 argument_list|(
@@ -292,14 +278,14 @@ name|ring
 argument_list|,
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
 name|ring
 operator|->
-name|addtime
+name|supplytime
 operator|=
 operator|++
 name|ring_clock
@@ -308,12 +294,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We have just sent "c" bytes.  */
+comment|/*  * We have just consumed "c" bytes.  */
 end_comment
 
 begin_function
 name|void
-name|ring_sent
+name|ring_consumed
 parameter_list|(
 name|ring
 parameter_list|,
@@ -329,7 +315,7 @@ decl_stmt|;
 block|{
 name|ring
 operator|->
-name|send
+name|consume
 operator|=
 name|ring_increment
 argument_list|(
@@ -337,99 +323,17 @@ name|ring
 argument_list|,
 name|ring
 operator|->
-name|send
+name|consume
 argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
 name|ring
 operator|->
-name|sendtime
+name|consumetime
 operator|=
 operator|++
 name|ring_clock
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * We have just received an "ack" for "c" bytes.  */
-end_comment
-
-begin_function
-name|void
-name|ring_acked
-parameter_list|(
-name|ring
-parameter_list|,
-name|count
-parameter_list|)
-name|Ring
-modifier|*
-name|ring
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-block|{
-name|ring
-operator|->
-name|ack
-operator|=
-name|ring_increment
-argument_list|(
-name|ring
-argument_list|,
-name|ring
-operator|->
-name|ack
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
-name|ring
-operator|->
-name|acktime
-operator|=
-operator|++
-name|ring_clock
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * We just sent and acked some data.  */
-end_comment
-
-begin_function
-name|void
-name|ring_sent_acked
-parameter_list|(
-name|ring
-parameter_list|,
-name|count
-parameter_list|)
-name|Ring
-modifier|*
-name|ring
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-block|{
-name|ring_sent
-argument_list|(
-name|ring
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
-name|ring_acked
-argument_list|(
-name|ring
-argument_list|,
-name|count
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -439,7 +343,7 @@ comment|/* Buffer state query routines */
 end_comment
 
 begin_comment
-comment|/* Number of bytes that may be added */
+comment|/* Number of bytes that may be supplied */
 end_comment
 
 begin_function
@@ -455,7 +359,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|ring_add_all
+name|ring_empty
 argument_list|(
 name|ring
 argument_list|)
@@ -477,11 +381,11 @@ name|ring
 argument_list|,
 name|ring
 operator|->
-name|ack
+name|consume
 argument_list|,
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|)
 return|;
 block|}
@@ -489,7 +393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* number of CONSECUTIVE bytes that may be added */
+comment|/* number of CONSECUTIVE bytes that may be supplied */
 end_comment
 
 begin_function
@@ -508,20 +412,20 @@ condition|(
 operator|(
 name|ring
 operator|->
-name|ack
+name|consume
 operator|<
 name|ring
 operator|->
-name|add
+name|supply
 operator|)
 operator|||
-name|ring_add_all
+name|ring_empty
 argument_list|(
 name|ring
 argument_list|)
 condition|)
 block|{
-comment|/* 				     * if ack is "below" add, or empty, then 				     * return distance to the top 				     */
+comment|/* 			     * if consume is "below" supply, or empty, then 			     * return distance to the top 			     */
 return|return
 name|ring_subtract
 argument_list|(
@@ -533,7 +437,7 @@ name|top
 argument_list|,
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|)
 return|;
 block|}
@@ -547,11 +451,11 @@ name|ring
 argument_list|,
 name|ring
 operator|->
-name|ack
+name|consume
 argument_list|,
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|)
 return|;
 block|}
@@ -559,12 +463,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* number of bytes that are available for sending */
+comment|/* number of bytes that are available for consuming */
 end_comment
 
 begin_function
 name|int
-name|ring_unsent_count
+name|ring_full_count
 parameter_list|(
 name|ring
 parameter_list|)
@@ -575,7 +479,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|ring_send_all
+name|ring_full
 argument_list|(
 name|ring
 argument_list|)
@@ -586,7 +490,7 @@ name|ring
 operator|->
 name|size
 return|;
-comment|/* nothing sent, but full */
+comment|/* nothing consumed, but full */
 block|}
 else|else
 block|{
@@ -597,11 +501,11 @@ name|ring
 argument_list|,
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|,
 name|ring
 operator|->
-name|send
+name|consume
 argument_list|)
 return|;
 block|}
@@ -609,12 +513,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* number of CONSECUTIVE bytes available for sending */
+comment|/* number of CONSECUTIVE bytes available for consuming */
 end_comment
 
 begin_function
 name|int
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 parameter_list|(
 name|ring
 parameter_list|)
@@ -628,14 +532,14 @@ condition|(
 operator|(
 name|ring
 operator|->
-name|add
+name|supply
 operator|<
 name|ring
 operator|->
-name|send
+name|consume
 operator|)
 operator|||
-name|ring_send_all
+name|ring_full
 argument_list|(
 name|ring
 argument_list|)
@@ -652,7 +556,7 @@ name|top
 argument_list|,
 name|ring
 operator|->
-name|send
+name|consume
 argument_list|)
 return|;
 block|}
@@ -665,11 +569,11 @@ name|ring
 argument_list|,
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|,
 name|ring
 operator|->
-name|send
+name|consume
 argument_list|)
 return|;
 block|}
@@ -677,62 +581,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* number of bytes awaiting acking */
-end_comment
-
-begin_function
-name|int
-name|ring_unacked_count
-parameter_list|(
-name|ring
-parameter_list|)
-name|Ring
-modifier|*
-name|ring
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|ring_ack_all
-argument_list|(
-name|ring
-argument_list|)
-condition|)
-block|{
-return|return
-name|ring
-operator|->
-name|size
-return|;
-comment|/* last operation was a send - nothing done */
-block|}
-else|else
-block|{
-return|return
-name|ring_subtract
-argument_list|(
-name|ring
-argument_list|,
-name|ring
-operator|->
-name|send
-argument_list|,
-name|ring
-operator|->
-name|ack
-argument_list|)
-return|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Move data into the "add" portion of of the ring buffer.  */
+comment|/*  * Move data into the "supply" portion of of the ring buffer.  */
 end_comment
 
 begin_function
 name|void
-name|ring_add_data
+name|ring_supply_data
 parameter_list|(
 name|ring
 parameter_list|,
@@ -776,14 +630,14 @@ name|memcpy
 argument_list|(
 name|ring
 operator|->
-name|add
+name|supply
 argument_list|,
 name|buffer
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ring_added
+name|ring_supplied
 argument_list|(
 name|ring
 argument_list|,
@@ -803,12 +657,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move data from the "send" portion of the ring buffer  */
+comment|/*  * Move data from the "consume" portion of the ring buffer  */
 end_comment
 
 begin_function
 name|void
-name|ring_send_data
+name|ring_consume_data
 parameter_list|(
 name|ring
 parameter_list|,
@@ -842,7 +696,7 @@ name|MIN
 argument_list|(
 name|count
 argument_list|,
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 argument_list|(
 name|ring
 argument_list|)
@@ -854,12 +708,12 @@ name|buffer
 argument_list|,
 name|ring
 operator|->
-name|send
+name|consume
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ring_sent
+name|ring_consumed
 argument_list|(
 name|ring
 argument_list|,

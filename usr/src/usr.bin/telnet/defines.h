@@ -64,7 +64,7 @@ name|NETADD
 parameter_list|(
 name|c
 parameter_list|)
-value|{ *netoring.add = c; ring_added(&netoring, 1); }
+value|{ *netoring.supply = c; ring_supplied(&netoring, 1); }
 end_define
 
 begin_define
@@ -84,7 +84,7 @@ define|#
 directive|define
 name|NETBYTES
 parameter_list|()
-value|(ring_unsent_count(&netoring))
+value|(ring_full_count(&netoring))
 end_define
 
 begin_define
@@ -102,7 +102,7 @@ name|TTYADD
 parameter_list|(
 name|c
 parameter_list|)
-value|if (!(SYNCHing||flushout)) { \ 				*ttyoring.add = c; \ 				ring_added(&ttyoring, 1); \ 			}
+value|if (!(SYNCHing||flushout)) { \ 				*ttyoring.supply = c; \ 				ring_supplied(&ttyoring, 1); \ 			}
 end_define
 
 begin_define
@@ -110,7 +110,7 @@ define|#
 directive|define
 name|TTYBYTES
 parameter_list|()
-value|(ring_unsent_count(&ttyoring))
+value|(ring_full_count(&ttyoring))
 end_define
 
 begin_define

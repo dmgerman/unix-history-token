@@ -258,7 +258,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|ring_unsent_consecutive
+name|ring_full_consecutive
 argument_list|(
 operator|&
 name|netoring
@@ -286,7 +286,7 @@ name|net
 argument_list|,
 name|netoring
 operator|.
-name|send
+name|consume
 argument_list|,
 name|n
 argument_list|,
@@ -306,7 +306,7 @@ name|net
 argument_list|,
 name|netoring
 operator|.
-name|send
+name|consume
 argument_list|,
 literal|1
 argument_list|,
@@ -381,13 +381,13 @@ literal|'>'
 argument_list|,
 name|netoring
 operator|.
-name|send
+name|consume
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
 block|}
-name|ring_sent_acked
+name|ring_consumed
 argument_list|(
 operator|&
 name|netoring
@@ -693,7 +693,7 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
-name|ring_add_data
+name|ring_supply_data
 argument_list|(
 operator|&
 name|netoring
@@ -705,7 +705,7 @@ operator|-
 name|buffer
 argument_list|)
 expr_stmt|;
-name|ring_add_data
+name|ring_supply_data
 argument_list|(
 operator|&
 name|netoring
@@ -755,7 +755,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
-name|ring_add_data
+name|ring_supply_data
 argument_list|(
 operator|&
 name|netoring
