@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.4.2.3 1997/09/29 06:36:13 charnier Exp $"
+literal|"$Id: moused.c,v 1.4.2.4 1998/01/20 03:52:44 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,40 +325,6 @@ name|args
 modifier|...
 parameter_list|)
 value|{				\ 	if (background)						\ 	    syslog(LOG_DAEMON | LOG_WARNING, fmt, ##args);	\ 	else							\ 	    warnx(fmt, ##args);					\ }
-end_define
-
-begin_comment
-comment|/* The following macros are defined in<sys/time.h> in 3.0-CURRENT. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|timeradd
-parameter_list|(
-name|tvp
-parameter_list|,
-name|uvp
-parameter_list|,
-name|vvp
-parameter_list|)
-define|\
-value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec + (uvp)->tv_sec;		\ 		(vvp)->tv_usec = (tvp)->tv_usec + (uvp)->tv_usec;	\ 		if ((vvp)->tv_usec>= 1000000) {			\ 			(vvp)->tv_sec++;				\ 			(vvp)->tv_usec -= 1000000;			\ 		}							\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|timersub
-parameter_list|(
-name|tvp
-parameter_list|,
-name|uvp
-parameter_list|,
-name|vvp
-parameter_list|)
-define|\
-value|do {								\ 		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\ 		(vvp)->tv_usec = (tvp)->tv_usec - (uvp)->tv_usec;	\ 		if ((vvp)->tv_usec< 0) {				\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_usec += 1000000;			\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -700,13 +666,13 @@ block|,
 name|MOUSE_MODEL_INTELLI
 block|}
 block|,
-comment|/* Genius EZScroll */
+comment|/* Genius PnP Mouse */
 block|{
-literal|"KYEEZ00"
+literal|"KYE0001"
 block|,
 name|MOUSE_PROTO_MS
 block|,
-name|MOUSE_MODEL_EASYSCROLL
+name|MOUSE_MODEL_GENERIC
 block|}
 block|,
 comment|/* Genius NetMouse */
@@ -716,6 +682,15 @@ block|,
 name|MOUSE_PROTO_INTELLI
 block|,
 name|MOUSE_MODEL_NET
+block|}
+block|,
+comment|/* Genius EZScroll */
+block|{
+literal|"KYEEZ00"
+block|,
+name|MOUSE_PROTO_MS
+block|,
+name|MOUSE_MODEL_EASYSCROLL
 block|}
 block|,
 comment|/* Logitech MouseMan (new 4 button model) */
@@ -3560,7 +3535,7 @@ block|,
 literal|3
 block|,
 operator|~
-literal|0x23
+literal|0x33
 block|,
 literal|0x00
 block|}
@@ -6151,6 +6126,16 @@ case|case
 name|MOUSE_PROTO_LOGIMOUSEMAN
 case|:
 comment|/* MouseMan/TrackMan */
+name|act
+operator|->
+name|button
+operator|=
+name|act
+operator|->
+name|obutton
+operator|&
+name|MOUSE_BUTTON4DOWN
+expr_stmt|;
 if|if
 condition|(
 name|rodent
@@ -6162,7 +6147,7 @@ condition|)
 name|act
 operator|->
 name|button
-operator|=
+operator||=
 operator|(
 operator|(
 name|pBuf
@@ -6196,7 +6181,7 @@ else|else
 name|act
 operator|->
 name|button
-operator|=
+operator||=
 operator|(
 name|act
 operator|->
