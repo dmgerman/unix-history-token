@@ -32,13 +32,6 @@ name|tcp_do_rfc1323
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|tcp_do_rfc1644
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* TCP segment queue entry */
 end_comment
@@ -302,21 +295,6 @@ value|0x001000
 comment|/* don't push */
 define|#
 directive|define
-name|TF_REQ_CC
-value|0x002000
-comment|/* have/will request CC */
-define|#
-directive|define
-name|TF_RCVD_CC
-value|0x004000
-comment|/* a CC was received in SYN */
-define|#
-directive|define
-name|TF_SENDCCNEW
-value|0x008000
-comment|/* send CCnew instead of CC in SYN */
-define|#
-directive|define
 name|TF_MORETOCOME
 value|0x010000
 comment|/* More data to be appended to sock */
@@ -538,15 +516,6 @@ comment|/* when last updated */
 name|tcp_seq
 name|last_ack_sent
 decl_stmt|;
-comment|/* RFC 1644 variables */
-name|tcp_cc
-name|cc_send
-decl_stmt|;
-comment|/* send connection count */
-name|tcp_cc
-name|cc_recv
-decl_stmt|;
-comment|/* receive connection count */
 comment|/* experimental */
 name|u_long
 name|snd_cwnd_prev
@@ -740,19 +709,6 @@ value|0x0001
 comment|/* timestamp */
 define|#
 directive|define
-name|TOF_CC
-value|0x0002
-comment|/* CC and CCnew are exclusive */
-define|#
-directive|define
-name|TOF_CCNEW
-value|0x0004
-define|#
-directive|define
-name|TOF_CCECHO
-value|0x0008
-define|#
-directive|define
 name|TOF_MSS
 value|0x0010
 define|#
@@ -779,13 +735,6 @@ name|to_tsval
 decl_stmt|;
 name|u_int32_t
 name|to_tsecr
-decl_stmt|;
-name|tcp_cc
-name|to_cc
-decl_stmt|;
-comment|/* holds CC or CCnew */
-name|tcp_cc
-name|to_ccecho
 decl_stmt|;
 name|u_int16_t
 name|to_mss
@@ -838,13 +787,6 @@ name|u_int32_t
 name|sc_flowlabel
 decl_stmt|;
 comment|/* IPv6 flowlabel */
-name|tcp_cc
-name|sc_cc_send
-decl_stmt|;
-comment|/* holds CC or CCnew */
-name|tcp_cc
-name|sc_cc_recv
-decl_stmt|;
 name|tcp_seq
 name|sc_irs
 decl_stmt|;
@@ -896,11 +838,6 @@ directive|define
 name|SCF_TIMESTAMP
 value|0x04
 comment|/* negotiated timestamps */
-define|#
-directive|define
-name|SCF_CC
-value|0x08
-comment|/* negotiated CC */
 define|#
 directive|define
 name|SCF_UNREACH
@@ -1033,12 +970,6 @@ decl_stmt|;
 name|tcp_seq
 name|irs
 decl_stmt|;
-name|tcp_cc
-name|cc_recv
-decl_stmt|;
-name|tcp_cc
-name|cc_send
-decl_stmt|;
 name|u_short
 name|last_win
 decl_stmt|;
@@ -1068,55 +999,6 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The TAO cache entry which is stored in the tcp hostcache.  */
-end_comment
-
-begin_struct
-struct|struct
-name|rmxp_tao
-block|{
-name|tcp_cc
-name|tao_cc
-decl_stmt|;
-comment|/* latest CC in valid SYN */
-name|tcp_cc
-name|tao_ccsent
-decl_stmt|;
-comment|/* latest CC sent to peer */
-name|u_short
-name|tao_mssopt
-decl_stmt|;
-comment|/* peer's cached MSS */
-ifdef|#
-directive|ifdef
-name|notyet
-name|u_short
-name|tao_flags
-decl_stmt|;
-comment|/* cache status flags */
-define|#
-directive|define
-name|TAOF_DONT
-value|0x0001
-comment|/* peer doesn't understand rfc1644 */
-define|#
-directive|define
-name|TAOF_OK
-value|0x0002
-comment|/* peer does understand rfc1644 */
-define|#
-directive|define
-name|TAOF_UNDEF
-value|0
-comment|/* we don't know yet */
-endif|#
-directive|endif
-comment|/* notyet */
 block|}
 struct|;
 end_struct
@@ -1648,17 +1530,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_DO_RFC1644
-value|2
-end_define
-
-begin_comment
-comment|/* use RFC-1644 extensions */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPCTL_MSSDFLT
 value|3
 end_define
@@ -1799,7 +1670,7 @@ begin_define
 define|#
 directive|define
 name|TCPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ 	{ "v6mssdflt", CTLTYPE_INT }, \ 	{ "maxid", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ 	{ "v6mssdflt", CTLTYPE_INT }, \ 	{ "maxid", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -2543,21 +2414,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tcp_hc_gettao
-parameter_list|(
-name|struct
-name|in_conninfo
-modifier|*
-parameter_list|,
-name|struct
-name|rmxp_tao
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|tcp_hc_updatemtu
 parameter_list|(
 name|struct
@@ -2583,48 +2439,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|tcp_hc_updatetao
-parameter_list|(
-name|struct
-name|in_conninfo
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|tcp_cc
-parameter_list|,
-name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* update which tao field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_HC_TAO_CC
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCP_HC_TAO_CCSENT
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCP_HC_TAO_MSSOPT
-value|0x3
-end_define
 
 begin_decl_stmt
 specifier|extern

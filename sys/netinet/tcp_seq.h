@@ -222,32 +222,6 @@ begin_comment
 comment|/* timestamp wrap-around time */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|tcp_cc
-name|tcp_ccgen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* global connection count */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

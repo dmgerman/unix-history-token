@@ -34,17 +34,6 @@ name|tcp_seq
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|tcp_cc
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* connection count per rfc1644 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -307,56 +296,6 @@ end_define
 begin_comment
 comment|/* Absolute maximum TCP options len */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_CC
-value|11
-end_define
-
-begin_comment
-comment|/* CC options: RFC-1644 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_CCNEW
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_CCECHO
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOLEN_CC
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOLEN_CC_APPA
-value|(TCPOLEN_CC+2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_CC_HDR
-parameter_list|(
-name|ccopt
-parameter_list|)
-define|\
-value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|(ccopt)<<8|TCPOLEN_CC)
-end_define
 
 begin_define
 define|#
