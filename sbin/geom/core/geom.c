@@ -3798,6 +3798,17 @@ argument_list|,
 argument|lg_geom
 argument_list|)
 block|{
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|gp
+operator|->
+name|lg_provider
+argument_list|)
+condition|)
+continue|continue;
 name|show_one_geom
 argument_list|(
 name|gp
