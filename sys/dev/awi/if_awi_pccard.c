@@ -989,9 +989,11 @@ name|sc_ec
 operator|.
 name|ac_if
 decl_stmt|;
-name|if_detach
+name|ether_ifdetach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|ifp

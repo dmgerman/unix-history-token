@@ -1407,7 +1407,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|PC98
-comment|/* 	 * XXX - is it safe to call isa_dmacascade() after if_attach()  	 *       and ether_ifattach() have been called in lnc_attach() ??? 	 */
+comment|/* 	 * XXX - is it safe to call isa_dmacascade() after 	 *       ether_ifattach() has been called in lnc_attach() ??? 	 */
 if|if
 condition|(
 operator|(

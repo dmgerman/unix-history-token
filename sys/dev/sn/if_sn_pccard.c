@@ -269,7 +269,7 @@ operator|&=
 operator|~
 name|IFF_RUNNING
 expr_stmt|;
-name|if_detach
+name|ether_ifdetach
 argument_list|(
 operator|&
 name|sc
@@ -277,6 +277,8 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|sn_deactivate
