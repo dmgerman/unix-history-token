@@ -168,6 +168,11 @@ literal|0
 decl_stmt|;
 comment|/* number of nameserver records read from file */
 name|int
+name|haveenv
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|havesearch
 init|=
 literal|0
@@ -221,6 +226,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -240,6 +246,10 @@ name|defdname
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|haveenv
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -295,12 +305,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
-operator|.
-name|defdname
-index|[
-literal|0
-index|]
+name|haveenv
 condition|)
 comment|/* skip if have from environ */
 continue|continue;
@@ -406,6 +411,12 @@ literal|1
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|haveenv
+condition|)
+comment|/* skip if have from environ */
+continue|continue;
 name|cp
 operator|=
 name|buf
@@ -564,6 +575,12 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|pp
+operator|++
+operator|=
+literal|0
+expr_stmt|;
 name|havesearch
 operator|=
 literal|1
@@ -829,7 +846,7 @@ name|_res
 operator|.
 name|dnsrch
 operator|+
-name|MAXDNSRCH
+name|MAXDFLSRCH
 condition|;
 name|n
 operator|--
@@ -852,6 +869,12 @@ operator|++
 name|cp
 expr_stmt|;
 block|}
+operator|*
+name|pp
+operator|++
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|_res
 operator|.
