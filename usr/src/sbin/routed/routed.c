@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.19 82/06/20"
+literal|"@(#)routed.c	4.20 82/06/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1472,6 +1472,11 @@ name|state
 decl_stmt|,
 name|metric
 decl_stmt|;
+name|struct
+name|rt_entry
+modifier|*
+name|rt
+decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1534,15 +1539,13 @@ operator|&
 name|net
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|rt
+operator|=
 name|rtlookup
 argument_list|(
 name|dst
 argument_list|)
-operator|==
-literal|0
-condition|)
+expr_stmt|;
 name|rtadd
 argument_list|(
 name|dst
@@ -1567,6 +1570,15 @@ name|IFF_PASSIVE
 operator||
 name|IFF_REMOTE
 operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rt
+condition|)
+name|rtdelete
+argument_list|(
+name|rt
 argument_list|)
 expr_stmt|;
 block|}
