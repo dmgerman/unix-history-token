@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_htt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_user_ldt.h"
 end_include
 
@@ -891,6 +897,12 @@ name|MP_ANNOUNCE_POST
 value|0x19
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HTT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -904,6 +916,11 @@ name|u_int
 name|logical_cpus
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/** XXX FIXME: where does this really belong, isa.h/isa.c perhaps? */
@@ -1415,6 +1432,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HTT
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1425,6 +1448,11 @@ name|id_mask
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3319,9 +3347,14 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HTT
 name|u_int
 name|id_mask
 decl_stmt|;
+endif|#
+directive|endif
 name|POSTCODE
 argument_list|(
 name|MPTABLE_PASS1_POST
@@ -3369,10 +3402,15 @@ name|nintrs
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HTT
 name|id_mask
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* check for use of 'default' configuration */
 if|if
 condition|(
@@ -3529,6 +3567,9 @@ block|{
 operator|++
 name|mp_naps
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HTT
 name|id_mask
 operator||=
 literal|1
@@ -3542,6 +3583,8 @@ operator|)
 operator|->
 name|apic_id
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
@@ -3655,12 +3698,17 @@ operator|=
 name|MAXCPU
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HTT
 comment|/* See if we need to fixup HT logical CPUs. */
 name|mptable_hyperthread_fixup
 argument_list|(
 name|id_mask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Count the BSP. 	 * This is also used as a counter while starting the APs. 	 */
 name|mp_ncpus
 operator|=
@@ -3685,10 +3733,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HTT
 name|struct
 name|PROCENTRY
 name|proc
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|x
 decl_stmt|;
@@ -3730,6 +3783,9 @@ argument_list|(
 name|MPTABLE_PASS2_POST
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HTT
 comment|/* Initialize fake proc entry for use with HT fixup. */
 name|bzero
 argument_list|(
@@ -3754,6 +3810,8 @@ name|cpu_flags
 operator|=
 name|PROCENTRY_FLAG_EN
 expr_stmt|;
+endif|#
+directive|endif
 name|pgeflag
 operator|=
 literal|0
@@ -4271,6 +4329,9 @@ condition|)
 operator|++
 name|cpu
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HTT
 if|if
 condition|(
 name|need_hyperthreading_fixup
@@ -4325,6 +4386,8 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 break|break;
 case|case
 literal|1
@@ -4428,6 +4491,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HTT
+end_ifdef
 
 begin_comment
 comment|/*  * Check if we should perform a hyperthreading "fix-up" to  * enumerate any logical CPU's that aren't already listed  * in the table.  *  * XXX: We assume that all of the physical CPUs in the  * system have the same number of logical CPUs.  *  * XXX: We assume that APIC ID's are allocated such that  * the APIC ID's for a physical processor are aligned  * with the number of logical CPU's in the processor.  */
@@ -4556,6 +4625,11 @@ name|logical_cpus
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
