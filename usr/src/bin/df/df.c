@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.31 (Berkeley) %G%"
+literal|"@(#)df.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,7 +681,7 @@ name|unmount
 argument_list|(
 name|mntpt
 argument_list|,
-name|MNT_NOFORCE
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
