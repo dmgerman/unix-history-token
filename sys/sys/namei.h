@@ -52,6 +52,10 @@ modifier|*
 name|cn_cred
 decl_stmt|;
 comment|/* credentials */
+name|int
+name|cn_lkflags
+decl_stmt|;
+comment|/* Lock flags LK_EXCLUSIVE or LK_SHARED */
 comment|/* 	 * Shared between lookup and commit routines. 	 */
 name|char
 modifier|*
