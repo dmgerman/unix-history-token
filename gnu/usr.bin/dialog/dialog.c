@@ -1926,7 +1926,6 @@ condition|(
 operator|!
 name|retval
 condition|)
-block|{
 name|fputs
 argument_list|(
 name|tresult
@@ -1934,12 +1933,6 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|tresult
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|clear_screen
