@@ -614,7 +614,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|volatile
 name|u_int32_t
 name|phase
 decl_stmt|;
@@ -671,7 +670,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|volatile
 name|u_int32_t
 name|stalled
 decl_stmt|;
