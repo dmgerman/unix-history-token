@@ -200,9 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
+name|void
 name|getcredhostname
 name|__P
 argument_list|(
@@ -211,6 +209,11 @@ expr|struct
 name|ucred
 operator|*
 name|cred
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
