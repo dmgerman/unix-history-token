@@ -2895,7 +2895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a number of pages from within an object  *  * Arguments:  *	zone   Unused  *	bytes  The number of bytes requested  *	wait   Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly   *	NULL if M_NOWAIT is set.  */
+comment|/*  * Allocates a number of pages from within an object  *  * Arguments:  *	zone   Unused  *	bytes  The number of bytes requested  *	wait   Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly   *	NULL if M_NOWAIT is set.  *  * TODO: If we fail during a multi-page allocation release the pages that have  *	 already been allocated.  */
 end_comment
 
 begin_function
