@@ -74,6 +74,7 @@ name|newcmd
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|objformat_path
