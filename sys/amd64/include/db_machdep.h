@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$Id: db_machdep.h,v 1.7 1995/01/14 10:34:52 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$Id: db_machdep.h,v 1.8 1995/05/30 08:00:34 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,78 +15,16 @@ directive|define
 name|_MACHINE_DB_MACHDEP_H_
 end_define
 
-begin_comment
-comment|/*  * Machine-dependent defines for new kernel debugger.  */
-end_comment
-
-begin_comment
-comment|/* #include<mach/i386/vm_types.h> */
-end_comment
-
-begin_comment
-comment|/* #include<mach/i386/vm_param.h> */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_prot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_inherit.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/lock.h>
-end_include
-
-begin_comment
-comment|/* #include<i386/thread.h> */
-end_comment
-
-begin_comment
-comment|/* for thread_status */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<machine/frame.h>
 end_include
 
-begin_comment
-comment|/* for struct trapframe */
-end_comment
-
-begin_comment
-comment|/* #include<i386/eflags.h> */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<machine/psl.h>
-end_include
-
-begin_comment
-comment|/* #include<i386/trap.h> */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/trap.h>
 end_include
 
 begin_define
@@ -317,153 +255,6 @@ parameter_list|(
 name|ins
 parameter_list|)
 value|0
-end_define
-
-begin_comment
-comment|/* access capability and access macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DB_ACCESS_LEVEL
-value|2
-end_define
-
-begin_comment
-comment|/* access any space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DB_CHECK_ACCESS
-parameter_list|(
-name|addr
-parameter_list|,
-name|size
-parameter_list|,
-name|task
-parameter_list|)
-define|\
-value|db_check_access(addr,size,task)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_PHYS_EQ
-parameter_list|(
-name|task1
-parameter_list|,
-name|addr1
-parameter_list|,
-name|task2
-parameter_list|,
-name|addr2
-parameter_list|)
-define|\
-value|db_phys_eq(task1,addr1,task2,addr2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_VALID_KERN_ADDR
-parameter_list|(
-name|addr
-parameter_list|)
-define|\
-value|((addr)>= VM_MIN_KERNEL_ADDRESS&& 			\ 	 (addr)< VM_MAX_KERNEL_ADDRESS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_VALID_ADDRESS
-parameter_list|(
-name|addr
-parameter_list|,
-name|user
-parameter_list|)
-define|\
-value|((!(user)&& DB_VALID_KERN_ADDR(addr)) ||		\ 	 ((user)&& (addr)< VM_MIN_KERNEL_ADDRESS))
-end_define
-
-begin_function_decl
-name|boolean_t
-name|db_check_access
-parameter_list|(
-comment|/* vm_offset_t, int, task_t */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|boolean_t
-name|db_phys_eq
-parameter_list|(
-comment|/* task_t, vm_offset_t, task_t, vm_offset_t */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* macros for printing OS server dependent task name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DB_TASK_NAME
-parameter_list|(
-name|task
-parameter_list|)
-value|db_task_name(task)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_TASK_NAME_TITLE
-value|"COMMAND                "
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_TASK_NAME_LEN
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|DB_NULL_TASK_NAME
-value|"?                      "
-end_define
-
-begin_function_decl
-name|void
-name|db_task_name
-parameter_list|(
-comment|/* task_t */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* macro for checking if a thread has used floating-point */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|db_thread_fp_used
-parameter_list|(
-name|thread
-parameter_list|)
-value|((thread)->pcb->ims.ifps != 0)
 end_define
 
 begin_endif
