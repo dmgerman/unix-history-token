@@ -16034,8 +16034,8 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* Undefined behaviour [expr.call] 5.2.2/7.  */
-name|warning
+comment|/* Undefined behaviour [expr.call] 5.2.2/7.  We used to just warn 	 here and do a bitwise copy, but now cp_expr_size will abort if we 	 try to do that.  */
+name|error
 argument_list|(
 literal|"cannot pass objects of non-POD type `%#T' through `...'"
 argument_list|,
@@ -16044,6 +16044,10 @@ argument_list|(
 name|arg
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+name|error_mark_node
 expr_stmt|;
 block|}
 return|return

@@ -33,7 +33,10 @@ name|unsigned
 name|long
 name|long
 name|__m64
-typedef|;
+name|__attribute__
+typedef|((
+name|__aligned__
+typedef|(8)));
 end_typedef
 
 begin_comment

@@ -1259,6 +1259,26 @@ begin_comment
 comment|/* RTX_CODE */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|sparc_output_mi_thunk
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|tree
+operator|,
+name|HOST_WIDE_INT
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

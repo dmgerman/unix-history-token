@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Demangler for IA64 / g++ V3 ABI.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.    Written by Alex Samuel<samuel@codesourcery.com>.      This file is part of GNU CC.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Demangler for IA64 / g++ V3 ABI.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Alex Samuel<samuel@codesourcery.com>.      This file is part of GNU CC.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -3060,6 +3060,9 @@ name|int
 operator|,
 name|int
 operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4525,6 +4528,8 @@ literal|0
 argument_list|,
 operator|&
 name|num_args
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5074,7 +5079,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits an<operator-name>.  If SHORT_NAME is non-zero,    the short form is emitted; otherwise the full source form    (`operator +' etc.) is emitted.  *NUM_ARGS is set to the number of    operands that the operator takes.<operator-name>                   ::= nw        # new                              ::= na        # new[]                   ::= dl        # delete                           ::= da        # delete[]       		  ::= ps        # + (unary)                   ::= ng        # - (unary)                        ::= ad        #& (unary)                        ::= de        # * (unary)                        ::= co        # ~                                ::= pl        # +                                ::= mi        # -                                ::= ml        # *                                ::= dv        # /                                ::= rm        # %                                ::= an        #&                                ::= or        # |                                ::= eo        # ^                                ::= aS        # =                                ::= pL        # +=                               ::= mI        # -=                               ::= mL        # *=                               ::= dV        # /=                               ::= rM        # %=                               ::= aN        #&=                               ::= oR        # |=                               ::= eO        # ^=                               ::= ls        #<<                               ::= rs        #>>                               ::= lS        #<<=                              ::= rS        #>>=                              ::= eq        # ==                               ::= ne        # !=                               ::= lt        #<                                ::= gt        #>                                ::= le        #<=                               ::= ge        #>=                               ::= nt        # !                                ::= aa        #&&                               ::= oo        # ||                               ::= pp        # ++                               ::= mm        # --                               ::= cm        # ,                                ::= pm        # ->*                              ::= pt        # ->                               ::= cl        # ()                               ::= ix        # []                               ::= qu        # ?                   ::= sz        # sizeof                    ::= cv<type> # cast         		  ::= v [0-9]<source-name>  # vendor extended operator  */
+comment|/* Demangles and emits an<operator-name>.  If SHORT_NAME is non-zero,    the short form is emitted; otherwise the full source form    (`operator +' etc.) is emitted.  *NUM_ARGS is set to the number of    operands that the operator takes.  If TYPE_ARG is non-NULL,    *TYPE_ARG is set to 1 if the first argument is a type and 0    otherwise.<operator-name>                   ::= nw        # new                              ::= na        # new[]                   ::= dl        # delete                           ::= da        # delete[]       		  ::= ps        # + (unary)                   ::= ng        # - (unary)                        ::= ad        #& (unary)                        ::= de        # * (unary)                        ::= co        # ~                                ::= pl        # +                                ::= mi        # -                                ::= ml        # *                                ::= dv        # /                                ::= rm        # %                                ::= an        #&                                ::= or        # |                                ::= eo        # ^                                ::= aS        # =                                ::= pL        # +=                               ::= mI        # -=                               ::= mL        # *=                               ::= dV        # /=                               ::= rM        # %=                               ::= aN        #&=                               ::= oR        # |=                               ::= eO        # ^=                               ::= ls        #<<                               ::= rs        #>>                               ::= lS        #<<=                              ::= rS        #>>=                              ::= eq        # ==                               ::= ne        # !=                               ::= lt        #<                                ::= gt        #>                                ::= le        #<=                               ::= ge        #>=                               ::= nt        # !                                ::= aa        #&&                               ::= oo        # ||                               ::= pp        # ++                               ::= mm        # --                               ::= cm        # ,                                ::= pm        # ->*                              ::= pt        # ->                               ::= cl        # ()                               ::= ix        # []                               ::= qu        # ? 		  ::= st        # sizeof (a type)                   ::= sz        # sizeof (an expression)                   ::= cv<type> # cast         		  ::= v [0-9]<source-name>  # vendor extended operator  */
 end_comment
 
 begin_function
@@ -5087,6 +5092,8 @@ parameter_list|,
 name|short_name
 parameter_list|,
 name|num_args
+parameter_list|,
+name|type_arg
 parameter_list|)
 name|demangling_t
 name|dm
@@ -5097,6 +5104,10 @@ decl_stmt|;
 name|int
 modifier|*
 name|num_args
+decl_stmt|;
+name|int
+modifier|*
+name|type_arg
 decl_stmt|;
 block|{
 struct|struct
@@ -5572,6 +5583,16 @@ argument_list|,
 name|dm
 argument_list|)
 expr_stmt|;
+comment|/* Assume the first argument is not a type.  */
+if|if
+condition|(
+name|type_arg
+condition|)
+operator|*
+name|type_arg
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Is this a vendor-extended operator?  */
 if|if
 condition|(
@@ -5647,6 +5668,46 @@ operator|*
 name|num_args
 operator|=
 literal|0
+expr_stmt|;
+return|return
+name|STATUS_OK
+return|;
+block|}
+comment|/* Is it the sizeof variant that takes a type?  */
+if|if
+condition|(
+name|c0
+operator|==
+literal|'s'
+operator|&&
+name|c1
+operator|==
+literal|'t'
+condition|)
+block|{
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|" sizeof"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|num_args
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|type_arg
+condition|)
+operator|*
+name|type_arg
+operator|=
+literal|1
 expr_stmt|;
 return|return
 name|STATUS_OK
@@ -10303,6 +10364,9 @@ block|{
 name|int
 name|num_args
 decl_stmt|;
+name|int
+name|type_arg
+decl_stmt|;
 name|status_t
 name|status
 init|=
@@ -10330,6 +10394,9 @@ literal|1
 argument_list|,
 operator|&
 name|num_args
+argument_list|,
+operator|&
+name|type_arg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10429,6 +10496,19 @@ literal|'('
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type_arg
+condition|)
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_type
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_expression

@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-bpT:0x10000000 -bpD:0x20000000 %{!r:-btextro} -bnodelcsect\    %{static:-bnso %(link_syscalls) } %{shared:-bM:SRE %{!e:-bnoentry}}\    %{!maix64:%{!shared:%{g*: %(link_libg) }}} %{maix64:-b64}"
+value|"-bpT:0x10000000 -bpD:0x20000000 %{!r:-btextro} -bnodelcsect\    %{static:-bnso %(link_syscalls) } %{shared:-bM:SRE %{!e:-bnoentry}}\    %{!maix64:%{!shared:%{g*: %(link_libg) }}} %{maix64:-b64}\    %{mpe:-binitfini:poe_remote_main}"
 end_define
 
 begin_undef
@@ -238,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"%{!shared:\    %{mpe:%{pg:/usr/lpp/ppe.poe/lib/gcrt0.o}\          %{!pg:%{p:/usr/lpp/ppe.poe/lib/mcrt0.o}\                %{!p:/usr/lpp/ppe.poe/lib/crt0.o}}}\    %{!mpe:\      %{maix64:%{pg:gcrt0_64%O%s}%{!pg:%{p:mcrt0_64%O%s}%{!p:crt0_64%O%s}}}\      %{!maix64:\        %{pthread:%{pg:gcrt0_r%O%s}%{!pg:%{p:mcrt0_r%O%s}%{!p:crt0_r%O%s}}}\        %{!pthread:%{pg:gcrt0%O%s}%{!pg:%{p:mcrt0%O%s}%{!p:crt0%O%s}}}}}}"
+value|"%{!shared:\    %{maix64:%{pg:gcrt0_64%O%s}%{!pg:%{p:mcrt0_64%O%s}%{!p:crt0_64%O%s}}}\    %{!maix64:\      %{pthread:%{pg:gcrt0_r%O%s}%{!pg:%{p:mcrt0_r%O%s}%{!p:crt0_r%O%s}}}\      %{!pthread:%{pg:gcrt0%O%s}%{!pg:%{p:mcrt0%O%s}%{!p:crt0%O%s}}}}}"
 end_define
 
 begin_comment

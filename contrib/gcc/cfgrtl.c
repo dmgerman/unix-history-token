@@ -3634,6 +3634,7 @@ name|succ_next
 condition|)
 block|{
 comment|/* Create the new structures.  */
+comment|/* Position the new block correctly relative to loop notes.  */
 name|note
 operator|=
 name|last_loop_beg_note
@@ -3643,6 +3644,80 @@ operator|->
 name|src
 operator|->
 name|end
+argument_list|)
+expr_stmt|;
+name|note
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|note
+argument_list|)
+expr_stmt|;
+comment|/* ... and ADDR_VECs.  */
+if|if
+condition|(
+name|note
+operator|!=
+name|NULL
+operator|&&
+name|GET_CODE
+argument_list|(
+name|note
+argument_list|)
+operator|==
+name|CODE_LABEL
+operator|&&
+name|NEXT_INSN
+argument_list|(
+name|note
+argument_list|)
+operator|&&
+name|GET_CODE
+argument_list|(
+name|NEXT_INSN
+argument_list|(
+name|note
+argument_list|)
+argument_list|)
+operator|==
+name|JUMP_INSN
+operator|&&
+operator|(
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|NEXT_INSN
+argument_list|(
+name|note
+argument_list|)
+argument_list|)
+argument_list|)
+operator|==
+name|ADDR_DIFF_VEC
+operator|||
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|NEXT_INSN
+argument_list|(
+name|note
+argument_list|)
+argument_list|)
+argument_list|)
+operator|==
+name|ADDR_VEC
+operator|)
+condition|)
+name|note
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|NEXT_INSN
+argument_list|(
+name|note
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|jump_block
@@ -3657,10 +3732,7 @@ name|index
 operator|+
 literal|1
 argument_list|,
-name|NEXT_INSN
-argument_list|(
 name|note
-argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -7809,7 +7881,7 @@ operator|&=
 operator|~
 name|EDGE_ABNORMAL
 expr_stmt|;
-comment|/* Check purposes we can have edge.  */
+comment|/* See if this edge is one we should keep.  */
 if|if
 condition|(
 operator|(
@@ -7825,6 +7897,7 @@ argument_list|(
 name|insn
 argument_list|)
 condition|)
+comment|/* A conditional jump can fall through into the next 	       block, so we should keep the edge.  */
 continue|continue;
 elseif|else
 if|if
@@ -7846,6 +7919,7 @@ argument_list|(
 name|insn
 argument_list|)
 condition|)
+comment|/* If the destination block is the target of the jump, 	       keep the edge.  */
 continue|continue;
 elseif|else
 if|if
@@ -7861,7 +7935,27 @@ argument_list|(
 name|insn
 argument_list|)
 condition|)
+comment|/* If the destination block is the exit block, and this 	       instruction is a return, then keep the edge.  */
 continue|continue;
+elseif|else
+if|if
+condition|(
+operator|(
+name|e
+operator|->
+name|flags
+operator|&
+name|EDGE_EH
+operator|)
+operator|&&
+name|can_throw_internal
+argument_list|(
+name|insn
+argument_list|)
+condition|)
+comment|/* Keep the edges that correspond to exceptions thrown by 	       this instruction.  */
+continue|continue;
+comment|/* We do not need this edge.  */
 name|purged
 operator|=
 name|true

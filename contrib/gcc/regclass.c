@@ -3189,6 +3189,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|SET_HARD_REG_BIT
+argument_list|(
+name|regs_invalidated_by_call
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

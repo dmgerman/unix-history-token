@@ -4284,6 +4284,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|gen_int_mode
+name|PARAMS
+argument_list|(
+operator|(
+name|HOST_WIDE_INT
+operator|,
+expr|enum
+name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* In rtl.c */
 end_comment

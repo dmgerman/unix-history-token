@@ -809,12 +809,6 @@ directive|undef
 name|BIGGEST_FIELD_ALIGNMENT
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|ADJUST_FIELD_ALIGN
-end_undef
-
 begin_comment
 comment|/* Use ELF style section commands.  */
 end_comment

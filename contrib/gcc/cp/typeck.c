@@ -19776,18 +19776,6 @@ name|x
 init|=
 name|exp
 decl_stmt|;
-if|if
-condition|(
-name|TREE_ADDRESSABLE
-argument_list|(
-name|x
-argument_list|)
-operator|==
-literal|1
-condition|)
-return|return
-literal|1
-return|;
 while|while
 condition|(
 literal|1
@@ -19852,6 +19840,7 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* FALLTHRU */
 case|case
 name|VAR_DECL
 case|:
@@ -19885,6 +19874,7 @@ argument_list|,
 literal|314
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 name|CONST_DECL
 case|:
@@ -19925,6 +19915,11 @@ name|x
 argument_list|)
 operator|=
 literal|1
+expr_stmt|;
+name|put_var_into_stack
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -22609,6 +22604,21 @@ comment|/* Produce (a ? (b = rhs) : (c = rhs)) 	   except that the RHS goes thro
 name|tree
 name|cond
 decl_stmt|;
+if|if
+condition|(
+name|lvalue_p
+argument_list|(
+name|rhs
+argument_list|)
+condition|)
+name|rhs
+operator|=
+name|stabilize_reference
+argument_list|(
+name|rhs
+argument_list|)
+expr_stmt|;
+else|else
 name|rhs
 operator|=
 name|save_expr

@@ -63,6 +63,10 @@ comment|/* Used to keep post-call psuedo/hard reg movements together with      t
 name|bool
 name|in_post_call_group_p
 decl_stmt|;
+comment|/* Set to the tail insn of the outermost libcall block.       When nonzero, we will mark each insn processed by sched_analyze_insn      with SCHED_GROUP_P to ensure libcalls are scheduled as a unit.  */
+name|rtx
+name|libcall_block_tail_insn
+decl_stmt|;
 comment|/* The maximum register number for the following arrays.  Before reload      this is max_reg_num; after reload it is FIRST_PSEUDO_REGISTER.  */
 name|int
 name|max_reg

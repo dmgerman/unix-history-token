@@ -1222,7 +1222,7 @@ name|CPTI_ABI
 block|,
 name|CPTI_TYPE_INFO_TYPE
 block|,
-name|CPTI_TINFO_DECL_TYPE
+name|CPTI_TYPE_INFO_PTR_TYPE
 block|,
 name|CPTI_ABORT_FNDECL
 block|,
@@ -1555,8 +1555,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|tinfo_decl_type
-value|cp_global_trees[CPTI_TINFO_DECL_TYPE]
+name|type_info_ptr_type
+value|cp_global_trees[CPTI_TYPE_INFO_PTR_TYPE]
 end_define
 
 begin_define
@@ -2485,6 +2485,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_gnu_binutils
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about things that will change when compiling    with an ABI-compliant compiler.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_abi
 decl_stmt|;
 end_decl_stmt
 
@@ -3473,12 +3484,17 @@ name|java_interface
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|non_zero_init
+range|:
+literal|1
+decl_stmt|;
 comment|/* When adding a flag here, consider whether or not it ought to      apply to a template instance if it applies to the template.  If      so, make sure to copy it in instantiate_class_template!  */
 comment|/* There are some bits left to fill out a 32-bit word.  Keep track      of this by updating the size of this bitfield whenever you add or      remove a flag.  */
 name|unsigned
 name|dummy
 range|:
-literal|8
+literal|7
 decl_stmt|;
 name|int
 name|vsize
@@ -4385,7 +4401,7 @@ value|(cp_has_mutable_p (NODE))
 end_define
 
 begin_comment
-comment|/*  Nonzero means that this class type is a non-POD class.  */
+comment|/* Nonzero means that this class type is a non-POD class.  */
 end_comment
 
 begin_define
@@ -4396,6 +4412,20 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|(TYPE_LANG_SPECIFIC (NODE)->non_pod_class)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this class contains pod types whose default    initialization is not a zero initialization (namely, pointers to    data members).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLASSTYPE_NON_ZERO_INIT_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_LANG_SPECIFIC (NODE)->non_zero_init)
 end_define
 
 begin_comment
@@ -14088,6 +14118,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|import_export_tinfo
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|tree
 name|build_cleanup
 name|PARAMS
@@ -15112,6 +15159,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
+name|build_forced_zero_init
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
 name|build_member_call
 name|PARAMS
 argument_list|(
@@ -15790,19 +15850,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|cxx_init_options
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|cxx_post_options
 name|PARAMS
 argument_list|(
 operator|(
@@ -17000,7 +17047,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|tinfo_decl_p
+name|unemitted_tinfo_decl_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -17426,6 +17473,21 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|look_for_overrides_here
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|check_final_overrider
 name|PARAMS
 argument_list|(
 operator|(
@@ -19220,6 +19282,19 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|pod_type_p
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|zero_init_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -21243,6 +21318,21 @@ name|N
 parameter_list|)
 value|(void) \  (((EXP) == 0) ? (fancy_abort (__FILE__, __LINE__, __FUNCTION__), 0) : 0)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|force_store_init_value
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

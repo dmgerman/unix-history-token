@@ -69,19 +69,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|c_post_options
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ### When changing hooks, consider if ObjC needs changing too!! ### */
 end_comment
@@ -161,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|LANG_HOOKS_POST_OPTIONS
-value|c_post_options
+value|c_common_post_options
 end_define
 
 begin_undef
@@ -302,22 +289,6 @@ init|=
 name|LANG_HOOKS_INITIALIZER
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Post-switch processing.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|c_post_options
-parameter_list|()
-block|{
-name|c_common_post_options
-argument_list|()
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static

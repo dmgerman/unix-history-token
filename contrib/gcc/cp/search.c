@@ -558,21 +558,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|check_final_overrider
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|look_for_overrides_r
 name|PARAMS
 argument_list|(
@@ -6610,7 +6595,6 @@ comment|/* Check that virtual overrider OVERRIDER is acceptable for base functio
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|check_final_overrider
 parameter_list|(

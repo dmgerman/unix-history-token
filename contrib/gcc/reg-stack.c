@@ -10250,9 +10250,9 @@ name|output_stack
 operator|->
 name|reg
 index|[
-name|reg
+name|value_reg_high
 operator|-
-name|value_reg_low
+name|reg
 index|]
 operator|=
 name|reg

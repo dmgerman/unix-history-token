@@ -2423,7 +2423,7 @@ operator|~
 name|TFF_EXPR_IN_PARENS
 argument_list|)
 expr_stmt|;
-name|print_left_paren
+name|print_right_paren
 argument_list|(
 name|scratch_buffer
 argument_list|)

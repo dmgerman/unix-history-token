@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language-dependent node constructors for parse phase of GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Language-dependent node constructors for parse phase of GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -7424,6 +7424,60 @@ block|}
 end_function
 
 begin_comment
+comment|/* Returns 1 iff zero initialization of type T means actually storing    zeros in it.  */
+end_comment
+
+begin_function
+name|int
+name|zero_init_p
+parameter_list|(
+name|t
+parameter_list|)
+name|tree
+name|t
+decl_stmt|;
+block|{
+name|t
+operator|=
+name|strip_array_types
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* NULL pointers to data members are initialized with -1.  */
+if|if
+condition|(
+name|TYPE_PTRMEM_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+comment|/* Classes that contain types that can't be zero-initialized, cannot      be zero-initialized themselves.  */
+if|if
+condition|(
+name|CLASS_TYPE_P
+argument_list|(
+name|t
+argument_list|)
+operator|&&
+name|CLASSTYPE_NON_ZERO_INIT_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Table of valid C++ attributes.  */
 end_comment
 
@@ -8301,7 +8355,8 @@ comment|/*defer_ok=*/
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
 name|TI_PENDING_TEMPLATE_FLAG
 argument_list|(
 name|DECL_TEMPLATE_INFO
@@ -8309,6 +8364,9 @@ argument_list|(
 name|fn
 argument_list|)
 argument_list|)
+condition|)
+return|return
+literal|1
 return|;
 block|}
 if|if
@@ -8713,6 +8771,28 @@ name|var
 argument_list|)
 operator|=
 name|DECL_ORIGIN
+argument_list|(
+name|nrv
+argument_list|)
+expr_stmt|;
+comment|/* Don't lose initialization info.  */
+name|DECL_INITIAL
+argument_list|(
+name|var
+argument_list|)
+operator|=
+name|DECL_INITIAL
+argument_list|(
+name|nrv
+argument_list|)
+expr_stmt|;
+comment|/* Don't forget that it needs to go in the stack.  */
+name|TREE_ADDRESSABLE
+argument_list|(
+name|var
+argument_list|)
+operator|=
+name|TREE_ADDRESSABLE
 argument_list|(
 name|nrv
 argument_list|)

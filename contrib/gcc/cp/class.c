@@ -374,30 +374,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|add_virtual_function
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|*
-operator|,
-name|tree
-operator|*
-operator|,
-name|int
-operator|*
-operator|,
-name|tree
-operator|,
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|tree
 name|delete_duplicate_fields_1
 name|PARAMS
@@ -949,9 +925,6 @@ operator|*
 operator|,
 name|tree
 operator|*
-operator|,
-name|tree
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -970,9 +943,6 @@ name|int
 operator|*
 operator|,
 name|int
-operator|*
-operator|,
-name|tree
 operator|*
 operator|,
 name|tree
@@ -4176,153 +4146,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Add a virtual function to all the appropriate vtables for the class    T.  DECL_VINDEX(X) should be error_mark_node, if we want to    allocate a new slot in our table.  If it is error_mark_node, we    know that no other function from another vtable is overridden by X.    VFUNS_P keeps track of how many virtuals there are in our    main vtable for the type, and we build upon the NEW_VIRTUALS list    and return it.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|add_virtual_function
-parameter_list|(
-name|new_virtuals_p
-parameter_list|,
-name|overridden_virtuals_p
-parameter_list|,
-name|vfuns_p
-parameter_list|,
-name|fndecl
-parameter_list|,
-name|t
-parameter_list|)
-name|tree
-modifier|*
-name|new_virtuals_p
-decl_stmt|;
-name|tree
-modifier|*
-name|overridden_virtuals_p
-decl_stmt|;
-name|int
-modifier|*
-name|vfuns_p
-decl_stmt|;
-name|tree
-name|fndecl
-decl_stmt|;
-name|tree
-name|t
-decl_stmt|;
-comment|/* Structure type.  */
-block|{
-name|tree
-name|new_virtual
-decl_stmt|;
-comment|/* If this function doesn't override anything from a base class, we      can just assign it a new DECL_VINDEX now.  Otherwise, if it does      override something, we keep it around and assign its DECL_VINDEX      later, in modify_all_vtables.  */
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|DECL_VINDEX
-argument_list|(
-name|fndecl
-argument_list|)
-argument_list|)
-operator|==
-name|INTEGER_CST
-condition|)
-comment|/* We've already dealt with this function.  */
-return|return;
-name|new_virtual
-operator|=
-name|make_node
-argument_list|(
-name|TREE_LIST
-argument_list|)
-expr_stmt|;
-name|BV_FN
-argument_list|(
-name|new_virtual
-argument_list|)
-operator|=
-name|fndecl
-expr_stmt|;
-name|BV_DELTA
-argument_list|(
-name|new_virtual
-argument_list|)
-operator|=
-name|integer_zero_node
-expr_stmt|;
-if|if
-condition|(
-name|DECL_VINDEX
-argument_list|(
-name|fndecl
-argument_list|)
-operator|==
-name|error_mark_node
-condition|)
-block|{
-comment|/* FNDECL is a new virtual function; it doesn't override any 	 virtual function in a base class.  */
-comment|/* We remember that this was the base sub-object for rtti.  */
-name|CLASSTYPE_RTTI
-argument_list|(
-name|t
-argument_list|)
-operator|=
-name|t
-expr_stmt|;
-comment|/* Now assign virtual dispatch information.  */
-name|set_vindex
-argument_list|(
-name|fndecl
-argument_list|,
-name|vfuns_p
-argument_list|)
-expr_stmt|;
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|fndecl
-argument_list|)
-operator|=
-name|t
-expr_stmt|;
-comment|/* Save the state we've computed on the NEW_VIRTUALS list.  */
-name|TREE_CHAIN
-argument_list|(
-name|new_virtual
-argument_list|)
-operator|=
-operator|*
-name|new_virtuals_p
-expr_stmt|;
-operator|*
-name|new_virtuals_p
-operator|=
-name|new_virtual
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* FNDECL overrides a function from a base class.  */
-name|TREE_CHAIN
-argument_list|(
-name|new_virtual
-argument_list|)
-operator|=
-operator|*
-name|overridden_virtuals_p
-expr_stmt|;
-operator|*
-name|overridden_virtuals_p
-operator|=
-name|new_virtual
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_escape
 end_escape
 
@@ -4723,6 +4546,17 @@ argument_list|(
 name|fns
 argument_list|)
 decl_stmt|;
+name|tree
+name|parms1
+decl_stmt|;
+name|tree
+name|parms2
+decl_stmt|;
+name|bool
+name|same
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|TREE_CODE
@@ -4736,37 +4570,9 @@ name|method
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|method
-argument_list|)
-operator|!=
-name|TEMPLATE_DECL
-condition|)
-block|{
-comment|/* [over.load] Member function declarations with the 		 same name and the same parameter types cannot be 		 overloaded if any of them is a static member 		 function declaration.  	         [namespace.udecl] When a using-declaration brings names 		 from a base class into a derived class scope, member 		 functions in the derived class override and/or hide member 		 functions with the same name and parameter types in a base 		 class (rather than conflicting).  */
-if|if
-condition|(
-operator|(
-name|DECL_STATIC_FUNCTION_P
-argument_list|(
-name|fn
-argument_list|)
-operator|!=
-name|DECL_STATIC_FUNCTION_P
-argument_list|(
-name|method
-argument_list|)
-operator|)
-operator|||
-name|using
-condition|)
-block|{
-name|tree
+comment|/* [over.load] Member function declarations with the 	     same name and the same parameter types cannot be 	     overloaded if any of them is a static member 	     function declaration.  	     [namespace.udecl] When a using-declaration brings names 	     from a base class into a derived class scope, member 	     functions in the derived class override and/or hide member 	     functions with the same name and parameter types in a base 	     class (rather than conflicting).  */
 name|parms1
-init|=
+operator|=
 name|TYPE_ARG_TYPES
 argument_list|(
 name|TREE_TYPE
@@ -4774,10 +4580,9 @@ argument_list|(
 name|fn
 argument_list|)
 argument_list|)
-decl_stmt|;
-name|tree
+expr_stmt|;
 name|parms2
-init|=
+operator|=
 name|TYPE_ARG_TYPES
 argument_list|(
 name|TREE_TYPE
@@ -4785,17 +4590,10 @@ argument_list|(
 name|method
 argument_list|)
 argument_list|)
-decl_stmt|;
-name|int
-name|same
-init|=
-literal|1
-decl_stmt|;
-comment|/* Compare the quals on the 'this' parm.  Don't compare 		     the whole types, as used functions are treated as 		     coming from the using class in overload resolution.  */
+expr_stmt|;
+comment|/* Compare the quals on the 'this' parm.  Don't compare 	     the whole types, as used functions are treated as 	     coming from the using class in overload resolution.  */
 if|if
 condition|(
-name|using
-operator|&&
 operator|!
 name|DECL_STATIC_FUNCTION_P
 argument_list|(
@@ -4876,6 +4674,33 @@ name|parms1
 argument_list|,
 name|parms2
 argument_list|)
+operator|&&
+operator|(
+operator|!
+name|DECL_CONV_FN_P
+argument_list|(
+name|fn
+argument_list|)
+operator|||
+name|same_type_p
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|fn
+argument_list|)
+argument_list|)
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|method
+argument_list|)
+argument_list|)
+argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -4892,41 +4717,22 @@ condition|)
 comment|/* Defer to the local function.  */
 return|return;
 else|else
-name|error
+block|{
+name|cp_error_at
 argument_list|(
 literal|"`%#D' and `%#D' cannot be overloaded"
 argument_list|,
+name|method
+argument_list|,
 name|fn
 argument_list|,
 name|method
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|decls_match
-argument_list|(
-name|fn
-argument_list|,
-name|method
-argument_list|)
-condition|)
-continue|continue;
-comment|/* There has already been a declaration of this method 	     or member template.  */
-name|cp_error_at
-argument_list|(
-literal|"`%D' has already been declared in `%T'"
-argument_list|,
-name|method
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-comment|/* We don't call duplicate_decls here to merge the 	     declarations because that will confuse things if the 	     methods have inline definitions.  In particular, we 	     will crash while processing the definitions.  */
+comment|/* We don't call duplicate_decls here to merge 		     the declarations because that will confuse 		     things if the methods have inline 		     definitions.  In particular, we will crash 		     while processing the definitions.  */
 return|return;
+block|}
+block|}
 block|}
 block|}
 comment|/* Actually insert the new method.  */
@@ -10298,6 +10104,17 @@ operator|==
 name|error_mark_node
 condition|)
 return|return;
+comment|/* Check for unsupported covariant returns again now that we've      calculated the base offsets.  */
+name|check_final_overrider
+argument_list|(
+name|TREE_PURPOSE
+argument_list|(
+name|overrider
+argument_list|)
+argument_list|,
+name|fn
+argument_list|)
+expr_stmt|;
 comment|/* Assume that we will produce a thunk that convert all the way to      the final overrider, and not to an intermediate virtual base.  */
 name|virtual_base
 operator|=
@@ -10645,7 +10462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Update all of the primary and secondary vtables for T.  Create new    vtables as required, and initialize their RTTI information.  Each    of the functions in OVERRIDDEN_VIRTUALS overrides a virtual    function from a base class; find and modify the appropriate entries    to point to the overriding functions.  Returns a list, in    declaration order, of the functions that are overridden in this    class, but do not appear in the primary base class vtable, and    which should therefore be appended to the end of the vtable for T.  */
+comment|/* Update all of the primary and secondary vtables for T.  Create new    vtables as required, and initialize their RTTI information.  Each    of the functions in VIRTUALS is declared in T and may override a    virtual function from a base class; find and modify the appropriate    entries to point to the overriding functions.  Returns a list, in    declaration order, of the virtual functions that are declared in T,    but do not appear in the primary base class vtable, and which    should therefore be appended to the end of the vtable for T.  */
 end_comment
 
 begin_function
@@ -10657,7 +10474,7 @@ name|t
 parameter_list|,
 name|vfuns_p
 parameter_list|,
-name|overridden_virtuals
+name|virtuals
 parameter_list|)
 name|tree
 name|t
@@ -10667,7 +10484,7 @@ modifier|*
 name|vfuns_p
 decl_stmt|;
 name|tree
-name|overridden_virtuals
+name|virtuals
 decl_stmt|;
 block|{
 name|tree
@@ -10705,13 +10522,13 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-comment|/* Include overriding functions for secondary vtables in our primary      vtable.  */
+comment|/* Add virtual functions not already in our primary vtable. These      will be both those introduced by this class, and those overridden      from secondary bases.  It does not include virtuals merely      inherited from secondary bases.  */
 for|for
 control|(
 name|fnsp
 operator|=
 operator|&
-name|overridden_virtuals
+name|virtuals
 init|;
 operator|*
 name|fnsp
@@ -10730,12 +10547,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|BINFO_VIRTUALS
-argument_list|(
-name|binfo
-argument_list|)
-operator|||
-operator|!
 name|value_member
 argument_list|(
 name|fn
@@ -10745,6 +10556,13 @@ argument_list|(
 name|binfo
 argument_list|)
 argument_list|)
+operator|||
+name|DECL_VINDEX
+argument_list|(
+name|fn
+argument_list|)
+operator|==
+name|error_mark_node
 condition|)
 block|{
 comment|/* Set the vtable index.  */
@@ -10780,7 +10598,7 @@ argument_list|)
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* This is an overridden function not already in our 	     vtable.  Keep it.  */
+comment|/* This is a function not already in our vtable.  Keep it.  */
 name|fnsp
 operator|=
 operator|&
@@ -10804,7 +10622,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|overridden_virtuals
+name|virtuals
 return|;
 block|}
 end_function
@@ -11063,8 +10881,7 @@ argument_list|(
 name|decl
 argument_list|)
 condition|)
-block|{
-comment|/* Set DECL_VINDEX to a value that is neither an 	 INTEGER_CST nor the error_mark_node so that 	 add_virtual_function will realize this is an 	 overriding function.  */
+comment|/* Set DECL_VINDEX to a value that is neither an INTEGER_CST nor        the error_mark_node so that we know it is an overriding        function.  */
 name|DECL_VINDEX
 argument_list|(
 name|decl
@@ -11072,7 +10889,6 @@ argument_list|)
 operator|=
 name|decl
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|DECL_VIRTUAL_P
@@ -11083,12 +10899,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|DECL_VINDEX
 argument_list|(
 name|decl
 argument_list|)
-operator|==
-name|NULL_TREE
 condition|)
 name|DECL_VINDEX
 argument_list|(
@@ -13455,6 +13270,21 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|zero_init_p
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|CLASSTYPE_NON_ZERO_INIT_P
+argument_list|(
+name|t
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 comment|/* If any field is const, the structure type is pseudo-const.  */
 if|if
 condition|(
@@ -14871,6 +14701,14 @@ name|CLASSTYPE_USER_ALIGN
 argument_list|(
 name|basetype
 argument_list|)
+expr_stmt|;
+comment|/* Tell the backend not to round up to TYPE_ALIGN.  */
+name|DECL_PACKED
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -16912,7 +16750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If T needs a pointer to its virtual function table, set TYPE_VFIELD    accordingly.  If a new vfield was created (because T doesn't have a    primary base class), then the newly created field is returned.  It    is not added to the TYPE_FIELDS list; it is the caller's    responsibility to do that.  */
+comment|/* If T needs a pointer to its virtual function table, set TYPE_VFIELD    accordingly.  If a new vfield was created (because T doesn't have a    primary base class), then the newly created field is returned.  It    is not added to the TYPE_FIELDS list; it is the caller's    responsibility to do that.  Accumulate declared virtual functions    on VIRTUALS_P.  */
 end_comment
 
 begin_function
@@ -16926,9 +16764,7 @@ name|empty_p
 parameter_list|,
 name|vfuns_p
 parameter_list|,
-name|new_virtuals_p
-parameter_list|,
-name|overridden_virtuals_p
+name|virtuals_p
 parameter_list|)
 name|tree
 name|t
@@ -16943,17 +16779,13 @@ name|vfuns_p
 decl_stmt|;
 name|tree
 modifier|*
-name|new_virtuals_p
-decl_stmt|;
-name|tree
-modifier|*
-name|overridden_virtuals_p
+name|virtuals_p
 decl_stmt|;
 block|{
 name|tree
 name|fn
 decl_stmt|;
-comment|/* Loop over the virtual functions, adding them to our various      vtables.  */
+comment|/* Collect the virtual functions declared in T.  */
 for|for
 control|(
 name|fn
@@ -16984,20 +16816,54 @@ name|DECL_MAYBE_IN_CHARGE_DESTRUCTOR_P
 argument_list|(
 name|fn
 argument_list|)
-condition|)
-name|add_virtual_function
+operator|&&
+name|TREE_CODE
 argument_list|(
-name|new_virtuals_p
-argument_list|,
-name|overridden_virtuals_p
-argument_list|,
-name|vfuns_p
-argument_list|,
+name|DECL_VINDEX
+argument_list|(
 name|fn
-argument_list|,
-name|t
 argument_list|)
+argument_list|)
+operator|!=
+name|INTEGER_CST
+condition|)
+block|{
+name|tree
+name|new_virtual
+init|=
+name|make_node
+argument_list|(
+name|TREE_LIST
+argument_list|)
+decl_stmt|;
+name|BV_FN
+argument_list|(
+name|new_virtual
+argument_list|)
+operator|=
+name|fn
 expr_stmt|;
+name|BV_DELTA
+argument_list|(
+name|new_virtual
+argument_list|)
+operator|=
+name|integer_zero_node
+expr_stmt|;
+name|TREE_CHAIN
+argument_list|(
+name|new_virtual
+argument_list|)
+operator|=
+operator|*
+name|virtuals_p
+expr_stmt|;
+operator|*
+name|virtuals_p
+operator|=
+name|new_virtual
+expr_stmt|;
+block|}
 comment|/* If we couldn't find an appropriate base class, create a new field      here.  Even if there weren't any new virtual functions, we might need a      new virtual function table if we're supposed to include vptrs in      all classes that need them.  */
 if|if
 condition|(
@@ -17009,7 +16875,7 @@ argument_list|)
 operator|&&
 operator|(
 operator|*
-name|vfuns_p
+name|virtuals_p
 operator|||
 name|TYPE_CONTAINS_VPTR_P
 argument_list|(
@@ -17621,6 +17487,11 @@ name|unsigned
 name|HOST_WIDE_INT
 name|eoc
 decl_stmt|;
+name|bool
+name|first_vbase
+init|=
+name|true
+decl_stmt|;
 if|if
 condition|(
 name|CLASSTYPE_N_BASECLASSES
@@ -17885,6 +17756,45 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If the first virtual base might have been placed at a 	     lower address, had we started from CLASSTYPE_SIZE, rather 	     than TYPE_SIZE, issue a warning.  There can be both false 	     positives and false negatives from this warning in rare 	     cases; to deal with all the possibilities would probably 	     require performing both layout algorithms and comparing 	     the results which is not particularly tractable.  */
+if|if
+condition|(
+name|warn_abi
+operator|&&
+name|first_vbase
+operator|&&
+name|tree_int_cst_lt
+argument_list|(
+name|size_binop
+argument_list|(
+name|CEIL_DIV_EXPR
+argument_list|,
+name|round_up
+argument_list|(
+name|CLASSTYPE_SIZE
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+name|desired_align
+argument_list|)
+argument_list|,
+name|bitsize_unit_node
+argument_list|)
+argument_list|,
+name|BINFO_OFFSET
+argument_list|(
+name|vbase
+argument_list|)
+argument_list|)
+condition|)
+name|warning
+argument_list|(
+literal|"offset of virtual base `%T' is not ABI-compliant and may change in a future version of GCC"
+argument_list|,
+name|basetype
+argument_list|)
+expr_stmt|;
 comment|/* Keep track of the offsets assigned to this virtual base.  */
 name|record_subobject_offsets
 argument_list|(
@@ -17903,6 +17813,10 @@ argument_list|,
 comment|/*vbases_p=*/
 literal|0
 argument_list|)
+expr_stmt|;
+name|first_vbase
+operator|=
+name|false
 expr_stmt|;
 block|}
 block|}
@@ -18328,7 +18242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Calculate the TYPE_SIZE, TYPE_ALIGN, etc for T.  Calculate    BINFO_OFFSETs for all of the base-classes.  Position the vtable    pointer.  */
+comment|/* Calculate the TYPE_SIZE, TYPE_ALIGN, etc for T.  Calculate    BINFO_OFFSETs for all of the base-classes.  Position the vtable    pointer.  Accumulate declared virtual functions on VIRTUALS_P. */
 end_comment
 
 begin_function
@@ -18342,9 +18256,7 @@ name|empty_p
 parameter_list|,
 name|vfuns_p
 parameter_list|,
-name|new_virtuals_p
-parameter_list|,
-name|overridden_virtuals_p
+name|virtuals_p
 parameter_list|)
 name|tree
 name|t
@@ -18359,11 +18271,7 @@ name|vfuns_p
 decl_stmt|;
 name|tree
 modifier|*
-name|new_virtuals_p
-decl_stmt|;
-name|tree
-modifier|*
-name|overridden_virtuals_p
+name|virtuals_p
 decl_stmt|;
 block|{
 name|tree
@@ -18385,6 +18293,12 @@ decl_stmt|;
 comment|/* Maps offsets (represented as INTEGER_CSTs) to a TREE_LIST of      types that appear at that offset.  */
 name|splay_tree
 name|empty_base_offsets
+decl_stmt|;
+comment|/* True if the last field layed out was a bit-field.  */
+name|bool
+name|last_field_was_bitfield
+init|=
+name|false
 decl_stmt|;
 comment|/* Keep track of the first non-static data member.  */
 name|non_static_data_members
@@ -18421,9 +18335,7 @@ name|empty_p
 argument_list|,
 name|vfuns_p
 argument_list|,
-name|new_virtuals_p
-argument_list|,
-name|overridden_virtuals_p
+name|virtuals_p
 argument_list|)
 expr_stmt|;
 comment|/* The vptr is always the first thing in the class.  */
@@ -18689,6 +18601,42 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* If a bit-field does not immediately follow another bit-field, 	 and yet it starts in the middle of a byte, we have failed to 	 comply with the ABI.  */
+if|if
+condition|(
+name|warn_abi
+operator|&&
+name|DECL_C_BIT_FIELD
+argument_list|(
+name|field
+argument_list|)
+operator|&&
+operator|!
+name|last_field_was_bitfield
+operator|&&
+operator|!
+name|integer_zerop
+argument_list|(
+name|size_binop
+argument_list|(
+name|TRUNC_MOD_EXPR
+argument_list|,
+name|DECL_FIELD_BIT_OFFSET
+argument_list|(
+name|field
+argument_list|)
+argument_list|,
+name|bitsize_unit_node
+argument_list|)
+argument_list|)
+condition|)
+name|cp_warning_at
+argument_list|(
+literal|"offset of `%D' is not ABI-compliant and may change in a future version of GCC"
+argument_list|,
+name|field
+argument_list|)
+expr_stmt|;
 comment|/* If we needed additional padding after this field, add it 	 now.  */
 if|if
 condition|(
@@ -18751,6 +18699,13 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
+name|last_field_was_bitfield
+operator|=
+name|DECL_C_BIT_FIELD
+argument_list|(
+name|field
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* It might be the case that we grew the class to allocate a      zero-sized base class.  That won't be reflected in RLI, yet,      because we are willing to overlay multiple bases at the same      offset.  However, now we need to make sure that RLI is big enough      to reflect the entire class.  */
 name|eoc
@@ -18879,6 +18834,38 @@ operator|=
 name|size_zero_node
 expr_stmt|;
 block|}
+comment|/* If this is a POD, we can't reuse its tail padding.  */
+elseif|else
+if|if
+condition|(
+operator|!
+name|CLASSTYPE_NON_POD_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+name|CLASSTYPE_SIZE
+argument_list|(
+name|t
+argument_list|)
+operator|=
+name|TYPE_SIZE
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|CLASSTYPE_SIZE_UNIT
+argument_list|(
+name|t
+argument_list|)
+operator|=
+name|TYPE_SIZE_UNIT
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|CLASSTYPE_SIZE
@@ -18976,15 +18963,9 @@ decl_stmt|;
 name|int
 name|vfuns
 decl_stmt|;
-comment|/* The NEW_VIRTUALS is a TREE_LIST.  The TREE_VALUE of each node is      a FUNCTION_DECL.  Each of these functions is a virtual function      declared in T that does not override any virtual function from a      base class.  */
+comment|/* A TREE_LIST.  The TREE_VALUE of each node is a FUNCTION_DECL. */
 name|tree
-name|new_virtuals
-init|=
-name|NULL_TREE
-decl_stmt|;
-comment|/* The OVERRIDDEN_VIRTUALS list is like the NEW_VIRTUALS list,      except that each declaration here overrides the declaration from      a base class.  */
-name|tree
-name|overridden_virtuals
+name|virtuals
 init|=
 name|NULL_TREE
 decl_stmt|;
@@ -19091,10 +19072,7 @@ operator|&
 name|vfuns
 argument_list|,
 operator|&
-name|new_virtuals
-argument_list|,
-operator|&
-name|overridden_virtuals
+name|virtuals
 argument_list|)
 expr_stmt|;
 comment|/* Make sure that we get our own copy of the vfield FIELD_DECL.  */
@@ -19206,7 +19184,7 @@ argument_list|,
 literal|20010726
 argument_list|)
 expr_stmt|;
-name|overridden_virtuals
+name|virtuals
 operator|=
 name|modify_all_vtables
 argument_list|(
@@ -19217,7 +19195,7 @@ name|vfuns
 argument_list|,
 name|nreverse
 argument_list|(
-name|overridden_virtuals
+name|virtuals
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -19258,9 +19236,7 @@ expr_stmt|;
 comment|/* If necessary, create the primary vtable for this class.  */
 if|if
 condition|(
-name|new_virtuals
-operator|||
-name|overridden_virtuals
+name|virtuals
 operator|||
 name|TYPE_CONTAINS_VPTR_P
 argument_list|(
@@ -19268,13 +19244,6 @@ name|t
 argument_list|)
 condition|)
 block|{
-name|new_virtuals
-operator|=
-name|nreverse
-argument_list|(
-name|new_virtuals
-argument_list|)
-expr_stmt|;
 comment|/* We must enter these virtuals into the table.  */
 if|if
 condition|(
@@ -19419,7 +19388,7 @@ argument_list|)
 operator|=
 name|vfuns
 expr_stmt|;
-comment|/* Entries for virtual functions defined in the primary base are 	 followed by entries for new functions unique to this class.  */
+comment|/* Add entries for virtual functions introduced by this class.  */
 name|TYPE_BINFO_VIRTUALS
 argument_list|(
 name|t
@@ -19432,23 +19401,7 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|,
-name|new_virtuals
-argument_list|)
-expr_stmt|;
-comment|/* Finally, add entries for functions that override virtuals 	 from non-primary bases.  */
-name|TYPE_BINFO_VIRTUALS
-argument_list|(
-name|t
-argument_list|)
-operator|=
-name|chainon
-argument_list|(
-name|TYPE_BINFO_VIRTUALS
-argument_list|(
-name|t
-argument_list|)
-argument_list|,
-name|overridden_virtuals
+name|virtuals
 argument_list|)
 expr_stmt|;
 block|}

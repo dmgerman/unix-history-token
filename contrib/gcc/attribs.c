@@ -5161,13 +5161,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|assemble_alias
-argument_list|(
-name|decl
-argument_list|,
-name|id
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{

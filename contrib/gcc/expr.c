@@ -29108,12 +29108,9 @@ name|target
 argument_list|,
 literal|0
 argument_list|,
-name|int_size_in_bytes
-argument_list|(
-name|TREE_TYPE
+name|int_expr_size
 argument_list|(
 name|exp
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -17523,6 +17523,9 @@ operator|->
 name|insn
 argument_list|)
 decl_stmt|;
+name|rtx
+name|seq
+decl_stmt|;
 comment|/* We can save some effort by offsetting the address on 		 architectures with offsettable memory references.  */
 if|if
 condition|(
@@ -17579,6 +17582,9 @@ operator|=
 name|reg
 expr_stmt|;
 block|}
+name|start_sequence
+argument_list|()
+expr_stmt|;
 comment|/* Make sure the address operand is valid for prefetch.  */
 if|if
 condition|(
@@ -17628,7 +17634,7 @@ argument_list|,
 name|loc
 argument_list|)
 expr_stmt|;
-name|emit_insn_before
+name|emit_insn
 argument_list|(
 name|gen_prefetch
 argument_list|(
@@ -17649,6 +17655,19 @@ argument_list|(
 literal|3
 argument_list|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|seq
+operator|=
+name|gen_sequence
+argument_list|()
+expr_stmt|;
+name|end_sequence
+argument_list|()
+expr_stmt|;
+name|emit_insn_before
+argument_list|(
+name|seq
 argument_list|,
 name|before_insn
 argument_list|)
@@ -24457,7 +24476,7 @@ operator|&&
 operator|(
 name|v
 operator|->
-name|always_computable
+name|always_executed
 operator|||
 name|last_use_this_basic_block
 argument_list|(

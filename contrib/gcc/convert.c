@@ -709,7 +709,7 @@ break|break;
 case|case
 name|LSHIFT_EXPR
 case|:
-comment|/* We can pass truncation down through left shifting 	     when the shift count is a nonnegative constant.  */
+comment|/* We can pass truncation down through left shifting 	     when the shift count is a nonnegative constant and 	     the target type is unsigned.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -735,6 +735,11 @@ argument_list|)
 argument_list|)
 operator|>=
 literal|0
+operator|&&
+name|TREE_UNSIGNED
+argument_list|(
+name|type
+argument_list|)
 operator|&&
 name|TREE_CODE
 argument_list|(
@@ -1023,7 +1028,7 @@ operator|!=
 name|inprec
 condition|)
 block|{
-comment|/* Don't do unsigned arithmetic where signed was wanted, 		       or vice versa. 		       Exception: if both of the original operands were 		       unsigned then can safely do the work as unsigned. 		       And we may need to do it as unsigned 		       if we truncate to the original size.  */
+comment|/* Don't do unsigned arithmetic where signed was wanted, 		       or vice versa. 		       Exception: if both of the original operands were 		       unsigned then we can safely do the work as unsigned; 		       if we are distributing through a LSHIFT_EXPR, we must 		       do the work as unsigned to avoid a signed overflow. 		       And we may need to do it as unsigned 		       if we truncate to the original size.  */
 name|typex
 operator|=
 operator|(
@@ -1053,6 +1058,10 @@ name|arg1
 argument_list|)
 argument_list|)
 operator|)
+operator|||
+name|ex_form
+operator|==
+name|LSHIFT_EXPR
 operator|)
 condition|?
 name|unsigned_type

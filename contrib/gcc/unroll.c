@@ -11267,7 +11267,7 @@ return|return
 name|const0_rtx
 return|;
 block|}
-comment|/* Try to calculate the final value as a function of the biv it depends      upon.  The only exit from the loop must be the fall through at the bottom      (otherwise it may not have its final value when the loop exits).  */
+comment|/* Try to calculate the final value as a function of the biv it depends      upon.  The only exit from the loop must be the fall through at the bottom      and the insn that sets the giv must be executed on every iteration      (otherwise the giv may not have its final value when the loop exits).  */
 comment|/* ??? Can calculate the final giv value by subtracting off the      extra biv increments times the giv's mult_val.  The loop must have      only one exit for this to work, but the loop iterations does not need      to be known.  */
 if|if
 condition|(
@@ -11279,6 +11279,10 @@ operator|!
 name|loop
 operator|->
 name|exit_count
+operator|&&
+name|v
+operator|->
+name|always_executed
 condition|)
 block|{
 comment|/* ?? It is tempting to use the biv's value here since these insns will 	 be put after the loop, and hence the biv will have its final value 	 then.  However, this fails if the biv is subsequently eliminated. 	 Perhaps determine whether biv's are eliminable before trying to 	 determine whether giv's are replaceable so that we can use the 	 biv value here if it is not eliminable.  */

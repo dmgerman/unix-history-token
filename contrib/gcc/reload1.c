@@ -28827,6 +28827,8 @@ if|if
 condition|(
 name|pseudo
 operator|&&
+name|optimize
+operator|&&
 name|GET_CODE
 argument_list|(
 name|pseudo

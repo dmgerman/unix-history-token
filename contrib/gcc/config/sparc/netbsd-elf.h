@@ -47,7 +47,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC64
 define|\
-value|"-D__sparc64__ -D__arch64__ -D__sparc_v9__ %{posix:-D_POSIX_SOURCE}"
+value|"-D__sparc64__ -D__sparc_v9__ -D_LP64 %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -66,6 +66,52 @@ directive|define
 name|CPP_SUBTARGET_SPEC32
 value|"-D__sparc %{posix:-D_POSIX_SOURCE}"
 end_define
+
+begin_comment
+comment|/* CPP_ARCH32_SPEC and CPP_ARCH64_SPEC are wrong from sparc/sparc.h; we    always want the non-SPARC_BI_ARCH versions, since the SPARC_BI_ARCH    versions define __SIZE_TYPE__ and __PTRDIFF_TYPE__ incorrectly for    NetBSD.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_ARCH32_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_ARCH32_SPEC
+value|"-D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_ARCH64_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_ARCH64_SPEC
+value|"-D__arch64__ -Acpu=sparc64 -Amachine=sparc64"
+end_define
+
+begin_comment
+comment|/* sparc/sparc.h defines NO_BUILTIN_SIZE_TYPE and NO_BUILTIN_PTRDIFF_TYPE    if SPARC_BI_ARCH is defined.  This is wrong for NetBSD; size_t and    ptrdiff_t do not change for 32-bit vs. 64-bit.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_BUILTIN_PTRDIFF_TYPE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|NO_BUILTIN_SIZE_TYPE
+end_undef
 
 begin_comment
 comment|/* SIZE_TYPE and PTRDIFF_TYPE are wrong from sparc/sparc.h.  */
@@ -280,18 +326,6 @@ end_define
 begin_comment
 comment|/*  * Clean up afterwards generic SPARC ELF configuration.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|TRANSFER_FROM_TRAMPOLINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TRANSFER_FROM_TRAMPOLINE
-end_define
 
 begin_comment
 comment|/* FIXME: Aren't these supposed to be available for SPARC ELF?  */
