@@ -17,6 +17,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -27,11 +28,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_save.c,v 8.15 1998/01/26 22:40:08 halley Exp $"
+literal|"$Id: db_save.c,v 8.26 1999/10/13 16:39:02 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996, 1997 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -82,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -329,19 +337,6 @@ decl_stmt|;
 name|int
 name|bytes
 init|=
-operator|(
-name|type
-operator|==
-name|T_NS
-operator|)
-condition|?
-name|DATASIZE
-argument_list|(
-name|size
-argument_list|)
-operator|+
-name|INT32SZ
-else|:
 name|DATASIZE
 argument_list|(
 name|size
@@ -368,6 +363,19 @@ condition|)
 name|panic
 argument_list|(
 literal|"savedata: memget"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|class
+operator|>
+name|CLASS_MAX
+condition|)
+name|panic
+argument_list|(
+literal|"savedata: bad class"
 argument_list|,
 name|NULL
 argument_list|)
@@ -437,6 +445,12 @@ literal|0
 expr_stmt|;
 name|dp
 operator|->
+name|d_secure
+operator|=
+name|DB_S_INSECURE
+expr_stmt|;
+name|dp
+operator|->
 name|d_rcode
 operator|=
 name|NOERROR
@@ -473,38 +487,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-name|int
-name|hashsizes
-index|[]
-init|=
-block|{
-comment|/* hashtable sizes */
-literal|2
-block|,
-literal|11
-block|,
-literal|113
-block|,
-literal|337
-block|,
-literal|977
-block|,
-literal|2053
-block|,
-literal|4073
-block|,
-literal|8011
-block|,
-literal|16001
-block|,
-literal|99887
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Allocate a data buffer& save data.  */

@@ -15,6 +15,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -25,11 +26,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 8.6 1997/05/21 19:49:58 halley Exp $"
+literal|"$Id: send.c,v 8.9 1999/10/13 16:39:19 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,77 +149,6 @@ end_decl_stmt
 begin_comment
 comment|/* socket used for communications */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FD_SET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NFDBITS
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_SETSIZE
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_SET
-parameter_list|(
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS] |= (1<< ((n) % NFDBITS)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_CLR
-parameter_list|(
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS]&= ~(1<< ((n) % NFDBITS)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_ISSET
-parameter_list|(
-name|n
-parameter_list|,
-name|p
-parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS]& (1<< ((n) % NFDBITS)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FD_ZERO
-parameter_list|(
-name|p
-parameter_list|)
-value|memset((p), 0, sizeof(*(p)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|unsigned
@@ -352,7 +283,7 @@ name|sa
 decl_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -403,7 +334,7 @@ expr_stmt|;
 name|v_circuit
 operator|=
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -429,7 +360,7 @@ literal|0
 init|;
 name|try
 operator|<
-name|_res
+name|res
 operator|.
 name|retry
 condition|;
@@ -452,7 +383,7 @@ decl_stmt|;
 comment|/* 			 * Use virtual circuit; 			 * at most one attempt per server. 			 */
 name|try
 operator|=
-name|_res
+name|res
 operator|.
 name|retry
 expr_stmt|;
@@ -487,7 +418,7 @@ name|errno
 expr_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -530,7 +461,7 @@ name|errno
 expr_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -635,7 +566,7 @@ name|errno
 expr_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -724,7 +655,7 @@ name|errno
 expr_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -790,7 +721,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -868,7 +799,7 @@ name|errno
 expr_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -997,7 +928,7 @@ name|errno
 expr_stmt|;
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1046,7 +977,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1082,7 +1013,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1132,7 +1063,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1153,7 +1084,7 @@ operator|.
 name|tv_sec
 operator|=
 operator|(
-name|_res
+name|res
 operator|.
 name|retrans
 operator|<<
@@ -1232,7 +1163,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1255,7 +1186,7 @@ block|{
 comment|/* 				 * timeout 				 */
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1321,7 +1252,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1350,7 +1281,7 @@ block|{
 comment|/* 				 * response from old query, ignore it 				 */
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1382,7 +1313,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1397,7 +1328,7 @@ block|{
 comment|/* 				 * get rest of answer; 				 * use TCP with same server. 				 */
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1432,7 +1363,7 @@ block|}
 block|}
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&
@@ -1441,7 +1372,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_res
+name|res
 operator|.
 name|options
 operator|&

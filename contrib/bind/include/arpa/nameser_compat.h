@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.9 1998/03/20 23:25:10 halley Exp $  */
+comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.11 1999/01/02 08:00:58 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -821,6 +821,18 @@ name|NOTZONE
 value|ns_r_notzone
 end_define
 
+begin_comment
+comment|/*#define BADSIG		ns_r_badsig*/
+end_comment
+
+begin_comment
+comment|/*#define BADKEY		ns_r_badkey*/
+end_comment
+
+begin_comment
+comment|/*#define BADTIME		ns_r_badtime*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1078,6 +1090,13 @@ define|#
 directive|define
 name|T_NAPTR
 value|ns_t_naptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_TSIG
+value|ns_t_tsig
 end_define
 
 begin_define

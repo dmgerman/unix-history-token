@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.39 1998/04/14 00:35:09 halley Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.89 1999/10/07 08:24:08 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -8,11 +8,15 @@ comment|/*  * Copyright (c) 1986  *    The Regents of the University of Californ
 end_comment
 
 begin_comment
-comment|/* Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996, 1997 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, Inc.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Check Point Software Technologies Incorporated not be used   * in advertising or publicity pertaining to distribution of the document   * or software without specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND CHECK POINT SOFTWARE TECHNOLOGIES   * INCORPORATED DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,   * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.     * IN NO EVENT SHALL CHECK POINT SOFTWARE TECHNOLOGIES INCORPRATED  * BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR   * ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT   * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -25,6 +29,17 @@ end_comment
 
 begin_comment
 comment|/*  * Timeout time should be around 1 minute or so.  Using the  * the current simplistic backoff strategy, the sequence  * retrys after 4, 8, and 16 seconds.  With 3 servers, this  * dies out in a little more than a minute.  * (sequence RETRYBASE, 2*RETRYBASE, 4*RETRYBASE... for MAXRETRY)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEWZONES
+value|64
+end_define
+
+begin_comment
+comment|/* must be a power of two. */
 end_comment
 
 begin_define
@@ -167,6 +182,47 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAX_REFRESH
+value|2419200
+end_define
+
+begin_comment
+comment|/* perform a refresh query at least */
+end_comment
+
+begin_comment
+comment|/* every 4 weeks*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_RETRY
+value|1209600
+end_define
+
+begin_comment
+comment|/* perform a retry after no more than 2 weeks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_EXPIRE
+value|31536000
+end_define
+
+begin_comment
+comment|/* expire a zone if we have not talked to */
+end_comment
+
+begin_comment
+comment|/* the primary in 1 year */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NADDRECS
 value|20
 end_define
@@ -252,6 +308,17 @@ begin_comment
 comment|/* arbitrary but bigger than most MTU's */
 end_comment
 
+begin_comment
+comment|/* maximum time to cache negative answers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MAX_NCACHE_TTL
+value|(3*60*60)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -289,115 +356,55 @@ begin_comment
 comment|/* What maintainance operations need to be performed sometime soon? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_RELOAD
-value|0x0001
-end_define
-
-begin_comment
-comment|/* db_reload() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_MAINT
-value|0x0002
-end_define
-
-begin_comment
-comment|/* ns_maint() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_ENDXFER
-value|0x0004
-end_define
-
-begin_comment
+begin_typedef
+typedef|typedef
+enum|enum
+name|need
+block|{
+name|main_need_zreload
+init|=
+literal|0
+block|,
+comment|/* ns_zreload() needed. */
+name|main_need_reload
+block|,
+comment|/* ns_reload() needed. */
+name|main_need_reconfig
+block|,
+comment|/* ns_reconfig() needed. */
+name|main_need_endxfer
+block|,
 comment|/* endxfer() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_ZONELOAD
-value|0x0008
-end_define
-
-begin_comment
+name|main_need_zoneload
+block|,
 comment|/* loadxfer() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_DUMP
-value|0x0010
-end_define
-
-begin_comment
+name|main_need_dump
+block|,
 comment|/* doadump() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_STATSDUMP
-value|0x0020
-end_define
-
-begin_comment
+name|main_need_statsdump
+block|,
 comment|/* ns_stats() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_EXIT
-value|0x0040
-end_define
-
-begin_comment
+name|main_need_exit
+block|,
 comment|/* exit() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_QRYLOG
-value|0x0080
-end_define
-
-begin_comment
+name|main_need_qrylog
+block|,
 comment|/* toggle_qrylog() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_DEBUG
-value|0x0100
-end_define
-
-begin_comment
+name|main_need_debug
+block|,
 comment|/* use_desired_debug() needed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAIN_NEED_NOTIFY
-value|0x0200
-end_define
-
-begin_comment
-comment|/* do_notify_after_load() needed */
-end_comment
+name|main_need_restart
+block|,
+comment|/* exec() needed. */
+name|main_need_reap
+block|,
+comment|/* need to reap dead children */
+name|main_need_num
+comment|/* number of needs, used for array bound. */
+block|}
+name|main_need
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* What global options are set? */
@@ -447,6 +454,12 @@ begin_comment
 comment|/* Fake up bogus response to IQUERY. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -457,6 +470,11 @@ end_define
 begin_comment
 comment|/* Turn off notify */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -505,8 +523,70 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OPTION_USE_IXFR
+value|0x0110
+end_define
+
+begin_comment
+comment|/* Use by delault ixfr in zone transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_MAINTAIN_IXFR_BASE
+value|0x0120
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NODIALUP
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Turn off dialup support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_NORFC2308_TYPE1
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Prevent type1 respones (RFC 2308) 					 * to cached negative respones */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_USE_ID_POOL
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Use the memory hogging query ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_TREAT_CR_AS_SPACE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Treat CR in zone files as space */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_OPTION_FLAGS
-value|0
+value|(OPTION_NODIALUP|OPTION_NONAUTH_NXDOMAIN|\ 				 OPTION_USE_ID_POOL|OPTION_NORFC2308_TYPE1)
 end_define
 
 begin_ifdef
@@ -597,6 +677,13 @@ define|#
 directive|define
 name|STATS_TIMER
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEARTBEAT_TIMER
+value|0x08
 end_define
 
 begin_comment
@@ -694,6 +781,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|NS_ZOPTION_P
+parameter_list|(
+name|zp
+parameter_list|,
+name|option
+parameter_list|)
+define|\
+value|(((zp) != NULL&& (((zp)->z_optset& option) != 0)) ? \ 		(((zp)->z_options& option) != 0) : NS_OPTION_P(option))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_ZFWDTAB
+parameter_list|(
+name|zp
+parameter_list|)
+value|(((zp) == NULL) ? \ 		server_options->fwdtab : (zp)->z_fwdtab)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NS_INCRSTAT
 parameter_list|(
 name|addr
@@ -719,6 +829,12 @@ block|}
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+end_ifdef
+
 begin_enum
 enum|enum
 name|znotify
@@ -730,6 +846,26 @@ block|,
 name|znotify_yes
 block|,
 name|znotify_no
+block|}
+enum|;
+end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_enum
+enum|enum
+name|zdialup
+block|{
+name|zdialup_use_default
+init|=
+literal|0
+block|,
+name|zdialup_yes
+block|,
+name|zdialup_no
 block|}
 enum|;
 end_enum
@@ -778,6 +914,19 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ip_match_key
+block|{
+name|struct
+name|dst_key
+modifier|*
+name|key
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -789,6 +938,8 @@ block|,
 name|ip_match_localhost
 block|,
 name|ip_match_localnets
+block|,
+name|ip_match_key
 block|}
 name|ip_match_type
 typedef|;
@@ -814,6 +965,10 @@ decl_stmt|;
 name|struct
 name|ip_match_indirect
 name|indirect
+decl_stmt|;
+name|struct
+name|ip_match_key
+name|key
 decl_stmt|;
 block|}
 name|u
@@ -939,11 +1094,6 @@ decl_stmt|;
 comment|/* bind() the axfr socket to this */
 name|struct
 name|in_addr
-name|z_xaddr
-decl_stmt|;
-comment|/* override server for next xfer */
-name|struct
-name|in_addr
 name|z_addr
 index|[
 name|NSMAX
@@ -954,11 +1104,23 @@ name|u_char
 name|z_addrcnt
 decl_stmt|;
 comment|/* number of entries in z_addr[] */
+name|struct
+name|in_addr
+name|z_xaddr
+index|[
+name|NSMAX
+index|]
+decl_stmt|;
+comment|/* list of master servers for xfer */
+name|u_char
+name|z_xaddrcnt
+decl_stmt|;
+comment|/* number of entries in z_xaddr[] */
 name|u_char
 name|z_type
 decl_stmt|;
 comment|/* type of zone; see below */
-name|u_int16_t
+name|u_int32_t
 name|z_flags
 decl_stmt|;
 comment|/* state bits; see below */
@@ -966,6 +1128,14 @@ name|pid_t
 name|z_xferpid
 decl_stmt|;
 comment|/* xfer child pid */
+name|u_int
+name|z_options
+decl_stmt|;
+comment|/* options set specific to this zone */
+name|u_int
+name|z_optset
+decl_stmt|;
+comment|/* which opts override global opts */
 name|int
 name|z_class
 decl_stmt|;
@@ -1029,6 +1199,9 @@ name|long
 name|z_max_transfer_time_in
 decl_stmt|;
 comment|/* max num seconds for AXFR */
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
 name|enum
 name|znotify
 name|z_notify
@@ -1036,14 +1209,38 @@ decl_stmt|;
 comment|/* Notify mode */
 name|struct
 name|in_addr
+modifier|*
 name|z_also_notify
-index|[
-name|NSMAX
-index|]
 decl_stmt|;
 comment|/* More nameservers to notify */
 name|int
 name|z_notify_count
+decl_stmt|;
+endif|#
+directive|endif
+name|enum
+name|zdialup
+name|z_dialup
+decl_stmt|;
+comment|/* secondaries over a dialup link */
+name|char
+modifier|*
+name|z_ixfr_base
+decl_stmt|;
+comment|/* where to find the history of the zone */
+name|char
+modifier|*
+name|z_ixfr_tmp
+decl_stmt|;
+comment|/* tmp file for the ixfr */
+name|int
+name|z_maintain_ixfr_base
+decl_stmt|;
+name|int
+name|z_log_size_ixfr
+decl_stmt|;
+name|int
+name|z_max_log_size_ixfr
 decl_stmt|;
 name|evTimerID
 name|z_timer
@@ -1057,6 +1254,30 @@ name|time_t
 name|z_nextmaint
 decl_stmt|;
 comment|/* time of next maintenance */
+name|u_int16_t
+name|z_port
+decl_stmt|;
+comment|/* perform AXFR to this port */
+name|struct
+name|fwdinfo
+modifier|*
+name|z_fwdtab
+decl_stmt|;
+comment|/* zone-specific forwarders */
+name|LINK
+argument_list|(
+argument|struct zoneinfo
+argument_list|)
+name|z_freelink
+expr_stmt|;
+comment|/* if it's on the free list. */
+name|LINK
+argument_list|(
+argument|struct zoneinfo
+argument_list|)
+name|z_reloadlink
+expr_stmt|;
+comment|/* if it's on the reload list. */
 block|}
 struct|;
 end_struct
@@ -1078,6 +1299,10 @@ block|,
 name|z_hint
 block|,
 name|z_stub
+block|,
+name|z_forward
+block|,
+name|z_cache
 block|,
 name|z_any
 block|}
@@ -1154,7 +1379,7 @@ begin_define
 define|#
 directive|define
 name|Z_CACHE
-value|z_hint
+value|z_cache
 end_define
 
 begin_comment
@@ -1175,6 +1400,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|Z_FORWARD
+value|z_forward
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|Z_ANY
 value|z_any
 end_define
@@ -1184,14 +1420,14 @@ comment|/* XXX*2 */
 end_comment
 
 begin_comment
-comment|/* zone state bits (16 bits) */
+comment|/* zone state bits (32 bits) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|Z_AUTH
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -1202,7 +1438,7 @@ begin_define
 define|#
 directive|define
 name|Z_NEED_XFER
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -1213,7 +1449,7 @@ begin_define
 define|#
 directive|define
 name|Z_XFER_RUNNING
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -1224,7 +1460,7 @@ begin_define
 define|#
 directive|define
 name|Z_NEED_RELOAD
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -1235,7 +1471,7 @@ begin_define
 define|#
 directive|define
 name|Z_SYSLOGGED
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -1246,7 +1482,7 @@ begin_define
 define|#
 directive|define
 name|Z_QSERIAL
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -1257,7 +1493,7 @@ begin_define
 define|#
 directive|define
 name|Z_FOUND
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -1268,7 +1504,7 @@ begin_define
 define|#
 directive|define
 name|Z_INCLUDE
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -1279,7 +1515,7 @@ begin_define
 define|#
 directive|define
 name|Z_DB_BAD
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -1290,7 +1526,7 @@ begin_define
 define|#
 directive|define
 name|Z_TMP_FILE
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
@@ -1307,7 +1543,7 @@ begin_define
 define|#
 directive|define
 name|Z_DYNAMIC
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
@@ -1318,7 +1554,7 @@ begin_define
 define|#
 directive|define
 name|Z_NEED_DUMP
-value|0x0800
+value|0x00000800
 end_define
 
 begin_comment
@@ -1329,7 +1565,7 @@ begin_define
 define|#
 directive|define
 name|Z_NEED_SOAUPDATE
-value|0x1000
+value|0x00001000
 end_define
 
 begin_comment
@@ -1349,7 +1585,7 @@ begin_define
 define|#
 directive|define
 name|Z_XFER_ABORTED
-value|0x2000
+value|0x00002000
 end_define
 
 begin_comment
@@ -1360,7 +1596,7 @@ begin_define
 define|#
 directive|define
 name|Z_XFER_GONE
-value|0x4000
+value|0x00004000
 end_define
 
 begin_comment
@@ -1371,11 +1607,66 @@ begin_define
 define|#
 directive|define
 name|Z_TIMER_SET
-value|0x8000
+value|0x00008000
 end_define
 
 begin_comment
 comment|/* z_timer contains a valid id */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Z_NOTIFY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* has an outbound notify executing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|Z_NEED_QSERIAL
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* we need to re-call qserial() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_PARENT_RELOAD
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* we need to reload this as parent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_FORWARD_SET
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* has forwarders been set */
 end_comment
 
 begin_comment
@@ -1426,8 +1717,70 @@ begin_comment
 comment|/* other failure, has been logged */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|XFER_SUCCESSAXFR
+value|4
+end_define
+
 begin_comment
-comment|/* XXX - "struct qserv" is deprecated in favor of "struct nameser" */
+comment|/* named-xfr recived a xfr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_SUCCESSIXFR
+value|5
+end_define
+
+begin_comment
+comment|/* named-xfr recived a ixfr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_SUCCESSAXFRIXFRFILE
+value|6
+end_define
+
+begin_comment
+comment|/* named-xfr received AXFR for IXFR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_ISAXFR
+value|-1
+end_define
+
+begin_comment
+comment|/* the last XFR is AXFR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_ISIXFR
+value|-2
+end_define
+
+begin_comment
+comment|/* the last XFR is IXFR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_ISAXFRIXFR
+value|-3
+end_define
+
+begin_comment
+comment|/* the last XFR is AXFR but we must create IXFR base */
 end_comment
 
 begin_struct
@@ -1456,10 +1809,24 @@ name|timeval
 name|stime
 decl_stmt|;
 comment|/* time first query started */
+name|unsigned
+name|int
+name|forwarder
+range|:
+literal|1
+decl_stmt|;
+comment|/* this entry is for a forwarder */
+name|unsigned
 name|int
 name|nretry
+range|:
+literal|31
 decl_stmt|;
 comment|/* # of times addr retried */
+name|u_int32_t
+name|serial
+decl_stmt|;
+comment|/* valid if Q_ZSERIAL */
 block|}
 struct|;
 end_struct
@@ -1511,12 +1878,6 @@ name|int16_t
 name|q_dfd
 decl_stmt|;
 comment|/* UDP file descriptor */
-name|struct
-name|fwdinfo
-modifier|*
-name|q_fwd
-decl_stmt|;
-comment|/* last	forwarder used */
 name|time_t
 name|q_time
 decl_stmt|;
@@ -1604,6 +1965,12 @@ modifier|*
 name|q_zquery
 decl_stmt|;
 comment|/* Zone query is about (Q_ZSERIAL) */
+name|struct
+name|zoneinfo
+modifier|*
+name|q_fzone
+decl_stmt|;
+comment|/* Forwarding zone, if any */
 name|char
 modifier|*
 name|q_domain
@@ -1628,9 +1995,21 @@ name|BIND_NOTIFY
 name|int
 name|q_notifyzone
 decl_stmt|;
-comment|/* zone which needs a sysnotify() 					 * when the reply to this comes in. 					 */
+comment|/* zone which needs another znotify() 					 * when the reply to this comes in. 					 */
 endif|#
 directive|endif
+name|struct
+name|tsig_record
+modifier|*
+name|q_tsig
+decl_stmt|;
+comment|/* forwarded query's TSIG record */
+name|struct
+name|tsig_record
+modifier|*
+name|q_nstsig
+decl_stmt|;
+comment|/* forwarded query's TSIG record */
 block|}
 struct|;
 end_struct
@@ -1692,8 +2071,7 @@ name|qp
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|(((qp)->q_fwd == (struct fwdinfo *)0) ? \&(qp)->q_addr[n].ns_addr :&(qp)->q_fwd->fwdaddr)
+value|(&(qp)->q_addr[n].ns_addr)
 end_define
 
 begin_define
@@ -1971,6 +2349,14 @@ block|,
 name|s_x_lastsoa
 block|,
 name|s_x_done
+block|,
+name|s_x_adding
+block|,
+name|s_x_deleting
+block|,
+name|s_x_addsoa
+block|,
+name|s_x_deletesoa
 block|}
 name|state
 enum|;
@@ -1999,6 +2385,9 @@ name|int
 name|class
 decl_stmt|,
 comment|/* class of an XFR. */
+name|type
+decl_stmt|,
+comment|/* type of XFR. */
 name|id
 decl_stmt|,
 comment|/* id of an XFR. */
@@ -2009,12 +2398,39 @@ name|u_int
 name|zone
 decl_stmt|;
 comment|/* zone being XFR'd. */
+union|union
+block|{
 name|struct
 name|namebuf
 modifier|*
-name|top
+name|axfr
 decl_stmt|;
-comment|/* top np of an XFR. */
+comment|/* top np of an AXFR. */
+name|struct
+name|ns_updrec
+modifier|*
+name|ixfr
+decl_stmt|;
+comment|/* top udp of an IXFR. */
+block|}
+name|top
+union|;
+name|int
+name|ixfr_zone
+decl_stmt|;
+name|u_int32_t
+name|serial
+decl_stmt|;
+comment|/* serial number requested in IXFR */
+name|ns_tcp_tsig_state
+modifier|*
+name|tsig_state
+decl_stmt|;
+comment|/* used by ns_sign_tcp */
+name|int
+name|tsig_skip
+decl_stmt|;
+comment|/* skip calling ns_sign_tcp 						 * during the next flush */
 struct|struct
 name|qs_x_lev
 block|{
@@ -2146,6 +2562,13 @@ define|#
 directive|define
 name|STREAM_AXFR
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|STREAM_AXFRIXFR
+value|0x22
 end_define
 
 begin_define
@@ -2318,6 +2741,8 @@ name|secondary_trans
 block|,
 name|response_trans
 block|,
+name|update_trans
+block|,
 name|num_trans
 block|}
 enum|;
@@ -2405,6 +2830,100 @@ name|rlimit_type
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|control
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|control
+modifier|*
+name|control
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|LIST
+argument_list|(
+argument|struct control
+argument_list|)
+name|controls
+expr_stmt|;
+end_typedef
+
+begin_enum
+enum|enum
+name|ordering
+block|{
+name|unknown_order
+block|,
+name|fixed_order
+block|,
+name|cyclic_order
+block|,
+name|random_order
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ORDERING
+value|cyclic_order
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|rrset_order_element
+block|{
+name|int
+name|class
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|enum
+name|ordering
+name|order
+decl_stmt|;
+name|struct
+name|rrset_order_element
+modifier|*
+name|next
+decl_stmt|;
+block|}
+typedef|*
+name|rrset_order_element
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|rrset_order_list
+block|{
+name|rrset_order_element
+name|first
+decl_stmt|;
+name|rrset_order_element
+name|last
+decl_stmt|;
+block|}
+typedef|*
+name|rrset_order_list
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2412,6 +2931,10 @@ name|options
 block|{
 name|u_int
 name|flags
+decl_stmt|;
+name|char
+modifier|*
+name|version
 decl_stmt|;
 name|char
 modifier|*
@@ -2446,6 +2969,12 @@ decl_stmt|;
 name|int
 name|transfers_out
 decl_stmt|;
+name|int
+name|serial_queries
+decl_stmt|;
+name|int
+name|max_log_size_ixfr
+decl_stmt|;
 name|enum
 name|axfr_format
 name|transfer_format
@@ -2457,14 +2986,40 @@ name|struct
 name|sockaddr_in
 name|query_source
 decl_stmt|;
+name|struct
+name|in_addr
+name|axfr_src
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+name|int
+name|notify_count
+decl_stmt|;
+name|struct
+name|in_addr
+modifier|*
+name|also_notify
+decl_stmt|;
+endif|#
+directive|endif
 name|ip_match_list
 name|query_acl
+decl_stmt|;
+name|ip_match_list
+name|recursion_acl
 decl_stmt|;
 name|ip_match_list
 name|transfer_acl
 decl_stmt|;
 name|ip_match_list
+name|blackhole_acl
+decl_stmt|;
+name|ip_match_list
 name|topology
+decl_stmt|;
+name|ip_match_list
+name|sortlist
 decl_stmt|;
 name|enum
 name|severity
@@ -2503,6 +3058,21 @@ decl_stmt|;
 name|int
 name|stats_interval
 decl_stmt|;
+name|rrset_order_list
+name|ordering
+decl_stmt|;
+name|int
+name|heartbeat_interval
+decl_stmt|;
+name|u_int
+name|max_ncache_ttl
+decl_stmt|;
+name|u_int
+name|lame_ttl
+decl_stmt|;
+name|int
+name|minroots
+decl_stmt|;
 block|}
 typedef|*
 name|options
@@ -2512,34 +3082,12 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|key_info
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|char
-modifier|*
-name|algorithm
-decl_stmt|;
-name|char
-modifier|*
-name|secret
-decl_stmt|;
-comment|/* XXX should be u_char? */
-block|}
-typedef|*
-name|key_info
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
 name|key_list_element
 block|{
-name|key_info
-name|info
+name|struct
+name|dst_key
+modifier|*
+name|key
 decl_stmt|;
 name|struct
 name|key_list_element
@@ -2677,6 +3225,13 @@ name|SERVER_INFO_BOGUS
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|SERVER_INFO_SUPPORT_IXFR
+value|0x02
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2771,8 +3326,13 @@ name|ns_log_eventlib
 block|,
 name|ns_log_packet
 block|,
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
 name|ns_log_notify
 block|,
+endif|#
+directive|endif
 name|ns_log_cname
 block|,
 name|ns_log_security
@@ -2786,6 +3346,8 @@ block|,
 name|ns_log_load
 block|,
 name|ns_log_resp_checks
+block|,
+name|ns_log_control
 block|,
 name|ns_log_max_category
 block|}
@@ -2835,11 +3397,11 @@ begin_define
 define|#
 directive|define
 name|NOERROR_NODATA
-value|6
+value|15
 end_define
 
 begin_comment
-comment|/* only used internally by the server, used for 				 * -ve $ing non-existence of records. 6 is not  				 * a code used as yet anyway. anant@isi.edu 				 */
+comment|/* only used internally by the server, used for 				 * -ve $ing non-existence of records. 15 is not 				 * a code used as yet anyway. 				 */
 end_comment
 
 begin_define
@@ -2887,80 +3449,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BIND_NOTIFY
-end_ifdef
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|notify_info_waitfor
-block|,
-name|notify_info_delay
-block|,
-name|notify_info_error
-block|,
-name|notify_info_done
-block|}
-name|notify_info_state
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|notify_info
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|class
-decl_stmt|;
-name|notify_info_state
-name|state
-decl_stmt|;
-name|evWaitID
-name|wait_id
-decl_stmt|;
-name|evTimerID
-name|timer_id
-decl_stmt|;
-name|LINK
-argument_list|(
-argument|struct notify_info
-argument_list|)
-name|link
-expr_stmt|;
-block|}
-typedef|*
-name|notify_info
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|LIST
-argument_list|(
-argument|struct notify_info
-argument_list|)
-name|notify_info_list
-expr_stmt|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BIND_NOTIFY */
-end_comment
 
 begin_ifdef
 ifdef|#

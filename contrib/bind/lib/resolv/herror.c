@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1987, 1993  *    The Regents of the University of Ca
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -24,6 +24,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -34,11 +35,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: herror.c,v 8.7 1996/11/18 09:10:00 vixie Exp $"
+literal|"$Id: herror.c,v 8.11 1999/10/13 16:39:39 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +80,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
 end_include
 
 begin_include
@@ -96,8 +116,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|<irs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"port_after.h"
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|h_errno
+end_undef
 
 begin_decl_stmt
 specifier|const
@@ -156,13 +188,11 @@ begin_function
 name|void
 name|herror
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|iovec
@@ -170,21 +200,28 @@ name|iov
 index|[
 literal|4
 index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|iovec
+decl_stmt|,
 modifier|*
 name|v
 init|=
 name|iov
 decl_stmt|;
+specifier|extern
+name|int
+modifier|*
+name|__h_errno
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|s
+operator|!=
+name|NULL
 operator|&&
 operator|*
 name|s
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|v
@@ -192,6 +229,7 @@ operator|->
 name|iov_base
 operator|=
 operator|(
+comment|/*noconst*/
 name|char
 operator|*
 operator|)
@@ -235,7 +273,9 @@ operator|*
 operator|)
 name|hstrerror
 argument_list|(
-name|h_errno
+operator|*
+name|__h_errno
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|v
@@ -282,17 +322,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * hstrerror --  *	return the string associated with a given "host" errno value.  */
+end_comment
+
 begin_function
 specifier|const
 name|char
 modifier|*
 name|hstrerror
 parameter_list|(
-name|err
-parameter_list|)
 name|int
 name|err
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

@@ -20,6 +20,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -30,11 +31,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_ntoa.c,v 1.5 1997/09/26 17:56:01 halley Exp $"
+literal|"$Id: inet_ntoa.c,v 1.7 1999/05/14 18:16:55 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +99,10 @@ end_include
 
 begin_comment
 comment|/*  * Convert network-format internet address  * to base 256 d.d.d.d representation.  */
+end_comment
+
+begin_comment
+comment|/*const*/
 end_comment
 
 begin_function

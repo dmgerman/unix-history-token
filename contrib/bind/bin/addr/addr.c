@@ -17,11 +17,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: addr.c,v 8.5 1997/04/25 00:00:29 vixie Exp $"
+literal|"$Id: addr.c,v 8.8 1999/10/13 16:38:55 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +36,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996,1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -624,6 +625,8 @@ decl_stmt|,
 name|af
 decl_stmt|,
 name|len
+decl_stmt|,
+name|some
 decl_stmt|;
 name|prog
 operator|=
@@ -639,6 +642,10 @@ expr_stmt|;
 name|len
 operator|=
 name|INADDRSZ
+expr_stmt|;
+name|some
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -729,6 +736,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|some
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -772,6 +782,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|some
+operator|++
+expr_stmt|;
 break|break;
 default|default:
 name|usage
@@ -780,6 +793,14 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|some
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
