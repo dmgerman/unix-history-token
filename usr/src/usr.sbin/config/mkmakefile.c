@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.24	83/01/14	*/
+comment|/*	mkmakefile.c	1.25	83/02/09	*/
 end_comment
 
 begin_comment
@@ -447,6 +447,9 @@ argument_list|(
 literal|"timezone not specified; gmt assumed\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 if|if
 condition|(
 name|maxusers
@@ -500,6 +503,66 @@ operator|=
 literal|128
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+if|if
+condition|(
+name|maxusers
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"maxusers not specified; 8 assumed\n"
+argument_list|)
+expr_stmt|;
+name|maxusers
+operator|=
+literal|8
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|maxusers
+operator|<
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"minimum of 2 maxusers assumed\n"
+argument_list|)
+expr_stmt|;
+name|maxusers
+operator|=
+literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|maxusers
+operator|>
+literal|32
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"maxusers truncated to 32\n"
+argument_list|)
+expr_stmt|;
+name|maxusers
+operator|=
+literal|32
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|ofp
