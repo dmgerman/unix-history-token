@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumprmt.c	1.8 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,8 +308,12 @@ name|ntrec
 operator|*
 name|TP_BSIZE
 expr_stmt|;
-if|if
+while|while
 condition|(
+name|size
+operator|>
+name|TP_BSIZE
+operator|&&
 name|setsockopt
 argument_list|(
 name|rmtape
@@ -329,12 +333,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rdump: Warning: setsockopt buffer size failed.\n"
-argument_list|)
+name|size
+operator|-=
+name|TP_BSIZE
 expr_stmt|;
 block|}
 end_block
