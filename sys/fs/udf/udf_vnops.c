@@ -4619,7 +4619,21 @@ argument_list|,
 name|TAGID_FID
 argument_list|)
 condition|)
-break|break;
+goto|goto
+name|continue_lookup
+goto|;
+comment|/* Is this a deleted file? */
+if|if
+condition|(
+name|fid
+operator|->
+name|file_char
+operator|&
+literal|0x4
+condition|)
+goto|goto
+name|continue_lookup
+goto|;
 if|if
 condition|(
 operator|(
@@ -4702,6 +4716,8 @@ break|break;
 block|}
 block|}
 comment|/*  		 * If we got this far then this fid isn't what we were 		 * looking for.  It's therefore safe to clean up from a 		 * fragmented fid. 		 */
+name|continue_lookup
+label|:
 if|if
 condition|(
 name|fid_fragment
