@@ -108,6 +108,29 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>
+literal|210
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/random.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCVT_FREEBSD> 210 */
+end_comment
+
 begin_else
 else|#
 directive|else
