@@ -6027,7 +6027,7 @@ literal|0x53
 operator|)
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 comment|/*  	 * Read the MAC address and verify checksum on the address. 	 */
 name|outw
@@ -6102,7 +6102,7 @@ operator|!=
 literal|0xFF
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 comment|/* 	 * Verify that the software model number is 0. 	 */
 name|outw
@@ -6140,7 +6140,7 @@ operator|!=
 literal|0x0000
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 comment|/* 	 * Read in and save the current options configured on card. 	 */
 name|sc
@@ -6242,7 +6242,7 @@ name|ED_ISR_RST
 operator|)
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 comment|/* reset did not complete */
 comment|/* 	 * Read out configuration information. 	 */
@@ -6289,7 +6289,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 comment|/*  	 * If the kernel IRQ was specified with a '?' use the cards idea 	 * of the IRQ.  If the kernel IRQ was explicitly specified, it  	 * should match that of the hardware. 	 */
 name|error
@@ -6482,7 +6482,7 @@ operator|!=
 name|conf_maddr
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 name|error
 operator|=
@@ -6781,7 +6781,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-literal|0
+name|ENXIO
 return|;
 block|}
 return|return
