@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)if_cons.c	7.10 (Berkeley) 5/29/91  *	$Id: if_cons.c,v 1.2 1993/10/16 21:05:10 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)if_cons.c	7.10 (Berkeley) 5/29/91  *	$Id: if_cons.c,v 1.3 1993/11/07 17:49:36 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -295,16 +295,34 @@ name|DONTCLEAR
 value|-1
 end_define
 
+begin_function_decl
+specifier|static
+name|int
+name|parse_facil
+parameter_list|(
+name|struct
+name|pklcd
+modifier|*
+parameter_list|,
+name|struct
+name|isopcb
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|,
+name|int
+comment|/*u_char*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*********************************************************************	  * cons.c - CONS interface to the x.25 layer  *  * TODO: figure out what resources we might run out of besides mbufs.  *  If we run out of any of them (including mbufs) close and recycle  *  lru x% of the connections, for some parameter x.  *  * There are 2 interfaces from above:  * 1) from TP0:   *    cons CO network service  *    TP associates a transport connection with a network connection.  * 	  cons_output( isop, m, len, isdgm==0 )   *        co_flags == 0  * 2) from TP4:  *	  It's a datagram service, like clnp is. - even though it calls  *			cons_output( isop, m, len, isdgm==1 )   *	  it eventually goes through  *			cosns_output(ifp, m, dst).  *    TP4 permits multiplexing (reuse, possibly simultaneously) of the   *	  network connections.  *    This means that many sockets (many tpcbs) may be associated with  *    this pklcd, hence cannot have a back ptr from pklcd to a tpcb.  *        co_flags& CONSF_DGM   *    co_socket is null since there may be many sockets that use this pklcd.  * NOTE: 	streams would really be nice. sigh. NOTE: 	PVCs could be handled by config-ing a cons with an address and with the 	IFF_POINTTOPOINT flag on.  This code would then have to skip the 	connection setup stuff for pt-to-pt links.      *********************************************************************/
 end_comment
 
-begin_decl_stmt
-name|struct
-name|cons_stat
-name|cons_stat
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* struct cons_stat cons_stat; */
+end_comment
 
 begin_decl_stmt
 name|u_char
@@ -871,14 +889,12 @@ begin_comment
 comment|/*  * NAME:	cons_init()  * CALLED FROM:  *	autoconf  * FUNCTION:  *	initialize the protocol  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cons_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-name|int
+name|void
 name|tp_incoming
 argument_list|()
 decl_stmt|,
@@ -976,35 +992,27 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|tp_incoming
-argument_list|(
-argument|lcp
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|lcp
+parameter_list|,
+name|m
+parameter_list|)
 name|struct
 name|pklcd
 modifier|*
 name|lcp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1017,7 +1025,7 @@ name|struct
 name|isopcb
 name|tp_isopcb
 decl_stmt|;
-name|int
+name|void
 name|cons_tpinput
 parameter_list|()
 function_decl|;
@@ -1126,9 +1134,9 @@ argument_list|)
 expr_stmt|;
 name|parse_facil
 argument_list|(
-name|isop
-argument_list|,
 name|lcp
+argument_list|,
+name|isop
 argument_list|,
 operator|&
 operator|(
@@ -1154,34 +1162,26 @@ name|PKHEADERLN
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|cons_tpinput
-argument_list|(
-argument|lcp
-argument_list|,
-argument|m0
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|lcp
+parameter_list|,
+name|m0
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pklcd
 modifier|*
 name|lcp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1365,26 +1365,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * NAME:	cons_connect()  * CALLED FROM:  *	tpcons_pcbconnect() when opening a new connection.    * FUNCTION anD ARGUMENTS:  *  Figures out which device to use, finding a route if one doesn't  *  already exist.  * RETURN VALUE:  *  returns E*  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|cons_connect
-argument_list|(
+parameter_list|(
 name|isop
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|isopcb
-operator|*
+modifier|*
 name|isop
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1406,6 +1404,8 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ifaddr
@@ -1539,7 +1539,7 @@ return|return
 name|error
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  **************************** DEVICE cons ***************************  */
@@ -1549,58 +1549,45 @@ begin_comment
 comment|/*   * NAME:	cons_ctlinput()  * CALLED FROM:  *  lower layer when ECN_CLEAR occurs : this routine is here  *  for consistency - cons subnet service calls its higher layer  *  through the protosw entry.  * FUNCTION& ARGUMENTS:  *  cmd is a PRC_* command, list found in ../sys/protosw.h  *  copcb is the obvious.  *  This serves the higher-layer cons service.  * NOTE: this takes 3rd arg. because cons uses it to inform itself  *  of things (timeouts, etc) but has a pcb instead of an address.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cons_ctlinput
-argument_list|(
-argument|cmd
-argument_list|,
-argument|sa
-argument_list|,
-argument|copcb
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|sa
+parameter_list|,
+name|copcb
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|pklcd
 modifier|*
 name|copcb
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{ }
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|find_error_reason
-argument_list|(
+parameter_list|(
 name|xp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|x25_packet
-operator|*
+modifier|*
 name|xp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|extern
 name|u_char
@@ -1821,7 +1808,7 @@ return|return
 name|error
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1850,8 +1837,11 @@ end_decl_stmt
 begin_else
 else|#
 directive|else
-else|X25_1984
 end_else
+
+begin_comment
+comment|/* X25_1984 */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1864,8 +1854,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|X25_1984
 end_endif
+
+begin_comment
+comment|/* X25_1984  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1901,9 +1894,13 @@ decl_stmt|;
 block|{
 name|u_int
 name|proto
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|flag
+init|=
+literal|0
 decl_stmt|;
 name|caddr_t
 name|buf
@@ -1935,6 +1932,8 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+literal|0
 decl_stmt|;
 name|IFDEBUG
 argument_list|(
@@ -2652,6 +2651,11 @@ name|rt
 init|=
 name|rtalloc1
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|siso
 argument_list|,
 literal|1
@@ -2780,6 +2784,8 @@ operator|++
 decl_stmt|;
 name|u_char
 name|buf_len
+init|=
+literal|0
 decl_stmt|;
 comment|/* in bytes */
 name|IFDEBUG
@@ -2903,21 +2909,19 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|init_siso
-argument_list|(
+parameter_list|(
 name|siso
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockaddr_iso
-operator|*
+modifier|*
 name|siso
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|siso
 operator|->
@@ -2951,7 +2955,7 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * NAME:	DTEtoNSAP()  * CALLED FROM:  *  parse_facil()  * FUNCTION and ARGUMENTS:  *  Creates a type 37 NSAP in the sockaddr_iso (addr)  * 	from a DTE address found in a sockaddr_x25.  *    * RETURNS:  *  0 if ok; E* otherwise.  */
