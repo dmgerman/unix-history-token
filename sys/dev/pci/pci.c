@@ -5380,6 +5380,18 @@ name|desc
 condition|)
 name|desc
 operator|=
+name|pci_vga_match
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|desc
+condition|)
+name|desc
+operator|=
 literal|"unknown card"
 expr_stmt|;
 name|device_printf
