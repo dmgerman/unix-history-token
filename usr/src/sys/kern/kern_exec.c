@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exec.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -653,7 +653,6 @@ operator|!=
 literal|'!'
 operator|||
 name|indir
-operator|++
 condition|)
 block|{
 name|u
@@ -686,7 +685,7 @@ block|{
 if|if
 condition|(
 name|cp
-operator|==
+operator|>=
 operator|&
 name|exdata
 operator|.
@@ -734,8 +733,6 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-for|for
-control|(
 name|cp
 operator|=
 operator|&
@@ -745,25 +742,25 @@ name|ex_shell
 index|[
 literal|2
 index|]
-init|;
+expr_stmt|;
+while|while
+condition|(
 operator|*
 name|cp
 operator|==
 literal|' '
-condition|;
-operator|++
+condition|)
 name|cp
-control|)
-empty_stmt|;
+operator|++
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_dirp
 operator|=
 name|cp
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 operator|*
 name|cp
 operator|&&
@@ -771,34 +768,32 @@ operator|*
 name|cp
 operator|!=
 literal|' '
-condition|;
-operator|++
+condition|)
 name|cp
-control|)
-empty_stmt|;
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*
 name|cp
 condition|)
 block|{
-for|for
-control|(
 operator|*
 name|cp
 operator|++
 operator|=
 literal|'\0'
-init|;
+expr_stmt|;
+while|while
+condition|(
 operator|*
 name|cp
 operator|==
 literal|' '
-condition|;
-operator|++
+condition|)
 name|cp
-control|)
-empty_stmt|;
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -827,6 +822,10 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|indir
+operator|=
+literal|1
 expr_stmt|;
 name|iput
 argument_list|(
