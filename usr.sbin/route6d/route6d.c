@@ -1623,6 +1623,19 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,6 +1654,19 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1657,6 +1683,19 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3106,6 +3145,8 @@ name|error
 condition|)
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|gai_strerror
 argument_list|(
 name|error
@@ -3343,6 +3384,8 @@ name|error
 condition|)
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|gai_strerror
 argument_list|(
 name|error
