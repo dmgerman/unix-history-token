@@ -456,14 +456,13 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|u_int
+name|int
 name|blen
 decl_stmt|,
 name|cnt
 decl_stmt|,
 name|recno
-decl_stmt|;
-name|int
+decl_stmt|,
 name|wrap
 decl_stmt|;
 name|char
