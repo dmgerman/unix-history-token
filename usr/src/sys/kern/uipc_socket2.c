@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	6.4	84/08/29	*/
+comment|/*	uipc_socket2.c	6.5	84/11/02	*/
 end_comment
 
 begin_include
@@ -2510,6 +2510,29 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|MFREE
+argument_list|(
+name|m
+argument_list|,
+name|mn
+argument_list|)
+expr_stmt|;
+name|m
+operator|=
+name|mn
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|m
+operator|&&
+name|m
+operator|->
+name|m_len
+operator|==
+literal|0
+condition|)
+block|{
 name|MFREE
 argument_list|(
 name|m
