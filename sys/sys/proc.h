@@ -1785,13 +1785,16 @@ name|uid
 operator|,
 name|int
 name|diff
+operator|,
+name|int
+name|max
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|rlim_t
+name|int
 name|chgsbsize
 name|__P
 argument_list|(
@@ -1801,6 +1804,9 @@ name|uid
 operator|,
 name|rlim_t
 name|diff
+operator|,
+name|rlim_t
+name|max
 operator|)
 argument_list|)
 decl_stmt|;

@@ -839,6 +839,8 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_hiwat
+argument_list|,
+name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
 if|if
@@ -869,6 +871,8 @@ operator|->
 name|so_snd
 operator|.
 name|sb_hiwat
+argument_list|,
+name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
 if|if

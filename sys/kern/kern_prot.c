@@ -1568,6 +1568,8 @@ name|p_ruid
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1578,6 +1580,8 @@ argument_list|(
 name|uid
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2651,6 +2655,8 @@ name|p_ruid
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2661,6 +2667,8 @@ argument_list|(
 name|ruid
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pc
@@ -3317,6 +3325,8 @@ name|p_ruid
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3327,6 +3337,8 @@ argument_list|(
 name|ruid
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pc
