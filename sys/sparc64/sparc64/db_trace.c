@@ -1847,7 +1847,34 @@ name|db_print_backtrace
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|u_long
+modifier|*
+name|sp
+decl_stmt|;
+name|sp
+operator|=
+name|__builtin_frame_address
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|db_stack_trace_cmd
+argument_list|(
+operator|(
+name|db_expr_t
+operator|)
+name|sp
+argument_list|,
+name|TRUE
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 end_unit
