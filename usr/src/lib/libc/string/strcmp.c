@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcmp.c	5.3 (Berkeley) %G%"
+literal|"@(#)strcmp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,45 +37,59 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|/*  * Compare strings.  */
+end_comment
+
+begin_function
+name|int
 name|strcmp
-argument_list|(
+parameter_list|(
 name|s1
-argument_list|,
+parameter_list|,
 name|s2
-argument_list|)
+parameter_list|)
 specifier|register
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
-for|for
-control|(
-init|;
+while|while
+condition|(
 operator|*
 name|s1
 operator|==
 operator|*
 name|s2
-condition|;
 operator|++
-name|s1
-operator|,
-operator|++
-name|s2
-control|)
+condition|)
 if|if
 condition|(
-operator|!
 operator|*
 name|s1
+operator|++
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -85,9 +99,20 @@ return|;
 return|return
 operator|(
 operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|s1
 operator|-
 operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|--
 name|s2
 operator|)
 return|;
