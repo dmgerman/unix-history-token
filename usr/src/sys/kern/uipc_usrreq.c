@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.8	83/03/23	*/
+comment|/*	uipc_usrreq.c	1.9	83/04/03	*/
 end_comment
 
 begin_include
@@ -1024,6 +1024,31 @@ expr_stmt|;
 return|return
 operator|(
 name|EADDRINUSE
+operator|)
+return|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|error
+operator|=
+name|u
+operator|.
+name|u_error
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
