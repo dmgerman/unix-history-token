@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.13	81/10/11	*/
+comment|/*	vfs_vnops.c	4.14	81/11/08	*/
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ file|"../h/mount.h"
 end_include
 
 begin_comment
-comment|/*  * Convert a user supplied  * file descriptor into a pointer  * to a file structure.  * Only task is to check range  * of the descriptor.  */
+comment|/*  * Convert a user supplied file descriptor into a pointer  * to a file structure.  Only task is to check range of the descriptor.  * Critical paths should use the GETF macro, defined in inline.h.  */
 end_comment
 
 begin_function
@@ -211,36 +211,25 @@ name|fp
 operator|->
 name|f_flag
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BBNNET
 if|if
 condition|(
 name|flag
 operator|&
-name|FNET
+name|FSOCKET
 condition|)
 block|{
-name|netclose
+name|skclose
 argument_list|(
 name|fp
+operator|->
+name|f_socket
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
-if|if
-condition|(
-name|flag
-operator|&
-name|FPORT
-condition|)
-block|{
-name|ptclose
-argument_list|(
 name|fp
-argument_list|)
+operator|->
+name|f_socket
+operator|=
+literal|0
 expr_stmt|;
 name|fp
 operator|->
@@ -275,7 +264,7 @@ name|i_mode
 operator|&
 name|IFMT
 expr_stmt|;
-name|plock
+name|ilock
 argument_list|(
 name|ip
 argument_list|)
@@ -378,20 +367,15 @@ name|fp
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|BBNNET
 if|if
 condition|(
 name|fp
 operator|->
 name|f_flag
 operator|&
-name|FNET
+name|FSOCKET
 condition|)
 continue|continue;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fp
@@ -433,7 +417,7 @@ operator|==
 name|IFBLK
 condition|)
 block|{
-comment|/* 		 * on last close of a block device (that isn't mounted) 		 * we must invalidate any in core blocks 		 */
+comment|/* 		 * On last close of a block device (that isn't mounted) 		 * we must invalidate any in core blocks 		 */
 name|bflush
 argument_list|(
 name|dev
@@ -461,7 +445,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * openi called to allow handler  * of special files to initialize and  * validate before actual IO.  */
+comment|/*  * Openi called to allow handler  * of special files to initialize and  * validate before actual IO.  */
 end_comment
 
 begin_expr_stmt
@@ -602,6 +586,12 @@ operator|*
 name|ip
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1089,8 +1079,6 @@ operator|++
 expr_stmt|;
 name|fp
 operator|->
-name|f_un
-operator|.
 name|f_offset
 operator|=
 literal|0
