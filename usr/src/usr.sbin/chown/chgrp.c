@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chgrp.c	5.8 (Berkeley) %G%"
+literal|"@(#)chgrp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -659,7 +659,6 @@ name|direct
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|stat
 name|st
