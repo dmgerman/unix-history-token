@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.36	82/11/13	*/
+comment|/*	uipc_syscalls.c	4.37	82/11/15	*/
 end_comment
 
 begin_include
@@ -202,7 +202,9 @@ name|u_error
 operator|=
 name|socreate
 argument_list|(
-name|AF_UNSPEC
+name|uap
+operator|->
+name|domain
 argument_list|,
 operator|&
 name|so
@@ -1735,6 +1737,20 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
+operator|=
+name|uap
+operator|->
+name|len
+operator|-
+name|auio
+operator|.
+name|uio_resid
+expr_stmt|;
 name|bad
 label|:
 name|m_freem
@@ -1938,6 +1954,20 @@ name|uap
 operator|->
 name|flags
 argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
+operator|=
+name|uap
+operator|->
+name|len
+operator|-
+name|auio
+operator|.
+name|uio_resid
 expr_stmt|;
 block|}
 end_block
