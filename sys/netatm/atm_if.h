@@ -37,6 +37,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATM_PCR_25
+value|59111
+end_define
+
+begin_comment
+comment|/* Peak Cell Rate for 25.6 Mbs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_PCR_DS3
+value|(12*8000)
+end_define
+
+begin_comment
+comment|/* 12 cells in 1/8000 sec */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATM_PCR_TAXI100
 value|227273
 end_define
@@ -123,7 +145,13 @@ name|VENDOR_ENI
 block|,
 comment|/* Efficient Networks, Inc. */
 name|VENDOR_IDT
+block|,
 comment|/* Integrated Device Technology, Inc. */
+name|VENDOR_PROSUM
+block|,
+comment|/* Prosum, Inc. */
+name|VENDOR_NETGRAPH
+comment|/* Netgraph device */
 block|}
 enum|;
 end_enum
@@ -154,7 +182,17 @@ name|VENDAPI_ENI_1
 block|,
 comment|/* ENI - Midway */
 name|VENDAPI_IDT_1
+block|,
 comment|/* IDT - NICStAR */
+name|VENDAPI_IDT_2
+block|,
+comment|/* IDT 77252 */
+name|VENDAPI_NETGRAPH_1
+block|,
+comment|/* Netgraph API v1 */
+name|VENDAPI_FORE_2
+block|,
+comment|/* FORE - HE Series */
 block|}
 enum|;
 end_enum
@@ -194,7 +232,38 @@ name|DEV_ENI_155P
 block|,
 comment|/* ENI-155p */
 name|DEV_IDT_155
+block|,
 comment|/* IDT NICStAR */
+name|DEV_PROATM_25
+block|,
+comment|/* Prosum boards based on IDT 77252 */
+name|DEV_PROATM_155
+block|,
+comment|/* Prosum boards based on IDT 77252 */
+name|DEV_VATMPIF
+block|,
+comment|/* Virtual ATM Physical IF */
+name|DEV_FORE_LE25
+block|,
+comment|/* ForeLE-25 */
+name|DEV_FORE_LE155
+block|,
+comment|/* ForeLE-155 */
+name|DEV_IDT_25
+block|,
+comment|/* IDT NICStAR */
+name|DEV_IDTABR_25
+block|,
+comment|/* IDT 77252 evaluation board */
+name|DEV_IDTABR_155
+block|,
+comment|/* IDT 77252 evaluation board */
+name|DEV_FORE_HE155
+block|,
+comment|/* ForeRunnerHE-155 */
+name|DEV_FORE_HE622
+block|,
+comment|/* ForeRunnerHE-622 */
 block|}
 enum|;
 end_enum
@@ -231,7 +300,16 @@ name|MEDIA_OC12C
 block|,
 comment|/* OC-12C */
 name|MEDIA_UTP155
+block|,
 comment|/* UTP-155 */
+name|MEDIA_UTP25
+block|,
+comment|/* UTP-25.6 */
+name|MEDIA_VIRTUAL
+block|,
+comment|/* Virtual Link */
+name|MEDIA_DSL
+comment|/* xDSL */
 block|}
 enum|;
 end_enum
@@ -265,7 +343,13 @@ name|BUS_PCI
 block|,
 comment|/* PCI */
 name|BUS_EISA
+block|,
 comment|/* EISA */
+name|BUS_USB
+block|,
+comment|/* USB */
+name|BUS_VIRTUAL
+comment|/* Virtual Bus */
 block|}
 enum|;
 end_enum
