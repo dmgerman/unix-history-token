@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.2 1994/10/19 01:58:53 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.3 1994/10/23 21:27:07 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -342,12 +342,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ddb.h"
 end_include
 
 begin_include
@@ -2741,41 +2735,32 @@ end_define
 begin_escape
 end_escape
 
-begin_comment
-comment|/* Grabbed from Julians SCSI aha-drivers */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|DDB
-end_ifdef
-
-begin_function_decl
-name|int
-name|Debugger
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-else|DDB
-end_else
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|Debugger
+name|fatal_if_no_DDB
 parameter_list|()
-value|panic("should call debugger here (aic6360.c)")
+value|panic("panic for historical reasons")
 end_define
 
 begin_endif
 endif|#
 directive|endif
-endif|DDB
 end_endif
 
 begin_typedef
@@ -7569,6 +7554,11 @@ expr_stmt|;
 endif|#
 directive|endif
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 block|}
@@ -9019,6 +9009,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 block|}
@@ -10848,6 +10843,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 name|aic_init
@@ -10937,6 +10937,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 block|}
@@ -11203,6 +11208,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 block|}
@@ -11346,6 +11356,11 @@ literal|"aic: no nexus!!\n"
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 block|}
@@ -11628,6 +11643,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 name|acb
@@ -11735,6 +11755,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 name|acb
@@ -12049,6 +12074,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 block|}
@@ -12062,6 +12092,11 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 name|Debugger
+argument_list|(
+literal|"aic6360"
+argument_list|)
+expr_stmt|;
+name|fatal_if_no_DDB
 argument_list|()
 expr_stmt|;
 break|break;
