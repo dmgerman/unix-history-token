@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.9 (Berkeley) %G%"
+literal|"@(#)collect.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,14 @@ condition|)
 name|message
 argument_list|(
 literal|"354 Enter mail, end with \".\" on a line by itself"
+argument_list|)
+expr_stmt|;
+comment|/* set global timer to monitor progress */
+name|sfgetset
+argument_list|(
+name|TimeOuts
+operator|.
+name|to_datablock
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to read a UNIX-style From line 	*/
@@ -884,6 +892,15 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+comment|/* reset global timer */
+name|sfgetset
+argument_list|(
+operator|(
+name|time_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fflush
