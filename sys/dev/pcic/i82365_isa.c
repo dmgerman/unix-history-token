@@ -744,30 +744,6 @@ end_endif
 
 begin_function
 specifier|static
-name|void
-name|pcic_isa_identify
-parameter_list|(
-name|driver_t
-modifier|*
-name|driver
-parameter_list|,
-name|device_t
-name|parent
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-block|device_t child; 	u_int16_t ioaddrs[] = { 0x3e0, 0x3e2, 0x3e4, 0x3e6, 0 }; 	u_int16_t ioaddr; 	int i;  	for (i = 0; ioaddrs[i]; i++) { 		ioaddr = ioaddrs[i]; 		if (pcic_isa_check(parent, ioaddr)) { 			child = BUS_ADD_CHILD(parent, ISA_ORDER_SPECULATIVE,  			    "pcic", -1); 			device_set_driver(child, driver);
-comment|/* XXX */
-block|bus_set_resource(child, SYS_RES_IRQ, 0, 10, 1); 			bus_set_resource(child, SYS_RES_MEMORY, 0, 0xd0000, 1<< 12); 			bus_set_resource(child, SYS_RES_IOPORT, 0, ioaddr, 			    PCIC_IOSIZE); 		} 	}
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|pcic_isa_probe
 parameter_list|(
@@ -1195,6 +1171,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|pcic_detach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1209,13 +1190,6 @@ index|[]
 init|=
 block|{
 comment|/* Device interface */
-name|DEVMETHOD
-argument_list|(
-name|device_identify
-argument_list|,
-name|pcic_isa_identify
-argument_list|)
-block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
