@@ -3409,12 +3409,12 @@ operator|)
 condition|)
 block|{
 comment|/* found match !*/
+comment|/* Find a devname for pretty printing. Either 			 * the matched one or otherwise, if there is only 			 * one devname for that device, use that. 			 */
 if|if
 condition|(
 name|match
-operator|!=
-operator|-
-literal|1
+operator|>=
+literal|0
 condition|)
 name|devname
 operator|=
