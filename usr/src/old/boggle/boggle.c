@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boggle.c	4.1 %G%"
+literal|"@(#)boggle.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1065,7 +1065,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"the  first argument.  The first + removes the restriction that postions\n"
+literal|"the  first argument.  The first + removes the restriction that positions\n"
 argument_list|)
 expr_stmt|;
 name|printf
