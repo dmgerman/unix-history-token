@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -1687,6 +1693,27 @@ name|sysmouse_tty
 operator|)
 expr_stmt|;
 block|}
+comment|/* do the /dev/random device a favour                        */
+comment|/* The nasty-looking cast is to force treatment of 8 u_chars */
+comment|/* in buf as a u_int64_t                                     */
+name|random_harvest
+argument_list|(
+operator|*
+operator|(
+operator|(
+name|u_int64_t
+operator|*
+operator|)
+name|buf
+operator|)
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|RANDOM_MOUSE
+argument_list|)
+expr_stmt|;
 return|return
 name|mouse_status
 operator|.
