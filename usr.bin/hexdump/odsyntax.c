@@ -414,6 +414,12 @@ name|argvp
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
 name|odoffset
 argument_list|(
 name|argc
