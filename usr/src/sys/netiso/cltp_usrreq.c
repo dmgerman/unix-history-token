@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cltp_usrreq.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cltp_usrreq.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1313,12 +1313,6 @@ name|sotoisopcb
 argument_list|(
 name|so
 argument_list|)
-decl_stmt|;
-specifier|register
-name|struct
-name|sockaddr_iso
-modifier|*
-name|siso
 decl_stmt|;
 name|int
 name|s
