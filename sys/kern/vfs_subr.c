@@ -10096,7 +10096,13 @@ operator|>=
 name|rootrefs
 argument_list|,
 operator|(
-literal|"vflush: rootrefs"
+literal|"vflush: usecount %d< rootrefs %d"
+operator|,
+name|rootvp
+operator|->
+name|v_usecount
+operator|,
+name|rootrefs
 operator|)
 argument_list|)
 expr_stmt|;
