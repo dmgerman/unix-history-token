@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.3 (Berkeley) %G%"
+literal|"@(#)query.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,8 +234,10 @@ condition|)
 block|{
 switch|switch
 condition|(
-operator|*
 name|argv
+index|[
+literal|0
+index|]
 index|[
 literal|1
 index|]
