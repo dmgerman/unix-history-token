@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.45 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,7 +626,6 @@ comment|/* common code for error returns and return receipts */
 comment|/* test for returning the body */
 if|if
 condition|(
-operator|!
 name|bitset
 argument_list|(
 name|QHAS_RET_PARAM
@@ -637,24 +636,6 @@ name|q_flags
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|EF_NORETURN
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-condition|)
-name|return_yes
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|bitset
@@ -675,6 +656,7 @@ name|return_yes
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1183,6 +1165,9 @@ if|if
 condition|(
 name|success_return
 operator|&&
+operator|!
+name|failure_return
+operator|&&
 name|strcmp
 argument_list|(
 name|e
@@ -1261,6 +1246,19 @@ condition|)
 name|savemail
 argument_list|(
 name|e
+argument_list|,
+name|return_yes
+operator|||
+operator|(
+operator|!
+name|return_no
+operator|&&
+name|e
+operator|->
+name|e_class
+operator|>=
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Arrange to send warning messages to postmaster as requested. 	*/

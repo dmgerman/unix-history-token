@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.40 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|<pwd.h>
 end_include
 
 begin_comment
-comment|/* **  SAVEMAIL -- Save mail on error ** **	If mailing back errors, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		e -- the envelope containing the message in error. ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
+comment|/* **  SAVEMAIL -- Save mail on error ** **	If mailing back errors, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		e -- the envelope containing the message in error. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
 end_comment
 
 begin_comment
@@ -158,6 +158,8 @@ begin_expr_stmt
 name|savemail
 argument_list|(
 name|e
+argument_list|,
+name|sendbody
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -165,6 +167,12 @@ operator|*
 name|e
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|sendbody
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -826,13 +834,7 @@ name|e
 operator|->
 name|e_errorqueue
 argument_list|,
-operator|(
-name|e
-operator|->
-name|e_class
-operator|>=
-literal|0
-operator|)
+name|sendbody
 argument_list|,
 name|e
 argument_list|)
@@ -902,13 +904,7 @@ name|e_message
 argument_list|,
 name|q
 argument_list|,
-operator|(
-name|e
-operator|->
-name|e_class
-operator|>=
-literal|0
-operator|)
+name|sendbody
 argument_list|,
 name|e
 argument_list|)
@@ -2744,6 +2740,8 @@ argument_list|(
 name|QBADADDR
 operator||
 name|QREPORT
+operator||
+name|QRELAYED
 argument_list|,
 name|q
 operator|->
@@ -2793,6 +2791,25 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"  (unrecoverable error)"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QRELAYED
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"  (relayed to non-DSN-aware mailer)"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3795,13 +3812,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|putline
-argument_list|(
-literal|""
-argument_list|,
-name|mci
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3830,6 +3840,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+block|}
 name|putline
 argument_list|(
 literal|""
@@ -3837,7 +3848,6 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-block|}
 name|putheader
 argument_list|(
 name|mci
