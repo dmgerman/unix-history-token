@@ -295,6 +295,20 @@ index|[]
 init|=
 block|{
 block|{
+name|PCIC_PNP_ACTIONTEC
+block|,
+name|NULL
+block|}
+block|,
+comment|/* AEI0218 */
+block|{
+name|PCIC_PNP_IBM3765
+block|,
+name|NULL
+block|}
+block|,
+comment|/* IBM3765 */
+block|{
 name|PCIC_PNP_82365
 block|,
 name|NULL
@@ -322,13 +336,6 @@ name|NULL
 block|}
 block|,
 comment|/* PNP0E03 */
-block|{
-name|PCIC_PNP_ACTIONTEC
-block|,
-name|NULL
-block|}
-block|,
-comment|/* AEI0218 */
 block|{
 name|PCIC_PNP_SCM_SWAPBOX
 block|,
