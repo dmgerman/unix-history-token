@@ -960,6 +960,26 @@ operator|++
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|dp
+operator|==
+name|dbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|dbuf
+argument_list|)
+operator|-
+literal|3
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"message too long"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|c
