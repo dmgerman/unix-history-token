@@ -11663,6 +11663,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|"telnet"
+block|,
+name|openhelp
+block|,
+name|tn
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"open"
 block|,
 name|openhelp
