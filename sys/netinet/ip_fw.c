@@ -4104,6 +4104,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4114,16 +4116,6 @@ name|NULL
 condition|)
 return|return ;
 comment|/* failed ! */
-name|bzero
-argument_list|(
-name|ipfw_dyn_v
-argument_list|,
-name|curr_dyn_buckets
-operator|*
-sizeof|sizeof
-name|r
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|i
@@ -4144,6 +4136,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4160,17 +4154,6 @@ argument_list|)
 expr_stmt|;
 return|return ;
 block|}
-name|bzero
-argument_list|(
-name|r
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|r
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mask
@@ -6912,6 +6895,8 @@ argument_list|,
 name|M_IPFW
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|ftmp
@@ -6967,18 +6952,6 @@ name|ENOSPC
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|ftmp_ext
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ftmp_ext
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* play safe! */
 name|bcopy
 argument_list|(
 name|frwl
