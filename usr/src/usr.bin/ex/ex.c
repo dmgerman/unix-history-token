@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	6.2 %G%"
+literal|"@(#)ex.c	6.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,10 @@ name|fast
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|onemt
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -389,6 +393,24 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|onhup
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|==
+name|SIG_DFL
+condition|)
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|onemt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize end of core pointers. 	 * Normally we avoid breaking back to fendcore after each 	 * file since this can be expensive (much core-core copying). 	 * If your system can scatter load processes you could do 	 * this as ed does, saving a little core, but it will probably 	 * not often make much difference. 	 */
@@ -1754,6 +1776,25 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * The following code is defensive programming against a bug in the  * pdp-11 overlay implementation.  Sometimes it goes nuts and asks  * for an overlay with some garbage number, which generates an emt  * trap.  This is a less than elegant solution, but it is somewhat  * better than core dumping and losing your work, leaving your tty  * in a weird state, etc.  */
+end_comment
+
+begin_macro
+name|onemt
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|error
+argument_list|(
+literal|"emt trap@ - try again"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
