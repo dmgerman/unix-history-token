@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ parameter_list|,
 name|cp
 parameter_list|)
 define|\
-value|if (((m)->m_next = m_getclr(M_DONTWAIT, MT_HEADER)) == NULL) {\ 		esis_stat.es_nomem++;\ 		m_freem(mhdr);\ 		return;\ 	} else {\ 		(m) = (m)->m_next;\ 		(cp) = mtod((m), caddr_t);\ 	}
+value|if (((m)->m_next = m_getclr(M_DONTWAIT, MT_HEADER)) == NULL) {\ 		esis_stat.es_nomem++;\ 		m_freem(mhdr);\ 		return;\ 	} else {\ 		(m) = (m)->m_next;\ 		(cp) = mtod((m), caddr_t);\ 		(m)->m_len = 0;\ 	}
 end_define
 
 begin_comment
