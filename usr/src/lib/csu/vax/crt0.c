@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)crt0.c	4.1 (Berkeley) %G%"
+literal|"@(#)crt0.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,6 +20,10 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
+
+begin_asm
+asm|asm("#define _start start");
+end_asm
 
 begin_macro
 name|start
@@ -158,21 +162,8 @@ comment|/*  * null mcount, just in case some routine is compiled for profiling  
 end_comment
 
 begin_asm
-asm|asm("#define _mcount mcount");
+asm|asm("mcount:	rsb");
 end_asm
-
-begin_macro
-name|mcount
-argument_list|()
-end_macro
-
-begin_block
-block|{
-asm|asm("	forgot to run ex script on gcrt0.s" );
-asm|asm( "	rsb" );
-asm|asm( "#undef _mcount");
-block|}
-end_block
 
 end_unit
 
