@@ -6272,7 +6272,6 @@ specifier|static
 name|int
 name|resource_find_hard
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|cp
