@@ -7222,6 +7222,15 @@ operator|(
 literal|"Toshiba Fast Infra Red controller"
 operator|)
 return|;
+comment|/* Compaq -- vendor 0x0e11 */
+case|case
+literal|0xa0f70e11
+case|:
+return|return
+operator|(
+literal|"Compaq PCI Hotplug controller"
+operator|)
+return|;
 comment|/* NEC -- vendor 0x1033 */
 comment|/* PCI to C-bus bridge */
 comment|/* The following chipsets are PCI to PC98 C-bus bridge. 	 * The C-bus is the 16-bits bus on PC98 and it should be probed as 	 * PCI to ISA bridge.  Because class of the C-bus is not defined, 	 * C-bus bridges are recognized as "other bridge."  To make C-bus 	 * bridge be recognized as ISA bridge, this function returns NULL. 	 */
@@ -9154,8 +9163,10 @@ end_comment
 
 begin_function
 specifier|static
-name|int
-name|ign_probe
+specifier|const
+name|char
+modifier|*
+name|ign_match
 parameter_list|(
 name|device_t
 name|dev
@@ -9174,11 +9185,61 @@ literal|0x10001042ul
 case|:
 comment|/* wd */
 return|return
-literal|0
+operator|(
+literal|"SMC FDC 37c665"
+operator|)
 return|;
-comment|/*		return ("SMC FDC 37c665");*/
 block|}
 empty_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ign_probe
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|ign_match
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|10000
+return|;
+block|}
 return|return
 name|ENXIO
 return|;
