@@ -412,23 +412,13 @@ argument_list|(
 name|command
 argument_list|)
 expr_stmt|;
-comment|/*    * Ultrix returns 127 for failure.  Is this normal?    */
 if|if
 condition|(
 name|status
-operator|==
-literal|127
 condition|)
-block|{
-name|gripe_system_command
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 else|else
 return|return
 literal|1
