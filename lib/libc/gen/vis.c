@@ -249,6 +249,10 @@ operator|||
 name|c
 operator|==
 literal|'['
+operator|||
+name|c
+operator|==
+literal|'#'
 operator|)
 condition|)
 empty_stmt|;
