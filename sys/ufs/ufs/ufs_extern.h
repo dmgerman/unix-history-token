@@ -188,13 +188,6 @@ operator|,
 name|daddr_t
 operator|*
 operator|,
-expr|struct
-name|indir
-operator|*
-operator|,
-name|int
-operator|*
-operator|,
 name|int
 operator|*
 operator|,
