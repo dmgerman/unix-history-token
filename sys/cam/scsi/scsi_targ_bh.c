@@ -881,24 +881,6 @@ argument_list|(
 name|new_path
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|status
-operator|!=
-name|CAM_REQ_CMP
-operator|&&
-name|status
-operator|!=
-name|CAM_REQ_INPROG
-condition|)
-name|printf
-argument_list|(
-literal|"targbhasync: Unable to allocate new periph "
-literal|"due to status 0x%x\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 case|case
