@@ -4198,20 +4198,6 @@ name|_PATH_DEV
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|dest
-argument_list|,
-literal|'/'
-argument_list|)
-condition|)
-name|usage
-argument_list|(
-literal|"\"dest\" argument must be geom-name\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|memset
 argument_list|(
