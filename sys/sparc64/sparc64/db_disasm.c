@@ -7425,12 +7425,11 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"ld"
+literal|"lduw"
 block|,
 literal|"pd"
 block|}
 block|,
-comment|/* officially: lduw */
 block|{
 operator|(
 name|FORMAT3
@@ -7448,7 +7447,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"ld"
+literal|"lduw"
 block|,
 literal|"qd"
 block|}
@@ -7470,12 +7469,11 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"lda"
+literal|"lduwa"
 block|,
 literal|"7d"
 block|}
 block|,
-comment|/* officially: lduwa */
 block|{
 operator|(
 name|FORMAT3
@@ -7493,7 +7491,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"lda"
+literal|"lduwa"
 block|,
 literal|"8d"
 block|}
@@ -7696,7 +7694,7 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"ld"
+literal|"lduw"
 block|,
 literal|"p5"
 block|}
@@ -7723,7 +7721,7 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"ld"
+literal|"lduw"
 block|,
 literal|"q5"
 block|}
@@ -8151,12 +8149,11 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"st"
+literal|"stw"
 block|,
 literal|"dp"
 block|}
 block|,
-comment|/* officially: stw */
 block|{
 operator|(
 name|FORMAT3
@@ -8174,7 +8171,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"st"
+literal|"stw"
 block|,
 literal|"dq"
 block|}
@@ -8196,12 +8193,11 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"sta"
+literal|"stwa"
 block|,
 literal|"d7"
 block|}
 block|,
-comment|/* officially: stwa */
 block|{
 operator|(
 name|FORMAT3
@@ -8219,7 +8215,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"sta"
+literal|"stwa"
 block|,
 literal|"d8"
 block|}
@@ -8241,7 +8237,7 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"st"
+literal|"stf"
 block|,
 literal|"ep"
 block|}
@@ -8263,7 +8259,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"st"
+literal|"stf"
 block|,
 literal|"eq"
 block|}
@@ -8285,7 +8281,7 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"sta"
+literal|"stfa"
 block|,
 literal|"e7"
 block|}
@@ -8307,7 +8303,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"sta"
+literal|"stfa"
 block|,
 literal|"e8"
 block|}
@@ -8417,7 +8413,7 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"st"
+literal|"stw"
 block|,
 literal|"5p"
 block|}
@@ -8439,7 +8435,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"st"
+literal|"stw"
 block|,
 literal|"5q"
 block|}
@@ -9483,7 +9479,7 @@ literal|0
 argument_list|)
 operator|)
 block|,
-literal|"stwa"
+literal|"stxa"
 block|,
 literal|"d7"
 block|}
@@ -9505,7 +9501,7 @@ literal|1
 argument_list|)
 operator|)
 block|,
-literal|"stwa"
+literal|"stxa"
 block|,
 literal|"d8"
 block|}
