@@ -53,12 +53,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.11	%G%"
+literal|"@(#)main.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/sendmail [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-a		This mail should be in ARPANET std **				format (not used). **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. **		-v		Give blow-by-blow description of **				everything that happens. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Compilation Instructions: **		cc -c -O main.c conf.c deliver.c parse.c **		cc -n -s *.o -lS **		chown root a.out **		chmod 755 a.out **		mv a.out sendmail ** **	Deficiencies: **		It ought to collect together messages that are **			destined for a single host and send these **			to the auxiliary mail server together. **		It should take "user at host" as three separate **			parameters and combine them into one address. ** **	Author: **		Eric Allman, UCB/INGRES */
+comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables defined in conf.c.  This **	file will be different from system to system, but the rest **	of the code will be the same.  This table could be read in, **	but it seemed nicer to have it compiled in, since deliver- **	mail will potentially be exercised a lot. ** **	Usage: **		/etc/sendmail [-f name] [-a] [-q] [-v] [-n] [-m] addr ... ** **	Positional Parameters: **		addr -- the address to deliver the mail to.  There **			can be several. ** **	Flags: **		-f name		The mail is from "name" -- used for **				the header in local mail, and to **				deliver reports of failures to. **		-r name		Same as -f; however, this flag is **				reserved to indicate special processing **				for remote mail delivery as needed **				in the future.  So, network servers **				should use -r. **		-Ffullname	Select what the full-name should be **				listed as. **		-a		This mail should be in ARPANET std **				format. **		-n		Don't do aliasing.  This might be used **				when delivering responses, for **				instance. **		-d		Run in debug mode. **		-em		Mail back a response if there was an **				error in processing.  This should be **				used when the origin of this message **				is another machine. **		-ew		Write back a response if the user is **				still logged in, otherwise, act like **				-em. **		-eq		Don't print any error message (just **				return exit status). **		-ep		(default)  Print error messages **				normally. **		-ee		Send BerkNet style errors.  This **				is equivalent to MailBack except **				that it has gives zero return code **				(unless there were errors during **				returning).  This used to be **				"EchoBack", but you know how the old **				software bounces. **		-m		In group expansion, send to the **				sender also (stands for the Mail metoo **				option. **		-i		Do not terminate mail on a line **				containing just dot. **		-s		Save UNIX-like "From" lines on the **				front of messages. **		-v		Give blow-by-blow description of **				everything that happens. **		-Cfilename	Use alternate configuration file. **		-DXvalue	Define macro X to have value. ** **	Return Codes: **		As defined in<sysexits.h>. ** **		These codes are actually returned from the auxiliary **		mailers; it is their responsibility to make them **		correct. ** **	Compilation Flags: **		LOG -- if set, everything is logged. ** **	Compilation Instructions: **		cc -c -O main.c conf.c deliver.c parse.c **		cc -n -s *.o -lS **		chown root a.out **		chmod 755 a.out **		mv a.out sendmail ** **	Deficiencies: **		It ought to collect together messages that are **			destined for a single host and send these **			to the auxiliary mail server together. **		It should take "user at host" as three separate **			parameters and combine them into one address. ** **	Author: **		Eric Allman, UCB/INGRES */
 end_comment
 
 begin_decl_stmt
@@ -79,16 +79,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* from person is explicitly specified */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|Debug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* run in debug mode */
 end_comment
 
 begin_decl_stmt
@@ -199,6 +189,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* set if blow-by-blow desired */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* debug level */
 end_comment
 
 begin_decl_stmt
@@ -342,6 +342,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|realname
+decl_stmt|;
+name|char
+modifier|*
+name|fullname
+init|=
+name|NULL
 decl_stmt|;
 specifier|extern
 name|char
@@ -694,6 +700,19 @@ name|p
 expr_stmt|;
 break|break;
 case|case
+literal|'F'
+case|:
+comment|/* set full name */
+name|fullname
+operator|=
+operator|&
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 comment|/* hop count */
@@ -832,13 +851,33 @@ literal|'d'
 case|:
 comment|/* debug */
 name|Debug
-operator|++
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Debug
+operator|<=
+literal|0
+condition|)
+name|Debug
+operator|=
+literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Version %s\n"
+literal|"Version %s Debug %d\n"
 argument_list|,
 name|Version
+argument_list|,
+name|Debug
 argument_list|)
 expr_stmt|;
 break|break;
@@ -865,9 +904,9 @@ endif|#
 directive|endif
 endif|DEBUG
 case|case
-literal|'F'
+literal|'C'
 case|:
-comment|/* select control file */
+comment|/* select configuration file */
 name|cfname
 operator|=
 operator|&
@@ -1057,6 +1096,19 @@ expr_stmt|;
 comment|/* 	locname = getname(); 	if (locname == NULL || locname[0] == '\0') 	{ 		extern struct passwd *getpwuid(); 		int uid;  		uid = getuid(); # ifdef V6 		uid&= 0377; # endif 		pw = getpwuid(uid); 		if (pw == NULL) 			syserr("Who are you? (uid=%d)", uid); 		else 			p = pw->pw_name; 	} 	else 	{ 		extern struct passwd *getpwnam();  		pw = getpwnam(p); 		if (pw == NULL) 			syserr("Who are you? (name=%s)", p); 	} 	if (p == NULL || p[0] == '\0' || pw == NULL) 		finis();  	realname = p;  	/* extract full name from passwd file */
 if|if
 condition|(
+operator|(
+name|fullname
+operator|==
+name|NULL
+operator|||
+name|fullname
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|)
+operator|&&
 name|pw
 operator|!=
 name|NULL
@@ -1170,6 +1222,24 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+name|fullname
+operator|=
+name|nbuf
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fullname
+operator|!=
+name|NULL
+operator|&&
+name|fullname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|define
 argument_list|(
 literal|'x'
@@ -1177,7 +1247,6 @@ argument_list|,
 name|nbuf
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	** Get a temp file. 	*/
 name|p
 operator|=
