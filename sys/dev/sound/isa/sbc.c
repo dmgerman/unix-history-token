@@ -1105,6 +1105,13 @@ block|}
 block|,
 comment|/* ESS1888 */
 block|{
+literal|0x07017316
+block|,
+literal|"ESS ES1888 (DEC OEM)"
+block|}
+block|,
+comment|/* DEC on-board ESS1888 */
+block|{
 literal|0
 block|}
 block|}
