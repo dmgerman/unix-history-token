@@ -724,7 +724,7 @@ comment|/* 	 * Reset everything 	 */
 name|KM_ZERO
 argument_list|(
 operator|(
-name|caddr_t
+name|uintptr_t
 operator|)
 name|vct
 argument_list|,

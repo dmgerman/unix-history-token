@@ -259,6 +259,9 @@ block|}
 comment|/* 	 * Clear all RAM to initial value of zero. 	 * This makes sure we don't leave anything funny in the 	 * queues. 	 */
 name|KM_ZERO
 argument_list|(
+operator|(
+name|uintptr_t
+operator|)
 name|eup
 operator|->
 name|eu_ram
