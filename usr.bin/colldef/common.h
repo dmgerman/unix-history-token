@@ -10,6 +10,13 @@ name|CHARMAP_SYMBOL_LEN
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|80
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
