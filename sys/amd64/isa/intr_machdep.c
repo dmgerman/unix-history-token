@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.85 1997/05/26 14:42:24 se Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.1 1997/06/02 08:19:04 dfr Exp $  */
 end_comment
 
 begin_include
@@ -111,11 +111,45 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/epsonio.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -146,6 +180,62 @@ include|#
 directive|include
 file|<sys/interrupt.h>
 end_include
+
+begin_comment
+comment|/* XXX should be in suitable include files */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ICU_IMR_OFFSET
+value|2
+end_define
+
+begin_comment
+comment|/* IO_ICU{1,2} + 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_SLAVEID
+value|7
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ICU_IMR_OFFSET
+value|1
+end_define
+
+begin_comment
+comment|/* IO_ICU{1,2} + 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_SLAVEID
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -555,6 +645,31 @@ name|isa_strayintr
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NMI_PARITY
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|NMI_EPARITY
+value|0x02
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -590,6 +705,11 @@ name|ENMI_IOSTATUS
 value|(1<< 5)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Handle a NMI, possibly a machine check.  * return true to panic system, false to ignore.  */
 end_comment
@@ -604,6 +724,78 @@ name|int
 name|cd
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+name|port
+init|=
+name|inb
+argument_list|(
+literal|0x33
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|epson_machine_id
+operator|==
+literal|0x20
+condition|)
+name|epson_outb
+argument_list|(
+literal|0xc16
+argument_list|,
+name|epson_inb
+argument_list|(
+literal|0xc16
+argument_list|)
+operator||
+literal|0x1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port
+operator|&
+name|NMI_PARITY
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"BASE RAM parity error, likely hardware failure."
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|port
+operator|&
+name|NMI_EPARITY
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"EXTENDED RAM parity error, likely hardware failure."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\nNMI Resume ??\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+else|#
+directive|else
+comment|/* IBM-PC */
 name|int
 name|isa_port
 init|=
@@ -706,6 +898,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -759,7 +953,7 @@ name|outb
 argument_list|(
 name|IO_ICU1
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 name|NRSVIDT
 argument_list|)
@@ -769,14 +963,15 @@ name|outb
 argument_list|(
 name|IO_ICU1
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
-literal|1
-operator|<<
-literal|2
+name|IRQ_SLAVE
 argument_list|)
 expr_stmt|;
-comment|/* slave on line 2 */
+comment|/* slave on line 7 */
+ifdef|#
+directive|ifdef
+name|PC98
 ifdef|#
 directive|ifdef
 name|AUTO_EOI_1
@@ -784,7 +979,37 @@ name|outb
 argument_list|(
 name|IO_ICU1
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
+argument_list|,
+literal|0x1f
+argument_list|)
+expr_stmt|;
+comment|/* (master) auto EOI, 8086 mode */
+else|#
+directive|else
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+name|ICU_IMR_OFFSET
+argument_list|,
+literal|0x1d
+argument_list|)
+expr_stmt|;
+comment|/* (master) 8086 mode */
+endif|#
+directive|endif
+else|#
+directive|else
+comment|/* IBM-PC */
+ifdef|#
+directive|ifdef
+name|AUTO_EOI_1
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+name|ICU_IMR_OFFSET
 argument_list|,
 literal|2
 operator||
@@ -798,7 +1023,7 @@ name|outb
 argument_list|(
 name|IO_ICU1
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 literal|1
 argument_list|)
@@ -806,11 +1031,14 @@ expr_stmt|;
 comment|/* 8086 mode */
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* PC98 */
 name|outb
 argument_list|(
 name|IO_ICU1
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 literal|0xff
 argument_list|)
@@ -824,6 +1052,9 @@ literal|0x0a
 argument_list|)
 expr_stmt|;
 comment|/* default to IRR on read */
+ifndef|#
+directive|ifndef
+name|PC98
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -838,6 +1069,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* pri order 3-7, 0-2 (com2 first) */
+endif|#
+directive|endif
+comment|/* !PC98 */
 name|outb
 argument_list|(
 name|IO_ICU2
@@ -850,7 +1084,7 @@ name|outb
 argument_list|(
 name|IO_ICU2
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 name|NRSVIDT
 operator|+
@@ -862,12 +1096,28 @@ name|outb
 argument_list|(
 name|IO_ICU2
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
-literal|2
+name|ICU_SLAVEID
 argument_list|)
 expr_stmt|;
-comment|/* my slave id is 2 */
+comment|/* my slave id is 7 */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|IO_ICU2
+operator|+
+name|ICU_IMR_OFFSET
+argument_list|,
+literal|9
+argument_list|)
+expr_stmt|;
+comment|/* 8086 mode */
+else|#
+directive|else
+comment|/* IBM-PC */
 ifdef|#
 directive|ifdef
 name|AUTO_EOI_2
@@ -875,7 +1125,7 @@ name|outb
 argument_list|(
 name|IO_ICU2
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 literal|2
 operator||
@@ -889,7 +1139,7 @@ name|outb
 argument_list|(
 name|IO_ICU2
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 literal|1
 argument_list|)
@@ -897,11 +1147,14 @@ expr_stmt|;
 comment|/* 8086 mode */
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* PC98 */
 name|outb
 argument_list|(
 name|IO_ICU2
 operator|+
-literal|1
+name|ICU_IMR_OFFSET
 argument_list|,
 literal|0xff
 argument_list|)
@@ -1206,7 +1459,7 @@ if|if
 condition|(
 name|intr
 operator|==
-literal|2
+name|ICU_SLAVEID
 condition|)
 continue|continue;
 comment|/* ignore 8259 SLAVE output */
@@ -1629,7 +1882,7 @@ name|ICU_LEN
 operator|||
 name|intr
 operator|==
-literal|2
+name|ICU_SLAVEID
 condition|)
 endif|#
 directive|endif
