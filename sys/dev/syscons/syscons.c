@@ -4120,6 +4120,14 @@ name|index
 expr_stmt|;
 name|ptr
 operator|->
+name|font_size
+operator|=
+name|scp
+operator|->
+name|font_size
+expr_stmt|;
+name|ptr
+operator|->
 name|mv_col
 operator|=
 name|scp
