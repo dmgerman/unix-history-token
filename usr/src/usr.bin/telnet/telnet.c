@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	8.2 (Berkeley) %G%"
+literal|"@(#)telnet.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ name|strip
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)&0x7f)
+value|((my_want_state_is_wont(TELOPT_BINARY)) ? ((x)&0x7f) : (x))
 end_define
 
 begin_decl_stmt
