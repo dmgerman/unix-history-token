@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.5 1994/10/20 19:30:50 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.6 1994/10/21 02:14:50 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -233,68 +233,6 @@ expr_stmt|;
 name|stage1
 argument_list|()
 expr_stmt|;
-comment|/*  		 * XXX This is how stage one should output: 		 */
-name|devicename
-index|[
-literal|0
-index|]
-operator|=
-name|StrAlloc
-argument_list|(
-literal|"wd0a"
-argument_list|)
-expr_stmt|;
-name|mountpoint
-index|[
-literal|0
-index|]
-operator|=
-name|StrAlloc
-argument_list|(
-literal|"/"
-argument_list|)
-expr_stmt|;
-name|devicename
-index|[
-literal|1
-index|]
-operator|=
-name|StrAlloc
-argument_list|(
-literal|"wd0e"
-argument_list|)
-expr_stmt|;
-name|mountpoint
-index|[
-literal|1
-index|]
-operator|=
-name|StrAlloc
-argument_list|(
-literal|"/usr"
-argument_list|)
-expr_stmt|;
-name|devicename
-index|[
-literal|2
-index|]
-operator|=
-name|StrAlloc
-argument_list|(
-literal|"wd0b"
-argument_list|)
-expr_stmt|;
-name|mountpoint
-index|[
-literal|2
-index|]
-operator|=
-name|StrAlloc
-argument_list|(
-literal|"swap"
-argument_list|)
-expr_stmt|;
-comment|/* 		 * XXX sort it by mountpoint, so that safe seq of mounting 		 * is guaranteed 		 */
 name|stage2
 argument_list|()
 expr_stmt|;

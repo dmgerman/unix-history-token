@@ -1422,6 +1422,11 @@ operator|=
 name|select_disk
 argument_list|()
 expr_stmt|;
+name|display_disklabel
+argument_list|(
+name|inst_disk
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|read_mbr
@@ -1756,6 +1761,11 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|display_disklabel
+argument_list|(
+name|inst_disk
+argument_list|)
+expr_stmt|;
 comment|/* Write master boot record and bootblocks */
 if|if
 condition|(
