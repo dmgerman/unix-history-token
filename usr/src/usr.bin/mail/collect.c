@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.6 %G%"
+literal|"@(#)collect.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2157,7 +2157,11 @@ condition|)
 empty_stmt|;
 if|if
 condition|(
+operator|(
 name|s
+operator|&
+literal|0377
+operator|)
 operator|!=
 literal|0
 condition|)
