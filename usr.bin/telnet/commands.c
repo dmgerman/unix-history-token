@@ -6378,6 +6378,10 @@ if|if
 condition|(
 operator|!
 name|In3270
+operator|&&
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
 condition|)
 block|{
 name|printf
@@ -10261,6 +10265,12 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
+if|if
+condition|(
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
+condition|)
 name|printf
 argument_list|(
 literal|"Escape character is '%s'.\n"
@@ -10288,6 +10298,10 @@ operator|(
 operator|!
 name|In3270
 operator|)
+operator|&&
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
 operator|&&
 operator|(
 operator|(
