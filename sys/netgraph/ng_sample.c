@@ -393,8 +393,6 @@ name|privdata
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|error
 decl_stmt|;
 comment|/* Initialize private descriptor */
 name|MALLOC
@@ -466,12 +464,12 @@ name|i
 expr_stmt|;
 block|}
 comment|/* Link structs together; this counts as our one reference to *nodep */
-name|NG_NODE_PRIVATE
+name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node
-argument_list|)
-operator|=
+argument_list|,
 name|privdata
+argument_list|)
 expr_stmt|;
 name|privdata
 operator|->
@@ -1100,9 +1098,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|meta_p
-name|meta
-decl_stmt|;
 name|NGI_GET_M
 argument_list|(
 name|item
@@ -1356,9 +1351,6 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 ifndef|#
 directive|ifndef
 name|PERSISTANT_NODE
@@ -1482,7 +1474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dook disconnection  *  * For this type, removal of the last link destroys the node  */
+comment|/*  * Hook disconnection  *  * For this type, removal of the last link destroys the node  */
 end_comment
 
 begin_function
