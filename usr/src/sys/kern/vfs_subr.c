@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -1948,6 +1954,14 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|vp
@@ -2039,6 +2053,8 @@ expr_stmt|;
 name|VOP_INACTIVE
 argument_list|(
 name|vp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -2392,6 +2408,14 @@ decl_stmt|;
 name|int
 name|active
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 comment|/* 	 * Check to see if the vnode is in use. 	 * If so we have to reference it before we clean it out 	 * so that its count cannot fall to zero and generate a 	 * race against ourselves to recycle it. 	 */
 if|if
 condition|(
@@ -2503,6 +2527,8 @@ operator|,
 literal|0
 operator|,
 name|NOCRED
+operator|,
+name|p
 operator|)
 expr_stmt|;
 operator|(
@@ -2515,6 +2541,8 @@ operator|)
 operator|)
 operator|(
 name|vp
+operator|,
+name|p
 operator|)
 expr_stmt|;
 block|}
