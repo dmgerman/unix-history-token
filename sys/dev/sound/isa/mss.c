@@ -27,6 +27,16 @@ directive|include
 file|<dev/sound/isa/mss.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|abs
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)< 0) ? -(x) : (x))
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|mss_info
