@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strftime.c	5.12 (Berkeley) %G%"
+literal|"@(#)strftime.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,7 +221,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|char
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1353,8 +1353,7 @@ name|int
 name|n
 decl_stmt|,
 name|digits
-decl_stmt|;
-name|char
+decl_stmt|,
 name|pad
 decl_stmt|;
 block|{
