@@ -210,6 +210,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"exec.h"
 end_include
 

@@ -266,6 +266,12 @@ directive|include
 file|"bundle.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"id.h"
+end_include
+
 begin_define
 define|#
 directive|define
