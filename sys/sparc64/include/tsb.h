@@ -152,6 +152,8 @@ name|tsb_vtobucket
 argument_list|(
 argument|pmap_t pm
 argument_list|,
+argument|u_long sz
+argument_list|,
 argument|vm_offset_t va
 argument_list|)
 block|{
@@ -163,7 +165,10 @@ name|pm
 argument_list|,
 name|va
 operator|>>
-name|PAGE_SHIFT
+name|TTE_PAGE_SHIFT
+argument_list|(
+name|sz
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -284,6 +289,9 @@ name|m
 parameter_list|,
 name|vm_offset_t
 name|va
+parameter_list|,
+name|u_long
+name|sz
 parameter_list|,
 name|u_long
 name|data

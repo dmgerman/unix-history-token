@@ -130,43 +130,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_SIZE_SPREAD
-value|(3)
+name|TS_8K
+value|(0UL)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_EXEC
-value|(1UL<< 4)
+name|TS_64K
+value|(1UL)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_REF
-value|(1UL<< 3)
+name|TS_512K
+value|(2UL)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_PV
-value|(1UL<< 2)
+name|TS_4M
+value|(3UL)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_W
-value|(1UL<< 1)
+name|TS_MIN
+value|TS_8K
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_WIRED
-value|(1UL<< 0)
+name|TS_MAX
+value|TS_4M
 end_define
 
 begin_define
@@ -180,28 +180,28 @@ begin_define
 define|#
 directive|define
 name|TD_8K
-value|(0UL<< TD_SIZE_SHIFT)
+value|(TS_8K<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_64K
-value|(1UL<< TD_SIZE_SHIFT)
+value|(TS_64K<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_512K
-value|(2UL<< TD_SIZE_SHIFT)
+value|(TS_512K<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_4M
-value|(3UL<< TD_SIZE_SHIFT)
+value|(TS_4M<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
@@ -232,35 +232,35 @@ begin_define
 define|#
 directive|define
 name|TD_EXEC
-value|(TS_EXEC<< TD_SOFT_SHIFT)
+value|((1UL<< 4)<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_REF
-value|(TS_REF<< TD_SOFT_SHIFT)
+value|((1UL<< 3)<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_PV
-value|(TS_PV<< TD_SOFT_SHIFT)
+value|((1UL<< 2)<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_SW
-value|(TS_W<< TD_SOFT_SHIFT)
+value|((1UL<< 1)<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_WIRED
-value|(TS_WIRED<< TD_SOFT_SHIFT)
+value|((1UL<< 0)<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
@@ -315,11 +315,38 @@ end_define
 begin_define
 define|#
 directive|define
+name|TV_SIZE_BITS
+value|(TD_SIZE_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TV_VPN
 parameter_list|(
 name|va
+parameter_list|,
+name|sz
 parameter_list|)
-value|((va)>> PAGE_SHIFT)
+value|((((va)>> TTE_PAGE_SHIFT(sz))<< TV_SIZE_BITS) | sz)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTE_SIZE_SPREAD
+value|(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTE_PAGE_SHIFT
+parameter_list|(
+name|sz
+parameter_list|)
+define|\
+value|(PAGE_SHIFT + ((sz) * TTE_SIZE_SPREAD))
 end_define
 
 begin_define
@@ -341,7 +368,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|(PAGE_SHIFT + (TTE_GET_SIZE(tp) * TD_SIZE_SPREAD))
+value|TTE_PAGE_SHIFT(TTE_GET_SIZE(tp))
 end_define
 
 begin_define
@@ -380,12 +407,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|TTE_GET_VPN
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|((tp)->tte_vpn>> TV_SIZE_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TTE_GET_VA
 parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|((tp)->tte_vpn<< PAGE_SHIFT)
+value|(TTE_GET_VPN(tp)<< TTE_GET_PAGE_SHIFT(tp))
 end_define
 
 begin_define
@@ -409,6 +447,12 @@ parameter_list|)
 define|\
 value|bzero(tp, sizeof(*tp))
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -439,43 +483,6 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|tte_match_vpn
-parameter_list|(
-name|struct
-name|tte
-modifier|*
-name|tp
-parameter_list|,
-name|vm_offset_t
-name|vpn
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|tp
-operator|->
-name|tte_data
-operator|&
-name|TD_V
-operator|)
-operator|!=
-literal|0
-operator|&&
-name|tp
-operator|->
-name|tte_vpn
-operator|==
-name|vpn
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
 name|tte_match
 parameter_list|(
 name|struct
@@ -489,14 +496,33 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|tte_match_vpn
+operator|(
+operator|(
+name|tp
+operator|->
+name|tte_data
+operator|&
+name|TD_V
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|tte_vpn
+operator|==
+name|TV_VPN
+argument_list|(
+name|va
+argument_list|,
+name|TTE_GET_SIZE
 argument_list|(
 name|tp
-argument_list|,
-name|va
-operator|>>
-name|PAGE_SHIFT
 argument_list|)
+argument_list|)
+operator|)
 operator|)
 return|;
 block|}

@@ -50,17 +50,6 @@ name|ASP_REG
 value|%g5
 end_define
 
-begin_comment
-comment|/*  * MMU %g7 points to the user tsb.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSB_REG
-value|%g7
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
