@@ -1619,13 +1619,6 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* can never happen as cutlinks is already called */
-block|if (privdata->left.hook&& privdata->right.hook) 		ng_bypass(privdata->left.hook, privdata->right.hook);
-endif|#
-directive|endif
 name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node
