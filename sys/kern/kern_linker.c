@@ -7286,6 +7286,13 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
+name|free
+argument_list|(
+name|pathbuf
+argument_list|,
+name|M_LINKER
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hints
