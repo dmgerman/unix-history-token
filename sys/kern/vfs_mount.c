@@ -3693,6 +3693,18 @@ name|mp
 operator|->
 name|mnt_optnew
 expr_stmt|;
+name|VFS_STATFS
+argument_list|(
+name|mp
+argument_list|,
+operator|&
+name|mp
+operator|->
+name|mnt_stat
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Prevent external consumers of mount options from reading 	 * mnt_optnew. 	*/
 name|mp
