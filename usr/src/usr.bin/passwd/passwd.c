@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.30 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1187,17 +1187,15 @@ name|COMPACT
 parameter_list|(
 name|e
 parameter_list|)
-value|tp = pwd->pw_
-comment|/**/
-value|e; while (*cp++ = *tp++);
+value|tp = pwd->e; while (*cp++ = *tp++);
 name|COMPACT
 argument_list|(
-name|name
+name|pw_name
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|passwd
+name|pw_passwd
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1280,22 +1278,22 @@ argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|comment
+name|pw_comment
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|gecos
+name|pw_gecos
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|dir
+name|pw_dir
 argument_list|)
 expr_stmt|;
 name|COMPACT
 argument_list|(
-name|shell
+name|pw_shell
 argument_list|)
 expr_stmt|;
 name|content

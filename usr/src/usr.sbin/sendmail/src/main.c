@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.13 (Berkeley) %G%"
+literal|"@(#)main.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3656,6 +3656,8 @@ decl_stmt|;
 specifier|extern
 name|char
 name|edata
+decl_stmt|,
+name|end
 decl_stmt|;
 specifier|extern
 name|char

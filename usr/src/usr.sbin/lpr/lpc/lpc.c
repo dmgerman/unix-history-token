@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	5.3 (Berkeley) %G%"
+literal|"@(#)lpc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,17 +384,6 @@ name|cmd
 modifier|*
 name|c
 decl_stmt|;
-specifier|extern
-name|struct
-name|cmd
-name|cmdtab
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|help
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -535,6 +524,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cmd
+name|cmdtab
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct

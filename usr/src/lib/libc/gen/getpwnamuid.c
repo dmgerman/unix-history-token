@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwnamuid.c	5.2 (Berkeley) %G%"
+literal|"@(#)getpwnamuid.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,17 +185,15 @@ name|EXPAND
 parameter_list|(
 name|e
 parameter_list|)
-value|passwd.pw_
-comment|/**/
-value|e = tp; while (*tp++ = *cp++);
+value|passwd.e = tp; while (*tp++ = *cp++);
 name|EXPAND
 argument_list|(
-name|name
+name|pw_name
 argument_list|)
 expr_stmt|;
 name|EXPAND
 argument_list|(
-name|passwd
+name|pw_passwd
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -278,22 +276,22 @@ argument_list|)
 expr_stmt|;
 name|EXPAND
 argument_list|(
-name|comment
+name|pw_comment
 argument_list|)
 expr_stmt|;
 name|EXPAND
 argument_list|(
-name|gecos
+name|pw_gecos
 argument_list|)
 expr_stmt|;
 name|EXPAND
 argument_list|(
-name|dir
+name|pw_dir
 argument_list|)
 expr_stmt|;
 name|EXPAND
 argument_list|(
-name|shell
+name|pw_shell
 argument_list|)
 expr_stmt|;
 return|return
