@@ -3628,6 +3628,13 @@ operator|->
 name|priority_mutex_count
 operator|--
 expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Remove the mutex from the threads queue. */
 name|MUTEX_ASSERT_IS_OWNED
 argument_list|(
