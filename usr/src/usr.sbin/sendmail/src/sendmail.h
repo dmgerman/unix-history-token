@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.43.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.86 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.43.1.1		%G%"
+literal|"@(#)sendmail.h	8.86		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4297,6 +4297,17 @@ end_define
 
 begin_comment
 comment|/* ok for root to own this file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOPATHCHECK
+value|0x0010
+end_define
+
+begin_comment
+comment|/* don't bother checking dir path */
 end_comment
 
 begin_comment

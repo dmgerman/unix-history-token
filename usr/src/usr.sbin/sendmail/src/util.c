@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.39.1.2 (Berkeley) %G%"
+literal|"@(#)util.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1571,6 +1571,32 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|SFF_NOPATHCHECK
+argument_list|,
+name|flags
+argument_list|)
+operator|||
+operator|(
+name|uid
+operator|==
+literal|0
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SFF_ROOTOK
+argument_list|,
+name|flags
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* check the path to the file for acceptability */
 for|for
 control|(
 name|p
@@ -1847,6 +1873,7 @@ expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 block|}
 ifdef|#
 directive|ifdef

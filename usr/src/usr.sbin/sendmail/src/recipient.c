@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.44.1.2 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3546,6 +3546,11 @@ argument_list|,
 name|geteuid
 argument_list|()
 argument_list|)
+expr_stmt|;
+else|else
+name|sfflags
+operator||=
+name|SFF_NOPATHCHECK
 expr_stmt|;
 block|}
 block|}
