@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.69 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.70 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3566,29 +3566,11 @@ condition|)
 block|{
 name|badmap
 label|:
-name|printf
-argument_list|(
-literal|"pid %d: VM allocation failure\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|uprintf
-argument_list|(
-literal|"sorry, pid %d was killed in exec: VM allocation\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|psignal
+name|killproc
 argument_list|(
 name|p
 argument_list|,
-name|SIGKILL
+literal|"VM allocation in exec"
 argument_list|)
 expr_stmt|;
 name|p

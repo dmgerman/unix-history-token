@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -4455,6 +4461,70 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Kill the current process for stated reason.  */
+end_comment
+
+begin_macro
+name|killproc
+argument_list|(
+argument|p
+argument_list|,
+argument|why
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|why
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"pid %d was killed: %s\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|why
+argument_list|)
+expr_stmt|;
+name|uprintf
+argument_list|(
+literal|"sorry, pid %d was killed: %s\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|why
+argument_list|)
+expr_stmt|;
+name|psignal
+argument_list|(
+name|p
+argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Force the current process to exit with the specified  * signal, dumping core if appropriate.  We bypass the normal  * tests for masked and caught signals, allowing unrecoverable  * failures to terminate the process without changing signal state.  * Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  * Calls exit and does not return.  */
