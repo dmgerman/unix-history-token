@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.1.2.1 1999/09/18 15:03:51 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.1.2.3 1999/11/18 13:55:26 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -568,6 +568,38 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SOLARIS2
+operator|>=
+literal|8
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inet/ip6.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ipif_local_addr
+value|ipif_lcl_addr
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -1131,18 +1163,10 @@ directive|include
 file|<machine/spl.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|3
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1164,16 +1188,6 @@ define|#
 directive|define
 name|ACTUALLY_LKM_NOT_KERNEL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -4316,12 +4330,12 @@ decl_stmt|;
 else|#
 directive|else
 name|__u8
-name|ip_hl
+name|ip_v
 range|:
 literal|4
 decl_stmt|;
 name|__u8
-name|ip_v
+name|ip_hl
 range|:
 literal|4
 decl_stmt|;

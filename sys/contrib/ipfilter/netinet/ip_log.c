@@ -91,6 +91,27 @@ end_if
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__FreeBSD_version
@@ -804,7 +825,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|fr_info_t
 name|iplcrc
 index|[

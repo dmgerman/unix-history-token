@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.3.2.4 1999/10/15 13:42:37 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.3.2.6 1999/12/17 12:58:16 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -553,6 +553,13 @@ define|#
 directive|define
 name|FI_W_DPORT
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_WILD
+value|(FI_W_SPORT|FI_W_DPORT)
 end_define
 
 begin_typedef
@@ -1572,21 +1579,39 @@ literal|2
 index|]
 decl_stmt|;
 name|int
-name|f_active
-decl_stmt|;
-comment|/* 1 or 0 - active rule set */
-name|int
 name|f_defpass
 decl_stmt|;
 comment|/* default pass - from fr_pass */
-name|int
+name|char
+name|f_active
+decl_stmt|;
+comment|/* 1 or 0 - active rule set */
+name|char
 name|f_running
 decl_stmt|;
 comment|/* 1 if running, else 0 */
-name|int
+name|char
 name|f_logging
 decl_stmt|;
 comment|/* 1 if enabled, else 0 */
+if|#
+directive|if
+operator|!
+name|SOLARIS
+operator|&&
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+name|char
+name|f_version
+index|[
+literal|25
+index|]
+decl_stmt|;
+comment|/* version string */
+else|#
+directive|else
 name|char
 name|f_version
 index|[
@@ -1594,6 +1619,8 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* version string */
+endif|#
+directive|endif
 block|}
 name|friostat_t
 typedef|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.1.2.1 1999/08/14 04:47:54 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.1.2.2 1999/11/28 11:01:51 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -271,6 +271,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|NAT_HW_CKSUM
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEF_NAT_AGE
 value|1200
 end_define
@@ -292,6 +299,9 @@ name|nat_flags
 decl_stmt|;
 name|u_32_t
 name|nat_sumd
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|u_32_t
 name|nat_ipsumd
@@ -1016,12 +1026,6 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-operator|||
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|300003
-operator|)
 end_if
 
 begin_decl_stmt
@@ -1320,6 +1324,8 @@ name|u_short
 operator|*
 operator|,
 name|u_32_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1336,6 +1342,8 @@ name|u_short
 operator|*
 operator|,
 name|u_32_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

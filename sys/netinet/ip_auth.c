@@ -105,6 +105,22 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+operator|(
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|220000
+operator|)
+operator|)
+operator|||
+expr|\
+operator|(
 name|defined
 argument_list|(
 name|_KERNEL
@@ -113,7 +129,9 @@ operator|&&
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|220000
+literal|40013
+operator|)
+operator|)
 operator|)
 end_if
 
@@ -177,17 +195,10 @@ end_include
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|)
 operator|&&
 operator|!
 name|defined
@@ -810,7 +821,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|frauth_t
 name|fr_auth
 index|[
@@ -830,7 +840,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|fr_authstart
 init|=
@@ -847,7 +856,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|frauthent_t
 modifier|*
 name|fae_list
@@ -1557,12 +1565,6 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-operator|||
-operator|(
-name|FreeBSD_version
-operator|>=
-literal|300003
-operator|)
 name|u_long
 name|cmd
 decl_stmt|;

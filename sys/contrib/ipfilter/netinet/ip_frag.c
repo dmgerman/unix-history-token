@@ -25,7 +25,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.4.2.3 1999/09/18 15:03:54 darrenr Exp $";*/
+comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.4.2.4 1999/11/28 04:52:10 darrenr Exp $";*/
 end_comment
 
 begin_decl_stmt
@@ -142,6 +142,22 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+operator|(
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|220000
+operator|)
+operator|)
+operator|||
+expr|\
+operator|(
 name|defined
 argument_list|(
 name|_KERNEL
@@ -150,7 +166,9 @@ operator|&&
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|220000
+literal|40013
+operator|)
+operator|)
 operator|)
 end_if
 
@@ -545,7 +563,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|ipfr_t
 modifier|*
 name|ipfr_heads
@@ -556,7 +573,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ipfr_t
 modifier|*
 name|ipfr_nattab
@@ -567,23 +583,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ipfrstat_t
 name|ipfr_stats
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipfr_inuse
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|fr_ipfrttl
 init|=
 literal|120
@@ -1553,6 +1563,8 @@ operator|=
 name|ip
 operator|->
 name|ip_off
+operator|&
+name|IP_OFFMASK
 expr_stmt|;
 name|atoff
 operator|=
@@ -1569,11 +1581,7 @@ expr_stmt|;
 comment|/* 			 * If we've follwed the fragments, and this is the 			 * last (in order), shrink expiration time. 			 */
 if|if
 condition|(
-operator|(
 name|off
-operator|&
-name|IP_OFFMASK
-operator|)
 operator|==
 name|f
 operator|->
@@ -1584,7 +1592,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|off
+name|ip
+operator|->
+name|ip_off
 operator|&
 name|IP_MF
 operator|)

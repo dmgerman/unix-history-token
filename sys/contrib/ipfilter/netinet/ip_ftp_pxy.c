@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id$  * $FreeBSD$  */
+comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -844,14 +844,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|newbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|newbuf
-argument_list|)
 argument_list|,
 literal|"%s %u,%u,%u,%u,%u,%u\r\n"
 argument_list|,
@@ -1146,6 +1141,8 @@ operator|->
 name|ip_sum
 argument_list|,
 name|sum2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2215,6 +2212,8 @@ operator|->
 name|ip_sum
 argument_list|,
 name|sum2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
