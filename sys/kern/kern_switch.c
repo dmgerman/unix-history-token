@@ -497,21 +497,6 @@ condition|(
 name|loaned
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|original
-operator|->
-name|td_standin
-operator|==
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"kse_reassign: borrower still has standin thread"
-operator|)
-argument_list|)
-expr_stmt|;
 name|TD_CLR_LOAN
 argument_list|(
 name|owner

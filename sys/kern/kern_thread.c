@@ -5808,6 +5808,14 @@ operator|->
 name|ke_owner
 argument_list|)
 expr_stmt|;
+name|setrunnable
+argument_list|(
+name|ke
+operator|->
+name|ke_owner
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
