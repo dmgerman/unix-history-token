@@ -1012,6 +1012,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RADIO_GETMODE
+value|_IOR('x', 58, unsigned char)
+end_define
+
+begin_comment
+comment|/* get radio modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_AFC
+value|0x01
+end_define
+
+begin_comment
+comment|/* These modes will probably not */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_MONO
+value|0x02
+end_define
+
+begin_comment
+comment|/*  work on the FRxxxx. It does	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_MUTE
+value|0x08
+end_define
+
+begin_comment
+comment|/*  work on the FMxxxx.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RADIO_SETFREQ
 value|_IOW('x', 59, unsigned int)
 end_define
@@ -1029,6 +1073,10 @@ end_define
 
 begin_comment
 comment|/* set frequency   */
+end_comment
+
+begin_comment
+comment|/*        Argument is frequency*100MHz  */
 end_comment
 
 begin_comment
