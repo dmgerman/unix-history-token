@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -918,6 +918,7 @@ name|TS_WOPEN
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|tsleep
@@ -938,6 +939,16 @@ name|ttopen
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|||
+operator|(
+name|error
+operator|=
+name|ttclosed
+argument_list|(
+name|tp
+argument_list|)
+operator|)
 condition|)
 block|{
 name|tp
