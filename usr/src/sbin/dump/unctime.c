@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -500,7 +500,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)unctime.c	1.3 (Berkeley) 81/04/18"
+literal|"@(#)unctime.c	1.4 (Berkeley) 83/07/03"
 decl_stmt|;
 end_decl_stmt
 

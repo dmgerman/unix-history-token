@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.6 (Berkeley) 4.6"
+literal|"@(#)file.c	4.7 (Berkeley) 4.7"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
