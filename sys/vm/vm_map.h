@@ -442,12 +442,6 @@ define|\
 value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curproc); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
 begin_comment
 comment|/* #define MAP_LOCK_DIAGNOSTIC 1 */
 end_comment
@@ -461,12 +455,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|vm_map_lock
+name|vm_map_printf
 parameter_list|(
-name|map
+name|str
+parameter_list|,
+name|arg
 parameter_list|)
-define|\
-value|do { \ 		printf ("locking map LK_EXCLUSIVE: 0x%x\n", map); \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) != 0) { \ 			panic("vm_map_lock: failed to get lock"); \ 		} \ 		(map)->timestamp++; \ 	} while(0)
+value|printf(str,arg)
 end_define
 
 begin_else
@@ -477,23 +472,18 @@ end_else
 begin_define
 define|#
 directive|define
-name|vm_map_lock
+name|vm_map_printf
 parameter_list|(
-name|map
+name|str
+parameter_list|,
+name|arg
 parameter_list|)
-define|\
-value|do { \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) != 0) { \ 			panic("vm_map_lock: failed to get lock"); \ 		} \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -503,26 +493,8 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: 0x%x\n", map); \ 		KASSERT(lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) == 0, \ 			("vm_map_lock: failed to get lock")); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DIAGNOSTIC */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MAP_LOCK_DIAGNOSTIC
-argument_list|)
-end_if
 
 begin_define
 define|#
@@ -532,7 +504,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		printf ("locking map LK_RELEASE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_RELEASE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -543,7 +515,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		printf ("locking map LK_SHARED: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_SHARED: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -554,51 +526,8 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		printf ("locking map LK_RELEASE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_RELEASE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vm_map_unlock
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_map_lock_read
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_map_unlock_read
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -618,21 +547,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MAP_LOCK_DIAGNOSTIC
-argument_list|)
-name|printf
+name|vm_map_printf
 argument_list|(
 literal|"locking map LK_EXCLUPGRADE: 0x%x\n"
 argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|lockmgr
@@ -680,15 +601,6 @@ parameter_list|)
 value|_vm_map_lock_upgrade(map, curproc)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MAP_LOCK_DIAGNOSTIC
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -697,29 +609,8 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		printf ("locking map LK_DOWNGRADE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_DOWNGRADE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_DOWNGRADE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_DOWNGRADE, (void *)0, curproc); \ 	} while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vm_map_lock_downgrade
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|lockmgr(&(map)->lock, LK_DOWNGRADE, (void *)0, curproc)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
