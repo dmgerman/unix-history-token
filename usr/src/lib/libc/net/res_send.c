@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	5.2 (Berkeley) %G%"
+literal|"@(#)res_send.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,6 +882,10 @@ name|close
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|ETIMEDOUT
 expr_stmt|;
 return|return
 operator|(
