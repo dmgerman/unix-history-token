@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.18	81/08/24	*/
+comment|/*	init_main.c	4.19	81/11/08	*/
 end_comment
 
 begin_include
@@ -122,6 +122,29 @@ include|#
 directive|include
 file|"../h/clist.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../h/protocol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/protosw.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc 13 (0xd) in user mode -- /etc/init  *	cannot be executed.  */
@@ -321,7 +344,18 @@ expr_stmt|;
 name|clkstart
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialize devices and 	 * set up 'known' i-nodes 	 */
+comment|/* 	 * Initialize tables, protocols, and set up well-known inodes. 	 */
+name|mbinit
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|prinit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ihinit
 argument_list|()
 expr_stmt|;
@@ -338,9 +372,6 @@ name|bswinit
 argument_list|()
 expr_stmt|;
 name|iinit
-argument_list|()
-expr_stmt|;
-name|ptinit
 argument_list|()
 expr_stmt|;
 name|rootdir
