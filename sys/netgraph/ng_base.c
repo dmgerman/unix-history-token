@@ -5796,7 +5796,9 @@ block|{
 name|int
 name|bufSize
 init|=
-literal|2000
+literal|20
+operator|*
+literal|1024
 decl_stmt|;
 comment|/* XXX hard coded constant */
 specifier|const
