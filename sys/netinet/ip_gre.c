@@ -308,6 +308,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|gre_softc
 modifier|*
@@ -326,6 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|gre_input2
 name|__P
@@ -457,6 +459,7 @@ comment|/*  * decapsulate.  * Does the real work and is called from gre_input() 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|gre_input2
 parameter_list|(
@@ -1335,6 +1338,7 @@ comment|/*  * Find the gre interface associated with our src/dst/proto set.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|gre_softc
 modifier|*

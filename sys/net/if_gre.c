@@ -335,14 +335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|ip_gre_ttl
-init|=
-name|GRE_TTL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|int
 name|gre_clone_create
 name|__P
@@ -359,6 +352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|gre_clone_destroy
 name|__P
@@ -372,7 +366,49 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|gre_ioctl
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gre_output
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+name|rt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
+specifier|static
 name|struct
 name|if_clone
 name|gre_cloner
@@ -393,6 +429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|gre_compute_route
 parameter_list|(
@@ -405,6 +442,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|greattach
 name|__P
@@ -620,6 +658,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|greattach
 parameter_list|(
@@ -642,6 +681,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|gre_clone_create
 parameter_list|(
@@ -871,6 +911,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gre_clone_destroy
 parameter_list|(
@@ -948,6 +989,7 @@ comment|/*  * The output routine. Takes a packet and encapsulates it in the prot
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|gre_output
 parameter_list|(
@@ -1887,7 +1929,7 @@ operator|)
 operator|->
 name|ip_ttl
 operator|=
-name|ip_gre_ttl
+name|GRE_TTL
 expr_stmt|;
 operator|(
 operator|(
@@ -1990,6 +2032,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|gre_ioctl
 parameter_list|(
@@ -3365,6 +3408,7 @@ comment|/*  * computes a route to our destination that is not the one  * which w
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|gre_compute_route
 parameter_list|(
