@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.27 (Berkeley) %G%"
+literal|"@(#)fts.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1208,7 +1208,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* 	 * Following a symlink -- SLNONE test allows application to see 	 * SLNONE and recover. 	 */
+comment|/* 	 * Following a symlink -- SLNONE test allows application to see 	 * SLNONE and recover. 	 * 	 * XXX 	 * Have to open a file descriptor to '.' so we can get back. 	 */
 if|if
 condition|(
 name|instr
@@ -1335,8 +1335,6 @@ condition|)
 block|{
 name|p
 operator|->
-name|fts_parent
-operator|->
 name|fts_errno
 operator|=
 name|errno
@@ -1448,7 +1446,7 @@ goto|goto
 name|name
 goto|;
 block|}
-comment|/* Move to next node on this level. */
+comment|/* Move to the next node on this level. */
 name|next
 label|:
 name|tmp
@@ -1508,6 +1506,7 @@ condition|)
 goto|goto
 name|next
 goto|;
+comment|/* 		 * XXX 		 * This may not be able to return to the current directory. 		 */
 if|if
 condition|(
 name|p
@@ -1635,7 +1634,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Cd back up to the parent directory.  If at a root node, have to cd 	 * back to the original place, otherwise may not be able to access the 	 * original node on post-order. 	 */
+comment|/* 	 * If at a root node, have to cd back to the starting point, otherwise 	 * may not be able to access the original node on post-order.  If not 	 * a root node, cd up to the parent directory.  Note that errors are 	 * assumed to be caused by an inability to cd to the directory in the 	 * first place. 	 */
 if|if
 condition|(
 name|p
@@ -1668,8 +1667,28 @@ name|NULL
 operator|)
 return|;
 block|}
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_DP
+expr_stmt|;
 block|}
 elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|fts_errno
+condition|)
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_ERR
+expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
 name|CHDIR
@@ -1691,40 +1710,13 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*  	 * If had a chdir error when trying to get into the directory, set the 	 * info field to reflect this, and restore errno.  The error indicator 	 * has to be reset to 0 so that if the user does an FTS_AGAIN, it all 	 * works. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|fts_errno
-condition|)
-block|{
-name|errno
-operator|=
-name|p
-operator|->
-name|fts_errno
-expr_stmt|;
-name|p
-operator|->
-name|fts_errno
-operator|=
-literal|0
-expr_stmt|;
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_ERR
-expr_stmt|;
-block|}
-else|else
 name|p
 operator|->
 name|fts_info
 operator|=
 name|FTS_DP
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|sp
@@ -1843,6 +1835,7 @@ operator|->
 name|fts_link
 operator|)
 return|;
+comment|/* XXX why FTS_DNR?? */
 comment|/* If not a directory being visited in pre-order, stop here. */
 if|if
 condition|(
@@ -2031,7 +2024,7 @@ modifier|*
 name|adjaddr
 decl_stmt|;
 name|int
-name|cderr
+name|cderrno
 decl_stmt|,
 name|descend
 decl_stmt|,
@@ -2170,9 +2163,9 @@ name|nlinks
 operator|=
 literal|0
 expr_stmt|;
-name|cderr
+name|cderrno
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 block|}
 else|else
@@ -2181,7 +2174,7 @@ name|descend
 operator|=
 literal|1
 expr_stmt|;
-name|cderr
+name|cderrno
 operator|=
 literal|0
 expr_stmt|;
@@ -2523,22 +2516,37 @@ block|}
 elseif|else
 if|if
 condition|(
-name|cderr
+name|cderrno
 condition|)
+block|{
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|FTS_NOSTAT
+argument_list|)
+condition|)
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_NSOK
+expr_stmt|;
+else|else
 block|{
 name|p
 operator|->
 name|fts_info
 operator|=
-name|ISSET
-argument_list|(
-name|FTS_NOSTAT
-argument_list|)
-condition|?
-name|FTS_NSOK
-else|:
 name|FTS_NS
 expr_stmt|;
+name|p
+operator|->
+name|fts_errno
+operator|=
+name|cderrno
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|fts_accpath
