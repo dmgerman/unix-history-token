@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: session.c,v 1.37 2000/09/07 20:27:53 deraadt Exp $"
+literal|"$OpenBSD: session.c,v 1.42 2000/10/27 07:32:18 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cipher.h"
 end_include
 
 begin_include
@@ -329,6 +323,11 @@ parameter_list|(
 name|Session
 modifier|*
 name|s
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|command
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -718,6 +717,10 @@ if|if
 condition|(
 operator|!
 name|no_port_forwarding_flag
+operator|&&
+name|options
+operator|.
+name|allow_tcp_forwarding
 condition|)
 name|channel_permit_all_opens
 argument_list|()
@@ -1381,6 +1384,21 @@ block|{
 name|debug
 argument_list|(
 literal|"Port forwarding not permitted for this authentication."
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|allow_tcp_forwarding
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"Port forwarding not permitted."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2409,18 +2427,22 @@ expr_stmt|;
 comment|/* record login, etc. similar to login(1) */
 if|if
 condition|(
-name|command
-operator|==
-name|NULL
-operator|&&
 operator|!
+operator|(
 name|options
 operator|.
 name|use_login
+operator|&&
+name|command
+operator|==
+name|NULL
+operator|)
 condition|)
 name|do_login
 argument_list|(
 name|s
+argument_list|,
+name|command
 argument_list|)
 expr_stmt|;
 comment|/* Do common processing for the child, such as execing the command. */
@@ -2641,6 +2663,11 @@ parameter_list|(
 name|Session
 modifier|*
 name|s
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|command
 parameter_list|)
 block|{
 name|FILE
@@ -2813,7 +2840,14 @@ operator|&
 name|from
 argument_list|)
 expr_stmt|;
-comment|/* Done if .hushlogin exists. */
+comment|/* Done if .hushlogin exists or a command given. */
+if|if
+condition|(
+name|command
+operator|!=
+name|NULL
+condition|)
+return|return;
 name|snprintf
 argument_list|(
 name|buf
@@ -2909,7 +2943,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|buf
+name|hostname
 argument_list|,
 literal|""
 argument_list|)
@@ -6975,6 +7009,8 @@ condition|?
 name|CHAN_EXTENDED_IGNORE
 else|:
 name|CHAN_EXTENDED_READ
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh-agent.c,v 1.35 2000/09/07 20:27:54 deraadt Exp $	*/
+comment|/*	$OpenBSD: ssh-agent.c,v 1.37 2000/09/21 11:07:51 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-agent.c,v 1.35 2000/09/07 20:27:54 deraadt Exp $"
+literal|"$OpenBSD: ssh-agent.c,v 1.37 2000/09/21 11:07:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"kex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"compat.h"
 end_include
 
 begin_typedef
@@ -1119,6 +1125,9 @@ name|slen
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 name|Buffer
 name|msg
 decl_stmt|;
@@ -1158,6 +1167,8 @@ operator|&
 name|dlen
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
 name|buffer_get_int
 argument_list|(
 operator|&
@@ -1166,7 +1177,16 @@ operator|->
 name|input
 argument_list|)
 expr_stmt|;
-comment|/* flags, unused */
+if|if
+condition|(
+name|flags
+operator|&
+name|SSH_AGENT_OLD_SIGNATURE
+condition|)
+name|datafellows
+operator|=
+name|SSH_BUG_SIGBLOB
+expr_stmt|;
 name|key
 operator|=
 name|dsa_key_from_blob
@@ -4065,6 +4085,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|setenv
 argument_list|(
 name|SSH_AUTHSOCKET_ENV_NAME
@@ -4073,7 +4095,10 @@ name|socket_name
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+operator|||
 name|setenv
 argument_list|(
 name|SSH_AGENTPID_ENV_NAME
@@ -4082,7 +4107,22 @@ name|pidstrbuf
 argument_list|,
 literal|1
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"setenv"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|execvp
 argument_list|(
 name|av

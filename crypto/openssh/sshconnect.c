@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.78 2000/09/07 20:27:54 deraadt Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.79 2000/09/17 15:52:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1896,6 +1896,7 @@ name|retval
 operator|=
 literal|1
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -1910,6 +1911,14 @@ condition|)
 name|retval
 operator|=
 literal|0
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please type 'yes' or 'no'.\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

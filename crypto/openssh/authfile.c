@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.19 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: authfile.c,v 1.20 2000/10/11 20:27:23 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"bufaux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cipher.h"
 end_include
 
 begin_include
@@ -142,10 +136,11 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|CipherContext
-name|cipher
+name|ciphercontext
 decl_stmt|;
-name|int
-name|cipher_type
+name|Cipher
+modifier|*
+name|cipher
 decl_stmt|;
 name|u_int32_t
 name|rand
@@ -162,14 +157,31 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|cipher_type
+name|cipher
 operator|=
+name|cipher_by_number
+argument_list|(
 name|SSH_CIPHER_NONE
+argument_list|)
 expr_stmt|;
 else|else
-name|cipher_type
+name|cipher
 operator|=
+name|cipher_by_number
+argument_list|(
 name|SSH_AUTHFILE_CIPHER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cipher
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"save_private_key_rsa: bad cipher"
+argument_list|)
 expr_stmt|;
 comment|/* This buffer is used to built the secret part of the private key. */
 name|buffer_init
@@ -351,7 +363,9 @@ argument_list|(
 operator|&
 name|encrypted
 argument_list|,
-name|cipher_type
+name|cipher
+operator|->
+name|number
 argument_list|)
 expr_stmt|;
 name|buffer_put_int
@@ -429,9 +443,9 @@ expr_stmt|;
 name|cipher_set_key_string
 argument_list|(
 operator|&
-name|cipher
+name|ciphercontext
 argument_list|,
-name|cipher_type
+name|cipher
 argument_list|,
 name|passphrase
 argument_list|)
@@ -439,7 +453,7 @@ expr_stmt|;
 name|cipher_encrypt
 argument_list|(
 operator|&
-name|cipher
+name|ciphercontext
 argument_list|,
 operator|(
 name|unsigned
@@ -469,13 +483,13 @@ expr_stmt|;
 name|memset
 argument_list|(
 operator|&
-name|cipher
+name|ciphercontext
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|cipher
+name|ciphercontext
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1347,6 +1361,10 @@ modifier|*
 name|cp
 decl_stmt|;
 name|CipherContext
+name|ciphercontext
+decl_stmt|;
+name|Cipher
+modifier|*
 name|cipher
 decl_stmt|;
 name|BN_CTX
@@ -1628,36 +1646,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Check that it is a supported cipher. */
+name|cipher
+operator|=
+name|cipher_by_number
+argument_list|(
+name|cipher_type
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
-name|cipher_mask1
-argument_list|()
-operator||
-name|SSH_CIPHER_NONE
-operator||
-name|SSH_AUTHFILE_CIPHER
-operator|)
-operator|&
-operator|(
-literal|1
-operator|<<
-name|cipher_type
-operator|)
-operator|)
+name|cipher
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|debug
 argument_list|(
-literal|"Unsupported cipher %.100s used in key file %.200s."
+literal|"Unsupported cipher %d used in key file %.200s."
 argument_list|,
-name|cipher_name
-argument_list|(
 name|cipher_type
-argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -1698,9 +1705,9 @@ comment|/* Rest of the buffer is encrypted.  Decrypt it using the passphrase. */
 name|cipher_set_key_string
 argument_list|(
 operator|&
-name|cipher
+name|ciphercontext
 argument_list|,
-name|cipher_type
+name|cipher
 argument_list|,
 name|passphrase
 argument_list|)
@@ -1708,7 +1715,7 @@ expr_stmt|;
 name|cipher_decrypt
 argument_list|(
 operator|&
-name|cipher
+name|ciphercontext
 argument_list|,
 operator|(
 name|unsigned
@@ -1732,6 +1739,19 @@ name|buffer_len
 argument_list|(
 operator|&
 name|buffer
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ciphercontext
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ciphercontext
 argument_list|)
 argument_list|)
 expr_stmt|;
