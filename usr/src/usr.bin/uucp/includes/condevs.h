@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	condevs.h	4.2	85/04/10	*/
+comment|/*	condevs.h	4.3	85/06/19	*/
 end_comment
 
 begin_include
@@ -190,7 +190,10 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|hysopn
+name|hyspopn
+argument_list|()
+decl_stmt|,
+name|hystopn
 argument_list|()
 decl_stmt|,
 name|hyscls
