@@ -540,13 +540,6 @@ argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_devices
-argument_list|()
-expr_stmt|;
 name|listconfig
 argument_list|()
 expr_stmt|;
@@ -690,14 +683,6 @@ operator|->
 name|error
 argument_list|)
 argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_devices
-argument_list|()
 expr_stmt|;
 name|checkupdates
 argument_list|()
@@ -1079,13 +1064,6 @@ argument_list|()
 expr_stmt|;
 comment|/* make sure we're updating */
 comment|/* Arguably we should be cleverer about this. */
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_devices
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1201,14 +1179,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_devices
-argument_list|()
-expr_stmt|;
-comment|/* recreate the /dev/vinum hierarchy */
 name|printf
 argument_list|(
 literal|"\b Vinum configuration obliterated\n"
@@ -7047,20 +7017,6 @@ expr_stmt|;
 comment|/* find the index of the volume */
 if|if
 condition|(
-name|no_devfs
-condition|)
-name|make_vol_dev
-argument_list|(
-name|vol
-operator|.
-name|volno
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* and create the devices */
-if|if
-condition|(
 name|vflag
 condition|)
 block|{
@@ -7767,20 +7723,6 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_vol_dev
-argument_list|(
-name|vol
-operator|.
-name|volno
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* and create the devices */
 if|if
 condition|(
 name|vflag
@@ -8491,20 +8433,6 @@ expr_stmt|;
 comment|/* find the index of the volume */
 if|if
 condition|(
-name|no_devfs
-condition|)
-name|make_vol_dev
-argument_list|(
-name|vol
-operator|.
-name|volno
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* and create the devices */
-if|if
-condition|(
 name|vflag
 condition|)
 block|{
@@ -9211,20 +9139,6 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_vol_dev
-argument_list|(
-name|vol
-operator|.
-name|volno
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* and create the devices */
 if|if
 condition|(
 name|vflag
@@ -10097,20 +10011,6 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
-if|if
-condition|(
-name|no_devfs
-condition|)
-name|make_vol_dev
-argument_list|(
-name|vol
-operator|.
-name|volno
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* and create the devices */
 if|if
 condition|(
 name|vflag

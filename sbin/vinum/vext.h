@@ -1480,46 +1480,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|make_devices
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|make_vol_dev
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|make_plex_dev
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|make_sd_dev
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|list_defective_objects
 parameter_list|(
 name|void
@@ -1974,17 +1934,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* vinum super device */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|no_devfs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if we don't have DEVFS */
 end_comment
 
 begin_decl_stmt
