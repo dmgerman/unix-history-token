@@ -1966,30 +1966,37 @@ value|{							\ 	bzero((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid 
 end_define
 
 begin_comment
-comment|/* Flags to low-level allocation routines. */
+comment|/*  * Flags to low-level bitmap allocation routines (balloc).  *  * Note: sequential_heuristic() in kern/vfs_vnops.c limits the count  * to 127.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|B_SEQMASK
-value|0x7FFF0000
+value|0x7F000000
 end_define
 
 begin_comment
-comment|/* sequential heuristic mask */
+comment|/* Sequential heuristic mask. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|B_SEQSHIFT
-value|16
+value|24
 end_define
 
 begin_comment
-comment|/* sequential heuristic shift */
+comment|/* Sequential heuristic shift. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|B_SEQMAX
+value|0x7F
+end_define
 
 begin_define
 define|#
@@ -1999,7 +2006,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* cleared invalid areas of buffer */
+comment|/* Cleared invalid areas of buffer. */
 end_comment
 
 begin_define

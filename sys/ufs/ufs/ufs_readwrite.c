@@ -1627,13 +1627,26 @@ name|ip
 operator|->
 name|i_size
 expr_stmt|;
+comment|/* 	 * NOTE! These B_ flags are actually balloc-only flags, not buffer 	 * flags.  They are similar to the BA_ flags in -current. 	 */
+if|if
+condition|(
+name|seqcount
+operator|>
+name|B_SEQMAX
+condition|)
 name|flags
 operator|=
-name|ioflag
-operator|&
-name|B_SEQMASK
+name|B_SEQMAX
+operator|<<
+name|B_SEQSHIFT
 expr_stmt|;
-comment|/* sequential heuristic high 16 bits */
+else|else
+name|flags
+operator|=
+name|seqcount
+operator|<<
+name|B_SEQSHIFT
+expr_stmt|;
 if|if
 condition|(
 operator|(
