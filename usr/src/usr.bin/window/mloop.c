@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.11 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"defs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
 begin_macro
 name|mloop
 argument_list|()
@@ -41,10 +47,15 @@ end_macro
 
 begin_block
 block|{
-name|wwrint
+name|kill
+argument_list|(
+name|getpid
 argument_list|()
+argument_list|,
+name|SIGIO
+argument_list|)
 expr_stmt|;
-comment|/* catch typeahead before we set ASYNC */
+comment|/* catch typeahead before ASYNC was set */
 while|while
 condition|(
 operator|!
