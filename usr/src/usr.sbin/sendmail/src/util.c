@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	5.2 (Berkeley) %G%"
+literal|"@(#)util.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,24 +78,6 @@ include|#
 directive|include
 file|"conf.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|util
-operator|.
-name|c
-literal|5.2
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. **		qf -- if set, remove actual `` " '' characters **			as well as the quote bits. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
