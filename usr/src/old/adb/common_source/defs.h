@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	5.1 (Berkeley) %G%	*/
+comment|/*	@(#)defs.h	5.2 (Berkeley) %G%	*/
 end_comment
 
 begin_comment
@@ -690,7 +690,7 @@ begin_define
 define|#
 directive|define
 name|MAXOFF
-value|255
+value|1024
 end_define
 
 begin_comment
