@@ -1008,14 +1008,6 @@ name|getpwent
 argument_list|()
 condition|)
 block|{
-if|if
-condition|(
-name|hide
-argument_list|(
-name|pw
-argument_list|)
-condition|)
-continue|continue;
 for|for
 control|(
 name|p
@@ -1043,6 +1035,12 @@ name|pw
 argument_list|,
 operator|*
 name|p
+argument_list|)
+operator|&&
+operator|!
+name|hide
+argument_list|(
+name|pw
 argument_list|)
 condition|)
 block|{
