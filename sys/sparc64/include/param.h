@@ -7,14 +7,6 @@ begin_comment
 comment|/*  * Machine dependent constants for sparc64.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TODO
-define|\
-value|panic("implement %s", __func__)
-end_define
-
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is unsigned int  * and must be cast to any desired pointer type.  */
 end_comment

@@ -3584,7 +3584,10 @@ name|int
 name|i
 parameter_list|)
 block|{
-name|TODO
+name|panic
+argument_list|(
+literal|"pmap_kenter_temporary"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8000,8 +8003,7 @@ name|vm_offset_t
 name|addr
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* TODO; */
 return|return
 operator|(
 literal|0

@@ -2122,7 +2122,10 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-name|TODO
+name|panic
+argument_list|(
+literal|"ipi_all"
+argument_list|)
 expr_stmt|;
 block|}
 end_function

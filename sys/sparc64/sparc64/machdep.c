@@ -2734,8 +2734,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* TODO; */
 return|return
 operator|(
 literal|0

@@ -107,8 +107,7 @@ name|int
 name|newhz
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* TODO; */
 block|}
 end_function
 
