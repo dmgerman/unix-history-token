@@ -4247,11 +4247,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Adding cardbus\n"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|cbdev
@@ -4298,11 +4293,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Adding pccard\n"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|pccarddev

@@ -840,6 +840,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CBB_SOCKET_MASK_ALL
+value|0x0F
+end_define
+
+begin_comment
+comment|/* all of the above */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CBB_SOCKET_STAT_CARDSTS
 value|0x00000001
 end_define
@@ -1044,17 +1055,6 @@ end_define
 
 begin_comment
 comment|/* Y.Y V Socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBB_SOCKET_FORCE_BADVCC
-value|0x0200
-end_define
-
-begin_comment
-comment|/* Bad Vcc Request */
 end_comment
 
 begin_define
