@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.45 1995/05/21 21:38:49 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.46 1995/05/30 08:06:27 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -3332,7 +3332,7 @@ condition|(
 operator|(
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 operator|==
 literal|0
 operator|)
@@ -3352,12 +3352,9 @@ literal|0
 return|;
 name|obj
 operator|=
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 expr_stmt|;
 name|tinc
 operator|=
@@ -3906,12 +3903,9 @@ condition|(
 operator|(
 name|obj
 operator|=
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 operator|)
 operator|&&
 operator|(
@@ -4649,12 +4643,9 @@ condition|)
 block|{
 name|obj
 operator|=
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 expr_stmt|;
 name|tinc
 operator|=
@@ -5606,12 +5597,9 @@ name|b_lblkno
 expr_stmt|;
 name|obj
 operator|=
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 expr_stmt|;
 if|if
 condition|(
@@ -6207,12 +6195,9 @@ decl_stmt|;
 name|vm_object_t
 name|obj
 init|=
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 decl_stmt|;
 name|vm_offset_t
 name|foff
@@ -6419,14 +6404,11 @@ block|{
 name|vm_object_t
 name|obj
 init|=
-operator|(
-name|vm_object_t
-operator|)
 name|bp
 operator|->
 name|b_vp
 operator|->
-name|v_vmdata
+name|v_object
 decl_stmt|;
 name|vm_offset_t
 name|foff

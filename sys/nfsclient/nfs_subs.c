@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_subs.c,v 1.16 1995/06/14 06:23:38 joerg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_subs.c,v 1.17 1995/06/27 11:06:47 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -8843,16 +8843,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pager
-operator|=
-operator|(
-name|vm_pager_t
-operator|)
+if|if
+condition|(
 name|vnode_pager_alloc
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|vp
 argument_list|,
 literal|0
@@ -8861,42 +8855,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|object
-operator|=
-operator|(
-name|vm_object_t
-operator|)
-name|vp
-operator|->
-name|v_vmdata
-expr_stmt|;
-if|if
-condition|(
-name|object
-operator|->
-name|pager
-operator|!=
-name|pager
+operator|==
+name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"nfsrv_vmio: pager/object mismatch"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vm_object_lookup
-argument_list|(
-name|pager
-argument_list|)
-expr_stmt|;
-name|pager_cache
-argument_list|(
-name|object
-argument_list|,
-name|TRUE
+literal|"nfsrv_vmio: failed to alloc pager"
 argument_list|)
 expr_stmt|;
 name|vp
@@ -8913,12 +8877,9 @@ condition|(
 operator|(
 name|object
 operator|=
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 operator|)
 operator|&&
 operator|(
@@ -8932,9 +8893,6 @@ condition|)
 block|{
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|object
 argument_list|,
 name|PVM
@@ -9011,7 +8969,7 @@ operator|)
 operator|&&
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 condition|)
 block|{
 name|vput
@@ -9021,12 +8979,9 @@ argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 argument_list|)
 expr_stmt|;
 block|}
@@ -9066,7 +9021,7 @@ operator|)
 operator|&&
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 condition|)
 block|{
 name|vrele
@@ -9076,12 +9031,9 @@ argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
-operator|(
-name|vm_object_t
-operator|)
 name|vp
 operator|->
-name|v_vmdata
+name|v_object
 argument_list|)
 expr_stmt|;
 block|}
