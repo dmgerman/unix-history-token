@@ -171,13 +171,6 @@ literal|"uiomove_fromphys proc"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|!=
-name|NULL
-condition|)
-block|{
 name|save
 operator|=
 name|td
@@ -192,7 +185,6 @@ name|td_pflags
 operator||=
 name|TDP_DEADLKTREAT
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|n
@@ -432,10 +424,6 @@ name|out
 label|:
 if|if
 condition|(
-name|td
-operator|!=
-name|NULL
-operator|&&
 name|save
 operator|==
 literal|0
