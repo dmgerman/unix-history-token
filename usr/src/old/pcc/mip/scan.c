@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.2 (Berkeley) %G%"
+literal|"@(#)scan.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1811,6 +1811,25 @@ name|lineno
 expr_stmt|;
 continue|continue;
 default|default:
+if|if
+condition|(
+name|hflag
+condition|)
+name|uerror
+argument_list|(
+literal|"superfluous backslash in string/character constant"
+argument_list|)
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
+literal|'\\'
+case|:
+case|case
+literal|'\"'
+case|:
+case|case
+literal|'\''
+case|:
 name|val
 operator|=
 name|c
