@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|KCSETA
-value|_IOW(k, 1, struct kmcntl)
+value|_IOW('k', 1, struct kmcntl)
 end_define
 
 begin_define

@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|DKIODIAL
-value|_IO(k, 0)
+value|_IO('k', 0)
 end_define
 
 begin_comment
@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|DKIOCNEW
-value|_IO(k, 1)
+value|_IO('k', 1)
 end_define
 
 begin_comment
@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|DKIOCREQ
-value|_IO(k, 2)
+value|_IO('k', 2)
 end_define
 
 begin_comment
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|DKIOCSPL
-value|_IO(s, 1)
+value|_IO('s', 1)
 end_define
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|DIOCSWAIT
-value|_IO(s, 2)
+value|_IO('s', 2)
 end_define
 
 begin_comment
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|DIOCEXCL
-value|_IO(d, 1)
+value|_IO('d', 1)
 end_define
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|DIOCNXCL
-value|_IO(d, 2)
+value|_IO('d', 2)
 end_define
 
 begin_comment
@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|DIOCRMODE
-value|_IOW(d, 3, short)
+value|_IOW('d', 3, short)
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|DIOCQQABO
-value|_IOR(d, 4, struct dkqqabo)
+value|_IOR('d', 4, struct dkqqabo)
 end_define
 
 begin_comment
@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|DIOCXCTL
-value|_IOW(d, 8, short)
+value|_IOW('d', 8, short)
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|DIOCFLUSH
-value|_IO(d, 9)
+value|_IO('d', 9)
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|DIOCSETK
-value|_IOW(d, 10, short)
+value|_IOW('d', 10, short)
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|DIOCXWIN
-value|_IOW(d, 11, struct diocxwin)
+value|_IOW('d', 11, struct diocxwin)
 end_define
 
 begin_comment
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|KIOCINIT
-value|_IO(d, 12)
+value|_IO('d', 12)
 end_define
 
 begin_comment
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|DIOCRESET
-value|_IOW(d, 13, short)
+value|_IOW('d', 13, short)
 end_define
 
 begin_comment
@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|DIOCCTYPE
-value|_IOW(d, 14, struct diocctype)
+value|_IOW('d', 14, struct diocctype)
 end_define
 
 begin_comment
@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|DIOCINFO
-value|_IOR(d, 15, struct diocinfo)
+value|_IOR('d', 15, struct diocinfo)
 end_define
 
 begin_comment
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|DIOCSTAT
-value|_IOWR(d, 16, int)
+value|_IOWR('d', 16, int)
 end_define
 
 begin_comment
@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|DXIOEXIT
-value|_IOW(D, 'T', int)
+value|_IOW('D', 'T', int)
 end_define
 
 begin_comment
