@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.12 %G%"
+literal|"@(#)lab.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,18 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|bool
+name|label_order
+init|=
+name|FALSE
+decl_stmt|;
+specifier|static
+name|bool
+name|label_seen
+init|=
+name|FALSE
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
@@ -180,18 +192,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"Label declarations should precede const, type, var and routine declarations"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|label_order
+condition|)
+block|{
+name|label_order
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Label declarations should precede const, type, var and routine declarations"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -214,18 +242,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"All labels should be declared in one label part"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|label_seen
+condition|)
+block|{
+name|label_seen
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"All labels should be declared in one label part"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 name|parts
 index|[

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c 1.4 %G%"
+literal|"@(#)const.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,11 +43,33 @@ end_ifndef
 
 begin_macro
 name|constbeg
-argument_list|()
+argument_list|(
+argument|lineofyconst
+argument_list|,
+argument|r
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|lineofyconst
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|bool
+name|const_order
+init|=
+name|FALSE
+decl_stmt|;
+specifier|static
+name|bool
+name|const_seen
+init|=
+name|FALSE
+decl_stmt|;
 comment|/*  * this allows for multiple declaration  * parts, unless the "standard" option  * has been specified.  * If a routine segment is being compiled,  * do level one processing.  */
 if|if
 condition|(
@@ -56,6 +78,10 @@ name|progseen
 condition|)
 name|level1
 argument_list|()
+expr_stmt|;
+name|line
+operator|=
+name|lineofyconst
 expr_stmt|;
 if|if
 condition|(
@@ -84,18 +110,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"Constant declarations should precede type, var and routine declarations"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|const_order
+condition|)
+block|{
+name|const_order
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Constant declarations should precede type, var and routine declarations"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -118,18 +160,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"All constants should be declared in one const part"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|const_seen
+condition|)
+block|{
+name|const_seen
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"All constants should be declared in one const part"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 name|parts
 index|[

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.11 %G%"
+literal|"@(#)var.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,11 +67,33 @@ end_comment
 
 begin_macro
 name|varbeg
-argument_list|()
+argument_list|(
+argument|lineofyvar
+argument_list|,
+argument|r
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|lineofyvar
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|bool
+name|var_order
+init|=
+name|FALSE
+decl_stmt|;
+specifier|static
+name|bool
+name|var_seen
+init|=
+name|FALSE
+decl_stmt|;
 comment|/* this allows for multiple declaration  * parts except when the "standard"  * option has been specified.  * If routine segment is being compiled,  * do level one processing.  */
 ifndef|#
 directive|ifndef
@@ -83,6 +105,10 @@ name|progseen
 condition|)
 name|level1
 argument_list|()
+expr_stmt|;
+name|line
+operator|=
+name|lineofyvar
 expr_stmt|;
 if|if
 condition|(
@@ -105,18 +131,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"Variable declarations should precede routine declarations"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|var_order
+condition|)
+block|{
+name|var_order
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Variable declarations should precede routine declarations"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -139,18 +181,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"All variables should be declared in one var part"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|var_seen
+condition|)
+block|{
+name|var_seen
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"All variables should be declared in one var part"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 name|parts
 index|[

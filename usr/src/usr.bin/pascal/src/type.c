@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.7 %G%"
+literal|"@(#)type.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,11 +43,33 @@ end_comment
 
 begin_macro
 name|typebeg
-argument_list|()
+argument_list|(
+argument|lineofytype
+argument_list|,
+argument|r
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|lineofytype
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|bool
+name|type_order
+init|=
+name|FALSE
+decl_stmt|;
+specifier|static
+name|bool
+name|type_seen
+init|=
+name|FALSE
+decl_stmt|;
 comment|/*  * this allows for multiple  * declaration parts unless  * standard option has been  * specified.  * If routine segment is being  * compiled, do level one processing.  */
 ifndef|#
 directive|ifndef
@@ -59,6 +81,10 @@ name|progseen
 condition|)
 name|level1
 argument_list|()
+expr_stmt|;
+name|line
+operator|=
+name|lineofytype
 expr_stmt|;
 if|if
 condition|(
@@ -85,18 +111,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"Type declarations should precede var and routine declarations"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|type_order
+condition|)
+block|{
+name|type_order
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Type declarations should precede var and routine declarations"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -119,18 +161,34 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-block|}
 name|error
 argument_list|(
 literal|"All types should be declared in one type part"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|type_seen
+condition|)
+block|{
+name|type_seen
+operator|=
+name|TRUE
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"All types should be declared in one type part"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 name|parts
 index|[
