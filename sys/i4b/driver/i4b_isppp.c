@@ -2522,7 +2522,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* do thhis here because pp_down calls i4bisppp_tlf */
+comment|/* do this here because pp_down calls i4bisppp_tlf */
 name|sc
 operator|->
 name|sc_state
@@ -2575,6 +2575,18 @@ name|i4bisppp_softc
 index|[
 name|unit
 index|]
+decl_stmt|;
+name|struct
+name|sppp
+modifier|*
+name|sp
+init|=
+operator|&
+name|sc
+operator|->
+name|sc_if_un
+operator|.
+name|scu_sp
 decl_stmt|;
 name|NDBGL4
 argument_list|(
@@ -2646,6 +2658,38 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|sc_cdp
+operator|=
+operator|(
+name|call_desc_t
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|/* do this here because pp_down calls i4bisppp_tlf */
+name|sc
+operator|->
+name|sc_state
+operator|=
+name|ST_IDLE
+expr_stmt|;
+comment|/*                  * Ahh, sppp doesn't like to get a down event when                  * dialing fails. So first tell it that we are up                  * (doesn't hurt us since sc_state != ST_CONNECTED)                  * and then go down.                  */
+name|sp
+operator|->
+name|pp_up
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|pp_down
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
