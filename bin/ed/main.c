@@ -58,7 +58,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.11 1997/08/07 21:33:43 steve Exp $"
+literal|"$Id: main.c,v 1.12 1997/10/08 14:47:56 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1881,7 +1881,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|int
+name|long
 name|sgnum
 init|=
 literal|0

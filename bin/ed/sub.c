@@ -32,7 +32,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: sub.c,v 1.9 1997/02/22 14:03:19 peter Exp $"
+literal|"$Id: sub.c,v 1.10 1997/08/07 21:33:44 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ name|int
 modifier|*
 name|flagp
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|np
 decl_stmt|;
