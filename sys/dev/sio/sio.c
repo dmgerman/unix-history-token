@@ -8025,7 +8025,7 @@ name|modem_status
 operator|&
 name|com
 operator|->
-name|ppsbit
+name|pps_bit
 operator|)
 condition|?
 name|PPS_CAPTUREASSERT
