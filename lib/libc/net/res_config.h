@@ -3,6 +3,7 @@ begin_define
 define|#
 directive|define
 name|DEBUG
+value|1
 end_define
 
 begin_comment
