@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ehash.c	4.1	(Berkeley)	82/11/06"
+literal|"@(#)ehash.c	4.2	(Berkeley)	82/11/06"
 decl_stmt|;
 end_decl_stmt
 
