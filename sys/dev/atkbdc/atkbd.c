@@ -3018,6 +3018,33 @@ operator|=
 literal|0x6b
 expr_stmt|;
 break|break;
+case|case
+literal|0x5e
+case|:
+comment|/* power key */
+name|keycode
+operator|=
+literal|0x6d
+expr_stmt|;
+break|break;
+case|case
+literal|0x5f
+case|:
+comment|/* sleep key */
+name|keycode
+operator|=
+literal|0x6e
+expr_stmt|;
+break|break;
+case|case
+literal|0x63
+case|:
+comment|/* wake key */
+name|keycode
+operator|=
+literal|0x6f
+expr_stmt|;
+break|break;
 default|default:
 comment|/* ignore everything else */
 goto|goto
