@@ -208,6 +208,25 @@ name|hardclock_divisor
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I586_CPU
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|pentium_mhz
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|clkintr
@@ -219,16 +238,60 @@ name|clockframe
 name|frame
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|I586_CPU
+comment|/* 	 * This resets the CPU cycle counter to zero, to make our 	 * job easier in microtime().  Some fancy ifdefs could speed 	 * this up for Pentium-only kernels. 	 * We want this to be done as close as possible to the actual 	 * timer incrementing in hardclock(), because there is a window 	 * between the two where the value is no longer valid.  Experimentation 	 * may reveal a good precompensation to apply in microtime(). 	 */
+if|if
+condition|(
+name|pentium_mhz
+condition|)
+block|{
+asm|__asm __volatile("movl $0x10,%%ecx\n"
+literal|"xorl %%eax,%%eax\n"
+literal|"movl %%eax,%%edx\n"
+literal|".byte 0x0f, 0x30\n"
+literal|"#%0%1"
+operator|:
+literal|"=m"
+operator|(
+name|frame
+operator|)
+comment|/* no outputs */
+operator|:
+literal|"b"
+operator|(
+operator|&
+name|frame
+operator|)
+comment|/* fake input */
+operator|:
+literal|"ax"
+operator|,
+literal|"cx"
+operator|,
+literal|"dx"
+block|)
+empty_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
 name|hardclock
 argument_list|(
 operator|&
 name|frame
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_if
+unit|}
 if|#
 directive|if
 literal|0
@@ -240,20 +303,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|acquire_timer0
-parameter_list|(
-name|int
-name|rate
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-name|function
-function_decl|)
-parameter_list|()
-parameter_list|)
+argument_list|(
+argument|int rate
+argument_list|,
+argument|void (*function)()
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -282,7 +342,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int
@@ -442,14 +502,6 @@ name|I586_CPU
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|pentium_mhz
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|long
 name|long
@@ -458,6 +510,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Figure out how fast the cyclecounter runs.  This must be run with  * clock interrupts disabled, but with the timer/counter programmed  * and running.  */
+end_comment
 
 begin_function
 name|void
