@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -307,14 +307,12 @@ name|howto
 argument_list|,
 name|devtype
 argument_list|,
-name|io
+name|aio
 argument_list|)
 specifier|register
 name|howto
 operator|,
 name|devtype
-operator|,
-name|io
 expr_stmt|;
 end_expr_stmt
 
@@ -322,14 +320,29 @@ begin_comment
 comment|/* howto=r11, devtype=r10 */
 end_comment
 
+begin_decl_stmt
+name|int
+name|aio
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+specifier|register
+name|int
+name|esym
+decl_stmt|;
+comment|/* must be r9 */
 name|struct
 name|exec
 name|x
 decl_stmt|;
 specifier|register
 name|int
+name|io
+init|=
+name|aio
+decl_stmt|,
 name|i
 decl_stmt|;
 name|char
