@@ -419,12 +419,9 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_comment
-comment|/*  * ANSI/POSIX  */
-end_comment
-
 begin_function_decl
 name|__BEGIN_DECLS
+comment|/*  * ANSI/POSIX  */
 name|double
 name|acos
 parameter_list|(
