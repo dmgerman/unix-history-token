@@ -4,7 +4,7 @@ comment|/******************************************** bsd43_vax.h copyright 1991
 end_comment
 
 begin_comment
-comment|/* $Log: config.h,v $  * Revision 1.2  1992/06/02  05:07:35  rich  * Ported to 386bsd.  Changes from vax BSD4.3 include usage of  * fmod in libm.a, usage of void pointers, and usage of vfprintf  * in libc.a.  Floating point exceptions are not raised when  * they should be, which causes the last fpe test to fail.  *  * Revision 1.1  1992/06/02  03:45:42  rich  * Initial revision  *  * Revision 4.1  91/09/25  11:41:07  brennan  * VERSION 1.0  *   * Revision 3.2  91/08/13  09:04:09  brennan  * VERSION .9994  *   * Revision 3.1  91/06/07  10:39:33  brennan  * VERSION 0.995  *  */
+comment|/* $Log: config.h,v $  * Revision 1.2  1992/06/02  05:07:35  rich  * Ported to 386bsd.  Changes from vax BSD4.3 include usage of  * fmod in libm.a, usage of void pointers, and usage of vfprintf  * in libc.a.  Floating point exceptions are not raised when  * they should be, which causes the last fpe test to fail.  *  * Revision 1.1  1992/06/02  03:45:42  rich  * Initial revision  *  * Revision 4.1  91/09/25  11:41:07  brennan  * VERSION 1.0  *   * Revision 3.2  91/08/13  09:04:09  brennan  * VERSION .9994  *   * Revision 3.1  91/06/07  10:39:33  brennan  * VERSION 0.995  *   *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00089  * --------------------         -----   ----------------------  *  * 01 Mar 93    Chris Demetriou		Adjust to life with strtod in libc  *  */
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRTOD
-value|0
+value|1
 end_define
 
 begin_define
