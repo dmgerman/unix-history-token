@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.16 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,12 +37,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -50,24 +44,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -92,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
