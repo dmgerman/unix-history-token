@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.18 1998/06/16 19:40:24 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.19 1998/06/16 19:40:34 brian Exp $  */
 end_comment
 
 begin_include
@@ -8491,21 +8491,50 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* ACK */
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cmsg
 operator|->
 name|cmsg_type
-operator|==
+operator|!=
 name|SCM_RIGHTS
 condition|)
 block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Recvmsg: no descriptor received !\n"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|niov
+operator|--
+condition|)
+name|free
+argument_list|(
+name|iov
+index|[
+name|niov
+index|]
+operator|.
+name|iov_base
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* We've successfully received an open file descriptor through our socket */
 name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Receiving non-tty device\n"
+literal|"Receiving device descriptor\n"
 argument_list|)
 expr_stmt|;
 name|link_fd
@@ -8520,43 +8549,6 @@ argument_list|(
 name|cmsg
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* It's a ``controlling'' tty device via CATPROG */
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"Receiving tty device\n"
-argument_list|)
-expr_stmt|;
-name|link_fd
-operator|=
-name|dup
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|fcntl
-argument_list|(
-name|link_fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|fcntl
-argument_list|(
-name|link_fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-operator||
-name|O_NONBLOCK
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|strncmp
@@ -8685,11 +8677,6 @@ literal|0
 index|]
 operator|.
 name|iov_base
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
