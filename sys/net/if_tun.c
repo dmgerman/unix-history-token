@@ -993,6 +993,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_lastchange
+operator|=
+name|time
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1159,6 +1165,12 @@ operator||=
 name|IFF_UP
 operator||
 name|IFF_RUNNING
+expr_stmt|;
+name|ifp
+operator|->
+name|if_lastchange
+operator|=
+name|time
 expr_stmt|;
 for|for
 control|(

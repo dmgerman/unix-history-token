@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.32 1996/04/07 17:39:08 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.33 1996/04/13 12:45:33 bde Exp $ */
 end_comment
 
 begin_comment
@@ -972,6 +972,14 @@ name|IFF_UP
 operator||
 name|IFF_RUNNING
 operator|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+operator|=
+name|time
 expr_stmt|;
 name|sc
 operator|->
@@ -3300,14 +3308,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_lastchange
-operator|=
-name|time
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -5108,14 +5108,6 @@ name|sc_if
 operator|.
 name|if_ipackets
 operator|++
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_lastchange
-operator|=
-name|time
 expr_stmt|;
 if|if
 condition|(
