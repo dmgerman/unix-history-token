@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.24 1997/10/08 07:48:15 charnier Exp $"
+literal|"$Id: plist.c,v 1.25 1998/07/18 22:19:11 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1938,6 +1938,11 @@ if|if
 condition|(
 operator|!
 name|isdir
+argument_list|(
+name|tmp
+argument_list|)
+operator|&&
+name|fexists
 argument_list|(
 name|tmp
 argument_list|)
