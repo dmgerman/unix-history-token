@@ -1905,12 +1905,6 @@ argument_list|,
 literal|"zs"
 argument_list|,
 literal|0
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|device_add_child
@@ -1920,12 +1914,6 @@ argument_list|,
 literal|"zs"
 argument_list|,
 literal|1
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

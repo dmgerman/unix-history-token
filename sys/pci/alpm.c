@@ -1366,8 +1366,6 @@ argument_list|,
 literal|"alsmb"
 argument_list|,
 name|unit
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return;

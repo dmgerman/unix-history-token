@@ -3690,6 +3690,11 @@ argument_list|,
 name|name
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|ivar
 argument_list|)

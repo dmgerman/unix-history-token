@@ -1648,8 +1648,6 @@ argument_list|,
 name|desc
 operator|->
 name|unit
-argument_list|,
-name|devi
 argument_list|)
 expr_stmt|;
 name|device_set_flags
@@ -1659,6 +1657,13 @@ argument_list|,
 name|desc
 operator|->
 name|flags
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
+argument_list|,
+name|devi
 argument_list|)
 expr_stmt|;
 name|err

@@ -574,6 +574,11 @@ name|iicd_name
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|iicdev
 argument_list|)

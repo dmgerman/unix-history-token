@@ -304,6 +304,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|device_t
+name|child
+decl_stmt|;
 name|struct
 name|kft_softc
 modifier|*
@@ -538,6 +541,8 @@ name|kd_hosenum
 operator|=
 name|hoseno
 expr_stmt|;
+name|child
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -548,6 +553,11 @@ name|kd_name
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|kd
 argument_list|)

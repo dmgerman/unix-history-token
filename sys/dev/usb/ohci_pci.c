@@ -597,6 +597,11 @@ literal|"usb"
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|usbus
 argument_list|,
 name|sc
 argument_list|)

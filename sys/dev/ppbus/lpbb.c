@@ -486,8 +486,6 @@ literal|"iicbb"
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* add the iicbus to the tree */
@@ -691,8 +689,6 @@ argument_list|,
 name|dev
 operator|->
 name|id_unit
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 return|return

@@ -2636,6 +2636,11 @@ operator|->
 name|tcb_modname
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|ta
 argument_list|)

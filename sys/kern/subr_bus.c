@@ -3044,10 +3044,6 @@ name|name
 parameter_list|,
 name|int
 name|unit
-parameter_list|,
-name|void
-modifier|*
-name|ivars
 parameter_list|)
 block|{
 name|device_t
@@ -3059,7 +3055,7 @@ decl_stmt|;
 name|PDEBUG
 argument_list|(
 operator|(
-literal|"%s at %s as unit %d with%s ivars"
+literal|"%s at %s as unit %d"
 operator|,
 name|name
 operator|,
@@ -3069,14 +3065,6 @@ name|parent
 argument_list|)
 operator|,
 name|unit
-operator|,
-operator|(
-name|ivars
-condition|?
-literal|""
-else|:
-literal|"out"
-operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3262,7 +3250,7 @@ name|dev
 operator|->
 name|ivars
 operator|=
-name|ivars
+name|NULL
 expr_stmt|;
 name|dev
 operator|->
@@ -3349,10 +3337,6 @@ name|name
 parameter_list|,
 name|int
 name|unit
-parameter_list|,
-name|void
-modifier|*
-name|ivars
 parameter_list|)
 block|{
 return|return
@@ -3365,8 +3349,6 @@ argument_list|,
 name|name
 argument_list|,
 name|unit
-argument_list|,
-name|ivars
 argument_list|)
 return|;
 block|}
@@ -3389,10 +3371,6 @@ name|name
 parameter_list|,
 name|int
 name|unit
-parameter_list|,
-name|void
-modifier|*
-name|ivars
 parameter_list|)
 block|{
 name|device_t
@@ -3404,7 +3382,7 @@ decl_stmt|;
 name|PDEBUG
 argument_list|(
 operator|(
-literal|"%s at %s with order %d as unit %d with%s ivars"
+literal|"%s at %s with order %d as unit %d"
 operator|,
 name|name
 operator|,
@@ -3416,14 +3394,6 @@ operator|,
 name|order
 operator|,
 name|unit
-operator|,
-operator|(
-name|ivars
-condition|?
-literal|""
-else|:
-literal|"out"
-operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3436,8 +3406,6 @@ argument_list|,
 name|name
 argument_list|,
 name|unit
-argument_list|,
-name|ivars
 argument_list|)
 expr_stmt|;
 if|if
@@ -4732,6 +4700,34 @@ name|dev
 operator|->
 name|ivars
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|device_set_ivars
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|ivars
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|dev
+condition|)
+return|return;
+name|dev
+operator|->
+name|ivars
+operator|=
+name|ivars
+expr_stmt|;
+return|return;
 block|}
 end_function
 

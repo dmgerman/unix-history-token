@@ -553,6 +553,9 @@ name|eisa_device
 modifier|*
 name|e_dev
 decl_stmt|;
+name|device_t
+name|child
+decl_stmt|;
 name|int
 name|eisaBase
 init|=
@@ -759,6 +762,8 @@ name|irqs
 operator|)
 argument_list|)
 expr_stmt|;
+name|child
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -767,6 +772,11 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|e_dev
 argument_list|)

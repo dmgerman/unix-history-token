@@ -4071,8 +4071,6 @@ argument_list|,
 literal|"intsmb"
 argument_list|,
 name|unit
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if

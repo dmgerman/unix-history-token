@@ -616,8 +616,6 @@ argument_list|,
 literal|"bti2c"
 argument_list|,
 name|unit
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* add bit-banging generic code onto bti2c interface */
@@ -631,8 +629,6 @@ literal|"iicbb"
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* probe and attach the interface, we need it NOW 	 * bit-banging code is also probed and attached */

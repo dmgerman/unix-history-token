@@ -1138,8 +1138,6 @@ argument_list|,
 literal|"id"
 argument_list|,
 name|i
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|bus_generic_attach

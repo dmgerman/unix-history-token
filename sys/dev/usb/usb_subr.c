@@ -3849,6 +3849,11 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|bdev
 argument_list|,
 operator|&
 name|uaa
@@ -4375,7 +4380,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/* create another child for the next iface */
+comment|/* create another device for the next iface */
 name|bdev
 operator|=
 name|device_add_child
@@ -4386,6 +4391,11 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|bdev
 argument_list|,
 operator|&
 name|uaa

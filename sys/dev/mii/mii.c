@@ -485,6 +485,11 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|args
 argument_list|)
@@ -963,6 +968,12 @@ literal|"miibus"
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+operator|*
+name|child
 argument_list|,
 name|v
 argument_list|)

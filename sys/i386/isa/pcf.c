@@ -747,8 +747,6 @@ argument_list|,
 name|pcf
 operator|->
 name|pcf_unit
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if

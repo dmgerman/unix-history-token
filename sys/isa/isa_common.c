@@ -1967,6 +1967,9 @@ name|int
 name|unit
 parameter_list|)
 block|{
+name|device_t
+name|child
+decl_stmt|;
 name|struct
 name|isa_device
 modifier|*
@@ -2020,7 +2023,8 @@ operator|->
 name|id_configs
 argument_list|)
 expr_stmt|;
-return|return
+name|child
+operator|=
 name|device_add_child_ordered
 argument_list|(
 name|dev
@@ -2030,9 +2034,17 @@ argument_list|,
 name|name
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|idev
 argument_list|)
+expr_stmt|;
+return|return
+name|child
 return|;
 block|}
 end_function

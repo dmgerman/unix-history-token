@@ -344,8 +344,6 @@ operator|.
 name|iobus
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|root_bus_configure

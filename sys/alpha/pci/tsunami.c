@@ -2289,6 +2289,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|device_t
+name|child
+decl_stmt|;
 name|int
 modifier|*
 name|hose
@@ -2372,6 +2375,8 @@ name|hose
 operator|=
 name|i
 expr_stmt|;
+name|child
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -2379,6 +2384,11 @@ argument_list|,
 literal|"pcib"
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|hose
 argument_list|)

@@ -4907,6 +4907,15 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|dev
 argument_list|,
 name|dinfo
 argument_list|)

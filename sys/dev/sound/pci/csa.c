@@ -402,6 +402,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|device_t
+name|child
+decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -514,6 +517,8 @@ name|func
 operator|=
 name|SCF_PCM
 expr_stmt|;
+name|child
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -522,6 +527,11 @@ literal|"pcm"
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|func
 argument_list|)
@@ -573,6 +583,8 @@ name|func
 operator|=
 name|SCF_MIDI
 expr_stmt|;
+name|child
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -581,6 +593,11 @@ literal|"midi"
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 name|func
 argument_list|)

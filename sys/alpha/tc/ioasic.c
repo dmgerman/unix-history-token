@@ -595,6 +595,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|device_t
+name|child
+decl_stmt|;
 name|struct
 name|ioasic_softc
 modifier|*
@@ -857,8 +860,8 @@ index|]
 operator|.
 name|iad_offset
 expr_stmt|;
-name|device_probe_and_attach
-argument_list|(
+name|child
+operator|=
 name|device_add_child
 argument_list|(
 name|dev
@@ -872,6 +875,11 @@ name|iad_modname
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
 argument_list|,
 operator|&
 name|ioasic_devs
@@ -879,6 +887,10 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|device_probe_and_attach
+argument_list|(
+name|child
 argument_list|)
 expr_stmt|;
 block|}

@@ -5214,8 +5214,6 @@ argument_list|,
 literal|"pci"
 argument_list|,
 name|secondary
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -5764,8 +5762,6 @@ literal|"eisa"
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5789,8 +5785,6 @@ literal|"isa"
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

@@ -829,8 +829,6 @@ argument_list|,
 literal|"eisa"
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -878,8 +876,6 @@ argument_list|,
 literal|"mca"
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -922,8 +918,6 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"isa"
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1022,8 +1016,6 @@ argument_list|,
 name|name
 argument_list|,
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}

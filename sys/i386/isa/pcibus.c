@@ -1734,8 +1734,6 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

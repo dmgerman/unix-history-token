@@ -1886,8 +1886,6 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-name|dr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1905,6 +1903,15 @@ operator|->
 name|amr_dev
 argument_list|,
 literal|"device_add_child failed\n"
+argument_list|)
+expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|dr
+operator|->
+name|al_disk
+argument_list|,
+name|dr
 argument_list|)
 expr_stmt|;
 block|}
