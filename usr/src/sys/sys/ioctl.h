@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.2	%G%	*/
+comment|/*	ioctl.h	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -1004,6 +1004,65 @@ directive|define
 name|LSETSTATE
 value|(('v'<<8)|3)
 end_define
+
+begin_comment
+comment|/* chaos net io control commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIOCRNEXT
+value|(('c'<<8)|1)
+end_define
+
+begin_comment
+comment|/* get chaos net unmatched rfc packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIOCRSKIP
+value|(('c'<<8)|2)
+end_define
+
+begin_comment
+comment|/* Skip the unmatched RFC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIOCRREAD
+value|(('c'<<8)|3)
+end_define
+
+begin_comment
+comment|/* Read my RFC packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIOCTTY
+value|(('c'<<8)|4)
+end_define
+
+begin_comment
+comment|/* make this channel a tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIOCFLUSH
+value|(('c'<<8)|5)
+end_define
+
+begin_comment
+comment|/* flush current output packet */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.1	%G%	*/
+comment|/*	file.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,16 @@ modifier|*
 name|f_chan
 decl_stmt|;
 comment|/* mpx channel pointer */
+ifdef|#
+directive|ifdef
+name|CHAOS
+name|struct
+name|connection
+modifier|*
+name|f_conn
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|f_un
 union|;
