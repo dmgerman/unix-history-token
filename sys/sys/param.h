@@ -516,13 +516,6 @@ name|BKVAMASK
 value|(BKVASIZE-1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXFRAG
-value|8
-end_define
-
 begin_comment
 comment|/*  * MAXPATHLEN defines the longest permissible path length after expanding  * symbolic links. It is used to allocate a temporary buffer from the buffer  * pool in which to do the name expansion, hence should be a power of two,  * and must be less than or equal to MAXBSIZE.  MAXSYMLINKS defines the  * maximum number of symbolic links that may be expanded in a path name.  * It should be set high enough to allow all legitimate uses, but halt  * infinite loops reasonably quickly.  */
 end_comment

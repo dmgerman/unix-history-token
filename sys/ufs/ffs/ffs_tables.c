@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
 begin_comment
 comment|/*  * Bit patterns for identifying fragments in the block map  * used as ((map& around) == inside)  */
 end_comment

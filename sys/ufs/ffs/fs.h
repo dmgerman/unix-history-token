@@ -62,6 +62,17 @@ value|((ufs_daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
 end_define
 
 begin_comment
+comment|/* Max number of fragments per block, this is not tweakable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXFRAG
+value|8
+end_define
+
+begin_comment
 comment|/*  * Addresses stored in inodes are capable of addressing fragments  * of `blocks'. File system blocks of at most size MAXBSIZE can  * be optionally broken into 2, 4, or 8 pieces, each of which is  * addressable; these pieces may be DEV_BSIZE, or some multiple of  * a DEV_BSIZE unit.  *  * Large files consist of exclusively large data blocks.  To avoid  * undue wasted disk space, the last data block of a small file may be  * allocated as only as many fragments of a large block as are  * necessary.  The file system format retains only a single pointer  * to such a fragment, which is a piece of a single large block that  * has been divided.  The size of such a fragment is determinable from  * information in the inode, using the ``blksize(fs, ip, lbn)'' macro.  *  * The file system records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  */
 end_comment
 
