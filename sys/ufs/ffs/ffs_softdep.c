@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.38 (McKusick) 5/13/99  *	$Id: ffs_softdep.c,v 1.27 1999/05/09 19:39:54 mckusick Exp $  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.38 (McKusick) 5/13/99  *	$Id: ffs_softdep.c,v 1.28 1999/05/14 01:26:46 mckusick Exp $  */
 end_comment
 
 begin_comment
@@ -1451,6 +1451,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|lk
@@ -1476,6 +1477,7 @@ operator|->
 name|lkt_held
 argument_list|)
 expr_stmt|;
+block|}
 name|lk
 operator|->
 name|lkt_spl
@@ -1563,6 +1565,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|lk
@@ -1588,6 +1591,7 @@ operator|->
 name|lkt_held
 argument_list|)
 expr_stmt|;
+block|}
 name|lk
 operator|->
 name|lkt_held
@@ -8215,6 +8219,7 @@ operator|++
 control|)
 while|while
 condition|(
+operator|(
 name|dap
 operator|=
 name|LIST_FIRST
@@ -8227,6 +8232,7 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|)
 condition|)
 name|free_diradd
 argument_list|(
@@ -13734,6 +13740,7 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|(
 name|adp
 operator|=
 name|LIST_FIRST
@@ -13743,6 +13750,7 @@ name|bmsafemap
 operator|->
 name|sm_allocdirecthd
 argument_list|)
+operator|)
 condition|)
 block|{
 name|adp
@@ -13772,6 +13780,7 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|(
 name|aip
 operator|=
 name|LIST_FIRST
@@ -13781,6 +13790,7 @@ name|bmsafemap
 operator|->
 name|sm_allocindirhd
 argument_list|)
+operator|)
 condition|)
 block|{
 name|aip
@@ -17687,6 +17697,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|flush_pagedep_deps
@@ -17705,6 +17716,7 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|)
 condition|)
 block|{
 name|FREE_LOCK
@@ -18846,6 +18858,7 @@ block|{
 comment|/* 			 * A newly allocated directory must have its "." and 			 * ".." entries written out before its name can be 			 * committed in its parent. We do not want or need 			 * the full semantics of a synchronous VOP_FSYNC as 			 * that may end up here again, once for each directory 			 * level in the filesystem. Instead, we push the blocks 			 * and wait for them to clear. 			 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_FSYNC
@@ -18860,6 +18873,7 @@ name|MNT_NOWAIT
 argument_list|,
 name|p
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vput
