@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	3.1	%H%	*/
+comment|/*	buf.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -90,6 +90,10 @@ name|char
 name|b_error
 decl_stmt|;
 comment|/* returned after I/O */
+name|short
+name|b_hlink
+decl_stmt|;
+comment|/* hash links for buffer cache */
 name|unsigned
 name|int
 name|b_resid
