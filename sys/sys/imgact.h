@@ -59,6 +59,11 @@ modifier|*
 name|stringp
 decl_stmt|;
 comment|/* current 'end' pointer of tmp strings */
+name|char
+modifier|*
+name|endargs
+decl_stmt|;
+comment|/* end of argv vector */
 name|int
 name|stringspace
 decl_stmt|;

@@ -1848,6 +1848,31 @@ name|M_PRISON
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Remove unused arguments 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_args
+operator|&&
+operator|--
+name|p
+operator|->
+name|p_args
+operator|->
+name|ar_ref
+operator|==
+literal|0
+condition|)
+name|FREE
+argument_list|(
+name|p
+operator|->
+name|p_args
+argument_list|,
+name|M_PARGS
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Finally finished with old proc entry. 			 * Unlink it from its process group and free it. 			 */
 name|leavepgrp
 argument_list|(

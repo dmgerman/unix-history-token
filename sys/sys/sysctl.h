@@ -1331,6 +1331,17 @@ begin_comment
 comment|/* by real uid */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_ARGS
+value|7
+end_define
+
+begin_comment
+comment|/* get/set arguments/proctitle */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment

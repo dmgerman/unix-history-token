@@ -259,6 +259,33 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * pargs, used to hold a copy of the command line, if it had a sane  * length  */
+end_comment
+
+begin_struct
+struct|struct
+name|pargs
+block|{
+name|u_int
+name|ar_ref
+decl_stmt|;
+comment|/* Reference count */
+name|u_int
+name|ar_length
+decl_stmt|;
+comment|/* Length */
+name|u_char
+name|ar_args
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* Arguments */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(PROC ONLY)" below,  * which might be addressable only on a processor on which the process  * is running.  */
 end_comment
 
@@ -629,6 +656,11 @@ name|struct
 name|prison
 modifier|*
 name|p_prison
+decl_stmt|;
+name|struct
+name|pargs
+modifier|*
+name|p_args
 decl_stmt|;
 comment|/* End area that is copied on creation. */
 define|#
@@ -1121,6 +1153,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_PARGS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1577,6 +1617,13 @@ end_decl_stmt
 begin_comment
 comment|/* Bit mask summary of non-empty Q's. */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|ps_arg_cache_limit
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
