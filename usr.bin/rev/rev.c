@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -110,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<wchar.h>
 end_include
 
 begin_function_decl
@@ -138,7 +150,8 @@ specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|,
+decl_stmt|;
+name|wchar_t
 modifier|*
 name|p
 decl_stmt|,
@@ -157,6 +170,13 @@ name|ch
 decl_stmt|,
 name|rval
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -262,7 +282,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|fgetln
+name|fgetwln
 argument_list|(
 name|fp
 argument_list|,
@@ -313,13 +333,13 @@ condition|;
 operator|--
 name|t
 control|)
-name|putchar
+name|putwchar
 argument_list|(
 operator|*
 name|t
 argument_list|)
 expr_stmt|;
-name|putchar
+name|putwchar
 argument_list|(
 literal|'\n'
 argument_list|)
