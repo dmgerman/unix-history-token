@@ -5960,7 +5960,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1000
 return|;
 block|}
 return|return
