@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostnamadr.c,v 1.2 1994/08/09 20:23:14 wollman Exp $"
+literal|"$Id: gethostnamadr.c,v 1.3 1994/08/09 22:44:12 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3163,7 +3163,7 @@ name|SERVICE_BIND
 case|:
 name|hp
 operator|=
-name|_getdnsbyname
+name|_getdnsbyaddr
 argument_list|(
 name|addr
 argument_list|,
