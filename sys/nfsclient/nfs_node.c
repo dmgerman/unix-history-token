@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpcclnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nfs/rpcv2.h>
 end_include
 
@@ -746,7 +752,7 @@ name|nfsmount
 modifier|*
 name|nmp
 decl_stmt|;
-comment|/* 	 * Calculate nfs mount point and figure out whether the rslock should 	 * be interruptable or not. 	 */
+comment|/* 	 * Calculate nfs mount point and figure out whether the rslock should 	 * be interruptible or not. 	 */
 name|nmp
 operator|=
 name|VFSTONFS
@@ -917,6 +923,29 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nmp
+operator|->
+name|nm_flag
+operator|&
+name|NFSMNT_NFSV4
+condition|)
+name|error
+operator|=
+name|getnewvnode
+argument_list|(
+literal|"nfs4"
+argument_list|,
+name|mntp
+argument_list|,
+name|nfs4_vnodeop_p
+argument_list|,
+operator|&
+name|nvp
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|getnewvnode
@@ -1314,7 +1343,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Remove the silly file that was rename'd earlier 		 */
-name|nfs_removeit
+call|(
+name|sp
+operator|->
+name|s_removeit
+call|)
 argument_list|(
 name|sp
 argument_list|)

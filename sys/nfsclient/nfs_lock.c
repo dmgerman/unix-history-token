@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/rpcclnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nfs/rpcv2.h>
 end_include
 

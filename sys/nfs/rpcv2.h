@@ -58,6 +58,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RPCAUTH_KERB4
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|RPCAUTH_MAXSIZ
 value|400
 end_define
@@ -99,7 +106,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Rpc Constants */
+comment|/* msg type */
 end_comment
 
 begin_define
@@ -116,6 +123,10 @@ name|RPC_REPLY
 value|1
 end_define
 
+begin_comment
+comment|/* reply status */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -128,6 +139,17 @@ define|#
 directive|define
 name|RPC_MSGDENIED
 value|1
+end_define
+
+begin_comment
+comment|/* accepted status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPC_SUCCESS
+value|0
 end_define
 
 begin_define
@@ -165,6 +187,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RPC_SYSTEMERR
+value|5
+end_define
+
+begin_comment
+comment|/* rejected status */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RPC_MISMATCH
 value|0
 end_define
@@ -179,6 +212,13 @@ end_define
 begin_comment
 comment|/* Authentication failures */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTH_OK
+value|0
+end_define
 
 begin_define
 define|#

@@ -44,7 +44,7 @@ comment|/* Max. size of groupslist */
 name|u_char
 name|nm_fh
 index|[
-name|NFSX_V3FHMAX
+name|NFSX_V4FH
 index|]
 decl_stmt|;
 comment|/* File handle of root dir */
@@ -52,6 +52,11 @@ name|int
 name|nm_fhsize
 decl_stmt|;
 comment|/* Size of root file handle */
+name|struct
+name|rpcclnt
+name|nm_rpcclnt
+decl_stmt|;
+comment|/* rpc state */
 name|struct
 name|socket
 modifier|*
@@ -176,6 +181,19 @@ name|u_int64_t
 name|nm_maxfilesize
 decl_stmt|;
 comment|/* maximum file size */
+comment|/* NFSv4 */
+name|uint64_t
+name|nm_clientid
+decl_stmt|;
+name|fsid_t
+name|nm_fsid
+decl_stmt|;
+name|u_int
+name|nm_lease_time
+decl_stmt|;
+name|time_t
+name|nm_last_renewal
+decl_stmt|;
 block|}
 struct|;
 end_struct

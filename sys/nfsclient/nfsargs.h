@@ -350,6 +350,28 @@ begin_comment
 comment|/* Locks are local */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_NFSV4
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Use NFS Version 4 protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASWRITEVERF
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* NFSv4 Write verifier */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

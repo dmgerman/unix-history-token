@@ -332,6 +332,23 @@ define|\
 value|do { \ 	error = nfs_request((v), mreq, (t), (p), (c),&mrep,&md,&dpos); \ 	if (error != 0) { \ 		if (error& NFSERR_RETERR) \ 			error&= ~NFSERR_RETERR; \ 		else \ 			goto nfsmout; \ 	} \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|nfsm_request_mnt
+parameter_list|(
+name|n
+parameter_list|,
+name|t
+parameter_list|,
+name|p
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|do { \ 	error = nfs4_request_mnt((n), mreq, (t), (p), (c),&mrep,&md,&dpos); \ 	if (error != 0) { \ 		if (error& NFSERR_RETERR) \ 			error&= ~NFSERR_RETERR; \ 		else \ 			goto nfsmout; \ 	} \ } while (0)
+end_define
+
 begin_comment
 comment|/* *********************************** */
 end_comment

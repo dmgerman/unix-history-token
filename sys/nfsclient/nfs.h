@@ -997,6 +997,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * File context information for nfsv4.	Currently, there is only one  * lockowner for the whole machine "0."  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfs4_fctx
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|nfs4_fstate
+argument_list|)
+name|next
+expr_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
+name|uint32_t
+name|refcnt
+decl_stmt|;
+name|struct
+name|nfs4_lowner
+modifier|*
+name|lop
+decl_stmt|;
+name|struct
+name|nfsnode
+modifier|*
+name|np
+decl_stmt|;
+name|char
+name|stateid
+index|[
+name|NFSX_V4STATEID
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 name|vfs_init_t
 name|nfs_init
@@ -1025,6 +1065,12 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS4_USE_RPCCLNT
+end_ifndef
 
 begin_function_decl
 name|int
@@ -1070,6 +1116,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! NFS4_USE_RPCCLNT */
+end_comment
 
 begin_function_decl
 name|int

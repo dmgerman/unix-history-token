@@ -60,6 +60,18 @@ name|vnode
 modifier|*
 name|s_dvp
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|s_removeit
+function_decl|)
+parameter_list|(
+name|struct
+name|sillyrename
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
 name|long
 name|s_namlen
 decl_stmt|;
@@ -97,15 +109,40 @@ expr_stmt|;
 name|int
 name|ndm_eocookie
 decl_stmt|;
+union|union
+block|{
 name|nfsuint64
-name|ndm_cookies
+name|ndmu3_cookies
+index|[
+name|NFSNUMCOOKIES
+index|]
+decl_stmt|;
+name|uint64_t
+name|ndmu4_cookies
 index|[
 name|NFSNUMCOOKIES
 index|]
 decl_stmt|;
 block|}
+name|ndm_un1
+union|;
+block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ndm_cookies
+value|ndm_un1.ndmu3_cookies
+end_define
+
+begin_define
+define|#
+directive|define
+name|ndm4_cookies
+value|ndm_un1.ndmu4_cookies
+end_define
 
 begin_comment
 comment|/*  * The nfsnode is the nfs equivalent to ufs's inode. Any similarity  * is purely coincidental.  * There is a unique nfsnode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An nfsnode is 'named' by its file handle. (nget/nfs_node.c)  * If this structure exceeds 256 bytes (it is currently 256 using 4.4BSD-Lite  * type definitions), file handles of> 32 bytes should probably be split out  * into a separate MALLOC()'d data structure. (Reduce the size of nfsfh_t by  * changing the definition in nfsproto.h of NFS_SMALLFH.)  * NB: Hopefully the current order of the fields is such that everything will  *     be well aligned and, therefore, tightly packed.  */
@@ -179,6 +216,12 @@ name|n_vnode
 decl_stmt|;
 comment|/* associated vnode */
 name|struct
+name|vnode
+modifier|*
+name|n_dvp
+decl_stmt|;
+comment|/* parent vnode */
+name|struct
 name|lockf
 modifier|*
 name|n_lockf
@@ -199,6 +242,12 @@ name|nfsuint64
 name|nd_cookieverf
 decl_stmt|;
 comment|/* Cookie verifier (dir only) */
+name|u_char
+name|nd4_cookieverf
+index|[
+name|NFSX_V4VERF
+index|]
+decl_stmt|;
 block|}
 name|n_un1
 union|;
@@ -250,6 +299,22 @@ name|struct
 name|lock
 name|n_rslock
 decl_stmt|;
+name|struct
+name|nfs4_fctx
+name|n_rfc
+decl_stmt|;
+name|struct
+name|nfs4_fctx
+name|n_wfc
+decl_stmt|;
+comment|/* 	 * The last component name is needed for the NFSv4 OPEN 	 * operation. 	 */
+name|u_char
+modifier|*
+name|n_name
+decl_stmt|;
+name|uint32_t
+name|n_namelen
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -280,6 +345,13 @@ define|#
 directive|define
 name|n_cookieverf
 value|n_un1.nd_cookieverf
+end_define
+
+begin_define
+define|#
+directive|define
+name|n4_cookieverf
+value|n_un1.nd4_cookieverf
 end_define
 
 begin_define
@@ -379,6 +451,28 @@ end_define
 
 begin_comment
 comment|/* Special file times changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCREATED
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Opened by nfs_create() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTRUNCATE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Opened by nfs_setattr() */
 end_comment
 
 begin_comment
@@ -563,6 +657,33 @@ name|spec_nfsnodeop_p
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vop_t
+modifier|*
+modifier|*
+name|fifo_nfs4nodeop_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vop_t
+modifier|*
+modifier|*
+name|nfs4_vnodeop_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vop_t
+modifier|*
+modifier|*
+name|spec_nfs4nodeop_p
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Prototypes for NFS vnode operations  */
 end_comment
@@ -639,6 +760,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|nfs4_removeit
+parameter_list|(
+name|struct
+name|sillyrename
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|nfs_nget
 parameter_list|(
 name|struct
@@ -675,8 +807,35 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+modifier|*
+name|nfs4_getcookie
+parameter_list|(
+name|struct
+name|nfsnode
+modifier|*
+parameter_list|,
+name|off_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|nfs_invaldir
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs4_invaldir
 parameter_list|(
 name|struct
 name|vnode
