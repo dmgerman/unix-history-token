@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsi_util.c	5.4 (Berkeley) %G%  *  * $Id: fsi_util.c,v 5.2.2.1 1992/02/09 15:09:39 jsp beta $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsi_util.c	8.1 (Berkeley) %G%  *  * $Id: fsi_util.c,v 5.2.2.1 1992/02/09 15:09:39 jsp beta $  *  */
 end_comment
 
 begin_include
