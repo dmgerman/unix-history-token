@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|_NG_ABI_VERSION
-value|8
+value|9
 end_define
 
 begin_ifdef
@@ -3396,123 +3396,6 @@ comment|/*----------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/***********************************************************************  ***************** Meta Data Structures and Methods ********************  ***********************************************************************  *  * The structure that holds meta_data about a data packet (e.g. priority)  * Nodes might add or subtract options as needed if there is room.  * They might reallocate the struct to make more room if they need to.  * Meta-data is still experimental.  */
-end_comment
-
-begin_struct
-struct|struct
-name|meta_field_header
-block|{
-name|u_long
-name|cookie
-decl_stmt|;
-comment|/* cookie for the field. Skip fields you don't 				 * know about (same cookie as in messgaes) */
-name|u_short
-name|type
-decl_stmt|;
-comment|/* field ID */
-name|u_short
-name|len
-decl_stmt|;
-comment|/* total len of this field including extra 				 * data */
-name|char
-name|data
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* data starts here */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* To zero out an option 'in place' set it's cookie to this */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NGM_INVALID_COOKIE
-value|865455152
-end_define
-
-begin_comment
-comment|/* This part of the metadata is always present if the pointer is non NULL */
-end_comment
-
-begin_struct
-struct|struct
-name|ng_meta
-block|{
-name|char
-name|priority
-decl_stmt|;
-comment|/* -ve is less priority,  0 is default */
-name|char
-name|discardability
-decl_stmt|;
-comment|/* higher is less valuable.. discard first */
-name|u_short
-name|allocated_len
-decl_stmt|;
-comment|/* amount malloc'd */
-name|u_short
-name|used_len
-decl_stmt|;
-comment|/* sum of all fields, options etc. */
-name|u_short
-name|flags
-decl_stmt|;
-comment|/* see below.. generic flags */
-name|struct
-name|meta_field_header
-name|options
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* add as (if) needed */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ng_meta
-modifier|*
-name|meta_p
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Flags for meta-data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NGMF_TEST
-value|0x01
-end_define
-
-begin_comment
-comment|/* discard at the last moment before sending */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NGMF_TRACE
-value|0x02
-end_define
-
-begin_comment
-comment|/* trace when handing this data to a node */
-end_comment
-
-begin_comment
 comment|/***********************************************************************  ************* Node Queue and Item Structures and Methods **************  ***********************************************************************  *  */
 end_comment
 
@@ -3557,19 +3440,11 @@ decl_stmt|;
 comment|/* Entering hook. Optional in Control messages */
 union|union
 block|{
-struct|struct
-block|{
 name|struct
 name|mbuf
 modifier|*
 name|da_m
 decl_stmt|;
-name|meta_p
-name|da_meta
-decl_stmt|;
-block|}
-name|data
-struct|;
 struct|struct
 block|{
 name|struct
@@ -3734,17 +3609,7 @@ name|_NGI_M
 parameter_list|(
 name|i
 parameter_list|)
-value|((i)->body.data.da_m)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_NGI_META
-parameter_list|(
-name|i
-parameter_list|)
-value|((i)->body.data.da_meta)
+value|((i)->body.da_m)
 end_define
 
 begin_define
@@ -3924,26 +3789,6 @@ argument|int line
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function_decl
-specifier|static
-name|__inline
-name|meta_p
-modifier|*
-name|_ngi_meta
-parameter_list|(
-name|item_p
-name|item
-parameter_list|,
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -4179,45 +4024,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|meta_p
-modifier|*
-name|_ngi_meta
-parameter_list|(
-name|item_p
-name|item
-parameter_list|,
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-block|{
-name|_ngi_check
-argument_list|(
-name|item
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|&
-name|_NGI_META
-argument_list|(
-name|item
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_expr_stmt
 specifier|static
@@ -4501,16 +4307,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGI_META
-parameter_list|(
-name|i
-parameter_list|)
-value|(*_ngi_meta(i, _NN_))
-end_define
-
-begin_define
-define|#
-directive|define
 name|NGI_MSG
 parameter_list|(
 name|i
@@ -4669,16 +4465,6 @@ parameter_list|(
 name|i
 parameter_list|)
 value|_NGI_M(i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NGI_META
-parameter_list|(
-name|i
-parameter_list|)
-value|_NGI_META(i)
 end_define
 
 begin_define
@@ -4844,19 +4630,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGI_GET_META
-parameter_list|(
-name|i
-parameter_list|,
-name|m
-parameter_list|)
-define|\
-value|do {								\ 		(m) = NGI_META(i);					\ 		_NGI_META(i) = NULL;					\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NGI_GET_MSG
 parameter_list|(
 name|i
@@ -4918,7 +4691,7 @@ value|do {								\ 		(error) =						\ 		    ng_address_hook(NULL, (item), (hook
 end_define
 
 begin_comment
-comment|/*  * Forward a data packet with no new meta-data.  * old metadata is passed along without change.  * Mbuf pointer is updated to new value. We presume you dealt with the  * old one when you update it to the new one (or it maybe the old one).  * We got a packet and possibly had to modify the mbuf.  * You should probably use NGI_GET_M() if you are going to use this too  */
+comment|/*  * Forward a data packet. Mbuf pointer is updated to new value. We  * presume you dealt with the old one when you update it to the new one  * (or it maybe the old one). We got a packet and possibly had to modify  * the mbuf. You should probably use NGI_GET_M() if you are going to use  * this too.  */
 end_comment
 
 begin_define
@@ -4939,7 +4712,7 @@ value|do {								\ 		NGI_M(item) = (m);					\ 		(m) = NULL;						\ 		NG_FWD_ITE
 end_define
 
 begin_comment
-comment|/* Send a previously unpackaged mbuf when we have no metadata to send */
+comment|/* Send a previously unpackaged mbuf. XXX: This should be called  * NG_SEND_DATA in future, but this name is kept for compatibility  * reasons.  */
 end_comment
 
 begin_define
@@ -4957,10 +4730,6 @@ define|\
 value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), NULL))) {		\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 	} while (0)
 end_define
 
-begin_comment
-comment|/* Send previously unpackeged data and metadata. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -4972,10 +4741,9 @@ name|hook
 parameter_list|,
 name|m
 parameter_list|,
-name|meta
+name|x
 parameter_list|)
-define|\
-value|do {								\ 		item_p _item;						\ 		if ((_item = ng_package_data((m), (meta)))) {		\ 			NG_FWD_ITEM_HOOK(error, _item, hook);		\ 		} else {						\ 			(error) = ENOMEM;				\ 		}							\ 		(m) = NULL;						\ 		(meta) = NULL;						\ 	} while (0)
+value|NG_SEND_DATA_ONLY(error, hook, m)
 end_define
 
 begin_define
@@ -4987,17 +4755,6 @@ name|msg
 parameter_list|)
 define|\
 value|do {								\ 		if ((msg)) {						\ 			FREE((msg), M_NETGRAPH_MSG);			\ 			(msg) = NULL;					\ 		}	 						\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NG_FREE_META
-parameter_list|(
-name|meta
-parameter_list|)
-define|\
-value|do {								\ 		if ((meta)) {						\ 			FREE((meta), M_NETGRAPH_META);			\ 			(meta) = NULL;					\ 		}	 						\ 	} while (0)
 end_define
 
 begin_define
@@ -5308,14 +5065,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_NETGRAPH_META
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* declare the base of the netgraph sysclt hierarchy */
 end_comment
@@ -5419,16 +5168,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|meta_p
-name|ng_copy_meta
-parameter_list|(
-name|meta_p
-name|meta
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|hook_p
 name|ng_findhook
 parameter_list|(
@@ -5505,8 +5244,9 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|meta_p
-name|meta
+name|void
+modifier|*
+name|dummy
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5752,6 +5492,68 @@ define|#
 directive|define
 name|NG_PRIO_LINKSTATE
 value|64
+end_define
+
+begin_comment
+comment|/* Macros and declarations to keep compatibility with metadata, which  * is obsoleted now. To be deleted.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|meta_p
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_NGI_META
+parameter_list|(
+name|i
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_META
+parameter_list|(
+name|i
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_FREE_META
+parameter_list|(
+name|meta
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGI_GET_META
+parameter_list|(
+name|i
+parameter_list|,
+name|m
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ng_copy_meta
+parameter_list|(
+name|meta
+parameter_list|)
+value|NULL
 end_define
 
 begin_endif

@@ -985,18 +985,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_NETGRAPH_META
-argument_list|,
-literal|"netgraph_meta"
-argument_list|,
-literal|"netgraph name storage"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
 name|M_NETGRAPH_MSG
 argument_list|,
 literal|"netgraph_msg"
@@ -4242,6 +4230,21 @@ block|{
 name|TRAP_ERROR
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|version
+operator|!=
+name|NG_ABI_VERSION
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Netgraph: Node type rejected. ABI mismatch. Suggest recompile\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|EINVAL
@@ -7250,7 +7253,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * The module code should have filled out the item correctly by this stage:  * Common:  *    reference to destination node.  *    Reference to destination rcv hook if relevant.  * Data:  *    pointer to mbuf  *    pointer to metadata  * Control_Message:  *    pointer to msg.  *    ID of original sender node. (return address)  * Function:  *    Function pointer  *    void * argument  *    integer argument  *  * The nodes have several routines and macros to help with this task:  */
+comment|/*  * The module code should have filled out the item correctly by this stage:  * Common:  *    reference to destination node.  *    Reference to destination rcv hook if relevant.  * Data:  *    pointer to mbuf  * Control_Message:  *    pointer to msg.  *    ID of original sender node. (return address)  * Function:  *    Function pointer  *    void * argument  *    integer argument  *  * The nodes have several routines and macros to help with this task:  */
 end_comment
 
 begin_function
@@ -10585,85 +10588,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a 'meta'.  *  * Returns new meta, or NULL if original meta is NULL or ENOMEM.  */
-end_comment
-
-begin_function
-name|meta_p
-name|ng_copy_meta
-parameter_list|(
-name|meta_p
-name|meta
-parameter_list|)
-block|{
-name|meta_p
-name|meta2
-decl_stmt|;
-if|if
-condition|(
-name|meta
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|MALLOC
-argument_list|(
-name|meta2
-argument_list|,
-name|meta_p
-argument_list|,
-name|meta
-operator|->
-name|used_len
-argument_list|,
-name|M_NETGRAPH_META
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|meta2
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|meta2
-operator|->
-name|allocated_len
-operator|=
-name|meta
-operator|->
-name|used_len
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|meta
-argument_list|,
-name|meta2
-argument_list|,
-name|meta
-operator|->
-name|used_len
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|meta2
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/************************************************************************ 			Module routines ************************************************************************/
 end_comment
 
@@ -11537,18 +11461,10 @@ block|{
 case|case
 name|NGQF_DATA
 case|:
-comment|/* If we have an mbuf and metadata still attached.. */
+comment|/* If we have an mbuf still attached.. */
 name|NG_FREE_M
 argument_list|(
 name|_NGI_M
-argument_list|(
-name|item
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|NG_FREE_META
-argument_list|(
-name|_NGI_META
 argument_list|(
 name|item
 argument_list|)
@@ -12648,7 +12564,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Put elements into the item.  * Hook and node references will be removed when the item is dequeued.  * (or equivalent)  * (XXX) Unsafe because no reference held by peer on remote node.  * remote node might go away in this timescale.  * We know the hooks can't go away because that would require getting  * a writer item on both nodes and we must have at least a  reader  * here to eb able to do this.  * Note that the hook loaded is the REMOTE hook.  *  * This is possibly in the critical path for new data.  */
+comment|/*  * Put mbuf into the item.  * Hook and node references will be removed when the item is dequeued.  * (or equivalent)  * (XXX) Unsafe because no reference held by peer on remote node.  * remote node might go away in this timescale.  * We know the hooks can't go away because that would require getting  * a writer item on both nodes and we must have at least a  reader  * here to eb able to do this.  * Note that the hook loaded is the REMOTE hook.  *  * This is possibly in the critical path for new data.  */
 end_comment
 
 begin_function
@@ -12660,8 +12576,9 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|meta_p
-name|meta
+name|void
+modifier|*
+name|dummy
 parameter_list|)
 block|{
 name|item_p
@@ -12682,11 +12599,6 @@ block|{
 name|NG_FREE_M
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|NG_FREE_META
-argument_list|(
-name|meta
 argument_list|)
 expr_stmt|;
 return|return
@@ -12715,13 +12627,6 @@ name|item
 argument_list|)
 operator|=
 name|m
-expr_stmt|;
-name|NGI_META
-argument_list|(
-name|item
-argument_list|)
-operator|=
-name|meta
 expr_stmt|;
 return|return
 operator|(
@@ -13765,9 +13670,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|meta_p
-name|meta
-decl_stmt|;
 name|struct
 name|ng_mesg
 modifier|*
@@ -13784,13 +13686,6 @@ argument_list|(
 name|item
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|NGI_GET_META
-argument_list|(
-name|item
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 name|NGI_GET_MSG
@@ -13815,7 +13710,7 @@ name|hook
 argument_list|,
 name|m
 argument_list|,
-name|meta
+name|NULL
 argument_list|)
 expr_stmt|;
 name|NG_SEND_DATA_ONLY
