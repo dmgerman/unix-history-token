@@ -669,6 +669,20 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiGetProcessorId
+parameter_list|(
+name|ACPI_HANDLE
+name|ProcessorHandle
+parameter_list|,
+name|UINT32
+modifier|*
+name|Id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiGetProcessorThrottlingInfo
 parameter_list|(
 name|ACPI_HANDLE
@@ -745,6 +759,16 @@ parameter_list|,
 name|UINT32
 modifier|*
 name|PmTimerTicks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiSetSystemSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
 parameter_list|)
 function_decl|;
 end_function_decl
