@@ -697,7 +697,7 @@ name|dev
 operator|->
 name|si_iosize_max
 operator|=
-literal|252
+literal|256
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
@@ -748,7 +748,7 @@ name|dev
 operator|->
 name|si_iosize_max
 operator|=
-literal|252
+literal|256
 operator|*
 name|DEV_BSIZE
 expr_stmt|;

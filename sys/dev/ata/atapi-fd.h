@@ -167,10 +167,6 @@ name|int
 name|lun
 decl_stmt|;
 comment|/* logical device unit */
-name|int
-name|transfersize
-decl_stmt|;
-comment|/* max size of each transfer */
 name|struct
 name|buf_queue_head
 name|queue
