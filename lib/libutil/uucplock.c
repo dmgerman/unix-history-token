@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include

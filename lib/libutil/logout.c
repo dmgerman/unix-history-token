@@ -74,13 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<libutil.h>
 end_include
 
 begin_include
@@ -104,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_typedef
