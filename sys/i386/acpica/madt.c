@@ -2276,7 +2276,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine properties of an interrupt source.  Note that for ACPI,  * these are only used for ISA interrupts, so we assume ISA bus values  * (Active Hi, Edge Triggered) for conforming values except for the ACPI  * SCI for which we use Active Lo, Level Triggered..  */
+comment|/*  * Determine properties of an interrupt source.  Note that for ACPI these  * functions are only used for ISA interrupts, so we assume ISA bus values  * (Active Hi, Edge Triggered) for conforming values except for the ACPI  * SCI for which we use Active Lo, Level Triggered.  */
 end_comment
 
 begin_function
