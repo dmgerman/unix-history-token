@@ -6590,7 +6590,7 @@ argument_list|(
 operator|&
 name|mac_test_ops
 argument_list|,
-name|trustedbsd_mac_test
+name|mac_test
 argument_list|,
 literal|"TrustedBSD MAC/Test"
 argument_list|,

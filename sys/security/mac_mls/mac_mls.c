@@ -11283,7 +11283,7 @@ argument_list|(
 operator|&
 name|mac_mls_ops
 argument_list|,
-name|trustedbsd_mac_mls
+name|mac_mls
 argument_list|,
 literal|"TrustedBSD MAC/MLS"
 argument_list|,

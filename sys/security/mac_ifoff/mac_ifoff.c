@@ -631,7 +631,7 @@ argument_list|(
 operator|&
 name|mac_ifoff_ops
 argument_list|,
-name|trustedbsd_mac_ifoff
+name|mac_ifoff
 argument_list|,
 literal|"TrustedBSD MAC/ifoff"
 argument_list|,

@@ -4372,7 +4372,7 @@ argument_list|(
 operator|&
 name|mac_none_ops
 argument_list|,
-name|trustedbsd_mac_none
+name|mac_none
 argument_list|,
 literal|"TrustedBSD MAC/None"
 argument_list|,

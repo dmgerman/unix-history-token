@@ -12335,7 +12335,7 @@ argument_list|(
 operator|&
 name|mac_biba_ops
 argument_list|,
-name|trustedbsd_mac_biba
+name|mac_biba
 argument_list|,
 literal|"TrustedBSD MAC/Biba"
 argument_list|,

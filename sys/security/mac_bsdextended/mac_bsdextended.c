@@ -3793,7 +3793,7 @@ argument_list|(
 operator|&
 name|mac_bsdextended_ops
 argument_list|,
-name|trustedbsd_mac_bsdextended
+name|mac_bsdextended
 argument_list|,
 literal|"TrustedBSD MAC/BSD Extended"
 argument_list|,

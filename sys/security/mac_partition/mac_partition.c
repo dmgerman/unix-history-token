@@ -1061,7 +1061,7 @@ argument_list|(
 operator|&
 name|mac_partition_ops
 argument_list|,
-name|trustedbsd_mac_partition
+name|mac_partition
 argument_list|,
 literal|"TrustedBSD MAC/Partition"
 argument_list|,

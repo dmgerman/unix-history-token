@@ -587,7 +587,7 @@ argument_list|(
 operator|&
 name|mac_seeotheruids_ops
 argument_list|,
-name|trustedbsd_mac_seeotheruids
+name|mac_seeotheruids
 argument_list|,
 literal|"TrustedBSD MAC/seeotheruids"
 argument_list|,
