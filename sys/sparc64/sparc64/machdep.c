@@ -1759,7 +1759,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * grow_stack() will return 0 if *sfp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
+comment|/* 	 * vm_map_growstack() will fail if *sfp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
 name|fp
 operator|=
 operator|(
