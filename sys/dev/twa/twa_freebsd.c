@@ -2163,12 +2163,17 @@ index|]
 operator|.
 name|length
 operator|=
+call|(
+name|u_int32_t
+call|)
+argument_list|(
 name|segs
 index|[
 name|i
 index|]
 operator|.
 name|ds_len
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -852,7 +852,7 @@ block|{
 name|bus_addr_t
 name|address
 decl_stmt|;
-name|bus_size_t
+name|u_int32_t
 name|length
 decl_stmt|;
 block|}
