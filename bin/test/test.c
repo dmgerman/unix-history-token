@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: test.c,v 1.19 1998/05/18 06:51:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1849,6 +1849,16 @@ case|:
 name|i
 operator|=
 name|S_IFIFO
+expr_stmt|;
+goto|goto
+name|filetype
+goto|;
+case|case
+name|ISSOCK
+case|:
+name|i
+operator|=
+name|S_IFSOCK
 expr_stmt|;
 goto|goto
 name|filetype

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: operators.c,v 1.7 1998/05/18 06:51:53 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,8 @@ block|,
 literal|"-x"
 block|,
 literal|"-z"
+block|,
+literal|"-S"
 block|,
 name|NULL
 block|}
@@ -210,6 +212,8 @@ literal|12
 block|,
 literal|12
 block|,
+literal|12
+block|,
 literal|1
 block|,
 literal|1
@@ -279,6 +283,8 @@ block|,
 name|OP_FILE
 block|,
 name|OP_STRING
+block|,
+name|OP_FILE
 block|,
 literal|0
 block|,
