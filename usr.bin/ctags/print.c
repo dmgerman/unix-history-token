@@ -119,8 +119,12 @@ name|GETC
 argument_list|(
 operator|!=
 argument_list|,
-literal|'\n'
+name|EOF
 argument_list|)
+operator|&&
+name|c
+operator|!=
+literal|'\n'
 condition|;
 operator|*
 name|cp

@@ -167,7 +167,7 @@ name|char
 operator|*
 name|moduleid
 operator|=
-literal|"@(#)$Id: fsmagic.c,v 1.6 1997/03/18 19:37:19 mpp Exp $"
+literal|"@(#)$Id: fsmagic.c,v 1.3.2.1 1997/08/18 18:59:09 jdp Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -246,7 +246,7 @@ name|stdout
 argument_list|,
 comment|/* Yes, I do mean stdout. */
 comment|/* No \n, caller will provide. */
-literal|"can't stat `%s' (%s)."
+literal|"can't stat `%s': %s."
 argument_list|,
 name|fn
 argument_list|,
@@ -461,7 +461,7 @@ name|ckfprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"unreadable symlink (%s)."
+literal|"unreadable symlink: %s."
 argument_list|,
 name|strerror
 argument_list|(
@@ -688,9 +688,11 @@ name|S_IFREG
 case|:
 break|break;
 default|default:
-name|error
+name|err
 argument_list|(
-literal|"invalid mode 0%o.\n"
+literal|1
+argument_list|,
+literal|"invalid mode 0%o"
 argument_list|,
 name|sb
 operator|->

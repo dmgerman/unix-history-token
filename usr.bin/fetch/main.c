@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.26.2.9 1998/05/09 08:50:03 des Exp $ */
+comment|/* $Id: main.c,v 1.26.2.10 1998/05/09 08:56:41 des Exp $ */
 end_comment
 
 begin_include
@@ -1406,7 +1406,8 @@ argument_list|,
 name|s
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|bytes
 operator|/
@@ -1447,7 +1448,8 @@ argument_list|,
 literal|"\n%qd bytes transfered in %.1f seconds"
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|bytes
 argument_list|,
@@ -1562,9 +1564,11 @@ literal|"\r%s: %2qd%%"
 argument_list|,
 name|s
 argument_list|,
-operator|(
-name|quad_t
-operator|)
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|bytes
 operator|/
 operator|(
@@ -1572,6 +1576,7 @@ name|size
 operator|/
 literal|100
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1589,14 +1594,17 @@ literal|"\r%s: %2qd%%"
 argument_list|,
 name|s
 argument_list|,
-operator|(
-name|quad_t
-operator|)
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 literal|100
 operator|*
 name|bytes
 operator|/
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1608,12 +1616,15 @@ literal|"\r%s: %qd Kbytes"
 argument_list|,
 name|s
 argument_list|,
-operator|(
-name|quad_t
-operator|)
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|bytes
 operator|/
 literal|1024
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -182,14 +182,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -215,14 +212,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -317,14 +311,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -350,14 +341,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -509,14 +497,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -533,14 +518,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 name|off
@@ -572,14 +554,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 name|bufsize
@@ -600,14 +579,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 name|offset

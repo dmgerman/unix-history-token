@@ -51,7 +51,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: apprentice.c,v 1.6 1997/03/18 19:37:16 mpp Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.3.2.1 1997/08/18 18:59:01 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,16 +273,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Out of memory.\n"
-argument_list|,
-name|progname
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 if|if
@@ -364,16 +357,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: couldn't find any magic files!\n"
-argument_list|,
-name|progname
+literal|"couldn't find any magic files"
 argument_list|)
 expr_stmt|;
 if|if
@@ -465,23 +451,11 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: can't read magic file %s (%s)\n"
-argument_list|,
-name|progname
+literal|"can't read magic file %s"
 argument_list|,
 name|fn
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -696,13 +670,17 @@ name|STRING
 case|:
 break|break;
 default|default:
-name|magwarn
+name|warnx
 argument_list|(
-literal|"can't happen: m->type=%d\n"
+literal|"can't happen: m->type=%d in file %s, line %d"
 argument_list|,
 name|m
 operator|->
 name|type
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 return|return
@@ -808,16 +786,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Out of memory.\n"
-argument_list|,
-name|progname
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 if|if
@@ -969,11 +940,15 @@ name|l
 operator|==
 name|t
 condition|)
-name|magwarn
+name|warnx
 argument_list|(
-literal|"offset %s invalid"
+literal|"offset %s invalid in file %s, line %d"
 argument_list|,
 name|l
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 name|l
@@ -1069,12 +1044,16 @@ name|BYTE
 expr_stmt|;
 break|break;
 default|default:
-name|magwarn
+name|warnx
 argument_list|(
-literal|"indirect offset type %c invalid"
+literal|"indirect offset type %c invalid in file %s, line %d"
 argument_list|,
 operator|*
 name|l
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1165,9 +1144,13 @@ operator|++
 operator|!=
 literal|')'
 condition|)
-name|magwarn
+name|warnx
 argument_list|(
-literal|"missing ')' in indirect offset"
+literal|"missing ')' in indirect offset in file %s, line %d"
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 name|l
@@ -1552,11 +1535,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|magwarn
+name|warnx
 argument_list|(
-literal|"type %s invalid"
+literal|"type %s invalid in file %s, line %d"
 argument_list|,
 name|l
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1742,7 +1729,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* 	 * TODO finish this macro and start using it! 	 * #define offsetcheck {if (offset> HOWMANY-1) 	 *	magwarn("offset too big"); } 	 */
+comment|/* 	 * TODO finish this macro and start using it! 	 * #define offsetcheck {if (offset> HOWMANY-1) 	 *	warnx("offset too big in file %s, line %d", 	 *		 magicfile, lineno); } 	 */
 comment|/* 	 * now get last part - the description 	 */
 name|GetDesc
 label|:
@@ -2070,11 +2057,9 @@ operator|>=
 name|pmax
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"String too long: %s\n"
+literal|"string too long: %s"
 argument_list|,
 name|origs
 argument_list|)

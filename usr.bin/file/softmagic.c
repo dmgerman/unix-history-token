@@ -51,7 +51,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: softmagic.c,v 1.7 1997/03/18 19:37:22 mpp Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.4.2.1 1997/08/18 18:59:23 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,9 +312,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"out of memory\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 for|for
@@ -451,9 +453,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"out of memory\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 while|while
@@ -684,9 +688,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"out of memory\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1107,9 +1113,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"invalid m->type (%d) in mprint().\n"
+literal|1
+argument_list|,
+literal|"invalid m->type (%d) in mprint()"
 argument_list|,
 name|m
 operator|->
@@ -1414,9 +1422,11 @@ return|return
 literal|1
 return|;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"invalid type %d in mconvert().\n"
+literal|1
+argument_list|,
+literal|"invalid type %d in mconvert()"
 argument_list|,
 name|m
 operator|->
@@ -2008,9 +2018,11 @@ break|break;
 block|}
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"invalid type %d in mcheck().\n"
+literal|1
+argument_list|,
+literal|"invalid type %d in mcheck()"
 argument_list|,
 name|m
 operator|->
@@ -2353,9 +2365,11 @@ name|matched
 operator|=
 literal|0
 expr_stmt|;
-name|error
+name|errx
 argument_list|(
-literal|"mcheck: can't happen: invalid relation %d.\n"
+literal|1
+argument_list|,
+literal|"mcheck: can't happen: invalid relation %d"
 argument_list|,
 name|m
 operator|->

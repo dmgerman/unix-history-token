@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.5 1997/02/22 19:29:10 peter Exp $  */
+comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.3.2.1 1997/08/18 18:59:03 jdp Exp $  */
 end_comment
 
 begin_include
@@ -411,14 +411,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|error
+name|err
 argument_list|(
-literal|"cannot create pipe (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"cannot create pipe"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -552,9 +549,11 @@ operator|.
 name|argv
 argument_list|)
 expr_stmt|;
-name|error
+name|err
 argument_list|(
-literal|"could not execute `%s' (%s).\n"
+literal|1
+argument_list|,
+literal|"could not execute `%s'"
 argument_list|,
 name|compr
 index|[
@@ -565,11 +564,6 @@ name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -577,14 +571,11 @@ case|case
 operator|-
 literal|1
 case|:
-name|error
+name|err
 argument_list|(
-literal|"could not fork (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"could not fork"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -629,14 +620,11 @@ operator|!=
 name|n
 condition|)
 block|{
-name|error
+name|err
 argument_list|(
-literal|"write failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"write failed"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -672,9 +660,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
+name|errx
 argument_list|(
-literal|"out of memory.\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -707,14 +697,11 @@ operator|*
 name|newch
 argument_list|)
 expr_stmt|;
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/

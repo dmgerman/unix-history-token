@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.4.2.6 1997/11/18 03:28:50 jdp Exp $  */
+comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.4.2.7 1998/03/08 08:57:19 jkh Exp $  */
 end_comment
 
 begin_include
@@ -1932,7 +1932,7 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-name|int
+name|size_t
 name|linelen
 decl_stmt|;
 name|int
@@ -2873,7 +2873,8 @@ argument_list|,
 literal|"Range: bytes=%qd-\r\n"
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|stab
 operator|.
@@ -3043,7 +3044,7 @@ argument_list|(
 name|timo
 argument_list|)
 expr_stmt|;
-comment|/* some hosts do not properly handle T/TCP connections.  If 	 * sendmsg() is used to establish the connection, the OS may 	 * choose to try to use one which could cause the transfer 	 * to fail.  Doing a connect() first ensures that the OS 	 * does not attempt T/TCP. 	 */
+comment|/* 	 * Some hosts do not correctly handle data in SYN segments. 	 * If no connect(2) is done, the TCP stack will send our 	 * initial request as such a segment.  fs_use_connect works 	 * around these broken server TCPs by avoiding this case. 	 * It is not the default because we want to exercise this 	 * code path, and in any case the majority of hosts handle 	 * our default correctly. 	 */
 if|if
 condition|(
 name|fs
@@ -8444,6 +8445,15 @@ condition|)
 return|return
 name|EX_NOPERM
 return|;
+if|if
+condition|(
+name|ha
+operator|->
+name|ha_params
+operator|==
+literal|0
+condition|)
+block|{
 name|fp
 operator|=
 name|fopen
@@ -8469,15 +8479,6 @@ return|return
 name|EX_OSERR
 return|;
 block|}
-if|if
-condition|(
-name|ha
-operator|->
-name|ha_params
-operator|==
-literal|0
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -8498,7 +8499,7 @@ name|user
 operator|=
 name|fgetln
 argument_list|(
-name|stdin
+name|fp
 argument_list|,
 operator|&
 name|userlen
@@ -8516,11 +8517,6 @@ literal|1
 condition|)
 block|{
 comment|/* longer name? */
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 name|EX_NOPERM
 return|;
@@ -8558,6 +8554,11 @@ operator|=
 name|safe_strdup
 argument_list|(
 name|user
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 name|pass
