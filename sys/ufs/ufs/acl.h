@@ -119,7 +119,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_UFS_UFS_ACL_H */
+comment|/* !_UFS_UFS_ACL_H_ */
 end_comment
 
 end_unit
