@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wormio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -86,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<pc98/pc98/atapi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/wormio.h>
 end_include
 
 begin_include
