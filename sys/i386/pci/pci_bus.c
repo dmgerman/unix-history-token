@@ -1467,11 +1467,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|device_t
-name|child
-decl_stmt|;
-name|child
-operator|=
 name|device_add_child
 argument_list|(
 name|dev
