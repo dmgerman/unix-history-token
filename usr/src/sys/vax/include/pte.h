@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	6.2	84/08/12	*/
+comment|/*	pte.h	6.3	84/12/20	*/
 end_comment
 
 begin_comment
@@ -170,14 +170,14 @@ begin_define
 define|#
 directive|define
 name|PG_FZERO
-value|(NOFILE)
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|PG_FTEXT
-value|(NOFILE+1)
+value|1
 end_define
 
 begin_define
