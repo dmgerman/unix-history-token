@@ -6282,7 +6282,7 @@ name|q
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
-name|cpu_wait
+name|vm_waitproc
 argument_list|(
 name|q
 argument_list|)
@@ -6314,6 +6314,16 @@ operator|->
 name|p_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_proc
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uma_zfree
 argument_list|(
 name|proc_zone
