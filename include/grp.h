@@ -45,24 +45,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_GID_T_DECLARED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_GID_T_DECLARED
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_GID_T_
+end_ifdef
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|_BSD_GID_T_
 name|gid_t
 typedef|;
 end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_GID_T_
+end_undef
 
 begin_endif
 endif|#

@@ -80,20 +80,20 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IN_ADDR_T_DECLARED_
+name|_UINT16_T_DECLARED
 end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
-name|in_addr_t
+name|__uint16_t
+name|uint16_t
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|_IN_ADDR_T_DECLARED_
+name|_UINT16_T_DECLARED
 end_define
 
 begin_endif
@@ -104,12 +104,60 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IN_PORT_T_DECLARED_
+name|_UINT32_T_DECLARED
 end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__uint16_t
+name|__uint32_t
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT32_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IN_ADDR_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|in_addr_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_IN_ADDR_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IN_PORT_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint16_t
 name|in_port_t
 typedef|;
 end_typedef
@@ -117,7 +165,7 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|_IN_PORT_T_DECLARED_
+name|_IN_PORT_T_DECLARED
 end_define
 
 begin_endif
@@ -219,10 +267,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * XXX missing typedefs for uint16_t and uint32_t.  */
-end_comment
 
 begin_comment
 comment|/* XXX all new diversions!! argh!! */
@@ -349,37 +393,37 @@ name|_BYTEORDER_PROTOTYPED
 define|#
 directive|define
 name|_BYTEORDER_PROTOTYPED
-name|__uint32_t
+name|uint32_t
 name|htonl
 parameter_list|(
-name|__uint32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__uint16_t
+name|uint16_t
 name|htons
 parameter_list|(
-name|__uint16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__uint32_t
+name|uint32_t
 name|ntohl
 parameter_list|(
-name|__uint32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__uint16_t
+name|uint16_t
 name|ntohs
 parameter_list|(
-name|__uint16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
