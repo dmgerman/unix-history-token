@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.59	83/02/16	*/
+comment|/*	kern_proc.c	4.60	83/04/05	*/
 end_comment
 
 begin_include
@@ -339,6 +339,8 @@ operator|=
 name|uap
 operator|->
 name|len
+operator|+
+literal|1
 expr_stmt|;
 name|u
 operator|.
