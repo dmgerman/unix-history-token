@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)psl.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)psl.h	7.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PSL_C
+end_ifndef
 
 begin_comment
 comment|/*  * MC68000 program status word  */
@@ -235,6 +241,35 @@ directive|define
 name|PSL_USERCLR
 value|(PSL_S | PSL_IPL7 | PSL_MBZ)
 end_define
+
+begin_comment
+comment|/*  * Macros to decode processor status word.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USERMODE
+parameter_list|(
+name|ps
+parameter_list|)
+value|(((ps)& PSL_S) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BASEPRI
+parameter_list|(
+name|ps
+parameter_list|)
+value|(((ps)& PSL_IPL7) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
