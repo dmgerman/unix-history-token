@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.1 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,31 +372,35 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-do|do
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|getfort
 argument_list|()
 expr_stmt|;
-block|}
-do|while
+if|if
 condition|(
-operator|(
 name|Sflag
 operator|&&
 operator|!
 name|is_short
 argument_list|()
-operator|)
-operator|||
-operator|(
+condition|)
+continue|continue;
+if|if
+condition|(
 name|Lflag
 operator|&&
 operator|!
 name|is_long
 argument_list|()
-operator|)
 condition|)
-do|;
+continue|continue;
+break|break;
+block|}
 name|fseek
 argument_list|(
 name|Inf
@@ -857,6 +861,10 @@ comment|/* short ones only */
 name|Sflag
 operator|++
 expr_stmt|;
+name|Lflag
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'l'
@@ -864,6 +872,10 @@ case|:
 comment|/* long ones only */
 name|Lflag
 operator|++
+expr_stmt|;
+name|Sflag
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
