@@ -7051,7 +7051,7 @@ name|IEEE80211_MSG_ASSOC
 operator||
 name|IEEE80211_MSG_DEBUG
 argument_list|,
-literal|"[%s] station %s associated at aid %d\n"
+literal|"[%s] station %sassociated at aid %d: %s preamble, %s slot time%s%s\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -7062,14 +7062,54 @@ argument_list|)
 argument_list|,
 name|newassoc
 condition|?
-literal|"newly"
+literal|""
 else|:
-literal|"already"
+literal|"re"
 argument_list|,
 name|IEEE80211_NODE_AID
 argument_list|(
 name|ni
 argument_list|)
+argument_list|,
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SHPREAMBLE
+condition|?
+literal|"short"
+else|:
+literal|"long"
+argument_list|,
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SHSLOT
+condition|?
+literal|"short"
+else|:
+literal|"long"
+argument_list|,
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_USEPROT
+condition|?
+literal|", protection"
+else|:
+literal|""
+argument_list|,
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_QOS
+condition|?
+literal|", QoS"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* give driver a chance to setup state like ni_txrate */
