@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.14 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.15 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.14 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.15 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1401,7 +1401,7 @@ modifier|*
 name|gethostbyname
 parameter_list|()
 function_decl|;
-comment|/* 	 * If first character is a bracket, then it is an address 	 * lookup.  Address is copied into a temporary buffer to 	 * strip the brackets and to preserve hbuf if address is 	 * unknown. 	 */
+comment|/* 	**  If first character is a bracket, then it is an address 	**  lookup.  Address is copied into a temporary buffer to 	**  strip the brackets and to preserve hbuf if address is 	**  unknown. 	*/
 if|if
 condition|(
 operator|*
@@ -1430,6 +1430,9 @@ name|char
 modifier|*
 name|bptr
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|ptr
@@ -1466,6 +1469,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|in_addr
 argument_list|,
@@ -1484,11 +1491,7 @@ name|hp
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 block|}
 else|else
 block|{

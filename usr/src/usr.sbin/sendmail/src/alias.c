@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.7 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.8 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.7 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.8 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,10 +843,6 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
-modifier|*
-name|p2
 decl_stmt|;
 name|char
 modifier|*

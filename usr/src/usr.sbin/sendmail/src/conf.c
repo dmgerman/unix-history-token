@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.10 (Berkeley) %G%"
+literal|"@(#)conf.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,6 +1273,11 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+specifier|extern
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|kmem

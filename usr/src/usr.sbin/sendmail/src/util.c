@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	5.7 (Berkeley) %G%"
+literal|"@(#)util.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1350,9 +1350,14 @@ control|)
 block|{
 name|sleep
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 literal|10
 operator|*
 name|tries
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)clock.c	5.3 (Berkeley) %G%"
+literal|"@(#)clock.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,6 +802,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|int
 name|intvl
 decl_stmt|;
