@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_prf.c	8.3 (Berkeley) 1/21/94  * $Id: subr_prf.c,v 1.52 1999/06/01 18:20:29 jlemon Exp $  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_prf.c	8.3 (Berkeley) 1/21/94  * $Id: subr_prf.c,v 1.53 1999/06/06 02:41:55 archie Exp $  */
 end_comment
 
 begin_include
@@ -95,27 +95,15 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Max number conversion buffer length: a long in base 8, plus NUL byte */
+comment|/* Max number conversion buffer length: a long in base 2, plus NUL byte. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXNBUF
-value|(sizeof(long) * NBBY / 3 + 2)
+value|(sizeof(long) * NBBY + 1)
 end_define
-
-begin_decl_stmt
-name|struct
-name|tty
-modifier|*
-name|constty
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pointer to console "window" tty */
-end_comment
 
 begin_struct
 struct|struct
@@ -147,6 +135,18 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|struct
+name|tty
+modifier|*
+name|constty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to console "window" tty */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -822,16 +822,16 @@ name|int
 name|level
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|char
 name|nbuf
 index|[
 name|MAXNBUF
 index|]
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|msglogchar
 argument_list|(
@@ -1639,7 +1639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put a number (base<= 16) in a buffer in reverse order; return an  * optional length and a pointer to the NULL terminated (preceded?)  * buffer. The buffer pointed to by "buf" must have length>= MAXNBUF.  */
+comment|/*  * Put a NUL-terminated ASCII number (base<= 16) in a buffer in reverse  * order; return an optional length and a pointer to the last character  * written in the buffer (i.e., the first character of the string).  * The buffer pointed to by `nbuf' must have length>= MAXNBUF.  */
 end_comment
 
 begin_function
@@ -1648,7 +1648,7 @@ name|char
 modifier|*
 name|ksprintn
 parameter_list|(
-name|buf
+name|nbuf
 parameter_list|,
 name|ul
 parameter_list|,
@@ -1658,7 +1658,7 @@ name|lenp
 parameter_list|)
 name|char
 modifier|*
-name|buf
+name|nbuf
 decl_stmt|;
 specifier|register
 name|u_long
@@ -1675,7 +1675,6 @@ end_function
 
 begin_block
 block|{
-comment|/* A long in base 8, plus NULL. */
 specifier|register
 name|char
 modifier|*
@@ -1683,7 +1682,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|buf
+name|nbuf
 expr_stmt|;
 operator|*
 name|p
@@ -1720,7 +1719,7 @@ name|lenp
 operator|=
 name|p
 operator|-
-name|buf
+name|nbuf
 expr_stmt|;
 return|return
 operator|(
