@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      ns_output.c     6.1     85/05/30     */
+comment|/*      ns_output.c     6.2     85/06/01     */
 end_comment
 
 begin_include
@@ -90,7 +90,7 @@ begin_decl_stmt
 name|int
 name|ns_hold_output
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -98,15 +98,7 @@ begin_decl_stmt
 name|int
 name|ns_copy_output
 init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|ns_lastout
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +107,14 @@ name|int
 name|ns_output_cnt
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|ns_lastout
 decl_stmt|;
 end_decl_stmt
 
