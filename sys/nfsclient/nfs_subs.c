@@ -4642,6 +4642,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|f
 operator|!=
 literal|0
