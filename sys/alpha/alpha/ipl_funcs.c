@@ -384,6 +384,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|intr_nesting_level
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|splsoft
 argument_list|()
 expr_stmt|;
@@ -463,6 +471,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|intr_nesting_level
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

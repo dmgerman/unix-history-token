@@ -81,10 +81,6 @@ parameter_list|)
 value|((framep)->cf_tf.tf_regs[FRAME_PC])
 end_define
 
-begin_comment
-comment|/*  * XXX No way to accurately tell if we were in interrupt mode before taking  * clock interrupt.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -92,7 +88,7 @@ name|CLKF_INTR
 parameter_list|(
 name|framep
 parameter_list|)
-value|(0)
+value|(intr_nesting_level>= 2)
 end_define
 
 begin_comment
@@ -165,6 +161,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* need to trap before returning to user mode */
+end_comment
+
+begin_decl_stmt
+name|u_int32_t
+name|intr_nesting_level
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bookeeping only; counts software intr */
 end_comment
 
 begin_decl_stmt

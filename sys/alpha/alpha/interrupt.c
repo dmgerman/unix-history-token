@@ -212,6 +212,14 @@ modifier|*
 name|framep
 decl_stmt|;
 block|{
+name|atomic_add_int
+argument_list|(
+operator|&
+name|intr_nesting_level
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|{
 name|struct
 name|proc
@@ -470,6 +478,14 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|intr_nesting_level
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
