@@ -1759,7 +1759,7 @@ begin_define
 define|#
 directive|define
 name|P_STOPPED_SGNL
-value|0x10000
+value|0x20000
 end_define
 
 begin_comment
@@ -1770,7 +1770,7 @@ begin_define
 define|#
 directive|define
 name|P_STOPPED_TRACE
-value|0x20000
+value|0x40000
 end_define
 
 begin_comment
@@ -1781,7 +1781,7 @@ begin_define
 define|#
 directive|define
 name|P_STOPPED_SNGL
-value|0x40000
+value|0x80000
 end_define
 
 begin_comment
