@@ -556,7 +556,7 @@ parameter_list|,
 name|node
 parameter_list|)
 define|\
-value|do { 								\ 		LIST_FOREACH(node,&ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
+value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -12066,6 +12066,12 @@ name|i
 init|=
 literal|1
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_nodelist_mtx
+argument_list|)
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|node
@@ -12093,6 +12099,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_nodelist_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -12112,6 +12124,12 @@ name|i
 init|=
 literal|1
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_nodelist_mtx
+argument_list|)
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|hook
@@ -12139,6 +12157,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_nodelist_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
