@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"namei.h"
 end_include
 
 begin_include
@@ -60,24 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscalls.c"
+file|"user.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsysent
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|syscallnames
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* XXX for curproc */
+end_comment
 
 begin_function
 name|struct
@@ -93,6 +81,13 @@ name|struct
 name|ktr_header
 modifier|*
 name|kth
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
 decl_stmt|;
 name|MALLOC
 argument_list|(
@@ -131,17 +126,13 @@ name|kth
 operator|->
 name|ktr_pid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_comm
 argument_list|,
@@ -930,17 +921,6 @@ name|NULL
 decl_stmt|;
 specifier|register
 name|struct
-name|nameidata
-modifier|*
-name|ndp
-init|=
-operator|&
-name|u
-operator|.
-name|u_nd
-decl_stmt|;
-specifier|register
-name|struct
 name|proc
 modifier|*
 name|p
@@ -989,6 +969,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|;
 if|if
 condition|(
 name|ops
@@ -997,14 +981,14 @@ name|KTROP_CLEAR
 condition|)
 block|{
 comment|/* 		 * an operation which requires a file argument. 		 */
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_segflg
 operator|=
 name|UIO_USERSPACE
 expr_stmt|;
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_dirp
 operator|=
 name|uap
@@ -1017,7 +1001,10 @@ name|error
 operator|=
 name|vn_open
 argument_list|(
-name|ndp
+operator|&
+name|nd
+argument_list|,
+name|curp
 argument_list|,
 name|FREAD
 operator||
@@ -1033,8 +1020,8 @@ operator|)
 return|;
 name|vp
 operator|=
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
@@ -1434,7 +1421,9 @@ if|if
 condition|(
 name|curp
 operator|->
-name|p_uid
+name|p_ucred
+operator|->
+name|cr_uid
 operator|==
 literal|0
 condition|)
@@ -1848,9 +1837,9 @@ name|IO_UNIT
 operator||
 name|IO_APPEND
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|curproc
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1923,35 +1912,59 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return true if caller has permission to set the ktracing state  * of target.  Essentially, the target can't possess any  * more permissions than the caller.  KTRFAC_ROOT signifies that  * root previously set the tracing status on the target process, and   * so, only root may further change it.  *  * TODO: check groups  (have to wait till group list is moved  *       out of u.  use caller effective gid.  */
+comment|/*  * Return true if caller has permission to set the ktracing state  * of target.  Essentially, the target can't possess any  * more permissions than the caller.  KTRFAC_ROOT signifies that  * root previously set the tracing status on the target process, and   * so, only root may further change it.  *  * TODO: check groups.  use caller effective gid.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ktrcanset
 argument_list|(
-name|caller
+argument|callp
 argument_list|,
-name|target
+argument|targetp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
-name|caller
-operator|,
-operator|*
-name|target
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|callp
+decl_stmt|,
+modifier|*
+name|targetp
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|pcred
+modifier|*
+name|caller
+init|=
+name|callp
+operator|->
+name|p_cred
+decl_stmt|;
+specifier|register
+name|struct
+name|pcred
+modifier|*
+name|target
+init|=
+name|targetp
+operator|->
+name|p_cred
+decl_stmt|;
 if|if
 condition|(
 operator|(
 name|caller
 operator|->
-name|p_uid
+name|pc_ucred
+operator|->
+name|cr_uid
 operator|==
 name|target
 operator|->
@@ -1983,7 +1996,7 @@ operator|->
 name|p_svgid
 operator|&&
 operator|(
-name|target
+name|targetp
 operator|->
 name|p_traceflag
 operator|&
@@ -1995,7 +2008,9 @@ operator|)
 operator|||
 name|caller
 operator|->
-name|p_uid
+name|pc_ucred
+operator|->
+name|cr_uid
 operator|==
 literal|0
 condition|)

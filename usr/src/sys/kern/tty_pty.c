@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -349,6 +349,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
@@ -467,9 +474,11 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 literal|0
 condition|)
@@ -682,6 +691,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
@@ -732,9 +748,7 @@ while|while
 condition|(
 name|isbackground
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|,
 name|tp
 argument_list|)
@@ -743,9 +757,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_sigignore
 operator|&
@@ -756,9 +768,7 @@ argument_list|)
 operator|)
 operator|||
 operator|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_sigmask
 operator|&
@@ -768,9 +778,7 @@ name|SIGTTIN
 argument_list|)
 operator|)
 operator|||
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pgrp
 operator|->
@@ -778,13 +786,11 @@ name|pg_jobc
 operator|==
 literal|0
 operator|||
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
-name|SVFORK
+name|SPPWAIT
 condition|)
 return|return
 operator|(
@@ -793,9 +799,7 @@ operator|)
 return|;
 name|pgsignal
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pgrp
 argument_list|,
@@ -1353,9 +1357,7 @@ name|printf
 argument_list|(
 literal|"WAKEUP c_cf %d\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|)
@@ -2333,6 +2335,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|curp
+init|=
+name|curproc
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
@@ -2529,9 +2538,7 @@ name|pti
 operator|->
 name|pt_selr
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curp
 expr_stmt|;
 break|break;
 case|case
@@ -2652,9 +2659,7 @@ name|pti
 operator|->
 name|pt_selw
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curp
 expr_stmt|;
 break|break;
 block|}
@@ -3837,18 +3842,6 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
-case|case
-name|JUNK_TIOCSETAS
-case|:
-comment|/* XXX */
-case|case
-name|JUNK_TIOCSETAWS
-case|:
-comment|/* XXX */
-case|case
-name|JUNK_TIOCSETAFS
-case|:
-comment|/* XXX */
 while|while
 condition|(
 name|getc
@@ -4666,18 +4659,6 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
-case|case
-name|JUNK_TIOCSETAS
-case|:
-comment|/* XXX */
-case|case
-name|JUNK_TIOCSETAWS
-case|:
-comment|/* XXX */
-case|case
-name|JUNK_TIOCSETAFS
-case|:
-comment|/* XXX */
 case|case
 name|TIOCSETP
 case|:
