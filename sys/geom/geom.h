@@ -698,6 +698,10 @@ define|#
 directive|define
 name|G_PF_CANDELETE
 value|0x1
+define|#
+directive|define
+name|G_PF_WITHER
+value|0x2
 block|}
 struct|;
 end_struct
