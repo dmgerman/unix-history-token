@@ -401,10 +401,10 @@ block|}
 block|,
 define|#
 directive|define
-name|N_MRTTABLE
+name|N_MFCTABLE
 value|29
 block|{
-literal|"_mrttable"
+literal|"_mfctable"
 block|}
 block|,
 define|#
@@ -1594,7 +1594,7 @@ name|n_value
 argument_list|,
 name|nl
 index|[
-name|N_MRTTABLE
+name|N_MFCTABLE
 index|]
 operator|.
 name|n_value
