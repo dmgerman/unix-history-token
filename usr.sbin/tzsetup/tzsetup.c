@@ -3471,7 +3471,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|dialog_yesno
+name|dialog_noyes
 argument_list|(
 literal|"Select local or UTC (Greenwich Mean Time) clock"
 argument_list|,
