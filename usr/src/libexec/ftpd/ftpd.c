@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.16 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,12 +348,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|guest
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|wtmp
 decl_stmt|;
 end_decl_stmt
 
@@ -903,10 +897,6 @@ argument_list|)
 expr_stmt|;
 comment|/* do telnet option negotiation here */
 comment|/* 	 * Set up default state 	 */
-name|logged_in
-operator|=
-literal|0
-expr_stmt|;
 name|data
 operator|=
 operator|-
@@ -1435,92 +1425,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* grab wtmp before chroot */
-name|wtmp
-operator|=
-name|open
-argument_list|(
-literal|"/usr/adm/wtmp"
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_APPEND
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|guest
-operator|&&
-name|chroot
-argument_list|(
-name|pw
-operator|->
-name|pw_dir
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|reply
-argument_list|(
-literal|550
-argument_list|,
-literal|"Can't set guest privileges."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|wtmp
-operator|>=
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|wtmp
-argument_list|)
-expr_stmt|;
-name|wtmp
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-goto|goto
-name|bad
-goto|;
-block|}
-if|if
-condition|(
-operator|!
-name|guest
-condition|)
-name|reply
-argument_list|(
-literal|230
-argument_list|,
-literal|"User %s logged in."
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
-else|else
-name|reply
-argument_list|(
-literal|230
-argument_list|,
-literal|"Guest login ok, access restrictions apply."
-argument_list|)
-expr_stmt|;
-name|logged_in
-operator|=
-literal|1
-expr_stmt|;
+comment|/* open wtmp before chroot */
 operator|(
 name|void
 operator|)
@@ -1543,6 +1448,58 @@ operator|->
 name|pw_name
 argument_list|,
 name|remotehost
+argument_list|)
+expr_stmt|;
+name|logged_in
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|guest
+condition|)
+block|{
+if|if
+condition|(
+name|chroot
+argument_list|(
+name|pw
+operator|->
+name|pw_dir
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|reply
+argument_list|(
+literal|550
+argument_list|,
+literal|"Can't set guest privileges."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+name|reply
+argument_list|(
+literal|230
+argument_list|,
+literal|"Guest login ok, access restrictions apply."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|reply
+argument_list|(
+literal|230
+argument_list|,
+literal|"User %s logged in."
+argument_list|,
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 expr_stmt|;
 name|seteuid
