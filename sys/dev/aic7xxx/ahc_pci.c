@@ -690,6 +690,11 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|regs
+condition|)
+block|{
 name|ahc
 operator|->
 name|tag
@@ -727,6 +732,7 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ahc
 operator|->
