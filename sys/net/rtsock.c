@@ -1658,10 +1658,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* XXX why this odd cast to (caddr_t *) ? Maybe wrong ? */
 if|if
 condition|(
 name|t
+operator|!=
+name|NULL
 operator|&&
 name|bcmp
 argument_list|(
@@ -1686,14 +1687,20 @@ name|rn_key
 operator|+
 literal|1
 argument_list|,
-operator|*
 operator|(
-name|u_char
+operator|(
+expr|struct
+name|sockaddr
 operator|*
 operator|)
+operator|(
 name|t
 operator|->
 name|rn_key
+operator|)
+operator|)
+operator|->
+name|sa_len
 operator|-
 literal|1
 argument_list|)
