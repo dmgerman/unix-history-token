@@ -948,8 +948,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4281,8 +4279,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -4613,8 +4609,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4720,8 +4714,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5016,8 +5008,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -5324,8 +5314,6 @@ argument_list|,
 name|ATPR_F_READ
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -7001,8 +6989,6 @@ literal|30
 argument_list|,
 name|acd_done
 argument_list|,
-name|cdp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -7281,8 +7267,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -7432,8 +7416,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -7517,8 +7499,6 @@ argument_list|,
 name|ATPR_F_READ
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -8221,8 +8201,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* load the wanted slot */
@@ -8281,8 +8259,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -8398,8 +8374,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -8845,8 +8819,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -8973,8 +8945,6 @@ argument_list|,
 name|ATPR_F_READ
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -9315,8 +9285,6 @@ else|:
 name|ATPR_F_READ
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -9777,8 +9745,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -10021,8 +9987,6 @@ argument_list|,
 name|ATPR_F_READ
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -10651,8 +10615,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|cdp
@@ -10756,8 +10718,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -10837,8 +10797,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -10914,8 +10872,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -11008,8 +10964,6 @@ argument_list|,
 name|ATPR_F_READ
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -11137,8 +11091,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -11216,8 +11168,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

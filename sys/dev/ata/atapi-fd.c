@@ -764,8 +764,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -1989,8 +1987,6 @@ literal|30
 argument_list|,
 name|afd_partial_done
 argument_list|,
-name|fdp
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2100,8 +2096,6 @@ argument_list|,
 literal|30
 argument_list|,
 name|afd_done
-argument_list|,
-name|fdp
 argument_list|,
 name|bp
 argument_list|)
@@ -2455,8 +2449,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2549,8 +2541,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

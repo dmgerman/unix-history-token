@@ -651,10 +651,6 @@ parameter_list|,
 name|atapi_callback_t
 name|callback
 parameter_list|,
-name|void
-modifier|*
-name|unused
-parameter_list|,
 name|struct
 name|buf
 modifier|*
@@ -2472,8 +2468,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|30
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

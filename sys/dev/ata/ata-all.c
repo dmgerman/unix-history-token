@@ -4581,11 +4581,6 @@ name|ATA_ATA_MASTER
 condition|)
 name|ad_detach
 argument_list|(
-operator|(
-expr|struct
-name|ad_softc
-operator|*
-operator|)
 name|scp
 operator|->
 name|dev_softc
@@ -4604,11 +4599,6 @@ name|ATA_ATA_SLAVE
 condition|)
 name|ad_detach
 argument_list|(
-operator|(
-expr|struct
-name|ad_softc
-operator|*
-operator|)
 name|scp
 operator|->
 name|dev_softc
@@ -4642,11 +4632,6 @@ name|ATA_ATAPI_MASTER
 condition|)
 name|atapi_detach
 argument_list|(
-operator|(
-expr|struct
-name|atapi_softc
-operator|*
-operator|)
 name|scp
 operator|->
 name|dev_softc
@@ -4665,11 +4650,6 @@ name|ATA_ATAPI_SLAVE
 condition|)
 name|atapi_detach
 argument_list|(
-operator|(
-expr|struct
-name|atapi_softc
-operator|*
-operator|)
 name|scp
 operator|->
 name|dev_softc

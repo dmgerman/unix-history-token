@@ -2734,8 +2734,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2776,8 +2774,6 @@ argument_list|,
 literal|2
 operator|*
 literal|60
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -2876,8 +2872,6 @@ argument_list|,
 literal|60
 argument_list|,
 name|ast_done
-argument_list|,
-name|stp
 argument_list|,
 name|bp
 argument_list|)
@@ -3090,8 +3084,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3211,8 +3203,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3347,8 +3337,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3466,8 +3454,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|position
@@ -3581,8 +3567,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -3679,8 +3663,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -3783,8 +3765,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -3882,8 +3862,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|10
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -4013,8 +3991,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4125,8 +4101,6 @@ argument_list|,
 literal|60
 operator|*
 literal|60
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

@@ -1210,9 +1210,6 @@ name|int32_t
 parameter_list|,
 name|atapi_callback_t
 parameter_list|,
-name|void
-modifier|*
-parameter_list|,
 name|struct
 name|buf
 modifier|*
