@@ -4605,6 +4605,11 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
+literal|"echo '# Note that BSD's export synatx is \"host-centric\" vs. Sun\'s \"FS-centric\" one.'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
 literal|"echo>> /etc/exports"
 argument_list|)
 expr_stmt|;
