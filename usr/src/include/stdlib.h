@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -674,6 +674,23 @@ name|_POSIX_SOURCE
 argument_list|)
 end_if
 
+begin_decl_stmt
+name|void
+modifier|*
+name|alloca
+name|__P
+argument_list|(
+operator|(
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* built-in for gcc */
+end_comment
+
 begin_comment
 comment|/* getcap(3) functions */
 end_comment
@@ -856,6 +873,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|daemon
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|getloadavg
 name|__P
 argument_list|(
@@ -949,21 +980,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|char
 modifier|*
-name|alloca
+name|group_from_gid
 name|__P
 argument_list|(
 operator|(
-name|size_t
+name|unsigned
+name|long
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* built-in for gcc */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1128,6 +1158,22 @@ name|__P
 argument_list|(
 operator|(
 name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|user_from_uid
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
