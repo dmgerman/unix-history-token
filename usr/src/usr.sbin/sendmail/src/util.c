@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.14 (Berkeley) %G%"
+literal|"@(#)util.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1791,7 +1791,7 @@ literal|0
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"timeout waiting for input"
+literal|"451 timeout waiting for input"
 argument_list|)
 expr_stmt|;
 name|buf
