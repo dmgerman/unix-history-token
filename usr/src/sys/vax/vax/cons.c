@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.9	81/05/05	*/
+comment|/*	cons.c	4.10	81/05/09	*/
 end_comment
 
 begin_comment
@@ -825,6 +825,12 @@ operator|->
 name|t_flags
 operator|&
 name|RAW
+operator|||
+name|tp
+operator|->
+name|t_local
+operator|&
+name|LLITOUT
 condition|)
 name|mtpr
 argument_list|(
