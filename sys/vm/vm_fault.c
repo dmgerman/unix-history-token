@@ -2861,16 +2861,13 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|mtx_lock_spin
+name|PROC_LOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|curproc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|curproc
-operator|&&
 operator|(
 name|curproc
 operator|->
@@ -2912,10 +2909,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock_spin
+name|PROC_UNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|curproc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Unlock everything, and return 	 */
