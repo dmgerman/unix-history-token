@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c 1.3 %G%"
+literal|"@(#)misc.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,7 @@ name|char
 modifier|*
 name|maintainer
 init|=
-literal|"csvax:linton"
+literal|"linton@ucbvax"
 decl_stmt|;
 name|puts
 argument_list|(
