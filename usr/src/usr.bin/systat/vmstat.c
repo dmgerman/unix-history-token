@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	1.3 (Berkeley) %G%"
+literal|"@(#)vmstat.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,6 +294,17 @@ define|#
 directive|define
 name|DISKCOL
 value|0
+end_define
+
+begin_comment
+comment|/*  * Maximum number of times that the clock may no longer advance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOPMAX
+value|10
 end_define
 
 begin_if
@@ -994,6 +1005,8 @@ decl_stmt|,
 name|l
 decl_stmt|,
 name|c
+decl_stmt|,
+name|loopcnt
 decl_stmt|;
 name|int
 name|psiz
@@ -1685,8 +1698,16 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
+name|loopcnt
+operator|=
+literal|0
 init|;
+name|loopcnt
+operator|<
+name|LOOPMAX
 condition|;
+name|loopcnt
+operator|++
 control|)
 block|{
 while|while
@@ -1820,6 +1841,10 @@ literal|5.0
 condition|)
 comment|/*< 5 ticks - ignore this trash */
 continue|continue;
+name|loopcnt
+operator|=
+literal|0
+expr_stmt|;
 name|etime
 operator|/=
 name|hertz
@@ -3351,6 +3376,29 @@ name|delay
 argument_list|)
 expr_stmt|;
 block|}
+name|clear
+argument_list|()
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|2
+argument_list|,
+literal|10
+argument_list|,
+literal|"THE SYSTEM CLOCK HAS DIED!"
+argument_list|)
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|finish
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
