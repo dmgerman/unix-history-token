@@ -461,8 +461,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ex: Found card at 0x%03x!\n"
+literal|"ex: Found card at 0x%03lx!\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ioport
 argument_list|)
 expr_stmt|;
@@ -502,8 +506,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ex: card at 0x%03x in PnP mode!\n"
+literal|"ex: card at 0x%03lx in PnP mode!\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ioport
 argument_list|)
 expr_stmt|;
@@ -819,8 +827,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ex: no card found at 0x%3x.\n"
+literal|"ex: no card found at 0x%03lx.\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|iobase
 argument_list|)
 expr_stmt|;
@@ -838,8 +850,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ex: ex_isa_probe() found card at 0x%03x\n"
+literal|"ex: ex_isa_probe() found card at 0x%03lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|iobase
 argument_list|)
 expr_stmt|;
