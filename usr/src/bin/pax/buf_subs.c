@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)buf_subs.c	8.1 (Berkeley) %G%"
+literal|"@(#)buf_subs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,23 +107,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXFBSZ
-value|4096
-end_define
-
-begin_comment
-comment|/* max block size for hole detection */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MINFBSZ
 value|512
 end_define
 
 begin_comment
-comment|/* min block size for hole detection */
+comment|/* default block size for hole detect */
 end_comment
 
 begin_define
@@ -135,6 +124,10 @@ end_define
 
 begin_comment
 comment|/* default media read error limit */
+end_comment
+
+begin_comment
+comment|/*  * Need to change bufmem to dynamic allocation when the upper  * limit on blocking size is removed (though that will violate pax spec)  * MAXBLK define and tests will also need to be updated.  */
 end_comment
 
 begin_decl_stmt
@@ -2170,7 +2163,7 @@ name|crc
 init|=
 literal|0L
 decl_stmt|;
-comment|/* 	 * pass the blocksize of the file being written to the write routine, 	 * if an odd size, use the default MINFBSZ 	 */
+comment|/* 	 * pass the blocksize of the file being written to the write routine, 	 * if the size is zero, use the default MINFBSZ 	 */
 if|if
 condition|(
 name|fstat
@@ -2186,21 +2179,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|sb
 operator|.
 name|st_blksize
 operator|>
 literal|0
-operator|)
-operator|&&
-operator|(
-name|sb
-operator|.
-name|st_blksize
-operator|<=
-name|MAXFBSZ
-operator|)
 condition|)
 name|sz
 operator|=
@@ -2554,7 +2537,7 @@ condition|)
 operator|++
 name|no_hole
 expr_stmt|;
-comment|/* 	 * pass the blocksize of the file being written to the write routine, 	 * if an odd size, use the default MINFBSZ 	 */
+comment|/* 	 * pass the blocksize of the file being written to the write routine, 	 * if the size is zero, use the default MINFBSZ 	 */
 if|if
 condition|(
 name|fstat
@@ -2570,21 +2553,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|sb
 operator|.
 name|st_blksize
 operator|>
 literal|0
-operator|)
-operator|&&
-operator|(
-name|sb
-operator|.
-name|st_blksize
-operator|<=
-name|MAXFBSZ
-operator|)
 condition|)
 name|sz
 operator|=

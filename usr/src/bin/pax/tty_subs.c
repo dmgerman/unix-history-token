@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty_subs.c	8.1 (Berkeley) %G%"
+literal|"@(#)tty_subs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -612,11 +612,13 @@ block|}
 operator|(
 name|void
 operator|)
-name|fputs
+name|fprintf
 argument_list|(
-literal|"pax: "
-argument_list|,
 name|stderr
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|argv0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -757,11 +759,13 @@ block|}
 operator|(
 name|void
 operator|)
-name|fputs
+name|fprintf
 argument_list|(
-literal|"pax: "
-argument_list|,
 name|stderr
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|argv0
 argument_list|)
 expr_stmt|;
 operator|(

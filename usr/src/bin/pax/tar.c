@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	8.1 (Berkeley) %G%"
+literal|"@(#)tar.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3454,7 +3454,7 @@ name|st_nlink
 operator|=
 literal|2
 expr_stmt|;
-comment|/*                  * Some programs that create ustar archives append a '/'                  * to the pathname for directories. This clearly violates                  * ustar specs, but we will silently strip it off anyway.                  */
+comment|/* 		 * Some programs that create ustar archives append a '/' 		 * to the pathname for directories. This clearly violates 		 * ustar specs, but we will silently strip it off anyway. 		 */
 if|if
 condition|(
 name|arcn

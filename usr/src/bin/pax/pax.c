@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pax.c	8.1 (Berkeley) %G%"
+literal|"@(#)pax.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +288,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* follow symlinks when writing archive */
+comment|/* follow symlinks when writing */
 end_comment
 
 begin_decl_stmt
@@ -415,6 +415,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* -v locale time format (if any) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|argv0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* root of argv[0] */
 end_comment
 
 begin_decl_stmt
@@ -1220,268 +1231,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/*  * usage()  *	print the usage summary to the user  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
-name|void
-name|usage
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|usage
-argument_list|()
-endif|#
-directive|endif
-block|{
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"usage: pax [-cdnv] [-E limit] [-f archive] "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-s replstr] ... [-U user] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-G group] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date]] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[pattern ...]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"       pax -r [-cdiknuvDYZ] [-E limit] "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-f archive] [-o options] ... \n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"           [-p string] ... [-s replstr] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-U user] ... [-G group] ...\n           "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date]] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|" [pattern ...]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"       pax -w [-dituvHLX] [-b blocksize] "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[ [-a] [-f archive] ] [-x format] \n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"           [-B bytes] [-s replstr] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-o options] ... [-U user] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-G group] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date][/[c][m]]] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[file ...]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"       pax -r -w [-diklntuvDHLXYZ]"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-p string] ... [-s replstr] ... [-U user] ..."
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"\n           [-G group] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[-T [from_date][,to_date][/[c][m]]] ... "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"[file ...]\n           directory\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_decl_stmt
 

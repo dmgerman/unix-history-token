@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)pax.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)pax.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -405,6 +405,11 @@ modifier|*
 name|pstr
 decl_stmt|;
 comment|/* pattern to match, user supplied */
+name|char
+modifier|*
+name|pend
+decl_stmt|;
+comment|/* end of a prefix match */
 name|int
 name|plen
 decl_stmt|;
@@ -417,12 +422,12 @@ define|#
 directive|define
 name|MTCH
 value|0x1
-comment|/* this pattern has been matched */
+comment|/* pattern has been matched */
 define|#
 directive|define
 name|DIR_MTCH
 value|0x2
-comment|/* this pattern matched a directory */
+comment|/* pattern matched a directory */
 name|struct
 name|pattern
 modifier|*

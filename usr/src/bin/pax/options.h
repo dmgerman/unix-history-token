@@ -1,7 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)options.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)options.h	8.2 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * argv[0] names. Used for tar and cpio emulation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_TAR
+value|"tar"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_CPIO
+value|"cpio"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_PAX
+value|"pax"
+end_define
 
 begin_comment
 comment|/*  * Constants used to specify the legal sets of flags in pax. For each major  * operation mode of pax, a set of illegal flags is defined. If any one of  * those illegal flags are found set, we scream and exit  */
@@ -206,10 +231,14 @@ name|CLF
 value|0x00800000
 end_define
 
+begin_comment
+comment|/* nonstandard extension */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|CTF
+name|CPF
 value|0x01000000
 end_define
 
@@ -220,7 +249,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CUF
+name|CTF
 value|0x02000000
 end_define
 
@@ -231,15 +260,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CXF
+name|CUF
 value|0x04000000
+end_define
+
+begin_comment
+comment|/* nonstandard extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CXF
+value|0x08000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|CYF
-value|0x08000000
+value|0x10000000
 end_define
 
 begin_comment
@@ -250,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|CZF
-value|0x10000000
+value|0x20000000
 end_define
 
 begin_comment
@@ -265,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|FLGCH
-value|"abcdfiklnoprstuvwxBDEGHLTUXYZ"
+value|"abcdfiklnoprstuvwxBDEGHLPTUXYZ"
 end_define
 
 begin_comment
@@ -340,7 +380,7 @@ begin_define
 define|#
 directive|define
 name|BDEXTR
-value|(AF|BF|LF|TF|WF|XF|CBF|CHF|CLF|CXF)
+value|(AF|BF|LF|TF|WF|XF|CBF|CHF|CLF|CPF|CXF)
 end_define
 
 begin_define
@@ -361,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|BDLIST
-value|(AF|BF|IF|KF|LF|OF|PF|RF|TF|UF|WF|XF|CBF|CDF|CHF|CLF|CXF|CYF|CZF)
+value|(AF|BF|IF|KF|LF|OF|PF|RF|TF|UF|WF|XF|CBF|CDF|CHF|CLF|CPF|CXF|CYF|CZF)
 end_define
 
 end_unit

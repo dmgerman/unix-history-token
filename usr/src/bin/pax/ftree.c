@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftree.c	8.1 (Berkeley) %G%"
+literal|"@(#)ftree.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,7 @@ name|ftsopts
 operator|=
 name|FTS_NOCHDIR
 expr_stmt|;
-comment|/* 	 * optional user flags that effect file traversal 	 * -H command line symlink follow only 	 * -L follow sylinks 	 * -X do not cross over mount points 	 * -t preserve access times on files read. 	 * -n select only the first member of a file tree when a match is found 	 * -d do not extract subtrees rooted at a directory arg. 	 */
+comment|/* 	 * optional user flags that effect file traversal 	 * -H command line symlink follow only (half follow) 	 * -L follow sylinks (logical) 	 * -P do not follow sylinks (physical). This is the default. 	 * -X do not cross over mount points 	 * -t preserve access times on files read. 	 * -n select only the first member of a file tree when a match is found 	 * -d do not extract subtrees rooted at a directory arg. 	 */
 if|if
 condition|(
 name|Lflag

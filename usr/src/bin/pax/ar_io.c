@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_io.c	8.1 (Berkeley) %G%"
+literal|"@(#)ar_io.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1140,11 +1140,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fputs
+name|fprintf
 argument_list|(
-literal|"pax: Waiting for tape drive close to complete..."
-argument_list|,
 name|outf
+argument_list|,
+literal|"%s: Waiting for tape drive close to complete..."
+argument_list|,
+name|argv0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1333,30 +1335,30 @@ name|fprintf
 argument_list|(
 argument|outf
 argument_list|,
-literal|"pax: unknown format, %lu bytes skipped.\n"
+literal|"%s: unknown format, %lu bytes skipped.\n"
 argument_list|,
 else|#
 directive|else
 argument|(void)fprintf(outf,
-literal|"pax: unknown format, %qu bytes skipped.\n"
+literal|"%s: unknown format, %qu bytes skipped.\n"
 argument|,
 endif|#
 directive|endif
-argument|rdcnt); 		(void)fflush(outf); 		flcnt =
+argument|argv0, rdcnt); 		(void)fflush(outf); 		flcnt =
 literal|0
 argument|; 		return; 	}  	(void)fprintf(outf,
 ifdef|#
 directive|ifdef
 name|NET2_STAT
-literal|"pax: %s vol %d, %lu files, %lu bytes read, %lu bytes written.\n"
+literal|"%s: %s vol %d, %lu files, %lu bytes read, %lu bytes written.\n"
 argument|,
 else|#
 directive|else
-literal|"pax: %s vol %d, %lu files, %qu bytes read, %qu bytes written.\n"
+literal|"%s: %s vol %d, %lu files, %qu bytes read, %qu bytes written.\n"
 argument|,
 endif|#
 directive|endif
-argument|frmt->name, arvol-
+argument|argv0, frmt->name, arvol-
 literal|1
 argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(outf); 	flcnt =
 literal|0
@@ -1436,8 +1438,8 @@ literal|0
 argument|); 	warn(
 literal|1
 argument|,
-literal|"Cannot append, device record size %d does not support pax spec"
-argument|, 		rdblksz); 	return(-
+literal|"Cannot append, device record size %d does not support %s spec"
+argument|, 		rdblksz, argv0); 	return(-
 literal|1
 argument|); }
 comment|/*  * ar_read()  *	read up to a specified number of bytes from the archive into the  *	supplied buffer. When dealing with tapes we may not always be able to  *	read what we want.  * Return:  *	Number of bytes in buffer. 0 for end of file, -1 for a read error.  */
@@ -1953,8 +1955,8 @@ literal|"Unable to restore signal mask"
 argument|);  	if (done || !wr_trail) 		return(-
 literal|1
 argument|);  	tty_prnt(
-literal|"\nATTENTION! Pax archive volume change required.\n"
-argument|);
+literal|"\nATTENTION! %s archive volume change required.\n"
+argument|, argv0);
 comment|/* 	 * if i/o is on stdin or stdout, we cannot reopen it (we do not know 	 * the name), the user will be forced to type it in. 	 */
 argument|if (strcmp(arcname, STDO)&& strcmp(arcname, STDN)&& (artyp != ISREG)&& (artyp != ISPIPE)) { 		if (artyp == ISTAPE) { 			tty_prnt(
 literal|"%s ready for archive tape volume: %d\n"
@@ -1969,8 +1971,8 @@ literal|" and make sure it is WRITE ENABLED.\n"
 argument|); 		else 			tty_prnt(
 literal|"\n"
 argument|);  		for(;;) { 			tty_prnt(
-literal|"Type \"y\" to continue, \".\" to quit pax,"
-argument|); 			tty_prnt(
+literal|"Type \"y\" to continue, \".\" to quit %s,"
+argument|, 				argv0); 			tty_prnt(
 literal|" or \"s\" to switch to new device.\nIf you"
 argument|); 			tty_prnt(
 literal|" cannot change storage media, type \"s\"\n"
@@ -1985,8 +1987,8 @@ literal|1
 argument|; 				lstrval = -
 literal|1
 argument|; 				tty_prnt(
-literal|"Quitting pax!\n"
-argument|); 				vfpart =
+literal|"Quitting %s!\n"
+argument|, argv0); 				vfpart =
 literal|0
 argument|; 				return(-
 literal|1
@@ -2029,8 +2031,8 @@ literal|"Ready for archive volume: %d\n"
 argument|, arvol);
 comment|/* 	 * have to go to a different archive 	 */
 argument|for (;;) { 		tty_prnt(
-literal|"Input archive name or \".\" to quit pax.\n"
-argument|); 		tty_prnt(
+literal|"Input archive name or \".\" to quit %s.\n"
+argument|, argv0); 		tty_prnt(
 literal|"Archive name> "
 argument|);  		if ((tty_read(buf, sizeof(buf))<
 literal|0
@@ -2041,8 +2043,8 @@ literal|1
 argument|; 			lstrval = -
 literal|1
 argument|; 			tty_prnt(
-literal|"Quitting pax!\n"
-argument|); 			vfpart =
+literal|"Quitting %s!\n"
+argument|, argv0); 			vfpart =
 literal|0
 argument|; 			return(-
 literal|1
