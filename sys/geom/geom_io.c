@@ -735,7 +735,7 @@ case|:
 case|case
 name|BIO_DELETE
 case|:
-comment|/* Noisily reject zero size sectors */
+comment|/* Zero sectorsize is a probably lack of media */
 if|if
 condition|(
 name|pp
@@ -744,22 +744,11 @@ name|sectorsize
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"GEOM provider %s has zero sectorsize\n"
-argument_list|,
-name|pp
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|EDOOFUS
+name|ENXIO
 operator|)
 return|;
-block|}
 comment|/* Reject I/O not on sector boundary */
 if|if
 condition|(
