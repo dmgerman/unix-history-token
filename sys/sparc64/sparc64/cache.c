@@ -421,19 +421,6 @@ argument_list|(
 literal|"cache_init: too many D$ colors"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cache
-operator|.
-name|dc_assoc
-operator|!=
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"cache_init: D$ is not directly mapped!"
-argument_list|)
-expr_stmt|;
 name|set
 operator|=
 name|cache
