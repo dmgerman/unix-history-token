@@ -1665,13 +1665,16 @@ name|i
 operator|==
 name|XL_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: command never completed!\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"command never completed!\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2701,13 +2704,16 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: found 10baseFL\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"found 10baseFL\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -2768,13 +2774,16 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: found AUI\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"found AUI\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -2805,13 +2814,16 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: found BNC\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"found BNC\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -2894,13 +2906,16 @@ operator|==
 literal|100
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: eeprom failed to come ready\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"eeprom failed to come ready\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3752,15 +3767,17 @@ decl_stmt|;
 name|u_int16_t
 name|mediastat
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"xl%d: selecting "
-argument_list|,
-name|sc
-operator|->
-name|xl_unit
-argument_list|)
-expr_stmt|;
+name|char
+modifier|*
+name|pmsg
+init|=
+literal|""
+decl_stmt|,
+modifier|*
+name|dmsg
+init|=
+literal|""
+decl_stmt|;
 name|XL_SEL_WIN
 argument_list|(
 literal|4
@@ -3808,10 +3825,9 @@ operator|==
 name|IFM_10_T
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"10baseT transceiver, "
-argument_list|)
+name|pmsg
+operator|=
+literal|"10baseT transceiver"
 expr_stmt|;
 name|sc
 operator|->
@@ -3864,10 +3880,9 @@ operator|==
 name|IFM_100_FX
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"100baseFX port, "
-argument_list|)
+name|pmsg
+operator|=
+literal|"100baseFX port"
 expr_stmt|;
 name|sc
 operator|->
@@ -3922,10 +3937,9 @@ operator|==
 name|IFM_10_5
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"AUI port, "
-argument_list|)
+name|pmsg
+operator|=
+literal|"AUI port"
 expr_stmt|;
 name|sc
 operator|->
@@ -3971,10 +3985,9 @@ operator|==
 name|IFM_10_FL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"10baseFL transceiver, "
-argument_list|)
+name|pmsg
+operator|=
+literal|"10baseFL transceiver"
 expr_stmt|;
 name|sc
 operator|->
@@ -4030,10 +4043,9 @@ operator|==
 name|IFM_10_2
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"BNC port, "
-argument_list|)
+name|pmsg
+operator|=
+literal|"AUI port"
 expr_stmt|;
 name|sc
 operator|->
@@ -4085,10 +4097,9 @@ operator|==
 name|IFM_100_FX
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"full duplex\n"
-argument_list|)
+name|dmsg
+operator|=
+literal|"full"
 expr_stmt|;
 name|XL_SEL_WIN
 argument_list|(
@@ -4107,10 +4118,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"half duplex\n"
-argument_list|)
+name|dmsg
+operator|=
+literal|"half"
 expr_stmt|;
 name|XL_SEL_WIN
 argument_list|(
@@ -4196,6 +4206,22 @@ expr_stmt|;
 name|XL_SEL_WIN
 argument_list|(
 literal|7
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"selecting %s, %s duplex\n"
+argument_list|,
+name|pmsg
+argument_list|,
+name|dmsg
 argument_list|)
 expr_stmt|;
 block|}
@@ -4299,13 +4325,16 @@ name|i
 operator|==
 name|XL_TIMEOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: reset didn't complete\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"reset didn't complete\n"
 argument_list|)
 expr_stmt|;
 comment|/* Reset TX and RX. */
@@ -4540,28 +4569,32 @@ condition|)
 return|return;
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: bogus xcvr value "
-literal|"in EEPROM (%x)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"bogus xcvr value in EEPROM (%x)\n"
 argument_list|,
 name|sc
 operator|->
 name|xl_xcvr
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: choosing new default based "
-literal|"on card type\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"choosing new default based on card type\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4583,34 +4616,40 @@ operator|&
 name|XL_MEDIAOPT_10FL
 condition|)
 return|return;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: WARNING: no media options bits set in "
-literal|"the media options register!!\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"WARNING: no media options bits set in the media options register!!\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: this could be a manufacturing defect in "
-literal|"your adapter or system\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"this could be a manufacturing defect in your adapter or system\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: attempting to guess media type; you "
-literal|"should probably consult your vendor\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"attempting to guess media type; you should probably consult your vendor\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4688,14 +4727,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing 10BaseT "
-literal|"transceiver\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing 10BaseT transceiver\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4727,14 +4768,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing COMBO "
-literal|"(AUI/BNC/TP)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing COMBO (AUI/BNC/TP)\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4760,13 +4803,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing TPC (BNC/TP)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing TPC (BNC/TP)\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4790,13 +4836,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing 10baseFL\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing 10baseFL\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4860,13 +4909,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing MII\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing MII\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4894,13 +4946,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing 100BaseT4/MII\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing 100baseT4/MII\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4944,13 +4999,16 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing 10/100 internal\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing 10/100 internal\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4978,26 +5036,30 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: guessing 10/100 "
-literal|"plus BNC/AUI\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"guessing 10/100 plus BNC/AUI\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: unknown device ID: %x -- "
-literal|"defaulting to 10baseT\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"unknown device ID: %x -- defaulting to 10baseT\n"
 argument_list|,
 name|devid
 argument_list|)
@@ -5404,11 +5466,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: using memory mapped I/O\n"
+name|dev
 argument_list|,
-name|unit
+literal|"using memory mapped I/O\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5447,11 +5509,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5466,11 +5528,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: using port I/O\n"
+name|dev
 argument_list|,
-name|unit
+literal|"using port I/O\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5534,11 +5596,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5604,11 +5666,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5619,6 +5681,37 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* Initialize interface name. */
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
+name|ifp
+operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|if_initname
+argument_list|(
+name|ifp
+argument_list|,
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Reset the adapter. */
 name|xl_reset
 argument_list|(
@@ -5646,13 +5739,11 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: failed to read station address\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"failed to read station address\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5739,11 +5830,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: failed to allocate rx dma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate rx dma tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5789,11 +5880,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: no memory for rx list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for rx list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dma_tag_destroy
@@ -5858,11 +5949,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: cannot get dma address of the rx ring!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get dma address of the rx ring!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dmamem_free
@@ -5950,11 +6041,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: failed to allocate tx dma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate tx dma tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6000,11 +6091,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: no memory for list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dma_tag_destroy
@@ -6069,11 +6160,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: cannot get dma address of the tx ring!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"cannot get dma address of the tx ring!\n"
 argument_list|)
 expr_stmt|;
 name|bus_dmamem_free
@@ -6162,11 +6253,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: failed to allocate mbuf dma tag\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to allocate mbuf dma tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6246,36 +6337,6 @@ operator|->
 name|xl_type
 operator|=
 name|XL_TYPE_90X
-expr_stmt|;
-name|ifp
-operator|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-expr_stmt|;
-name|ifp
-operator|->
-name|if_softc
-operator|=
-name|sc
-expr_stmt|;
-name|if_initname
-argument_list|(
-name|ifp
-argument_list|,
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -6430,13 +6491,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: media options word: %x\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"media options word: %x\n"
 argument_list|,
 name|sc
 operator|->
@@ -6519,13 +6578,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: found MII/AUTO\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"found MII/AUTO\n"
 argument_list|)
 expr_stmt|;
 name|xl_setcfg
@@ -6550,13 +6607,11 @@ name|xl_ifmedia_sts
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: no PHY found!\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"no PHY found!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -6601,13 +6656,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: found 10baseT\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"found 10baseT\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -6704,13 +6757,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: found 10baseFL\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"found 10baseFL\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -6780,13 +6831,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: found AUI\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"found AUI\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -6820,13 +6869,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: found BNC\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"found BNC\n"
 argument_list|)
 expr_stmt|;
 name|ifmedia_add
@@ -6859,13 +6906,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: found 100baseFX\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"found 100baseFX\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -7004,13 +7049,11 @@ name|IFM_100_FX
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: unknown XCVR type: %d\n"
+name|dev
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"unknown XCVR type: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -7106,11 +7149,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"xl%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -7176,6 +7219,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|mtx_initialized
@@ -7195,15 +7247,6 @@ name|XL_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
 expr_stmt|;
 if|if
 condition|(
@@ -8358,13 +8401,16 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: can't map mbuf (error %d)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -8734,14 +8780,11 @@ name|XL_RXSTAT_UP_CMPLT
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: bad receive status -- "
-literal|"packet dropped\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"bad receive status -- packet dropped\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -9535,13 +9578,16 @@ operator|&
 name|XL_TXSTATUS_RECLAIM
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: transmission error: %x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"transmission error: %x\n"
 argument_list|,
 name|txstat
 argument_list|)
@@ -9687,14 +9733,16 @@ name|xl_tx_thresh
 operator|+=
 name|XL_MIN_FRAMELEN
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: tx underrun, increasing tx start"
-literal|" threshold to %d bytes\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|xl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"tx underrun, increasing tx start threshold to %d bytes\n"
 argument_list|,
 name|sc
 operator|->
@@ -10269,17 +10317,14 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-name|ifp
-operator|=
+init|=
 operator|&
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
-expr_stmt|;
-comment|/* XXX unused elsewhere */
+decl_stmt|;
 comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out 	 * of fragments or hit the end of the mbuf chain. 	 */
 name|error
 operator|=
@@ -10318,13 +10363,11 @@ argument_list|(
 name|m_head
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: can't map mbuf (error %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -10413,13 +10456,11 @@ argument_list|(
 name|m_head
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: can't map mbuf (error %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"can't map mbuf (error %d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -11564,13 +11605,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: initialization of the rx ring failed (%d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"initialization of the rx ring failed (%d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -11616,13 +11655,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: initialization of the tx ring failed (%d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"initialization of the tx ring failed (%d)\n"
 argument_list|,
 name|error
 argument_list|)
@@ -12679,13 +12716,11 @@ name|IFM_100_FX
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: unknown XCVR type: %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"unknown XCVR type: %d\n"
 argument_list|,
 name|icfg
 argument_list|)
@@ -13114,13 +13149,11 @@ argument_list|,
 name|XL_W4_MEDIA_STATUS
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: watchdog timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -13129,13 +13162,11 @@ name|status
 operator|&
 name|XL_MEDIASTAT_CARRIER
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"xl%d: no carrier - transceiver cable problem?\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|xl_unit
+literal|"no carrier - transceiver cable problem?\n"
 argument_list|)
 expr_stmt|;
 name|xl_txeoc
