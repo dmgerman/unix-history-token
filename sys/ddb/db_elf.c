@@ -1517,7 +1517,7 @@ name|elf
 operator|.
 name|e_machine
 operator|=
-name|EM_486
+name|ELF_ARCH
 expr_stmt|;
 name|elf
 operator|.
