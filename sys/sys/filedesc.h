@@ -252,6 +252,26 @@ name|FILEDESC_LOCK_DESC
 value|"filedesc structure"
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_FAST
+parameter_list|(
+name|fd
+parameter_list|)
+value|FILEDESC_LOCK(fd);
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_UNLOCK_FAST
+parameter_list|(
+name|fd
+parameter_list|)
+value|FILEDESC_UNLOCK(fd);
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|thread

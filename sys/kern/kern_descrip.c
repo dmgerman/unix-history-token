@@ -2565,7 +2565,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Check for race with close */
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -2591,7 +2591,7 @@ name|fd
 index|]
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -2643,7 +2643,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -3380,7 +3380,7 @@ condition|(
 name|holdleaders
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -3420,7 +3420,7 @@ name|fd_holdleaderscount
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -4521,7 +4521,7 @@ condition|(
 name|holdleaders
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -4561,7 +4561,7 @@ name|fd_holdleaderscount
 argument_list|)
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6713,7 +6713,7 @@ modifier|*
 name|fdp
 decl_stmt|;
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6723,7 +6723,7 @@ operator|->
 name|fd_refcnt
 operator|++
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6781,7 +6781,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6797,7 +6797,7 @@ operator|->
 name|fd_nfiles
 condition|)
 block|{
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6823,7 +6823,7 @@ argument_list|(
 name|newfdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6938,7 +6938,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6986,7 +6986,7 @@ argument_list|(
 name|newfdp
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -7014,7 +7014,7 @@ name|fdp
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)

@@ -938,7 +938,7 @@ operator|&
 name|RFFDG
 condition|)
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|p1
 operator|->
@@ -961,7 +961,7 @@ name|filedesc
 modifier|*
 name|newfd
 decl_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p1
 operator|->
@@ -990,7 +990,7 @@ name|newfd
 expr_stmt|;
 block|}
 else|else
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p1
 operator|->
@@ -1679,7 +1679,7 @@ name|p1
 operator|->
 name|p_fdtol
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|p1
 operator|->
@@ -1691,7 +1691,7 @@ operator|->
 name|fdl_refcount
 operator|++
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p1
 operator|->

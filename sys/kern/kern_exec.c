@@ -1905,7 +1905,7 @@ name|argc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For security and other reasons, the file descriptor table cannot 	 * be shared after an exec. 	 */
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|p
 operator|->
@@ -1928,7 +1928,7 @@ name|filedesc
 modifier|*
 name|tmp
 decl_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p
 operator|->
@@ -1957,7 +1957,7 @@ name|tmp
 expr_stmt|;
 block|}
 else|else
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|p
 operator|->

@@ -2343,7 +2343,7 @@ argument_list|,
 name|kq
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -2360,7 +2360,7 @@ argument_list|,
 name|kq_list
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6638,7 +6638,7 @@ argument_list|(
 name|kq
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6657,7 +6657,7 @@ argument_list|,
 name|kq_list
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)

@@ -512,7 +512,7 @@ name|EBADF
 expr_stmt|;
 else|else
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -567,7 +567,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -737,7 +737,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -770,7 +770,7 @@ name|f_type
 operator|=
 name|DTYPE_SOCKET
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)

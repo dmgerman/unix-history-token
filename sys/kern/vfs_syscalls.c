@@ -3730,7 +3730,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -3747,7 +3747,7 @@ name|fd_cdir
 operator|=
 name|vp
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -3966,7 +3966,7 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -3985,7 +3985,7 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -5946,7 +5946,7 @@ operator|&
 name|vattr
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -5974,7 +5974,7 @@ name|p_fd
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -6548,7 +6548,7 @@ name|va_type
 operator|=
 name|VFIFO
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -6576,7 +6576,7 @@ name|p_fd
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -7726,7 +7726,7 @@ operator|&
 name|vattr
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -7750,7 +7750,7 @@ name|p_fd
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -16723,7 +16723,7 @@ name|va_type
 operator|=
 name|VDIR
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -16751,7 +16751,7 @@ name|p_fd
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -18831,7 +18831,7 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -18869,7 +18869,7 @@ name|newmask
 operator|&
 name|ALLPERMS
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|td
 operator|->
