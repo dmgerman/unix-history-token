@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RESET.c 1.6 %G%"
+literal|"@(#)RESET.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,17 +112,17 @@ operator|->
 name|funit
 operator|&=
 operator|~
-operator|(
 name|EOFF
-operator||
-name|EOLN
-operator|)
 expr_stmt|;
 name|filep
 operator|->
 name|funit
 operator||=
+operator|(
 name|SYNC
+operator||
+name|EOLN
+operator|)
 expr_stmt|;
 return|return;
 block|}

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCSTART.c 1.6 %G%"
+literal|"@(#)PCSTART.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,6 +242,8 @@ operator||
 name|FREAD
 operator||
 name|SYNC
+operator||
+name|EOLN
 block|,
 comment|/* funit   */
 literal|0
