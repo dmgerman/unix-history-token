@@ -1591,7 +1591,7 @@ name|conf
 operator|)
 return|;
 block|}
-comment|/* 	 * New driver must be allocated. Find one that matches the 	 * any configurations not in use. 	 */
+comment|/* 	 * New driver must be allocated. Find the first configuration 	 * not in use. 	 */
 for|for
 control|(
 name|conf
@@ -1620,7 +1620,8 @@ name|conf
 operator|->
 name|driver
 operator|->
-name|card
+name|inuse
+comment|/*card*/
 operator|==
 literal|0
 condition|)
