@@ -120,6 +120,11 @@ name|sysentvec
 modifier|*
 name|sysvec
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|interp_newpath
+decl_stmt|;
 block|}
 name|__ElfN
 typedef|(

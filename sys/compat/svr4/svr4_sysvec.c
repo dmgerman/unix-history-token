@@ -522,7 +522,9 @@ literal|"/lib/libc.so.1"
 block|,
 operator|&
 name|svr4_sysvec
-block|}
+block|,
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -4692,7 +4692,9 @@ literal|"/lib/ld-linux.so.1"
 block|,
 operator|&
 name|elf_linux_sysvec
-block|}
+block|,
+name|NULL
+block|, 				 }
 decl_stmt|;
 end_decl_stmt
 
@@ -4714,7 +4716,9 @@ literal|"/lib/ld-linux.so.2"
 block|,
 operator|&
 name|elf_linux_sysvec
-block|}
+block|,
+name|NULL
+block|, 				 }
 decl_stmt|;
 end_decl_stmt
 
