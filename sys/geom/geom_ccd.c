@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.30 1998/02/15 08:28:26 jkh Exp $ */
+comment|/* $Id: ccd.c,v 1.31 1998/02/22 10:01:23 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -4100,6 +4100,16 @@ name|ci
 operator|->
 name|ci_vp
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|cbp
+operator|->
+name|cb_buf
+operator|.
+name|b_dep
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cs
@@ -4313,6 +4323,16 @@ operator|=
 name|ci2
 operator|->
 name|ci_vp
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|cbp
+operator|->
+name|cb_buf
+operator|.
+name|b_dep
+argument_list|)
 expr_stmt|;
 name|cbp
 operator|->
