@@ -2404,16 +2404,16 @@ block|}
 block|,
 comment|/* 204 = munlock */
 block|{
-literal|0
+literal|2
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|utrace
 block|}
 block|,
-comment|/* 205 = nosys */
+comment|/* 205 = utrace */
 block|{
 literal|0
 block|,

@@ -1337,6 +1337,13 @@ end_macro
 begin_macro
 name|HIDE_BSD
 argument_list|(
+argument|utrace
+argument_list|)
+end_macro
+
+begin_macro
+name|HIDE_BSD
+argument_list|(
 argument|__semctl
 argument_list|)
 end_macro

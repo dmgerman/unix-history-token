@@ -1181,6 +1181,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_utrace
+value|205
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYS___semctl
 value|220
 end_define
