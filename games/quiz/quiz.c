@@ -1486,6 +1486,9 @@ return|;
 case|case
 literal|'\\'
 case|:
+name|s
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|':'
