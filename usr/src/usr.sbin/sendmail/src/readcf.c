@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.57 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4845,12 +4845,7 @@ define|#
 directive|define
 name|O_MHSA
 value|0x84
-literal|"MaxHostStatAge"
-block|,
-name|O_MHSA
-block|,
-name|TRUE
-block|,
+comment|/* 	"MaxHostStatAge",	O_MHSA,		TRUE, */
 define|#
 directive|define
 name|O_DEFCHARSET
@@ -7097,6 +7092,44 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|isascii
+argument_list|(
+name|opt
+argument_list|)
+operator|&&
+name|isprint
+argument_list|(
+name|opt
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"Warning: option %c unknown\n"
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Warning: option 0x%x unknown\n"
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
