@@ -315,6 +315,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+operator|!=
+name|NULL
 condition|?
 name|p
 operator|->
@@ -331,6 +333,8 @@ argument_list|,
 name|p
 operator|->
 name|p_pgrp
+operator|!=
+name|NULL
 condition|?
 name|p
 operator|->
@@ -385,6 +389,8 @@ condition|(
 name|td
 operator|->
 name|td_wchan
+operator|!=
+name|NULL
 condition|)
 block|{
 name|db_printf
@@ -455,8 +461,14 @@ expr_stmt|;
 if|if
 condition|(
 name|td
+operator|!=
+name|NULL
+operator|&&
+name|td
 operator|->
 name|td_wchan
+operator|!=
+name|NULL
 condition|)
 block|{
 name|db_printf
@@ -480,6 +492,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|td
+operator|!=
+name|NULL
+operator|&&
 name|td
 operator|->
 name|td_state
