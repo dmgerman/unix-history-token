@@ -439,7 +439,6 @@ operator|*
 literal|1024
 operator|)
 condition|)
-block|{
 comment|/* chop under16 memory to 15MB */
 name|under16
 operator|=
@@ -447,7 +446,6 @@ literal|15
 operator|*
 literal|1024
 expr_stmt|;
-block|}
 name|init_epson_memwin
 argument_list|()
 expr_stmt|;
@@ -477,7 +475,6 @@ name|over16
 operator|>
 literal|0
 condition|)
-block|{
 operator|*
 name|ext
 operator|=
@@ -491,9 +488,7 @@ literal|1024
 operator|-
 literal|1024
 expr_stmt|;
-block|}
 else|else
-block|{
 operator|*
 name|ext
 operator|=
@@ -501,9 +496,10 @@ name|under16
 operator|-
 literal|1024
 expr_stmt|;
-block|}
 return|return
+operator|(
 name|under16
+operator|)
 return|;
 block|}
 end_function
@@ -529,9 +525,6 @@ decl_stmt|;
 name|int
 name|target
 decl_stmt|;
-name|int
-name|bus
-decl_stmt|;
 name|target
 operator|=
 name|ccg
@@ -540,11 +533,6 @@ name|ccb_h
 operator|.
 name|target_id
 expr_stmt|;
-name|bus
-operator|=
-literal|0
-expr_stmt|;
-comment|/* If your really need to know, send a PathInq CCB */
 name|tmp
 operator|=
 operator|(
@@ -680,11 +668,15 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
