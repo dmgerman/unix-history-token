@@ -321,7 +321,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Structure per mounted file system.  Each mounted file system has an  * array of operations and an instance record.  The file systems are  * put on a doubly linked list.  */
+comment|/*  * Structure per mounted file system.  Each mounted file system has an  * array of operations and an instance record.  The file systems are  * put on a doubly linked list.  *  * NOTE: mnt_nvnodelist and mnt_reservedvnlist.  At the moment vnodes  * are linked into mnt_nvnodelist.  At some point in the near future the  * vnode list will be split into a 'dirty' and 'clean' list. mnt_nvnodelist  * will become the dirty list and mnt_reservedvnlist will become the 'clean'  * list.  Filesystem kld's syncing code should remain compatible since  * they only need to scan the dirty vnode list (nvnodelist -> dirtyvnodelist).  */
 end_comment
 
 begin_expr_stmt
@@ -374,6 +374,11 @@ name|vnodelst
 name|mnt_nvnodelist
 decl_stmt|;
 comment|/* list of vnodes this mount */
+name|struct
+name|vnodelst
+name|mnt_reservedvnlist
+decl_stmt|;
+comment|/* (future) dirty vnode list */
 name|struct
 name|lock
 name|mnt_lock

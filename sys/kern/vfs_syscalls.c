@@ -1574,6 +1574,14 @@ operator|->
 name|mnt_nvnodelist
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_reservedvnlist
+argument_list|)
+expr_stmt|;
 name|lockinit
 argument_list|(
 operator|&
