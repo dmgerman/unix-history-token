@@ -97,6 +97,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_geom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_kern_geom
@@ -282,7 +290,9 @@ index|[
 name|i
 index|]
 operator|.
-name|d_valid
+name|d_consumer
+operator|!=
+name|NULL
 condition|)
 name|no
 operator|++
@@ -321,7 +331,9 @@ name|KASSERT
 argument_list|(
 name|disk
 operator|->
-name|d_valid
+name|d_consumer
+operator|!=
+name|NULL
 argument_list|,
 operator|(
 literal|"Non-valid disk in %s."
@@ -363,9 +375,9 @@ argument_list|)
 expr_stmt|;
 name|disk
 operator|->
-name|d_valid
+name|d_consumer
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|g_error_provider
 argument_list|(
@@ -1523,7 +1535,9 @@ if|if
 condition|(
 name|disk
 operator|->
-name|d_valid
+name|d_consumer
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1755,12 +1769,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not yet */
-name|disk
-operator|->
-name|d_valid
-operator|=
-literal|1
-expr_stmt|;
 name|G_CONCAT_DEBUG
 argument_list|(
 literal|0
@@ -2147,9 +2155,9 @@ index|[
 name|no
 index|]
 operator|.
-name|d_valid
+name|d_consumer
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sc
 operator|->
@@ -2366,7 +2374,9 @@ index|[
 name|no
 index|]
 operator|.
-name|d_valid
+name|d_consumer
+operator|!=
+name|NULL
 condition|)
 name|g_concat_remove_disk
 argument_list|(

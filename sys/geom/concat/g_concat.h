@@ -86,14 +86,6 @@ parameter_list|)
 value|do {				\ 	if (g_concat_debug>= 2) {					\ 		printf("GEOM_CONCAT[2]: ");				\ 		printf(__VA_ARGS__);					\ 		g_print_bio(bp);					\ 		printf("\n");						\ 	}								\ } while (0)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysctl_oid_list
-name|sysctl__kern_geom_children
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|g_concat_disk
@@ -113,9 +105,6 @@ name|d_start
 decl_stmt|;
 name|off_t
 name|d_end
-decl_stmt|;
-name|boolean_t
-name|d_valid
 decl_stmt|;
 block|}
 struct|;
