@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.15 (Berkeley) %G%"
+literal|"@(#)trees.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,11 +2306,10 @@ comment|/* in the case of ASSIGN, any assignment of pointer to integer is illega
 comment|/* this falls out, because the LHS is never 0 */
 argument|register NODE *q; 	register t1, t2; 	register d1, d2;  	t1 = p->in.left->in.type; 	t2 = p->in.right->in.type;  	if( t1==ENUMTY || t2==ENUMTY ) {
 comment|/* check for enumerations */
-argument|if( logop( p->in.op )&& p->in.op != EQ&& p->in.op != NE ) 			werror(
-literal|"comparison of enums"
-argument|); 		if( t1==ENUMTY&& t2==ENUMTY&& 		    p->in.left->fn.csiz!=p->in.right->fn.csiz ) 			werror(
+comment|/* rob pike says this is obnoxious... 		if( logop( p->in.op )&& p->in.op != EQ&& p->in.op != NE ) 			werror( "comparison of enums" ); */
+argument|if( t1==ENUMTY&& t2==ENUMTY ) { 			if ( p->in.left->fn.csiz!=p->in.right->fn.csiz ) 				werror(
 literal|"enumeration type clash, operator %s"
-argument|, opst[p->in.op] ); 		return; 		}  	if( ISPTR(t1) || ISARY(t1) ) q = p->in.right; 	else q = p->in.left;  	if( !ISPTR(q->in.type)&& !ISARY(q->in.type) ){ 		if( q->in.op != ICON || q->tn.lval !=
+argument|, opst[p->in.op] ); 			return; 			} 		if ( t1 == ENUMTY ) t1 = INT; 		if ( t2 == ENUMTY ) t2 = INT; 		}  	if( ISPTR(t1) || ISARY(t1) ) q = p->in.right; 	else q = p->in.left;  	if( !ISPTR(q->in.type)&& !ISARY(q->in.type) ){ 		if( q->in.op != ICON || q->tn.lval !=
 literal|0
 argument|){ 			werror(
 literal|"illegal combination of pointer and integer, op %s"
