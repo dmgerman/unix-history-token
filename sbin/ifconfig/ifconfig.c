@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.26 1997/05/04 06:14:47 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.27 1997/05/04 06:27:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1952,10 +1952,11 @@ name|af_name
 operator|==
 name|NULL
 condition|)
-name|usage
-argument_list|()
+name|afp
+operator|=
+name|NULL
 expr_stmt|;
-comment|/* leave with afp non-zero */
+comment|/* not a family, NULL */
 block|}
 name|mib
 index|[
@@ -2410,7 +2411,17 @@ expr_stmt|;
 if|if
 condition|(
 name|rafp
+operator|==
+name|NULL
 condition|)
+name|rafp
+operator|=
+operator|&
+name|afs
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|ifr
 operator|.
 name|ifr_addr
@@ -2419,20 +2430,6 @@ name|sa_family
 operator|=
 name|rafp
 operator|->
-name|af_af
-expr_stmt|;
-else|else
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
-operator|=
-name|afs
-index|[
-literal|0
-index|]
-operator|.
 name|af_af
 expr_stmt|;
 if|if
@@ -2536,6 +2533,7 @@ block|{
 name|status
 argument_list|()
 expr_stmt|;
+comment|/* uses global afp */
 ifdef|#
 directive|ifdef
 name|USE_IF_MEDIA
