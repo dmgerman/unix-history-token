@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	6.4	84/08/15	*/
+comment|/*	dh.c	6.5	84/08/30	*/
 end_comment
 
 begin_include
@@ -42,115 +42,115 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"ubavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/dhreg.h"
+file|"dhreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/dmreg.h"
+file|"dmreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/bk.h"
+file|"bkmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/clist.h"
+file|"clist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/uio.h"
+file|"uio.h"
 end_include
 
 begin_comment
