@@ -1335,16 +1335,11 @@ name|script
 operator|==
 literal|'#'
 condition|)
-block|{
 operator|*
 name|script
 operator|=
 literal|'\0'
 expr_stmt|;
-name|nargs
-operator|--
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
