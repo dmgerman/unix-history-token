@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.4 (Berkeley) %G%"
+literal|"@(#)os.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,16 +408,11 @@ name|void
 name|intread
 parameter_list|()
 block|{
-if|#
-directive|if
-name|SIGSETMASK
 name|sigsetmask
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|longjmp
 argument_list|(
 name|read_label
