@@ -582,7 +582,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1=SB, 2=SB Pro */
+comment|/* DSP version */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dsp_mono
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 SB, 0 SB Pro */
 end_comment
 
 begin_decl_stmt
@@ -1381,7 +1394,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|dsp_model
+name|dsp_mono
 operator|==
 literal|1
 condition|)
@@ -4868,6 +4881,16 @@ break|break;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|major
+operator|==
+literal|2
+condition|)
+name|dsp_model
+operator|=
+literal|2
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|EXCLUDE_SBPRO
@@ -4877,6 +4900,10 @@ name|detect_mixer
 argument_list|()
 condition|)
 block|{
+name|dsp_mono
+operator|=
+literal|0
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|sb_dsp_operations
