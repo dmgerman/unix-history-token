@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dec_eb164.c,v 1.1 1998/07/05 12:10:10 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -14,6 +14,12 @@ end_comment
 begin_comment
 comment|/*  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Research Center  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
 
 begin_include
 include|#
