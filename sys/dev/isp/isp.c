@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.2 1998/09/15 08:42:55 gibbs Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -2809,6 +2809,8 @@ name|ISP_MBOXDMASETUP
 argument_list|(
 name|isp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|PRINTF
@@ -3149,6 +3151,8 @@ name|ISP_MBOXDMASETUP
 argument_list|(
 name|isp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|PRINTF
@@ -4083,13 +4087,17 @@ operator|==
 name|optr
 condition|)
 block|{
-name|PRINTF
+name|IDPRINTF
 argument_list|(
-literal|"%s: Request Queue Overflow\n"
+literal|2
 argument_list|,
+operator|(
+literal|"%s: Request Queue Overflow\n"
+operator|,
 name|isp
 operator|->
 name|isp_name
+operator|)
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -4183,6 +4191,22 @@ name|isp_sendmarker
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Unconditionally update the input pointer anyway. 		 */
+name|ISP_WRITE
+argument_list|(
+name|isp
+argument_list|,
+name|INMAILBOX4
+argument_list|,
+name|iptr
+argument_list|)
+expr_stmt|;
+name|isp
+operator|->
+name|isp_reqidx
+operator|=
+name|iptr
+expr_stmt|;
 name|niptr
 operator|=
 name|ISP_NXT_QENTRY
@@ -4199,21 +4223,6 @@ operator|==
 name|optr
 condition|)
 block|{
-name|ISP_WRITE
-argument_list|(
-name|isp
-argument_list|,
-name|INMAILBOX4
-argument_list|,
-name|iptr
-argument_list|)
-expr_stmt|;
-name|isp
-operator|->
-name|isp_reqidx
-operator|=
-name|iptr
-expr_stmt|;
 if|if
 condition|(
 name|isp
@@ -4229,13 +4238,17 @@ name|isp
 argument_list|)
 expr_stmt|;
 block|}
-name|PRINTF
+name|IDPRINTF
 argument_list|(
-literal|"%s: Request Queue Overflow+\n"
+literal|2
 argument_list|,
+operator|(
+literal|"%s: Request Queue Overflow+\n"
+operator|,
 name|isp
 operator|->
 name|isp_name
+operator|)
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -4385,13 +4398,17 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|PRINTF
+name|IDPRINTF
 argument_list|(
-literal|"%s: ran out of xflist pointers?????\n"
+literal|2
 argument_list|,
+operator|(
+literal|"%s: out of xflist pointers\n"
+operator|,
 name|isp
 operator|->
 name|isp_name
+operator|)
 argument_list|)
 expr_stmt|;
 name|XS_SETERR
@@ -4661,8 +4678,8 @@ name|req_time
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
+name|i
+operator|=
 name|ISP_DMASETUP
 argument_list|(
 name|isp
@@ -4676,6 +4693,12 @@ name|iptr
 argument_list|,
 name|optr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|CMD_QUEUED
 condition|)
 block|{
 if|if
@@ -4691,10 +4714,10 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-comment|/* dmasetup sets actual error */
+comment|/* 		 * dmasetup sets actual error in packet, and 		 * return what we were given to return. 		 */
 return|return
 operator|(
-name|CMD_COMPLETE
+name|i
 operator|)
 return|;
 block|}
@@ -12914,6 +12937,15 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|isp
+operator|->
+name|isp_xflist
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|isp_reset
 argument_list|(
@@ -12998,7 +13030,9 @@ argument_list|(
 name|xs
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 name|isp
 operator|->
 name|isp_nactive
@@ -13012,12 +13046,14 @@ name|isp_nactive
 operator|<
 literal|0
 condition|)
+block|{
 name|isp
 operator|->
 name|isp_nactive
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|XS_RESID
 argument_list|(
 name|xs
