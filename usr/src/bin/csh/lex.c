@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	4.8 (Berkeley) %G%"
+literal|"@(#)lex.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4867,6 +4867,8 @@ begin_block
 block|{
 if|if
 condition|(
+name|cp
+operator|&&
 name|cp
 index|[
 literal|0
