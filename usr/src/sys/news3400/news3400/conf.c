@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -640,6 +640,30 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|ctty
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* open, read, write, ioctl, select -- XXX should be a tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cdev_ctty_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
+end_define
+
+begin_expr_stmt
 name|dev_type_read
 argument_list|(
 name|mmrw
@@ -1169,10 +1193,14 @@ name|rs
 argument_list|)
 block|,
 comment|/* 1: rs232c */
-name|cdev_notdef
-argument_list|()
+name|cdev_ctty_init
+argument_list|(
+literal|1
+argument_list|,
+name|ctty
+argument_list|)
 block|,
-comment|/* 2: sy? */
+comment|/* 2: controlling terminal */
 name|cdev_mm_init
 argument_list|(
 literal|1
@@ -1249,9 +1277,6 @@ name|ms
 argument_list|)
 block|,
 comment|/* 12: mouse */
-ifdef|#
-directive|ifdef
-name|notdef
 name|cdev_fd_init
 argument_list|(
 literal|1
@@ -1260,14 +1285,6 @@ name|fd
 argument_list|)
 block|,
 comment|/* 13: file descriptor pseudo-dev */
-else|#
-directive|else
-name|cdev_notdef
-argument_list|()
-block|,
-comment|/* 13 */
-endif|#
-directive|endif
 name|cdev_fb_init
 argument_list|(
 name|NFB
