@@ -28,10 +28,26 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* unit number */
-name|u_int
-name|vx_io_addr
+name|bus_space_handle_t
+name|vx_bhandle
 decl_stmt|;
-comment|/* i/o bus address		*/
+name|bus_space_tag_t
+name|vx_btag
+decl_stmt|;
+name|void
+modifier|*
+name|vx_intrhand
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|vx_irq
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|vx_res
+decl_stmt|;
 define|#
 directive|define
 name|MAX_MBS
@@ -82,6 +98,90 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_4(sc->vx_btag, sc->vx_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_2(sc->vx_btag, sc->vx_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_1(sc->vx_btag, sc->vx_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_4(sc->vx_btag, sc->vx_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_2(sc->vx_btag, sc->vx_bhandle, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_1(sc->vx_btag, sc->vx_bhandle, reg)
+end_define
 
 begin_comment
 comment|/*  * Some global constants  */
@@ -1141,7 +1241,7 @@ begin_define
 define|#
 directive|define
 name|VX_BUSY_WAIT
-value|while (inw(BASE + VX_STATUS)& S_COMMAND_IN_PROGRESS)
+value|while (CSR_READ_2(sc, VX_STATUS)& S_COMMAND_IN_PROGRESS)
 end_define
 
 begin_comment
@@ -1441,7 +1541,7 @@ name|GO_WINDOW
 parameter_list|(
 name|x
 parameter_list|)
-value|outw(BASE+VX_COMMAND, WINDOW_SELECT|(x))
+value|CSR_WRITE_2(sc, VX_COMMAND, WINDOW_SELECT|(x))
 end_define
 
 begin_define
