@@ -2201,6 +2201,10 @@ name|pwd_storage
 operator|=
 name|NULL
 expr_stmt|;
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2242,6 +2246,16 @@ operator|==
 name|ERANGE
 condition|)
 do|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+name|errno
+operator|=
+name|rv
+expr_stmt|;
 return|return
 operator|(
 name|res
