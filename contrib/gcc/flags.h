@@ -768,6 +768,17 @@ name|flag_pack_struct
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Nonzero means that -Wformat accepts certain non-ANSI formats.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_format_extensions
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 

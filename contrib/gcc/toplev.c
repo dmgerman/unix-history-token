@@ -1933,6 +1933,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means that -Wformat accepts certain system-dependent formats.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_format_extensions
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Table of language-independent -f options.    STRING is the option name.  VARIABLE is the address of the variable.    ON_VALUE is the value to store in VARIABLE     if `-fSTRING' is seen as an option.    (If `-fno-STRING' is seen as an option, the opposite value is stored.)  */
 end_comment
 
@@ -2293,6 +2305,15 @@ literal|"pack-struct"
 block|,
 operator|&
 name|flag_pack_struct
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"format-extensions"
+block|,
+operator|&
+name|flag_format_extensions
 block|,
 literal|1
 block|}
