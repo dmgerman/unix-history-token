@@ -5345,11 +5345,6 @@ block|,
 name|DIST_COMPAT22
 block|}
 block|,
-if|#
-directive|if
-name|__FreeBSD__
-operator|>
-literal|3
 block|{
 literal|" compat3x"
 block|,
@@ -5380,6 +5375,18 @@ directive|if
 name|__FreeBSD__
 operator|>=
 literal|4
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+operator|)
 block|{
 literal|" compat4x"
 block|,
@@ -5405,8 +5412,6 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|#
-directive|endif
 block|{
 literal|" crypto"
 block|,
@@ -5430,36 +5435,6 @@ block|,
 name|DIST_CRYPTO_CRYPTO
 block|, }
 block|,
-if|#
-directive|if
-name|__FreeBSD__
-operator|<=
-literal|3
-block|{
-literal|" krb"
-block|,
-literal|"KerberosIV authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_KERBEROS
-block|}
-block|,
-else|#
-directive|else
 block|{
 literal|" krb4"
 block|,
@@ -5506,8 +5481,6 @@ block|,
 name|DIST_CRYPTO_KERBEROS5
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|" dict"
 block|,
