@@ -122,7 +122,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|nselcoll
 decl_stmt|;
 end_decl_stmt

@@ -3450,7 +3450,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|nselcoll
 decl_stmt|;
 end_decl_stmt
@@ -3460,7 +3460,7 @@ comment|/* Select collisions since boot */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_kern
 argument_list|,
@@ -3591,13 +3591,13 @@ decl_stmt|,
 name|ttv
 decl_stmt|;
 name|int
-name|ncoll
-decl_stmt|,
 name|error
 decl_stmt|,
 name|timo
 decl_stmt|;
 name|u_int
+name|ncoll
+decl_stmt|,
 name|nbufbytes
 decl_stmt|,
 name|ncpbytes
@@ -4620,8 +4620,6 @@ decl_stmt|,
 name|ttv
 decl_stmt|;
 name|int
-name|ncoll
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -4629,6 +4627,8 @@ decl_stmt|,
 name|timo
 decl_stmt|;
 name|u_int
+name|ncoll
+decl_stmt|,
 name|nfds
 decl_stmt|;
 name|size_t
