@@ -1661,8 +1661,6 @@ name|printf
 argument_list|(
 literal|"pci_cfgintr_search: linked (%x) to configured irq %d at %d:%d:%d\n"
 argument_list|,
-name|irq
-argument_list|,
 name|pe
 operator|->
 name|pe_intpin
@@ -1673,6 +1671,8 @@ literal|1
 index|]
 operator|.
 name|link
+argument_list|,
+name|irq
 argument_list|,
 name|pci_get_bus
 argument_list|(
