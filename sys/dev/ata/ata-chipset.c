@@ -12916,6 +12916,21 @@ block|}
 block|,
 comment|/* 1chip */
 block|{
+name|ATA_SIS661
+block|,
+literal|0x00
+block|,
+name|SIS_SOUTH
+block|,
+literal|0
+block|,
+name|ATA_UDMA6
+block|,
+literal|"SiS 661"
+block|}
+block|,
+comment|/* ext south */
+block|{
 name|ATA_SIS658
 block|,
 literal|0x00
