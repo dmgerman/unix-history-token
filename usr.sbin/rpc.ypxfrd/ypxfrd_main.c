@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ypxfrd_main.c,v 1.1.1.1.2.2 1997/11/06 07:32:21 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,32 +201,6 @@ directive|define
 name|_RPCSVC_CLOSEDOWN
 value|120
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: ypxfrd_main.c,v 1.1.1.1.2.1 1997/08/29 05:15:58 imp Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_decl_stmt
 name|int
