@@ -1040,7 +1040,9 @@ name|hlen
 operator|>=
 literal|3
 argument_list|,
+operator|(
 literal|"if_simloop: hlen too small"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bcopy
