@@ -9820,35 +9820,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If the old-style non-vif-associated socket is set, then use      * it and ignore the new ones.      */
-if|if
-condition|(
-name|ip_rsvpd
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|rsvpdebug
-condition|)
-name|printf
-argument_list|(
-literal|"rsvp_input: Sending packet up old-style socket\n"
-argument_list|)
-expr_stmt|;
-name|rip_input
-argument_list|(
-name|m
-argument_list|,
-name|off
-argument_list|,
-name|proto
-argument_list|)
-expr_stmt|;
-comment|/* xxx */
-return|return;
-block|}
 name|s
 operator|=
 name|splnet
@@ -9906,7 +9877,6 @@ condition|;
 name|vifi
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|viftable
@@ -9919,47 +9889,12 @@ operator|==
 name|ifp
 condition|)
 break|break;
-block|}
 if|if
 condition|(
 name|vifi
 operator|==
 name|numvifs
-condition|)
-block|{
-comment|/* Can't find vif packet arrived on. Drop packet. */
-if|if
-condition|(
-name|rsvpdebug
-condition|)
-name|printf
-argument_list|(
-literal|"rsvp_input: Can't find vif for packet...dropping it.\n"
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|rsvpdebug
-condition|)
-name|printf
-argument_list|(
-literal|"rsvp_input: check socket\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|viftable
 index|[
 name|vifi
@@ -9970,10 +9905,62 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* drop packet, since there is no specific socket for this 	 * interface */
+comment|/* 	 * If the old-style non-vif-associated socket is set, 	 * then use it.  Otherwise, drop packet since there 	 * is no specific socket for this vif. 	 */
+if|if
+condition|(
+name|ip_rsvpd
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|rsvpdebug
+condition|)
+name|printf
+argument_list|(
+literal|"rsvp_input: Sending packet up old-style socket\n"
+argument_list|)
+expr_stmt|;
+name|rip_input
+argument_list|(
+name|m
+argument_list|,
+name|off
+argument_list|,
+name|proto
+argument_list|)
+expr_stmt|;
+comment|/* xxx */
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|rsvpdebug
+operator|&&
+name|vifi
+operator|==
+name|numvifs
+condition|)
+name|printf
+argument_list|(
+literal|"rsvp_input: Can't find vif for packet.\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rsvpdebug
+operator|&&
+name|viftable
+index|[
+name|vifi
+index|]
+operator|.
+name|v_rsvpd
+operator|==
+name|NULL
 condition|)
 name|printf
 argument_list|(
@@ -9987,6 +9974,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
