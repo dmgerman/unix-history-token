@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.15 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3344,11 +3344,8 @@ name|mp
 operator|=
 name|mountlist
 operator|.
-name|tqh_first
+name|cqh_first
 init|;
-name|mp
-operator|!=
-name|NULL
 condition|;
 name|mp
 operator|=
@@ -3356,7 +3353,7 @@ name|mp
 operator|->
 name|mnt_list
 operator|.
-name|tqe_next
+name|cqe_next
 control|)
 block|{
 name|KGET2
@@ -3464,6 +3461,15 @@ name|num
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mp
+operator|==
+name|mountlist
+operator|.
+name|cqh_last
+condition|)
+break|break;
 block|}
 operator|*
 name|avnodes
