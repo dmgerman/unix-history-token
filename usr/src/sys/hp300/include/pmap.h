@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.9 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|MAXKL2SIZE
-value|16
+value|32
 end_define
 
 begin_define
