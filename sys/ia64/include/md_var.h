@@ -215,6 +215,12 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
+name|_special
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|fpreg
 struct_decl|;
 end_struct_decl
@@ -292,6 +298,21 @@ name|int
 name|ia64_count_cpus
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ia64_flush_dirty
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|_special
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

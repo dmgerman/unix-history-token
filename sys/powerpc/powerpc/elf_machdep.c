@@ -279,6 +279,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+name|void
+name|elf32_dump_thread
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+name|__unused
+parameter_list|,
+name|void
+modifier|*
+name|dst
+name|__unused
+parameter_list|,
+name|size_t
+modifier|*
+name|off
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/* Process one elf relocation with addend. */
 end_comment

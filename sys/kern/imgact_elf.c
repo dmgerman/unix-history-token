@@ -5758,7 +5758,19 @@ expr|*
 name|fpregset
 argument_list|)
 expr_stmt|;
-comment|/* XXX allow for MD specific notes. */
+comment|/* 		 * Allow for MD specific notes, as well as any MD 		 * specific preparations for writing MI notes. 		 */
+name|__elfN
+function_decl|(
+name|dump_thread
+function_decl|)
+parameter_list|(
+name|thr
+parameter_list|,
+name|dst
+parameter_list|,
+name|off
+parameter_list|)
+function_decl|;
 name|thr
 operator|=
 operator|(

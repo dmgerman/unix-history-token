@@ -250,6 +250,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+name|void
+name|elf64_dump_thread
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+name|__unused
+parameter_list|,
+name|void
+modifier|*
+name|dst
+name|__unused
+parameter_list|,
+name|size_t
+modifier|*
+name|off
+name|__unused
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/*  * The following table holds for each relocation type:  *	- the width in bits of the memory location the relocation  *	  applies to (not currently used)  *	- the number of bits the relocation value must be shifted to the  *	  right (i.e. discard least significant bits) to fit into  *	  the appropriate field in the instruction word.  *	- flags indicating whether  *		* the relocation involves a symbol  *		* the relocation is relative to the current position  *		* the relocation is for a GOT entry  *		* the relocation is relative to the load address  *  */
 end_comment
