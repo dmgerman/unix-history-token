@@ -380,7 +380,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"mount_root_delay"
+literal|"vfs.root.mountdelay"
 argument_list|,
 operator|&
 name|mount_root_delay
