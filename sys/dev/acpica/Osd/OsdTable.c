@@ -82,6 +82,7 @@ name|NewVal
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Allow both _OS and _OS_ to be overridden. */
 if|if
 condition|(
 name|strncmp
@@ -90,9 +91,9 @@ name|InitVal
 operator|->
 name|Name
 argument_list|,
-literal|"_OS_"
+literal|"_OS"
 argument_list|,
-literal|4
+literal|3
 argument_list|)
 operator|==
 literal|0
