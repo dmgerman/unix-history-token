@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.3 1998/07/25 15:22:11 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.17 1999/01/03 01:09:18 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb.h,v 1.3 1998/12/14 09:32:24 n_hibma Exp $ */
+comment|/*	FreeBSD $Id$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Author: Lennart Augustsson<augustss@carlstedt.se>  *         Carlstedt Research& Technology  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -54,9 +54,42 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|__NetBSD__
 argument_list|)
 end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_port.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
 
 begin_include
 include|#
@@ -89,15 +122,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_port.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_define
 define|#
@@ -125,6 +172,13 @@ define|#
 directive|define
 name|USB_MAX_ENDPOINTS
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_FRAMES_PER_SECOND
+value|1000
 end_define
 
 begin_comment
@@ -182,6 +236,38 @@ parameter_list|,
 name|l
 parameter_list|)
 value|((w)[0] = (u_int8_t)(l), (w)[1] = (u_int8_t)(h))
+end_define
+
+begin_typedef
+typedef|typedef
+name|u_int8_t
+name|uDWord
+index|[
+literal|4
+index|]
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|UGETDW
+parameter_list|(
+name|w
+parameter_list|)
+value|((w)[0] | ((w)[1]<< 8) | ((w)[2]<< 16) | ((w)[3]<< 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USETDW
+parameter_list|(
+name|w
+parameter_list|,
+name|v
+parameter_list|)
+value|((w)[0] = (u_int8_t)(v), \ 		     (w)[1] = (u_int8_t)((v)>> 8), \ 		     (w)[2] = (u_int8_t)((v)>> 16), \ 		     (w)[3] = (u_int8_t)((v)>> 24))
 end_define
 
 begin_comment
@@ -392,6 +478,48 @@ name|UT_WRITE_CLASS_OTHER
 value|(UT_WRITE | UT_CLASS | UT_OTHER)
 end_define
 
+begin_define
+define|#
+directive|define
+name|UT_READ_VENDOR_DEVICE
+value|(UT_READ  | UT_VENDOR | UT_DEVICE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_READ_VENDOR_INTERFACE
+value|(UT_READ  | UT_VENDOR | UT_INTERFACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_READ_VENDOR_OTHER
+value|(UT_READ  | UT_VENDOR | UT_OTHER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_WRITE_VENDOR_DEVICE
+value|(UT_WRITE | UT_VENDOR | UT_DEVICE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_WRITE_VENDOR_INTERFACE
+value|(UT_WRITE | UT_VENDOR | UT_INTERFACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UT_WRITE_VENDOR_OTHER
+value|(UT_WRITE | UT_VENDOR | UT_OTHER)
+end_define
+
 begin_comment
 comment|/* Requests */
 end_comment
@@ -515,7 +643,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UF_ENDPOINT_STALL
+name|UF_ENDPOINT_HALT
 value|0
 end_define
 
@@ -741,6 +869,13 @@ name|UE_ADDR
 value|0x0f
 define|#
 directive|define
+name|UE_GET_ADDR
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& UE_ADDR)
+define|#
+directive|define
 name|UE_GET_IN
 parameter_list|(
 name|a
@@ -749,6 +884,10 @@ value|(((a)>> 7)& 1)
 name|uByte
 name|bmAttributes
 decl_stmt|;
+define|#
+directive|define
+name|UE_XFERTYPE
+value|0x03
 define|#
 directive|define
 name|UE_CONTROL
@@ -767,8 +906,20 @@ name|UE_INTERRUPT
 value|0x03
 define|#
 directive|define
-name|UE_XFERTYPE
-value|0x03
+name|UE_ISO_TYPE
+value|0x0c
+define|#
+directive|define
+name|UE_ISO_ASYNC
+value|0x04
+define|#
+directive|define
+name|UE_ISO_ADAPT
+value|0x08
+define|#
+directive|define
+name|UE_ISO_SYNC
+value|0x0c
 name|uWord
 name|wMaxPacketSize
 decl_stmt|;
@@ -814,6 +965,17 @@ directive|define
 name|USB_MAX_STRING_LEN
 value|128
 end_define
+
+begin_define
+define|#
+directive|define
+name|USB_LANGUAGE_TABLE
+value|0
+end_define
+
+begin_comment
+comment|/* # of the string language id table */
+end_comment
 
 begin_comment
 comment|/* Hub specific request */
@@ -942,7 +1104,7 @@ name|uByte
 name|bNbrPorts
 decl_stmt|;
 name|uWord
-name|bHubCharacteristics
+name|wHubCharacteristics
 decl_stmt|;
 define|#
 directive|define
@@ -994,16 +1156,21 @@ decl_stmt|;
 name|uByte
 name|DeviceRemovable
 index|[
-literal|1
+literal|32
 index|]
 decl_stmt|;
-comment|/* this is only correct with 1-7 ports on the hub */
-name|uByte
-name|PortPowerCtrlMask
-index|[
-literal|3
-index|]
-decl_stmt|;
+comment|/* max 255 ports */
+define|#
+directive|define
+name|UHD_NOT_REMOV
+parameter_list|(
+name|desc
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|(((desc)->DeviceRemovable[(i)/8]>> ((i) % 8))& 1)
+comment|/* deprecated uByte		PortPowerCtrlMask[]; */
 block|}
 name|usb_hub_descriptor_t
 typedef|;
@@ -1013,7 +1180,7 @@ begin_define
 define|#
 directive|define
 name|USB_HUB_DESCRIPTOR_SIZE
-value|9
+value|8
 end_define
 
 begin_typedef
@@ -1032,6 +1199,11 @@ define|#
 directive|define
 name|UDS_REMOTE_WAKEUP
 value|0x0002
+comment|/* Endpoint status flags */
+define|#
+directive|define
+name|UES_HALT
+value|0x0001
 block|}
 name|usb_status_t
 typedef|;
@@ -1200,11 +1372,22 @@ name|UCLASS_CDC
 value|2
 end_define
 
+begin_comment
+comment|/* communication */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|USUBCLASS_MODEM
+name|USUBCLASS_ABSTRACT_CONTROL_MODEL
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPROTO_CDC_AT
+value|1
 end_define
 
 begin_define
@@ -1260,7 +1443,14 @@ begin_define
 define|#
 directive|define
 name|USUBCLASS_HUB
-value|1
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCLASS_DATA
+value|10
 end_define
 
 begin_define
@@ -1270,10 +1460,57 @@ name|USB_HUB_MAX_DEPTH
 value|5
 end_define
 
+begin_comment
+comment|/*   * Minimum time a device needs to be powered down to go through   * a power cycle.  XXX Are these time in the spec?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_POWER_DOWN_TIME
+value|200
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_POWER_DOWN_TIME
+value|100
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* These are the values from the spec. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|USB_PORT_RESET_DELAY
+value|10
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_RESET_SETTLE
 value|10
 end_define
 
@@ -1295,13 +1532,71 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_POWER_SETTLE
-value|100
+name|USB_SET_ADDRESS_SETTLE
+value|2
 end_define
 
 begin_comment
 comment|/* ms */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Allow for marginal (i.e. non-conforming) devices. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_RESET_DELAY
+value|20
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_RESET_RECOVERY
+value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_POWERUP_DELAY
+value|200
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_SET_ADDRESS_SETTLE
+value|10
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1328,7 +1623,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESET_DELAY
+name|USB_BUS_RESET_DELAY
 value|100
 end_define
 
@@ -1365,21 +1660,140 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+comment|/* XXX must match flags in usbdi.h */
+define|#
+directive|define
+name|USBD_SHORT_XFER_OK
+value|0x04
+name|int
+name|actlen
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|usb_all_desc
+name|usb_alt_interface
 block|{
-name|u_char
-name|data
-index|[
-literal|1024
-index|]
+name|int
+name|config_index
 decl_stmt|;
-comment|/* filled data size will vary */
+name|int
+name|interface_index
+decl_stmt|;
+name|int
+name|alt_no
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|USB_CURRENT_CONFIG_INDEX
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_CURRENT_ALT_INDEX
+value|(-1)
+end_define
+
+begin_struct
+struct|struct
+name|usb_config_desc
+block|{
+name|int
+name|config_index
+decl_stmt|;
+name|usb_config_descriptor_t
+name|desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usb_interface_desc
+block|{
+name|int
+name|config_index
+decl_stmt|;
+name|int
+name|interface_index
+decl_stmt|;
+name|int
+name|alt_index
+decl_stmt|;
+name|usb_interface_descriptor_t
+name|desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usb_endpoint_desc
+block|{
+name|int
+name|config_index
+decl_stmt|;
+name|int
+name|interface_index
+decl_stmt|;
+name|int
+name|alt_index
+decl_stmt|;
+name|int
+name|endpoint_index
+decl_stmt|;
+name|usb_endpoint_descriptor_t
+name|desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usb_full_desc
+block|{
+name|int
+name|config_index
+decl_stmt|;
+name|u_int
+name|size
+decl_stmt|;
+name|u_char
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|usb_string_desc
+block|{
+name|int
+name|string_index
+decl_stmt|;
+name|int
+name|language_id
+decl_stmt|;
+name|usb_string_descriptor_t
+name|desc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1406,7 +1820,7 @@ begin_struct
 struct|struct
 name|usb_device_info
 block|{
-name|uByte
+name|u_int8_t
 name|addr
 decl_stmt|;
 comment|/* device address */
@@ -1428,13 +1842,19 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|uByte
+name|u_int16_t
+name|productNo
+decl_stmt|;
+name|u_int16_t
+name|vendorNo
+decl_stmt|;
+name|u_int8_t
 name|class
 decl_stmt|;
-name|uByte
+name|u_int8_t
 name|config
 decl_stmt|;
-name|uByte
+name|u_int8_t
 name|lowspeed
 decl_stmt|;
 name|int
@@ -1444,7 +1864,7 @@ comment|/* power consumption in mA, 0 if selfpowered */
 name|int
 name|nports
 decl_stmt|;
-name|uByte
+name|u_int8_t
 name|ports
 index|[
 literal|16
@@ -1575,43 +1995,99 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_SET_CONFIG
-value|_IOW ('U', 100, int)
+name|USB_GET_CONFIG
+value|_IOR ('U', 100, int)
 end_define
 
 begin_define
 define|#
 directive|define
-name|USB_SET_INTERFACE
+name|USB_SET_CONFIG
 value|_IOW ('U', 101, int)
 end_define
 
 begin_define
 define|#
 directive|define
+name|USB_GET_ALTINTERFACE
+value|_IOWR('U', 102, struct usb_alt_interface)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_ALTINTERFACE
+value|_IOWR('U', 103, struct usb_alt_interface)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_NO_ALT
+value|_IOWR('U', 104, struct usb_alt_interface)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_GET_DEVICE_DESC
-value|_IOR ('U', 102, usb_device_descriptor_t)
+value|_IOR ('U', 105, usb_device_descriptor_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_CONFIG_DESC
-value|_IOR ('U', 103, usb_config_descriptor_t)
+value|_IOWR('U', 106, struct usb_config_desc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USB_GET_INTERFACE_DESC
-value|_IOR ('U', 104, usb_interface_descriptor_t)
+value|_IOWR('U', 107, struct usb_interface_desc)
 end_define
 
 begin_define
 define|#
 directive|define
-name|USB_GET_ALL_DESC
-value|_IOR ('U', 105, struct usb_all_desc)
+name|USB_GET_ENDPOINT_DESC
+value|_IOWR('U', 108, struct usb_endpoint_desc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_FULL_DESC
+value|_IOWR('U', 109, struct usb_full_desc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_STRING_DESC
+value|_IOWR('U', 110, struct usb_string_desc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_DO_REQUEST
+value|_IOWR('U', 111, struct usb_ctl_request)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_DEVICEINFO
+value|_IOR ('U', 112, struct usb_device_info)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_SHORT_XFER
+value|_IOW ('U', 113, int)
 end_define
 
 begin_endif

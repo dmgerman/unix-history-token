@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.3 1998/11/25 22:32:04 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.4 1998/12/26 12:53:01 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -149,27 +149,10 @@ name|unit
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
+comment|/* __FreeBSD__ */
 name|usb_dma_t
 name|sc_hccadma
 decl_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|void
-modifier|*
-name|sc_hccadma
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|ohci_hcca
 modifier|*
@@ -310,6 +293,7 @@ value|if (ohcidebug>(n)) printf x
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|ohcidebug
 decl_stmt|;

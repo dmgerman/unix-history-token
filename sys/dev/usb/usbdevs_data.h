@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdevs_data.h,v 1.6 1998/10/05 02:31:14 mark Exp $	*/
+comment|/*	$NetBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.5 1998/10/05 02:30:17 mark Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.14 1998/12/30 03:52:30 augustss Exp   */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Author: Lennart Augustsson<augustss@carlstedt.se>  *         Carlstedt Research& Technology  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_decl_stmt
@@ -35,6 +35,18 @@ literal|"hub"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_NEC
+block|,
+name|USB_PRODUCT_NEC_HUB_B
+block|,
+literal|0
+block|,
+literal|"NEC"
+block|,
+literal|"hub"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_KODAK
 block|,
 name|USB_PRODUCT_KODAK_DC260
@@ -44,6 +56,18 @@ block|,
 literal|"Eastman Kodak"
 block|,
 literal|"Digital Science DC260"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CATC
+block|,
+name|USB_PRODUCT_CATC_ANDROMEDA
+block|,
+literal|0
+block|,
+literal|"CATC"
+block|,
+literal|"Andromeda hub"
 block|, 	}
 block|,
 block|{
@@ -107,6 +131,18 @@ literal|"Flight 2000 joystick"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MICROSOFT
+block|,
+name|USB_PRODUCT_MICROSOFT_INTELLIMOUSE
+block|,
+literal|0
+block|,
+literal|"Microsoft"
+block|,
+literal|"IntelliMouse"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_CHERRY
 block|,
 name|USB_PRODUCT_CHERRY_MY3000KBD
@@ -128,6 +164,18 @@ block|,
 literal|"Cherry"
 block|,
 literal|"My3000 hub"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_BTC
+block|,
+name|USB_PRODUCT_BTC_BTC7932
+block|,
+literal|0
+block|,
+literal|"BTC"
+block|,
+literal|"Keyboard with mouse port"
 block|, 	}
 block|,
 block|{
@@ -173,21 +221,69 @@ name|USB_PRODUCT_CYPRESS_MOUSE
 block|,
 literal|0
 block|,
-literal|"Cypress Semicondutor"
+literal|"Cypress Semiconductor"
 block|,
 literal|"mouse"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_BELKIN
+name|USB_VENDOR_3COM
 block|,
-name|USB_PRODUCT_BELKIN_F5U002
+name|USB_PRODUCT_3COM_USR56K
 block|,
 literal|0
 block|,
-literal|"Belkin"
+literal|"3Com"
+block|,
+literal|"U.S.Robotics 56000 Voice USB Modem"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_SHUTTLE
+block|,
+name|USB_PRODUCT_SHUTTLE_EUSB
+block|,
+literal|0
+block|,
+literal|"Shuttle Technology"
+block|,
+literal|"E-USB Bridge"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_JAZZ
+block|,
+name|USB_PRODUCT_JAZZ_J6502
+block|,
+literal|0
+block|,
+literal|"Jazz"
+block|,
+literal|"J-6502 speakers"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ATEN
+block|,
+name|USB_PRODUCT_ATEN_UC1284
+block|,
+literal|0
+block|,
+literal|"ATen"
 block|,
 literal|"Parallel printer adapter"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_PERACOM
+block|,
+name|USB_PRODUCT_PERACOM_SERIAL1
+block|,
+literal|0
+block|,
+literal|"Peracom"
+block|,
+literal|"Serial Converter"
 block|, 	}
 block|,
 block|{
@@ -212,6 +308,54 @@ block|,
 literal|"EIZO"
 block|,
 literal|"monitor"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_AGILER
+block|,
+name|USB_PRODUCT_AGILER_MOUSE29UO
+block|,
+literal|0
+block|,
+literal|"Agiler"
+block|,
+literal|"mouse 29UO"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_BELKIN
+block|,
+name|USB_PRODUCT_BELKIN_F5U002
+block|,
+literal|0
+block|,
+literal|"Belkin"
+block|,
+literal|"Parallel printer adapter"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_M2452
+block|,
+literal|0
+block|,
+literal|"Logitech"
+block|,
+literal|"M2452 keyboard"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+name|USB_PRODUCT_LOGITECH_M4848
+block|,
+literal|0
+block|,
+literal|"Logitech"
+block|,
+literal|"M4848 mouse"
 block|, 	}
 block|,
 block|{
@@ -248,6 +392,18 @@ block|,
 literal|"Chic Technology"
 block|,
 literal|"mouse"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ADS
+block|,
+name|USB_PRODUCT_ADS_ENET
+block|,
+literal|0
+block|,
+literal|"ADS Technologies"
+block|,
+literal|"Ethernet adapter"
 block|, 	}
 block|,
 block|{
@@ -311,6 +467,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_CATC
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"CATC"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_NANAO
 block|,
 literal|0
@@ -347,6 +515,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MICROSOFT
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Microsoft"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_CHERRY
 block|,
 literal|0
@@ -354,6 +534,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Cherry"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_BTC
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"BTC"
 block|,
 name|NULL
 block|, 	}
@@ -389,7 +581,67 @@ literal|0
 block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
-literal|"Cypress Semicondutor"
+literal|"Cypress Semiconductor"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_3COM
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"3Com"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_SHUTTLE
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Shuttle Technology"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_JAZZ
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Jazz"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ATEN
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"ATen"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_PERACOM
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Peracom"
 block|,
 name|NULL
 block|, 	}
@@ -407,6 +659,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_AGILER
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Agiler"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_BELKIN
 block|,
 literal|0
@@ -414,6 +678,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Belkin"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Logitech"
 block|,
 name|NULL
 block|, 	}
@@ -438,6 +714,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Chic Technology"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_ADS
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"ADS Technologies"
 block|,
 name|NULL
 block|, 	}

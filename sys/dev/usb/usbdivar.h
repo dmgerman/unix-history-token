@@ -1,85 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: usbdivar.h,v 1.14 1998/12/30 18:06:25 augustss Exp $	*/
+end_comment
+
+begin_comment
 comment|/*	FreeBSD $Id$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Author: Lennart Augustsson<augustss@carlstedt.se>  *         Carlstedt Research& Technology  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* conversiom from one type of queue to the other */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_REMOVE_HEAD
-value|STAILQ_REMOVE_HEAD_QUEUE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_INSERT_HEAD
-value|STAILQ_INSERT_HEAD
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_INSERT_TAIL
-value|STAILQ_INSERT_TAIL
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_NEXT
-value|STAILQ_NEXT
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_FIRST
-value|STAILQ_FIRST
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_HEAD
-value|STAILQ_HEAD
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_INIT
-value|STAILQ_INIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIMPLEQ_ENTRY
-value|STAILQ_ENTRY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -147,6 +77,18 @@ name|reqh
 operator|)
 argument_list|)
 expr_stmt|;
+name|usbd_status
+argument_list|(
+argument|*start
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|usbd_request_handle
+name|reqh
+operator|)
+argument_list|)
+expr_stmt|;
 name|void
 argument_list|(
 argument|*abort
@@ -200,10 +142,20 @@ block|{
 name|usb_port_status_t
 name|status
 decl_stmt|;
-name|int
+name|u_int16_t
 name|power
 decl_stmt|;
 comment|/* mA of current on port */
+name|u_int8_t
+name|portno
+decl_stmt|;
+name|u_int8_t
+name|restartcnt
+decl_stmt|;
+define|#
+directive|define
+name|USBD_RESTART_MAX
+value|5
 name|struct
 name|usbd_device
 modifier|*
@@ -237,13 +189,10 @@ argument_list|)
 expr_stmt|;
 name|void
 modifier|*
-name|hubdata
+name|hubsoftc
 decl_stmt|;
 name|usb_hub_descriptor_t
 name|hubdesc
-decl_stmt|;
-name|int
-name|nports
 decl_stmt|;
 name|struct
 name|usbd_port
@@ -373,6 +322,14 @@ decl_stmt|;
 name|int
 name|config
 decl_stmt|;
+name|int
+name|langid
+decl_stmt|;
+comment|/* language to use for strings */
+define|#
+directive|define
+name|USBD_NOLANG
+value|(-1)
 name|struct
 name|usbd_port
 modifier|*
@@ -411,18 +368,11 @@ modifier|*
 name|hub
 decl_stmt|;
 comment|/* only if this is a hub */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|bdevice
-name|bdev
+name|void
+modifier|*
+name|softc
 decl_stmt|;
-comment|/* base device */
-endif|#
-directive|endif
+comment|/* device softc if attached */
 block|}
 struct|;
 end_struct
@@ -442,6 +392,12 @@ decl_stmt|;
 name|usb_interface_descriptor_t
 modifier|*
 name|idesc
+decl_stmt|;
+name|int
+name|index
+decl_stmt|;
+name|int
+name|altindex
 decl_stmt|;
 name|struct
 name|usbd_endpoint
@@ -524,10 +480,6 @@ name|usbd_request_handle
 name|intrreqh
 decl_stmt|;
 comment|/* used for repeating requests */
-name|usbd_request_handle
-name|curreqh
-decl_stmt|;
-comment|/* currently running request */
 comment|/* Filled by HC driver. */
 name|struct
 name|usbd_methods
@@ -650,13 +602,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|usbd_delay_ms
+name|usb_delay_ms
 name|__P
 argument_list|(
 operator|(
 name|usbd_bus_handle
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -803,6 +755,51 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|usbd_status
+name|usb_insert_transfer
+name|__P
+argument_list|(
+operator|(
+name|usbd_request_handle
+name|reqh
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usb_start_next
+name|__P
+argument_list|(
+operator|(
+name|usbd_pipe_handle
+name|pipe
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|usbd_status
+name|usbd_fill_iface_data
+name|__P
+argument_list|(
+operator|(
+name|usbd_device_handle
+name|dev
+operator|,
+name|int
+name|i
+operator|,
+name|int
+name|a
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Routines from usb.c */
 end_comment
@@ -846,57 +843,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|usb_driver_load
-name|__P
-argument_list|(
-operator|(
-name|module_t
-name|mod
-operator|,
-name|int
-name|what
-operator|,
-name|void
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|usb_device_set_desc
-name|__P
-argument_list|(
-operator|(
-name|device_t
-name|device
-operator|,
-name|char
-operator|*
-name|devinfo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -917,15 +863,45 @@ name|__NetBSD__
 argument_list|)
 end_if
 
-begin_comment
-comment|/* NWH File not found anywhere in NetBSD sources... */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"locators.h"
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* XXX these values are used to statically bind some elements in the USB tree  * to specific driver instances. This should be somehow emulated in FreeBSD  * but can be done later on.  * The values are copied from the files.usb file in the NetBSD sources.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UHUBCF_PORT_DEFAULT
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHUBCF_CONFIGURATION_DEFAULT
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHUBCF_INTERFACE_DEFAULT
+value|-1
+end_define
 
 begin_endif
 endif|#
@@ -984,32 +960,6 @@ end_define
 
 begin_comment
 comment|/* wildcarded 'interface' */
-end_comment
-
-begin_comment
-comment|/* Junk. */
-end_comment
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|splusb
-value|splbio
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPL_USB
-value|IPL_BIO
-end_define
-
-begin_comment
-comment|/* XXX */
 end_comment
 
 end_unit

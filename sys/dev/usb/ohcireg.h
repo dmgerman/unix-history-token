@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.6 1998/11/25 22:32:04 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.7 1998/12/10 23:16:47 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -699,7 +699,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_ALL_INTRS
-value|(OHCI_SO | OHCI_WDH | OHCI_SF | OHCI_RD | OHCI_UE | OHCI_FNO | OHCI_RHSC | OHCI_OC)
+value|(OHCI_SO | OHCI_WDH | OHCI_SF | OHCI_RD | OHCI_UE | \                         OHCI_FNO | OHCI_RHSC | OHCI_OC)
 end_define
 
 begin_define

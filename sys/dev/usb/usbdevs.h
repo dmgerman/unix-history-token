@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdevs.h,v 1.8 1998/12/02 22:51:50 augustss Exp $	*/
+comment|/*	$NetBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.14 1998/12/30 03:52:30 augustss Exp   */
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.8 1998/12/02 22:49:51 augustss Exp   */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Author: Lennart Augustsson<augustss@carlstedt.se>  *         Carlstedt Research& Technology  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -92,6 +88,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_MICROSOFT
+value|0x045e
+end_define
+
+begin_comment
+comment|/* Microsoft */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_CHERRY
 value|0x046a
 end_define
@@ -162,6 +169,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_SHUTTLE
+value|0x04e6
+end_define
+
+begin_comment
+comment|/* Shuttle Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_JAZZ
 value|0x04fa
 end_define
@@ -179,6 +197,17 @@ end_define
 
 begin_comment
 comment|/* ATen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_PERACOM
+value|0x0565
+end_define
+
+begin_comment
+comment|/* Peracom */
 end_comment
 
 begin_define
@@ -217,6 +246,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_LOGITECH
+value|0x05ac
+end_define
+
+begin_comment
+comment|/* Logitech */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_EIZONANAO
 value|0x05e7
 end_define
@@ -234,6 +274,17 @@ end_define
 
 begin_comment
 comment|/* Chic Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_ADS
+value|0x06e1
+end_define
+
+begin_comment
+comment|/* ADS Technologies */
 end_comment
 
 begin_define
@@ -282,6 +333,17 @@ define|#
 directive|define
 name|USB_PRODUCT_NEC_HUB
 value|0x55aa
+end_define
+
+begin_comment
+comment|/* hub */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_NEC_HUB_B
+value|0x55ab
 end_define
 
 begin_comment
@@ -386,6 +448,21 @@ comment|/* Flight 2000 joystick */
 end_comment
 
 begin_comment
+comment|/* Microsoft products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MICROSOFT_INTELLIMOUSE
+value|0x0009
+end_define
+
+begin_comment
+comment|/* IntelliMouse */
+end_comment
+
+begin_comment
 comment|/* Cherry products */
 end_comment
 
@@ -468,6 +545,21 @@ comment|/* QuickCam */
 end_comment
 
 begin_comment
+comment|/* Cypress Semiconduuctor products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CYPRESS_MOUSE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* mouse */
+end_comment
+
+begin_comment
 comment|/* 3Com products */
 end_comment
 
@@ -480,6 +572,21 @@ end_define
 
 begin_comment
 comment|/* U.S.Robotics 56000 Voice USB Modem */
+end_comment
+
+begin_comment
+comment|/* Shuttle Technology products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_SHUTTLE_EUSB
+value|0x0001
+end_define
+
+begin_comment
+comment|/* E-USB Bridge */
 end_comment
 
 begin_comment
@@ -498,22 +605,7 @@ comment|/* J-6502 speakers */
 end_comment
 
 begin_comment
-comment|/* Cypress Semiconduuctor products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_CYPRESS_MOUSE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* mouse */
-end_comment
-
-begin_comment
-comment|/* ATen */
+comment|/* ATen products */
 end_comment
 
 begin_define
@@ -525,6 +617,47 @@ end_define
 
 begin_comment
 comment|/* Parallel printer adapter */
+end_comment
+
+begin_comment
+comment|/* Peracom products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_PERACOM_SERIAL1
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Serial Converter */
+end_comment
+
+begin_comment
+comment|/* EIZO products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_EIZO_HUB
+value|0x0000
+end_define
+
+begin_comment
+comment|/* hub */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_EIZO_MONITOR
+value|0x0001
+end_define
+
+begin_comment
+comment|/* monitor */
 end_comment
 
 begin_comment
@@ -558,29 +691,33 @@ comment|/* Parallel printer adapter */
 end_comment
 
 begin_comment
+comment|/* Logitech products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_M2452
+value|0x0203
+end_define
+
+begin_comment
+comment|/* M2452 keyboard */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LOGITECH_M4848
+value|0x0301
+end_define
+
+begin_comment
+comment|/* M4848 mouse */
+end_comment
+
+begin_comment
 comment|/* EIZO Nanao products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_EIZO_HUB
-value|0x0000
-end_define
-
-begin_comment
-comment|/* hub */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_EIZO_MONITOR
-value|0x0001
-end_define
-
-begin_comment
-comment|/* monitor */
 end_comment
 
 begin_define
@@ -606,7 +743,7 @@ comment|/* monitor */
 end_comment
 
 begin_comment
-comment|/* Chic Technology */
+comment|/* Chic Technology products */
 end_comment
 
 begin_define
@@ -618,6 +755,21 @@ end_define
 
 begin_comment
 comment|/* mouse */
+end_comment
+
+begin_comment
+comment|/* ADS products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ADS_ENET
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Ethernet adapter */
 end_comment
 
 begin_comment
