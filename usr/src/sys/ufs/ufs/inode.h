@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -94,14 +94,6 @@ modifier|*
 name|i_lockf
 decl_stmt|;
 comment|/* head of byte-level lock list */
-name|long
-name|i_diroff
-decl_stmt|;
-comment|/* offset in dir, where we found last entry */
-name|off_t
-name|i_endoff
-decl_stmt|;
-comment|/* end of useful stuff in directory */
 name|u_quad_t
 name|i_modrev
 decl_stmt|;
@@ -114,18 +106,44 @@ name|pid_t
 name|i_lockwaiter
 decl_stmt|;
 comment|/* DEBUG: latest blocked for inode lock */
-name|long
-name|i_spare
-index|[
-literal|16
-index|]
+comment|/* 	 * Side effects; used during directory lookup. 	 */
+name|off_t
+name|i_endoff
 decl_stmt|;
-comment|/* spares to round up to 256 bytes */
+comment|/* end of useful stuff in directory */
+name|long
+name|i_diroff
+decl_stmt|;
+comment|/* offset in dir, where we found last entry */
+name|long
+name|i_offset
+decl_stmt|;
+comment|/* offset of free space in directory */
+name|long
+name|i_count
+decl_stmt|;
+comment|/* size of free slot in directory */
+name|ino_t
+name|i_ino
+decl_stmt|;
+comment|/* inode number of found directory */
+name|u_long
+name|i_reclen
+decl_stmt|;
+comment|/* size of found directory entry */
+comment|/* 	 * the on-disk dinode itself. 	 */
 name|struct
 name|dinode
 name|i_din
 decl_stmt|;
 comment|/* the on-disk dinode */
+name|long
+name|i_spare
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* spares to round up to 256 bytes */
 block|}
 struct|;
 end_struct
