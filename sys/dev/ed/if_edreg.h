@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.15 1994/08/02 07:39:30 davidg Exp $  */
+comment|/*  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_edreg.h,v 1.16 1994/08/04 17:42:35 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1952,6 +1952,86 @@ comment|/* enable interrupts */
 end_comment
 
 begin_comment
+comment|/*  * REV/IOPA Revision / I/O Pipe register for the 83C79X  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_REV
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_WD790
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_WD795
+value|0x40
+end_define
+
+begin_comment
+comment|/*  * 79X RAM Address Register (RAR)  *	Enabled with SWH bit=1 in HWR register  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_RAR
+value|0x0b
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_RAR_SZ8
+value|0x00
+end_define
+
+begin_comment
+comment|/* 8k memory buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_RAR_SZ16
+value|0x10
+end_define
+
+begin_comment
+comment|/* 16k memory buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_RAR_SZ32
+value|0x20
+end_define
+
+begin_comment
+comment|/* 32k memory buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_RAR_SZ64
+value|0x30
+end_define
+
+begin_comment
+comment|/* 64k memory buffer */
+end_comment
+
+begin_comment
 comment|/*  * General Control Register (GCR)  *	Enabled with SWH bit=1 in HWR register  */
 end_comment
 
@@ -2004,6 +2084,17 @@ end_define
 
 begin_comment
 comment|/* bit 2 of encoded IRQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD790_GCR_LIT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Link Integrity Test Enable */
 end_comment
 
 begin_comment
