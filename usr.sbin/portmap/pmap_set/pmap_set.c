@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#) pmap_set.c 1.1 92/06/11 22:53:16";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#) pmap_set.c 1.1 92/06/11 22:53:16"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +36,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -65,7 +84,33 @@ directive|include
 file|<rpc/pmap_clnt.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|parse_line
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|unsigned
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -146,16 +191,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: malformed line: %s"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"malformed line: %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -185,10 +223,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"not registered: %s"
 argument_list|,
 name|buf
@@ -207,57 +243,40 @@ begin_comment
 comment|/* parse_line - convert line to numbers */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|parse_line
-argument_list|(
-argument|buf
-argument_list|,
-argument|prog
-argument_list|,
-argument|vers
-argument_list|,
-argument|prot
-argument_list|,
-argument|port
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|prog
+parameter_list|,
+name|vers
+parameter_list|,
+name|prot
+parameter_list|,
+name|port
+parameter_list|)
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 modifier|*
 name|prog
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 modifier|*
 name|vers
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|prot
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 modifier|*
 name|port
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|proto_name
@@ -363,7 +382,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

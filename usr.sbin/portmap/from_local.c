@@ -13,13 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#) from_local.c 1.2 93/11/16 21:50:02";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#) from_local.c 1.2 93/11/16 21:50:02"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +100,12 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -148,12 +167,10 @@ begin_comment
 comment|/* find_local - find all IP addresses for this host */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|find_local
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|ifconf
@@ -461,28 +478,23 @@ name|num_local
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* from_local - determine whether request comes from the local system */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|from_local
-argument_list|(
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -568,7 +580,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#) pmap_dump.c 1.1 92/06/11 22:53:15";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#) pmap_dump.c 1.1 92/06/11 22:53:15"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +111,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc

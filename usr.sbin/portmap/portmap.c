@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)portmap.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)portmap.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,13 +82,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<rpc/rpc.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<rpc/pmap_prot.h>
+file|<netdb.h>
 end_include
 
 begin_include
@@ -110,7 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/pmap_prot.h>
 end_include
 
 begin_include
@@ -172,6 +192,19 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|pmaplist
 modifier|*
@@ -187,14 +220,8 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -279,45 +306,8 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s [-dv]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-d: debugging mode\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-v: verbose logging\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -333,28 +323,13 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"portmap: fork: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"fork"
 argument_list|)
 expr_stmt|;
-block|}
 name|openlog
 argument_list|(
 literal|"portmap"
@@ -757,6 +732,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: portmap [-dv]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -960,7 +956,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"server: about do a switch\n"
+literal|"server: about to do a switch\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1028,6 +1024,9 @@ name|xprt
 argument_list|,
 name|xdr_pmap
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|reg
 argument_list|)
@@ -1268,6 +1267,9 @@ name|xprt
 argument_list|,
 name|xdr_pmap
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|reg
 argument_list|)
@@ -1491,6 +1493,9 @@ name|xprt
 argument_list|,
 name|xdr_pmap
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|reg
 argument_list|)
@@ -2270,6 +2275,9 @@ name|xprt
 argument_list|,
 name|xdr_rmtcall_args
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|a
 argument_list|)
