@@ -2870,7 +2870,7 @@ specifier|static
 name|int
 name|contigmask
 parameter_list|(
-name|u_char
+name|uint8_t
 modifier|*
 name|p
 parameter_list|,
@@ -3012,7 +3012,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|set
 init|=
 name|cmd
@@ -3021,7 +3021,7 @@ name|arg1
 operator|&
 literal|0xff
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|clear
 init|=
 operator|(
@@ -3358,7 +3358,7 @@ argument_list|,
 name|contigmask
 argument_list|(
 operator|(
-name|u_char
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -3569,7 +3569,7 @@ else|:
 name|contigmask
 argument_list|(
 operator|(
-name|u_char
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -3736,11 +3736,11 @@ specifier|static
 name|void
 name|print_mac
 parameter_list|(
-name|u_char
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
-name|u_char
+name|uint8_t
 modifier|*
 name|mask
 parameter_list|)
@@ -9788,7 +9788,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"ipfw syntax summary (but please do read the ipfw(8) manpage):\n"
-literal|"ipfw [-acdeftTnNpqS]<command> where<command is one of:\n"
+literal|"ipfw [-acdeftTnNpqS]<command> where<command> is one of:\n"
 literal|"add [num] [set N] [prob x] RULE-BODY\n"
 literal|"{pipe|queue} N config PIPE-BODY\n"
 literal|"[pipe|queue] {zero|delete|show} [N{,N}]\n"
@@ -10281,7 +10281,7 @@ init|=
 name|contigmask
 argument_list|(
 operator|(
-name|u_char
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -13334,11 +13334,11 @@ name|char
 modifier|*
 name|p
 parameter_list|,
-name|u_char
+name|uint8_t
 modifier|*
 name|addr
 parameter_list|,
-name|u_char
+name|uint8_t
 modifier|*
 name|mask
 parameter_list|)
