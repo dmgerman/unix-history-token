@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.18 1997/07/30 22:44:20 smp Exp smp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.23 1997/07/31 05:39:48 fsmp Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -328,7 +328,7 @@ begin_decl_stmt
 specifier|extern
 specifier|volatile
 name|struct
-name|simple_lock
+name|simplelock
 name|imen_lock
 decl_stmt|;
 end_decl_stmt
