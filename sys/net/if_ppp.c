@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.34 1996/06/10 23:07:33 gpalmer Exp $ */
+comment|/* $Id: if_ppp.c,v 1.35 1996/06/12 19:24:00 gpalmer Exp $ */
 end_comment
 
 begin_comment
@@ -2381,6 +2381,12 @@ name|ifr
 operator|->
 name|ifr_mtu
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_setmtu
+condition|)
 call|(
 modifier|*
 name|sc
