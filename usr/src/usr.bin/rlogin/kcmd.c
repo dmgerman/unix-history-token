@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kcmd.c	5.7 (Berkeley) %G%"
+literal|"@(#)kcmd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -636,7 +636,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * don't wait very long for Kerberos rcmd. 	 */
+comment|/* 		 * don't wait very long for Kerberos rcmd. 		 */
 if|if
 condition|(
 name|errno
