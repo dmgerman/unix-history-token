@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.14 (Berkeley) %G%"
+literal|"@(#)file.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,11 +328,6 @@ name|MAXPATHLEN
 operator|+
 literal|1
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-name|_sobuf
-index|[]
 decl_stmt|;
 if|if
 condition|(

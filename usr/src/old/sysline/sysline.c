@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.10 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1276,22 +1276,10 @@ name|home
 decl_stmt|;
 specifier|extern
 name|char
-name|_sobuf
-index|[]
-decl_stmt|;
-specifier|extern
-name|char
 modifier|*
 name|index
 parameter_list|()
 function_decl|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HOSTNAME

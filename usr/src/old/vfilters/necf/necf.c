@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)necf.c	5.2 (Berkeley) %G%"
+literal|"@(#)necf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,13 +77,6 @@ parameter_list|()
 block|{
 specifier|extern
 name|char
-name|_sobuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-specifier|extern
-name|char
 modifier|*
 name|rindex
 parameter_list|()
@@ -103,13 +96,6 @@ name|cp
 decl_stmt|;
 specifier|register
 name|lnumber
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
