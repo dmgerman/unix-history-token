@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.29 1996/03/11 15:13:17 davidg Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.30 1996/03/11 17:11:23 fenner Exp $  */
 end_comment
 
 begin_include
@@ -153,25 +153,6 @@ directive|include
 file|<netinet/udp.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|rsvp_input
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-name|m
-operator|,
-name|int
-name|iphlen
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -282,22 +263,6 @@ ifndef|#
 directive|ifndef
 name|MROUTING
 end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ipip_input
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-name|m
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -766,6 +731,8 @@ expr_stmt|;
 name|rip_input
 argument_list|(
 name|m
+argument_list|,
+name|iphlen
 argument_list|)
 expr_stmt|;
 return|return;
@@ -787,12 +754,17 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|iphlen
 parameter_list|)
 block|{
 comment|/* XXX must fixup manually */
 name|rip_input
 argument_list|(
 name|m
+argument_list|,
+name|iphlen
 argument_list|)
 expr_stmt|;
 block|}
@@ -975,25 +947,6 @@ name|MROUTE_LKM
 end_ifndef
 
 begin_decl_stmt
-specifier|extern
-name|void
-name|ipip_input
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-name|m
-operator|,
-name|int
-name|iphlen
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|socket
 modifier|*
@@ -1031,15 +984,6 @@ begin_comment
 comment|/* MROUTE_LKM */
 end_comment
 
-begin_error
-error|#
-directive|error
-end_error
-
-begin_comment
-comment|/* the function definition will have a syntax error */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -1051,6 +995,9 @@ expr|struct
 name|mbuf
 operator|*
 name|m
+operator|,
+name|int
+name|iphlen
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7982,6 +7929,8 @@ name|MROUTE_LKM
 name|X_ipip_input
 parameter_list|(
 name|m
+parameter_list|,
+name|iphlen
 parameter_list|)
 else|#
 directive|else
@@ -8064,6 +8013,8 @@ block|{
 name|rip_input
 argument_list|(
 name|m
+argument_list|,
+name|iphlen
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10082,6 +10033,8 @@ expr_stmt|;
 name|rip_input
 argument_list|(
 name|m
+argument_list|,
+name|iphlen
 argument_list|)
 expr_stmt|;
 return|return;
