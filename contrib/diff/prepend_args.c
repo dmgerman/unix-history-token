@@ -33,6 +33,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"diff.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"prepend_args.h"
 end_include
 
