@@ -1169,7 +1169,9 @@ block|{
 name|unsigned
 name|int
 name|size1
-init|=
+decl_stmt|;
+name|size1
+operator|=
 name|phys_avail
 index|[
 name|indx
@@ -1181,7 +1183,7 @@ name|phys_avail
 index|[
 name|indx
 index|]
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%08x - 0x%08x, %u bytes (%u pages)\n"
