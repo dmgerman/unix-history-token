@@ -1414,7 +1414,11 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"you are not in the correct group to su %s."
+literal|"you are not in the correct group (%s) to su %s."
+argument_list|,
+name|gr
+operator|->
+name|gr_name
 argument_list|,
 name|user
 argument_list|)
