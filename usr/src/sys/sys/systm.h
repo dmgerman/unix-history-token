@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -432,6 +432,26 @@ name|printf
 name|__P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sprintf
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|buf
+operator|,
 specifier|const
 name|char
 operator|*
