@@ -1012,6 +1012,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|CAP_MAX_BUF_LEN
+value|1024
+end_define
+
+begin_comment
+comment|/* Maximum cap text buffer length */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
