@@ -1376,6 +1376,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|vm_page_try_to_free
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|vm_page_dontneed
 name|__P

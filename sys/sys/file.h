@@ -90,9 +90,9 @@ name|f_list
 expr_stmt|;
 comment|/* list of active files */
 name|short
-name|f_flag
+name|f_FILLER3
 decl_stmt|;
-comment|/* see fcntl.h */
+comment|/* (old f_flag) */
 define|#
 directive|define
 name|DTYPE_VNODE
@@ -122,14 +122,10 @@ name|short
 name|f_type
 decl_stmt|;
 comment|/* descriptor type */
-name|short
-name|f_FILLER1
+name|u_int
+name|f_flag
 decl_stmt|;
-comment|/* (OLD) reference count */
-name|short
-name|f_FILLER2
-decl_stmt|;
-comment|/* (OLD) references from message queue */
+comment|/* see fcntl.h */
 name|struct
 name|ucred
 modifier|*
