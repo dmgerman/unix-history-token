@@ -456,14 +456,47 @@ comment|/* Commands */
 end_comment
 
 begin_comment
-comment|/*  * the top three bits -- where appropriate -- are set as follows:  *  * 0x80 - MT  multi-track; allow both sides to be handled in single cmd  * 0x40 - MFM modified frequency modulation; use MFM encoding  * 0x20 - SK  skip; skip sectors marked as "deleted"  */
+comment|/*  * the top three bits -- where appropriate -- are set as follows:  *  * MT  - multi-track; allow both sides to be handled in single cmd  * MFM - modified frequency modulation; use MFM encoding  * SK  - skip; skip sectors marked as "deleted"  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NE7CMD_MT
+value|0x80
+end_define
+
+begin_comment
+comment|/* READ, WRITE, WRITEDEL, READDEL, SCAN* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NE7CMD_MFM
+value|0x40
+end_define
+
+begin_comment
+comment|/* same as MT, plus READTRK, READID, FORMAT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NE7CMD_SK
+value|0x20
+end_define
+
+begin_comment
+comment|/* READ, READDEL, SCAN* */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NE7CMD_READTRK
-value|0x42
+value|2
 end_define
 
 begin_comment
@@ -478,7 +511,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*  specify drive parameters - requires unit 					parameters byte */
+comment|/*  specify drive parameters - requires unit 				 *  parameters byte */
 end_comment
 
 begin_define
@@ -496,7 +529,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_WRITE
-value|0xc5
+value|5
 end_define
 
 begin_comment
@@ -507,7 +540,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READ
-value|0xe6
+value|6
 end_define
 
 begin_comment
@@ -522,7 +555,7 @@ value|7
 end_define
 
 begin_comment
-comment|/*  recalibrate drive - requires 					unit select byte */
+comment|/*  recalibrate drive - requires 				 *  unit select byte */
 end_comment
 
 begin_define
@@ -540,7 +573,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_WRITEDEL
-value|0xc9
+value|9
 end_define
 
 begin_comment
@@ -551,7 +584,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READID
-value|0x4a
+value|0xa
 end_define
 
 begin_comment
@@ -562,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_READDEL
-value|0xec
+value|0xc
 end_define
 
 begin_comment
@@ -573,7 +606,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_FORMAT
-value|0x4d
+value|0xd
 end_define
 
 begin_comment
@@ -584,18 +617,18 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SEEK
-value|0x0f
+value|0xf
 end_define
 
 begin_comment
-comment|/*  seek drive - requires unit select byte 					and new cyl byte */
+comment|/*  seek drive - requires unit select byte 				 *  and new cyl byte */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NE7CMD_SCNEQU
-value|0xf1
+value|0x11
 end_define
 
 begin_comment
@@ -606,7 +639,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SCNLE
-value|0xf9
+value|0x19
 end_define
 
 begin_comment
@@ -617,7 +650,7 @@ begin_define
 define|#
 directive|define
 name|NE7CMD_SCNGE
-value|0xfd
+value|0x1d
 end_define
 
 begin_comment
