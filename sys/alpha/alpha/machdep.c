@@ -7738,6 +7738,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|cpu_idle
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Insert code to halt (until next interrupt) for the idle loop */
+block|}
+end_function
+
 begin_comment
 comment|/*  * Clear registers on exec  */
 end_comment
