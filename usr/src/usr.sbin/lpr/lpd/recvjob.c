@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.12 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,11 +1041,18 @@ name|open
 argument_list|(
 name|file
 argument_list|,
-name|O_WRONLY
-operator||
 name|O_CREAT
+operator||
+name|O_EXECL
+operator||
+name|O_WRONLY
 argument_list|,
 name|FILMOD
+argument_list|)
+expr_stmt|;
+name|frecverr
+argument_list|(
+literal|"illegal path name"
 argument_list|)
 expr_stmt|;
 if|if
