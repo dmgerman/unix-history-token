@@ -79,10 +79,6 @@ parameter_list|)
 value|((td)->td_frame->tf_special.sp)
 end_define
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -96,11 +92,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRAPF_CPL
+parameter_list|(
+name|tf
+parameter_list|)
+value|((tf)->tf_special.psr& IA64_PSR_CPL)
+end_define
+
+begin_comment
+comment|/*  * User mode for use by ast() and VM faults. It's takes into account  * that the gateway page is kernel space when looking at the VA, but  * is to be treated as user space when running with user priveleges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRAPF_USERMODE
 parameter_list|(
 name|tf
 parameter_list|)
-value|((TRAPF_PC(tf)>> 61)< 5)
+define|\
+value|((TRAPF_PC(tf)>> 61)< 5 || TRAPF_CPL(tf) == IA64_PSR_CPL_USER)
 end_define
 
 begin_comment
