@@ -350,8 +350,6 @@ parameter_list|(
 name|struct
 name|pcic_handle
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2999,8 +2997,6 @@ expr_stmt|;
 name|pcic_detach_card
 argument_list|(
 name|h
-argument_list|,
-name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3419,8 +3415,6 @@ expr_stmt|;
 name|pcic_detach_card
 argument_list|(
 name|h
-argument_list|,
-name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
 name|DEVPRINTF
@@ -3681,9 +3675,6 @@ name|struct
 name|pcic_handle
 modifier|*
 name|h
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 if|if
@@ -3708,18 +3699,6 @@ argument_list|(
 name|h
 operator|->
 name|dev
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"pcic_detach_card: already detached\n"
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
