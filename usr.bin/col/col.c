@@ -522,6 +522,16 @@ begin_comment
 comment|/* if not to output any backspaces */
 end_comment
 
+begin_decl_stmt
+name|int
+name|pass_unknown_seqs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pass unknown control sequences */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -627,7 +637,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bfhl:x"
+literal|"bfhl:px"
 argument_list|)
 operator|)
 operator|!=
@@ -691,6 +701,15 @@ literal|"bad -l argument %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* pass unknown control sequences */
+name|pass_unknown_seqs
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -915,6 +934,11 @@ literal|2
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|!
+name|pass_unknown_seqs
+condition|)
 continue|continue;
 block|}
 comment|/* Must stuff ch in a line - are we at the right one? */
@@ -2240,7 +2264,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: col [-bfhx] [-l nline]\n"
+literal|"usage: col [-bfhpx] [-l nline]\n"
 argument_list|)
 expr_stmt|;
 name|exit
