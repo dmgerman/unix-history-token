@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: bus.h,v 1.1 1998/01/15 07:32:54 gibbs Exp $ */
 end_comment
 
 begin_ifndef
@@ -770,7 +770,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	movb (%1),%%al				; 			stosb					; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movb (%1),%%al				\n\ 			stosb					\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -887,7 +887,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	movw (%1),%%ax				; 			stosw					; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movw (%1),%%ax				\n\ 			stosw					\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -1004,7 +1004,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	movl (%1),%%eax				; 			stosl					; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	movl (%1),%%eax				\n\ 			stosl					\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -1195,7 +1195,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	inb %w1,%%al				; 			stosb					; 			incl %1					; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inb %w1,%%al				\n\ 			stosb					\n\ 			incl %1					\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -1258,7 +1258,7 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(" 			cld					; 			repne					; 			movsb"					:
+asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsb"					:
 block|:
 literal|"S"
 operator|(
@@ -1346,7 +1346,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	inw %w1,%%ax				; 			stosw					; 			addl $2,%1				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inw %w1,%%ax				\n\ 			stosw					\n\ 			addl $2,%1				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -1409,7 +1409,7 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(" 			cld					; 			repne					; 			movsw"					:
+asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsw"					:
 block|:
 literal|"S"
 operator|(
@@ -1497,7 +1497,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	inl %w1,%%eax				; 			stosl					; 			addl $4,%1				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	inl %w1,%%eax				\n\ 			stosl					\n\ 			addl $4,%1				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -1560,7 +1560,7 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(" 			cld					; 			repne					; 			movsl"					:
+asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsl"					:
 block|:
 literal|"S"
 operator|(
@@ -2122,7 +2122,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	lodsb					; 			movb %%al,(%1)				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsb					\n\ 			movb %%al,(%1)				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -2238,7 +2238,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	lodsw					; 			movw %%ax,(%1)				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			movw %%ax,(%1)				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -2354,7 +2354,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	lodsl					; 			movl %%eax,(%1)				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsl					\n\ 			movl %%eax,(%1)				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -2559,7 +2559,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	lodsb					; 			outb %%al,%w1				; 			incl %1					; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsb					\n\ 			outb %%al,%w1				\n\ 			incl %1					\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -2622,7 +2622,7 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(" 			cld					; 			repne					; 			movsb"					:
+asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsb"					:
 block|:
 literal|"D"
 operator|(
@@ -2711,7 +2711,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	lodsw					; 			outw %%ax,%w1				; 			addl $2,%1				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsw					\n\ 			outw %%ax,%w1				\n\ 			addl $2,%1				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -2774,7 +2774,7 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(" 			cld					; 			repne					; 			movsw"					:
+asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsw"					:
 block|:
 literal|"D"
 operator|(
@@ -2863,7 +2863,7 @@ argument_list|(
 literal|"%eax"
 argument_list|)
 decl_stmt|;
-asm|__asm __volatile(" 			cld					; 		1:	lodsl					; 			outl %%eax,%w1				; 			addl $4,%1				; 			loop 1b"				:
+asm|__asm __volatile("				\n\ 			cld					\n\ 		1:	lodsl					\n\ 			outl %%eax,%w1				\n\ 			addl $4,%1				\n\ 			loop 1b"				:
 literal|"=&a"
 operator|(
 name|__x
@@ -2926,7 +2926,7 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(" 			cld					; 			repne					; 			movsl"					:
+asm|__asm __volatile("				\n\ 			cld					\n\ 			repne					\n\ 			movsl"					:
 block|:
 literal|"D"
 operator|(
@@ -4933,7 +4933,7 @@ block|,
 name|BUS_DMASYNC_PREWRITE
 block|,
 name|BUS_DMASYNC_POSTWRITE
-block|, }
+block|}
 name|bus_dmasync_op_t
 typedef|;
 end_typedef
