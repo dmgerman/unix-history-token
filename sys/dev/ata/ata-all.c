@@ -6211,6 +6211,13 @@ argument_list|(
 name|atadev
 operator|->
 name|channel
+operator|->
+name|r_io
+index|[
+name|ATA_DATA
+index|]
+operator|.
+name|res
 argument_list|)
 argument_list|,
 name|command
