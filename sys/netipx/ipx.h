@@ -383,6 +383,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|u_int
+name|u_net
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -454,6 +457,20 @@ define|#
 directive|define
 name|sipx_port
 value|sipx_addr.x_port
+end_define
+
+begin_define
+define|#
+directive|define
+name|sipx_network
+value|sipx_addr.x_net.u_net
+end_define
+
+begin_define
+define|#
+directive|define
+name|sipx_node
+value|sipx_addr.x_host.c_host
 end_define
 
 begin_comment
