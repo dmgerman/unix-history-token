@@ -1613,6 +1613,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|resource
 modifier|*
