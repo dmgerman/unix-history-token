@@ -806,6 +806,8 @@ block|}
 if|if
 condition|(
 name|category
+operator|!=
+name|LC_ALL
 condition|)
 return|return
 operator|(
