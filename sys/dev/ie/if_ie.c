@@ -884,6 +884,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|ie
+argument_list|,
+name|iedriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_enum
 enum|enum
 name|ie_hardware
