@@ -47,7 +47,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Each ``pup-level-1'' input queue has a bit in a ``netisr'' status  * word which is used to de-multiplex a single software  * interrupt used for scheduling the network code to calls  * on the lowest level routine of each protocol.  */
+comment|/*  * Each ``pup-level-1'' input queue has a bit in a ``netisr'' status  * word which is used to de-multiplex a single software  * interrupt used for scheduling the network code to calls  * on the lowest level routine of each protocol.  * Therefore must be< 32.  */
 end_comment
 
 begin_define
@@ -180,6 +180,17 @@ end_define
 
 begin_comment
 comment|/* same as AF_NATM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_NETGRAPH
+value|31
+end_define
+
+begin_comment
+comment|/* NOT same as AF_NETGRAPH */
 end_comment
 
 begin_define
