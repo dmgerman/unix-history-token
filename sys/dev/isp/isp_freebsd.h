@@ -246,13 +246,12 @@ name|HANDLE_LOOPSTATE_IN_OUTER_LAYERS
 value|1
 end_define
 
-begin_comment
-comment|/* turn this off for now */
-end_comment
-
-begin_comment
-comment|/* #define	ISP_SMPLOCK			1	*/
-end_comment
+begin_define
+define|#
+directive|define
+name|ISP_SMPLOCK
+value|1
+end_define
 
 begin_ifdef
 ifdef|#
