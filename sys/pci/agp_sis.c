@@ -350,13 +350,6 @@ operator|(
 literal|"SiS 760 host to AGP bridge"
 operator|)
 return|;
-case|case
-literal|0x10221039
-case|:
-comment|/* AMD64 */
-return|return
-name|NULL
-return|;
 block|}
 empty_stmt|;
 return|return
