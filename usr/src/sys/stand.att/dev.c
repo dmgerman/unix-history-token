@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dev.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,9 +19,21 @@ begin_comment
 comment|/* used from machine/stand dir */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
 begin_comment
-comment|/*  * NB: the value "io->i_dev", used to offset the devsw[] array  * in the routines below, is munged by the vaxstand Makefile to work  * for certain boots.  */
+comment|/*  * NB: the value "io->i_dev", used to offset the devsw[] array in the  * routines below, is munged by the machine specific stand Makefiles  * to work for certain boots.  */
 end_comment
+
+begin_decl_stmt
+name|jmp_buf
+name|exception
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|devread
@@ -79,6 +91,19 @@ operator|&=
 operator|~
 name|F_TYPEMASK
 expr_stmt|;
+if|if
+condition|(
+name|scankbd
+argument_list|()
+condition|)
+name|_longjmp
+argument_list|(
+operator|&
+name|exception
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|cc
@@ -133,7 +158,7 @@ operator|)
 operator|(
 name|io
 operator|,
-name|WRITE
+name|F_WRITE
 operator|)
 expr_stmt|;
 name|io
@@ -142,6 +167,19 @@ name|i_flgs
 operator|&=
 operator|~
 name|F_TYPEMASK
+expr_stmt|;
+if|if
+condition|(
+name|scankbd
+argument_list|()
+condition|)
+name|_longjmp
+argument_list|(
+operator|&
+name|exception
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -405,7 +443,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -428,7 +466,7 @@ block|{}
 end_block
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -456,7 +494,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
