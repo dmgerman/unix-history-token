@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fio[] = "@(#)fio.h	1.1";  *  * f77 file i/o common definitions  */
+comment|/* char id_fio[] = "@(#)fio.h	1.2";  *  * f77 file i/o common definitions  */
 end_comment
 
 begin_include
@@ -349,6 +349,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|radix
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ioiflg
+name|ioiflg_
 decl_stmt|;
 end_decl_stmt
 
