@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.32 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3225,6 +3225,9 @@ name|struct
 name|file
 modifier|*
 name|fp
+decl_stmt|,
+modifier|*
+name|nextfp
 decl_stmt|;
 specifier|register
 name|struct
@@ -3455,11 +3458,15 @@ name|fp
 condition|;
 name|fp
 operator|=
+name|nextfp
+control|)
+block|{
+name|nextfp
+operator|=
 name|fp
 operator|->
 name|f_filef
-control|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|fp
