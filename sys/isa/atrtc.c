@@ -498,8 +498,6 @@ name|u_char
 name|rtc_statusb
 init|=
 name|RTCSB_24HR
-operator||
-name|RTCSB_PINTR
 decl_stmt|;
 end_decl_stmt
 
@@ -2919,32 +2917,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If we aren't using the local APIC timer to drive the kernel 	 * clocks, setup the interrupt handler for the 8254 timer 0 so 	 * that it can drive hardclock(). 	 */
 if|if
 condition|(
-name|statclock_disable
-operator|||
+operator|!
 name|using_lapic_timer
 condition|)
 block|{
-comment|/* 		 * The stat interrupt mask is different without the 		 * statistics clock.  Also, don't set the interrupt 		 * flag which would normally cause the RTC to generate 		 * interrupts. 		 */
-name|rtc_statusb
-operator|=
-name|RTCSB_24HR
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Setting stathz to nonzero early helps avoid races. */
-name|stathz
-operator|=
-name|RTC_NOPROFRATE
-expr_stmt|;
-name|profhz
-operator|=
-name|RTC_PROFRATE
-expr_stmt|;
-block|}
-comment|/* Finish initializing 8254 timer 0. */
 name|intr_add_handler
 argument_list|(
 literal|"clk"
@@ -2987,6 +2966,7 @@ name|is_pic
 operator|->
 name|pic_source_pending
 expr_stmt|;
+block|}
 comment|/* Initialize RTC. */
 name|writertc
 argument_list|(
@@ -3002,7 +2982,7 @@ argument_list|,
 name|RTCSB_24HR
 argument_list|)
 expr_stmt|;
-comment|/* Don't bother enabling the statistics clock. */
+comment|/* 	 * If the separate statistics clock hasn't been explicility disabled 	 * and we aren't already using the local APIC timer to drive the 	 * kernel clocks, then setup the RTC to periodically interrupt to 	 * drive statclock() and profclock(). 	 */
 if|if
 condition|(
 operator|!
@@ -3033,6 +3013,20 @@ name|diag
 argument_list|,
 name|RTCDG_BITS
 argument_list|)
+expr_stmt|;
+comment|/* Setting stathz to nonzero early helps avoid races. */
+name|stathz
+operator|=
+name|RTC_NOPROFRATE
+expr_stmt|;
+name|profhz
+operator|=
+name|RTC_PROFRATE
+expr_stmt|;
+comment|/* Enable periodic interrupts from the RTC. */
+name|rtc_statusb
+operator||=
+name|RTCSB_PINTR
 expr_stmt|;
 name|intr_add_handler
 argument_list|(
