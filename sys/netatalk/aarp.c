@@ -327,10 +327,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Not used?  */
-end_comment
-
 begin_decl_stmt
 name|u_char
 name|at_org_code
