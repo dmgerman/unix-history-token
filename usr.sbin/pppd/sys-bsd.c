@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.5 1995/10/31 21:21:46 peter Exp $"
+literal|"$Id: sys-bsd.c,v 1.6 1996/03/01 19:29:44 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3277,6 +3277,8 @@ operator|=
 name|RTF_UP
 operator||
 name|RTF_GATEWAY
+operator||
+name|RTF_STATIC
 expr_stmt|;
 name|rtmsg
 operator|.
