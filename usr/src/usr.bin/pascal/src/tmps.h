@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tmps.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tmps.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -41,6 +41,36 @@ begin_endif
 endif|#
 directive|endif
 endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_comment
+comment|/*      *	the number of register types.      *	the details of how many of each kind of register there is      *	(and what they are for) is known in tmps.c      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUMREGTYPES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_GENERAL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|tahoe
 end_endif
 
 begin_ifdef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c	5.1 (Berkeley) %G%"
+literal|"@(#)lab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,9 +653,17 @@ name|bn
 argument_list|)
 expr_stmt|;
 comment|/* 		     * this is a funny jump because it's to a label that 		     * has been declared global. 		     * Although this branch is within this module 		     * the assembler will complain that the destination 		     * is a global symbol. 		     * The complaint arises because the assembler 		     * doesn't change relative jumps into absolute jumps. 		     * and this  may cause a branch displacement overflow 		     * when the module is subsequently linked with 		     * the rest of the program. 		     */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|putprintf
 argument_list|(
 literal|"	jmp	%s"
@@ -670,7 +678,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000

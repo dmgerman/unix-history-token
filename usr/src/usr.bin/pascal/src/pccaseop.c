@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c	5.1 (Berkeley) %G%"
+literal|"@(#)pccaseop.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,11 +108,19 @@ begin_comment
 comment|/*      *	the PCC_FORCE operator puts its operand into a register.      *	these to keep from thinking of it as r0 all over.      */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -124,7 +132,7 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 end_endif
 
 begin_ifdef
@@ -1366,6 +1374,182 @@ directive|endif
 endif|vax
 ifdef|#
 directive|ifdef
+name|tahoe
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'J'
+argument_list|)
+condition|)
+block|{
+comment|/* 	     *	We have a table of absolute addresses. 	     * 	     *	subl2	to make r0 a 0-origin byte offset. 	     *	cmpl	check against upper limit. 	     *	jlssu	error if out of bounds. 	     *	shal	to make r0 a 0-origin long offset, 	     *	jmp	and indirect through it. 	     */
+name|putprintf
+argument_list|(
+literal|"	subl2	$%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+operator|(
+name|int
+operator|)
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	cmpl	$%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|ctab
+index|[
+name|count
+index|]
+operator|.
+name|cconst
+operator|-
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jlssu	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+literal|0
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	shal	$2,%s,%s"
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|FORCENAME
+argument_list|,
+operator|(
+name|int
+operator|)
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jmp	*%s%d(%s)"
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|LABELPREFIX
+argument_list|,
+name|fromlabel
+argument_list|,
+operator|(
+name|int
+operator|)
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 	     *	We can use the TAHOE casel instruction with a table 	     *	of short relative offsets. 	     */
+name|putprintf
+argument_list|(
+literal|"	casel	%s,$%d,$%d"
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|FORCENAME
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|ctab
+index|[
+name|count
+index|]
+operator|.
+name|cconst
+operator|-
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	.align 1"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|tahoe
+ifdef|#
+directive|ifdef
 name|mc68000
 comment|/* 	 *	subl	to make d0 a 0-origin byte offset. 	 *	cmpl	check against upper limit. 	 *	bhi	error if out of bounds. 	 */
 name|putprintf
@@ -1727,9 +1911,17 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 comment|/* 	     *	execution continues here if value not in range of case. 	     */
 if|if
 condition|(
@@ -1754,7 +1946,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 block|}
 end_block
 
@@ -1870,9 +2062,17 @@ operator|==
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|putprintf
 argument_list|(
 literal|"	cmpl	%s,$%d"
@@ -1924,7 +2124,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000
@@ -2001,9 +2201,17 @@ operator|)
 name|getlab
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|putprintf
 argument_list|(
 literal|"	cmpl	%s,$%d"
@@ -2061,7 +2269,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000
@@ -2212,9 +2420,17 @@ name|i
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|putprintf
 argument_list|(
 literal|"	cmpl	%s,$%d"
@@ -2258,7 +2474,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000

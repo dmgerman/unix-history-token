@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sconv.c	5.1 (Berkeley) %G%"
+literal|"@(#)sconv.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,11 +214,19 @@ begin_comment
 comment|/*      *	this routine will emit sconv operators when it thinks they are needed.      *	this is code generator specific, rather than machine-specific.      *	this routine takes p2types for arguments, not struct nl *'s.      */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_comment
 comment|/*      *	the vax code genrator is very good, this routine is extremely boring.      */
@@ -324,7 +332,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 end_endif
 
 begin_ifdef

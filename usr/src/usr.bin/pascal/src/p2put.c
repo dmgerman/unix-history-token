@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c	5.3 (Berkeley) %G%"
+literal|"@(#)p2put.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,9 +348,17 @@ decl_stmt|;
 name|int
 name|alignedframesize
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|maxtempreg
 operator|=
 name|sizesp
@@ -364,7 +372,7 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000
@@ -1639,9 +1647,17 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|putprintf
 argument_list|(
 literal|"	.double 0d%.20e"
@@ -1653,7 +1669,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000
@@ -3295,9 +3311,17 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|putprintf
 argument_list|(
 literal|"	jbr	"
@@ -3318,7 +3342,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000

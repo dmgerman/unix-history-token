@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c	5.1 (Berkeley) %G%"
+literal|"@(#)tmps.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,55 @@ begin_endif
 endif|#
 directive|endif
 endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_comment
+comment|/*      *	first pass register declaration constants      */
+end_comment
+
+begin_struct
+struct|struct
+name|regtype
+block|{
+name|long
+name|lowreg
+decl_stmt|;
+name|long
+name|highreg
+decl_stmt|;
+name|long
+name|regsize
+decl_stmt|;
+block|}
+name|regtypes
+index|[
+name|NUMREGTYPES
+index|]
+init|=
+block|{
+block|{
+literal|6
+block|,
+literal|12
+block|,
+literal|4
+block|}
+block|,
+comment|/* r6..r12 */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+endif|tahoe
 end_endif
 
 begin_ifdef
@@ -367,9 +416,17 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 if|if
 condition|(
 name|mode
@@ -457,7 +514,7 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000
@@ -849,9 +906,17 @@ name|change
 init|=
 name|FALSE
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 if|if
 condition|(
 name|restore
@@ -894,7 +959,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 ifdef|#
 directive|ifdef
 name|mc68000
@@ -1034,11 +1099,19 @@ directive|ifdef
 name|PC
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * create a save mask for registers which have been used  * in this level  */
@@ -1123,7 +1196,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 end_endif
 
 begin_endif
