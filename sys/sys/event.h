@@ -76,8 +76,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_TIMER
+value|(-7)
+end_define
+
+begin_comment
+comment|/* timers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|6
+value|7
 end_define
 
 begin_define
