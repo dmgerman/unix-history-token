@@ -1032,6 +1032,9 @@ name|n_type
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -2077,6 +2080,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Can't get kerninfo: %s\n"
@@ -3674,7 +3680,7 @@ name|position
 expr_stmt|;
 if|if
 condition|(
-name|compute_stats
+name|devstat_compute_statistics
 argument_list|(
 operator|&
 name|cur
@@ -3698,22 +3704,12 @@ index|]
 argument_list|,
 name|busy_seconds
 argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+name|DSM_TRANSFERS_PER_SECOND
 argument_list|,
 operator|&
 name|transfers_per_second
 argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+name|DSM_NONE
 argument_list|)
 operator|!=
 literal|0
@@ -3727,6 +3723,9 @@ argument_list|,
 name|devstat_errbuf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%3.0Lf "
@@ -4607,6 +4606,9 @@ name|j
 operator|<
 literal|1024
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%4d  %s"
@@ -4621,6 +4623,9 @@ if|if
 condition|(
 name|first
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%3dK  %s"
@@ -4633,6 +4638,9 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|","
@@ -4645,6 +4653,9 @@ operator|>=
 literal|79
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n\t "
@@ -4665,6 +4676,9 @@ condition|(
 operator|!
 name|first
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -4677,6 +4691,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -4835,12 +4852,18 @@ if|if
 condition|(
 name|first
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"  "
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|","
@@ -4852,6 +4875,9 @@ name|j
 operator|<
 literal|1024
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%d"
@@ -4860,6 +4886,9 @@ name|j
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%dK"
@@ -4874,6 +4903,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
