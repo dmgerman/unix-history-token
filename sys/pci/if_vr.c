@@ -5489,7 +5489,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vr%d: no memory for tx list"
+literal|"vr%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
@@ -5539,7 +5539,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vr%d: no memory for tx list"
+literal|"vr%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
@@ -5853,6 +5853,8 @@ operator|->
 name|vr_nextdesc
 expr_stmt|;
 comment|/* Pack the data into the descriptor. */
+if|if
+condition|(
 name|vr_encap
 argument_list|(
 name|sc
@@ -5861,7 +5863,30 @@ name|cur_tx
 argument_list|,
 name|m_head
 argument_list|)
+condition|)
+block|{
+name|IF_PREPEND
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|m_head
+argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_OACTIVE
+expr_stmt|;
+name|cur_tx
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|cur_tx
