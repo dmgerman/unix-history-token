@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cgsixreg.h	8.2 (Berkeley) %G%  *  * from: $Header: cgsixreg.h,v 1.1 93/10/12 15:29:24 torek Exp $  */
+comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cgsixreg.h	8.3 (Berkeley) %G%  *  * from: $Header: cgsixreg.h,v 1.1 93/10/12 15:29:24 torek Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * CG6 display registers.  (Note, I got tired of writing `cgsix' about  * halfway through and changed everything to cg6, but I probably missed  * some.  Unfortunately, the way config works, we need to spell out `six'  * in some places anyway.)  *  * The cg6 is a complicated beastie.  We have been unable to extract any  * documentation and most of the following are guesses based on a limited  * amount of reverse engineering.  *  * A cg6 is composed of numerous groups of control registers, all with TLAs:  *	FBC - frame buffer control?  *	FHC - fbc hardware configuration / control? register (32 bits)  *	DHC - ???  *	TEC - transform engine control?  *	THC - TEC Hardware Configuration (this is where our action goes)  *	ROM - a 64Kbyte ROM with who knows what in it.  *	colormap - see below  *	frame buffer memory (video RAM)  *	possible other stuff  *  * Like the cg3, the cg6 uses a Brooktree Video DAC (see btreg.h).  *  * Various revisions of the cgsix have various hardware bugs.  So far,  * we have only seen rev 1& 2.  */
+comment|/*  * CG6 display registers.  (Note, I got tired of writing `cgsix' about  * halfway through and changed everything to cg6, but I probably missed  * some.  Unfortunately, the way config works, we need to spell out `six'  * in some places anyway.)  *  * The cg6 is a complicated beastie.  We have been unable to extract any  * documentation and most of the following are guesses based on a limited  * amount of reverse engineering.  *  * A cg6 is composed of numerous groups of control registers, all with TLAs:  *	FBC - frame buffer control?  *	FHC - fbc hardware configuration / control? register (32 bits)  *	DHC - ???  *	TEC - transform engine control?  *	THC - TEC Hardware Configuration  *	ROM - a 64Kbyte ROM with who knows what in it.  *	colormap - see below  *	frame buffer memory (video RAM)  *	possible other stuff  *  * Like the cg3, the cg6 uses a Brooktree Video DAC (see btreg.h).  *  * Various revisions of the cgsix have various hardware bugs.  So far,  * we have only seen rev 1& 2.  */
 end_comment
 
 begin_comment
@@ -523,6 +523,30 @@ comment|/* i.e., USHRT_MAX+1-32 */
 end_comment
 
 begin_comment
+comment|/*  * Partial description of TEC (needed to get around FHC rev 1 bugs).  */
+end_comment
+
+begin_struct
+struct|struct
+name|cg6_tec_xxx
+block|{
+name|u_int
+name|tec_mv
+decl_stmt|;
+comment|/* matrix stuff */
+name|u_int
+name|tec_clip
+decl_stmt|;
+comment|/* clipping stuff */
+name|u_int
+name|tec_vdc
+decl_stmt|;
+comment|/* ??? */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * This structure exists only to compute the layout of the CG6  * hardware.  Each of the individual substructures lives on a  * separate `page' (where a `page' is at least 4K), and many are  * very far apart.  We avoid large offsets (which make for lousy  * code) by using pointers to the individual interesting pieces,  * and map them in independently (to avoid using up PTEs unnecessarily).  */
 end_comment
 
@@ -648,6 +672,10 @@ literal|0x100000
 operator|-
 literal|0x1000
 index|]
+decl_stmt|;
+name|struct
+name|cg6_tec_xxx
+name|un_tec
 decl_stmt|;
 block|}
 name|cg6_tec_un
