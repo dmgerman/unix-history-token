@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd.c	5.5 (Berkeley) %G%"
+literal|"@(#)pwd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -85,7 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -171,6 +177,9 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|p
 operator|=
 name|getcwd
@@ -179,12 +188,24 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -198,27 +219,6 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"pwd: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
