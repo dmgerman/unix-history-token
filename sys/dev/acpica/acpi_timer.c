@@ -515,7 +515,7 @@ name|acpi_timer_timecounter
 operator|.
 name|tc_get_timecount
 operator|=
-name|acpi_timer_get_timecount
+name|acpi_timer_get_timecount_safe
 expr_stmt|;
 name|acpi_timer_timecounter
 operator|.
