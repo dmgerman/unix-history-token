@@ -135,6 +135,16 @@ begin_comment
 comment|/* Symbolic, not hard, link. */
 end_comment
 
+begin_decl_stmt
+name|int
+name|vflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Verbose output. */
+end_comment
+
 begin_comment
 comment|/* System link call. */
 end_comment
@@ -161,6 +171,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|linkch
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -237,7 +253,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fs"
+literal|"fsv"
 argument_list|)
 operator|)
 operator|!=
@@ -266,6 +282,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+name|vflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -288,6 +312,14 @@ condition|?
 name|symlink
 else|:
 name|link
+expr_stmt|;
+name|linkch
+operator|=
+name|sflag
+condition|?
+literal|'-'
+else|:
+literal|'='
 expr_stmt|;
 switch|switch
 condition|(
@@ -657,6 +689,24 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s %c> %s\n"
+argument_list|,
+name|source
+argument_list|,
+name|linkch
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -679,9 +729,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: ln [-fs] file1 file2"
+literal|"usage: ln [-fsv] file1 file2"
 argument_list|,
-literal|"       ln [-fs] file ... directory"
+literal|"       ln [-fsv] file ... directory"
 argument_list|)
 expr_stmt|;
 name|exit
