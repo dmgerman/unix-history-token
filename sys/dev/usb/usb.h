@@ -1821,6 +1821,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|UCLASS_VENDOR_DA
+value|0xfe
+end_define
+
+begin_comment
+comment|/* Doug Ambrisko */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_DA
+value|0xda
+end_define
+
+begin_comment
+comment|/* Doug Ambrisko */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_HUB_MAX_DEPTH
 value|5
 end_define
@@ -2498,6 +2520,13 @@ define|#
 directive|define
 name|USB_GET_REPORT
 value|_IOWR('U', 23, struct usb_ctl_report)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_REPORT
+value|_IOW ('U', 24, struct usb_ctl_report)
 end_define
 
 begin_comment
