@@ -285,6 +285,11 @@ specifier|static
 name|sm_stat_res
 name|res
 decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|claddr
+decl_stmt|;
 specifier|static
 name|int
 name|err
@@ -357,11 +362,27 @@ name|stat_succ
 expr_stmt|;
 else|else
 block|{
+name|claddr
+operator|=
+name|svc_getcaller
+argument_list|(
+name|req
+operator|->
+name|rq_xprt
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"invalid hostname to sm_stat: %s"
+literal|"invalid hostname to sm_stat from %s: %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|claddr
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|,
 name|arg
 operator|->
