@@ -136,14 +136,26 @@ literal|"%s: phase 3: dir %d of %d (%d%%)\n"
 argument_list|,
 name|cdevname
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|inplast
 operator|-
 name|inpindex
 operator|-
 literal|1
+argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|inplast
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|inplast
 operator|-
@@ -155,6 +167,7 @@ operator|*
 literal|100
 operator|/
 name|inplast
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|got_siginfo
@@ -355,6 +368,9 @@ name|pfatal
 argument_list|(
 literal|"ORPHANED DIRECTORY LOOP DETECTED I=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|orphan
 argument_list|)
 expr_stmt|;

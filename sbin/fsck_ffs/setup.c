@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -216,8 +222,6 @@ block|{
 name|long
 name|cg
 decl_stmt|,
-name|size
-decl_stmt|,
 name|asked
 decl_stmt|,
 name|i
@@ -237,6 +241,9 @@ decl_stmt|;
 name|struct
 name|fs
 name|proto
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|havesb
 operator|=

@@ -902,6 +902,9 @@ name|pfatal
 argument_list|(
 literal|"PARTIALLY ALLOCATED INODE I=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;
@@ -1817,12 +1820,21 @@ name|pwarn
 argument_list|(
 literal|"INCORRECT BLOCK COUNT I=%lu (%ld should be %ld)"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|inumber
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dp
 operator|->
 name|di_blocks
 argument_list|,
+operator|(
+name|long
+operator|)
 name|idesc
 operator|->
 name|id_entryno
@@ -1902,7 +1914,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjblkcnt ino %d amount %d\n"
+literal|"adjblkcnt ino %ld amount %ld\n"
 argument_list|,
 operator|(
 name|long
@@ -1956,6 +1968,9 @@ name|pfatal
 argument_list|(
 literal|"UNKNOWN FILE TYPE I=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|inumber
 argument_list|)
 expr_stmt|;
@@ -2180,6 +2195,9 @@ name|pwarn
 argument_list|(
 literal|"EXCESSIVE BAD BLKS I=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|idesc
 operator|->
 name|id_number
@@ -2303,6 +2321,9 @@ name|pwarn
 argument_list|(
 literal|"EXCESSIVE DUP BLKS I=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|idesc
 operator|->
 name|id_number

@@ -2012,7 +2012,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjrefcnt ino %d amt %d\n"
+literal|"adjrefcnt ino %ld amt %ld\n"
 argument_list|,
 operator|(
 name|long
@@ -3035,6 +3035,9 @@ name|pwarn
 argument_list|(
 literal|"DIR I=%lu CONNECTED. "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|orphan
 argument_list|)
 expr_stmt|;

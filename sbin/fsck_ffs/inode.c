@@ -1325,10 +1325,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size: blk %ld, offset %ld, size %ld\n"
+literal|"bad size: blk %ld, offset %i, size %d\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fragnum
 argument_list|(
 operator|&
@@ -2619,7 +2625,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjrefcnt ino %d amt %d\n"
+literal|"adjrefcnt ino %ld amt %ld\n"
 argument_list|,
 operator|(
 name|long
@@ -3094,10 +3100,16 @@ name|pfatal
 argument_list|(
 literal|"%ld %s I=%lu"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 argument_list|,
 name|type
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

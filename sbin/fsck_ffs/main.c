@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -143,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -192,22 +204,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|docheck
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|fstab
-operator|*
-name|fsp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|checkfilesys
 name|__P
 argument_list|(
@@ -215,16 +211,6 @@ operator|(
 name|char
 operator|*
 name|filesys
-operator|,
-name|char
-operator|*
-name|mntpt
-operator|,
-name|long
-name|auxdata
-operator|,
-name|int
-name|child
 operator|)
 argument_list|)
 decl_stmt|;
@@ -587,12 +573,6 @@ argument_list|(
 operator|*
 name|argv
 operator|++
-argument_list|,
-literal|0
-argument_list|,
-literal|0L
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -708,35 +688,11 @@ name|int
 name|checkfilesys
 parameter_list|(
 name|filesys
-parameter_list|,
-name|mntpt
-parameter_list|,
-name|auxdata
-parameter_list|,
-name|child
 parameter_list|)
 name|char
 modifier|*
 name|filesys
-decl_stmt|,
-decl|*
-name|mntpt
 decl_stmt|;
-end_function
-
-begin_decl_stmt
-name|long
-name|auxdata
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|child
-decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ufs_daddr_t
 name|n_ffree
@@ -773,22 +729,6 @@ name|cylno
 decl_stmt|,
 name|size
 decl_stmt|;
-if|if
-condition|(
-name|preen
-operator|&&
-name|child
-condition|)
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|voidquit
-argument_list|)
-expr_stmt|;
 name|cdevname
 operator|=
 name|filesys
@@ -1258,6 +1198,10 @@ name|pwarn
 argument_list|(
 literal|"clean, %ld free "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sblock
 operator|.
 name|fs_cstotal
@@ -1273,6 +1217,7 @@ operator|.
 name|fs_cstotal
 operator|.
 name|cs_nbfree
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1575,10 +1520,13 @@ name|countdirs
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"Reclaimed: %d directories, %d files, %d fragments\n"
+literal|"Reclaimed: %ld directories, %ld files, %d fragments\n"
 argument_list|,
 name|countdirs
 argument_list|,
+operator|(
+name|long
+operator|)
 name|files
 operator|-
 name|countdirs
@@ -1591,10 +1539,20 @@ name|pwarn
 argument_list|(
 literal|"%ld files, %ld used, %ld free "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n_files
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n_blks
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|n_ffree
 operator|+
 name|sblock
@@ -1602,6 +1560,7 @@ operator|.
 name|fs_frag
 operator|*
 name|n_bfree
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2080,7 +2039,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get the mount point information for name.  */

@@ -526,8 +526,15 @@ name|inpp
 operator|-
 name|inpsort
 argument_list|,
+operator|(
+name|int
+operator|)
 name|inplast
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|inpp
 operator|-
@@ -537,6 +544,7 @@ operator|*
 literal|100
 operator|/
 name|inplast
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|got_siginfo

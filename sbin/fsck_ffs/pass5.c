@@ -1434,7 +1434,7 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"BAD STATE %d FOR INODE I=%ld"
+literal|"BAD STATE %d FOR INODE I=%d"
 argument_list|,
 name|inoinfo
 argument_list|(
@@ -2785,7 +2785,7 @@ name|debug
 condition|)
 name|pwarn
 argument_list|(
-literal|"%s %sS %d-%d MARKED USED\n"
+literal|"%s %sS %d-%ld MARKED USED\n"
 argument_list|,
 literal|"UNALLOCATED"
 argument_list|,
@@ -2891,6 +2891,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 name|astart
@@ -2924,6 +2925,7 @@ argument_list|,
 name|aend
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ustart
@@ -2996,7 +2998,7 @@ expr_stmt|;
 else|else
 name|pwarn
 argument_list|(
-literal|"UNALLOCATED %sS %d-%d MARKED USED\n"
+literal|"UNALLOCATED %sS %d-%ld MARKED USED\n"
 argument_list|,
 name|name
 argument_list|,

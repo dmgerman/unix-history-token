@@ -337,8 +337,7 @@ name|dirty
 parameter_list|(
 name|bp
 parameter_list|)
-define|\
-value|if (fswritefd< 0) \ 		pfatal("SETTING DIRTY FLAG IN READ_ONLY MODE\n"); \ 	else \ 		(bp)->b_dirty = 1
+value|do { \ 	if (fswritefd< 0) \ 		pfatal("SETTING DIRTY FLAG IN READ_ONLY MODE\n"); \ 	else \ 		(bp)->b_dirty = 1; \ } while (0)
 end_define
 
 begin_define
@@ -348,8 +347,7 @@ name|initbarea
 parameter_list|(
 name|bp
 parameter_list|)
-define|\
-value|(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs_daddr_t)-1; \ 	(bp)->b_flags = 0;
+value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs_daddr_t)-1; \ 	(bp)->b_flags = 0; \ } while (0)
 end_define
 
 begin_define
@@ -2199,18 +2197,6 @@ operator|(
 name|char
 operator|*
 name|dev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|voidquit
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
