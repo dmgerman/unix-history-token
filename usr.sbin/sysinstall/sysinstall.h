@@ -939,7 +939,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
 name|int
 name|Boolean
 typedef|;
