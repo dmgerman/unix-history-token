@@ -184,6 +184,14 @@ name|ag_entries
 decl_stmt|;
 name|u_int32_t
 modifier|*
+name|ag_virtual
+decl_stmt|;
+comment|/* virtual address of gatt */
+name|vm_offset_t
+name|ag_physical
+decl_stmt|;
+name|u_int32_t
+modifier|*
 name|ag_vdir
 decl_stmt|;
 comment|/* virtual address of page dir */
@@ -191,11 +199,6 @@ name|vm_offset_t
 name|ag_pdir
 decl_stmt|;
 comment|/* physical address of page dir */
-name|u_int32_t
-modifier|*
-name|ag_virtual
-decl_stmt|;
-comment|/* virtual address of gatt */
 block|}
 struct|;
 end_struct
@@ -270,6 +273,8 @@ name|int
 name|i
 decl_stmt|,
 name|npages
+decl_stmt|,
+name|pdir_offset
 decl_stmt|;
 if|if
 condition|(
@@ -313,7 +318,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * The AMD751 uses a page directory to map a non-contiguous 	 * gatt so we don't need to use contigmalloc. 	 */
+comment|/* 	 * The AMD751 uses a page directory to map a non-contiguous 	 * gatt so we don't need to use contigmalloc. 	 * Malloc individual gatt pages and map them into the page 	 * directory. 	 */
 name|gatt
 operator|->
 name|ag_entries
@@ -396,6 +401,15 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|gatt
+operator|->
+name|ag_vdir
+argument_list|,
+name|AGP_PAGE_SIZE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -435,15 +449,6 @@ return|return
 literal|0
 return|;
 block|}
-name|bzero
-argument_list|(
-name|gatt
-operator|->
-name|ag_vdir
-argument_list|,
-name|AGP_PAGE_SIZE
-argument_list|)
-expr_stmt|;
 name|gatt
 operator|->
 name|ag_pdir
@@ -458,18 +463,122 @@ operator|->
 name|ag_vdir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"gatt -> ag_pdir %8x\n"
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|gatt
 operator|->
 name|ag_pdir
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Allocate the gatt pages 	 */
+name|gatt
+operator|->
+name|ag_entries
+operator|=
+name|entries
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"allocating GATT for %d AGP page entries\n"
+argument_list|,
+name|gatt
+operator|->
+name|ag_entries
+argument_list|)
+expr_stmt|;
+name|gatt
+operator|->
+name|ag_virtual
+operator|=
+name|malloc
+argument_list|(
+name|entries
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+argument_list|,
+name|M_AGP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|gatt
+operator|->
+name|ag_virtual
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"allocation failed\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|gatt
+argument_list|,
+name|M_AGP
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|gatt
+operator|->
+name|ag_physical
 operator|=
 name|vtophys
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|gatt
 operator|->
 name|ag_virtual
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map the pages of the GATT into the page directory. 	 */
+comment|/* 	 * Map the pages of the GATT into the page directory. 	 * 	 * The GATT page addresses are mapped into the directory offset by 	 * an amount dependent on the base address of the aperture. This 	 * is and offset into the page directory, not an offset added to 	 * the addresses of the gatt pages. 	 */
+name|pdir_offset
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_AMD751_APBASE
+argument_list|,
+literal|4
+argument_list|)
+operator|>>
+literal|22
+expr_stmt|;
 name|npages
 operator|=
 operator|(
@@ -536,6 +645,8 @@ operator|->
 name|ag_vdir
 index|[
 name|i
+operator|+
+name|pdir_offset
 index|]
 operator|=
 name|pa
@@ -656,6 +767,14 @@ case|:
 return|return
 operator|(
 literal|"AMD 751 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x700c1022
+case|:
+return|return
+operator|(
+literal|"AMD 762 host to AGP bridge"
 operator|)
 return|;
 block|}
@@ -1145,12 +1264,14 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+comment|/*  	 * While the size register is bits 1-3 of APCTRL, bit 0 must be 	 * set for the size value to be 'valid' 	 */
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
 name|AGP_AMD751_APCTRL
 argument_list|,
+operator|(
 operator|(
 operator|(
 name|pci_read_config
@@ -1166,9 +1287,16 @@ operator|~
 literal|0x06
 operator|)
 operator||
+operator|(
+operator|(
 name|vas
 operator|<<
 literal|1
+operator|)
+operator||
+literal|1
+operator|)
+operator|)
 operator|)
 argument_list|,
 literal|1
@@ -1240,6 +1368,12 @@ operator|=
 name|physical
 operator||
 literal|1
+expr_stmt|;
+comment|/* invalidate the cache */
+name|AGP_FLUSH_TLB
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

@@ -258,6 +258,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AGP_AMD751_APBASE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|AGP_AMD751_REGISTERS
 value|0x14
 end_define
