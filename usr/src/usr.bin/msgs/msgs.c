@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.4 %G%"
+literal|"@(#)msgs.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,6 +405,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|bool
+name|tstpflag
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|uid
 decl_stmt|;
@@ -480,6 +488,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|onintr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|onsusp
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1973,6 +1988,23 @@ operator|=
 name|YES
 expr_stmt|;
 comment|/* 		 * Print header 		 */
+name|again
+label|:
+name|tstpflag
+operator|=
+name|NO
+expr_stmt|;
+if|if
+condition|(
+name|totty
+condition|)
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|onsusp
+argument_list|)
+expr_stmt|;
 name|nlines
 operator|=
 literal|2
@@ -2136,6 +2168,25 @@ index|]
 operator|=
 literal|'y'
 expr_stmt|;
+if|if
+condition|(
+name|totty
+condition|)
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Loop if we've been suspended 		 */
+if|if
+condition|(
+name|tstpflag
+condition|)
+goto|goto
+name|again
+goto|;
 name|cmnd
 label|:
 name|in
@@ -2639,6 +2690,46 @@ operator|=
 name|YES
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * We have just gotten a susp.  Suspend and prepare to resume.  */
+end_comment
+
+begin_macro
+name|onsusp
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|tstpflag
+operator|=
+name|YES
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|kill
+argument_list|(
+literal|0
+argument_list|,
+name|SIGTSTP
+argument_list|)
+expr_stmt|;
+comment|/* the pc stops here */
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|onsusp
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
