@@ -2800,7 +2800,7 @@ name|mnt_syncer
 operator|!=
 name|NULL
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|mp
 operator|->
@@ -4552,7 +4552,7 @@ name|mnt_syncer
 operator|!=
 name|NULL
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|mp
 operator|->
@@ -5490,7 +5490,7 @@ name|mnt_syncer
 operator|!=
 name|NULL
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|mp
 operator|->
