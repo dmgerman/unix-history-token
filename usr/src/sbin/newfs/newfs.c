@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.34 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2301,7 +2301,7 @@ if|if
 condition|(
 name|minfree
 operator|<
-literal|10
+name|MINFREE
 operator|&&
 name|opt
 operator|!=
@@ -2319,7 +2319,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"because minfree is less than 10%%\n"
+literal|"because minfree is less than %d%%\n"
+argument_list|,
+name|MINFREE
 argument_list|)
 expr_stmt|;
 name|opt
@@ -3351,6 +3353,16 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-N do not create file system, just print out parameters\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-O create a 4.3BSD format filesystem\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
