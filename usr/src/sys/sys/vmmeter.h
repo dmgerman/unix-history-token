@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vmmeter.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vmmeter.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -197,39 +197,39 @@ name|short
 name|t_sw
 decl_stmt|;
 comment|/* swapped out runnable/short block jobs */
-name|int
+name|long
 name|t_vm
 decl_stmt|;
 comment|/* total virtual memory */
-name|int
+name|long
 name|t_avm
 decl_stmt|;
 comment|/* active virtual memory */
-name|short
+name|long
 name|t_rm
 decl_stmt|;
 comment|/* total real memory in use */
-name|short
+name|long
 name|t_arm
 decl_stmt|;
 comment|/* active real memory */
-name|int
+name|long
 name|t_vmtxt
 decl_stmt|;
 comment|/* virtual memory used by text */
-name|int
+name|long
 name|t_avmtxt
 decl_stmt|;
 comment|/* active virtual memory used by text */
-name|short
+name|long
 name|t_rmtxt
 decl_stmt|;
 comment|/* real memory used by text */
-name|short
+name|long
 name|t_armtxt
 decl_stmt|;
 comment|/* active real memory used by text */
-name|short
+name|long
 name|t_free
 decl_stmt|;
 comment|/* free memory pages */
