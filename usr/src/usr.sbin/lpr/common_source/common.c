@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	8.2 (Berkeley) %G%"
+literal|"@(#)common.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,6 +1265,10 @@ operator|>
 name|arraysz
 condition|)
 block|{
+name|arraysz
+operator|*=
+literal|2
+expr_stmt|;
 name|queue
 operator|=
 operator|(
@@ -1281,13 +1285,7 @@ operator|*
 operator|)
 name|queue
 argument_list|,
-operator|(
-name|stbuf
-operator|.
-name|st_size
-operator|/
-literal|12
-operator|)
+name|arraysz
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1633,7 +1631,7 @@ block|}
 comment|/* 		 * if the two hosts are not the same, 		 * then the printer must be remote. 		 */
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|name
 argument_list|,
@@ -1650,11 +1648,7 @@ literal|1
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 return|;
 block|}
 end_function

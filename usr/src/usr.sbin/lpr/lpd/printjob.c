@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	8.2 (Berkeley) %G%"
+literal|"@(#)printjob.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,7 +812,7 @@ name|i
 decl_stmt|,
 name|nitems
 decl_stmt|;
-name|long
+name|off_t
 name|pidoff
 decl_stmt|;
 name|int
@@ -1264,9 +1264,6 @@ name|lseek
 argument_list|(
 name|lfd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|pidoff
 argument_list|,
 literal|0
@@ -2797,6 +2794,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* pipe is stdout */
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -3527,6 +3527,9 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -4255,10 +4258,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%c%qd %s\n"
+literal|"%c%ld %s\n"
 argument_list|,
 name|type
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stb
 operator|.
 name|st_size
@@ -5436,6 +5442,9 @@ index|]
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|closelog
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -6942,6 +6951,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* printer is std out */
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i

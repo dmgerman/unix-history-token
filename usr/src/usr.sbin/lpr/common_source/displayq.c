@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	8.1 (Berkeley) %G%"
+literal|"@(#)displayq.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,8 +745,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-operator|*
-name|cp
+name|i
 operator|=
 name|getc
 argument_list|(
@@ -756,13 +755,15 @@ operator|)
 operator|!=
 name|EOF
 operator|&&
-operator|*
-name|cp
+name|i
 operator|!=
 literal|'\n'
 condition|)
+operator|*
 name|cp
 operator|++
+operator|=
+name|i
 expr_stmt|;
 operator|*
 name|cp
@@ -804,8 +805,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-operator|*
-name|cp
+name|i
 operator|=
 name|getc
 argument_list|(
@@ -815,13 +815,15 @@ operator|)
 operator|!=
 name|EOF
 operator|&&
-operator|*
-name|cp
+name|i
 operator|!=
 literal|'\n'
 condition|)
+operator|*
 name|cp
 operator|++
+operator|=
+name|i
 expr_stmt|;
 operator|*
 name|cp
@@ -2083,8 +2085,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" %qd bytes"
+literal|" %ld bytes"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|lbuf
 operator|.
 name|st_size
