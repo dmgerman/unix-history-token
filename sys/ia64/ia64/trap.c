@@ -2240,12 +2240,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 		 * It is only a kernel address space fault iff: 		 *	1. !user and 		 *	2. pcb_onfault not set or 		 *	3. pcb_onfault set but kernel space data fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 * 		 * For the purposes of the Linux emulator, we allow 		 * kernel accesses to a small region of the 		 * user stack which the emulator uses to 		 * translate syscall arguments. 		 */
 if|if
 condition|(
@@ -2401,24 +2395,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Grow the stack if necessary 			 */
-comment|/* vm_map_growstack fails only if va falls into 			 * a growable stack region and the stack growth 			 * fails.  It succeeds if va was not within 			 * a growable stack region, or if the stack  			 * growth succeeded. 			 */
-if|if
-condition|(
-name|vm_map_growstack
-argument_list|(
-name|p
-argument_list|,
-name|va
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-condition|)
-name|rv
-operator|=
-name|KERN_FAILURE
-expr_stmt|;
-else|else
 comment|/* Fault in the user page: */
 name|rv
 operator|=
@@ -2474,12 +2450,6 @@ name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rv
