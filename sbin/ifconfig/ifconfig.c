@@ -1975,6 +1975,20 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* no arguments is equivalent to '-a' */
+if|if
+condition|(
+operator|!
+name|namesonly
+operator|&&
+name|argc
+operator|<
+literal|1
+condition|)
+name|all
+operator|=
+literal|1
+expr_stmt|;
 comment|/* -a and -l allow an address family arg to limit the output */
 if|if
 condition|(
