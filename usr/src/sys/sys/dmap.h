@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmap.h	6.1	83/07/29	*/
+comment|/*	dmap.h	6.2	85/03/07	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|NDMAP
-value|16
+value|38
 end_define
 
 begin_comment
