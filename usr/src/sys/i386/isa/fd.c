@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.386.c%  *  *	@(#)fd.c	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.386.c%  *  *	@(#)fd.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"disk.h"
 end_include
 
 begin_include
