@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.3 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.4 %G%"; */
 end_comment
 
 begin_comment
@@ -114,7 +114,7 @@ value|( ( 1<< 15 ) | ( 1<< 14 ) )
 end_define
 
 begin_comment
-comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	    FORMALPREFIX	prefix for EXTFORMAT for formal entry points.      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
+comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    LABELFORMAT		for label names, a preceding dollar-sign.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	    FORMALPREFIX	prefix for EXTFORMAT for formal entry points.      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
 end_comment
 
 begin_define
@@ -129,6 +129,13 @@ define|#
 directive|define
 name|EXTFORMAT
 value|"_%s"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LABELFORMAT
+value|"$%s"
 end_define
 
 begin_define
