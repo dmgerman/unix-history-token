@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.3 %G%"
+literal|"@(#)func.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2640,6 +2640,31 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'#'
+condition|)
+do|do
+name|c
+operator|=
+name|readc
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|c
+operator|>=
+literal|0
+operator|&&
+name|c
+operator|!=
+literal|'\n'
+condition|)
+do|;
 if|if
 condition|(
 name|c
