@@ -645,6 +645,27 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Sony Memory Stick adapter MSAC-US1, 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Sony"
+block|,
+literal|"MSAC-US1"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 * do not support READ_6 commands, only READ_10.  		 */
 block|{
 name|T_DIRECT
 block|,
@@ -659,6 +680,8 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
 block|}
 block|}
 decl_stmt|;
