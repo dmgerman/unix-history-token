@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.14 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,18 +55,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -120,6 +108,24 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -198,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|BOOTDIR
-value|"/usr/mdec"
+value|_PATH_BOOTDIR
 end_define
 
 begin_comment
@@ -236,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|DEFEDITOR
-value|"/usr/ucb/vi"
+value|_PATH_EDITOR
 end_define
 
 begin_define
