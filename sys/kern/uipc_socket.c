@@ -3936,7 +3936,7 @@ operator|.
 name|sb_cc
 argument_list|,
 operator|(
-literal|"receive: m == %p so->so_rcv.sb_cc == %lu"
+literal|"receive: m == %p so->so_rcv.sb_cc == %u"
 operator|,
 name|m
 operator|,
