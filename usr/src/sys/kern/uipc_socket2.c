@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket2.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket2.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1740,13 +1740,6 @@ operator|*
 name|asa
 argument_list|)
 expr_stmt|;
-name|sballoc
-argument_list|(
-name|sb
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rights0
@@ -1801,6 +1794,13 @@ name|m_next
 argument_list|)
 expr_stmt|;
 block|}
+name|sballoc
+argument_list|(
+name|sb
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
