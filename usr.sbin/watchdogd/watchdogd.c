@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/types.h>
 end_include
 
 begin_expr_stmt
@@ -24,13 +24,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/rtprio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -48,18 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rtprio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -67,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -84,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sysexits.h>
 end_include
 
@@ -97,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_function_decl
@@ -312,9 +294,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit
+name|errx
 argument_list|(
 name|EX_SOFTWARE
+argument_list|,
+literal|"unable to initialize watchdog"
 argument_list|)
 expr_stmt|;
 if|if
@@ -500,16 +484,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not find reset OID: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"could not find reset OID"
 argument_list|)
 expr_stmt|;
 return|return
@@ -689,11 +666,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not %s watchdog: %s\n"
+literal|"could not %s watchdog"
 argument_list|,
 operator|(
 name|onoff
@@ -704,11 +679,6 @@ condition|?
 literal|"enable"
 else|:
 literal|"disable"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
