@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.7 89/04/11$  *  *	@(#)hpux_tty.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.7 89/04/11$  *  *	@(#)hpux_tty.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -90,26 +90,6 @@ include|#
 directive|include
 file|"hpux_termio.h"
 end_include
-
-begin_comment
-comment|/*  * XXX should just include syscontext.h but RETURN definition clashes  * with defined constant in tty.h  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|RETURN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|value
-parameter_list|)
-value|{ u.u_error = (value); return (u.u_error); }
-end_define
 
 begin_decl_stmt
 name|char
@@ -1680,8 +1660,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|getsettty
 argument_list|(
 name|uap
@@ -1694,8 +1674,8 @@ name|uap
 operator|->
 name|cmarg
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1743,8 +1723,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|getsettty
 argument_list|(
 name|uap
@@ -1757,8 +1737,8 @@ name|uap
 operator|->
 name|cmarg
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
