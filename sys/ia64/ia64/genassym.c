@@ -302,14 +302,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|MTX_SAVEPSR
+name|MTX_SAVEINTR
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|mtx
 argument_list|,
-name|mtx_savepsr
+name|mtx_saveintr
 argument_list|)
 argument_list|)
 expr_stmt|;
