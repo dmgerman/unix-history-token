@@ -466,22 +466,13 @@ parameter_list|)
 block|{
 name|device_t
 name|dev
-init|=
-name|context
 decl_stmt|;
-name|ACPI_VPRINT
-argument_list|(
 name|dev
-argument_list|,
-name|acpi_device_get_parent_softc
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"Notify 0x%x\n"
-argument_list|,
-name|notify
-argument_list|)
+operator|=
+operator|(
+name|device_t
+operator|)
+name|context
 expr_stmt|;
 switch|switch
 condition|(
@@ -509,6 +500,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unknown notify %#x\n"
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}

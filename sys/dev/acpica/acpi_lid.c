@@ -375,7 +375,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Install notification handler */
+comment|/*      * If a system does not get lid events, it may make sense to change      * the type to ACPI_ALL_NOTIFY.  Some systems generate both a wake and      * runtime notify in that case though.      */
 name|AcpiInstallNotifyHandler
 argument_list|(
 name|sc
@@ -641,13 +641,6 @@ name|struct
 name|acpi_lid_softc
 modifier|*
 name|sc
-init|=
-operator|(
-expr|struct
-name|acpi_lid_softc
-operator|*
-operator|)
-name|context
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
@@ -662,6 +655,15 @@ name|__func__
 argument_list|,
 name|notify
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|acpi_lid_softc
+operator|*
+operator|)
+name|context
 expr_stmt|;
 switch|switch
 condition|(
@@ -682,6 +684,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|lid_dev
+argument_list|,
+literal|"unknown notify %#x\n"
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|return_VOID

@@ -599,7 +599,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|void
+name|uint32_t
 name|EcGpeHandler
 parameter_list|(
 name|void
@@ -1648,11 +1648,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|int
-name|errval
-init|=
-literal|0
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -1798,12 +1793,8 @@ argument_list|,
 literal|"can't allocate data port\n"
 argument_list|)
 expr_stmt|;
-name|errval
-operator|=
-name|ENXIO
-expr_stmt|;
 goto|goto
-name|out
+name|error
 goto|;
 block|}
 name|sc
@@ -1870,12 +1861,8 @@ argument_list|,
 literal|"can't allocate command/status port\n"
 argument_list|)
 expr_stmt|;
-name|errval
-operator|=
-name|ENXIO
-expr_stmt|;
 goto|goto
-name|out
+name|error
 goto|;
 block|}
 name|sc
@@ -1957,12 +1944,8 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|errval
-operator|=
-name|ENXIO
-expr_stmt|;
 goto|goto
-name|out
+name|error
 goto|;
 block|}
 comment|/*       * Install address space handler      */
@@ -2021,9 +2004,14 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+comment|/* Enable runtime GPEs for the handler. */
 name|Status
 operator|=
-name|AcpiRemoveGpeHandler
+name|AcpiSetGpeType
 argument_list|(
 name|sc
 operator|->
@@ -2033,8 +2021,7 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-operator|&
-name|EcGpeHandler
+name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -2044,17 +2031,60 @@ argument_list|(
 name|Status
 argument_list|)
 condition|)
-name|panic
+block|{
+name|device_printf
 argument_list|(
-literal|"Added GPE handler but can't remove it"
+name|dev
+argument_list|,
+literal|"AcpiSetGpeType failed: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|errval
+goto|goto
+name|error
+goto|;
+block|}
+name|Status
 operator|=
-name|ENXIO
+name|AcpiEnableGpe
+argument_list|(
+name|sc
+operator|->
+name|ec_gpehandle
+argument_list|,
+name|sc
+operator|->
+name|ec_gpebit
+argument_list|,
+name|ACPI_NOT_ISR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"AcpiEnableGpe failed: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
 expr_stmt|;
 goto|goto
-name|out
+name|error
 goto|;
 block|}
 name|ACPI_DEBUG_PRINT
@@ -2071,8 +2101,33 @@ operator|(
 literal|0
 operator|)
 return|;
-name|out
+name|error
 label|:
+name|AcpiRemoveGpeHandler
+argument_list|(
+name|sc
+operator|->
+name|ec_gpehandle
+argument_list|,
+name|sc
+operator|->
+name|ec_gpebit
+argument_list|,
+operator|&
+name|EcGpeHandler
+argument_list|)
+expr_stmt|;
+name|AcpiRemoveAddressSpaceHandler
+argument_list|(
+name|sc
+operator|->
+name|ec_handle
+argument_list|,
+name|ACPI_ADR_SPACE_EC
+argument_list|,
+name|EcSpaceHandler
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -2129,7 +2184,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errval
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -2418,7 +2473,9 @@ name|Status
 operator|=
 name|AcpiEnableGpe
 argument_list|(
-name|NULL
+name|sc
+operator|->
+name|ec_gpehandle
 argument_list|,
 name|sc
 operator|->
@@ -2448,7 +2505,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|uint32_t
 name|EcGpeHandler
 parameter_list|(
 name|void
@@ -2480,13 +2537,15 @@ expr_stmt|;
 comment|/* Disable further GPEs while we handle this one. */
 name|AcpiDisableGpe
 argument_list|(
-name|NULL
+name|sc
+operator|->
+name|ec_gpehandle
 argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_ISR
+name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
 comment|/* Schedule the GPE query handler. */
@@ -2518,13 +2577,15 @@ name|Status
 operator|=
 name|AcpiEnableGpe
 argument_list|(
-name|NULL
+name|sc
+operator|->
+name|ec_gpehandle
 argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_ISR
+name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2540,6 +2601,11 @@ literal|"EcGpeHandler: AcpiEnableEvent failed\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
