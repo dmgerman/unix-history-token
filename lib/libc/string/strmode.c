@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strmode.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)strmode.c	8.3 (Berkeley) 8/15/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,6 +159,22 @@ name|p
 operator|++
 operator|=
 literal|'p'
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|S_IFWHT
+case|case
+name|S_IFWHT
+case|:
+comment|/* whiteout */
+operator|*
+name|p
+operator|++
+operator|=
+literal|'w'
 expr_stmt|;
 break|break;
 endif|#

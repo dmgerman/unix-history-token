@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	8.4 (Berkeley) 3/18/94"
+literal|"@(#)syslog.c	8.5 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,6 +405,7 @@ comment|/* Check priority against setlogmask values. */
 if|if
 condition|(
 operator|!
+operator|(
 name|LOG_MASK
 argument_list|(
 name|LOG_PRI
@@ -414,6 +415,7 @@ argument_list|)
 argument_list|)
 operator|&
 name|LogMask
+operator|)
 condition|)
 return|return;
 name|saved_errno
