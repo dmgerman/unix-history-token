@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1624,7 +1624,7 @@ name|p
 operator|->
 name|p_sigacts
 decl_stmt|;
-comment|/* 	 * When returning from sigpause, we want 	 * the old mask to be restored after the 	 * signal handler has finished.  Thus, we 	 * save it here and mark the proc structure 	 * to indicate this (should be in sigacts). 	 */
+comment|/* 	 * When returning from sigpause, we want 	 * the old mask to be restored after the 	 * signal handler has finished.  Thus, we 	 * save it here and mark the sigacts structure 	 * to indicate this. 	 */
 name|ps
 operator|->
 name|ps_oldmask
