@@ -177,6 +177,9 @@ name|mip
 operator|->
 name|mapoff
 operator|+
+operator|(
+name|off_t
+operator|)
 name|mip
 operator|->
 name|maplen
@@ -324,6 +327,9 @@ name|TAILMAPLEN
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|off_t
+operator|)
 name|mip
 operator|->
 name|maplen

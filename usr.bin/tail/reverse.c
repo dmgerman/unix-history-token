@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -355,6 +361,9 @@ name|map
 operator|.
 name|mapoff
 operator|+
+operator|(
+name|off_t
+operator|)
 name|map
 operator|.
 name|maplen
@@ -843,8 +852,11 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"warning: %qd bytes discarded"
+literal|"warning: %jd bytes discarded"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|enomem
 argument_list|)
 expr_stmt|;
