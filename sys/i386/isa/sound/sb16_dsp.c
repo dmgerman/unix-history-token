@@ -2145,7 +2145,7 @@ index|[
 name|my_dev
 index|]
 operator|=
-literal|1
+name|DSP_BUFFCOUNT
 expr_stmt|;
 name|sound_buffsizes
 index|[
