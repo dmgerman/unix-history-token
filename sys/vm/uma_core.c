@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -89,6 +83,18 @@ begin_include
 include|#
 directive|include
 file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/types.h>
 end_include
 
 begin_include
@@ -153,7 +159,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|uma_zone
-name|master_zone
+name|masterzone
 decl_stmt|;
 end_decl_stmt
 
@@ -163,7 +169,7 @@ name|uma_zone_t
 name|zones
 init|=
 operator|&
-name|master_zone
+name|masterzone
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +203,19 @@ begin_decl_stmt
 specifier|static
 name|uma_zone_t
 name|bucketzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Are we allowed to allocate buckets?  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bucketdisable
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -639,6 +658,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|bucket_enable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|uma_print_zone
 parameter_list|(
@@ -709,6 +738,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * This routine checks to see whether or not it's safe to enable buckets.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bucket_enable
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|cnt
+operator|.
+name|v_free_count
+operator|<
+name|cnt
+operator|.
+name|v_free_min
+condition|)
+name|bucketdisable
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|bucketdisable
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Routine called by timeout which is used to fire off some time interval  * based calculations.  (working set, stats, etc.)  *  * Arguments:  *	arg   Unused  *   * Returns:  *	Nothing  */
 end_comment
 
@@ -722,6 +785,9 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+name|bucket_enable
+argument_list|()
+expr_stmt|;
 name|zone_foreach
 argument_list|(
 name|zone_timeout
@@ -4272,6 +4338,9 @@ name|booted
 operator|=
 literal|1
 expr_stmt|;
+name|bucket_enable
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG
@@ -5031,8 +5100,7 @@ expr_stmt|;
 comment|/* 	 * This is to stop us from allocating per cpu buckets while we're 	 * running out of UMA_BOOT_PAGES.  Otherwise, we would exhaust the 	 * boot pages. 	 */
 if|if
 condition|(
-operator|!
-name|booted
+name|bucketdisable
 operator|&&
 name|zone
 operator|==
@@ -6786,6 +6854,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|bucket_enable
+argument_list|()
+expr_stmt|;
 name|zone_foreach
 argument_list|(
 name|zone_drain
