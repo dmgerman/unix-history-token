@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.6 (Berkeley) %G%"
+literal|"@(#)ls.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -874,6 +874,9 @@ operator||=
 name|FTS_COMFOLLOW
 expr_stmt|;
 comment|/* 	 * If -W, show whiteout entries 	 */
+ifdef|#
+directive|ifdef
+name|FTS_WHITEOUT
 if|if
 condition|(
 name|f_whiteout
@@ -882,6 +885,8 @@ name|fts_options
 operator||=
 name|FTS_WHITEOUT
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* If -l or -s, figure out block size. */
 if|if
 condition|(
