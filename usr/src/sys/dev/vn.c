@@ -1,26 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: fd.c 1.1 90/07/09$  *  *	@(#)vn.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.1 91/04/30$  *  *	@(#)vn.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * CURRENTLY BROKEN; the name "fd" collides with /dev/fd/xxx.  * This would need to be converted to the new proc/user layout as well.  */
-end_comment
-
-begin_comment
-comment|/*  * File (vnode) disk driver.  *  * Block/character interface to a vnode.  Note that this uses the  * VOP_BMAP/VOP_STRATEGY interface to the vnode instead of a simple  * VOP_RDWR.  We do this to avoid distorting the local buffer cache.  *  * NOTE: There is a security issue involved with this driver.  * Once mounted all access to the contents of the "mapped" file via  * the special file is controlled by the permissions on the special  * file, the protection of the mapped file is ignored (effectively,  * by using root credentials in all transactions).  */
+comment|/*  * Vnode disk driver.  *  * Block/character interface to a vnode.  Allows one to treat a file  * as a disk (e.g. build a filesystem in it, mount it, etc.).  *  * NOTE 1: This uses the VOP_BMAP/VOP_STRATEGY interface to the vnode  * instead of a simple VOP_RDWR.  We do this to avoid distorting the  * local buffer cache.  *  * NOTE 2: There is a security issue involved with this driver.  * Once mounted all access to the contents of the "mapped" file via  * the special file is controlled by the permissions on the special  * file, the protection of the mapped file is ignored (effectively,  * by using root credentials in all transactions).  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"fd.h"
+file|"vn.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NFD
+name|NVN
 operator|>
 literal|0
 end_if
@@ -40,7 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|"sys/namei.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/proc.h"
 end_include
 
 begin_include
@@ -58,25 +60,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sys/buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/malloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/vfs.h"
+file|"sys/mount.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"sys/vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/specdev.h"
 end_include
 
 begin_include
@@ -94,13 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fdioctl.h"
+file|"vnioctl.h"
 end_include
 
 begin_ifdef
@@ -111,7 +119,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|fddebug
+name|vndebug
 init|=
 literal|0x00
 decl_stmt|;
@@ -120,21 +128,21 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|FDB_INIT
+name|VDB_INIT
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|FDB_IO
+name|VDB_IO
 value|0x04
 end_define
 
@@ -146,9 +154,9 @@ end_endif
 begin_decl_stmt
 name|struct
 name|buf
-name|fdbuf
+name|vnbuf
 index|[
-name|NFD
+name|NVN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -156,9 +164,9 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|buf
-name|fdtab
+name|vntab
 index|[
-name|NFD
+name|NVN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -173,7 +181,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|fdunit
+name|vnunit
 parameter_list|(
 name|x
 parameter_list|)
@@ -187,7 +195,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|getfdbuf
+name|getvnbuf
 parameter_list|()
 define|\
 value|((struct buf *)malloc(sizeof(struct buf), M_DEVBUF, M_WAITOK))
@@ -196,7 +204,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|putfdbuf
+name|putvnbuf
 parameter_list|(
 name|bp
 parameter_list|)
@@ -206,7 +214,7 @@ end_define
 
 begin_struct
 struct|struct
-name|fd_softc
+name|vn_softc
 block|{
 name|int
 name|sc_flags
@@ -215,7 +223,7 @@ comment|/* flags */
 name|size_t
 name|sc_size
 decl_stmt|;
-comment|/* size of fd */
+comment|/* size of vn */
 name|struct
 name|vnode
 modifier|*
@@ -233,9 +241,9 @@ name|sc_maxactive
 decl_stmt|;
 comment|/* max # of active requests */
 block|}
-name|fd_softc
+name|vn_softc
 index|[
-name|NFD
+name|NVN
 index|]
 struct|;
 end_struct
@@ -247,38 +255,47 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDF_ALIVE
+name|VNF_ALIVE
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|FDF_INITED
+name|VNF_INITED
 value|0x02
 end_define
 
-begin_macro
-name|fdopen
-argument_list|(
-argument|dev
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|vnopen
+parameter_list|(
+name|dev
+parameter_list|,
+name|flags
+parameter_list|,
+name|mode
+parameter_list|,
+name|p
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|flags
+decl_stmt|,
+name|mode
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 block|{
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|dev
 argument_list|)
@@ -288,17 +305,21 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"fdopen(%x, %x)\n"
+literal|"vnopen(%x, %x, %x, %x)\n"
 argument_list|,
 name|dev
 argument_list|,
 name|flags
+argument_list|,
+name|mode
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -307,7 +328,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NFD
+name|NVN
 condition|)
 return|return
 operator|(
@@ -320,14 +341,14 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Break the request into bsize pieces and submit using VOP_BMAP/VOP_STRATEGY.  * Note that this driver can only be used for swapping over NFS on the hp  * since nfs_strategy on the vax cannot handle u-areas and page tables.  */
 end_comment
 
 begin_expr_stmt
-name|fdstrategy
+name|vnstrategy
 argument_list|(
 name|bp
 argument_list|)
@@ -344,7 +365,7 @@ block|{
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|bp
 operator|->
@@ -353,12 +374,12 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|fd_softc
+name|vn_softc
 modifier|*
-name|fs
+name|vn
 init|=
 operator|&
-name|fd_softc
+name|vn_softc
 index|[
 name|unit
 index|]
@@ -388,7 +409,7 @@ name|flags
 decl_stmt|;
 specifier|extern
 name|int
-name|fdiodone
+name|vniodone
 parameter_list|()
 function_decl|;
 ifdef|#
@@ -396,13 +417,13 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"fdstrategy(%x): unit %d\n"
+literal|"vnstrategy(%x): unit %d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -414,11 +435,11 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator|&
-name|FDF_INITED
+name|VNF_INITED
 operator|)
 operator|==
 literal|0
@@ -436,7 +457,7 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-name|iodone
+name|biodone
 argument_list|(
 name|bp
 argument_list|)
@@ -478,7 +499,7 @@ name|bn
 operator|+
 name|sz
 operator|>
-name|fs
+name|vn
 operator|->
 name|sc_size
 condition|)
@@ -487,7 +508,7 @@ if|if
 condition|(
 name|bn
 operator|!=
-name|fs
+name|vn
 operator|->
 name|sc_size
 condition|)
@@ -505,7 +526,7 @@ operator||=
 name|B_ERROR
 expr_stmt|;
 block|}
-name|iodone
+name|biodone
 argument_list|(
 name|bp
 argument_list|)
@@ -521,13 +542,15 @@ argument_list|)
 expr_stmt|;
 name|bsize
 operator|=
-name|fs
+name|vn
 operator|->
 name|sc_vp
 operator|->
-name|v_vfsp
+name|v_mount
 operator|->
-name|vfs_bsize
+name|mnt_stat
+operator|.
+name|f_bsize
 expr_stmt|;
 name|addr
 operator|=
@@ -575,7 +598,7 @@ name|s
 decl_stmt|;
 name|nbp
 operator|=
-name|getfdbuf
+name|getvnbuf
 argument_list|()
 expr_stmt|;
 name|off
@@ -600,7 +623,7 @@ name|void
 operator|)
 name|VOP_BMAP
 argument_list|(
-name|fs
+name|vn
 operator|->
 name|sc_vp
 argument_list|,
@@ -620,15 +643,15 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_IO
+name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"fdstrategy: vp %x/%x bn %x/%x dev %x\n"
+literal|"vnstrategy: vp %x/%x bn %x/%x\n"
 argument_list|,
-name|fs
+name|vn
 operator|->
 name|sc_vp
 argument_list|,
@@ -637,10 +660,6 @@ argument_list|,
 name|bn
 argument_list|,
 name|nbn
-argument_list|,
-name|vp
-operator|->
-name|v_rdev
 argument_list|)
 expr_stmt|;
 endif|#
@@ -671,6 +690,20 @@ name|b_error
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VBLK
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
 name|nbp
 operator|->
 name|b_dev
@@ -678,6 +711,13 @@ operator|=
 name|vp
 operator|->
 name|v_rdev
+expr_stmt|;
+else|else
+name|nbp
+operator|->
+name|b_dev
+operator|=
+name|NODEV
 expr_stmt|;
 name|nbp
 operator|->
@@ -710,7 +750,7 @@ name|nbp
 operator|->
 name|b_iodone
 operator|=
-name|fdiodone
+name|vniodone
 expr_stmt|;
 name|nbp
 operator|->
@@ -745,7 +785,7 @@ expr_stmt|;
 name|disksort
 argument_list|(
 operator|&
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
@@ -755,19 +795,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
 operator|.
 name|b_active
 operator|<
-name|fs
+name|vn
 operator|->
 name|sc_maxactive
 condition|)
 block|{
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
@@ -775,7 +815,7 @@ operator|.
 name|b_active
 operator|++
 expr_stmt|;
-name|fdstart
+name|vnstart
 argument_list|(
 name|unit
 argument_list|)
@@ -803,7 +843,7 @@ comment|/*  * Feed requests sequentially.  * We do it this way to keep from floo
 end_comment
 
 begin_macro
-name|fdstart
+name|vnstart
 argument_list|(
 argument|unit
 argument_list|)
@@ -813,12 +853,12 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|fd_softc
+name|vn_softc
 modifier|*
-name|fs
+name|vn
 init|=
 operator|&
-name|fd_softc
+name|vn_softc
 index|[
 name|unit
 index|]
@@ -832,14 +872,14 @@ decl_stmt|;
 comment|/* 	 * Dequeue now since lower level strategy routine might 	 * queue using same links 	 */
 name|bp
 operator|=
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
 operator|.
 name|b_actf
 expr_stmt|;
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
@@ -855,13 +895,13 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_IO
+name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"fdstart(%d): bp %x vp %x blkno %x addr %x cnt %x\n"
+literal|"vnstart(%d): bp %x vp %x blkno %x addr %x cnt %x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -897,7 +937,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|fdiodone
+name|vniodone
 argument_list|(
 name|bp
 argument_list|)
@@ -931,7 +971,7 @@ specifier|register
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|pbp
 operator|->
@@ -951,13 +991,13 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_IO
+name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"fdiodone(%d): bp %x vp %x blkno %x addr %x cnt %x\n"
+literal|"vniodone(%d): bp %x vp %x blkno %x addr %x cnt %x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -996,13 +1036,13 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_IO
+name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"fdiodone: bp %x error %d\n"
+literal|"vniodone: bp %x error %d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -1023,7 +1063,7 @@ name|pbp
 operator|->
 name|b_error
 operator|=
-name|geterror
+name|biowait
 argument_list|(
 name|bp
 argument_list|)
@@ -1037,7 +1077,7 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
-name|putfdbuf
+name|putvnbuf
 argument_list|(
 name|bp
 argument_list|)
@@ -1056,20 +1096,20 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_IO
+name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"fdiodone: pbp %x iodone\n"
+literal|"vniodone: pbp %x iodone\n"
 argument_list|,
 name|pbp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|iodone
+name|biodone
 argument_list|(
 name|pbp
 argument_list|)
@@ -1077,20 +1117,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
 operator|.
 name|b_actf
 condition|)
-name|fdstart
+name|vnstart
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
 else|else
-name|fdtab
+name|vntab
 index|[
 name|unit
 index|]
@@ -1107,11 +1147,15 @@ block|}
 end_block
 
 begin_macro
-name|fdread
+name|vnread
 argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flags
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1129,13 +1173,27 @@ name|uio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|dev
 argument_list|)
@@ -1145,17 +1203,21 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"fdread(%x, %x)\n"
+literal|"vnread(%x, %x, %x, %x)\n"
 argument_list|,
 name|dev
 argument_list|,
 name|uio
+argument_list|,
+name|flags
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1164,10 +1226,10 @@ return|return
 operator|(
 name|physio
 argument_list|(
-name|fdstrategy
+name|vnstrategy
 argument_list|,
 operator|&
-name|fdbuf
+name|vnbuf
 index|[
 name|unit
 index|]
@@ -1186,11 +1248,15 @@ block|}
 end_block
 
 begin_macro
-name|fdwrite
+name|vnwrite
 argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flags
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1208,13 +1274,27 @@ name|uio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|dev
 argument_list|)
@@ -1224,17 +1304,21 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"fdwrite(%x, %x)\n"
+literal|"vnwrite(%x, %x, %x, %x)\n"
 argument_list|,
 name|dev
 argument_list|,
 name|uio
+argument_list|,
+name|flags
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1243,10 +1327,10 @@ return|return
 operator|(
 name|physio
 argument_list|(
-name|fdstrategy
+name|vnstrategy
 argument_list|,
 operator|&
-name|fdbuf
+name|vnbuf
 index|[
 name|unit
 index|]
@@ -1269,7 +1353,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|fdioctl
+name|vnioctl
 argument_list|(
 argument|dev
 argument_list|,
@@ -1278,6 +1362,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1305,35 +1391,42 @@ name|flag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|fd_softc
+name|vn_softc
 modifier|*
-name|fs
+name|vn
 decl_stmt|;
 name|struct
-name|fd_ioctl
+name|vn_ioctl
 modifier|*
-name|fio
+name|vio
 decl_stmt|;
 name|struct
 name|vattr
 name|vattr
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|vp
+name|nameidata
+name|nd
 decl_stmt|;
 name|int
 name|error
@@ -1343,13 +1436,13 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"fdioctl(%x, %x, %x, %x): unit %d\n"
+literal|"vnioctl(%x, %x, %x, %x, %x): unit %d\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -1358,6 +1451,8 @@ argument_list|,
 name|data
 argument_list|,
 name|flag
+argument_list|,
+name|p
 argument_list|,
 name|unit
 argument_list|)
@@ -1368,14 +1463,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -1391,26 +1486,26 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NFD
+name|NVN
 condition|)
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-name|fs
+name|vn
 operator|=
 operator|&
-name|fd_softc
+name|vn_softc
 index|[
 name|unit
 index|]
 expr_stmt|;
-name|fio
+name|vio
 operator|=
 operator|(
 expr|struct
-name|fd_ioctl
+name|vn_ioctl
 operator|*
 operator|)
 name|data
@@ -1421,15 +1516,15 @@ name|cmd
 condition|)
 block|{
 case|case
-name|FDIOCSET
+name|VNIOCSET
 case|:
 if|if
 condition|(
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator|&
-name|FDF_INITED
+name|VNF_INITED
 condition|)
 return|return
 operator|(
@@ -1437,24 +1532,34 @@ name|EBUSY
 operator|)
 return|;
 comment|/* 		 * Always open for read and write. 		 * This is probably bogus, but it lets vn_open() 		 * weed out directories, sockets, etc. so we don't 		 * have to worry about them. 		 */
+name|nd
+operator|.
+name|ni_segflg
+operator|=
+name|UIO_USERSPACE
+expr_stmt|;
+name|nd
+operator|.
+name|ni_dirp
+operator|=
+name|vio
+operator|->
+name|vn_file
+expr_stmt|;
 name|error
 operator|=
 name|vn_open
 argument_list|(
-name|fio
-operator|->
-name|fd_file
+operator|&
+name|nd
 argument_list|,
-name|UIO_USERSPACE
+name|p
 argument_list|,
 name|FREAD
 operator||
 name|FWRITE
 argument_list|,
 literal|0
-argument_list|,
-operator|&
-name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1470,14 +1575,18 @@ name|error
 operator|=
 name|VOP_GETATTR
 argument_list|(
-name|vp
+name|nd
+operator|.
+name|ni_vp
 argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1485,18 +1594,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|vn_close
+name|vrele
 argument_list|(
-name|vp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
-name|VN_RELE
-argument_list|(
-name|vp
+name|nd
+operator|.
+name|ni_vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1505,13 +1607,15 @@ name|error
 operator|)
 return|;
 block|}
-name|fs
+name|vn
 operator|->
 name|sc_vp
 operator|=
-name|vp
+name|nd
+operator|.
+name|ni_vp
 expr_stmt|;
-name|fs
+name|vn
 operator|->
 name|sc_size
 operator|=
@@ -1525,9 +1629,13 @@ expr_stmt|;
 comment|/* note truncation */
 name|error
 operator|=
-name|fdsetcred
+name|vnsetcred
 argument_list|(
-name|fs
+name|vn
+argument_list|,
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1535,18 +1643,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|vn_close
+name|vrele
 argument_list|(
-name|vp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
-name|VN_RELE
-argument_list|(
-name|vp
+name|vn
+operator|->
+name|sc_vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1555,48 +1656,50 @@ name|error
 operator|)
 return|;
 block|}
-name|fdthrottle
+name|vnthrottle
 argument_list|(
-name|fs
+name|vn
 argument_list|,
-name|vp
+name|vn
+operator|->
+name|sc_vp
 argument_list|)
 expr_stmt|;
-name|fio
+name|vio
 operator|->
-name|fd_size
+name|vn_size
 operator|=
 name|dbtob
 argument_list|(
-name|fs
+name|vn
 operator|->
 name|sc_size
 argument_list|)
 expr_stmt|;
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator||=
-name|FDF_INITED
+name|VNF_INITED
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_INIT
+name|VDB_INIT
 condition|)
 name|printf
 argument_list|(
-literal|"fdioctl: SET vp %x size %x\n"
+literal|"vnioctl: SET vp %x size %x\n"
 argument_list|,
-name|fs
+name|vn
 operator|->
 name|sc_vp
 argument_list|,
-name|fs
+name|vn
 operator|->
 name|sc_size
 argument_list|)
@@ -1605,16 +1708,16 @@ endif|#
 directive|endif
 break|break;
 case|case
-name|FDIOCCLR
+name|VNIOCCLR
 case|:
 if|if
 condition|(
 operator|(
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator|&
-name|FDF_INITED
+name|VNF_INITED
 operator|)
 operator|==
 literal|0
@@ -1624,9 +1727,9 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|fdclear
+name|vnclear
 argument_list|(
-name|fs
+name|vn
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1634,13 +1737,13 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_INIT
+name|VDB_INIT
 condition|)
 name|printf
 argument_list|(
-literal|"fdioctl: CLRed\n"
+literal|"vnioctl: CLRed\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1666,17 +1769,26 @@ comment|/*  * Duplicate the current processes' credentials.  Since we are called
 end_comment
 
 begin_expr_stmt
-name|fdsetcred
+name|vnsetcred
 argument_list|(
-name|fs
+name|vn
+argument_list|,
+name|cred
 argument_list|)
 specifier|register
 expr|struct
-name|fd_softc
+name|vn_softc
 operator|*
-name|fs
+name|vn
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+name|cred
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1694,15 +1806,13 @@ index|[
 name|DEV_BSIZE
 index|]
 decl_stmt|;
-name|fs
+name|vn
 operator|->
 name|sc_cred
 operator|=
 name|crdup
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|cred
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Horrible kludge to establish credentials for NFS */
@@ -1722,7 +1832,7 @@ name|DEV_BSIZE
 argument_list|,
 name|dbtob
 argument_list|(
-name|fs
+name|vn
 operator|->
 name|sc_size
 argument_list|)
@@ -1771,7 +1881,7 @@ return|return
 operator|(
 name|VOP_READ
 argument_list|(
-name|fs
+name|vn
 operator|->
 name|sc_vp
 argument_list|,
@@ -1780,7 +1890,7 @@ name|auio
 argument_list|,
 literal|0
 argument_list|,
-name|fs
+name|vn
 operator|->
 name|sc_cred
 argument_list|)
@@ -1794,17 +1904,17 @@ comment|/*  * Set maxactive based on FS type  */
 end_comment
 
 begin_expr_stmt
-name|fdthrottle
+name|vnthrottle
 argument_list|(
-name|fs
+name|vn
 argument_list|,
 name|vp
 argument_list|)
 specifier|register
 expr|struct
-name|fd_softc
+name|vn_softc
 operator|*
-name|fs
+name|vn
 expr_stmt|;
 end_expr_stmt
 
@@ -1823,7 +1933,7 @@ name|struct
 name|vnodeops
 name|ufs_vnodeops
 decl_stmt|,
-name|nfs_vnodeops
+name|nfsv2_vnodeops
 decl_stmt|;
 if|if
 condition|(
@@ -1832,16 +1942,16 @@ operator|->
 name|v_op
 operator|==
 operator|&
-name|nfs_vnodeops
+name|nfsv2_vnodeops
 condition|)
-name|fs
+name|vn
 operator|->
 name|sc_maxactive
 operator|=
 literal|2
 expr_stmt|;
 else|else
-name|fs
+name|vn
 operator|->
 name|sc_maxactive
 operator|=
@@ -1849,13 +1959,13 @@ literal|8
 expr_stmt|;
 if|if
 condition|(
-name|fs
+name|vn
 operator|->
 name|sc_maxactive
 operator|<
 literal|1
 condition|)
-name|fs
+name|vn
 operator|->
 name|sc_maxactive
 operator|=
@@ -1865,7 +1975,7 @@ block|}
 end_block
 
 begin_macro
-name|fdshutdown
+name|vnshutdown
 argument_list|()
 end_macro
 
@@ -1873,57 +1983,57 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|fd_softc
+name|vn_softc
 modifier|*
-name|fs
+name|vn
 decl_stmt|;
 for|for
 control|(
-name|fs
+name|vn
 operator|=
 operator|&
-name|fd_softc
+name|vn_softc
 index|[
 literal|0
 index|]
 init|;
-name|fs
+name|vn
 operator|<
 operator|&
-name|fd_softc
+name|vn_softc
 index|[
-name|NFD
+name|NVN
 index|]
 condition|;
-name|fs
+name|vn
 operator|++
 control|)
 if|if
 condition|(
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator|&
-name|FDF_INITED
+name|VNF_INITED
 condition|)
-name|fdclear
+name|vnclear
 argument_list|(
-name|fs
+name|vn
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_expr_stmt
-name|fdclear
+name|vnclear
 argument_list|(
-name|fs
+name|vn
 argument_list|)
 specifier|register
 expr|struct
-name|fd_softc
+name|vn_softc
 operator|*
-name|fs
+name|vn
 expr_stmt|;
 end_expr_stmt
 
@@ -1935,7 +2045,7 @@ name|vnode
 modifier|*
 name|vp
 init|=
-name|fs
+name|vn
 operator|->
 name|sc_vp
 decl_stmt|;
@@ -1944,25 +2054,25 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|fddebug
+name|vndebug
 operator|&
-name|FDB_FOLLOW
+name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"fdclear(%x): vp %x\n"
+literal|"vnclear(%x): vp %x\n"
 argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator|&=
 operator|~
-name|FDF_INITED
+name|VNF_INITED
 expr_stmt|;
 if|if
 condition|(
@@ -1977,38 +2087,29 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"fdioctl: null vp"
+literal|"vnioctl: null vp"
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* XXX - this doesn't work right now */
-block|(void) VOP_FSYNC(vp, fs->sc_cred);
+block|(void) VOP_FSYNC(vp, 0, vn->sc_cred, MNT_WAIT, p);
 endif|#
 directive|endif
-name|vn_close
-argument_list|(
-name|vp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
-name|VN_RELE
+name|vrele
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
 name|crfree
 argument_list|(
-name|fs
+name|vn
 operator|->
 name|sc_cred
 argument_list|)
 expr_stmt|;
-name|fs
+name|vn
 operator|->
 name|sc_vp
 operator|=
@@ -2019,7 +2120,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|fs
+name|vn
 operator|->
 name|sc_cred
 operator|=
@@ -2030,7 +2131,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|fs
+name|vn
 operator|->
 name|sc_size
 operator|=
@@ -2040,7 +2141,7 @@ block|}
 end_block
 
 begin_macro
-name|fdsize
+name|vnsize
 argument_list|(
 argument|dev
 argument_list|)
@@ -2057,19 +2158,19 @@ block|{
 name|int
 name|unit
 init|=
-name|fdunit
+name|vnunit
 argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|fd_softc
+name|vn_softc
 modifier|*
-name|fs
+name|vn
 init|=
 operator|&
-name|fd_softc
+name|vn_softc
 index|[
 name|unit
 index|]
@@ -2078,14 +2179,14 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NFD
+name|NVN
 operator|||
 operator|(
-name|fs
+name|vn
 operator|->
 name|sc_flags
 operator|&
-name|FDF_INITED
+name|VNF_INITED
 operator|)
 operator|==
 literal|0
@@ -2098,7 +2199,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|fs
+name|vn
 operator|->
 name|sc_size
 operator|)
@@ -2107,7 +2208,7 @@ block|}
 end_block
 
 begin_macro
-name|fddump
+name|vndump
 argument_list|(
 argument|dev
 argument_list|)
