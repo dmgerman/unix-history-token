@@ -12211,6 +12211,7 @@ name|error
 operator|!=
 name|ENOIOCTL
 condition|)
+block|{
 name|fdrop
 argument_list|(
 name|fp
@@ -12223,6 +12224,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 block|}
 name|fdrop
