@@ -4478,6 +4478,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|snd_sbc
+argument_list|,
+name|acpi
+argument_list|,
+name|sbc_driver
+argument_list|,
+name|sbc_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|snd_sbc
