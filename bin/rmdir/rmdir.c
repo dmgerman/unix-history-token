@@ -424,7 +424,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rmdir [-p] directory ...\n"
+literal|"usage: rmdir [-pv] directory ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
