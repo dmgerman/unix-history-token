@@ -428,14 +428,6 @@ name|router_info
 modifier|*
 name|rti
 decl_stmt|;
-name|rti
-operator|=
-name|SLIST_FIRST
-argument_list|(
-operator|&
-name|router_info_head
-argument_list|)
-expr_stmt|;
 name|IGMP_PRINTF
 argument_list|(
 literal|"[igmp.c, _find_rti] --> entering \n"
