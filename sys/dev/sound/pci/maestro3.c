@@ -2766,7 +2766,7 @@ operator|=
 name|format
 expr_stmt|;
 return|return
-name|format
+literal|0
 return|;
 block|}
 end_function
@@ -4372,7 +4372,7 @@ operator|=
 name|format
 expr_stmt|;
 return|return
-name|format
+literal|0
 return|;
 block|}
 end_function
