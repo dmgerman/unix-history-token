@@ -208,6 +208,14 @@ operator|(
 literal|"VIA 82C691 (Apollo Pro) host to PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x03051106
+case|:
+return|return
+operator|(
+literal|"VIA 82C8363 (Apollo KT133A) host to PCI bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
