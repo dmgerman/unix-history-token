@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -448,7 +448,7 @@ name|message
 argument_list|(
 literal|"220"
 argument_list|,
-literal|"%s Sendmail v%s ready at %s"
+literal|"%s Sendmail %s ready at %s"
 argument_list|,
 name|HostName
 argument_list|,

@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.96
+literal|3.97
 operator|%
 name|G
 operator|%
@@ -195,7 +195,7 @@ name|TRUE
 decl_stmt|;
 comment|/* this conf file is sys default */
 name|char
-name|ibuf
+name|jbuf
 index|[
 literal|30
 index|]
@@ -1278,15 +1278,15 @@ end_comment
 begin_expr_stmt
 name|expand
 argument_list|(
-literal|"$i"
+literal|"$j"
 argument_list|,
-name|ibuf
+name|jbuf
 argument_list|,
 operator|&
-name|ibuf
+name|jbuf
 index|[
 sizeof|sizeof
-name|ibuf
+name|jbuf
 operator|-
 literal|1
 index|]
@@ -1299,7 +1299,7 @@ end_expr_stmt
 begin_expr_stmt
 name|HostName
 operator|=
-name|ibuf
+name|jbuf
 expr_stmt|;
 end_expr_stmt
 
@@ -4017,6 +4017,15 @@ name|e_qf
 index|[
 name|fx
 index|]
+expr_stmt|;
+name|define
+argument_list|(
+literal|'i'
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
