@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timetc.h>
+file|<sys/timepps.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/timepps.h>
+file|<sys/timetc.h>
 end_include
 
 begin_include
@@ -609,6 +609,8 @@ end_decl_stmt
 begin_decl_stmt
 name|time_t
 name|time_second
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -981,12 +983,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|SYNC_TIME
-end_define
 
 begin_function
 name|void
@@ -1838,7 +1834,7 @@ operator|=
 name|ncount
 expr_stmt|;
 block|}
-comment|/*-? 	 * Recalculate the scaling factor.  We want the number of 1/2^64 	 * fractions of a second per period of the hardware counter, taking 	 * into account the th_adjustment factor which the NTP PLL/adjtime(2) 	 * processing provides us with. 	 * 	 * The th_adjustment is nanoseconds per second with 32 bit binary 	 * fraction and want 64 bit binary fraction of second: 	 * 	 *	 x = a * 2^32 / 10^9 = a * 4.294967296 	 * 	 * The range of th_adjustment is +/- 5000PPM so inside a 64bit int 	 * we can only multiply by about 850 without overflowing, but that 	 * leaves suitably precise fractions for multiply before divide. 	 * 	 * Divide before multiply with a fraction of 2199/512 results in a 	 * systematic undercompensation of 10PPM of th_adjustment.  On a 	 * 5000PPM adjustment this is a 0.05PPM error.  This is acceptable.  	 * 	 * We happily sacrifice the lowest of the 64 bits of our result 	 * to the goddess of code clarity. 	 * 	 */
+comment|/*- 	 * Recalculate the scaling factor.  We want the number of 1/2^64 	 * fractions of a second per period of the hardware counter, taking 	 * into account the th_adjustment factor which the NTP PLL/adjtime(2) 	 * processing provides us with. 	 * 	 * The th_adjustment is nanoseconds per second with 32 bit binary 	 * fraction and want 64 bit binary fraction of second: 	 * 	 *	 x = a * 2^32 / 10^9 = a * 4.294967296 	 * 	 * The range of th_adjustment is +/- 5000PPM so inside a 64bit int 	 * we can only multiply by about 850 without overflowing, but that 	 * leaves suitably precise fractions for multiply before divide. 	 * 	 * Divide before multiply with a fraction of 2199/512 results in a 	 * systematic undercompensation of 10PPM of th_adjustment.  On a 	 * 5000PPM adjustment this is a 0.05PPM error.  This is acceptable.  	 * 	 * We happily sacrifice the lowest of the 64 bits of our result 	 * to the goddess of code clarity. 	 * 	 */
 name|scale
 operator|=
 operator|(
@@ -3153,7 +3149,7 @@ operator|%
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* warm up new timecounter (again) and get rolling */
+comment|/* warm up new timecounter (again) and get rolling. */
 operator|(
 name|void
 operator|)
