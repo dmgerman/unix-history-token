@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syscallsubr.h>
 end_include
 
@@ -2019,27 +2025,27 @@ name|void
 operator|*
 operator|)
 name|linux_args
-operator|->
+operator|.
 name|addr
 argument_list|,
 name|linux_args
-operator|->
+operator|.
 name|len
 argument_list|,
 name|linux_args
-operator|->
+operator|.
 name|prot
 argument_list|,
 name|linux_args
-operator|->
+operator|.
 name|flags
 argument_list|,
 name|linux_args
-operator|->
+operator|.
 name|fd
 argument_list|,
 name|linux_args
-operator|->
+operator|.
 name|pos
 argument_list|)
 expr_stmt|;
@@ -4016,13 +4022,16 @@ name|ARGS
 argument_list|(
 name|ftruncate64
 argument_list|,
-literal|"%d, %d"
+literal|"%u, %jd"
 argument_list|)
 argument_list|,
 name|args
 operator|->
 name|fd
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|args
 operator|->
 name|length
