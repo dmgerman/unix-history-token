@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	7.7	90/12/16	*/
+comment|/*	cons.c	7.8	91/05/08	*/
 end_comment
 
 begin_comment
@@ -1227,10 +1227,9 @@ block|}
 end_block
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|consintr
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
