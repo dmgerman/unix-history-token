@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.4 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.44 93/10/31 05:28:36 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.5 (Berkeley) %G%  *  * from: $Header: machdep.c,v 1.44 93/10/31 05:28:36 torek Exp $  */
 end_comment
 
 begin_include
@@ -2320,7 +2320,11 @@ name|waittime
 operator|<
 literal|0
 operator|&&
-name|rootfs
+name|mountlist
+operator|.
+name|tqh_first
+operator|!=
+name|NULL
 condition|)
 block|{
 specifier|register
