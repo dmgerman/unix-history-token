@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ctype.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -74,7 +74,13 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|char
-name|_ctype_
+name|__ctype_
+index|[]
+decl_stmt|,
+name|__maplower
+index|[]
+decl_stmt|,
+name|__mapupper
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -86,7 +92,7 @@ name|isalnum
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& (_U|_L|_N))
+value|((__ctype + 1)[c]& (_U|_L|_N))
 end_define
 
 begin_define
@@ -96,7 +102,7 @@ name|isalpha
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& (_U|_L))
+value|((__ctype + 1)[c]& (_U|_L))
 end_define
 
 begin_define
@@ -106,7 +112,7 @@ name|iscntrl
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& _C)
+value|((__ctype + 1)[c]& _C)
 end_define
 
 begin_define
@@ -116,7 +122,7 @@ name|isdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& _N)
+value|((__ctype + 1)[c]& _N)
 end_define
 
 begin_define
@@ -126,7 +132,7 @@ name|isgraph
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& (_P|_U|_L|_N))
+value|((__ctype + 1)[c]& (_P|_U|_L|_N))
 end_define
 
 begin_define
@@ -136,7 +142,7 @@ name|islower
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& _L)
+value|((__ctype + 1)[c]& _L)
 end_define
 
 begin_define
@@ -146,7 +152,7 @@ name|isprint
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& (_P|_U|_L|_N|_B))
+value|((__ctype + 1)[c]& (_P|_U|_L|_N|_B))
 end_define
 
 begin_define
@@ -156,7 +162,7 @@ name|ispunct
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& _P)
+value|((__ctype + 1)[c]& _P)
 end_define
 
 begin_define
@@ -166,7 +172,7 @@ name|isspace
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& _S)
+value|((__ctype + 1)[c]& _S)
 end_define
 
 begin_define
@@ -176,7 +182,7 @@ name|isupper
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& _U)
+value|((__ctype + 1)[c]& _U)
 end_define
 
 begin_define
@@ -186,7 +192,7 @@ name|isxdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|((_ctype_ + 1)[c]& (_N|_X))
+value|((__ctype + 1)[c]& (_N|_X))
 end_define
 
 begin_define
@@ -196,7 +202,7 @@ name|tolower
 parameter_list|(
 name|c
 parameter_list|)
-value|((c) - 'A' + 'a')
+value|((__maplower + 1)[c])
 end_define
 
 begin_define
@@ -206,7 +212,7 @@ name|toupper
 parameter_list|(
 name|c
 parameter_list|)
-value|((c) - 'a' + 'A')
+value|((__mapupper + 1)[c])
 end_define
 
 begin_if
@@ -232,7 +238,7 @@ name|isascii
 parameter_list|(
 name|c
 parameter_list|)
-value|((unsigned)(c)<= 0177)
+value|((unsigned int)(c)<= 0177)
 end_define
 
 begin_define
