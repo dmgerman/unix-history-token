@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.21 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4444,6 +4444,9 @@ init|=
 literal|"_hashXXXXXX"
 decl_stmt|;
 comment|/* Block signals; make sure file goes away at process exit. */
+operator|(
+name|void
+operator|)
 name|sigfillset
 argument_list|(
 operator|&

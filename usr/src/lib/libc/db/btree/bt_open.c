@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.17 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -1544,6 +1550,9 @@ else|:
 literal|"/tmp"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigfillset
 argument_list|(
 operator|&
