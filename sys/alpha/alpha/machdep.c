@@ -3132,6 +3132,20 @@ expr_stmt|;
 if|if
 condition|(
 name|cputype
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* 		 * At least some white-box (NT) systems have SRM which 		 * reports a systype that's the negative of their 		 * blue-box (UNIX/OVMS) counterpart. 		 */
+name|cputype
+operator|=
+operator|-
+name|cputype
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cputype
 operator|>=
 name|ncpuinit
 condition|)
