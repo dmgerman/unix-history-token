@@ -1344,17 +1344,6 @@ operator|=
 name|NOCRED
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|b_vp
-condition|)
-name|pbrelvp
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|BUF_UNLOCK
 argument_list|(
 name|bp
