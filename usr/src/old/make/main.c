@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.4 (Berkeley) 82/10/11"
+literal|"@(#)main.c	4.5 (Berkeley) 83/03/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -996,6 +996,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1023,6 +1029,10 @@ name|TIMETYPE
 name|exists
 parameter_list|()
 function_decl|;
+name|struct
+name|stat
+name|sbuf
+decl_stmt|;
 if|if
 condition|(
 name|okdel
@@ -1044,12 +1054,27 @@ operator|->
 name|varval
 operator|)
 operator|&&
-name|exists
+operator|(
+name|stat
 argument_list|(
 name|p
+argument_list|,
+operator|&
+name|sbuf
 argument_list|)
-operator|>
+operator|>=
 literal|0
+operator|&&
+operator|(
+name|sbuf
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFREG
+operator|)
 operator|&&
 operator|!
 name|isprecious
