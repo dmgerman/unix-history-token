@@ -61,26 +61,24 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_function
+begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
 name|sem_init
 name|__P
-parameter_list|(
+argument_list|(
+operator|(
 name|sem_t
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-parameter_list|,
+operator|,
 name|unsigned
 name|int
-parameter_list|)
-end_function
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -143,6 +141,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|sem_wait
+name|__P
 argument_list|(
 operator|(
 name|sem_t
@@ -155,6 +154,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|sem_trywait
+name|__P
 argument_list|(
 operator|(
 name|sem_t
@@ -167,6 +167,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|sem_post
+name|__P
 argument_list|(
 operator|(
 name|sem_t
@@ -179,6 +180,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|sem_getvalue
+name|__P
 argument_list|(
 operator|(
 name|sem_t
