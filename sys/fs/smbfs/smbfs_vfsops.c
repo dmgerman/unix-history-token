@@ -1399,13 +1399,6 @@ name|smbfattr
 name|fattr
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-name|struct
 name|ucred
 modifier|*
 name|cred
