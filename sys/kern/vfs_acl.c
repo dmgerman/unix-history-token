@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1999-2001 Robert N. M. Watson  * All rights reserve
 end_comment
 
 begin_comment
-comment|/*  * Developed by the TrustedBSD Project.  * Support for POSIX.1e access control lists.  */
+comment|/*  * Developed by the TrustedBSD Project.  * Support for POSIX.1e access control lists.  *  * XXX: When vn_start_write() was scattered throughout the kernel, it  * was not scattered here for some reason.  It needs to be.  */
 end_comment
 
 begin_include
