@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs.c,v 1.27 1998/10/17 08:03:52 bde Exp $"
+literal|"$Id: newfs.c,v 1.28 1999/02/09 17:19:19 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1044,7 +1044,7 @@ name|mfs
 condition|?
 literal|"NF:T:a:b:c:d:e:f:i:m:o:s:"
 else|:
-literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:vx"
+literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:vx:"
 expr_stmt|;
 while|while
 condition|(
