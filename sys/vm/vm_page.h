@@ -1047,25 +1047,44 @@ begin_define
 define|#
 directive|define
 name|VM_ALLOC_WIRED
-value|0x20
+value|0x0020
 end_define
+
+begin_comment
+comment|/* non pageable */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_ALLOC_ZERO
-value|0x40
+value|0x0040
 end_define
+
+begin_comment
+comment|/* Try to obtain a zeroed page */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_ALLOC_RETRY
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* vm_page_grab() only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_NOOBJ
+value|0x0100
+end_define
+
+begin_comment
+comment|/* No associated object */
 end_comment
 
 begin_function_decl
