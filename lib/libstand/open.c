@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: open.c,v 1.16 1997/01/28 09:41:03 pk Exp $	*/
 end_comment
 
@@ -69,6 +73,41 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|o_rainit
+parameter_list|(
+name|struct
+name|open_file
+modifier|*
+name|f
+parameter_list|)
+block|{
+name|f
+operator|->
+name|f_rabuf
+operator|=
+name|malloc
+argument_list|(
+name|SOPEN_RASIZE
+argument_list|)
+expr_stmt|;
+name|f
+operator|->
+name|f_ralen
+operator|=
+literal|0
+expr_stmt|;
+name|f
+operator|->
+name|f_raoffset
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -315,6 +354,11 @@ name|file_system
 index|[
 name|i
 index|]
+expr_stmt|;
+name|o_rainit
+argument_list|(
+name|f
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

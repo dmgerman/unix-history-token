@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: lseek.c,v 1.4 1997/01/22 00:38:10 cgd Exp $	*/
 end_comment
 
@@ -17,23 +21,16 @@ begin_function
 name|off_t
 name|lseek
 parameter_list|(
-name|fd
-parameter_list|,
-name|offset
-parameter_list|,
-name|where
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|,
 name|off_t
 name|offset
-decl_stmt|;
+parameter_list|,
 name|int
 name|where
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|open_file
 modifier|*
@@ -81,7 +78,7 @@ operator|&
 name|F_RAW
 condition|)
 block|{
-comment|/* 		 * On RAW devices, update internal offset. 		 */
+comment|/* 	 * On RAW devices, update internal offset. 	 */
 switch|switch
 condition|(
 name|where
@@ -130,6 +127,26 @@ name|f_offset
 operator|)
 return|;
 block|}
+comment|/*      * If this is a relative seek, we need to correct the offset for      * bytes that we have already read but the caller doesn't know      * about.      */
+if|if
+condition|(
+name|where
+operator|==
+name|SEEK_CUR
+condition|)
+name|offset
+operator|-=
+name|f
+operator|->
+name|f_ralen
+expr_stmt|;
+comment|/*       * Invalidate the readahead buffer.      */
+name|f
+operator|->
+name|f_ralen
+operator|=
+literal|0
+expr_stmt|;
 return|return
 call|(
 name|f

@@ -631,7 +631,24 @@ comment|/* file system specific data */
 name|off_t
 name|f_offset
 decl_stmt|;
-comment|/* current file offset (F_RAW) */
+comment|/* current file offset */
+name|char
+modifier|*
+name|f_rabuf
+decl_stmt|;
+comment|/* readahead buffer pointer */
+name|size_t
+name|f_ralen
+decl_stmt|;
+comment|/* valid data in readahead buffer */
+name|off_t
+name|f_raoffset
+decl_stmt|;
+comment|/* consumer offset in readahead buffer */
+define|#
+directive|define
+name|SOPEN_RASIZE
+value|512
 block|}
 struct|;
 end_struct

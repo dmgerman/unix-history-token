@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: close.c,v 1.7 1997/01/22 00:38:09 cgd Exp $	*/
 end_comment
 
@@ -17,13 +21,10 @@ begin_function
 name|int
 name|close
 parameter_list|(
-name|fd
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|open_file
 modifier|*
@@ -71,6 +72,21 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|f
+operator|->
+name|f_rabuf
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|f
+operator|->
+name|f_rabuf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
