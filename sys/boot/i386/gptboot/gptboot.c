@@ -772,15 +772,9 @@ operator|++
 control|)
 empty_stmt|;
 return|return
-operator|(
-name|u_char
-operator|)
 operator|*
 name|s1
 operator|-
-operator|(
-name|u_char
-operator|)
 operator|*
 name|s2
 return|;
@@ -811,6 +805,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|fsread
 argument_list|(
 name|inode
@@ -1284,7 +1281,7 @@ argument|); 	autoboot =
 literal|0
 argument|; 	if (parse(cmd)) 	    putchar(
 literal|'\a'
-argument|);  	else 	    load(kname);     } }
+argument|); 	else 	    load(kname);     } }
 comment|/* XXX - Needed for btxld to link the boot2 binary; do not remove. */
 argument|void exit(int x) { }  static void load(const char *fname) {     union { 	struct exec ex; 	Elf32_Ehdr eh;     } hdr;     Elf32_Phdr ep[
 literal|2
@@ -1310,7 +1307,7 @@ argument|); 	return;     }     if (fmt ==
 literal|0
 argument|) { 	addr = hdr.ex.a_entry&
 literal|0xffffff
-argument|; 	p = PTOV(addr); 	fs_off = PAGE_SIZE; 	if (xfsread(ino, p, hdr.ex.a_text)) 	    return; 	p += roundup2(hdr.ex.a_text, PAGE_SIZE); 	if (xfsread(ino, p, hdr.ex.a_data)) 	    return; 	p += hdr.ex.a_data + roundup2(hdr.ex.a_bss, PAGE_SIZE); 	bootinfo.bi_symtab = VTOP(p); 	memcpy(p, (char *)&hdr.ex.a_syms, sizeof(hdr.ex.a_syms)); 	p += sizeof(hdr.ex.a_syms); 	if (hdr.ex.a_syms) { 	    if (xfsread(ino, p, hdr.ex.a_syms)) 		return; 	    p += hdr.ex.a_syms; 	    if (xfsread(ino, p, sizeof(int))) 		return; 	    x = *(uint32_t *)p; 	    p += sizeof(int); 	    x -= sizeof(int); 	    if (xfsread(ino, p, x)) 		return; 	    p += x; 	}     } else { 	fs_off = hdr.eh.e_phoff; 	for (j = i =
+argument|; 	p = PTOV(addr); 	fs_off = PAGE_SIZE; 	if (xfsread(ino, p, hdr.ex.a_text)) 	    return; 	p += roundup2(hdr.ex.a_text, PAGE_SIZE); 	if (xfsread(ino, p, hdr.ex.a_data)) 	    return; 	p += hdr.ex.a_data + roundup2(hdr.ex.a_bss, PAGE_SIZE); 	bootinfo.bi_symtab = VTOP(p); 	memcpy(p,&hdr.ex.a_syms, sizeof(hdr.ex.a_syms)); 	p += sizeof(hdr.ex.a_syms); 	if (hdr.ex.a_syms) { 	    if (xfsread(ino, p, hdr.ex.a_syms)) 		return; 	    p += hdr.ex.a_syms; 	    if (xfsread(ino, p, sizeof(int))) 		return; 	    x = *(uint32_t *)p; 	    p += sizeof(int); 	    x -= sizeof(int); 	    if (xfsread(ino, p, x)) 		return; 	    p += x; 	}     } else { 	fs_off = hdr.eh.e_phoff; 	for (j = i =
 literal|0
 argument|; i< hdr.eh.e_phnum&& j<
 literal|2
@@ -1334,7 +1331,7 @@ argument|); 	    if (xfsread(ino,&es, sizeof(es))) 		return; 	    for (i =
 literal|0
 argument|; i<
 literal|2
-argument|; i++) { 		memcpy(p, (char *)&es[i].sh_size, sizeof(es[i].sh_size)); 		p += sizeof(es[i].sh_size); 		fs_off = es[i].sh_offset; 		if (xfsread(ino, p, es[i].sh_size)) 		    return; 		p += es[i].sh_size; 	    } 	} 	addr = hdr.eh.e_entry&
+argument|; i++) { 		memcpy(p,&es[i].sh_size, sizeof(es[i].sh_size)); 		p += sizeof(es[i].sh_size); 		fs_off = es[i].sh_offset; 		if (xfsread(ino, p, es[i].sh_size)) 		    return; 		p += es[i].sh_size; 	    } 	} 	addr = hdr.eh.e_entry&
 literal|0xffffff
 argument|;     }     bootinfo.bi_esymtab = VTOP(p);     bootinfo.bi_kernelname = VTOP(fname);     bootinfo.bi_bios_dev = dsk.drive;     __exec((caddr_t)addr, opts& RBX_MASK, 	   MAKEBOOTDEV(dev_maj[dsk.type],
 literal|0
@@ -1480,7 +1477,7 @@ argument|) + drv; 		dsk_meta =
 literal|0
 argument|; 	    } 	    if ((i = p - arg - !*(p -
 literal|1
-argument|))) { 		if (i>= sizeof(kname)) 		    return -
+argument|))) { 		if ((size_t)i>= sizeof(kname)) 		    return -
 literal|1
 argument|; 		memcpy(kname, arg, i +
 literal|1
