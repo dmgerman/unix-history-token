@@ -1,7 +1,102 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stty.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stty.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_struct
+struct|struct
+name|info
+block|{
+name|int
+name|fd
+decl_stmt|;
+comment|/* file descriptor */
+name|int
+name|ldisc
+decl_stmt|;
+comment|/* line discipline */
+name|int
+name|off
+decl_stmt|;
+comment|/* turn off */
+name|int
+name|set
+decl_stmt|;
+comment|/* need set */
+name|int
+name|wset
+decl_stmt|;
+comment|/* need window set */
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+comment|/* argument */
+name|struct
+name|termios
+name|t
+decl_stmt|;
+comment|/* terminal info */
+name|struct
+name|winsize
+name|win
+decl_stmt|;
+comment|/* window info */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|key
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name */
+name|void
+argument_list|(
+argument|*f
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* function */
+define|#
+directive|define
+name|F_NEEDARG
+value|0x01
+comment|/* needs an argument */
+define|#
+directive|define
+name|F_OFFOK
+value|0x02
+comment|/* can turn off */
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
