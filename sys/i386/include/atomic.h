@@ -1518,10 +1518,15 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+comment|/* 	 * The apparently-bogus cast to intptr_t in the following is to 	 * avoid a warning from "gcc -Wbad-function-cast". 	 */
 return|return
+operator|(
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|atomic_load_acq_int
 argument_list|(
@@ -1532,6 +1537,7 @@ operator|*
 operator|)
 name|p
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
