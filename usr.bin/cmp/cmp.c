@@ -437,7 +437,7 @@ index|]
 argument_list|,
 name|NULL
 argument_list|,
-literal|10
+literal|0
 argument_list|)
 else|:
 literal|0
@@ -457,7 +457,7 @@ index|]
 argument_list|,
 name|NULL
 argument_list|,
-literal|10
+literal|0
 argument_list|)
 else|:
 literal|0
