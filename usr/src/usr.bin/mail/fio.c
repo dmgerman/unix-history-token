@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	1.11 %G%"
+literal|"@(#)fio.c	1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1629,6 +1629,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|fseek
+argument_list|(
+name|ibuf
+argument_list|,
+name|mailsize
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
