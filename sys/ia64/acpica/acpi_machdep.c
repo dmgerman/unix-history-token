@@ -53,13 +53,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|acpi_install_wakeup_handler
 argument_list|(
 name|sc
