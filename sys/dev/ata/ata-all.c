@@ -311,6 +311,18 @@ begin_comment
 comment|/* global vars */
 end_comment
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ATA
+argument_list|,
+literal|"ATA generic"
+argument_list|,
+literal|"ATA driver generic layer"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|intr_config_hook
@@ -338,19 +350,6 @@ end_decl_stmt
 begin_comment
 comment|/* local vars */
 end_comment
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ATA
-argument_list|,
-literal|"ATA generic"
-argument_list|,
-literal|"ATA driver generic layer"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
