@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -605,11 +605,6 @@ modifier|*
 name|fs
 decl_stmt|;
 name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
 name|segment
 modifier|*
 name|sp
@@ -629,34 +624,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mp
-operator|=
-name|vp
-operator|->
-name|v_mount
-expr_stmt|;
 name|fs
 operator|=
 name|VFSTOUFS
 argument_list|(
-name|mp
+name|vp
+operator|->
+name|v_mount
 argument_list|)
 operator|->
 name|um_lfs
 expr_stmt|;
-comment|/* 	 * XXX 	 * check flags? 	 * mp->mnt_flag& (MNT_MLOCK|MNT_RDONLY|MNT_MPBUSY) || 	 */
-if|if
-condition|(
-name|vfs_busy
+name|lfs_seglock
 argument_list|(
-name|mp
+name|fs
 argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 comment|/* 	 * Allocate a segment structure and enough space to hold pointers to 	 * the maximum possible number of buffers which can be described in a 	 * single summary block. 	 */
 name|sp
 operator|=
@@ -860,9 +843,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|vfs_unbusy
+name|lfs_segunlock
 argument_list|(
-name|mp
+name|fs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * Should be writing a checkpoint? 	 */
@@ -1116,8 +1099,6 @@ name|do_ckp
 decl_stmt|;
 comment|/* Do a checkpoint. */
 block|{
-name|USES_VOP_ISLOCKED
-expr_stmt|;
 name|struct
 name|inode
 modifier|*
@@ -1161,6 +1142,11 @@ name|mp
 argument_list|)
 operator|->
 name|um_lfs
+expr_stmt|;
+name|lfs_seglock
+argument_list|(
+name|fs
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate a segment structure and enough space to hold pointers to 	 * the maximum possible number of buffers which can be described in a 	 * single summary block. 	 */
 name|sp
@@ -1569,6 +1555,11 @@ else|else
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|lfs_segunlock
+argument_list|(
+name|fs
 argument_list|)
 expr_stmt|;
 name|free
@@ -2849,8 +2840,6 @@ name|int
 name|nblocks
 decl_stmt|;
 block|{
-name|USES_VOP_BWRITE
-expr_stmt|;
 name|SEGUSE
 modifier|*
 name|sup
@@ -3767,8 +3756,6 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -3828,6 +3815,10 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|struct
+name|vop_strategy_args
+name|vop_strategy_a
+decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -4391,8 +4382,6 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -4414,6 +4403,10 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|struct
+name|vop_strategy_args
+name|vop_strategy_a
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VERBOSE
