@@ -1,16 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2002    Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    Bitfield support by Ovidiu Predescu  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000, 2002    Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    Bitfield support by Ovidiu Predescu  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* As a special exception, if you link this library with files    compiled with GCC to produce an executable, this does not cause    the resulting executable to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
 end_comment
 
+begin_comment
+comment|/* FIXME: This file has no business including tm.h.  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"tconfig.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -240,6 +256,25 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  FIXME: while this file has no business including tm.h, this     definitely has no business defining this macro but it     is only way around without really rewritting this file,     should look after the branch of 3.4 to fix this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rs6000_special_round_type_align
+parameter_list|(
+name|STRUCT
+parameter_list|,
+name|COMPUTED
+parameter_list|,
+name|SPECIFIED
+parameter_list|)
+define|\
+value|((TYPE_FIELDS (STRUCT) != 0						\&& DECL_MODE (TYPE_FIELDS (STRUCT)) == DFmode)			\    ? MAX (MAX (COMPUTED, SPECIFIED), 64)				\    : MAX (COMPUTED, SPECIFIED))
+end_define
 
 begin_comment
 comment|/*   return the size of an object specified by type */

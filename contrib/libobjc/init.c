@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime initialization     Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    +load support contributed by Ovidiu Predescu<ovidiu@net-community.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime initialization     Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    +load support contributed by Ovidiu Predescu<ovidiu@net-community.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -338,6 +338,67 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This function is used when building the class tree used to send    ordinately the +load message to all classes needing it.  The tree    is really needed so that superclasses will get the message before    subclasses.     This tree will contain classes which are being loaded (or have just    being loaded), and whose super_class pointers have not yet been    resolved.  This implies that their super_class pointers point to a    string with the name of the superclass; when the first message is    sent to the class (/an object of that class) the class links will    be resolved, which will replace the super_class pointers with    pointers to the actual superclasses.     Unfortunately, the tree might also contain classes which had been    loaded previously, and whose class links have already been    resolved.     This function returns the superclass of a class in both cases, and    can be used to build the determine the class relationships while    building the tree. */
+end_comment
+
+begin_function
+specifier|static
+name|Class
+name|class_superclass_of_class
+parameter_list|(
+name|Class
+name|class
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|super_class_name
+decl_stmt|;
+comment|/* If the class links have been resolved, use the resolved    * links.  */
+if|if
+condition|(
+name|CLS_ISRESOLV
+argument_list|(
+name|class
+argument_list|)
+condition|)
+return|return
+name|class
+operator|->
+name|super_class
+return|;
+comment|/* Else, 'class' has not yet been resolved.  This means that its    * super_class pointer is really the name of the super class (rather    * than a pointer to the actual superclass).  */
+name|super_class_name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|class
+operator|->
+name|super_class
+expr_stmt|;
+comment|/* Return Nil for a root class.  */
+if|if
+condition|(
+name|super_class_name
+operator|==
+name|NULL
+condition|)
+return|return
+name|Nil
+return|;
+comment|/* Lookup the superclass of non-root classes.  */
+return|return
+name|objc_lookup_class
+argument_list|(
+name|super_class_name
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Creates a tree of classes whose topmost class is directly inherited    from `upper' and the bottom class in this tree is    `bottom_class'. The classes in this tree are super classes of    `bottom_class'. `subclasses' member of each tree node point to the    next subclass tree node.  */
 end_comment
 
@@ -471,24 +532,10 @@ argument_list|)
 expr_stmt|;
 name|superclass
 operator|=
-operator|(
-name|superclass
-operator|->
-name|super_class
-condition|?
-name|objc_lookup_class
+name|class_superclass_of_class
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|superclass
-operator|->
-name|super_class
 argument_list|)
-else|:
-name|Nil
-operator|)
 expr_stmt|;
 name|prev
 operator|=
@@ -571,24 +618,10 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|class
-operator|->
-name|super_class
-condition|?
-name|objc_lookup_class
+name|class_superclass_of_class
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|class
-operator|->
-name|super_class
 argument_list|)
-else|:
-name|Nil
-operator|)
 operator|==
 name|tree
 operator|->
@@ -1418,24 +1451,10 @@ name|YES
 return|;
 name|class
 operator|=
-operator|(
-name|class
-operator|->
-name|super_class
-condition|?
-name|objc_lookup_class
+name|class_superclass_of_class
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|class
-operator|->
-name|super_class
 argument_list|)
-else|:
-name|Nil
-operator|)
 expr_stmt|;
 block|}
 return|return

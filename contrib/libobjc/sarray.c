@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sparse Arrays for Objective C dispatch tables    Copyright (C) 1993, 1995, 1996, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sparse Arrays for Objective C dispatch tables    Copyright (C) 1993, 1995, 1996, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1834,35 +1834,6 @@ name|buckets
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
-name|array
-operator|->
-name|is_copy_of
-operator|)
-operator|&&
-operator|(
-operator|(
-name|array
-operator|->
-name|is_copy_of
-operator|->
-name|ref_count
-operator|-
-literal|1
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|sarray_free
-argument_list|(
-name|array
-operator|->
-name|is_copy_of
-argument_list|)
-expr_stmt|;
 comment|/* Free all entries that do not point to empty_bucket */
 for|for
 control|(
@@ -2144,6 +2115,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* If this is a copy, go ahead and decrement/deallocate the original */
+if|if
+condition|(
+name|array
+operator|->
+name|is_copy_of
+condition|)
+name|sarray_free
+argument_list|(
+name|array
+operator|->
+name|is_copy_of
+argument_list|)
+expr_stmt|;
 comment|/* free array */
 name|sarray_free_garbage
 argument_list|(
