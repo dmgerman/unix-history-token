@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.51	82/12/14	*/
+comment|/*	kern_proc.c	4.52	82/12/16	*/
 end_comment
 
 begin_include
@@ -2020,6 +2020,12 @@ operator|->
 name|f_type
 operator|==
 name|DTYPE_FILE
+operator|&&
+name|fp
+operator|->
+name|f_count
+operator|>
+literal|0
 operator|&&
 name|fp
 operator|->
