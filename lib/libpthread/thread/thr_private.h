@@ -1606,6 +1606,11 @@ name|spinlock_t
 modifier|*
 name|spinlock
 decl_stmt|;
+name|struct
+name|pthread
+modifier|*
+name|thread
+decl_stmt|;
 block|}
 union|;
 end_union

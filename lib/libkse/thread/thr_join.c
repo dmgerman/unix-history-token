@@ -255,6 +255,15 @@ name|joiner
 operator|=
 name|curthread
 expr_stmt|;
+comment|/* Keep track of which thread we're joining to: */
+name|curthread
+operator|->
+name|data
+operator|.
+name|thread
+operator|=
+name|pthread
+expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thread_kern_sched_state
 argument_list|(
