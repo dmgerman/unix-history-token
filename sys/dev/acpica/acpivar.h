@@ -992,7 +992,13 @@ modifier|*
 name|irq
 parameter_list|,
 name|int
-name|cout
+name|count
+parameter_list|,
+name|int
+name|trig
+parameter_list|,
+name|int
+name|pol
 parameter_list|)
 function_decl|;
 name|void
