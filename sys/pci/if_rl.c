@@ -4888,13 +4888,6 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* Clear the timeout timer. */
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Go through our tx list and free mbufs for those 	 * frames that have been uploaded. 	 */
 do|do
 block|{
@@ -5074,6 +5067,28 @@ operator|.
 name|cur_tx
 condition|)
 do|;
+name|ifp
+operator|->
+name|if_timer
+operator|=
+operator|(
+name|sc
+operator|->
+name|rl_cdata
+operator|.
+name|last_tx
+operator|==
+name|sc
+operator|->
+name|rl_cdata
+operator|.
+name|cur_tx
+operator|)
+condition|?
+literal|0
+else|:
+literal|5
+expr_stmt|;
 return|return;
 block|}
 end_function
