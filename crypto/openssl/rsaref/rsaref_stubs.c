@@ -142,7 +142,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"** program again. See Chapter 6.5 in the FreeBSD Handbook, located at\n"
+literal|"** program again. See the OpenSSL chapter in the FreeBSD Handbook, located at\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
