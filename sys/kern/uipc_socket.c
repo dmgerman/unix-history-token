@@ -6892,6 +6892,10 @@ name|struct
 name|sockbuf
 name|asb
 decl_stmt|;
+comment|/* 	 * XXX: This variable is for an ugly workaround to fix problem,          * that was fixed in rev. 1.137 of sys/socketvar.h, and keep ABI          * compatibility. 	 */
+name|short
+name|save_sb_state
+decl_stmt|;
 comment|/* 	 * XXXRW: This is quite ugly.  Previously, this code made a copy of 	 * the socket buffer, then zero'd the original to clear the buffer 	 * fields.  However, with mutexes in the socket buffer, this causes 	 * problems.  We only clear the zeroable bits of the original; 	 * however, we have to initialize and destroy the mutex in the copy 	 * so that dom_dispose() and sbrelease() can lock t as needed. 	 */
 name|SOCKBUF_LOCK
 argument_list|(
@@ -6931,6 +6935,12 @@ name|sb
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Invalidate/clear most of the sockbuf structure, but leave 	 * selinfo and mutex data unchanged. 	 */
+name|save_sb_state
+operator|=
+name|sb
+operator|->
+name|sb_state
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -6993,6 +7003,12 @@ argument_list|,
 name|sb_startzero
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|sb
+operator|->
+name|sb_state
+operator|=
+name|save_sb_state
 expr_stmt|;
 name|SOCKBUF_UNLOCK
 argument_list|(
