@@ -2987,7 +2987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppsratecheck(): packets (or events) per second limitation.  *  * Return 0 if the limit is to be enforced (e.g. the caller  * should drop a packet because of the rate limitation).  *  * Note that we maintain the struct timeval for compatibility  * with other bsd systems.  We reuse the storage and just monitor  * clock ticks for minimal overhead.    */
+comment|/*  * ppsratecheck(): packets (or events) per second limitation.  *  * Return 0 if the limit is to be enforced (e.g. the caller  * should drop a packet because of the rate limitation).  *  * maxpps of 0 always causes zero to be returned.  maxpps of -1  * always causes 1 to be returned; this effectively defeats rate  * limiting.  *  * Note that we maintain the struct timeval for compatibility  * with other bsd systems.  We reuse the storage and just monitor  * clock ticks for minimal overhead.    */
 end_comment
 
 begin_function
@@ -3050,7 +3050,9 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|maxpps
+operator|!=
+literal|0
 operator|)
 return|;
 block|}
