@@ -811,13 +811,23 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|_fdset_mask
+parameter_list|(
+name|n
+parameter_list|)
+value|((fd_mask)1<< ((n) % NFDBITS))
+end_define
+
+begin_define
+define|#
+directive|define
 name|FD_SET
 parameter_list|(
 name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS] |= (1<< ((n) % NFDBITS)))
+value|((p)->fds_bits[(n)/NFDBITS] |= _fdset_mask(n))
 end_define
 
 begin_define
@@ -829,7 +839,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS]&= ~(1<< ((n) % NFDBITS)))
+value|((p)->fds_bits[(n)/NFDBITS]&= ~_fdset_mask(n))
 end_define
 
 begin_define
@@ -841,7 +851,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->fds_bits[(n)/NFDBITS]& (1<< ((n) % NFDBITS)))
+value|((p)->fds_bits[(n)/NFDBITS]& _fdset_mask(n))
 end_define
 
 begin_define
