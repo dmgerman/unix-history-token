@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * PCI specific probe and attach routines for Qlogic ISP SCSI adapters.  * FreeBSD Version.  *  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -5207,9 +5207,10 @@ name|ct_entry_t
 modifier|*
 name|cto
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
-decl_stmt|,
+decl_stmt|;
+name|u_int32_t
 name|totxfr
 decl_stmt|,
 name|sflags
@@ -5328,7 +5329,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun %d->iid%d flgs 0x%x sts 0x%x ssts 0x%x res %d"
+literal|"CTIO[%x] lun%d->iid%d flgs 0x%x sts 0x%x ssts 0x%x res %d"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5387,16 +5392,16 @@ name|nctios
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Save handle, and potentially any SCSI status, which we'll reinsert 	 * on the last CTIO we're going to send. 	 */
+comment|/* 	 * Save syshandle, and potentially any SCSI status, which we'll 	 * reinsert on the last CTIO we're going to send. 	 */
 name|handle
 operator|=
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 expr_stmt|;
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -5700,7 +5705,7 @@ block|{
 comment|/* 			 * We're the last in a sequence of CTIOs, so mark 			 * this CTIO and save the handle to the CCB such that 			 * when this CTIO completes we can free dma resources 			 * and do whatever else we need to do to finish the 			 * rest of the command. 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 name|handle
 expr_stmt|;
@@ -5752,8 +5757,12 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun%d for ID %d ct_flags 0x%x scsi "
-literal|"status %x resid %d"
+literal|"CTIO[%x] lun%d for ID %d ct_flags 0x%x "
+literal|"scsi status %x resid %d"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5789,7 +5798,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun%d for ID%d ct_flags 0x%x"
+literal|"CTIO[%x] lun%d for ID%d ct_flags 0x%x"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5843,10 +5856,10 @@ name|octo
 init|=
 name|cto
 decl_stmt|;
-comment|/* 			 * Make sure handle fields are clean 			 */
+comment|/* 			 * Make sure syshandle fields are clean 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -5866,7 +5879,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO lun%d for ID%d ct_flags 0x%x"
+literal|"CTIO[%x] lun%d for ID%d ct_flags 0x%x"
+argument_list|,
+name|cto
+operator|->
+name|ct_fwhandle
 argument_list|,
 name|csio
 operator|->
@@ -5956,7 +5973,7 @@ name|mp
 operator|->
 name|isp
 argument_list|,
-name|ISP_LOGWARN
+name|ISP_LOGTDEBUG0
 argument_list|,
 literal|"Queue Overflow in tdma_mk"
 argument_list|)
@@ -5985,6 +6002,14 @@ operator|.
 name|rqs_entry_count
 operator|=
 literal|1
+expr_stmt|;
+name|cto
+operator|->
+name|ct_fwhandle
+operator|=
+name|octo
+operator|->
+name|ct_fwhandle
 expr_stmt|;
 name|cto
 operator|->
@@ -6167,10 +6192,10 @@ decl_stmt|,
 name|send_status
 decl_stmt|,
 name|send_sense
+decl_stmt|,
+name|handle
 decl_stmt|;
 name|u_int32_t
-name|handle
-decl_stmt|,
 name|totxfr
 decl_stmt|,
 name|datalen
@@ -6277,7 +6302,7 @@ name|rqs_seqno
 operator|=
 literal|1
 expr_stmt|;
-comment|/* ct_reserved contains the handle set by caller */
+comment|/* ct_syshandle contains the handle set by caller */
 comment|/* 		 * We preserve ct_lun, ct_iid, ct_rxid. We set the data 		 * flags to NO DATA and clear relative offset flags. 		 * We preserve the ct_resid and the response area. 		 */
 name|cto
 operator|->
@@ -6350,7 +6375,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x sts 0x%x ssts "
+literal|"CTIO2[%x] lun %d->iid%d flgs 0x%x sts 0x%x ssts "
 literal|"0x%x res %d"
 argument_list|,
 name|cto
@@ -6458,11 +6483,11 @@ name|handle
 operator|=
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 expr_stmt|;
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -6816,7 +6841,7 @@ block|{
 comment|/* 			 * We're the last in a sequence of CTIO2s, so mark this 			 * CTIO2 and save the handle to the CCB such that when 			 * this CTIO2 completes we can free dma resources and 			 * do whatever else we need to do to finish the rest 			 * of the command. 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 name|handle
 expr_stmt|;
@@ -6976,7 +7001,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x sts 0x%x"
+literal|"CTIO2[%x] lun %d->iid%d flgs 0x%x sts 0x%x"
 literal|" ssts 0x%x res %d"
 argument_list|,
 name|cto
@@ -7038,7 +7063,7 @@ decl_stmt|;
 comment|/* 			 * Make sure handle fields are clean 			 */
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 operator|=
 literal|0
 expr_stmt|;
@@ -7074,7 +7099,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x lun %d->iid%d flgs 0x%x"
+literal|"CTIO2[%x] lun %d->iid%d flgs 0x%x"
 argument_list|,
 name|cto
 operator|->
@@ -7193,7 +7218,15 @@ name|rqs_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* ct_header.rqs_seqno&& ct_reserved done later */
+comment|/* ct_header.rqs_seqno&& ct_syshandle done later */
+name|cto
+operator|->
+name|ct_fwhandle
+operator|=
+name|octo
+operator|->
+name|ct_fwhandle
+expr_stmt|;
 name|cto
 operator|->
 name|ct_lun
