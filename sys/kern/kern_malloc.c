@@ -872,6 +872,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|t_malloc_fail
+operator|=
+name|time_uptime
+expr_stmt|;
 return|return
 operator|(
 name|NULL
