@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.12 84/04/05"
+literal|"@(#)parser1.c	3.13 84/04/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -701,6 +701,10 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cmd
+condition|)
 name|str_free
 argument_list|(
 name|cmd
@@ -747,6 +751,10 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cmd
+condition|)
 name|str_free
 argument_list|(
 name|cmd
@@ -758,6 +766,10 @@ literal|1
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|cmd
+condition|)
 name|str_free
 argument_list|(
 name|cmd
