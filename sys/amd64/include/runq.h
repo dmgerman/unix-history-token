@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|RQB_LEN
-value|(2)
+value|(1)
 end_define
 
 begin_comment
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|RQB_L2BPW
-value|(5)
+value|(6)
 end_define
 
 begin_comment
@@ -55,7 +55,7 @@ name|RQB_BIT
 parameter_list|(
 name|pri
 parameter_list|)
-value|(1<< ((pri)& (RQB_BPW - 1)))
+value|(1ul<< ((pri)& (RQB_BPW - 1)))
 end_define
 
 begin_define
@@ -75,7 +75,7 @@ name|RQB_FFS
 parameter_list|(
 name|word
 parameter_list|)
-value|(ffs(word) - 1)
+value|(bsfq(word))
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|rqb_word_t
 typedef|;
 end_typedef
