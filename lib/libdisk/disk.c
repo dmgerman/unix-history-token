@@ -1953,7 +1953,7 @@ name|n
 argument_list|,
 name|part
 argument_list|,
-literal|0
+name|ty
 argument_list|,
 literal|0
 argument_list|,
