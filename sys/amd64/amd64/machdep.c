@@ -409,12 +409,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ptrace.h>
 end_include
 
@@ -8748,9 +8742,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|rand_initialize
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
