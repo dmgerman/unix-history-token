@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootinfo.c,v 1.2 1998/09/03 02:10:09 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootinfo.c,v 1.3 1998/09/14 18:27:05 msmith Exp $  */
 end_comment
 
 begin_include
@@ -347,7 +347,7 @@ operator|->
 name|ev_next
 control|)
 block|{
-name|vpbcopy
+name|i386_copyin
 argument_list|(
 name|ep
 operator|->
@@ -372,7 +372,7 @@ operator|->
 name|ev_name
 argument_list|)
 expr_stmt|;
-name|vpbcopy
+name|i386_copyin
 argument_list|(
 literal|"="
 argument_list|,
@@ -393,7 +393,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vpbcopy
+name|i386_copyin
 argument_list|(
 name|ep
 operator|->
@@ -419,7 +419,7 @@ name|ev_value
 argument_list|)
 expr_stmt|;
 block|}
-name|vpbcopy
+name|i386_copyin
 argument_list|(
 literal|""
 argument_list|,
@@ -432,7 +432,7 @@ name|addr
 operator|++
 expr_stmt|;
 block|}
-name|vpbcopy
+name|i386_copyin
 argument_list|(
 literal|""
 argument_list|,
@@ -462,7 +462,7 @@ name|a
 parameter_list|,
 name|s
 parameter_list|)
-value|{				\     u_int32_t ident = (t<< 16) + strlen(s) + 1;	\     vpbcopy(&ident, a, sizeof(ident));			\     a += sizeof(ident);					\     vpbcopy(s, a, strlen(s) + 1);			\     a += strlen(s) + 1;					\ }
+value|{				\     u_int32_t ident = (t<< 16) + strlen(s) + 1;	\     i386_copyin(&ident, a, sizeof(ident));		\     a += sizeof(ident);					\     i386_copyin(s, a, strlen(s) + 1);			\     a += strlen(s) + 1;					\ }
 end_define
 
 begin_define
@@ -500,7 +500,7 @@ name|a
 parameter_list|,
 name|s
 parameter_list|)
-value|{			\     u_int32_t ident = (t<< 16) + sizeof(s);	\     vpbcopy(&ident, a, sizeof(ident));		\     a += sizeof(ident);				\     vpbcopy(&s, a, sizeof(s));			\     a += sizeof(s);				\ }
+value|{			\     u_int32_t ident = (t<< 16) + sizeof(s);	\     i386_copyin(&ident, a, sizeof(ident));	\     a += sizeof(ident);				\     i386_copyin(&s, a, sizeof(s));		\     a += sizeof(s);				\ }
 end_define
 
 begin_define
@@ -536,7 +536,7 @@ name|a
 parameter_list|,
 name|mm
 parameter_list|)
-value|{							\     u_int32_t ident = ((MODINFO_METADATA | mm->md_type)<< 16) + mm->md_size;	\     vpbcopy(&ident, a, sizeof(ident));						\     a += sizeof(ident);								\     vpbcopy(mm->md_data, a, mm->md_size);					\     a += mm->md_size;								\ }
+value|{							\     u_int32_t ident = ((MODINFO_METADATA | mm->md_type)<< 16) + mm->md_size;	\     i386_copyin(&ident, a, sizeof(ident));					\     a += sizeof(ident);								\     i386_copyin(mm->md_data, a, mm->md_size);					\     a += mm->md_size;								\ }
 end_define
 
 begin_define
@@ -546,7 +546,7 @@ name|MOD_END
 parameter_list|(
 name|a
 parameter_list|)
-value|{			\     u_int32_t ident = 0;		\     vpbcopy(&ident, a, sizeof(ident));	\     a += sizeof(ident);			\     vpbcopy(&ident, a, sizeof(ident));	\     a += sizeof(ident);			\ }
+value|{				\     u_int32_t ident = 0;			\     i386_copyin(&ident, a, sizeof(ident));	\     a += sizeof(ident);				\     i386_copyin(&ident, a, sizeof(ident));	\     a += sizeof(ident);				\ }
 end_define
 
 begin_function

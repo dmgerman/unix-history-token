@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.3 1998/09/03 02:10:09 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.4 1998/09/14 18:27:06 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -31,16 +31,11 @@ directive|include
 file|"libi386/libi386.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|boot_biosdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from runtime startup */
-end_comment
+begin_include
+include|#
+directive|include
+file|"btxv86.h"
+end_include
 
 begin_decl_stmt
 name|struct
@@ -78,21 +73,6 @@ begin_comment
 comment|/* XXX debugging */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"libi386/crt/diskbuf.h"
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|stackbase
-decl_stmt|,
-name|stacktop
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -115,7 +95,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*       * Initialise the heap as early as possible.  Once this is done, alloc() is usable.      * The stack is buried inside us, so this is safe       */
+comment|/*       * Initialise the heap as early as possible.  Once this is done, malloc() is usable.      *      * XXX better to locate end of memory and use that      */
 name|setheap
 argument_list|(
 operator|(
@@ -131,7 +111,11 @@ operator|)
 operator|(
 name|end
 operator|+
-literal|0x80000
+operator|(
+literal|384
+operator|*
+literal|1024
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -247,8 +231,9 @@ name|biosdisk
 operator|.
 name|unit
 operator|=
-name|boot_biosdev
+literal|0
 expr_stmt|;
+comment|/* XXX wrong, need to get from bootinfo etc. */
 name|currdev
 operator|.
 name|d_kind
@@ -400,16 +385,7 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|reboot
-argument_list|()
-expr_stmt|;
-comment|/* Note: we shouldn't get to this point! */
-name|panic
-argument_list|(
-literal|"Reboot failed!"
-argument_list|)
-expr_stmt|;
-name|exit
+name|__exit
 argument_list|(
 literal|0
 argument_list|)
@@ -417,78 +393,41 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|COMMAND_SET
-argument_list|(
-name|stack
-argument_list|,
-literal|"stack"
-argument_list|,
-literal|"show stack usage"
-argument_list|,
-name|command_stack
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* provide this for panic */
+end_comment
 
 begin_function
-specifier|static
-name|int
-name|command_stack
+name|void
+name|exit
 parameter_list|(
 name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|code
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-operator|&
-name|stackbase
-init|;
-name|cp
-operator|<
-operator|&
-name|stacktop
-condition|;
-name|cp
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|cp
-operator|!=
-literal|0
-condition|)
-break|break;
-name|printf
+name|__exit
 argument_list|(
-literal|"%d bytes of stack used\n"
-argument_list|,
-operator|&
-name|stacktop
-operator|-
-name|cp
+name|code
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|CMD_OK
-operator|)
-return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX learn to ask BTX */
+end_comment
+
+begin_endif
+unit|COMMAND_SET(stack, "stack", "show stack usage", command_stack);  extern char stackbase, stacktop;  static int command_stack(int argc, char *argv[]) {     char	*cp;      for (cp =&stackbase; cp<&stacktop; cp++) 	if (*cp != 0) 	    break;          printf("%d bytes of stack used\n",&stacktop - cp);     return(CMD_OK); }
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|COMMAND_SET

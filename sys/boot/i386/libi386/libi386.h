@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: libi386.h,v 1.3 1998/09/03 02:10:09 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: libi386.h,v 1.4 1998/09/14 18:27:05 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -149,67 +149,21 @@ begin_comment
 comment|/* from crt module */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|vpbcopy
-parameter_list|(
-name|void
-modifier|*
-name|src
-parameter_list|,
-name|vm_offset_t
-name|dest
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function_decl
-specifier|extern
-name|void
-name|pvbcopy
-parameter_list|(
-name|vm_offset_t
-name|src
-parameter_list|,
-name|void
-modifier|*
-name|dest
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* BTX */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|pbzero
-parameter_list|(
-name|vm_offset_t
-name|dest
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|vm_offset_t
-name|vtophys
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_endif
+unit|extern void		vpbcopy(void *src, vm_offset_t dest, size_t size); extern void		pvbcopy(vm_offset_t src, void *dest, size_t size); extern void		pbzero(vm_offset_t dest, size_t size); extern vm_offset_t	vtophys(void *addr);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -264,26 +218,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|startprog
-parameter_list|(
-name|vm_offset_t
-name|entry
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|u_int32_t
-modifier|*
-name|argv
-parameter_list|,
-name|vm_offset_t
-name|stack
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* BTX */
+end_comment
+
+begin_endif
+unit|extern void		startprog(vm_offset_t entry, int argc, u_int32_t *argv, vm_offset_t stack);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -305,15 +254,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|void
-name|reboot
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|vm_offset_t
+name|memtop
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -354,6 +300,72 @@ name|bi_copyenv
 parameter_list|(
 name|vm_offset_t
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * BIOS functions from bioscalls.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|BIOS_cominit
+parameter_list|(
+name|int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|BIOS_computc
+parameter_list|(
+name|int
+name|c
+parameter_list|,
+name|int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|BIOS_comgetc
+parameter_list|(
+name|int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|BIOS_comisc
+parameter_list|(
+name|int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|BIOS_diskinfo_old
+parameter_list|(
+name|int
+name|drive
+parameter_list|,
+name|int
+modifier|*
+name|param
 parameter_list|)
 function_decl|;
 end_function_decl

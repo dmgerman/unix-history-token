@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id:$  */
+comment|/*  *	$Id: btxv86.h,v 1.1 1998/09/14 10:37:00 rnordier Exp $  */
 end_comment
 
 begin_ifndef
@@ -136,6 +136,83 @@ end_comment
 
 begin_function_decl
 name|void
+name|__v86int
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|v86
+value|__v86
+end_define
+
+begin_define
+define|#
+directive|define
+name|v86int
+value|__v86int
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|__base
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|__args
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PTOV
+parameter_list|(
+name|pa
+parameter_list|)
+value|(caddr_t)((pa) - __base)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTOP
+parameter_list|(
+name|va
+parameter_list|)
+value|(vm_offset_t)((va) + __base)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTOPSEG
+parameter_list|(
+name|va
+parameter_list|)
+value|(u_int16_t)(VTOP(va)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTOPOFF
+parameter_list|(
+name|va
+parameter_list|)
+value|(u_int16_t)(VTOP(va)& 0xf)
+end_define
+
+begin_function_decl
+name|void
 name|__exit
 parameter_list|(
 name|int
@@ -150,15 +227,6 @@ parameter_list|(
 name|caddr_t
 parameter_list|,
 modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|__v86int
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
