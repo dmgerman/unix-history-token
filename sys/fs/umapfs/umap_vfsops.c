@@ -440,7 +440,7 @@ name|umap_mount
 modifier|*
 name|amp
 decl_stmt|;
-name|u_int
+name|size_t
 name|size
 decl_stmt|;
 name|int
