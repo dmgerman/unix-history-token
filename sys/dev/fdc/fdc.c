@@ -2542,7 +2542,7 @@ argument_list|)
 expr_stmt|;
 name|fdc
 operator|->
-name|res_ioport
+name|res_drq
 operator|=
 name|NULL
 expr_stmt|;
