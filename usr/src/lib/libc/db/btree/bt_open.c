@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.21 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,30 +53,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -92,13 +68,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -111,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -203,6 +203,10 @@ decl_stmt|;
 name|int
 name|nr
 decl_stmt|;
+name|t
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Intention is to make sure all of the user's selections are okay 	 * here and then use them without checking.  Can't be complete, since 	 * we don't know the right page size, lorder or flags until the backing 	 * file is opened.  Also, the file's page size can cause the cachesize 	 * to change. 	 */
 if|if
 condition|(
@@ -992,19 +996,23 @@ operator|=
 name|MAX_PAGE_OFFSET
 expr_stmt|;
 block|}
-name|t
-operator|->
-name|bt_flags
-operator||=
+if|if
+condition|(
+operator|!
+operator|(
 name|b
 operator|.
 name|flags
 operator|&
 name|R_DUP
-condition|?
-literal|0
-else|:
+operator|)
+condition|)
+name|SET
+argument_list|(
+name|t
+argument_list|,
 name|BTF_NODUPS
+argument_list|)
 expr_stmt|;
 name|t
 operator|->
@@ -1215,7 +1223,8 @@ name|err
 goto|;
 if|if
 condition|(
-name|NOTSET
+operator|!
+name|ISSET
 argument_list|(
 name|t
 argument_list|,
