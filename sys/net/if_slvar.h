@@ -114,6 +114,11 @@ argument|sl_softc
 argument_list|)
 name|sl_next
 expr_stmt|;
+name|u_char
+modifier|*
+name|bpfbuf
+decl_stmt|;
+comment|/* hing buffer for bpf here */
 block|}
 struct|;
 end_struct
