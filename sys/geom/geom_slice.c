@@ -1102,6 +1102,12 @@ condition|(
 name|gsp
 operator|->
 name|start
+operator|!=
+name|NULL
+operator|&&
+name|gsp
+operator|->
+name|start
 argument_list|(
 name|bp
 argument_list|)
@@ -2129,6 +2135,33 @@ name|length
 operator|=
 name|length
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+operator|(
+name|ract
+operator||
+name|dact
+operator||
+name|wact
+operator|)
+operator|&
+name|G_SLICE_HOT_START
+operator|)
+operator|||
+name|gsp
+operator|->
+name|start
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"G_SLICE_HOT_START but no slice->start"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX: check that we _have_ a start function if HOT_START specified */
 name|gsl
 index|[
 name|idx
