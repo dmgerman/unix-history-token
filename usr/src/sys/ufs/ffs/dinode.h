@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	6.5	84/07/26	*/
+comment|/*	dinode.h	6.6	84/12/20	*/
 end_comment
 
 begin_comment
@@ -747,6 +747,17 @@ end_define
 
 begin_comment
 comment|/* inode is being renamed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXMOD
+value|0x8000
+end_define
+
+begin_comment
+comment|/* inode is text, but impure (XXX) */
 end_comment
 
 begin_comment
