@@ -2227,15 +2227,17 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Do you wish to install cryptographic software?\n\n"
-literal|"If you choose No, FreeBSD will use an MD5 based password scheme which,\n"
-literal|"while perhaps more secure, is not interoperable with the traditional\n"
-literal|"DES-based passwords on other Unix systems.  There will also be some\n"
-literal|"differences in the type of RSA code you use.\n\n"
-literal|"Please do NOT choose Yes at this point if you are outside the\n"
-literal|"United States and Canada and are installing from a U.S. FTP server.\n"
-literal|"Instead, install everything but the crypto bits from the U.S. site\n"
-literal|"and then switch to an international FTP server to install crypto on\n"
-literal|"a second pass with the Custom Installation option."
+literal|"If you choose No, FreeBSD will use an MD5-based password scheme which,\n"
+literal|"while more secure, is not interoperable with the traditional\n"
+literal|"DES-based passwords used on other Unix systems.\n\n"
+literal|"Please do NOT choose Yes at this point if you are outside the United\n"
+literal|"States and Canada and are installing from a U.S. FTP server (installing\n"
+literal|"from the CD is fine). Instead, install everything but the crypto bits\n"
+literal|"from the U.S. site and then switch to an international FTP server to\n"
+literal|"install crypto on a second pass with the Custom Installation option.\n\n"
+literal|"Note that the international crypto distribution has a better\n"
+literal|"implementation of the RSA algorithm, which cannot be used in the U.S.\n"
+literal|"for patent reasons.\n"
 argument_list|)
 condition|)
 block|{
@@ -2298,7 +2300,7 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Would you like to install the FreeBSD ports collection?\n\n"
-literal|"This will give you ready access to over 3000 ported software packages,\n"
+literal|"This will give you ready access to over 3600 ported software packages,\n"
 literal|"at a cost of around 70MB of disk space when \"clean\" and possibly\n"
 literal|"much more than that when a lot of the distribution tarballs are loaded\n"
 literal|"(unless you have the extra CDs available from a FreeBSD CDROM distribution\n"

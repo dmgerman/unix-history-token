@@ -4702,9 +4702,7 @@ block|,
 literal|"Select the distributions you wish to install."
 block|,
 literal|"Please check off the distributions you wish to install.  At the\n"
-literal|"very minimum, this should be \"bin\".  WARNING:  Do not export the\n"
-literal|"Encryption distribution out of the U.S.!\n"
-literal|"It is for U.S. customers only."
+literal|"very minimum, this should be \"bin\"."
 block|,
 name|NULL
 block|,
