@@ -1456,6 +1456,12 @@ expr_stmt|;
 name|fp_divide_by_0
 argument_list|()
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* wait for any IRQ13 */
 if|if
 condition|(
 name|npx_traps_while_probing
@@ -1552,30 +1558,6 @@ argument_list|,
 name|irq_cookie
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX hack around brokenness of bus_teardown_intr().  If we left the 	 * irq active then we would get it instead of exception 16. 	 */
-block|{
-name|struct
-name|intsrc
-modifier|*
-name|isrc
-decl_stmt|;
-name|isrc
-operator|=
-name|intr_lookup_source
-argument_list|(
-name|irq_num
-argument_list|)
-expr_stmt|;
-name|isrc
-operator|->
-name|is_pic
-operator|->
-name|pic_disable_source
-argument_list|(
-name|isrc
-argument_list|)
-expr_stmt|;
-block|}
 name|bus_release_resource
 argument_list|(
 name|dev
