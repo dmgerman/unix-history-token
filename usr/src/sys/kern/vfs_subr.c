@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1276,9 +1276,11 @@ name|v_type
 operator|!=
 name|VBAD
 condition|)
-name|vgone
+name|VOP_REVOKE
 argument_list|(
 name|vp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3557,9 +3559,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vgone
+name|VOP_REVOKE
 argument_list|(
 name|vp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3587,9 +3591,11 @@ operator|!=
 name|VCHR
 condition|)
 block|{
-name|vgone
+name|VOP_REVOKE
 argument_list|(
 name|vp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3857,31 +3863,50 @@ comment|/*  * Eliminate all activity associated with  the requested vnode  * and
 end_comment
 
 begin_function
-name|void
-name|vgoneall
+name|int
+name|vop_revoke
 parameter_list|(
-name|vp
+name|ap
 parameter_list|)
-specifier|register
 name|struct
-name|vnode
+name|vop_revoke_args
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 	} */
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
 block|{
 specifier|register
 name|struct
 name|vnode
 modifier|*
+name|vp
+decl_stmt|,
+modifier|*
 name|vq
 decl_stmt|;
+name|vp
+operator|=
+name|ap
+operator|->
+name|a_vp
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|ap
+operator|->
+name|a_flags
+operator|&
+name|REVOKEALL
+operator|)
+operator|&&
+operator|(
 name|vp
 operator|->
 name|v_flag
 operator|&
 name|VALIASED
+operator|)
 condition|)
 block|{
 comment|/* 		 * If a vgone (or vclean) is already in progress, 		 * wait until it is done and return. 		 */
@@ -3909,12 +3934,16 @@ name|vp
 argument_list|,
 name|PINOD
 argument_list|,
-literal|"vgoneall"
+literal|"vop_revokeall"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 		 * Ensure that vp will not be vgone'd while we 		 * are eliminating its aliases. 		 */
 name|vp
@@ -3995,6 +4024,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
