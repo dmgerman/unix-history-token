@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.8 1995/05/30 08:03:04 rgrimes Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.9 1995/07/13 15:01:38 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -2403,6 +2403,11 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|struct
+name|scsibus_data
+modifier|*
+name|scbus
+decl_stmt|;
 name|sea_kdc
 index|[
 name|unit
@@ -2484,15 +2489,33 @@ operator|=
 operator|&
 name|sea_dev
 expr_stmt|;
-comment|/* ask the adapter what subunits are present */
-name|scsi_attachdevs
-argument_list|(
+comment|/* 	 * Prepare the scsibus_data area for the upperlevel 	 * scsi code. 	 */
+name|scbus
+operator|=
+name|scsi_alloc_bus
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|scbus
+condition|)
+return|return
+literal|0
+return|;
+name|scbus
+operator|->
+name|adapter_link
+operator|=
 operator|&
-operator|(
 name|z
 operator|->
 name|sc_link
-operator|)
+expr_stmt|;
+comment|/* ask the adapter what subunits are present */
+name|scsi_attachdevs
+argument_list|(
+name|scbus
 argument_list|)
 expr_stmt|;
 return|return
