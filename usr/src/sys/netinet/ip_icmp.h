@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -490,6 +490,17 @@ define|#
 directive|define
 name|ICMP_MAXTYPE
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMP_INFOTYPE
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|((type) == ICMP_ECHOREPLY || (type) == ICMP_ECHO || \ 	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \ 	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \ 	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
 end_define
 
 end_unit
