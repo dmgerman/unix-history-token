@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.43	82/10/22	*/
+comment|/*	if_imp.c	4.44	82/10/31	*/
 end_comment
 
 begin_include
@@ -326,7 +326,7 @@ name|ui_flags
 expr_stmt|;
 name|ifp
 operator|->
-name|if_ubareset
+name|if_reset
 operator|=
 name|reset
 expr_stmt|;
