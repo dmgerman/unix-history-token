@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	7.1	%G%"
+literal|"@(#)ex.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,24 +414,6 @@ argument_list|,
 name|onemt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize end of core pointers. 	 * Normally we avoid breaking back to fendcore after each 	 * file since this can be expensive (much core-core copying). 	 * If your system can scatter load processes you could do 	 * this as ed does, saving a little core, but it will probably 	 * not often make much difference. 	 */
-name|fendcore
-operator|=
-operator|(
-name|line
-operator|*
-operator|)
-name|sbrk
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|endcore
-operator|=
-name|fendcore
-operator|-
-literal|2
-expr_stmt|;
 comment|/* 	 * Process flag arguments. 	 */
 name|ac
 operator|--
@@ -781,6 +763,24 @@ name|av
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * Initialize end of core pointers. 	 * Normally we avoid breaking back to fendcore after each 	 * file since this can be expensive (much core-core copying). 	 * If your system can scatter load processes you could do 	 * this as ed does, saving a little core, but it will probably 	 * not often make much difference. 	 */
+name|fendcore
+operator|=
+operator|(
+name|line
+operator|*
+operator|)
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|endcore
+operator|=
+name|fendcore
+operator|-
+literal|2
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGTSTP
