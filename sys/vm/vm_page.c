@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.14 1994/03/14 21:54:28 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.15 1994/03/19 22:24:38 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1325,7 +1325,7 @@ index|]
 expr_stmt|;
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 name|simple_lock
@@ -1388,7 +1388,7 @@ operator|&
 name|bucket_lock
 argument_list|)
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1419,7 +1419,7 @@ operator|&
 name|bucket_lock
 argument_list|)
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1476,7 +1476,7 @@ expr_stmt|;
 comment|/* keep page from moving out from 				   under pageout daemon */
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 name|vm_page_remove
@@ -1493,7 +1493,7 @@ argument_list|,
 name|new_offset
 argument_list|)
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1532,7 +1532,7 @@ name|spl
 decl_stmt|;
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 name|simple_lock
@@ -1571,7 +1571,7 @@ operator|&
 name|vm_page_queue_free_lock
 argument_list|)
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1613,7 +1613,7 @@ operator|&
 name|vm_page_queue_free_lock
 argument_list|)
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1694,11 +1694,11 @@ literal|0
 expr_stmt|;
 name|mem
 operator|->
-name|deact
+name|act_count
 operator|=
 literal|0
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1753,19 +1753,13 @@ name|spl
 decl_stmt|;
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 name|vm_page_remove
 argument_list|(
 name|mem
 argument_list|)
-expr_stmt|;
-name|mem
-operator|->
-name|deact
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1887,7 +1881,7 @@ operator|&
 name|vm_page_queue_free_lock
 argument_list|)
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1945,7 +1939,7 @@ block|}
 block|}
 else|else
 block|{
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -1987,7 +1981,7 @@ argument_list|)
 expr_stmt|;
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -2072,7 +2066,7 @@ operator|->
 name|wire_count
 operator|++
 expr_stmt|;
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -2105,7 +2099,7 @@ argument_list|)
 expr_stmt|;
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -2155,7 +2149,7 @@ name|vm_page_wire_count
 operator|--
 expr_stmt|;
 block|}
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -2191,12 +2185,6 @@ name|spl
 operator|=
 name|splhigh
 argument_list|()
-expr_stmt|;
-name|m
-operator|->
-name|deact
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2382,16 +2370,27 @@ decl_stmt|;
 block|{
 name|int
 name|spl
+decl_stmt|,
+name|target
+decl_stmt|,
+name|shortage
+decl_stmt|,
+name|maxscan
+decl_stmt|;
+name|vm_page_t
+name|actm
+decl_stmt|,
+name|next
 decl_stmt|;
 name|VM_PAGE_CHECK
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_pageout_deact_bump
-argument_list|(
-name|m
-argument_list|)
+name|spl
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2427,11 +2426,6 @@ literal|"vm_page_activate: on both queues?"
 argument_list|)
 expr_stmt|;
 block|}
-name|spl
-operator|=
-name|vm_disable_intr
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2463,16 +2457,12 @@ operator|&=
 operator|~
 name|PG_INACTIVE
 expr_stmt|;
+name|vm_stat
+operator|.
+name|reactivations
+operator|++
+expr_stmt|;
 block|}
-if|if
-condition|(
-name|m
-operator|->
-name|wire_count
-operator|==
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|m
@@ -2539,8 +2529,13 @@ expr_stmt|;
 name|vm_page_active_count
 operator|++
 expr_stmt|;
-block|}
-name|vm_set_intr
+name|m
+operator|->
+name|act_count
+operator|=
+literal|10
+expr_stmt|;
+name|splx
 argument_list|(
 name|spl
 argument_list|)

@@ -2026,6 +2026,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|++
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nswap
+expr_stmt|;
 operator|(
 name|void
 operator|)

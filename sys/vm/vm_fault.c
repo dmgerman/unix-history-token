@@ -4,7 +4,7 @@ comment|/*   * Copyright (c) 1991 Regents of the University of California.  * Al
 end_comment
 
 begin_comment
-comment|/*  * $Id: vm_fault.c,v 1.14 1994/01/31 04:19:59 davidg Exp $  */
+comment|/*  * $Id: vm_fault.c,v 1.15 1994/03/14 21:54:24 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -189,6 +189,11 @@ name|reqpage
 decl_stmt|;
 name|int
 name|spl
+decl_stmt|;
+name|int
+name|hardfault
+init|=
+literal|0
 decl_stmt|;
 name|vm_stat
 operator|.
@@ -404,7 +409,7 @@ argument_list|()
 expr_stmt|;
 name|spl
 operator|=
-name|vm_disable_intr
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -437,11 +442,6 @@ name|PG_INACTIVE
 expr_stmt|;
 name|vm_page_inactive_count
 operator|--
-expr_stmt|;
-name|vm_stat
-operator|.
-name|reactivations
-operator|++
 expr_stmt|;
 block|}
 if|if
@@ -476,7 +476,7 @@ name|vm_page_active_count
 operator|--
 expr_stmt|;
 block|}
-name|vm_set_intr
+name|splx
 argument_list|(
 name|spl
 argument_list|)
@@ -786,6 +786,9 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|hardfault
+operator|++
 expr_stmt|;
 break|break;
 block|}
@@ -1892,11 +1895,43 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_pageout_deact_bump
-argument_list|(
-name|m
-argument_list|)
+block|}
+if|if
+condition|(
+name|curproc
+operator|&&
+name|curproc
+operator|->
+name|p_stats
+condition|)
+block|{
+if|if
+condition|(
+name|hardfault
+condition|)
+block|{
+name|curproc
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_majflt
+operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+name|curproc
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_minflt
+operator|++
+expr_stmt|;
+block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
