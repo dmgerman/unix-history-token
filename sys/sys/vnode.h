@@ -242,24 +242,12 @@ modifier|*
 name|vu_socket
 decl_stmt|;
 comment|/* v unix ipc (VSOCK) */
-struct|struct
-block|{
 name|struct
 name|cdev
 modifier|*
 name|vu_cdev
 decl_stmt|;
 comment|/* v device (VCHR, VBLK) */
-name|SLIST_ENTRY
-argument_list|(
-argument|vnode
-argument_list|)
-name|vu_specnext
-expr_stmt|;
-comment|/* s device aliases */
-block|}
-name|vu_spec
-struct|;
 name|struct
 name|fifoinfo
 modifier|*
@@ -410,14 +398,7 @@ begin_define
 define|#
 directive|define
 name|v_rdev
-value|v_un.vu_spec.vu_cdev
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_specnext
-value|v_un.vu_spec.vu_specnext
+value|v_un.vu_cdev
 end_define
 
 begin_define

@@ -73,6 +73,12 @@ name|snapdata
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|devfs_dirent
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|cdev
@@ -161,12 +167,12 @@ argument|cdev
 argument_list|)
 name|si_hash
 expr_stmt|;
-name|SLIST_HEAD
+name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|vnode
+argument|devfs_dirent
 argument_list|)
-name|si_hlist
+name|si_alist
 expr_stmt|;
 name|LIST_HEAD
 argument_list|(
@@ -1129,9 +1135,9 @@ name|void
 name|dev_rel
 parameter_list|(
 name|struct
-name|vnode
+name|cdev
 modifier|*
-name|vp
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -369,6 +369,12 @@ argument|devfs_dirent
 argument_list|)
 name|de_dlist
 expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|devfs_dirent
+argument_list|)
+name|de_alias
+expr_stmt|;
 name|struct
 name|devfs_dirent
 modifier|*
