@@ -1029,11 +1029,13 @@ name|size_t
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|fp
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

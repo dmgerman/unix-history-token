@@ -275,7 +275,7 @@ name|disklabel
 expr_stmt|;
 else|#
 directive|else
-else|EMBEDDED_DISKLABEL
+comment|/* EMBEDDED_DISKLABEL */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -470,7 +470,7 @@ directive|endif
 comment|/* PC98 */
 endif|#
 directive|endif
-endif|EMBEDDED_DISKLABEL
+comment|/* EMBEDDED_DISKLABEL */
 if|if
 condition|(
 name|dl

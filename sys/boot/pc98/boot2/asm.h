@@ -236,8 +236,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|wheeze
 end_else
+
+begin_comment
+comment|/* wheeze */
+end_comment
 
 begin_define
 define|#
@@ -320,8 +323,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|__STDC__
 end_else
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_define
 define|#
@@ -380,8 +386,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|__STDC__
 end_endif
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_define
 define|#
@@ -459,8 +468,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|wheeze
 end_endif
+
+begin_comment
+comment|/* wheeze */
+end_comment
 
 begin_define
 define|#
@@ -530,8 +542,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|__STDC__
 end_else
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_define
 define|#
@@ -575,14 +590,20 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|__STDC__
 end_endif
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_else
 else|#
 directive|else
-else|GPROF
 end_else
+
+begin_comment
+comment|/* GPROF */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -631,8 +652,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|__STDC__
 end_else
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_define
 define|#
@@ -675,14 +699,20 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|__STDC__
 end_endif
+
+begin_comment
+comment|/* __STDC__ */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|GPROF
 end_endif
+
+begin_comment
+comment|/* GPROF */
+end_comment
 
 begin_define
 define|#
