@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.36 2001/01/14 06:34:57 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.24 2000/03/01 02:34:57 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -35,6 +35,11 @@ begin_enum
 enum|enum
 name|constants
 block|{
+comment|/*      * Current version of the data structures.  This      * is used to ensure synchronization between      * kernel module and userland vinum(8).      */
+name|VINUMVERSION
+init|=
+literal|1
+block|,
 name|VINUM_HEADER
 init|=
 literal|512
@@ -481,7 +486,7 @@ comment|/* super device for daemon only */
 end_comment
 
 begin_comment
-comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.  */
+comment|/*  * Flags for all objects.  Most of them only apply  * to specific objects, but we currently have  * space for all in any 32 bit flags word.  */
 end_comment
 
 begin_enum
@@ -598,138 +603,14 @@ init|=
 literal|0x200000
 block|,
 comment|/* for drives: use as hot spare */
+name|VF_RETRYERRORS
+init|=
+literal|0x400000
+block|,
+comment|/* don't down subdisks on I/O errors */
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* Global configuration information for the vinum subsystem */
-end_comment
-
-begin_struct
-struct|struct
-name|_vinum_conf
-block|{
-comment|/* Pointers to vinum structures */
-name|struct
-name|drive
-modifier|*
-name|drive
-decl_stmt|;
-name|struct
-name|sd
-modifier|*
-name|sd
-decl_stmt|;
-name|struct
-name|plex
-modifier|*
-name|plex
-decl_stmt|;
-name|struct
-name|volume
-modifier|*
-name|volume
-decl_stmt|;
-comment|/* the number allocated */
-name|int
-name|drives_allocated
-decl_stmt|;
-name|int
-name|subdisks_allocated
-decl_stmt|;
-name|int
-name|plexes_allocated
-decl_stmt|;
-name|int
-name|volumes_allocated
-decl_stmt|;
-comment|/* and the number currently in use */
-name|int
-name|drives_used
-decl_stmt|;
-name|int
-name|subdisks_used
-decl_stmt|;
-name|int
-name|plexes_used
-decl_stmt|;
-name|int
-name|volumes_used
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|VINUM_MAXACTIVE
-value|30000
-comment|/* maximum number of active requests */
-name|int
-name|active
-decl_stmt|;
-comment|/* current number of requests outstanding */
-name|int
-name|maxactive
-decl_stmt|;
-comment|/* maximum number of requests ever outstanding */
-if|#
-directive|if
-name|VINUMDEBUG
-name|struct
-name|request
-modifier|*
-name|lastrq
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|lastbuf
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Use these defines to simplify code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRIVE
-value|vinum_conf.drive
-end_define
-
-begin_define
-define|#
-directive|define
-name|SD
-value|vinum_conf.sd
-end_define
-
-begin_define
-define|#
-directive|define
-name|PLEX
-value|vinum_conf.plex
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOL
-value|vinum_conf.volume
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFLAGS
-value|vinum_conf.flags
-end_define
 
 begin_comment
 comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      8  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      9  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      9 + size of config  * |                                      |  * |--------------------------------------|  */
@@ -876,277 +757,6 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*** Drive definitions ***/
-end_comment
-
-begin_comment
-comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theoretically be a complete, unpartitioned disk  */
-end_comment
-
-begin_struct
-struct|struct
-name|drive
-block|{
-name|enum
-name|drivestate
-name|state
-decl_stmt|;
-comment|/* current state */
-name|int
-name|flags
-decl_stmt|;
-comment|/* flags */
-name|int
-name|subdisks_allocated
-decl_stmt|;
-comment|/* number of entries in sd */
-name|int
-name|subdisks_used
-decl_stmt|;
-comment|/* and the number used */
-name|int
-name|blocksize
-decl_stmt|;
-comment|/* size of fs blocks */
-name|int
-name|pid
-decl_stmt|;
-comment|/* of locker */
-name|u_int64_t
-name|sectors_available
-decl_stmt|;
-comment|/* number of sectors still available */
-name|int
-name|secsperblock
-decl_stmt|;
-name|int
-name|lasterror
-decl_stmt|;
-comment|/* last error on drive */
-name|int
-name|driveno
-decl_stmt|;
-comment|/* index of drive in vinum_conf */
-name|int
-name|opencount
-decl_stmt|;
-comment|/* number of up subdisks */
-name|u_int64_t
-name|reads
-decl_stmt|;
-comment|/* number of reads on this drive */
-name|u_int64_t
-name|writes
-decl_stmt|;
-comment|/* number of writes on this drive */
-name|u_int64_t
-name|bytes_read
-decl_stmt|;
-comment|/* number of bytes read */
-name|u_int64_t
-name|bytes_written
-decl_stmt|;
-comment|/* number of bytes written */
-name|char
-name|devicename
-index|[
-name|MAXDRIVENAME
-index|]
-decl_stmt|;
-comment|/* name of the slice it's on */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* device information */
-name|struct
-name|vinum_label
-name|label
-decl_stmt|;
-comment|/* and the label information */
-name|struct
-name|partinfo
-name|partinfo
-decl_stmt|;
-comment|/* partition information */
-name|int
-name|freelist_size
-decl_stmt|;
-comment|/* number of entries alloced in free list */
-name|int
-name|freelist_entries
-decl_stmt|;
-comment|/* number of entries used in free list */
-struct|struct
-name|drive_freelist
-block|{
-comment|/* sorted list of free space on drive */
-name|u_int64_t
-name|offset
-decl_stmt|;
-comment|/* offset of entry */
-name|u_int64_t
-name|sectors
-decl_stmt|;
-comment|/* and length in sectors */
-block|}
-modifier|*
-name|freelist
-struct|;
-define|#
-directive|define
-name|DRIVE_MAXACTIVE
-value|30000
-comment|/* maximum number of active requests */
-name|int
-name|active
-decl_stmt|;
-comment|/* current number of requests outstanding */
-name|int
-name|maxactive
-decl_stmt|;
-comment|/* maximum number of requests ever outstanding */
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
-name|char
-name|lockfilename
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* name of file from which we were locked */
-name|int
-name|lockline
-decl_stmt|;
-comment|/* and the line number */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*** Subdisk definitions ***/
-end_comment
-
-begin_struct
-struct|struct
-name|sd
-block|{
-name|enum
-name|sdstate
-name|state
-decl_stmt|;
-comment|/* state */
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|lasterror
-decl_stmt|;
-comment|/* last error occurred */
-comment|/* offsets in blocks */
-name|int64_t
-name|driveoffset
-decl_stmt|;
-comment|/* offset on drive */
-comment|/*      * plexoffset is the offset from the beginning      * of the plex to the very first part of the      * subdisk, in sectors.  For striped, RAID-4 and      * RAID-5 plexes, only the first stripe is      * located at this offset      */
-name|int64_t
-name|plexoffset
-decl_stmt|;
-comment|/* offset in plex */
-name|u_int64_t
-name|sectors
-decl_stmt|;
-comment|/* and length in sectors */
-name|int
-name|plexno
-decl_stmt|;
-comment|/* index of plex, if it belongs */
-name|int
-name|driveno
-decl_stmt|;
-comment|/* index of the drive on which it is located */
-name|int
-name|sdno
-decl_stmt|;
-comment|/* our index in vinum_conf */
-name|int
-name|plexsdno
-decl_stmt|;
-comment|/* and our number in our plex */
-comment|/* (undefined if no plex) */
-name|u_int64_t
-name|reads
-decl_stmt|;
-comment|/* number of reads on this subdisk */
-name|u_int64_t
-name|writes
-decl_stmt|;
-comment|/* number of writes on this subdisk */
-name|u_int64_t
-name|bytes_read
-decl_stmt|;
-comment|/* number of bytes read */
-name|u_int64_t
-name|bytes_written
-decl_stmt|;
-comment|/* number of bytes written */
-comment|/* revive parameters */
-name|u_int64_t
-name|revived
-decl_stmt|;
-comment|/* block number of current revive request */
-name|int
-name|revive_blocksize
-decl_stmt|;
-comment|/* revive block size (bytes) */
-name|int
-name|revive_interval
-decl_stmt|;
-comment|/* and time to wait between transfers */
-name|pid_t
-name|reviver
-decl_stmt|;
-comment|/* PID of reviving process */
-name|struct
-name|request
-modifier|*
-name|waitlist
-decl_stmt|;
-comment|/* list of requests waiting on revive op */
-comment|/* init parameters */
-name|u_int64_t
-name|initialized
-decl_stmt|;
-comment|/* block number of current init request */
-name|int
-name|init_blocksize
-decl_stmt|;
-comment|/* init block size (bytes) */
-name|int
-name|init_interval
-decl_stmt|;
-comment|/* and time to wait between transfers */
-name|char
-name|name
-index|[
-name|MAXSDNAME
-index|]
-decl_stmt|;
-comment|/* name of subdisk */
-name|dev_t
-name|dev
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*** Plex definitions ***/
-end_comment
-
-begin_comment
 comment|/* kinds of plex organization */
 end_comment
 
@@ -1204,138 +814,6 @@ begin_comment
 comment|/* RAID 4 or 5 */
 end_comment
 
-begin_struct
-struct|struct
-name|plex
-block|{
-name|enum
-name|plexorg
-name|organization
-decl_stmt|;
-comment|/* Plex organization */
-name|enum
-name|plexstate
-name|state
-decl_stmt|;
-comment|/* and current state */
-name|u_int64_t
-name|length
-decl_stmt|;
-comment|/* total length of plex (sectors) */
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|stripesize
-decl_stmt|;
-comment|/* size of stripe or raid band, in sectors */
-name|int
-name|subdisks
-decl_stmt|;
-comment|/* number of associated subdisks */
-name|int
-name|subdisks_allocated
-decl_stmt|;
-comment|/* number of subdisks allocated space for */
-name|int
-modifier|*
-name|sdnos
-decl_stmt|;
-comment|/* list of component subdisks */
-name|int
-name|plexno
-decl_stmt|;
-comment|/* index of plex in vinum_conf */
-name|int
-name|volno
-decl_stmt|;
-comment|/* index of volume */
-name|int
-name|volplexno
-decl_stmt|;
-comment|/* number of plex in volume */
-comment|/* Lock information */
-name|struct
-name|mtx
-name|lockmtx
-decl_stmt|;
-name|int
-name|usedlocks
-decl_stmt|;
-comment|/* number currently in use */
-name|int
-name|lockwaits
-decl_stmt|;
-comment|/* and number of waits for locks */
-name|struct
-name|rangelock
-modifier|*
-name|lock
-decl_stmt|;
-comment|/* ranges of locked addresses */
-name|off_t
-name|checkblock
-decl_stmt|;
-comment|/* block number for parity op */
-comment|/* Statistics */
-name|u_int64_t
-name|reads
-decl_stmt|;
-comment|/* number of reads on this plex */
-name|u_int64_t
-name|writes
-decl_stmt|;
-comment|/* number of writes on this plex */
-name|u_int64_t
-name|bytes_read
-decl_stmt|;
-comment|/* number of bytes read */
-name|u_int64_t
-name|bytes_written
-decl_stmt|;
-comment|/* number of bytes written */
-name|u_int64_t
-name|recovered_reads
-decl_stmt|;
-comment|/* number of recovered read operations */
-name|u_int64_t
-name|degraded_writes
-decl_stmt|;
-comment|/* number of degraded writes */
-name|u_int64_t
-name|parityless_writes
-decl_stmt|;
-comment|/* number of parityless writes */
-name|u_int64_t
-name|multiblock
-decl_stmt|;
-comment|/* requests that needed more than one block */
-name|u_int64_t
-name|multistripe
-decl_stmt|;
-comment|/* requests that needed more than one stripe */
-name|int
-name|sddowncount
-decl_stmt|;
-comment|/* number of subdisks down */
-name|char
-name|name
-index|[
-name|MAXPLEXNAME
-index|]
-decl_stmt|;
-comment|/* name of plex */
-name|dev_t
-name|dev
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*** Volume definitions ***/
-end_comment
-
 begin_comment
 comment|/* Address range definitions, for locking volumes */
 end_comment
@@ -1360,100 +838,70 @@ end_struct
 
 begin_struct
 struct|struct
-name|volume
+name|drive_freelist
 block|{
-name|enum
-name|volumestate
-name|state
-decl_stmt|;
-comment|/* current state */
-name|int
-name|plexes
-decl_stmt|;
-comment|/* number of plexes */
-name|int
-name|preferred_plex
-decl_stmt|;
-comment|/* plex to read from, -1 for round-robin */
-comment|/*      * index of plex used for last read, for      * round-robin.      */
-name|int
-name|last_plex_read
-decl_stmt|;
-name|int
-name|volno
-decl_stmt|;
-comment|/* volume number */
-name|int
-name|flags
-decl_stmt|;
-comment|/* status and configuration flags */
-name|int
-name|openflags
-decl_stmt|;
-comment|/* flags supplied to last open(2) */
+comment|/* sorted list of free space on drive */
 name|u_int64_t
-name|size
+name|offset
 decl_stmt|;
-comment|/* size of volume */
-name|int
-name|blocksize
-decl_stmt|;
-comment|/* logical block size */
-name|int
-name|active
-decl_stmt|;
-comment|/* number of outstanding requests active */
-name|int
-name|subops
-decl_stmt|;
-comment|/* and the number of suboperations */
-comment|/* Statistics */
+comment|/* offset of entry */
 name|u_int64_t
-name|bytes_read
+name|sectors
 decl_stmt|;
-comment|/* number of bytes read */
-name|u_int64_t
-name|bytes_written
-decl_stmt|;
-comment|/* number of bytes written */
-name|u_int64_t
-name|reads
-decl_stmt|;
-comment|/* number of reads on this volume */
-name|u_int64_t
-name|writes
-decl_stmt|;
-comment|/* number of writes on this volume */
-name|u_int64_t
-name|recovered_reads
-decl_stmt|;
-comment|/* reads recovered from another plex */
-comment|/*      * Unlike subdisks in the plex, space for the      * plex pointers is static.      */
-name|int
-name|plex
-index|[
-name|MAXPLEX
-index|]
-decl_stmt|;
-comment|/* index of plexes */
-name|char
-name|name
-index|[
-name|MAXVOLNAME
-index|]
-decl_stmt|;
-comment|/* name of volume */
-name|struct
-name|disklabel
-name|label
-decl_stmt|;
-comment|/* for DIOCGPART */
-name|dev_t
-name|dev
-decl_stmt|;
+comment|/* and length in sectors */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Include the structure definitions shared  * between userland and kernel.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/vinum/vinumobj.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<dev/vinum/vinumobj.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<dev/vinum/vinumobj.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly  */
@@ -1751,6 +1199,11 @@ init|=
 literal|512
 block|,
 comment|/* log various relatively harmless warnings  */
+name|DEBUG_LOCKREQS
+init|=
+literal|1024
+block|,
+comment|/* log locking requests  */
 block|}
 enum|;
 end_enum
