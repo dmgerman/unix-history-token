@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Stephen Deering.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_mroute.h	8.1 (Berkeley) 6/10/93  * $Id: ip_mroute.h,v 1.2 1994/08/02 07:48:42 davidg Exp $  */
+comment|/*  * Copyright (c) 1989 Stephen Deering.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_mroute.h	8.1 (Berkeley) 6/10/93  * $Id: ip_mroute.h,v 1.3 1994/08/21 05:27:32 paul Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_NETINET_IP_MROUTE_H_
 end_define
 
 begin_comment
-comment|/*  * Definitions for the kernel part of DVMRP,  * a Distance-Vector Multicast Routing Protocol.  * (See RFC-1075.)  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  *  * MROUTING 1.0  */
+comment|/*  * Definitions for the kernel part of DVMRP,  * a Distance-Vector Multicast Routing Protocol.  * (See RFC-1075.)  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Ajit Thyagarajan, PARC, August 1993.  * Modified by Ajit Thyagarajan, PARC, August 1994.  *  * MROUTING 1.5  */
 end_comment
 
 begin_comment
@@ -30,12 +30,20 @@ name|DVMRP_INIT
 value|100
 end_define
 
+begin_comment
+comment|/* initialize forwarder */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DVMRP_DONE
 value|101
 end_define
+
+begin_comment
+comment|/* shut down forwarder */
+end_comment
 
 begin_define
 define|#
@@ -44,6 +52,10 @@ name|DVMRP_ADD_VIF
 value|102
 end_define
 
+begin_comment
+comment|/* create virtual interface */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -51,32 +63,40 @@ name|DVMRP_DEL_VIF
 value|103
 end_define
 
+begin_comment
+comment|/* delete virtual interface */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DVMRP_ADD_LGRP
+name|DVMRP_ADD_MFC
 value|104
 end_define
 
+begin_comment
+comment|/* insert forwarding cache entry */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|DVMRP_DEL_LGRP
+name|DVMRP_DEL_MFC
 value|105
 end_define
 
-begin_define
-define|#
-directive|define
-name|DVMRP_ADD_MRT
-value|106
-end_define
+begin_comment
+comment|/* delete forwarding cache entry */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|DVMRP_DEL_MRT
-value|107
+name|GET_TIME
+parameter_list|(
+name|t
+parameter_list|)
+value|microtime(&t)
 end_define
 
 begin_comment
@@ -179,7 +199,7 @@ value|((m1) == (m2))
 end_define
 
 begin_comment
-comment|/*  * Agument structure for DVMRP_ADD_VIF.  * (DVMRP_DEL_VIF takes a single vifi_t argument.)  */
+comment|/*  * Argument structure for DVMRP_ADD_VIF.  * (DVMRP_DEL_VIF takes a single vifi_t argument.)  */
 end_comment
 
 begin_struct
@@ -198,6 +218,10 @@ name|u_char
 name|vifc_threshold
 decl_stmt|;
 comment|/* min ttl required to forward on vif */
+name|u_int
+name|vifc_rate_limit
+decl_stmt|;
+comment|/* max tate */
 name|struct
 name|in_addr
 name|vifc_lcl_addr
@@ -223,55 +247,232 @@ begin_comment
 comment|/* vif represents a tunnel end-point */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIFF_SRCRT
+value|0x2
+end_define
+
 begin_comment
-comment|/*  * Argument structure for DVMRP_ADD_LGRP and DVMRP_DEL_LGRP.  */
+comment|/* tunnel uses IP source routing */
+end_comment
+
+begin_comment
+comment|/*  * Argument structure for DVMRP_ADD_MFC  * (mfcc_tos to be added at a future point)  */
 end_comment
 
 begin_struct
 struct|struct
-name|lgrplctl
+name|mfcctl
 block|{
-name|vifi_t
-name|lgc_vifi
-decl_stmt|;
 name|struct
 name|in_addr
-name|lgc_gaddr
+name|mfcc_origin
+decl_stmt|;
+comment|/* subnet origin of mcasts   */
+name|struct
+name|in_addr
+name|mfcc_mcastgrp
+decl_stmt|;
+comment|/* multicast group associated*/
+name|struct
+name|in_addr
+name|mfcc_originmask
+decl_stmt|;
+comment|/* subnet mask for origin    */
+name|vifi_t
+name|mfcc_parent
+decl_stmt|;
+comment|/* incoming vif              */
+name|u_char
+name|mfcc_ttls
+index|[
+name|MAXVIFS
+index|]
+decl_stmt|;
+comment|/* forwarding ttls on vifs   */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structure for DVMRP_DEL_MFC  */
+end_comment
+
+begin_struct
+struct|struct
+name|delmfcctl
+block|{
+name|struct
+name|in_addr
+name|mfcc_origin
+decl_stmt|;
+comment|/* subnet origin of multicasts      */
+name|struct
+name|in_addr
+name|mfcc_mcastgrp
+decl_stmt|;
+comment|/* multicast group assoc. w/ origin */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structure used by RSVP daemon to get vif information  */
+end_comment
+
+begin_struct
+struct|struct
+name|vif_req
+block|{
+name|u_char
+name|v_flags
+decl_stmt|;
+comment|/* VIFF_ flags defined above           */
+name|u_char
+name|v_threshold
+decl_stmt|;
+comment|/* min ttl required to forward on vif  */
+name|struct
+name|in_addr
+name|v_lcl_addr
+decl_stmt|;
+comment|/* local interface address             */
+name|struct
+name|in_addr
+name|v_rmt_addr
+decl_stmt|;
+name|char
+name|v_if_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vif_conf
+block|{
+name|u_int
+name|vifc_len
+decl_stmt|;
+name|u_int
+name|vifc_num
+decl_stmt|;
+name|struct
+name|vif_req
+modifier|*
+name|vifc_req
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Argument structure for DVMRP_ADD_MRT.  * (DVMRP_DEL_MRT takes a single struct in_addr argument, containing origin.)  */
+comment|/*  * The kernel's multicast routing statistics.  */
 end_comment
 
 begin_struct
 struct|struct
-name|mrtctl
+name|mrtstat
+block|{
+name|u_long
+name|mrts_mfc_lookups
+decl_stmt|;
+comment|/* # forw. cache hash table hits   */
+name|u_long
+name|mrts_mfc_misses
+decl_stmt|;
+comment|/* # forw. cache hash table misses */
+name|u_long
+name|mrts_upcalls
+decl_stmt|;
+comment|/* # calls to mrouted              */
+name|u_long
+name|mrts_no_route
+decl_stmt|;
+comment|/* no route for packet's origin    */
+name|u_long
+name|mrts_bad_tunnel
+decl_stmt|;
+comment|/* malformed tunnel options        */
+name|u_long
+name|mrts_cant_tunnel
+decl_stmt|;
+comment|/* no room for tunnel options      */
+name|u_long
+name|mrts_wrong_if
+decl_stmt|;
+comment|/* arrived on wrong interface	   */
+name|u_long
+name|mrts_upq_ovflw
+decl_stmt|;
+comment|/* upcall Q overflow		   */
+name|u_long
+name|mrts_cache_cleanups
+decl_stmt|;
+comment|/* # entries with no upcalls 	   */
+name|u_long
+name|mrts_drop_sel
+decl_stmt|;
+comment|/* pkts dropped selectively        */
+name|u_long
+name|mrts_q_overflow
+decl_stmt|;
+comment|/* pkts dropped - Q overflow       */
+name|u_long
+name|mrts_pkt2large
+decl_stmt|;
+comment|/* pkts dropped - size> BKT SIZE  */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structure used by mrouted to get src-grp pkt counts  */
+end_comment
+
+begin_struct
+struct|struct
+name|sioc_sg_req
 block|{
 name|struct
 name|in_addr
-name|mrtc_origin
+name|src
 decl_stmt|;
-comment|/* subnet origin of multicasts */
 name|struct
 name|in_addr
-name|mrtc_originmask
+name|grp
 decl_stmt|;
-comment|/* subnet mask for origin */
+name|u_long
+name|count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structure used by mrouted to get vif pkt counts  */
+end_comment
+
+begin_struct
+struct|struct
+name|sioc_vif_req
+block|{
 name|vifi_t
-name|mrtc_parent
+name|vifi
 decl_stmt|;
-comment|/* incoming vif */
-name|vifbitmap_t
-name|mrtc_children
+name|u_long
+name|icount
 decl_stmt|;
-comment|/* outgoing children vifs */
-name|vifbitmap_t
-name|mrtc_leaves
+name|u_long
+name|ocount
 decl_stmt|;
-comment|/* subset of outgoing children vifs */
 block|}
 struct|;
 end_struct
@@ -282,10 +483,6 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * The kernel's virtual-interface structure.  */
-end_comment
-
 begin_struct
 struct|struct
 name|vif
@@ -293,89 +490,117 @@ block|{
 name|u_char
 name|v_flags
 decl_stmt|;
-comment|/* VIFF_ flags defined above */
+comment|/* VIFF_ flags defined above         */
 name|u_char
 name|v_threshold
 decl_stmt|;
-comment|/* min ttl required to forward on vif */
+comment|/* min ttl required to forward on vif*/
+name|u_int
+name|v_rate_limit
+decl_stmt|;
+comment|/* max rate			     */
+name|struct
+name|tbf
+modifier|*
+name|v_tbf
+decl_stmt|;
+comment|/* token bucket structure at intf.   */
 name|struct
 name|in_addr
 name|v_lcl_addr
 decl_stmt|;
-comment|/* local interface address */
+comment|/* local interface address           */
 name|struct
 name|in_addr
 name|v_rmt_addr
 decl_stmt|;
-comment|/* remote address (tunnels only) */
+comment|/* remote address (tunnels only)     */
 name|struct
 name|ifnet
 modifier|*
 name|v_ifp
 decl_stmt|;
-comment|/* pointer to interface */
-name|struct
-name|in_addr
-modifier|*
-name|v_lcl_grps
-decl_stmt|;
-comment|/* list of local grps (phyints only) */
-name|int
-name|v_lcl_grps_max
-decl_stmt|;
-comment|/* malloc'ed number of v_lcl_grps */
-name|int
-name|v_lcl_grps_n
-decl_stmt|;
-comment|/* used number of v_lcl_grps */
+comment|/* pointer to interface              */
 name|u_long
-name|v_cached_group
+name|v_pkt_in
 decl_stmt|;
-comment|/* last grp looked-up (phyints only) */
-name|int
-name|v_cached_result
+comment|/* # pkts in on interface            */
+name|u_long
+name|v_pkt_out
 decl_stmt|;
-comment|/* last look-up result (phyints only) */
+comment|/* # pkts out on interface           */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * The kernel's multicast route structure.  */
+comment|/*  * The kernel's multicast forwarding cache entry structure   * (A field for the type of service (mfc_tos) is to be added   * at a future point)  */
 end_comment
 
 begin_struct
 struct|struct
-name|mrt
+name|mfc
 block|{
 name|struct
 name|in_addr
-name|mrt_origin
+name|mfc_origin
 decl_stmt|;
-comment|/* subnet origin of multicasts */
+comment|/* subnet origin of mcasts   */
 name|struct
 name|in_addr
-name|mrt_originmask
+name|mfc_mcastgrp
 decl_stmt|;
-comment|/* subnet mask for origin */
-name|vifi_t
-name|mrt_parent
-decl_stmt|;
-comment|/* incoming vif */
-name|vifbitmap_t
-name|mrt_children
-decl_stmt|;
-comment|/* outgoing children vifs */
-name|vifbitmap_t
-name|mrt_leaves
-decl_stmt|;
-comment|/* subset of outgoing children vifs */
+comment|/* multicast group associated*/
 name|struct
-name|mrt
-modifier|*
-name|mrt_next
+name|in_addr
+name|mfc_originmask
 decl_stmt|;
-comment|/* forward link */
+comment|/* subnet mask for origin    */
+name|vifi_t
+name|mfc_parent
+decl_stmt|;
+comment|/* incoming vif              */
+name|u_char
+name|mfc_ttls
+index|[
+name|MAXVIFS
+index|]
+decl_stmt|;
+comment|/* forwarding ttls on vifs   */
+name|u_long
+name|mfc_pkt_cnt
+decl_stmt|;
+comment|/* pkt count for src-grp     */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Argument structure used for pkt info. while upcall is made  */
+end_comment
+
+begin_struct
+struct|struct
+name|rtdetq
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|u_long
+name|tunnel_src
+decl_stmt|;
+name|struct
+name|ip_moptions
+modifier|*
+name|imo
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -383,18 +608,18 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MRTHASHSIZ
-value|64
+name|MFCTBLSIZ
+value|256
 end_define
 
 begin_if
 if|#
 directive|if
 operator|(
-name|MRTHASHSIZ
+name|MFCTBLSIZ
 operator|&
 operator|(
-name|MRTHASHSIZ
+name|MFCTBLSIZ
 operator|-
 literal|1
 operator|)
@@ -410,11 +635,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MRTHASHMOD
+name|MFCHASHMOD
 parameter_list|(
 name|h
 parameter_list|)
-value|((h)& (MRTHASHSIZ - 1))
+value|((h)& (MFCTBLSIZ - 1))
 end_define
 
 begin_else
@@ -425,11 +650,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|MRTHASHMOD
+name|MFCHASHMOD
 parameter_list|(
 name|h
 parameter_list|)
-value|((h) % MRTHASHSIZ)
+value|((h) % MFCTBLSIZ)
 end_define
 
 begin_endif
@@ -437,42 +662,97 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MAX_UPQ
+value|4
+end_define
+
 begin_comment
-comment|/*  * The kernel's multicast routing statistics.  */
+comment|/* max. no of pkts in upcall Q */
+end_comment
+
+begin_comment
+comment|/*  * Token Bucket filter code   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_BKT_SIZE
+value|10000
+end_define
+
+begin_comment
+comment|/* 10K bytes size 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXQSIZE
+value|10
+end_define
+
+begin_comment
+comment|/* max # of pkts in queue 	*/
+end_comment
+
+begin_comment
+comment|/*  * queue structure at each vif  */
 end_comment
 
 begin_struct
 struct|struct
-name|mrtstat
+name|pkt_queue
 block|{
 name|u_long
-name|mrts_mrt_lookups
+name|pkt_len
 decl_stmt|;
-comment|/* # multicast route lookups */
+comment|/* length of packet in queue 	*/
+name|struct
+name|mbuf
+modifier|*
+name|pkt_m
+decl_stmt|;
+comment|/* pointer to packet mbuf	*/
+name|struct
+name|ip
+modifier|*
+name|pkt_ip
+decl_stmt|;
+comment|/* pointer to ip header	*/
+name|struct
+name|ip_moptions
+modifier|*
+name|pkt_imo
+decl_stmt|;
+comment|/* IP multicast options assoc. with pkt */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * the token bucket filter at each vif  */
+end_comment
+
+begin_struct
+struct|struct
+name|tbf
+block|{
 name|u_long
-name|mrts_mrt_misses
+name|last_pkt_t
 decl_stmt|;
-comment|/* # multicast route cache misses */
+comment|/* arr. time of last pkt 	*/
 name|u_long
-name|mrts_grp_lookups
+name|n_tok
 decl_stmt|;
-comment|/* # group address lookups */
+comment|/* no of tokens in bucket 	*/
 name|u_long
-name|mrts_grp_misses
+name|q_len
 decl_stmt|;
-comment|/* # group address cache misses */
-name|u_long
-name|mrts_no_route
-decl_stmt|;
-comment|/* no route for packet's origin */
-name|u_long
-name|mrts_bad_tunnel
-decl_stmt|;
-comment|/* malformed tunnel options */
-name|u_long
-name|mrts_cant_tunnel
-decl_stmt|;
-comment|/* no room for tunnel options */
+comment|/* length of queue at this vif	*/
 block|}
 struct|;
 end_struct
@@ -522,6 +802,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NETINET_IP_MROUTE_H_ */
+end_comment
 
 end_unit
 
