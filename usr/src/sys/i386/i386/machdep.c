@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -252,10 +252,6 @@ begin_comment
 comment|/* set when safe to use msgbuf */
 end_comment
 
-begin_comment
-comment|/*  * Machine-dependent startup code  */
-end_comment
-
 begin_decl_stmt
 name|int
 name|boothowto
@@ -290,6 +286,10 @@ end_decl_stmt
 begin_extern
 extern|extern cyloffset;
 end_extern
+
+begin_comment
+comment|/*  * cpu_startup: allocate memory for variable-sized tables,  * initialize cpu, and do autoconfiguration.  */
+end_comment
 
 begin_macro
 name|cpu_startup
@@ -2661,7 +2661,7 @@ block|{ }
 end_block
 
 begin_comment
-comment|/*  * Clear registers on exec  */
+comment|/*  * Set registers on exec.  * XXX Should clear registers except sp, pc,  * but would break init; should be fixed soon.  */
 end_comment
 
 begin_macro
