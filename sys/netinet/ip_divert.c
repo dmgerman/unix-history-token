@@ -1245,7 +1245,7 @@ name|PRU_SOCKADDR
 case|:
 name|in_setsockaddr
 argument_list|(
-name|inp
+name|so
 argument_list|,
 name|nam
 argument_list|)
