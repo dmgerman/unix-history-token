@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: lock.c,v 1.3 1998/12/28 04:56:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumlock.c,v 1.8 1999/01/14 02:52:13 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -24,6 +24,116 @@ end_include
 begin_comment
 comment|/* Lock routines.  Currently, we lock either an individual volume  * or the global configuration.  I don't think tsleep and  * wakeup are SMP safe. FIXME XXX */
 end_comment
+
+begin_comment
+comment|/* Lock a drive, wait if it's in use */
+end_comment
+
+begin_function
+name|int
+name|lockdrive
+parameter_list|(
+name|struct
+name|drive
+modifier|*
+name|drive
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+comment|/* XXX get rid of     drive->flags |= VF_LOCKING; */
+while|while
+condition|(
+operator|(
+name|drive
+operator|->
+name|flags
+operator|&
+name|VF_LOCKED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* There are problems sleeping on a unique identifier, 	 * since the drive structure can move, and the unlock 	 * function can be called after killing the drive. 	 * Solve this by waiting on this function; the number 	 * of conflicts is negligible */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|tsleep
+argument_list|(
+operator|&
+name|lockdrive
+argument_list|,
+name|PRIBIO
+operator||
+name|PCATCH
+argument_list|,
+literal|"vindrv"
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|error
+return|;
+block|}
+name|drive
+operator|->
+name|flags
+operator||=
+name|VF_LOCKED
+expr_stmt|;
+name|drive
+operator|->
+name|pid
+operator|=
+name|curproc
+operator|->
+name|p_pid
+expr_stmt|;
+comment|/* it's a panic error if curproc is null */
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Unlock a drive and let the next one at it */
+end_comment
+
+begin_function
+name|void
+name|unlockdrive
+parameter_list|(
+name|struct
+name|drive
+modifier|*
+name|drive
+parameter_list|)
+block|{
+name|drive
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_LOCKED
+expr_stmt|;
+comment|/* we don't reset pid: it's of hysterical interest */
+name|wakeup
+argument_list|(
+operator|&
+name|lockdrive
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Lock a volume, wait if it's in use */
@@ -199,7 +309,7 @@ name|flags
 operator||=
 name|VF_LOCKING
 expr_stmt|;
-comment|/* It would seem to make more sense to sleep on 	 * the address 'plex'.  Unfortuntaly we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change. */
+comment|/* It would seem to make more sense to sleep on 	 * the address 'plex'.  Unfortunately we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change. */
 if|if
 condition|(
 operator|(
