@@ -358,7 +358,7 @@ comment|/* default paths */
 end_comment
 
 begin_comment
-unit|pnp_readconf("/boot/pnpdata.local"); 	    pnp_readconf("/boot/pnpdata"); 	} else { 	    if (pnp_readconf("fname")) { 		sprintf(command_errbuf, "can't read PnP information from '%s'", fname); 		return(CMD_ERROR); 	    } 	}
+unit|pnp_readconf("/boot/pnpdata.local"); 	    pnp_readconf("/boot/pnpdata"); 	} else { 	    if (pnp_readconf(fname)) { 		sprintf(command_errbuf, "can't read PnP information from '%s'", fname); 		return(CMD_ERROR); 	    } 	}
 comment|/* try to load any modules that have been nominated */
 end_comment
 
