@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.5 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2536,6 +2536,26 @@ name|tTd
 argument_list|(
 literal|27
 argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"   ruid=%d euid=%d\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
 literal|14
 argument_list|)
 condition|)
@@ -2699,6 +2719,25 @@ decl_stmt|;
 name|clrevent
 argument_list|(
 name|ev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"include: open: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2961,6 +3000,30 @@ name|AliasLevel
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+operator|&&
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"include: read error: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nincludes

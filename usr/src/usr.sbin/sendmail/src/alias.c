@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.4 (Berkeley) %G%"
+literal|"@(#)alias.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2508,7 +2508,7 @@ name|ep
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|HASSETEUID
+name|HASSETREUID
 specifier|register
 name|ADDRESS
 modifier|*
@@ -2627,7 +2627,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HASSETEUID
+name|HASSETREUID
 name|ca
 operator|=
 name|getctladdr
@@ -2768,7 +2768,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HASSETEUID
+name|HASSETREUID
 name|saveduid
 operator|=
 name|geteuid
@@ -2787,8 +2787,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|seteuid
+name|setreuid
 argument_list|(
+literal|0
+argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
@@ -2831,7 +2833,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HASSETEUID
+name|HASSETREUID
 if|if
 condition|(
 name|saveduid
@@ -2844,18 +2846,30 @@ literal|0
 condition|)
 if|if
 condition|(
-name|seteuid
+name|setreuid
 argument_list|(
-name|saveduid
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|setreuid
+argument_list|(
+name|RealUid
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"seteuid(%d) failure (real=%d, eff=%d)"
+literal|"setreuid(%d, 0) failure (real=%d, eff=%d)"
 argument_list|,
-name|saveduid
+name|RealUid
 argument_list|,
 name|getuid
 argument_list|()

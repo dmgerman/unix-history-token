@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.5 (Berkeley) %G%"
+literal|"@(#)main.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,21 +953,6 @@ name|RealUid
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_comment
-comment|/* our real uid will have to be root -- we will trash this later */
-end_comment
-
-begin_expr_stmt
-name|setuid
-argument_list|(
-operator|(
-name|uid_t
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* save command line arguments */

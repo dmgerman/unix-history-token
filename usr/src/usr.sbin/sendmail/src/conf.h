@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ file|<fcntl.h>
 end_include
 
 begin_comment
-comment|/* **  Table sizes, etc.... **	There shouldn't be much need to change these.... */
+comment|/********************************************************************** **  Table sizes, etc.... **	There shouldn't be much need to change these.... **********************************************************************/
 end_comment
 
 begin_define
@@ -217,7 +217,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Compilation options. ** **	#define these if they are available; comment them out otherwise. */
+comment|/********************************************************************** **  Compilation options. ** **	#define these if they are available; comment them out otherwise. **********************************************************************/
 end_comment
 
 begin_define
@@ -320,7 +320,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. */
+comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
 end_comment
 
 begin_comment
@@ -380,7 +380,7 @@ comment|/* **  Per-Operating System defines */
 end_comment
 
 begin_comment
-comment|/* HP-UX -- tested for 8.07 */
+comment|/* **  HP-UX -- tested for 8.07 */
 end_comment
 
 begin_ifdef
@@ -414,22 +414,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETEUID
+name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* we have seteuid call */
+comment|/* have setreuid(2) call */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|seteuid
+name|setreuid
 parameter_list|(
-name|uid
+name|r
+parameter_list|,
+name|e
 parameter_list|)
-value|setresuid(-1, uid, -1)
+value|setresuid(r, e, -1)
 end_define
 
 begin_ifndef
@@ -460,7 +462,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IBM AIX 3.x -- actually tested for 3.2.3 */
+comment|/* **  IBM AIX 3.x -- actually tested for 3.2.3 */
 end_comment
 
 begin_ifdef
@@ -519,7 +521,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Silicon Graphics IRIX */
+comment|/* **  Silicon Graphics IRIX ** **	I haven't tested this yet myself. */
 end_comment
 
 begin_ifdef
@@ -563,7 +565,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* various systems from Sun Microsystems */
+comment|/* **  SunOS */
 end_comment
 
 begin_if
@@ -599,7 +601,7 @@ name|SOLARIS
 end_ifdef
 
 begin_comment
-comment|/* Solaris 2.x */
+comment|/* Solaris 2.x (a.k.a. SunOS 5.x) */
 end_comment
 
 begin_define
@@ -693,12 +695,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETEUID
+name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* we have seteuid call */
+comment|/* have setreuid(2) call */
 end_comment
 
 begin_include
@@ -718,7 +720,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Digital Ultrix 4.2A or 4.3 */
+comment|/* **  Digital Ultrix 4.2A or 4.3 */
 end_comment
 
 begin_ifdef
@@ -741,12 +743,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASSETEUID
+name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* we have seteuid call */
+comment|/* have setreuid(2) call */
 end_comment
 
 begin_endif
@@ -755,7 +757,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OSF/1 (tested on Alpha) */
+comment|/* **  OSF/1 (tested on Alpha) */
 end_comment
 
 begin_ifdef
@@ -767,12 +769,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|HASSETEUID
+name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* we have seteuid call */
+comment|/* have setreuid(2) call */
 end_comment
 
 begin_define
@@ -791,7 +793,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NeXTstep */
+comment|/* **  NeXTstep */
 end_comment
 
 begin_ifdef
@@ -824,7 +826,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* various flavors of BSD */
+comment|/* **  BSD */
 end_comment
 
 begin_ifdef
@@ -868,12 +870,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|HASSETEUID
+name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* we have seteuid(2) call */
+comment|/* have setreuid(2) call */
 end_comment
 
 begin_define
@@ -892,7 +894,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SCO Unix */
+comment|/* **  SCO Unix */
 end_comment
 
 begin_ifdef
@@ -943,7 +945,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  End of Per-Operating System defines */
+comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
 begin_comment
