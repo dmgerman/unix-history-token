@@ -4459,7 +4459,7 @@ directive|ifdef
 name|SEM_DEBUG
 name|printf
 argument_list|(
-literal|"error = %d from ipaccess\n"
+literal|"error = %d from ipcperm\n"
 argument_list|,
 name|error
 argument_list|)
