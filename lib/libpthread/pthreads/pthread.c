@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ==== pthread.c ============================================================  * Copyright (c) 1993 by Chris Provenzano, proven@mit.edu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  This product includes software developed by Chris Provenzano.  * 4. The name of Chris Provenzano may not be used to endorse or promote   *	  products derived from this software without specific prior written  *	  permission.  *  * THIS SOFTWARE IS PROVIDED BY CHRIS PROVENZANO ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CHRIS PROVENZANO BE LIABLE FOR ANY   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.  *  * Description : Pthread functions.  *  *  1.00 93/07/26 proven  *      -Started coding this file.  */
+comment|/* ==== pthread.c ============================================================  * Copyright (c) 1993, 1994 by Chris Provenzano, proven@mit.edu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  This product includes software developed by Chris Provenzano.  * 4. The name of Chris Provenzano may not be used to endorse or promote   *	  products derived from this software without specific prior written  *	  permission.  *  * THIS SOFTWARE IS PROVIDED BY CHRIS PROVENZANO ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CHRIS PROVENZANO BE LIABLE FOR ANY   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.  *  * Description : Pthread functions.  *  *  1.00 93/07/26 proven  *      -Started coding this file.  */
 end_comment
 
 begin_include
@@ -42,14 +42,6 @@ name|machdep_data
 init|=
 name|MACHDEP_PTHREAD_INIT
 decl_stmt|;
-comment|/* Initialize the signal handler. */
-name|sig_init
-argument_list|()
-expr_stmt|;
-comment|/* Initialize the fd table. */
-name|fd_init
-argument_list|()
-expr_stmt|;
 comment|/* Initialize the first thread */
 if|if
 condition|(
@@ -68,16 +60,17 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|machdep_data
-argument_list|,
 operator|&
 operator|(
 name|pthread_initial
 operator|->
 name|machdep_data
 operator|)
+argument_list|,
+operator|&
+name|machdep_data
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -129,65 +122,18 @@ name|pthread_run
 operator|=
 name|pthread_initial
 expr_stmt|;
+comment|/* Initialize the signal handler. */
+name|sig_init
+argument_list|()
+expr_stmt|;
+comment|/* Initialize the fd table. */
+name|fd_init
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|PANIC
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* ==========================================================================  * pthread_cleanup()  */
-end_comment
-
-begin_function
-name|void
-name|pthread_cleanup
-parameter_list|(
-name|pthread_t
-modifier|*
-name|thread
-parameter_list|)
-block|{
-name|void
-modifier|*
-name|stack
-decl_stmt|;
-comment|/* Check attr to see what needs cleanup. */
-if|if
-condition|(
-name|stack
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|machdep_pthread_cleanup
-argument_list|(
-operator|&
-operator|(
-operator|(
-operator|*
-name|thread
-operator|)
-operator|->
-name|machdep_data
-operator|)
-argument_list|)
-condition|)
-block|{
-name|free
-argument_list|(
-name|stack
-argument_list|)
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-operator|*
-name|thread
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -256,7 +202,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ==========================================================================  * pthread_exit()  *   * Once this routine gets the lock it never gives it up.  * Joining with a thread that has exited is not valid anymore, so  * there now is no valid opperation that can be done to a thread once it  * has done the pthread_exit().  * It doesn't matter if a context switch occurs before yield is called  * but after the state is set.   */
+comment|/* ==========================================================================  * pthread_exit()  */
 end_comment
 
 begin_function
@@ -271,6 +217,12 @@ block|{
 name|semaphore
 modifier|*
 name|lock
+decl_stmt|,
+modifier|*
+name|plock
+decl_stmt|;
+name|pthread_t
+name|pthread
 decl_stmt|;
 name|lock
 operator|=
@@ -291,13 +243,80 @@ name|pthread_yield
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Save return value */
 name|pthread_run
+operator|->
+name|ret
+operator|=
+name|status
+expr_stmt|;
+comment|/* First execute all cleanup handlers */
+comment|/* 	 * Are there any threads joined to this one, 	 * if so wake them and let them detach this thread. 	 */
+if|if
+condition|(
+name|pthread
+operator|=
+name|pthread_queue_get
+argument_list|(
+operator|&
+operator|(
+name|pthread_run
+operator|->
+name|join_queue
+operator|)
+argument_list|)
+condition|)
+block|{
+comment|/* The current thread pthread_run can't be detached */
+name|plock
+operator|=
+operator|&
+operator|(
+name|pthread
+operator|->
+name|lock
+operator|)
+expr_stmt|;
+while|while
+condition|(
+name|SEMAPHORE_TEST_AND_SET
+argument_list|(
+name|plock
+argument_list|)
+condition|)
+block|{
+name|pthread_yield
+argument_list|()
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|pthread_queue_deq
+argument_list|(
+operator|&
+operator|(
+name|pthread_run
+operator|->
+name|join_queue
+operator|)
+argument_list|)
+expr_stmt|;
+name|pthread
 operator|->
 name|state
 operator|=
-name|PS_DEAD
+name|PS_RUNNING
 expr_stmt|;
-name|pthread_yield
+comment|/* Thread will unlock itself in pthread_join() */
+block|}
+comment|/* This thread will never run again */
+name|reschedule
+argument_list|(
+name|PS_DEAD
+argument_list|)
+expr_stmt|;
+name|PANIC
 argument_list|()
 expr_stmt|;
 block|}
