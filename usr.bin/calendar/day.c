@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: day.c,v 1.10 1997/09/18 14:06:43 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: day.c,v 1.11 1997/10/26 12:51:30 wosch Exp $  */
 end_comment
 
 begin_include
@@ -1147,11 +1147,13 @@ operator|-=
 literal|1900
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Mktime: %d %d %d %s\n"
 argument_list|,
 operator|(
@@ -1242,7 +1244,7 @@ name|v1
 decl_stmt|,
 name|v2
 decl_stmt|;
-comment|/*  	 * CONVENTION 	 * 	 * Month:     1-12 	 * Monthname: Jan .. Dec 	 * Day:       1-31 	 * Weekday:   Mon-Sun 	 * 	 */
+comment|/* 	 * CONVENTION 	 * 	 * Month:     1-12 	 * Monthname: Jan .. Dec 	 * Day:       1-31 	 * Weekday:   Mon-Sun 	 * 	 */
 name|flags
 operator|=
 literal|0
@@ -1286,7 +1288,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* days since January 1 [0-365] */
-comment|/*  	  * 1. {Weekday,Day} XYZ ...  	  * 	  *    where Day is> 12  	  */
+comment|/* 	  * 1. {Weekday,Day} XYZ ... 	  * 	  *    where Day is> 12 	  */
 elseif|else
 if|if
 condition|(
@@ -1305,7 +1307,7 @@ operator|=
 name|v1
 expr_stmt|;
 comment|/* {Day,Weekday} {Month,Monthname} ... */
-comment|/* if no recognizable month, assume just a day alone  		 * in other words, find month or use current month */
+comment|/* if no recognizable month, assume just a day alone 		 * in other words, find month or use current month */
 if|if
 condition|(
 operator|!
@@ -1433,7 +1435,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* convert Weekday into *next*  Day,  	 * e.g.: 'Sunday' -> 22  	 *       'SundayLast' -> ?? 	 */
+comment|/* convert Weekday into *next*  Day, 	 * e.g.: 'Sunday' -> 22 	 *       'SundayLast' -> ?? 	 */
 if|if
 condition|(
 name|flags
@@ -1441,8 +1443,8 @@ operator|&
 name|F_ISDAY
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|fprintf
 argument_list|(
@@ -1504,7 +1506,7 @@ literal|10
 operator|)
 expr_stmt|;
 comment|/* day 1 ... 7 */
-comment|/* day, eg '22th' */
+comment|/* day, eg '22nd' */
 name|v2
 operator|=
 name|tp
@@ -1532,6 +1534,20 @@ expr_stmt|;
 comment|/* (month length - day) / 7 + 1 */
 if|if
 condition|(
+name|cumdays
+index|[
+name|month
+operator|+
+literal|1
+index|]
+operator|-
+name|cumdays
+index|[
+name|month
+index|]
+operator|>=
+name|v2
+operator|&&
 operator|(
 call|(
 name|int
@@ -1786,19 +1802,24 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"day2: day %d(%d) yday %d\n"
+literal|"day2: day %d(%d-%d) yday %d\n"
 argument_list|,
 operator|*
 name|dayp
 argument_list|,
 name|day
+argument_list|,
+name|cumdays
+index|[
+name|month
+index|]
 argument_list|,
 name|tp
 operator|->
@@ -2167,7 +2188,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* return offset for variable weekdays  * -1 -> last weekday in month  * +1 -> first weekday in month   * ... etc ...  */
+comment|/* return offset for variable weekdays  * -1 -> last weekday in month  * +1 -> first weekday in month  * ... etc ...  */
 end_comment
 
 begin_function
@@ -2194,7 +2215,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* Sun+1 or Wednesday-2 	 *    ^              ^   */
-comment|/* printf ("x: %s %s %d\n", s, s + offset - 2, offset); */
+comment|/* fprintf(stderr, "x: %s %s %d\n", s, s + offset - 2, offset); */
 switch|switch
 condition|(
 operator|*
@@ -2243,7 +2264,7 @@ operator|)
 return|;
 break|break;
 block|}
-comment|/*  	 * some aliases: last, first, second, third, fourth 	 */
+comment|/* 	 * some aliases: last, first, second, third, fourth 	 */
 comment|/* last */
 if|if
 condition|(
