@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	4.8 (Berkeley) %G%"
+literal|"@(#)start.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ file|<unistd.h>
 end_include
 
 begin_macro
-name|start
+name|lstart
 argument_list|(
 argument|lesson
 argument_list|)

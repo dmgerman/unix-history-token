@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dounit.c	4.4 (Berkeley) %G%"
+literal|"@(#)dounit.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,7 @@ condition|(
 operator|!
 name|noclobber
 condition|)
-name|start
+name|lstart
 argument_list|(
 name|todo
 argument_list|)
