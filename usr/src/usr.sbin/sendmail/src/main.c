@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.105 (Berkeley) %G%"
+literal|"@(#)main.c	8.106 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2197,6 +2197,16 @@ block|}
 block|}
 block|}
 end_if
+
+begin_comment
+comment|/* probe interfaces and locate any additional names */
+end_comment
+
+begin_expr_stmt
+name|load_if_names
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* current time */
