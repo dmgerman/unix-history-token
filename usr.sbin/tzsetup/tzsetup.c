@@ -3348,6 +3348,35 @@ expr_stmt|;
 name|init_dialog
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dialog_yesno
+argument_list|(
+literal|"Select local or UTC (Greenwich Mean Time) clock"
+argument_list|,
+literal|"Is this machine's CMOS clock set to UTC?  If it is set to local time,\n"
+literal|"please choose NO here!"
+argument_list|,
+literal|7
+argument_list|,
+literal|72
+argument_list|)
+condition|)
+name|system
+argument_list|(
+literal|"rm -f /etc/wall_cmos_clock"
+argument_list|)
+expr_stmt|;
+else|else
+name|system
+argument_list|(
+literal|"touch /etc/wall_cmos_clock"
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|dialog_menu
 argument_list|(
 literal|"Time Zone Selector"
@@ -3373,6 +3402,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
 expr_stmt|;
 name|end_dialog
 argument_list|()
