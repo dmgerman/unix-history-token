@@ -224,7 +224,7 @@ literal|"ATAPI/IDE CDROM"
 block|,
 literal|117
 block|,
-literal|2
+literal|0
 block|,
 literal|8
 block|,
