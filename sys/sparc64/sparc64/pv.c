@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -124,22 +124,10 @@ file|<machine/tsb.h>
 end_include
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|pvzone
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|struct vm_zone pvzone_store;
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -214,10 +202,12 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|pvzone
 argument_list|)
+operator|,
+name|M_WAITOK
 operator|)
 return|;
 block|}
@@ -273,7 +263,7 @@ block|{
 name|pv_entry_count
 operator|--
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|pvzone
 argument_list|,

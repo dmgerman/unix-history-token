@@ -148,7 +148,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -2389,15 +2389,9 @@ literal|"pmap_init: vm_map_find"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|pvzone =&pvzone_store; 	pvinit = (struct pv_entry *)kmem_alloc(kernel_map, 	    vm_page_array_size * sizeof (struct pv_entry)); 	zbootinit(pvzone, "PV ENTRY", sizeof (struct pv_entry), pvinit, 	    vm_page_array_size);
-else|#
-directive|else
 name|pvzone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"PV ENTRY"
 argument_list|,
@@ -2407,9 +2401,15 @@ expr|struct
 name|pv_entry
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
 argument_list|)
@@ -2428,8 +2428,6 @@ argument_list|,
 name|vm_page_array_size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pmap_initialized
 operator|=
 name|TRUE
@@ -2481,12 +2479,6 @@ operator|/
 literal|10
 operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|zinitna(pvzone,&pvzone_obj, NULL, 0, pv_entry_max, ZONE_INTERRUPT, 1);
-else|#
-directive|else
 name|uma_zone_set_obj
 argument_list|(
 name|pvzone
@@ -2497,8 +2489,6 @@ argument_list|,
 name|pv_entry_max
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

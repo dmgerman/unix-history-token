@@ -17,16 +17,8 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vm_zone_t
+name|uma_zone_t
 name|pvzone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vm_zone
-name|pvzone_store
 decl_stmt|;
 end_decl_stmt
 
