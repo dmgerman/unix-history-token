@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.3 1993/08/01 18:29:47 mycroft Exp $"
+literal|"$Id: rstat_proc.c,v 1.4 1993/09/23 18:42:39 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,13 +39,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -123,6 +135,22 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|FSHIFT
+end_undef
+
+begin_comment
+comment|/* Use protocol's shift and scale values */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FSCALE
+end_undef
 
 begin_include
 include|#
