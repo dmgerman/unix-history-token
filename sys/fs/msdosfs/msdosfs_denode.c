@@ -167,6 +167,13 @@ name|dehash_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|dehash_init
+decl_stmt|;
+end_decl_stmt
+
 begin_union
 union|union
 name|_qcvt
@@ -269,6 +276,26 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
+comment|/* 	 * The following lines prevent us from initializing the mutex 	 * init multiple times.  I'm not sure why we get called multiple 	 * times, but the following prevents the panic when we initalize 	 * the mutext the second time.  XXX BAD XXX 	 */
+if|if
+condition|(
+name|dehash_init
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: msdosfs_init called more than once!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|dehash_init
+operator|++
+expr_stmt|;
 name|dehashtbl
 operator|=
 name|hashinit
@@ -331,6 +358,9 @@ argument_list|(
 operator|&
 name|dehash_mtx
 argument_list|)
+expr_stmt|;
+name|dehash_init
+operator|--
 expr_stmt|;
 return|return
 operator|(
