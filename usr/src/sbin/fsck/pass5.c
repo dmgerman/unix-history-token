@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.5 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,9 @@ decl_stmt|;
 name|struct
 name|inodesc
 name|idesc
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|char
 name|buf
@@ -455,15 +458,31 @@ operator|*
 operator|)
 operator|&
 name|idesc
+index|[
+literal|0
+index|]
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|inodesc
-argument_list|)
+name|idesc
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
 name|idesc
+index|[
+name|i
+index|]
 operator|.
 name|id_type
 operator|=
@@ -1224,6 +1243,9 @@ name|dofix
 argument_list|(
 operator|&
 name|idesc
+index|[
+literal|0
+index|]
 argument_list|,
 literal|"FREE BLK COUNT(S) WRONG IN SUPERBLK"
 argument_list|)
@@ -1307,6 +1329,9 @@ name|dofix
 argument_list|(
 operator|&
 name|idesc
+index|[
+literal|1
+index|]
 argument_list|,
 literal|"BLK(S) MISSING IN BIT MAPS"
 argument_list|)
@@ -1391,6 +1416,9 @@ name|dofix
 argument_list|(
 operator|&
 name|idesc
+index|[
+literal|2
+index|]
 argument_list|,
 literal|"SUMMARY INFORMATION BAD"
 argument_list|)
@@ -1494,6 +1522,9 @@ name|dofix
 argument_list|(
 operator|&
 name|idesc
+index|[
+literal|0
+index|]
 argument_list|,
 literal|"FREE BLK COUNT(S) WRONG IN SUPERBLK"
 argument_list|)
