@@ -2253,6 +2253,9 @@ operator|=
 name|end
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If the caller is smart and only msync()s a range he knows is 	 * dirty, we may be able to avoid an object scan.  This results in 	 * a phenominal improvement in performance.  We cannot do this 	 * as a matter of course because the object may be huge - e.g. 	 * the size might be in the gigabytes or terrabytes. 	 */
 if|if
 condition|(
@@ -2457,6 +2460,9 @@ name|size
 operator|)
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|vm_object_clear_flag
 argument_list|(
 name|object
@@ -2471,9 +2477,6 @@ comment|/* 	 * Generally set CLEANCHK interlock and make the page read-only so 	
 name|clearobjflags
 operator|=
 literal|1
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -2520,9 +2523,6 @@ name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|clearobjflags
@@ -2831,6 +2831,9 @@ name|again
 goto|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2910,8 +2913,13 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|pi
 operator|=
@@ -2931,6 +2939,9 @@ literal|"vpcwai"
 argument_list|)
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -2951,9 +2962,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 block|}
 name|maxf
 operator|=
@@ -3449,9 +3457,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|maxf
