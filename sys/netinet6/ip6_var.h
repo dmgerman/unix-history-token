@@ -1353,14 +1353,10 @@ operator|,
 expr|struct
 name|mbuf
 operator|*
-operator|*
-operator|,
-expr|struct
-name|ip6_hdr
-operator|*
 operator|,
 expr|struct
 name|mbuf
+operator|*
 operator|*
 operator|)
 argument_list|)

@@ -675,12 +675,10 @@ name|ip6_savecontrol
 argument_list|(
 name|last
 argument_list|,
+name|n
+argument_list|,
 operator|&
 name|opts
-argument_list|,
-name|ip6
-argument_list|,
-name|n
 argument_list|)
 expr_stmt|;
 comment|/* strip intermediate headers */
@@ -852,12 +850,10 @@ name|ip6_savecontrol
 argument_list|(
 name|last
 argument_list|,
+name|m
+argument_list|,
 operator|&
 name|opts
-argument_list|,
-name|ip6
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
 comment|/* strip intermediate headers */

@@ -2117,15 +2117,10 @@ name|ip6_savecontrol
 argument_list|(
 name|last
 argument_list|,
+name|n
+argument_list|,
 operator|&
 name|opts
-argument_list|,
-operator|&
-name|udp_ip6
-operator|.
-name|uip6_ip6
-argument_list|,
-name|n
 argument_list|)
 expr_stmt|;
 name|last
