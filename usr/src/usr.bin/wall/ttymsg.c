@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttymsg.c	5.8 (Berkeley) %G%"
+literal|"@(#)ttymsg.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * Display the contents of a uio structure on a terminal.  Used by wall(1)  * and syslogd(8).  Forks and finishes in child if write would block, waiting  * at most five minutes.  Returns pointer to error string on unexpected error;  * string is not newline-terminated.  Various "normal" errors are ignored  * (exclusive-use, lack of permission, etc.).  */
+comment|/*  * Display the contents of a uio structure on a terminal.  Used by wall(1),  * syslogd(8), and talk(1).  Forks and finishes in child if write would block,   * waiting up to tmout seconds.  Returns pointer to error string on unexpected   * error; string is not newline-terminated.  Various "normal" errors are   * ignored (exclusive-use, lack of permission, etc.).  */
 end_comment
 
 begin_function
@@ -108,6 +108,8 @@ parameter_list|,
 name|iovcnt
 parameter_list|,
 name|line
+parameter_list|,
+name|tmout
 parameter_list|)
 name|struct
 name|iovec
@@ -120,6 +122,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|line
+decl_stmt|;
+name|int
+name|tmout
 decl_stmt|;
 block|{
 specifier|static
@@ -489,7 +494,7 @@ block|}
 name|forked
 operator|++
 expr_stmt|;
-comment|/* wait at most 5 minutes */
+comment|/* wait at most tmout seconds */
 operator|(
 name|void
 operator|)
@@ -524,14 +529,10 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-call|(
+operator|(
 name|u_int
-call|)
-argument_list|(
-literal|60
-operator|*
-literal|5
-argument_list|)
+operator|)
+name|tmout
 argument_list|)
 expr_stmt|;
 operator|(
