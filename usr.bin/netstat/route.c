@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.31 1998/06/09 04:13:03 imp Exp $"
+literal|"$Id: route.c,v 1.32 1998/07/06 20:52:08 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -335,6 +335,10 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
+name|long
+name|dummy
+decl_stmt|;
+comment|/* Helps align structure. */
 name|struct
 name|sockaddr
 name|u_sa
@@ -1021,10 +1025,10 @@ name|Aflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-8.8x "
+literal|"%-8.8lx "
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|rn
 argument_list|)
@@ -1137,10 +1141,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-8.8x "
+literal|"%-8.8lx "
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|rn
 argument_list|)
@@ -1263,19 +1267,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6.6s %8.8x : %8.8x"
+literal|"%6.6s %8.8lx : %8.8lx"
 argument_list|,
 name|nbuf
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|rnode
 operator|.
 name|rn_l
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|rnode
 operator|.
@@ -1308,10 +1312,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" mk = %8.8x {(%d),%s"
+literal|" mk = %8.8lx {(%d),%s"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|rm
 argument_list|,
