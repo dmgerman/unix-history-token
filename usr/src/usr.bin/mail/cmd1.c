@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.9 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1424,7 +1424,7 @@ name|pipef
 operator|=
 name|NULL
 expr_stmt|;
-name|pclose
+name|Pclose
 argument_list|(
 name|obuf
 argument_list|)
@@ -1552,7 +1552,7 @@ name|MORE
 expr_stmt|;
 name|obuf
 operator|=
-name|popen
+name|Popen
 argument_list|(
 name|cp
 argument_list|,
@@ -1678,7 +1678,7 @@ name|pipef
 operator|=
 name|NULL
 expr_stmt|;
-name|pclose
+name|Pclose
 argument_list|(
 name|obuf
 argument_list|)
