@@ -431,6 +431,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_LOCKED
+parameter_list|(
+name|object
+parameter_list|)
+value|mtx_owned(&(object)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_UNLOCK
 parameter_list|(
 name|object
