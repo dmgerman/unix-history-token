@@ -19,6 +19,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -130,6 +136,24 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -6794,14 +6818,6 @@ name|name_len
 init|=
 literal|1
 decl_stmt|;
-name|int
-name|str_len
-init|=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -11822,6 +11838,40 @@ block|}
 comment|/* Set up the search paths before we go looking for config files.  */
 comment|/* These come before the md prefixes so that we will find gcc's subcommands      (such as cpp) rather than those of the host system.  */
 comment|/* Use 2 as fourth arg meaning try just the machine as a suffix,      as well as trying the machine and the version.  */
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+name|add_prefix
+argument_list|(
+operator|&
+name|exec_prefixes
+argument_list|,
+literal|"/usr/libexec/"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL_PTR
+argument_list|)
+expr_stmt|;
+name|add_prefix
+argument_list|(
+operator|&
+name|exec_prefixes
+argument_list|,
+literal|"/usr/bin/"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL_PTR
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* not FREEBSD_NATIVE */
 ifndef|#
 directive|ifndef
 name|OS2
@@ -11883,6 +11933,9 @@ argument_list|,
 name|NULL_PTR
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_NATIVE */
 name|tooldir_prefix
 operator|=
 name|concat3
@@ -11993,6 +12046,9 @@ name|tooldir_prefix
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|add_prefix
 argument_list|(
 operator|&
@@ -12035,6 +12091,9 @@ argument_list|,
 name|NULL_PTR
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_NATIVE */
 comment|/* More prefixes are enabled in main, after we read the specs file      and determine whether this is cross-compilation or not.  */
 comment|/* Then create the space for the vectors and scan again.  */
 name|switches
@@ -16711,9 +16770,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|q
-decl_stmt|,
-modifier|*
-name|copy
 decl_stmt|;
 comment|/* If desired, advance to second version number.  */
 if|if
@@ -18824,6 +18880,9 @@ operator|=
 name|n_default_compilers
 expr_stmt|;
 comment|/* Read specs from a file if there is one.  */
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|machine_suffix
 operator|=
 name|concat4
@@ -18846,6 +18905,8 @@ argument_list|,
 name|dir_separator_str
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|specs_file
 operator|=
 name|find_a_file
@@ -19032,6 +19093,9 @@ name|NULL_PTR
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|add_prefix
 argument_list|(
 operator|&
@@ -19067,6 +19131,9 @@ comment|/* Can cause surprises, and one can use -B./ instead.  */
 block|add_prefix (&startfile_prefixes, "./", 0, 1, NULL_PTR);
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* FREEBSD_NATIVE */
 block|}
 else|else
 block|{
@@ -19429,7 +19496,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"No input files"
+literal|"No input files specified"
 argument_list|)
 expr_stmt|;
 comment|/* Make a place to record the compiler output file names      that correspond to the input files.  */
