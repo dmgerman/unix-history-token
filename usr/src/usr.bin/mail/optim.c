@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optim.c	5.4 (Berkeley) %G%"
+literal|"@(#)optim.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,7 +473,7 @@ decl_stmt|;
 name|char
 name|nbuf
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|;
 comment|/* 	 * Make into lower case. 	 */
