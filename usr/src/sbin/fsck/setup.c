@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.27 (Berkeley) %G%"
+literal|"@(#)setup.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,9 +187,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|dev_t
-name|rootdev
-decl_stmt|;
 name|long
 name|cg
 decl_stmt|,
@@ -220,29 +217,6 @@ decl_stmt|;
 name|havesb
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-literal|"/"
-argument_list|,
-operator|&
-name|statb
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|errexit
-argument_list|(
-literal|"Can't stat root\n"
-argument_list|)
-expr_stmt|;
-name|rootdev
-operator|=
-name|statb
-operator|.
-name|st_dev
 expr_stmt|;
 if|if
 condition|(
@@ -285,21 +259,21 @@ operator|&
 name|S_IFMT
 operator|)
 operator|!=
-name|S_IFBLK
-operator|&&
-operator|(
-name|statb
-operator|.
-name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
 name|S_IFCHR
-operator|&&
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"%s is not a character device"
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|reply
 argument_list|(
-literal|"file is not a block or character device; OK"
+literal|"CONTINUE"
 argument_list|)
 operator|==
 literal|0
@@ -309,17 +283,7 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|rootdev
-operator|==
-name|statb
-operator|.
-name|st_rdev
-condition|)
-name|hotroot
-operator|++
-expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
