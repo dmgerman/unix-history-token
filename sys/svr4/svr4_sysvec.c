@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1998 Mark Newton  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Christos Zoulas.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *   * $Id$  */
+end_comment
+
+begin_comment
 comment|/* XXX we use functions that might not exist. */
 end_comment
 
@@ -507,9 +511,11 @@ block|,
 operator|&
 name|svr4_szsigcode
 block|,
-literal|0
+name|NULL
 block|,
 literal|"SVR4"
+block|,
+name|elf_coredump
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1361,31 +1367,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * XXX: wrong, for the same reason described in linux_sysvec.c  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|svr4_elf_modevent
-name|__P
-argument_list|(
-operator|(
-name|module_t
-name|mod
-operator|,
-name|int
-name|type
-operator|,
-name|void
-operator|*
-name|data
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static

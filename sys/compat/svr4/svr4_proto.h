@@ -3305,7 +3305,6 @@ name|int
 argument_list|)
 index|]
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|buf
@@ -3315,7 +3314,6 @@ name|buf_
 index|[
 name|PAD_
 argument_list|(
-specifier|const
 name|void
 operator|*
 argument_list|)
@@ -3345,7 +3343,6 @@ name|int
 argument_list|)
 index|]
 decl_stmt|;
-specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -3356,21 +3353,15 @@ name|to_
 index|[
 name|PAD_
 argument_list|(
-specifier|const
 expr|struct
 name|sockaddr
 operator|*
-block|)
-struct|];
-end_struct
-
-begin_decl_stmt
+argument_list|)
+index|]
+decl_stmt|;
 name|int
 name|tolen
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|tolen_
 index|[
@@ -3380,10 +3371,11 @@ name|int
 argument_list|)
 index|]
 decl_stmt|;
-end_decl_stmt
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
-unit|};
 name|int
 name|svr4_sys_open
 name|__P
