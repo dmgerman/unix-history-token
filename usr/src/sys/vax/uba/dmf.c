@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	6.4	84/12/20	*/
+comment|/*	dmf.c	6.5	85/03/12	*/
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_include
@@ -1558,8 +1564,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|KERN_RECOV
+argument_list|,
 literal|"dmf%d: silo overflow\n"
 argument_list|,
 name|dmf

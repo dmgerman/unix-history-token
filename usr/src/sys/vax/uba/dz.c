@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	6.5	84/12/20	*/
+comment|/*	dz.c	6.6	85/03/12	*/
 end_comment
 
 begin_include
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_include
@@ -1707,7 +1713,23 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* printf("dz%d,%d: silo overflow\n", dz, (c>>8)&7); */
+name|log
+argument_list|(
+name|KERN_RECOV
+argument_list|,
+literal|"dz%d,%d: silo overflow\n"
+argument_list|,
+name|dz
+argument_list|,
+operator|(
+name|c
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|7
+argument_list|)
+expr_stmt|;
 name|overrun
 operator|=
 literal|1
