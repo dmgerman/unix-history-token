@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.18 1998/02/22 15:09:39 ache Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.19 1998/02/22 17:26:24 ache Exp $ */
 end_comment
 
 begin_comment
@@ -3409,8 +3409,6 @@ name|cnt
 parameter_list|,
 name|chksum
 parameter_list|,
-name|table_loaded
-parameter_list|,
 name|u2w
 parameter_list|)
 specifier|const
@@ -3432,9 +3430,6 @@ decl_stmt|;
 name|int
 name|chksum
 decl_stmt|;
-name|int
-name|table_loaded
-decl_stmt|;
 name|u_int16_t
 modifier|*
 name|u2w
@@ -3454,6 +3449,15 @@ name|i
 decl_stmt|;
 name|u_int16_t
 name|code
+decl_stmt|;
+name|int
+name|table_loaded
+init|=
+operator|(
+name|u2w
+operator|!=
+name|NULL
+operator|)
 decl_stmt|;
 comment|/* 	 * Drop trailing blanks and dots 	 */
 for|for
@@ -3949,8 +3953,6 @@ name|wep
 parameter_list|,
 name|chksum
 parameter_list|,
-name|table_loaded
-parameter_list|,
 name|u2w
 parameter_list|)
 specifier|const
@@ -3969,9 +3971,6 @@ decl_stmt|;
 name|int
 name|chksum
 decl_stmt|;
-name|int
-name|table_loaded
-decl_stmt|;
 name|u_int16_t
 modifier|*
 name|u2w
@@ -3986,6 +3985,15 @@ name|i
 decl_stmt|;
 name|u_int16_t
 name|code
+decl_stmt|;
+name|int
+name|table_loaded
+init|=
+operator|(
+name|u2w
+operator|!=
+name|NULL
+operator|)
 decl_stmt|;
 comment|/* 	 * First compare checksums 	 */
 if|if
@@ -4473,8 +4481,6 @@ name|dp
 parameter_list|,
 name|chksum
 parameter_list|,
-name|table_loaded
-parameter_list|,
 name|u2w
 parameter_list|)
 name|struct
@@ -4489,9 +4495,6 @@ name|dp
 decl_stmt|;
 name|int
 name|chksum
-decl_stmt|;
-name|int
-name|table_loaded
 decl_stmt|;
 name|u_int16_t
 modifier|*
@@ -4520,6 +4523,15 @@ name|code
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|table_loaded
+init|=
+operator|(
+name|u2w
+operator|!=
+name|NULL
+operator|)
 decl_stmt|;
 if|if
 condition|(

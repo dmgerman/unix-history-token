@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.16 1998/02/22 15:09:42 ache Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.17 1998/02/22 17:26:27 ache Exp $ */
 end_comment
 
 begin_comment
@@ -820,15 +820,19 @@ name|dep
 argument_list|,
 name|chksum
 argument_list|,
+operator|(
 name|pmp
 operator|->
 name|pm_flags
 operator|&
 name|MSDOSFSMNT_U2WTABLE
-argument_list|,
+operator|)
+condition|?
 name|pmp
 operator|->
 name|pm_u2w
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2205,15 +2209,19 @@ operator|++
 argument_list|,
 name|chksum
 argument_list|,
+operator|(
 name|pmp
 operator|->
 name|pm_flags
 operator|&
 name|MSDOSFSMNT_U2WTABLE
-argument_list|,
+operator|)
+condition|?
 name|pmp
 operator|->
 name|pm_u2w
+else|:
+name|NULL
 argument_list|)
 condition|)
 empty_stmt|;
