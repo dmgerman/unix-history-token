@@ -6609,7 +6609,7 @@ value|ptr =					\ 	(base) + (((ptr) - (base) + sizeof(int) - 1)& ~(sizeof(int) -
 end_define
 
 begin_comment
-comment|/*  * Lookup KLD which contains requested module in the "linker.hints" file. If  * version specification is available, then try to find the best KLD.  * Otherwise just find the latest one.  *   * XXX: Vnode locking here is hosed; lock should be held for calls to  * VOP_GETATTR() and vn_rdwr().  */
+comment|/*  * Lookup KLD which contains requested module in the "linker.hints" file. If  * version specification is available, then try to find the best KLD.  * Otherwise just find the latest one.  */
 end_comment
 
 begin_function
@@ -6843,17 +6843,6 @@ argument_list|,
 name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|nd
-operator|.
-name|ni_vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nd
@@ -6986,6 +6975,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|VOP_UNLOCK
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|vn_close
 argument_list|(
 name|nd
@@ -7336,6 +7336,18 @@ name|ni_vp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|VOP_UNLOCK
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|vn_close
 argument_list|(
 name|nd
@@ -7349,6 +7361,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * If nothing found or hints is absent - fallback to the old 	 * way by using "kldname[.ko]" as module name. 	 */
 if|if
 condition|(
