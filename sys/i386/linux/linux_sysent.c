@@ -39,6 +39,16 @@ directive|include
 file|<i386/linux/linux_proto.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|AS
+parameter_list|(
+name|name
+parameter_list|)
+value|(sizeof(struct name) / sizeof(register_t))
+end_define
+
 begin_comment
 comment|/* The casts are bogus but will do for now. */
 end_comment
@@ -62,7 +72,10 @@ block|}
 block|,
 comment|/* 0 = linux_setup */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|rexit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -84,7 +97,10 @@ block|}
 block|,
 comment|/* 2 = linux_fork */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|read_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -95,7 +111,10 @@ block|}
 block|,
 comment|/* 3 = read */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|write_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -106,7 +125,10 @@ block|}
 block|,
 comment|/* 4 = write */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_open_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -117,7 +139,10 @@ block|}
 block|,
 comment|/* 5 = linux_open */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|close_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -128,7 +153,10 @@ block|}
 block|,
 comment|/* 6 = close */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_waitpid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -139,7 +167,10 @@ block|}
 block|,
 comment|/* 7 = linux_waitpid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_creat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -150,7 +181,10 @@ block|}
 block|,
 comment|/* 8 = linux_creat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_link_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -161,7 +195,10 @@ block|}
 block|,
 comment|/* 9 = linux_link */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_unlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -172,7 +209,10 @@ block|}
 block|,
 comment|/* 10 = linux_unlink */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_execve_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -183,7 +223,10 @@ block|}
 block|,
 comment|/* 11 = linux_execve */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_chdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -194,7 +237,10 @@ block|}
 block|,
 comment|/* 12 = linux_chdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_time_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -205,7 +251,10 @@ block|}
 block|,
 comment|/* 13 = linux_time */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_mknod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -216,7 +265,10 @@ block|}
 block|,
 comment|/* 14 = linux_mknod */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_chmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -227,7 +279,10 @@ block|}
 block|,
 comment|/* 15 = linux_chmod */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_lchown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -238,7 +293,10 @@ block|}
 block|,
 comment|/* 16 = linux_lchown */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_break_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -249,7 +307,10 @@ block|}
 block|,
 comment|/* 17 = linux_break */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_stat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -260,7 +321,10 @@ block|}
 block|,
 comment|/* 18 = linux_stat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_lseek_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -304,7 +368,10 @@ block|}
 block|,
 comment|/* 22 = linux_umount */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|setuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -348,7 +415,10 @@ block|}
 block|,
 comment|/* 26 = linux_ptrace */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_alarm_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -359,7 +429,10 @@ block|}
 block|,
 comment|/* 27 = linux_alarm */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_fstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -381,7 +454,10 @@ block|}
 block|,
 comment|/* 29 = linux_pause */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_utime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -414,7 +490,10 @@ block|}
 block|,
 comment|/* 32 = linux_gtty */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_access_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -425,7 +504,10 @@ block|}
 block|,
 comment|/* 33 = linux_access */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_nice_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -458,7 +540,10 @@ block|}
 block|,
 comment|/* 36 = sync */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_kill_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -469,7 +554,10 @@ block|}
 block|,
 comment|/* 37 = linux_kill */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_rename_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -480,7 +568,10 @@ block|}
 block|,
 comment|/* 38 = linux_rename */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_mkdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -491,7 +582,10 @@ block|}
 block|,
 comment|/* 39 = linux_mkdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_rmdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -502,7 +596,10 @@ block|}
 block|,
 comment|/* 40 = linux_rmdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|dup_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -513,7 +610,10 @@ block|}
 block|,
 comment|/* 41 = dup */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_pipe_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -524,7 +624,10 @@ block|}
 block|,
 comment|/* 42 = linux_pipe */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_times_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -546,7 +649,10 @@ block|}
 block|,
 comment|/* 44 = linux_prof */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_brk_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -557,7 +663,10 @@ block|}
 block|,
 comment|/* 45 = linux_brk */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|setgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -579,7 +688,10 @@ block|}
 block|,
 comment|/* 47 = getgid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_signal_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -612,7 +724,10 @@ block|}
 block|,
 comment|/* 50 = getegid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|acct_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -645,7 +760,10 @@ block|}
 block|,
 comment|/* 53 = linux_lock */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_ioctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -656,7 +774,10 @@ block|}
 block|,
 comment|/* 54 = linux_ioctl */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_fcntl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -678,7 +799,10 @@ block|}
 block|,
 comment|/* 56 = linux_mpx */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setpgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -711,7 +835,10 @@ block|}
 block|,
 comment|/* 59 = linux_olduname */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|umask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -722,7 +849,10 @@ block|}
 block|,
 comment|/* 60 = umask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|chroot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -733,7 +863,10 @@ block|}
 block|,
 comment|/* 61 = chroot */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_ustat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -744,7 +877,10 @@ block|}
 block|,
 comment|/* 62 = linux_ustat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|dup2_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -788,7 +924,10 @@ block|}
 block|,
 comment|/* 66 = setsid */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_sigaction_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -810,7 +949,10 @@ block|}
 block|,
 comment|/* 68 = linux_siggetmask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_sigsetmask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -821,7 +963,10 @@ block|}
 block|,
 comment|/* 69 = linux_sigsetmask */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setreuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -832,7 +977,10 @@ block|}
 block|,
 comment|/* 70 = setreuid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setregid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -843,7 +991,10 @@ block|}
 block|,
 comment|/* 71 = setregid */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_sigsuspend_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -854,7 +1005,10 @@ block|}
 block|,
 comment|/* 72 = linux_sigsuspend */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_sigpending_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -865,7 +1019,10 @@ block|}
 block|,
 comment|/* 73 = linux_sigpending */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|sethostname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -876,7 +1033,10 @@ block|}
 block|,
 comment|/* 74 = osethostname */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_setrlimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -887,7 +1047,10 @@ block|}
 block|,
 comment|/* 75 = linux_setrlimit */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_getrlimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -898,7 +1061,10 @@ block|}
 block|,
 comment|/* 76 = linux_getrlimit */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getrusage_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -909,7 +1075,10 @@ block|}
 block|,
 comment|/* 77 = getrusage */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|gettimeofday_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -920,7 +1089,10 @@ block|}
 block|,
 comment|/* 78 = gettimeofday */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|settimeofday_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -931,7 +1103,10 @@ block|}
 block|,
 comment|/* 79 = settimeofday */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_getgroups_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -942,7 +1117,10 @@ block|}
 block|,
 comment|/* 80 = linux_getgroups */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_setgroups_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -953,7 +1131,10 @@ block|}
 block|,
 comment|/* 81 = linux_setgroups */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_select_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -964,7 +1145,10 @@ block|}
 block|,
 comment|/* 82 = linux_select */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_symlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -975,7 +1159,10 @@ block|}
 block|,
 comment|/* 83 = linux_symlink */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ostat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -986,7 +1173,10 @@ block|}
 block|,
 comment|/* 84 = ostat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_readlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -997,7 +1187,10 @@ block|}
 block|,
 comment|/* 85 = linux_readlink */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_uselib_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1008,7 +1201,10 @@ block|}
 block|,
 comment|/* 86 = linux_uselib */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|swapon_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1019,7 +1215,10 @@ block|}
 block|,
 comment|/* 87 = swapon */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|reboot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1030,7 +1229,10 @@ block|}
 block|,
 comment|/* 88 = reboot */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_readdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1041,7 +1243,10 @@ block|}
 block|,
 comment|/* 89 = linux_readdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_mmap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1052,7 +1257,10 @@ block|}
 block|,
 comment|/* 90 = linux_mmap */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|munmap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1063,7 +1271,10 @@ block|}
 block|,
 comment|/* 91 = munmap */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_truncate_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1074,7 +1285,10 @@ block|}
 block|,
 comment|/* 92 = linux_truncate */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|oftruncate_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1085,7 +1299,10 @@ block|}
 block|,
 comment|/* 93 = oftruncate */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|fchmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1096,7 +1313,10 @@ block|}
 block|,
 comment|/* 94 = fchmod */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|fchown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1107,7 +1327,10 @@ block|}
 block|,
 comment|/* 95 = fchown */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getpriority_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1118,7 +1341,10 @@ block|}
 block|,
 comment|/* 96 = getpriority */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|setpriority_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1129,7 +1355,10 @@ block|}
 block|,
 comment|/* 97 = setpriority */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|profil_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1140,7 +1369,10 @@ block|}
 block|,
 comment|/* 98 = profil */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_statfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1151,7 +1383,10 @@ block|}
 block|,
 comment|/* 99 = linux_statfs */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_fstatfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1162,7 +1397,10 @@ block|}
 block|,
 comment|/* 100 = linux_fstatfs */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_ioperm_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1173,7 +1411,10 @@ block|}
 block|,
 comment|/* 101 = linux_ioperm */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_socketcall_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1184,7 +1425,10 @@ block|}
 block|,
 comment|/* 102 = linux_socketcall */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_ksyslog_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1195,7 +1439,10 @@ block|}
 block|,
 comment|/* 103 = linux_ksyslog */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_setitimer_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1206,7 +1453,10 @@ block|}
 block|,
 comment|/* 104 = linux_setitimer */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_getitimer_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1217,7 +1467,10 @@ block|}
 block|,
 comment|/* 105 = linux_getitimer */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_newstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1228,7 +1481,10 @@ block|}
 block|,
 comment|/* 106 = linux_newstat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_newlstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1239,7 +1495,10 @@ block|}
 block|,
 comment|/* 107 = linux_newlstat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_newfstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1261,7 +1520,10 @@ block|}
 block|,
 comment|/* 109 = linux_uname */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_iopl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1305,7 +1567,10 @@ block|}
 block|,
 comment|/* 113 = linux_vm86old */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|linux_wait4_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1338,7 +1603,10 @@ block|}
 block|,
 comment|/* 116 = linux_sysinfo */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|linux_ipc_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1349,7 +1617,10 @@ block|}
 block|,
 comment|/* 117 = linux_ipc */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fsync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1360,7 +1631,10 @@ block|}
 block|,
 comment|/* 118 = fsync */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_sigreturn_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1371,7 +1645,10 @@ block|}
 block|,
 comment|/* 119 = linux_sigreturn */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_clone_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1382,7 +1659,10 @@ block|}
 block|,
 comment|/* 120 = linux_clone */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setdomainname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1393,7 +1673,10 @@ block|}
 block|,
 comment|/* 121 = setdomainname */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_newuname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1404,7 +1687,10 @@ block|}
 block|,
 comment|/* 122 = linux_newuname */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_modify_ldt_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1426,7 +1712,10 @@ block|}
 block|,
 comment|/* 124 = linux_adjtimex */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|mprotect_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1437,7 +1726,10 @@ block|}
 block|,
 comment|/* 125 = mprotect */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_sigprocmask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1503,7 +1795,10 @@ block|}
 block|,
 comment|/* 131 = linux_quotactl */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_getpgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1514,7 +1809,10 @@ block|}
 block|,
 comment|/* 132 = linux_getpgid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fchdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1536,7 +1834,10 @@ block|}
 block|,
 comment|/* 134 = linux_bdflush */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_sysfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1547,7 +1848,10 @@ block|}
 block|,
 comment|/* 135 = linux_sysfs */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_personality_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1569,7 +1873,10 @@ block|}
 block|,
 comment|/* 137 = linux_afs_syscall */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_setfsuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1580,7 +1887,10 @@ block|}
 block|,
 comment|/* 138 = linux_setfsuid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_setfsgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1591,7 +1901,10 @@ block|}
 block|,
 comment|/* 139 = linux_setfsgid */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|linux_llseek_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1602,7 +1915,10 @@ block|}
 block|,
 comment|/* 140 = linux_llseek */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_getdents_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1613,7 +1929,10 @@ block|}
 block|,
 comment|/* 141 = linux_getdents */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|linux_newselect_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1624,7 +1943,10 @@ block|}
 block|,
 comment|/* 142 = linux_newselect */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|flock_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1635,7 +1957,10 @@ block|}
 block|,
 comment|/* 143 = flock */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_msync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1646,7 +1971,10 @@ block|}
 block|,
 comment|/* 144 = linux_msync */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|readv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1657,7 +1985,10 @@ block|}
 block|,
 comment|/* 145 = readv */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|writev_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1668,7 +1999,10 @@ block|}
 block|,
 comment|/* 146 = writev */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_getsid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1679,7 +2013,10 @@ block|}
 block|,
 comment|/* 147 = linux_getsid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_fdatasync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1701,7 +2038,10 @@ block|}
 block|,
 comment|/* 149 = linux_sysctl */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|mlock_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1712,7 +2052,10 @@ block|}
 block|,
 comment|/* 150 = mlock */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|munlock_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1723,7 +2066,10 @@ block|}
 block|,
 comment|/* 151 = munlock */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|mlockall_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1745,7 +2091,10 @@ block|}
 block|,
 comment|/* 153 = munlockall */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|sched_setparam_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1756,7 +2105,10 @@ block|}
 block|,
 comment|/* 154 = sched_setparam */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|sched_getparam_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1767,7 +2119,10 @@ block|}
 block|,
 comment|/* 155 = sched_getparam */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_sched_setscheduler_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1778,7 +2133,10 @@ block|}
 block|,
 comment|/* 156 = linux_sched_setscheduler */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|linux_sched_getscheduler_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1800,7 +2158,10 @@ block|}
 block|,
 comment|/* 158 = sched_yield */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|sched_get_priority_max_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1811,7 +2172,10 @@ block|}
 block|,
 comment|/* 159 = sched_get_priority_max */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|sched_get_priority_min_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1822,7 +2186,10 @@ block|}
 block|,
 comment|/* 160 = sched_get_priority_min */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|sched_rr_get_interval_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1833,7 +2200,10 @@ block|}
 block|,
 comment|/* 161 = sched_rr_get_interval */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|nanosleep_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1844,7 +2214,10 @@ block|}
 block|,
 comment|/* 162 = nanosleep */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|linux_mremap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1855,7 +2228,10 @@ block|}
 block|,
 comment|/* 163 = linux_mremap */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|setresuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1866,7 +2242,10 @@ block|}
 block|,
 comment|/* 164 = setresuid */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_getresuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1899,7 +2278,10 @@ block|}
 block|,
 comment|/* 167 = linux_query_module */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|poll_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1921,7 +2303,10 @@ block|}
 block|,
 comment|/* 169 = linux_nfsservctl */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|setresgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1932,7 +2317,10 @@ block|}
 block|,
 comment|/* 170 = setresgid */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_getresgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1965,7 +2353,10 @@ block|}
 block|,
 comment|/* 173 = linux_rt_sigreturn */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|linux_rt_sigaction_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1976,7 +2367,10 @@ block|}
 block|,
 comment|/* 174 = linux_rt_sigaction */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|linux_rt_sigprocmask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2020,7 +2414,10 @@ block|}
 block|,
 comment|/* 178 = linux_rt_sigqueueinfo */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_rt_sigsuspend_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2031,7 +2428,10 @@ block|}
 block|,
 comment|/* 179 = linux_rt_sigsuspend */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|linux_pread_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2042,7 +2442,10 @@ block|}
 block|,
 comment|/* 180 = linux_pread */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|linux_pwrite_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2053,7 +2456,10 @@ block|}
 block|,
 comment|/* 181 = linux_pwrite */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|linux_chown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2064,7 +2470,10 @@ block|}
 block|,
 comment|/* 182 = linux_chown */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_getcwd_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2097,7 +2506,10 @@ block|}
 block|,
 comment|/* 185 = linux_capset */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|linux_sigaltstack_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t

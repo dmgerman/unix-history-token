@@ -45,6 +45,16 @@ directive|include
 file|<alpha/osf1/osf1_proto.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|AS
+parameter_list|(
+name|name
+parameter_list|)
+value|(sizeof(struct name) / sizeof(register_t))
+end_define
+
 begin_comment
 comment|/* The casts are bogus but will do for now. */
 end_comment
@@ -68,7 +78,10 @@ block|}
 block|,
 comment|/* 0 = nosys */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|exit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -90,7 +103,10 @@ block|}
 block|,
 comment|/* 2 = fork */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|read_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -101,7 +117,10 @@ block|}
 block|,
 comment|/* 3 = read */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|write_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -123,7 +142,10 @@ block|}
 block|,
 comment|/* 5 = old open */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|close_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -134,7 +156,10 @@ block|}
 block|,
 comment|/* 6 = close */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osf1_wait4_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -156,7 +181,10 @@ block|}
 block|,
 comment|/* 8 = old creat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|link_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -167,7 +195,10 @@ block|}
 block|,
 comment|/* 9 = link */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|unlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -189,7 +220,10 @@ block|}
 block|,
 comment|/* 11 = execv */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|chdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -200,7 +234,10 @@ block|}
 block|,
 comment|/* 12 = chdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fchdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -211,7 +248,10 @@ block|}
 block|,
 comment|/* 13 = fchdir */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_mknod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -222,7 +262,10 @@ block|}
 block|,
 comment|/* 14 = osf1_mknod */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|chmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -233,7 +276,10 @@ block|}
 block|,
 comment|/* 15 = chmod */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|chown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -244,7 +290,10 @@ block|}
 block|,
 comment|/* 16 = chown */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|obreak_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -255,7 +304,10 @@ block|}
 block|,
 comment|/* 17 = obreak */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_getfsstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -266,7 +318,10 @@ block|}
 block|,
 comment|/* 18 = osf1_getfsstat */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osf1_lseek_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -288,7 +343,10 @@ block|}
 block|,
 comment|/* 20 = getpid */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osf1_mount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -299,7 +357,10 @@ block|}
 block|,
 comment|/* 21 = osf1_mount */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_unmount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -310,7 +371,10 @@ block|}
 block|,
 comment|/* 22 = osf1_unmount */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_setuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -376,7 +440,10 @@ block|}
 block|,
 comment|/* 28 = sendmsg */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|recvfrom_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -387,7 +454,10 @@ block|}
 block|,
 comment|/* 29 = recvfrom */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|accept_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -398,7 +468,10 @@ block|}
 block|,
 comment|/* 30 = accept */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|getpeername_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -409,7 +482,10 @@ block|}
 block|,
 comment|/* 31 = getpeername */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|getsockname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -420,7 +496,10 @@ block|}
 block|,
 comment|/* 32 = getsockname */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_access_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -464,7 +543,10 @@ block|}
 block|,
 comment|/* 36 = sync */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_kill_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -486,7 +568,10 @@ block|}
 block|,
 comment|/* 38 = old stat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setpgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -508,7 +593,10 @@ block|}
 block|,
 comment|/* 40 = old lstat */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|dup_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -530,7 +618,10 @@ block|}
 block|,
 comment|/* 42 = pipe */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osf1_set_program_attributes_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -552,7 +643,10 @@ block|}
 block|,
 comment|/* 44 = profil */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_open_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -585,7 +679,10 @@ block|}
 block|,
 comment|/* 47 = getgid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_sigprocmask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -596,7 +693,10 @@ block|}
 block|,
 comment|/* 48 = osf1_sigprocmask */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getlogin_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -607,7 +707,10 @@ block|}
 block|,
 comment|/* 49 = getlogin */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|setlogin_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -618,7 +721,10 @@ block|}
 block|,
 comment|/* 50 = setlogin */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|acct_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -629,7 +735,10 @@ block|}
 block|,
 comment|/* 51 = acct */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_sigpending_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -640,7 +749,10 @@ block|}
 block|,
 comment|/* 52 = osf1_sigpending */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osf1_classcntl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -651,7 +763,10 @@ block|}
 block|,
 comment|/* 53 = osf1_classcntl */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_ioctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -662,7 +777,10 @@ block|}
 block|,
 comment|/* 54 = osf1_ioctl */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_reboot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -673,7 +791,10 @@ block|}
 block|,
 comment|/* 55 = osf1_reboot */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|revoke_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -684,7 +805,10 @@ block|}
 block|,
 comment|/* 56 = revoke */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|symlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -695,7 +819,10 @@ block|}
 block|,
 comment|/* 57 = symlink */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|readlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -706,7 +833,10 @@ block|}
 block|,
 comment|/* 58 = readlink */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_execve_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -717,7 +847,10 @@ block|}
 block|,
 comment|/* 59 = osf1_execve */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|umask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -728,7 +861,10 @@ block|}
 block|,
 comment|/* 60 = umask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|chroot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -794,7 +930,10 @@ block|}
 block|,
 comment|/* 66 = vfork */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_stat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -805,7 +944,10 @@ block|}
 block|,
 comment|/* 67 = osf1_stat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_lstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -838,7 +980,10 @@ block|}
 block|,
 comment|/* 70 = sstk */
 block|{
-literal|7
+name|AS
+argument_list|(
+name|osf1_mmap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -860,7 +1005,10 @@ block|}
 block|,
 comment|/* 72 = ovadvise */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|munmap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -871,7 +1019,10 @@ block|}
 block|,
 comment|/* 73 = munmap */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|mprotect_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -926,7 +1077,10 @@ block|}
 block|,
 comment|/* 78 = mincore */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getgroups_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -937,7 +1091,10 @@ block|}
 block|,
 comment|/* 79 = getgroups */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setgroups_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -959,7 +1116,10 @@ block|}
 block|,
 comment|/* 81 = old getpgrp */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_setpgrp_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -970,7 +1130,10 @@ block|}
 block|,
 comment|/* 82 = osf1_setpgrp */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_setitimer_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -992,7 +1155,10 @@ block|}
 block|,
 comment|/* 84 = old wait */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|osf1_table_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1003,7 +1169,10 @@ block|}
 block|,
 comment|/* 85 = osf1_table */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_getitimer_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1014,7 +1183,10 @@ block|}
 block|,
 comment|/* 86 = osf1_getitimer */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ogethostname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1025,7 +1197,10 @@ block|}
 block|,
 comment|/* 87 = ogethostname */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osethostname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1047,7 +1222,10 @@ block|}
 block|,
 comment|/* 89 = getdtablesize */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|dup2_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1058,7 +1236,10 @@ block|}
 block|,
 comment|/* 90 = dup2 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_fstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1069,7 +1250,10 @@ block|}
 block|,
 comment|/* 91 = osf1_fstat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_fcntl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1080,7 +1264,10 @@ block|}
 block|,
 comment|/* 92 = osf1_fcntl */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|osf1_select_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1091,7 +1278,10 @@ block|}
 block|,
 comment|/* 93 = osf1_select */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|poll_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1102,7 +1292,10 @@ block|}
 block|,
 comment|/* 94 = poll */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fsync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1113,7 +1306,10 @@ block|}
 block|,
 comment|/* 95 = fsync */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|setpriority_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1124,7 +1320,10 @@ block|}
 block|,
 comment|/* 96 = setpriority */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_socket_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1135,7 +1334,10 @@ block|}
 block|,
 comment|/* 97 = osf1_socket */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|connect_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1146,7 +1348,10 @@ block|}
 block|,
 comment|/* 98 = connect */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|oaccept_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1157,7 +1362,10 @@ block|}
 block|,
 comment|/* 99 = oaccept */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getpriority_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1168,7 +1376,10 @@ block|}
 block|,
 comment|/* 100 = getpriority */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osend_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1179,7 +1390,10 @@ block|}
 block|,
 comment|/* 101 = osend */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|orecv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1190,7 +1404,10 @@ block|}
 block|,
 comment|/* 102 = orecv */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_sigreturn_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1201,7 +1418,10 @@ block|}
 block|,
 comment|/* 103 = osf1_sigreturn */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|bind_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1212,7 +1432,10 @@ block|}
 block|,
 comment|/* 104 = bind */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|setsockopt_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1223,7 +1446,10 @@ block|}
 block|,
 comment|/* 105 = setsockopt */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|listen_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1278,7 +1504,10 @@ block|}
 block|,
 comment|/* 110 = old sigsetmask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_sigsuspend_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1289,7 +1518,10 @@ block|}
 block|,
 comment|/* 111 = osf1_sigsuspend */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_osigstack_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1333,7 +1565,10 @@ block|}
 block|,
 comment|/* 115 = vtrace */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_gettimeofday_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1344,7 +1579,10 @@ block|}
 block|,
 comment|/* 116 = osf1_gettimeofday */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_getrusage_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1355,7 +1593,10 @@ block|}
 block|,
 comment|/* 117 = osf1_getrusage */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|getsockopt_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1377,7 +1618,10 @@ block|}
 block|,
 comment|/* 119 =  */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_readv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1388,7 +1632,10 @@ block|}
 block|,
 comment|/* 120 = osf1_readv */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_writev_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1399,7 +1646,10 @@ block|}
 block|,
 comment|/* 121 = osf1_writev */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|settimeofday_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1410,7 +1660,10 @@ block|}
 block|,
 comment|/* 122 = settimeofday */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|fchown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1421,7 +1674,10 @@ block|}
 block|,
 comment|/* 123 = fchown */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|fchmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1432,7 +1688,10 @@ block|}
 block|,
 comment|/* 124 = fchmod */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|orecvfrom_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1443,7 +1702,10 @@ block|}
 block|,
 comment|/* 125 = orecvfrom */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setreuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1454,7 +1716,10 @@ block|}
 block|,
 comment|/* 126 = setreuid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setregid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1465,7 +1730,10 @@ block|}
 block|,
 comment|/* 127 = setregid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|rename_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1476,7 +1744,10 @@ block|}
 block|,
 comment|/* 128 = rename */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_truncate_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1487,7 +1758,10 @@ block|}
 block|,
 comment|/* 129 = osf1_truncate */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_ftruncate_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1498,7 +1772,10 @@ block|}
 block|,
 comment|/* 130 = osf1_ftruncate */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|flock_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1509,7 +1786,10 @@ block|}
 block|,
 comment|/* 131 = flock */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_setgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1520,7 +1800,10 @@ block|}
 block|,
 comment|/* 132 = osf1_setgid */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|osf1_sendto_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1531,7 +1814,10 @@ block|}
 block|,
 comment|/* 133 = osf1_sendto */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|shutdown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1553,7 +1839,10 @@ block|}
 block|,
 comment|/* 135 = socketpair */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|mkdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1564,7 +1853,10 @@ block|}
 block|,
 comment|/* 136 = mkdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|rmdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1575,7 +1867,10 @@ block|}
 block|,
 comment|/* 137 = rmdir */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|utimes_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1608,7 +1903,10 @@ block|}
 block|,
 comment|/* 140 = adjtime */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ogetpeername_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1630,7 +1928,10 @@ block|}
 block|,
 comment|/* 142 = ogethostid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osethostid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1641,7 +1942,10 @@ block|}
 block|,
 comment|/* 143 = osethostid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_getrlimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1652,7 +1956,10 @@ block|}
 block|,
 comment|/* 144 = osf1_getrlimit */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_setrlimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1707,7 +2014,10 @@ block|}
 block|,
 comment|/* 149 = oquota */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ogetsockname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1773,7 +2083,10 @@ block|}
 block|,
 comment|/* 155 =  */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|osf1_sigaction_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1806,7 +2119,10 @@ block|}
 block|,
 comment|/* 158 = nfssvc */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ogetdirentries_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1817,7 +2133,10 @@ block|}
 block|,
 comment|/* 159 = ogetdirentries */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_statfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1828,7 +2147,10 @@ block|}
 block|,
 comment|/* 160 = osf1_statfs */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_fstatfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1872,7 +2194,10 @@ block|}
 block|,
 comment|/* 164 = getfh */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getdomainname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1883,7 +2208,10 @@ block|}
 block|,
 comment|/* 165 = getdomainname */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setdomainname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2257,7 +2585,10 @@ block|}
 block|,
 comment|/* 199 = swapon */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|msgctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2268,7 +2599,10 @@ block|}
 block|,
 comment|/* 200 = msgctl */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|msgget_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2279,7 +2613,10 @@ block|}
 block|,
 comment|/* 201 = msgget */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|msgrcv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2290,7 +2627,10 @@ block|}
 block|,
 comment|/* 202 = msgrcv */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|msgsnd_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2301,7 +2641,10 @@ block|}
 block|,
 comment|/* 203 = msgsnd */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|__semctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2312,7 +2655,10 @@ block|}
 block|,
 comment|/* 204 = __semctl */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|semget_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2323,7 +2669,10 @@ block|}
 block|,
 comment|/* 205 = semget */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|semop_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2334,7 +2683,10 @@ block|}
 block|,
 comment|/* 206 = semop */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|uname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2345,7 +2697,10 @@ block|}
 block|,
 comment|/* 207 = uname */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|lchown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2356,7 +2711,10 @@ block|}
 block|,
 comment|/* 208 = lchown */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|shmat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2367,7 +2725,10 @@ block|}
 block|,
 comment|/* 209 = shmat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|shmctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2378,7 +2739,10 @@ block|}
 block|,
 comment|/* 210 = shmctl */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|shmdt_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2389,7 +2753,10 @@ block|}
 block|,
 comment|/* 211 = shmdt */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|shmget_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2444,7 +2811,10 @@ block|}
 block|,
 comment|/* 216 = mwakeup */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_msync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2455,7 +2825,10 @@ block|}
 block|,
 comment|/* 217 = osf1_msync */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_signal_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2620,7 +2993,10 @@ block|}
 block|,
 comment|/* 232 =  */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|getpgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2631,7 +3007,10 @@ block|}
 block|,
 comment|/* 233 = getpgid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|getsid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2642,7 +3021,10 @@ block|}
 block|,
 comment|/* 234 = getsid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_sigaltstack_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2708,7 +3090,10 @@ block|}
 block|,
 comment|/* 240 = msfs_syscall */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|osf1_sysinfo_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2752,7 +3137,10 @@ block|}
 block|,
 comment|/* 244 = osf1_proplist_syscall */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_ntpadjtime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2763,7 +3151,10 @@ block|}
 block|,
 comment|/* 245 = osf1_ntpadjtime */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|osf1_ntpgettime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2774,7 +3165,10 @@ block|}
 block|,
 comment|/* 246 = osf1_ntpgettime */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_pathconf_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2785,7 +3179,10 @@ block|}
 block|,
 comment|/* 247 = osf1_pathconf */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_fpathconf_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2807,7 +3204,10 @@ block|}
 block|,
 comment|/* 249 =  */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_uswitch_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2818,7 +3218,10 @@ block|}
 block|,
 comment|/* 250 = osf1_uswitch */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|osf1_usleep_thread_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2873,7 +3276,10 @@ block|}
 block|,
 comment|/* 255 =  */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|osf1_getsysinfo_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2884,7 +3290,10 @@ block|}
 block|,
 comment|/* 256 = osf1_getsysinfo */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|osf1_setsysinfo_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t

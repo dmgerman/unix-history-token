@@ -39,6 +39,16 @@ directive|include
 file|<i386/ibcs2/ibcs2_proto.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|AS
+parameter_list|(
+name|name
+parameter_list|)
+value|(sizeof(struct name) / sizeof(register_t))
+end_define
+
 begin_comment
 comment|/* The casts are bogus but will do for now. */
 end_comment
@@ -62,7 +72,10 @@ block|}
 block|,
 comment|/* 0 = syscall */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|exit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -84,7 +97,10 @@ block|}
 block|,
 comment|/* 2 = fork */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_read_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -95,7 +111,10 @@ block|}
 block|,
 comment|/* 3 = ibcs2_read */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|write_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -106,7 +125,10 @@ block|}
 block|,
 comment|/* 4 = write */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_open_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -117,7 +139,10 @@ block|}
 block|,
 comment|/* 5 = ibcs2_open */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|close_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -128,7 +153,10 @@ block|}
 block|,
 comment|/* 6 = close */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_wait_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -139,7 +167,10 @@ block|}
 block|,
 comment|/* 7 = ibcs2_wait */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_creat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -150,7 +181,10 @@ block|}
 block|,
 comment|/* 8 = ibcs2_creat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|link_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -161,7 +195,10 @@ block|}
 block|,
 comment|/* 9 = link */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_unlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -172,7 +209,10 @@ block|}
 block|,
 comment|/* 10 = ibcs2_unlink */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_execv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -183,7 +223,10 @@ block|}
 block|,
 comment|/* 11 = ibcs2_execv */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_chdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -194,7 +237,10 @@ block|}
 block|,
 comment|/* 12 = ibcs2_chdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_time_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -205,7 +251,10 @@ block|}
 block|,
 comment|/* 13 = ibcs2_time */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_mknod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -216,7 +265,10 @@ block|}
 block|,
 comment|/* 14 = ibcs2_mknod */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_chmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -227,7 +279,10 @@ block|}
 block|,
 comment|/* 15 = ibcs2_chmod */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_chown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -238,7 +293,10 @@ block|}
 block|,
 comment|/* 16 = ibcs2_chown */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|obreak_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -249,7 +307,10 @@ block|}
 block|,
 comment|/* 17 = obreak */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_stat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -260,7 +321,10 @@ block|}
 block|,
 comment|/* 18 = ibcs2_stat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_lseek_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -282,7 +346,10 @@ block|}
 block|,
 comment|/* 20 = getpid */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|ibcs2_mount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -293,7 +360,10 @@ block|}
 block|,
 comment|/* 21 = ibcs2_mount */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_umount_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -304,7 +374,10 @@ block|}
 block|,
 comment|/* 22 = ibcs2_umount */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_setuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -326,7 +399,10 @@ block|}
 block|,
 comment|/* 24 = getuid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_stime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -337,7 +413,10 @@ block|}
 block|,
 comment|/* 25 = ibcs2_stime */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ptrace_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -348,7 +427,10 @@ block|}
 block|,
 comment|/* 26 = ptrace */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_alarm_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -359,7 +441,10 @@ block|}
 block|,
 comment|/* 27 = ibcs2_alarm */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_fstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -381,7 +466,10 @@ block|}
 block|,
 comment|/* 29 = ibcs2_pause */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_utime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -392,7 +480,10 @@ block|}
 block|,
 comment|/* 30 = ibcs2_utime */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_stty_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -403,7 +494,10 @@ block|}
 block|,
 comment|/* 31 = ibcs2_stty */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_gtty_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -414,7 +508,10 @@ block|}
 block|,
 comment|/* 32 = ibcs2_gtty */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_access_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -425,7 +522,10 @@ block|}
 block|,
 comment|/* 33 = ibcs2_access */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_nice_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -436,7 +536,10 @@ block|}
 block|,
 comment|/* 34 = ibcs2_nice */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ibcs2_statfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -458,7 +561,10 @@ block|}
 block|,
 comment|/* 36 = sync */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_kill_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -469,7 +575,10 @@ block|}
 block|,
 comment|/* 37 = ibcs2_kill */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ibcs2_fstatfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -480,7 +589,10 @@ block|}
 block|,
 comment|/* 38 = ibcs2_fstatfs */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ibcs2_pgrpsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -491,7 +603,10 @@ block|}
 block|,
 comment|/* 39 = ibcs2_pgrpsys */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|ibcs2_xenix_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -502,7 +617,10 @@ block|}
 block|,
 comment|/* 40 = ibcs2_xenix */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|dup_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -524,7 +642,10 @@ block|}
 block|,
 comment|/* 42 = pipe */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_times_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -535,7 +656,10 @@ block|}
 block|,
 comment|/* 43 = ibcs2_times */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|profil_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -546,7 +670,10 @@ block|}
 block|,
 comment|/* 44 = profil */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_plock_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -557,7 +684,10 @@ block|}
 block|,
 comment|/* 45 = ibcs2_plock */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_setgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -579,7 +709,10 @@ block|}
 block|,
 comment|/* 47 = getgid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_sigsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -590,7 +723,10 @@ block|}
 block|,
 comment|/* 48 = ibcs2_sigsys */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|ibcs2_msgsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -601,7 +737,10 @@ block|}
 block|,
 comment|/* 49 = ibcs2_msgsys */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_sysi86_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -623,7 +762,10 @@ block|}
 block|,
 comment|/* 51 = ibcs2_acct */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ibcs2_shmsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -634,7 +776,10 @@ block|}
 block|,
 comment|/* 52 = ibcs2_shmsys */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|ibcs2_semsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -645,7 +790,10 @@ block|}
 block|,
 comment|/* 53 = ibcs2_semsys */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_ioctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -656,7 +804,10 @@ block|}
 block|,
 comment|/* 54 = ibcs2_ioctl */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_uadmin_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -678,7 +829,10 @@ block|}
 block|,
 comment|/* 56 = nosys */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_utssys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -689,7 +843,10 @@ block|}
 block|,
 comment|/* 57 = ibcs2_utssys */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fsync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -700,7 +857,10 @@ block|}
 block|,
 comment|/* 58 = fsync */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_execve_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -711,7 +871,10 @@ block|}
 block|,
 comment|/* 59 = ibcs2_execve */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|umask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -722,7 +885,10 @@ block|}
 block|,
 comment|/* 60 = umask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|chroot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -733,7 +899,10 @@ block|}
 block|,
 comment|/* 61 = chroot */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_fcntl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -744,7 +913,10 @@ block|}
 block|,
 comment|/* 62 = ibcs2_fcntl */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_ulimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -920,7 +1092,10 @@ block|}
 block|,
 comment|/* 78 = rfs_rfsys */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|ibcs2_rmdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -931,7 +1106,10 @@ block|}
 block|,
 comment|/* 79 = ibcs2_rmdir */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_mkdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -942,7 +1120,10 @@ block|}
 block|,
 comment|/* 80 = ibcs2_mkdir */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_getdents_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -975,7 +1156,10 @@ block|}
 block|,
 comment|/* 83 = nosys */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_sysfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -986,7 +1170,10 @@ block|}
 block|,
 comment|/* 84 = ibcs2_sysfs */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ibcs2_getmsg_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -997,7 +1184,10 @@ block|}
 block|,
 comment|/* 85 = ibcs2_getmsg */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|ibcs2_putmsg_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1008,7 +1198,10 @@ block|}
 block|,
 comment|/* 86 = ibcs2_putmsg */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_poll_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1030,7 +1223,10 @@ block|}
 block|,
 comment|/* 88 = nosys */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|ibcs2_secure_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1041,7 +1237,10 @@ block|}
 block|,
 comment|/* 89 = ibcs2_secure */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_symlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1052,7 +1251,10 @@ block|}
 block|,
 comment|/* 90 = ibcs2_symlink */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|ibcs2_lstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1063,7 +1265,10 @@ block|}
 block|,
 comment|/* 91 = ibcs2_lstat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|ibcs2_readlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1184,7 +1389,10 @@ block|}
 block|,
 comment|/* 102 = nosys */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|sigreturn_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
