@@ -223,6 +223,18 @@ name|e2
 block|,   }
 block|,
 block|{
+literal|"other information"
+block|,
+name|p_gecos
+block|,
+literal|0
+block|,
+literal|11
+block|,
+name|e1
+block|,   }
+block|,
+block|{
 literal|"home directory"
 block|,
 name|p_hdir

@@ -76,6 +76,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E_OTHER
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
 name|E_SHELL
 value|12
 end_define
