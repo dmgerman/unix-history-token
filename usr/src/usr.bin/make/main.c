@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2830,55 +2830,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYSV
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|is68k
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PROF
-argument_list|)
-end_if
-
-begin_macro
-name|exit
-argument_list|(
-argument|status
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|_cleanup
-argument_list|()
-expr_stmt|;
-name|_exit
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* System V */
-end_comment
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.3 (Berkeley) %G%"
+literal|"@(#)job.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,37 +746,6 @@ name|defined
 argument_list|(
 name|USE_PGRP
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SYSV
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|KILL
-parameter_list|(
-name|pid
-parameter_list|,
-name|sig
-parameter_list|)
-value|killpg(-(pid),(sig))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PGRP
-argument_list|)
 end_if
 
 begin_define
@@ -807,11 +776,6 @@ name|sig
 parameter_list|)
 value|kill((pid),(sig))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -3504,20 +3468,6 @@ ifdef|#
 directive|ifdef
 name|USE_PGRP
 comment|/* 	 * We want to switch the child into a different process family so 	 * we can kill it and all its descendants in one fell swoop, 	 * by killing its process family, but not commit suicide. 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYSV
-argument_list|)
-operator|(
-name|void
-operator|)
-name|setpgrp
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
 operator|(
 name|void
 operator|)
@@ -3529,8 +3479,6 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 endif|USE_PGRP
