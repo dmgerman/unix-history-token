@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.20 1996/08/27 19:45:56 pst Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.21 1996/08/28 17:49:33 pst Exp $  */
 end_comment
 
 begin_comment
@@ -230,6 +230,11 @@ case|:
 comment|/* debug exception */
 break|break;
 default|default:
+comment|/* 		 * XXX this is almost useless now.  In most cases, 		 * trap_fatal() has already printed a much more verbose 		 * message.  However, it is dangerous to print things in 		 * trap_fatal() - printf() might be reentered and trap. 		 * The debugger should be given control first. 		 */
+if|if
+condition|(
+name|ddb_mode
+condition|)
 name|db_printf
 argument_list|(
 literal|"kernel: type %d trap, code=%x\n"
@@ -270,7 +275,7 @@ operator|=
 operator|*
 name|regs
 expr_stmt|;
-comment|/* 	 * Kernel mode - esp and ss not saved, so dummy them up 	 */
+comment|/* 	 * If in kernel mode, esp and ss are not saved, so dummy them up. 	 */
 if|if
 condition|(
 name|ISPL
@@ -383,7 +388,7 @@ name|ddb_regs
 operator|.
 name|tf_ebx
 expr_stmt|;
-comment|/* 	 * If in user mode, the saved ESP and SS were valid, restore them 	 */
+comment|/* 	 * If in user mode, the saved ESP and SS were valid, restore them. 	 */
 if|if
 condition|(
 name|ISPL
@@ -660,7 +665,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* data crosses a page boundary */
+comment|/* Map another page if the data crosses a page boundary. */
 if|if
 condition|(
 name|trunc_page
