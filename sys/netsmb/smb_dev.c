@@ -1754,12 +1754,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-name|cdevsw_add
-argument_list|(
-operator|&
-name|nsmb_cdevsw
-argument_list|)
-expr_stmt|;
 name|nsmb_dev_tag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -1799,12 +1793,6 @@ argument_list|(
 name|dev_clone
 argument_list|,
 name|nsmb_dev_tag
-argument_list|)
-expr_stmt|;
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|nsmb_cdevsw
 argument_list|)
 expr_stmt|;
 name|printf
