@@ -707,6 +707,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|OEM1
+argument_list|,
+name|PRISM3
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|PLANEX_2
 argument_list|,
 name|GWNS11H
