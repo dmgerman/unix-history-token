@@ -689,6 +689,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|IODATA2
+argument_list|,
+name|WCF12
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|LINKSYS2
 argument_list|,
 name|IWN
