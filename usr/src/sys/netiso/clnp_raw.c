@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_raw.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_raw.c	7.6 (Berkeley) %G% */
+comment|/*	@(#)clnp_raw.c	7.7 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -909,8 +909,6 @@ name|m
 argument_list|,
 name|nam
 argument_list|,
-name|rights
-argument_list|,
 name|control
 argument_list|)
 specifier|register
@@ -929,9 +927,6 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
-decl_stmt|,
-modifier|*
-name|rights
 decl_stmt|,
 modifier|*
 name|control
@@ -1416,8 +1411,6 @@ argument_list|,
 name|m
 argument_list|,
 name|nam
-argument_list|,
-name|rights
 argument_list|,
 name|control
 argument_list|)
