@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -432,11 +432,20 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|LFS_UBWRITE
+if|if
+condition|(
+name|error
+operator|=
+name|VOP_BWRITE
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Create a vnode to associate with the inode. */
 if|if
@@ -696,7 +705,7 @@ name|ip
 operator|->
 name|i_flag
 operator|=
-literal|0
+name|IMOD
 expr_stmt|;
 name|ip
 operator|->
@@ -783,6 +792,13 @@ name|i_blocks
 operator|=
 literal|0
 expr_stmt|;
+operator|++
+name|ump
+operator|->
+name|um_lfs
+operator|->
+name|lfs_uinodes
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -842,6 +858,9 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* Get the inode number and file system. */
 name|ip
 operator|=
@@ -864,6 +883,36 @@ name|ip
 operator|->
 name|i_number
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IMOD
+condition|)
+block|{
+operator|--
+name|fs
+operator|->
+name|lfs_uinodes
+expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator|&=
+operator|~
+operator|(
+name|IMOD
+operator||
+name|IACC
+operator||
+name|IUPD
+operator||
+name|ICHG
+operator|)
+expr_stmt|;
+block|}
 comment|/* 	 * Set the ifile's inode entry to unused, increment its version number 	 * and link it into the free chain. 	 */
 name|LFS_IENTRY
 argument_list|(
@@ -907,7 +956,10 @@ name|lfs_free
 operator|=
 name|ino
 expr_stmt|;
-name|LFS_UBWRITE
+operator|(
+name|void
+operator|)
+name|VOP_BWRITE
 argument_list|(
 name|bp
 argument_list|)
@@ -974,7 +1026,10 @@ expr|struct
 name|dinode
 argument_list|)
 expr_stmt|;
-name|LFS_UBWRITE
+operator|(
+name|void
+operator|)
+name|VOP_BWRITE
 argument_list|(
 name|bp
 argument_list|)
