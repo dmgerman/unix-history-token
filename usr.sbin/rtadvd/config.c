@@ -1170,6 +1170,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
+name|pfx
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pfx
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* link into chain */
 name|insque
 argument_list|(
