@@ -920,9 +920,11 @@ name|setbuf
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -933,9 +935,11 @@ name|setvbuf
 parameter_list|(
 name|FILE
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|int
 parameter_list|,
