@@ -566,11 +566,12 @@ name|p_flag
 operator||=
 name|P_WEXIT
 expr_stmt|;
+name|SIGEMPTYSET
+argument_list|(
 name|p
 operator|->
 name|p_siglist
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -460,7 +460,7 @@ modifier|*
 name|p_tracep
 decl_stmt|;
 comment|/* Trace to vnode. */
-name|int
+name|sigset_t
 name|p_siglist
 decl_stmt|;
 comment|/* Signals arrived but not delivered. */
@@ -1019,6 +1019,17 @@ end_define
 
 begin_comment
 comment|/* Process is in jail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_NEWSIGSET
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Process uses new sigset_t */
 end_comment
 
 begin_comment

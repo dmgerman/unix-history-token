@@ -15,6 +15,12 @@ directive|define
 name|_SYS_SYSENT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|proc
@@ -176,7 +182,8 @@ argument_list|)
 operator|,
 name|int
 operator|,
-name|int
+name|sigset_t
+operator|*
 operator|,
 name|u_long
 operator|)

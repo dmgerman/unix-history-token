@@ -992,14 +992,15 @@ name|vp
 decl_stmt|;
 name|int
 name|sig
+decl_stmt|,
+name|code
 decl_stmt|;
 name|sig_t
 name|action
 decl_stmt|;
-name|int
+name|sigset_t
+modifier|*
 name|mask
-decl_stmt|,
-name|code
 decl_stmt|;
 block|{
 name|struct
@@ -1051,6 +1052,7 @@ name|kp
 operator|.
 name|mask
 operator|=
+operator|*
 name|mask
 expr_stmt|;
 name|kp

@@ -272,10 +272,10 @@ name|sig_t
 name|action
 decl_stmt|;
 name|int
-name|mask
-decl_stmt|;
-name|int
 name|code
+decl_stmt|;
+name|sigset_t
+name|mask
 decl_stmt|;
 block|}
 struct|;
@@ -471,7 +471,8 @@ name|int
 operator|,
 name|sig_t
 operator|,
-name|int
+name|sigset_t
+operator|*
 operator|,
 name|int
 operator|)

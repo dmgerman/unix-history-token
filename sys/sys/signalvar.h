@@ -25,9 +25,47 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel signal definitions and data structures,  * not exported to user programs.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|__sigisempty
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+name|set
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__sigseteq
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+name|set1
+operator|,
+name|sigset_t
+operator|*
+name|set2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Process signal actions and state, needed only within the process  * (not necessarily resident).  */
@@ -40,14 +78,14 @@ block|{
 name|sig_t
 name|ps_sigact
 index|[
-name|NSIG
+name|_SIG_MAXSIG
 index|]
 decl_stmt|;
 comment|/* disposition of signals */
 name|sigset_t
 name|ps_catchmask
 index|[
-name|NSIG
+name|_SIG_MAXSIG
 index|]
 decl_stmt|;
 comment|/* signals to be blocked */
@@ -75,8 +113,7 @@ name|int
 name|ps_flags
 decl_stmt|;
 comment|/* signal flags, below */
-name|struct
-name|sigaltstack
+name|stack_t
 name|ps_sigstk
 decl_stmt|;
 comment|/* sp& on stack state variable */
@@ -115,20 +152,106 @@ comment|/* have alternate signal stack */
 end_comment
 
 begin_comment
-comment|/* additional signal action values, used only temporarily/internally */
+comment|/*  * Compatibility  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|struct
+name|osigcontext
+name|si_sc
+decl_stmt|;
+name|int
+name|si_signo
+decl_stmt|;
+name|int
+name|si_code
+decl_stmt|;
+name|union
+name|sigval
+name|si_value
+decl_stmt|;
+block|}
+name|osiginfo_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|osigaction
+block|{
+union|union
+block|{
+name|void
+argument_list|(
+argument|*__sa_handler
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*__sa_sigaction
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|osiginfo_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|__sigaction_u
+union|;
+comment|/* signal handler */
+name|osigset_t
+name|sa_mask
+decl_stmt|;
+comment|/* signal mask to apply */
+name|int
+name|sa_flags
+decl_stmt|;
+comment|/* see signal options below */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|void
+name|__osiginfohandler_t
+name|__P
+typedef|((
+name|int
+typedef|,
+name|osiginfo_t
+modifier|*
+typedef|,
+name|void
+modifier|*
+typedef|));
+end_typedef
+
+begin_comment
+comment|/*  * additional signal action values, used only temporarily/internally  * NOTE: SIG_HOLD was previously internal only, but has been moved to  *       sys/signal.h  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIG_CATCH
-value|((__sighandler_t *)2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_HOLD
 value|((__sighandler_t *)3)
 end_define
 
@@ -145,286 +268,189 @@ name|p
 parameter_list|,
 name|sig
 parameter_list|)
-value|(p->p_sigacts->ps_sigact[(sig)])
+value|(p->p_sigacts->ps_sigact[_SIG_IDX(sig)])
 end_define
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
+comment|/*  * sigset_t manipulation macros  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CURSIG
+name|SIGADDSET
 parameter_list|(
-name|p
+name|set
+parameter_list|,
+name|signo
 parameter_list|)
 define|\
-value|(((p)->p_siglist == 0 ||					\ 	    (((p)->p_flag& P_TRACED) == 0&&				\ 	     ((p)->p_siglist& ~(p)->p_sigmask) == 0)) ?		\ 	    0 : issignal(p))
+value|(set).__bits[_SIG_WORD(signo)] |= _SIG_BIT(signo)
 end_define
-
-begin_comment
-comment|/*  * Clear a pending signal from a process.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CLRSIG
+name|SIGDELSET
 parameter_list|(
-name|p
+name|set
 parameter_list|,
-name|sig
+name|signo
 parameter_list|)
-value|{ (p)->p_siglist&= ~sigmask(sig); }
-end_define
-
-begin_comment
-comment|/*  * Signal properties and actions.  * The array below categorizes the signals and their default actions  * according to the following properties:  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_KILL
-value|0x01
-end_define
-
-begin_comment
-comment|/* terminates process by default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_CORE
-value|0x02
-end_define
-
-begin_comment
-comment|/* ditto and coredumps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_STOP
-value|0x04
-end_define
-
-begin_comment
-comment|/* suspend process */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_TTYSTOP
-value|0x08
-end_define
-
-begin_comment
-comment|/* ditto, from tty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_IGNORE
-value|0x10
-end_define
-
-begin_comment
-comment|/* ignore by default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_CONT
-value|0x20
-end_define
-
-begin_comment
-comment|/* continue if suspended */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SA_CANTMASK
-value|0x40
-end_define
-
-begin_comment
-comment|/* non-maskable, catchable */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGPROP
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|sigprop
-index|[
-name|NSIG
-operator|+
-literal|1
-index|]
-init|=
-block|{
-literal|0
-block|,
-comment|/* unused */
-name|SA_KILL
-block|,
-comment|/* SIGHUP */
-name|SA_KILL
-block|,
-comment|/* SIGINT */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGQUIT */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGILL */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGTRAP */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGABRT */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGEMT */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGFPE */
-name|SA_KILL
-block|,
-comment|/* SIGKILL */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGBUS */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGSEGV */
-name|SA_KILL
-operator||
-name|SA_CORE
-block|,
-comment|/* SIGSYS */
-name|SA_KILL
-block|,
-comment|/* SIGPIPE */
-name|SA_KILL
-block|,
-comment|/* SIGALRM */
-name|SA_KILL
-block|,
-comment|/* SIGTERM */
-name|SA_IGNORE
-block|,
-comment|/* SIGURG */
-name|SA_STOP
-block|,
-comment|/* SIGSTOP */
-name|SA_STOP
-operator||
-name|SA_TTYSTOP
-block|,
-comment|/* SIGTSTP */
-name|SA_IGNORE
-operator||
-name|SA_CONT
-block|,
-comment|/* SIGCONT */
-name|SA_IGNORE
-block|,
-comment|/* SIGCHLD */
-name|SA_STOP
-operator||
-name|SA_TTYSTOP
-block|,
-comment|/* SIGTTIN */
-name|SA_STOP
-operator||
-name|SA_TTYSTOP
-block|,
-comment|/* SIGTTOU */
-name|SA_IGNORE
-block|,
-comment|/* SIGIO */
-name|SA_KILL
-block|,
-comment|/* SIGXCPU */
-name|SA_KILL
-block|,
-comment|/* SIGXFSZ */
-name|SA_KILL
-block|,
-comment|/* SIGVTALRM */
-name|SA_KILL
-block|,
-comment|/* SIGPROF */
-name|SA_IGNORE
-block|,
-comment|/* SIGWINCH  */
-name|SA_IGNORE
-block|,
-comment|/* SIGINFO */
-name|SA_KILL
-block|,
-comment|/* SIGUSR1 */
-name|SA_KILL
-block|,
-comment|/* SIGUSR2 */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|contsigmask
-value|(sigmask(SIGCONT))
+define|\
+value|(set).__bits[_SIG_WORD(signo)]&= ~_SIG_BIT(signo)
 end_define
 
 begin_define
 define|#
 directive|define
-name|stopsigmask
-value|(sigmask(SIGSTOP) | sigmask(SIGTSTP) | \ 			    sigmask(SIGTTIN) | sigmask(SIGTTOU))
+name|SIGEMPTYSET
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set).__bits[__i] = 0;				\ 	} while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SIGFILLSET
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set).__bits[__i] = ~(unsigned int)0;		\ 	} while (0)
+end_define
 
-begin_comment
-comment|/* SIGPROP */
-end_comment
+begin_define
+define|#
+directive|define
+name|SIGISMEMBER
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+define|\
+value|((set).__bits[_SIG_WORD(signo)]& _SIG_BIT(signo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGISEMPTY
+parameter_list|(
+name|set
+parameter_list|)
+value|__sigisempty(&(set))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGNOTEMPTY
+parameter_list|(
+name|set
+parameter_list|)
+value|(!__sigisempty(&(set)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETEQ
+parameter_list|(
+name|set1
+parameter_list|,
+name|set2
+parameter_list|)
+value|__sigseteq(&(set1),&(set2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETNEQ
+parameter_list|(
+name|set1
+parameter_list|,
+name|set2
+parameter_list|)
+value|(!__sigseteq(&(set1),&(set2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETOR
+parameter_list|(
+name|set1
+parameter_list|,
+name|set2
+parameter_list|)
+define|\
+value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set1).__bits[__i] |= (set2).__bits[__i];	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETAND
+parameter_list|(
+name|set1
+parameter_list|,
+name|set2
+parameter_list|)
+define|\
+value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set1).__bits[__i]&= (set2).__bits[__i];	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGSETNAND
+parameter_list|(
+name|set1
+parameter_list|,
+name|set2
+parameter_list|)
+define|\
+value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set1).__bits[__i]&= ~(set2).__bits[__i];	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_CANTMASK
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|SIGDELSET(set, SIGKILL), SIGDELSET(set, SIGSTOP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_STOPSIGMASK
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|SIGDELSET(set, SIGSTOP), SIGDELSET(set, SIGTSTP),		\ 	SIGDELSET(set, SIGTTIN), SIGDELSET(set, SIGTTOU)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_CONTSIGMASK
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|SIGDELSET(set, SIGCONT)
+end_define
 
 begin_define
 define|#
@@ -432,6 +458,143 @@ directive|define
 name|sigcantmask
 value|(sigmask(SIGKILL) | sigmask(SIGSTOP))
 end_define
+
+begin_define
+define|#
+directive|define
+name|SIG2OSIG
+parameter_list|(
+name|sig
+parameter_list|,
+name|osig
+parameter_list|)
+value|osig = (sig).__bits[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|OSIG2SIG
+parameter_list|(
+name|osig
+parameter_list|,
+name|sig
+parameter_list|)
+value|SIGEMPTYSET(sig); (sig).__bits[0] = osig
+end_define
+
+begin_function
+specifier|extern
+name|__inline
+name|int
+name|__sigisempty
+parameter_list|(
+name|sigset_t
+modifier|*
+name|set
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|_SIG_WORDS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|set
+operator|->
+name|__bits
+index|[
+name|i
+index|]
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|extern
+name|__inline
+name|int
+name|__sigseteq
+parameter_list|(
+name|sigset_t
+modifier|*
+name|set1
+parameter_list|,
+name|sigset_t
+modifier|*
+name|set2
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|_SIG_WORDS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|set1
+operator|->
+name|__bits
+index|[
+name|i
+index|]
+operator|!=
+name|set2
+operator|->
+name|__bits
+index|[
+name|i
+index|]
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -663,14 +826,46 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|check_sigacts
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__sig_ffs
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+name|set
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__cursig
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Machine-dependent functions:  */
@@ -688,8 +883,9 @@ operator|,
 name|int
 name|sig
 operator|,
-name|int
-name|returnmask
+name|sigset_t
+operator|*
+name|retmask
 operator|,
 name|u_long
 name|code
@@ -697,6 +893,115 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|md_sigreturn
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|void
+operator|*
+name|sigcntxp
+operator|,
+name|sigset_t
+operator|*
+name|mask
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Inline functions:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CURSIG
+parameter_list|(
+name|p
+parameter_list|)
+value|__cursig(p)
+end_define
+
+begin_comment
+comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
+end_comment
+
+begin_function
+specifier|extern
+name|__inline
+name|int
+name|__cursig
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|sigset_t
+name|tmpset
+decl_stmt|;
+name|tmpset
+operator|=
+name|p
+operator|->
+name|p_siglist
+expr_stmt|;
+name|SIGSETNAND
+argument_list|(
+name|tmpset
+argument_list|,
+name|p
+operator|->
+name|p_sigmask
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|SIGISEMPTY
+argument_list|(
+name|p
+operator|->
+name|p_siglist
+argument_list|)
+operator|||
+operator|(
+operator|!
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+operator|)
+operator|&&
+name|SIGISEMPTY
+argument_list|(
+name|tmpset
+argument_list|)
+operator|)
+operator|)
+condition|?
+literal|0
+else|:
+name|issignal
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/signal.h>
 end_include
 
@@ -37,37 +43,57 @@ begin_comment
 comment|/* sig_atomic_t; trap codes; sigcontext */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
+begin_comment
+comment|/*  * sigset_t macros  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|NSIG
-value|32
+name|_SIG_WORDS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SIG_MAXSIG
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SIG_IDX
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SIG_WORD
+parameter_list|(
+name|sig
+parameter_list|)
+value|(_SIG_IDX(sig)>> 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SIG_BIT
+parameter_list|(
+name|sig
+parameter_list|)
+value|(1<< (_SIG_IDX(sig)& 31))
 end_define
 
 begin_comment
-comment|/* counting 0; could be 33 (mask is 1-32) */
+comment|/*  * system defined signals  */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -110,7 +136,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* illegal instruction (not reset when caught) */
+comment|/* illegal instr. (not reset when caught) */
 end_comment
 
 begin_ifndef
@@ -374,7 +400,7 @@ value|22
 end_define
 
 begin_comment
-comment|/* like TTIN for output if (tp->t_local&LTOSTOP) */
+comment|/* like TTIN if (tp->t_local&LTOSTOP) */
 end_comment
 
 begin_ifndef
@@ -501,218 +527,6 @@ name|int
 typedef|));
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_P1003_1B_VISIBLE_HISTORICALLY
-argument_list|)
-operator|||
-expr|\
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|)
-end_if
-
-begin_union
-union|union
-name|sigval
-block|{
-comment|/* Members as suggested by Annex C of POSIX 1003.1b. */
-name|int
-name|sigval_int
-decl_stmt|;
-name|void
-modifier|*
-name|sigval_ptr
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ANSI_SOURCE&& _P1003_1B_VISIBLE_HISTORICALLY */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_comment
-comment|/* POSIX 1003.1b required values. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SI_USER
-value|0x10001
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_QUEUE
-value|0x10002
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_TIMER
-value|0x10003
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_ASYNCIO
-value|0x10004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SI_MESGQ
-value|0x10005
-end_define
-
-begin_comment
-comment|/* Additional FreeBSD values. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SI_UNDEFINED
-value|0
-end_define
-
-begin_struct
-struct|struct
-name|__siginfo
-block|{
-name|struct
-name|sigcontext
-name|si_sc
-decl_stmt|;
-name|int
-name|si_signo
-decl_stmt|;
-comment|/* signal number */
-comment|/*  	 * Cause of signal, one of the SI_ macros or signal-specific 	 * values, i.e. one of the FPE_... values for SIGFPE. This 	 * value is equivalent to the second argument to an old-style 	 * FreeBSD signal handler. 	 */
-name|int
-name|si_code
-decl_stmt|;
-name|union
-name|sigval
-name|si_value
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! _ANSI_SOURCE&& ! _POSIX_SOURCE */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|__siginfo
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! _ANSI_SOURCE&& ! _POSIX_SOURCE */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|__siginfo
-name|siginfo_t
-typedef|;
-end_typedef
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|void
-name|__siginfohandler_t
-name|__P
-typedef|((
-name|int
-typedef|,
-name|siginfo_t
-modifier|*
-typedef|,
-name|void
-modifier|*
-typedef|));
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! _ANSI_SOURCE&& ! _POSIX_SOURCE */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -730,23 +544,113 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIG_HOLD
+value|((__sighandler_t *)2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIG_ERR
 value|((__sighandler_t *)-1)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_union
+union|union
+name|sigval
+block|{
+comment|/* Members as suggested by Annex C of POSIX 1003.1b. */
+name|int
+name|sigval_int
+decl_stmt|;
+name|void
+modifier|*
+name|sigval_ptr
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_typedef
 typedef|typedef
+struct|struct
+block|{
+name|int
+name|si_signo
+decl_stmt|;
+comment|/* signal number */
+name|int
+name|si_errno
+decl_stmt|;
+comment|/* errno association */
+comment|/*  	 * Cause of signal, one of the SI_ macros or signal-specific 	 * values, i.e. one of the FPE_... values for SIGFPE. This 	 * value is equivalent to the second argument to an old-style 	 * FreeBSD signal handler. 	 */
+name|int
+name|si_code
+decl_stmt|;
+comment|/* signal code */
+name|pid_t
+name|si_pid
+decl_stmt|;
+comment|/* sending process */
+name|uid_t
+name|si_uid
+decl_stmt|;
+comment|/* sender's ruid */
+name|int
+name|si_status
+decl_stmt|;
+comment|/* exit value */
+name|void
+modifier|*
+name|si_addr
+decl_stmt|;
+comment|/* faulting instruction */
+name|union
+name|sigval
+name|si_value
+decl_stmt|;
+comment|/* signal value */
+name|long
+name|si_band
+decl_stmt|;
+comment|/* band event for SIGPOLL */
+name|int
+name|__spare__
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* gimme some slack */
+block|}
+name|siginfo_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
 name|unsigned
 name|int
+name|__bits
+index|[
+name|_SIG_WORDS
+index|]
+decl_stmt|;
+block|}
 name|sigset_t
 typedef|;
 end_typedef
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Signal vector "template" used in sigaction call.  */
@@ -790,14 +694,14 @@ block|}
 name|__sigaction_u
 union|;
 comment|/* signal handler */
-name|sigset_t
-name|sa_mask
-decl_stmt|;
-comment|/* signal mask to apply */
 name|int
 name|sa_flags
 decl_stmt|;
 comment|/* see signal options below */
+name|sigset_t
+name|sa_mask
+decl_stmt|;
+comment|/* signal mask to apply */
 block|}
 struct|;
 end_struct
@@ -813,11 +717,26 @@ name|sa_handler
 value|__sigaction_u.__sa_handler
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_define
+define|#
+directive|define
+name|SA_NOCLDSTOP
+value|0x0008
+end_define
+
+begin_comment
+comment|/* do not generate SIGCHLD on child stop */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_POSIX_SOURCE
-end_ifndef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -825,17 +744,6 @@ directive|define
 name|sa_sigaction
 value|__sigaction_u.__sa_sigaction
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
 
 begin_define
 define|#
@@ -925,68 +833,78 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NSIG
+value|32
+end_define
 
 begin_comment
-comment|/* _POSIX_SOURCE */
+comment|/* POSIX 1003.1b required values. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SA_NOCLDSTOP
-value|0x0008
+name|SI_USER
+value|0x10001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SI_QUEUE
+value|0x10002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SI_TIMER
+value|0x10003
+end_define
+
+begin_define
+define|#
+directive|define
+name|SI_ASYNCIO
+value|0x10004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SI_MESGQ
+value|0x10005
 end_define
 
 begin_comment
-comment|/* do not generate SIGCHLD on child stop */
-end_comment
-
-begin_comment
-comment|/*  * Flags for sigprocmask:  */
+comment|/* Additional FreeBSD values. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SIG_BLOCK
-value|1
+name|SI_UNDEFINED
+value|0
 end_define
 
-begin_comment
-comment|/* block specified signal set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_UNBLOCK
-value|2
-end_define
-
-begin_comment
-comment|/* unblock specified signal set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_SETMASK
-value|3
-end_define
-
-begin_comment
-comment|/* set specified signal set */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_typedef
+typedef|typedef
+name|void
+name|__siginfohandler_t
+name|__P
+typedef|((
+name|int
+typedef|,
+name|siginfo_t
+modifier|*
+typedef|,
+name|void
+modifier|*
+typedef|));
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1025,10 +943,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Structure used in sigaltstack call.  */
+comment|/*  * sigaltstack  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|sigaltstack
 block|{
@@ -1037,7 +956,8 @@ modifier|*
 name|ss_sp
 decl_stmt|;
 comment|/* signal stack base */
-name|size_t
+name|unsigned
+name|int
 name|ss_size
 decl_stmt|;
 comment|/* signal stack length */
@@ -1046,8 +966,9 @@ name|ss_flags
 decl_stmt|;
 comment|/* SS_DISABLE and/or SS_ONSTACK */
 block|}
-struct|;
-end_struct
+name|stack_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -1092,6 +1013,16 @@ end_define
 begin_comment
 comment|/* recommended stack size */
 end_comment
+
+begin_comment
+comment|/*  * Suck in definition of ucontext_t  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ucontext.h>
+end_include
 
 begin_comment
 comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */
@@ -1226,29 +1157,42 @@ begin_comment
 comment|/* !_POSIX_SOURCE */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* !_ANSI_SOURCE */
+comment|/*  * Flags for sigprocmask:  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_P1003_1B_VISIBLE_HISTORICALLY
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|SIG_BLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* block specified signal set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_UNBLOCK
+value|2
+end_define
+
+begin_comment
+comment|/* unblock specified signal set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_SETMASK
+value|3
+end_define
+
+begin_comment
+comment|/* set specified signal set */
+end_comment
 
 begin_struct
 struct|struct
@@ -1299,7 +1243,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! _ANSI_SOURCE&& _P1003_1B_VISIBLE_HISTORICALLY */
+comment|/* !_ANSI_SOURCE */
 end_comment
 
 begin_comment

@@ -1427,6 +1427,8 @@ name|int
 name|gotsig
 init|=
 literal|0
+decl_stmt|,
+name|sig
 decl_stmt|;
 comment|/* 	 * We must prevent the system from trying to swap 	 * out or kill ( when swap space is low, see vm/pageout.c ) the 	 * process.  A deadlock can occur if the process is swapped out, 	 * and the system can loop trying to kill the unkillable ( while 	 * references exist ) MFS process when swap space is low. 	 */
 name|PHOLD
@@ -1531,17 +1533,28 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|CLRSIG
-argument_list|(
-name|p
-argument_list|,
+block|{
+name|sig
+operator|=
 name|CURSIG
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sig
+condition|)
+name|SIGDELSET
+argument_list|(
+name|p
+operator|->
+name|p_siglist
+argument_list|,
+name|sig
 argument_list|)
 expr_stmt|;
-comment|/* try sleep again.. */
+block|}
 block|}
 elseif|else
 if|if

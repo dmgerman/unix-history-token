@@ -1460,7 +1460,11 @@ begin_define
 define|#
 directive|define
 name|NFSINT_SIGMASK
-value|(sigmask(SIGINT)|sigmask(SIGTERM)|sigmask(SIGKILL)| \ 			 sigmask(SIGHUP)|sigmask(SIGQUIT))
+parameter_list|(
+name|set
+parameter_list|)
+define|\
+value|(SIGISMEMBER(set, SIGINT) || SIGISMEMBER(set, SIGTERM) ||	\ 	 SIGISMEMBER(set, SIGHUP) || SIGISMEMBER(set, SIGKILL) ||	\ 	 SIGISMEMBER(set, SIGQUIT))
 end_define
 
 begin_comment
