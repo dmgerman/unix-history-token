@@ -858,7 +858,7 @@ block|{
 specifier|register
 name|INDIR
 modifier|*
-name|ap
+name|inp
 decl_stmt|;
 specifier|register
 name|int
@@ -1325,7 +1325,7 @@ endif|#
 directive|endif
 default|default:
 comment|/* Chain of indirect blocks. */
-name|ap
+name|inp
 operator|=
 name|a
 operator|+
@@ -1334,7 +1334,7 @@ name|depth
 expr_stmt|;
 if|if
 condition|(
-name|ap
+name|inp
 operator|->
 name|in_off
 operator|>
@@ -1347,7 +1347,7 @@ condition|)
 block|{
 name|lbn
 operator|-=
-name|ap
+name|inp
 operator|->
 name|in_off
 operator|<
@@ -1355,7 +1355,7 @@ name|lbn
 operator|-
 name|lastblock
 condition|?
-name|ap
+name|inp
 operator|->
 name|in_off
 else|:
@@ -1371,7 +1371,7 @@ init|;
 name|depth
 operator|&&
 operator|(
-name|ap
+name|inp
 operator|->
 name|in_off
 operator|==
@@ -1383,7 +1383,7 @@ name|lastblock
 operator|)
 condition|;
 operator|--
-name|ap
+name|inp
 operator|,
 operator|--
 name|depth
@@ -1396,7 +1396,7 @@ name|bread
 argument_list|(
 name|vp
 argument_list|,
-name|ap
+name|inp
 operator|->
 name|in_lbn
 argument_list|,
@@ -1414,7 +1414,7 @@ name|panic
 argument_list|(
 literal|"lfs_truncate: bread bno %d"
 argument_list|,
-name|ap
+name|inp
 operator|->
 name|in_lbn
 argument_list|)
@@ -1427,7 +1427,7 @@ name|b_un
 operator|.
 name|b_daddr
 operator|+
-name|ap
+name|inp
 operator|->
 name|in_off
 expr_stmt|;
@@ -1435,7 +1435,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ap
+name|inp
 operator|->
 name|in_off
 init|;
@@ -1476,7 +1476,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|ap
+name|inp
 operator|->
 name|in_off
 operator|==
@@ -1497,7 +1497,7 @@ name|b_un
 operator|.
 name|b_daddr
 operator|+
-name|ap
+name|inp
 operator|->
 name|in_off
 argument_list|,
@@ -1505,7 +1505,7 @@ name|fs
 operator|->
 name|lfs_bsize
 operator|-
-name|ap
+name|inp
 operator|->
 name|in_off
 operator|*
