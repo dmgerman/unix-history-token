@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.1 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,7 +451,35 @@ goto|goto
 name|another
 goto|;
 block|}
-comment|/* 	 * Ignore the -w, -e and -8 flags to allow aliases with rlogin 	 * to work 	 */
+comment|/* 	 * Ignore the -L, -w, -e and -8 flags to allow aliases with rlogin 	 * to work 	 * 	 * There must be a better way to do this! -jmb 	 */
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-L"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+goto|goto
+name|another
+goto|;
+block|}
 if|if
 condition|(
 name|argc
