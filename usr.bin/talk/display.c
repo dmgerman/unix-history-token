@@ -581,6 +581,10 @@ condition|(
 operator|!
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|text
 argument_list|)
@@ -645,6 +649,7 @@ name|x_win
 argument_list|,
 operator|(
 name|unsigned
+name|char
 operator|)
 operator|*
 name|text
