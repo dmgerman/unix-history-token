@@ -4017,7 +4017,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 comment|/*   Check for cntl-alt-esc	*/
 if|if
@@ -4037,29 +4037,16 @@ name|altgr_down
 operator|)
 condition|)
 block|{
-specifier|static
-name|u_char
-name|in_Debugger
-decl_stmt|;
 if|if
 condition|(
 operator|!
-name|in_Debugger
+name|kdb_active
 condition|)
 block|{
-name|in_Debugger
-operator|=
-literal|1
-expr_stmt|;
-comment|/* the string is actually not used... */
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"kbd"
 argument_list|)
-expr_stmt|;
-name|in_Debugger
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4076,7 +4063,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* defined(DDB) */
+comment|/* defined(KDB) */
 comment|/* look for keys with special handling */
 if|if
 condition|(
