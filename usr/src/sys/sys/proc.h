@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ name|pid_t
 name|pg_id
 decl_stmt|;
 comment|/* pgrp id */
-name|short
+name|int
 name|pg_jobc
 decl_stmt|;
 comment|/* # procs qualifying pgrp for job control */
@@ -292,8 +292,10 @@ name|short
 name|p_ndx
 decl_stmt|;
 comment|/* proc index for memall (because of vfork) */
-name|short
-name|p_idhash
+name|struct
+name|proc
+modifier|*
+name|p_hash
 decl_stmt|;
 comment|/* hashed based on p_pid for kill+exit+... */
 name|struct
@@ -489,12 +491,11 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|PIDHSZ
-value|64
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -503,23 +504,33 @@ name|PIDHASH
 parameter_list|(
 name|pid
 parameter_list|)
-value|((pid)& (PIDHSZ - 1))
+value|((pid)& pidhashmask)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_decl_stmt
-name|pid_t
-name|pidhash
-index|[
-name|PIDHSZ
-index|]
+specifier|extern
+name|int
+name|pidhashmask
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* in param.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|pidhash
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in param.c */
+end_comment
 
 begin_function_decl
 name|struct
@@ -530,16 +541,23 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* find process by id */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|struct
 name|pgrp
 modifier|*
 name|pgrphash
-index|[
-name|PIDHSZ
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* in param.c */
+end_comment
 
 begin_function_decl
 name|struct
@@ -1004,22 +1022,11 @@ begin_define
 define|#
 directive|define
 name|SPTECHG
-value|0x1000000
+value|0x0000000
 end_define
 
 begin_comment
-comment|/* pte's for process have changed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLOGIN
-value|0x2000000
-end_define
-
-begin_comment
-comment|/* a login process (legit child of init) */
+comment|/* pte's for process have changed XXX */
 end_comment
 
 end_unit
