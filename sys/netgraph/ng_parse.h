@@ -628,6 +628,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * ETHERNET ADDRESS TYPE  *  *   Default value:		None  *   Additional info:		None required  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_enaddr_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * VARIABLE LENGTH BYTE ARRAY TYPE  *  * The bytes are displayed in hex.  The ASCII form may be either an  * array of bytes or a string constant, in which case the array is  * zero-filled after the string bytes.  *  *   Default value:		All bytes are zero  *   Additional info:		ng_parse_array_getLength_t *  */
 end_comment
 
