@@ -117,6 +117,8 @@ decl_stmt|;
 block|{
 name|pid_t
 name|pid
+decl_stmt|,
+name|savedpid
 decl_stmt|;
 name|int
 name|pstat
@@ -313,13 +315,17 @@ argument_list|)
 expr_stmt|;
 default|default:
 comment|/* parent */
+name|savedpid
+operator|=
+name|pid
+expr_stmt|;
 do|do
 block|{
 name|pid
 operator|=
 name|_wait4
 argument_list|(
-name|pid
+name|savedpid
 argument_list|,
 operator|&
 name|pstat
