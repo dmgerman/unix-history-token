@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.5 (Berkeley) %G%"
+literal|"@(#)login.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1031,7 +1031,6 @@ if|if
 condition|(
 name|rflag
 condition|)
-block|{
 name|SCPYN
 argument_list|(
 name|utmp
@@ -1041,18 +1040,6 @@ argument_list|,
 name|lusername
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|usererr
-operator|==
-operator|-
-literal|1
-condition|)
-name|rflag
-operator|=
-literal|0
-expr_stmt|;
-block|}
 else|else
 name|getloginname
 argument_list|(
