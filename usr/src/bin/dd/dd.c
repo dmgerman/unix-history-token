@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	4.1 (Berkeley) %G%"
+literal|"@(#)dd.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2728,13 +2728,8 @@ name|ibuf
 expr_stmt|;
 name|c
 operator|=
-operator|(
 name|ibc
 operator|>>
-literal|1
-operator|)
-operator|&
-operator|~
 literal|1
 expr_stmt|;
 if|if
