@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -39,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -76,6 +88,34 @@ include|#
 directive|include
 file|<machine/vmparam.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hw_uma_mdpages
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uma_mdpages
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|hw_uma_mdpages
+argument_list|,
+literal|0
+argument_list|,
+literal|"UMA MD pages in use"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -228,6 +268,14 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|hw_uma_mdpages
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|va
@@ -274,6 +322,14 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|hw_uma_mdpages
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
