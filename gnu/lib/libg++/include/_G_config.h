@@ -9,6 +9,16 @@ directive|ifndef
 name|_G_config_h
 end_ifndef
 
+begin_comment
+comment|/*  * XXX This #include added by hand, it SHOULD NOT be here, but we do  * not currently have the tools that Automatically generate this file and must  * resort to this hackery to make it compile under FreeBSD 2.X  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_define
 define|#
 directive|define
