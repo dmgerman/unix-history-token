@@ -284,11 +284,11 @@ name|u_short
 modifier|*
 name|_cksum
 parameter_list|,
-name|u_short
+name|void
 modifier|*
 name|_new
 parameter_list|,
-name|u_short
+name|void
 modifier|*
 name|_old
 parameter_list|,
