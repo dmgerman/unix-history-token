@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.33 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -935,7 +935,7 @@ name|reply
 argument_list|(
 literal|550
 argument_list|,
-literal|"User %s: can't change directory to $s."
+literal|"User %s: can't change directory to %s."
 argument_list|,
 name|pw
 operator|->
