@@ -1016,6 +1016,28 @@ name|retcode
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pwd
+operator|=
+name|getpwnam
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pwd
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"unknown login: %s"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 name|retcode
 operator|=
 name|pam_acct_mgmt
@@ -1100,29 +1122,7 @@ literal|"Sorry"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* get target login information, default to root */
-name|pwd
-operator|=
-name|getpwnam
-argument_list|(
-name|user
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pwd
-operator|==
-name|NULL
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"unknown login: %s"
-argument_list|,
-name|user
-argument_list|)
-expr_stmt|;
+comment|/* get target login information */
 if|if
 condition|(
 name|class
