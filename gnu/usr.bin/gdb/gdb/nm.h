@@ -1,18 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent definitions for Intel 386 running BSD Unix, for GDB.    Copyright 1986, 1987, 1989, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Native-dependent definitions for Intel 386 running BSD Unix, for GDB.    Copyright 1986, 1987, 1989, 1992, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NM_FREEBSD_H
+name|NM_FBSD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NM_FREEBSD_H
+name|NM_FBSD_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTACH_DETACH
 end_define
 
 begin_comment
@@ -40,21 +46,6 @@ define|#
 directive|define
 name|KERNEL_U_ADDR
 value|USRSTACK
-end_define
-
-begin_comment
-comment|/* #undef FLOAT_INFO */
-end_comment
-
-begin_comment
-comment|/* No float info yet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLOAT_INFO
-value|extern void i386_float_info (); \ 						  i386_float_info ()
 end_define
 
 begin_define
@@ -92,18 +83,6 @@ define|#
 directive|define
 name|PTRACE_ARG3_TYPE
 value|char*
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATTACH_DETACH
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_DEBUG
 end_define
 
 begin_comment
@@ -432,13 +411,74 @@ name|ld_2
 value|d_sdt
 end_define
 
+begin_comment
+comment|/* Return sizeof user struct to callers in less machine dependent routines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL_U_SIZE
+value|kernel_u_size()
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kernel_u_size
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ADDITIONAL_OPTIONS
+define|\
+value|{"kernel", no_argument,&kernel_debugging, 1}, \ 	{"k", no_argument,&kernel_debugging, 1}, \ 	{"wcore", no_argument,&kernel_writablecore, 1}, \ 	{"w", no_argument,&kernel_writablecore, 1},
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDITIONAL_OPTION_HELP
+define|\
+value|"\   --kernel           Enable kernel debugging.\n\   --wcore            Make core file writable (only works for /dev/mem).\n\                      This option only works while debugging a kernel !!\n\ "
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kernel_debugging
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kernel_writablecore
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PROMPT
+value|kernel_debugging?"(kgdb) ":"(gdb) "
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* NM_FREEBSD_H */
+comment|/* NM_FBSD_H */
 end_comment
 
 end_unit

@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"frame.h"
 end_include
 
@@ -245,35 +239,16 @@ define|\
 value|(target_read_memory((CORE_ADDR)(addr), (char *)(p), sizeof(*(p))))
 end_define
 
-begin_function_decl
-name|int
-name|read_pcb
-parameter_list|(
-name|int
-parameter_list|,
-name|CORE_ADDR
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern read_pcb (int
+operator|,
+extern|CORE_ADDR
+end_extern
 
-begin_function_decl
-specifier|extern
-name|struct
-name|kinfo_proc
-modifier|*
-name|kvm_getprocs
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|CORE_ADDR
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 name|CORE_ADDR
@@ -1268,16 +1243,6 @@ block|{
 name|CORE_ADDR
 name|paddr
 decl_stmt|;
-name|struct
-name|kinfo_proc
-modifier|*
-name|kp
-decl_stmt|;
-name|int
-name|cnt
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1308,25 +1273,6 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"paddr %#x kernel_start %#x "
-argument_list|,
-name|paddr
-argument_list|,
-name|kernel_start
-argument_list|)
-expr_stmt|;
-comment|/* assume it's a proc pointer if it's in the kernel */
-if|if
-condition|(
-name|paddr
-operator|>=
-name|kernel_start
-condition|)
-block|{
 if|if
 condition|(
 name|set_proc_context
@@ -1339,62 +1285,6 @@ argument_list|(
 literal|"invalid proc address"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|kp
-operator|=
-name|kvm_getprocs
-argument_list|(
-name|core_kd
-argument_list|,
-name|KERN_PROC_PID
-argument_list|,
-name|paddr
-argument_list|,
-operator|&
-name|cnt
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cnt %d\n"
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cnt
-condition|)
-name|error
-argument_list|(
-literal|"invalid pid"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|set_proc_context
-argument_list|(
-operator|(
-name|CORE_ADDR
-operator|)
-name|kp
-operator|->
-name|kp_eproc
-operator|.
-name|e_paddr
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"invalid proc address"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
