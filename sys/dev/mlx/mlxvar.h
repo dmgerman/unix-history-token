@@ -239,34 +239,15 @@ name|mlx_sg_dmamap
 decl_stmt|;
 comment|/* map for s/g buffers */
 comment|/* controller limits and features */
-name|int
-name|mlx_hwid
+name|struct
+name|mlx_enquiry2
+modifier|*
+name|mlx_enq2
 decl_stmt|;
-comment|/* hardware identifier */
 name|int
 name|mlx_maxiop
 decl_stmt|;
-comment|/* maximum number of I/O operations */
-name|int
-name|mlx_nchan
-decl_stmt|;
-comment|/* number of active channels */
-name|int
-name|mlx_maxiosize
-decl_stmt|;
-comment|/* largest I/O for this controller */
-name|int
-name|mlx_maxtarg
-decl_stmt|;
-comment|/* maximum number of targets per channel */
-name|int
-name|mlx_maxtags
-decl_stmt|;
-comment|/* maximum number of tags per device */
-name|int
-name|mlx_scsicap
-decl_stmt|;
-comment|/* SCSI capabilities */
+comment|/* hard maximum number of commands */
 name|int
 name|mlx_feature
 decl_stmt|;
@@ -324,13 +305,6 @@ name|mlx_waitbufs
 decl_stmt|;
 comment|/* number of bufs awaiting commands */
 comment|/* controller status */
-name|u_int8_t
-name|mlx_fwminor
-decl_stmt|;
-comment|/* firmware revision */
-name|u_int8_t
-name|mlx_fwmajor
-decl_stmt|;
 name|int
 name|mlx_geom
 decl_stmt|;
@@ -375,18 +349,14 @@ name|time_t
 name|mlx_lastpoll
 decl_stmt|;
 comment|/* last time_second we polled for status */
-name|u_int16_t
+name|int
 name|mlx_lastevent
 decl_stmt|;
 comment|/* sequence number of the last event we recorded */
-name|u_int16_t
+name|int
 name|mlx_currevent
 decl_stmt|;
 comment|/* sequence number last time we looked */
-name|int
-name|mlx_polling
-decl_stmt|;
-comment|/* if> 0, polling operations still running */
 name|int
 name|mlx_rebuild
 decl_stmt|;

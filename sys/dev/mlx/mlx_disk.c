@@ -1178,7 +1178,9 @@ name|sc
 operator|->
 name|mlxd_controller
 operator|->
-name|mlx_maxiosize
+name|mlx_enq2
+operator|->
+name|me_maxblk
 operator|*
 name|MLX_BLKSIZE
 expr_stmt|;

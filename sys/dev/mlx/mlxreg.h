@@ -1045,7 +1045,7 @@ decl_stmt|;
 name|u_int8_t
 name|res4
 index|[
-literal|10
+literal|12
 index|]
 decl_stmt|;
 name|u_int16_t
@@ -1118,7 +1118,7 @@ literal|5
 index|]
 decl_stmt|;
 name|u_int16_t
-name|me_fimware_build
+name|me_firmware_build
 decl_stmt|;
 name|u_int8_t
 name|me_fault_mgmt_type
