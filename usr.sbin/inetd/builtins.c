@@ -1170,9 +1170,10 @@ block|{
 name|char
 name|buffer
 index|[
-name|BUFSIZE
+literal|65536
 index|]
 decl_stmt|;
+comment|/* Should be sizeof(max datagram). */
 name|int
 name|i
 decl_stmt|;
