@@ -356,6 +356,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -432,6 +435,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -508,6 +514,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -617,6 +626,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -693,6 +705,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf

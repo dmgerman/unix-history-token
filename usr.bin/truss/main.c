@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.7 1998/01/05 07:30:25 charnier Exp $"
+literal|"$Id: main.c,v 1.8 1998/01/07 06:19:50 jmg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,7 +809,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"SIGNAL %d\n"
+literal|"SIGNAL %lu\n"
 argument_list|,
 name|pfs
 operator|.
@@ -824,7 +824,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"process exit, rval = %d\n"
+literal|"process exit, rval = %lu\n"
 argument_list|,
 name|pfs
 operator|.

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ctl.c,v 1.4 1998/01/14 07:20:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,6 +401,9 @@ name|printf
 argument_list|(
 literal|"addr = %lx, port = %o, family = %o zero = "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|addr
 operator|.
 name|sin_addr

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.22 1997/12/05 19:28:28 bde Exp $"
+literal|"$Id: vmstat.c,v 1.23 1998/03/07 23:40:23 dyson Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2047,6 +2047,9 @@ name|printf
 argument_list|(
 literal|"%4lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2066,6 +2069,9 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2085,6 +2091,9 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2114,6 +2123,9 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2143,6 +2155,9 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2162,6 +2177,9 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2184,6 +2202,9 @@ name|printf
 argument_list|(
 literal|"%4lu %4lu %3lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2195,6 +2216,9 @@ operator|.
 name|v_intr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -2206,6 +2230,9 @@ operator|.
 name|v_syscall
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|rate
 argument_list|(
 name|sum
@@ -4080,6 +4107,8 @@ operator|<
 literal|200
 operator|&&
 name|kmsp
+operator|!=
+name|NULL
 condition|;
 name|nkms
 operator|++
@@ -4123,10 +4152,11 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"kvm_read(%08x)"
+literal|"kvm_read(%p)"
 argument_list|,
 operator|(
-name|u_long
+name|void
+operator|*
 operator|)
 name|kmsp
 argument_list|)
@@ -4164,10 +4194,11 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"kvm_read(%08x)"
+literal|"kvm_read(%p)"
 argument_list|,
 operator|(
-name|u_long
+name|void
+operator|*
 operator|)
 name|kmemstats
 index|[

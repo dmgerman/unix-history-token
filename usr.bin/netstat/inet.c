@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet.c,v 1.28 1998/05/19 16:00:55 pb Exp $"
+literal|"$Id: inet.c,v 1.29 1998/06/09 04:13:01 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,6 +1123,15 @@ parameter_list|)
 value|if (tcpstat.f || sflag<= 1) \     printf(m, tcpstat.f, plural(tcpstat.f))
 define|#
 directive|define
+name|p1a
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (tcpstat.f || sflag<= 1) \     printf(m, tcpstat.f)
+define|#
+directive|define
 name|p2
 parameter_list|(
 name|f1
@@ -1132,6 +1141,17 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1) \     printf(m, tcpstat.f1, plural(tcpstat.f1), tcpstat.f2, plural(tcpstat.f2))
+define|#
+directive|define
+name|p2a
+parameter_list|(
+name|f1
+parameter_list|,
+name|f2
+parameter_list|,
+name|m
+parameter_list|)
+value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1) \     printf(m, tcpstat.f1, plural(tcpstat.f1), tcpstat.f2)
 define|#
 directive|define
 name|p3
@@ -1173,7 +1193,7 @@ argument_list|,
 literal|"\t\t%lu resend%s initiated by MTU discovery\n"
 argument_list|)
 expr_stmt|;
-name|p2
+name|p2a
 argument_list|(
 name|tcps_sndacks
 argument_list|,
@@ -1327,7 +1347,7 @@ argument_list|,
 literal|"\t\t%lu discarded for bad header offset field%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|tcps_rcvshort
 argument_list|,
@@ -1483,7 +1503,13 @@ directive|undef
 name|p
 undef|#
 directive|undef
+name|p1a
+undef|#
+directive|undef
 name|p2
+undef|#
+directive|undef
+name|p2a
 undef|#
 directive|undef
 name|p3
@@ -1566,6 +1592,15 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (udpstat.f || sflag<= 1) \     printf(m, udpstat.f, plural(udpstat.f))
+define|#
+directive|define
+name|p1a
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (udpstat.f || sflag<= 1) \     printf(m, udpstat.f)
 name|p
 argument_list|(
 name|udps_ipackets
@@ -1573,28 +1608,28 @@ argument_list|,
 literal|"\t%lu datagram%s received\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|udps_hdrops
 argument_list|,
 literal|"\t%lu with incomplete header\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|udps_badlen
 argument_list|,
 literal|"\t%lu with bad data length field\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|udps_badsum
 argument_list|,
 literal|"\t%lu with bad checksum\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|udps_noport
 argument_list|,
@@ -1608,14 +1643,14 @@ argument_list|,
 literal|"\t%lu broadcast/multicast datagram%s dropped due to no socket\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|udps_fullsock
 argument_list|,
 literal|"\t%lu dropped due to full socket buffers\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|udpps_pcbhashmiss
 argument_list|,
@@ -1677,6 +1712,9 @@ expr_stmt|;
 undef|#
 directive|undef
 name|p
+undef|#
+directive|undef
+name|p1a
 block|}
 end_function
 
@@ -1753,6 +1791,15 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (ipstat.f || sflag<= 1) \     printf(m, ipstat.f, plural(ipstat.f))
+define|#
+directive|define
+name|p1a
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (ipstat.f || sflag<= 1) \     printf(m, ipstat.f)
 name|p
 argument_list|(
 name|ips_total
@@ -1767,42 +1814,42 @@ argument_list|,
 literal|"\t%lu bad header checksum%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|ips_toosmall
 argument_list|,
 literal|"\t%lu with size smaller than minimum\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|ips_tooshort
 argument_list|,
 literal|"\t%lu with data size< data length\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|ips_badhlen
 argument_list|,
 literal|"\t%lu with header length< data size\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|ips_badlen
 argument_list|,
 literal|"\t%lu with data length< header length\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|ips_badoptions
 argument_list|,
 literal|"\t%lu with bad options\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|ips_badvers
 argument_list|,
@@ -1953,6 +2000,9 @@ expr_stmt|;
 undef|#
 directive|undef
 name|p
+undef|#
+directive|undef
+name|p1a
 block|}
 end_function
 
@@ -2130,6 +2180,15 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f, plural(icmpstat.f))
+define|#
+directive|define
+name|p1a
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (icmpstat.f || sflag<= 1) \     printf(m, icmpstat.f)
 name|p
 argument_list|(
 name|icps_error
@@ -2236,14 +2295,14 @@ argument_list|,
 literal|"\t%lu message%s with bad length\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|icps_bmcastecho
 argument_list|,
 literal|"\t%lu multicast echo requests ignored\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p1a
 argument_list|(
 name|icps_bmcasttstamp
 argument_list|,
@@ -2324,6 +2383,9 @@ expr_stmt|;
 undef|#
 directive|undef
 name|p
+undef|#
+directive|undef
+name|p1a
 name|mib
 index|[
 literal|3
@@ -2908,12 +2970,12 @@ name|C
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0xff)
+value|((u_int)((x)& 0xff))
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%lu.%lu.%lu.%lu"
+literal|"%u.%u.%u.%u"
 argument_list|,
 name|C
 argument_list|(

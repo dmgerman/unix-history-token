@@ -3294,7 +3294,7 @@ operator|*
 operator|)
 name|temp
 argument_list|,
-literal|"%c%c%c%c%d,%d%c%c"
+literal|"%c%c%c%c%ld,%ld%c%c"
 argument_list|,
 name|IAC
 argument_list|,

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unix.c,v 1.7 1998/05/16 08:31:49 ache Exp $"
+literal|"$Id: unix.c,v 1.8 1998/05/16 18:04:00 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -703,6 +703,10 @@ name|printf
 argument_list|(
 literal|" %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|sa
 operator|->
 name|sun_len
@@ -713,6 +717,7 @@ expr|struct
 name|sockaddr_un
 argument_list|,
 name|sun_path
+argument_list|)
 argument_list|)
 argument_list|,
 name|sa

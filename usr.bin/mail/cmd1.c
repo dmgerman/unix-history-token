@@ -726,7 +726,7 @@ name|sprintf
 argument_list|(
 name|wcount
 argument_list|,
-literal|"%3d/%-5ld"
+literal|"%3ld/%-5ld"
 argument_list|,
 name|mp
 operator|->

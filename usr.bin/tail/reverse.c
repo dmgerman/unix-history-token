@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: reverse.c,v 1.7 1997/08/13 06:46:56 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -773,7 +773,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"warning: %ld bytes discarded"
+literal|"warning: %qd bytes discarded"
 argument_list|,
 name|enomem
 argument_list|)

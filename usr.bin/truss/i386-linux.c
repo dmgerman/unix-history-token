@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: i386-linux.c,v 1.4 1998/01/09 00:39:10 sef Exp $"
+literal|"$Id: i386-linux.c,v 1.5 1998/01/09 09:31:42 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1240,7 +1240,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|lsc
 operator|.
@@ -1304,7 +1304,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|lsc
 operator|.

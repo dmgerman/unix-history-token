@@ -960,6 +960,9 @@ name|HDR3
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sb
 operator|->
 name|st_mtimespec
@@ -1022,6 +1025,9 @@ name|AR_EFMT1
 argument_list|,
 name|lname
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sb
 operator|->
 name|st_mtimespec
@@ -1066,6 +1072,9 @@ name|HDR2
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sb
 operator|->
 name|st_mtimespec

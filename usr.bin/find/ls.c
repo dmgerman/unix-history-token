@@ -161,6 +161,9 @@ name|printf
 argument_list|(
 literal|"%6lu %4qd "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sb
 operator|->
 name|st_ino

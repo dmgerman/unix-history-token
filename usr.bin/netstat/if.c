@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: if.c,v 1.23 1997/02/22 19:56:21 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -907,6 +907,9 @@ name|netnum
 argument_list|,
 literal|"%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|net

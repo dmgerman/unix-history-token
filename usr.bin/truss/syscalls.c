@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: syscalls.c,v 1.4 1998/01/05 07:30:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -838,7 +838,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|args
 index|[
@@ -863,7 +863,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"0%o"
+literal|"0%lo"
 argument_list|,
 name|args
 index|[
@@ -888,7 +888,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|args
 index|[
@@ -1031,7 +1031,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|args
 index|[
@@ -1084,7 +1084,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|args
 index|[

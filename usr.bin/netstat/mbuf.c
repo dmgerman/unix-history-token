@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.10 1998/04/24 04:30:27 dg Exp $"
+literal|"$Id: mbuf.c,v 1.11 1998/05/15 20:19:18 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,7 +483,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u/%u mbufs in use:\n"
+literal|"%u/%lu mbufs in use:\n"
 argument_list|,
 name|totmbufs
 argument_list|,
@@ -598,7 +598,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%lu/%lu/%lu mbuf clusters in use (current/peak/max)\n"
+literal|"%lu/%lu/%u mbuf clusters in use (current/peak/max)\n"
 argument_list|,
 name|mbstat
 operator|.

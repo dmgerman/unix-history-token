@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipx.c,v 1.8 1997/05/10 10:03:41 jhay Exp $"
+literal|"$Id: ipx.c,v 1.9 1997/07/29 06:51:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -656,6 +656,20 @@ parameter_list|)
 value|(printf("\t%u %s%s%s\n",x,y,plural(x),z))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ANYl
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|(printf("\t%lu %s%s%s\n",x,y,plural(x),z))
+end_define
+
 begin_comment
 comment|/*  * Dump SPX statistics structure.  */
 end_comment
@@ -814,7 +828,7 @@ argument_list|,
 literal|" refused as exceeding allocation"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -825,7 +839,7 @@ argument_list|,
 literal|" initiated"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -836,7 +850,7 @@ argument_list|,
 literal|" accepted"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -847,7 +861,7 @@ argument_list|,
 literal|" established"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -858,7 +872,7 @@ argument_list|,
 literal|" dropped"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -869,7 +883,7 @@ argument_list|,
 literal|" dropped"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -880,7 +894,7 @@ argument_list|,
 literal|" closed (includes drops)"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -891,7 +905,7 @@ argument_list|,
 literal|" where we tried to get rtt"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -902,7 +916,7 @@ argument_list|,
 literal|" we got rtt"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -913,7 +927,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -924,7 +938,7 @@ argument_list|,
 literal|" dropped in rxmt timeout"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -935,7 +949,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -946,7 +960,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -957,7 +971,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -968,7 +982,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -979,7 +993,7 @@ argument_list|,
 literal|" dropped in keepalive"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -990,7 +1004,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1001,7 +1015,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1012,7 +1026,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1023,7 +1037,7 @@ argument_list|,
 literal|" retransmitted"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1034,7 +1048,7 @@ argument_list|,
 literal|" retransmitted"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1045,7 +1059,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1056,7 +1070,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1067,7 +1081,7 @@ argument_list|,
 literal|" sent with URG only"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1078,7 +1092,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1089,7 +1103,7 @@ argument_list|,
 literal|" sent"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1100,7 +1114,7 @@ argument_list|,
 literal|" to send a non-existant packet"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1111,7 +1125,7 @@ argument_list|,
 literal|" received"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1122,7 +1136,7 @@ argument_list|,
 literal|" received in sequence"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1133,7 +1147,7 @@ argument_list|,
 literal|" received in sequence"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1144,7 +1158,7 @@ argument_list|,
 literal|" received with ccksum errs"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1155,7 +1169,7 @@ argument_list|,
 literal|" received with bad offset"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1166,7 +1180,7 @@ argument_list|,
 literal|" received too short"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1177,7 +1191,7 @@ argument_list|,
 literal|" received"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1188,7 +1202,7 @@ argument_list|,
 literal|" received"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1199,7 +1213,7 @@ argument_list|,
 literal|" with some duplicate data"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1210,7 +1224,7 @@ argument_list|,
 literal|" in part-dup. packet"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1221,7 +1235,7 @@ argument_list|,
 literal|" received"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1232,7 +1246,7 @@ argument_list|,
 literal|" received"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1243,7 +1257,7 @@ argument_list|,
 literal|" with data after window"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1254,7 +1268,7 @@ argument_list|,
 literal|" rcvd after window"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1265,7 +1279,7 @@ argument_list|,
 literal|" rcvd after 'close'"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1276,7 +1290,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1287,7 +1301,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1298,7 +1312,7 @@ argument_list|,
 literal|" for unsent data"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1309,7 +1323,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1320,7 +1334,7 @@ argument_list|,
 literal|" acked by rcvd acks"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|spxstat
 operator|.
@@ -1333,26 +1347,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|ANY
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ANY
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-value|(printf("\t%u %s%s%s\n",x,y,plural(x),z))
-end_define
 
 begin_comment
 comment|/*  * Dump IPX statistics structure.  */
@@ -1409,7 +1403,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1420,7 +1414,7 @@ argument_list|,
 literal|" received"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1431,7 +1425,7 @@ argument_list|,
 literal|" with bad checksums"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1442,7 +1436,7 @@ argument_list|,
 literal|" smaller than advertised"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1453,7 +1447,7 @@ argument_list|,
 literal|" smaller than a header"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1464,7 +1458,7 @@ argument_list|,
 literal|" forwarded"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1475,7 +1469,7 @@ argument_list|,
 literal|" not forwardable"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1486,7 +1480,7 @@ argument_list|,
 literal|" for this host"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1497,7 +1491,7 @@ argument_list|,
 literal|" sent from this host"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1508,7 +1502,7 @@ argument_list|,
 literal|" dropped due to no bufs, etc."
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.
@@ -1519,7 +1513,7 @@ argument_list|,
 literal|" discarded due to no route"
 argument_list|)
 expr_stmt|;
-name|ANY
+name|ANYl
 argument_list|(
 name|ipxstat
 operator|.

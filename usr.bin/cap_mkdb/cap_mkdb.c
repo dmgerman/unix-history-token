@@ -613,6 +613,9 @@ name|warnx
 argument_list|(
 literal|"no name field: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|MIN
 argument_list|(
 name|len
@@ -771,6 +774,9 @@ name|warnx
 argument_list|(
 literal|"ignored duplicate: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|key
 operator|.
 name|size
@@ -945,6 +951,9 @@ name|warnx
 argument_list|(
 literal|"ignored duplicate: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|key
 operator|.
 name|size
