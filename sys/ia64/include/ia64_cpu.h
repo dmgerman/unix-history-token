@@ -908,6 +908,24 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Set the value of ar.fpsr  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_fpsr
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov ar.fpsr=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
 comment|/*  * Read the value of ar.k0.  */
 end_comment
 
