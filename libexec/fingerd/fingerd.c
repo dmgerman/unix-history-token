@@ -34,13 +34,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)fingerd.c	8.1 (Berkeley) 6/4/93"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)fingerd.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -127,7 +138,7 @@ end_include
 
 begin_decl_stmt
 name|void
-name|err
+name|logerr
 name|__P
 argument_list|(
 operator|(
@@ -297,7 +308,7 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|err
+name|logerr
 argument_list|(
 literal|"illegal option -- %c"
 argument_list|,
@@ -337,7 +348,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|logerr
 argument_list|(
 literal|"getpeername: %s"
 argument_list|,
@@ -401,6 +412,40 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Enable server-side Transaction TCP. 	 */
+block|{
+name|int
+name|one
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+name|IPPROTO_TCP
+argument_list|,
+name|TCP_NOPUSH
+argument_list|,
+operator|&
+name|one
+argument_list|,
+sizeof|sizeof
+name|one
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|logerr
+argument_list|(
+literal|"setsockopt(TCP_NOPUSH) failed: %m"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -621,7 +666,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|logerr
 argument_list|(
 literal|"pipe: %s"
 argument_list|,
@@ -693,7 +738,7 @@ argument_list|,
 name|comp
 argument_list|)
 expr_stmt|;
-name|err
+name|logerr
 argument_list|(
 literal|"execv: %s: %s"
 argument_list|,
@@ -714,7 +759,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|err
+name|logerr
 argument_list|(
 literal|"fork: %s"
 argument_list|,
@@ -753,7 +798,7 @@ literal|"r"
 argument_list|)
 operator|)
 condition|)
-name|err
+name|logerr
 argument_list|(
 literal|"fdopen: %s"
 argument_list|,
@@ -835,7 +880,7 @@ name|void
 if|#
 directive|if
 name|__STDC__
-name|err
+name|logerr
 parameter_list|(
 specifier|const
 name|char
@@ -846,7 +891,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|err
+function|logerr
 parameter_list|(
 name|fmt
 parameter_list|,
