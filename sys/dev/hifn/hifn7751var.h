@@ -469,6 +469,10 @@ name|u_int32_t
 name|sc_drammodel
 decl_stmt|;
 comment|/* 1=dram, 0=sram */
+name|u_int32_t
+name|sc_pllconfig
+decl_stmt|;
+comment|/* 7954/7955/7956 PLL config */
 name|struct
 name|hifn_dma
 modifier|*
