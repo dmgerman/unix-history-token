@@ -3878,7 +3878,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|O_NONBLOCK
+name|IO_NDELAY
 condition|)
 block|{
 name|splx
@@ -4242,7 +4242,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|O_NONBLOCK
+name|IO_NDELAY
 condition|)
 block|{
 name|splx
