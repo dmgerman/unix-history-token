@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.3 (Berkeley) %G%"
+literal|"@(#)du.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,20 +82,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_comment
-comment|/* this macro uses ints, not longs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|kb
-parameter_list|(
-name|n
-parameter_list|)
-value|(howmany(dbtob(n), 1024))
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -128,6 +114,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|crossmounts
+decl_stmt|,
+name|kvalue
 decl_stmt|,
 name|listdirs
 decl_stmt|,
@@ -204,7 +192,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"asx"
+literal|"aksx"
 argument_list|)
 operator|)
 operator|!=
@@ -219,6 +207,14 @@ case|case
 literal|'a'
 case|:
 name|listfiles
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|kvalue
 operator|=
 literal|1
 expr_stmt|;
@@ -245,11 +241,14 @@ case|case
 literal|'?'
 case|:
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-asx] [name ...]\n"
+literal|"usage: du [-aksx] [name ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -455,14 +454,22 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%u\t%s\n"
+literal|"%ld\t%s\n"
 argument_list|,
-name|kb
+name|kvalue
+condition|?
+name|howmany
 argument_list|(
 name|info
 operator|.
 name|st_blocks
+argument_list|,
+literal|2
 argument_list|)
+else|:
+name|info
+operator|.
+name|st_blocks
 argument_list|,
 name|arg
 argument_list|)
@@ -505,12 +512,18 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%u\t%s\n"
+literal|"%lu\t%s\n"
 argument_list|,
-name|kb
+name|kvalue
+condition|?
+name|howmany
 argument_list|(
 name|total
+argument_list|,
+literal|2
 argument_list|)
+else|:
+name|total
 argument_list|,
 name|path
 argument_list|)
@@ -723,6 +736,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -886,6 +902,9 @@ literal|".."
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -919,12 +938,18 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%u\t%s\n"
+literal|"%lu\t%s\n"
 argument_list|,
-name|kb
+name|kvalue
+condition|?
+name|howmany
 argument_list|(
 name|total
+argument_list|,
+literal|2
 argument_list|)
+else|:
+name|total
 argument_list|,
 name|path
 argument_list|)
@@ -940,12 +965,18 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%u\t%s\n"
+literal|"%lu\t%s\n"
 argument_list|,
-name|kb
+name|kvalue
+condition|?
+name|howmany
 argument_list|(
 name|total
+argument_list|,
+literal|2
 argument_list|)
+else|:
+name|total
 argument_list|,
 name|path
 argument_list|)
