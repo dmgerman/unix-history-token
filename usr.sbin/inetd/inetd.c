@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.15.2.8 1998/07/18 11:10:26 jkh Exp $"
+literal|"$Id: inetd.c,v 1.15.2.9 1998/10/09 11:50:52 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2011,6 +2011,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|sigblock
+argument_list|(
+name|SIGBLOCK
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2025,6 +2033,17 @@ decl_stmt|;
 name|fd_set
 name|readable
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+init|=
+block|{
+literal|5
+block|,
+literal|0
+block|}
+decl_stmt|;
+comment|/* 	     * Handle signal masking and select.  Signals are unmasked and 	     * we pause if we have no active descriptors.  If we do have  	     * active descriptors, leave signals unmasked through the select() 	     * call.  The select() call is inclusive of a timeout in order 	     * to handle the race condition where a signal occurs just prior 	     * to the select() call and potentially changes the allsock 	     * fd_set, to prevent select() from potentially blocking forever. 	     * 	     * Signals are masked at all other times. 	     */
 if|if
 condition|(
 name|nsock
@@ -2032,14 +2051,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|SIGBLOCK
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|nsock
@@ -2051,6 +2062,7 @@ argument_list|(
 literal|0L
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2059,14 +2071,14 @@ argument_list|(
 literal|0L
 argument_list|)
 expr_stmt|;
-block|}
 name|readable
 operator|=
 name|allsock
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|select
@@ -2078,26 +2090,25 @@ argument_list|,
 operator|&
 name|readable
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-literal|0
+operator|&
+name|tv
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
 operator|)
+name|sigblock
+argument_list|(
+name|SIGBLOCK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|<=
 literal|0
 condition|)
@@ -2107,6 +2118,8 @@ condition|(
 name|n
 operator|<
 literal|0
+operator|&&
+name|errno
 operator|&&
 name|errno
 operator|!=
@@ -2345,14 +2358,7 @@ name|sep
 operator|->
 name|se_fd
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|SIGBLOCK
-argument_list|)
-expr_stmt|;
+comment|/* (void) sigblock(SIGBLOCK); */
 name|pid
 operator|=
 literal|0
@@ -2485,11 +2491,7 @@ argument_list|(
 name|sep
 argument_list|)
 expr_stmt|;
-name|sigsetmask
-argument_list|(
-literal|0L
-argument_list|)
-expr_stmt|;
+comment|/* sigsetmask(0L); */
 if|if
 condition|(
 operator|!
@@ -2546,11 +2548,7 @@ argument_list|(
 name|ctrl
 argument_list|)
 expr_stmt|;
-name|sigsetmask
-argument_list|(
-literal|0L
-argument_list|)
-expr_stmt|;
+comment|/* sigsetmask(0L); */
 name|sleep
 argument_list|(
 literal|1
@@ -2569,11 +2567,7 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
-name|sigsetmask
-argument_list|(
-literal|0L
-argument_list|)
-expr_stmt|;
+comment|/* sigsetmask(0L); */
 if|if
 condition|(
 name|pid
@@ -3527,9 +3521,7 @@ modifier|*
 modifier|*
 name|sepp
 decl_stmt|;
-name|long
-name|omask
-decl_stmt|;
+comment|/* long omask; */
 if|if
 condition|(
 operator|!
@@ -3749,13 +3741,7 @@ parameter_list|,
 name|b
 parameter_list|)
 value|{ typeof(a) c = a; a = b; b = c; }
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-name|SIGBLOCK
-argument_list|)
-expr_stmt|;
+comment|/* omask = sigblock(SIGBLOCK); */
 comment|/* copy over outstanding child pids */
 if|if
 condition|(
@@ -4005,11 +3991,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
+comment|/* sigsetmask(omask); */
 name|freeconfig
 argument_list|(
 name|new
@@ -4314,13 +4296,7 @@ name|endconfig
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Purge anything not looked at above. 	 */
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-name|SIGBLOCK
-argument_list|)
-expr_stmt|;
+comment|/* omask = sigblock(SIGBLOCK); */
 name|sepp
 operator|=
 operator|&
@@ -4415,14 +4391,7 @@ name|sep
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
+comment|/* (void) sigsetmask(omask); */
 block|}
 end_function
 
@@ -4446,16 +4415,8 @@ name|servtab
 modifier|*
 name|sepp
 decl_stmt|;
-name|long
-name|omask
-decl_stmt|;
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-name|SIGBLOCK
-argument_list|)
-expr_stmt|;
+comment|/* long omask; */
+comment|/* omask = sigblock(SIGBLOCK); */
 for|for
 control|(
 name|sepp
@@ -4565,14 +4526,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
+comment|/* (void) sigsetmask(omask); */
 block|}
 end_function
 
@@ -5224,9 +5178,7 @@ name|servtab
 modifier|*
 name|sep
 decl_stmt|;
-name|long
-name|omask
-decl_stmt|;
+comment|/* long omask; */
 name|sep
 operator|=
 operator|(
@@ -5281,13 +5233,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-name|SIGBLOCK
-argument_list|)
-expr_stmt|;
+comment|/* omask = sigblock(SIGBLOCK); */
 name|sep
 operator|->
 name|se_next
@@ -5298,11 +5244,7 @@ name|servtab
 operator|=
 name|sep
 expr_stmt|;
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
+comment|/* sigsetmask(omask); */
 return|return
 operator|(
 name|sep
@@ -9121,7 +9063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Based on TCPMUX.C by Mark K. Lottor November 1988  *  sri-nic::ps:<mkl>tcpmux.c  */
+comment|/*  *  Based on TCPMUX.C by Mark K. Lottor November 1988  *  sri-nic::ps:<mkl>tcpmux.c  *  *  signals are masked on call, we have to unmask SIGALRM for the  *  duration of the read  */
 end_comment
 
 begin_function
@@ -9154,9 +9096,17 @@ literal|0
 decl_stmt|,
 name|n
 decl_stmt|;
+name|int
+name|not_done
+init|=
+literal|1
+decl_stmt|;
 name|struct
 name|sigaction
 name|sa
+decl_stmt|;
+name|long
+name|omask
 decl_stmt|;
 name|sa
 operator|.
@@ -9193,6 +9143,19 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|omask
+operator|=
+name|sigsetmask
+argument_list|(
+name|SIGBLOCK
+operator|&
+operator|~
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|alarm
@@ -9224,23 +9187,21 @@ name|n
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|count
-operator|)
-return|;
+break|break;
 if|if
 condition|(
 name|n
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|count
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 while|while
 condition|(
 operator|--
@@ -9266,11 +9227,13 @@ name|buf
 operator|==
 literal|'\0'
 condition|)
-return|return
-operator|(
-name|count
-operator|)
-return|;
+block|{
+name|not_done
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 name|count
 operator|++
 expr_stmt|;
@@ -9281,11 +9244,18 @@ block|}
 block|}
 do|while
 condition|(
+name|not_done
+operator|&&
 name|count
 operator|<
 name|len
 condition|)
 do|;
+name|sigsetmask
+argument_list|(
+name|omask
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|count
