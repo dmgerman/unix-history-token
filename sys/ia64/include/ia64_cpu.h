@@ -925,496 +925,405 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the value of ar.fpsr  */
+comment|/*  * Define accessors for application registers.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_fpsr
+begin_define
+define|#
+directive|define
+name|IA64_AR
 parameter_list|(
-name|u_int64_t
-name|v
+name|name
 parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.fpsr=%0" :: "r" (v));
-block|}
-end_function
+define|\ 								\
+value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=ar." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov ar." #name "=%0" :: "r" (v));	\ }
+end_define
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k0
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k1
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k2
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k3
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k4
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k5
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k6
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|k7
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|rsc
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|bsp
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|bspstore
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|rnat
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|fcr
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|eflag
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|csd
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|ssd
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|cflg
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|fsr
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|fir
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|fdr
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|ccv
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|unat
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|fpsr
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|itc
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|pfs
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|lc
+argument_list|)
+end_macro
+
+begin_macro
+name|IA64_AR
+argument_list|(
+argument|ec
+argument_list|)
+end_macro
 
 begin_comment
-comment|/*  * Read the value of ar.k0.  */
+comment|/*  * Define accessors for control registers.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k0
+begin_define
+define|#
+directive|define
+name|IA64_CR
 parameter_list|(
-name|void
+name|name
 parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k0" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+define|\ 								\
+value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=cr." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov cr." #name "=%0" :: "r" (v));	\ }
+end_define
 
-begin_comment
-comment|/*  * Read the value of ar.k1.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|dcr
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k1
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k1" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|itm
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Read the value of ar.k2.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|iva
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k2
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k2" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|pta
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Read the value of ar.k3.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|ipsr
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k3
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k3" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|isr
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Read the value of ar.k4.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|iip
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k4
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k4" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|ifa
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Read the value of ar.k5.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|itir
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k5
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k5" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|iipa
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Read the value of ar.k6.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|ifs
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k6
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k6" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|iim
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Read the value of ar.k7.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|iha
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_k7
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.k7" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|lid
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Write the value of ar.k0.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|ivr
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k0
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k0=%0" :: "r" (v));
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|tpr
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Write the value of ar.k1.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|eoi
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k1
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k1=%0" :: "r" (v));
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|irr0
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Write the value of ar.k2.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|irr1
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k2
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k2=%0" :: "r" (v));
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|irr2
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Write the value of ar.k3.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|irr3
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k3
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k3=%0" :: "r" (v));
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|itv
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Write the value of ar.k4.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|pmv
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k4
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k4=%0" :: "r" (v));
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|cmcv
+argument_list|)
+end_macro
 
-begin_comment
-comment|/*  * Write the value of ar.k5.  */
-end_comment
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|lrr0
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k5
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k5=%0" :: "r" (v));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Write the value of ar.k6.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k6
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k6=%0" :: "r" (v));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Write the value of ar.k7.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_k7
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov ar.k7=%0" :: "r" (v));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Read the value of ar.itc.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_itc
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=ar.itc" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Read the value of cr.itm.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_itm
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=cr.itm" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Write the value of cr.itm.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_itm
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov cr.itm=%0" :: "r" (v));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Write the value of cr.itv.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_itv
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov cr.itv=%0" :: "r" (v));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Read the value of cr.lid.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_lid
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=cr.lid" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Read the value of cr.tpr.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|u_int64_t
-name|ia64_get_tpr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int64_t
-name|result
-decl_stmt|;
-asm|__asm __volatile("mov %0=cr.tpr" : "=r" (result));
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Write the value of cr.itv.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ia64_set_tpr
-parameter_list|(
-name|u_int64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile("mov cr.tpr=%0" :: "r" (v));
-block|}
-end_function
+begin_macro
+name|IA64_CR
+argument_list|(
+argument|lrr1
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Write a region register.  */
