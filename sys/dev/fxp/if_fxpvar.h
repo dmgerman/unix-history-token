@@ -62,6 +62,28 @@ name|FXP_MAX_RX_IDLE
 value|15
 end_define
 
+begin_comment
+comment|/*  * Default maximum time, in microseconds, that an interrupt may be delayed  * in an attempt to coalesce interrupts.  This is only effective if the Intel   * microcode is loaded, and may be changed via either loader tunables or  * sysctl.  See also the CPUSAVER_DWORD entry in rcvbundl.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_INT_DELAY
+value|1000
+end_define
+
+begin_comment
+comment|/*  * Default number of packets that will be bundled, before an interrupt is   * generated.  This is only effective if the Intel microcode is loaded, and  * may be changed via either loader tunables or sysctl.  This may not be   * present in all microcode revisions, see also the CPUSAVER_BUNDLE_MAX_DWORD  * entry in rcvbundl.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_BUNDLE_MAX
+value|6
+end_define
+
 begin_if
 if|#
 directive|if
@@ -302,6 +324,23 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sysctl_tree
+decl_stmt|;
+name|int
+name|tunable_int_delay
+decl_stmt|;
+comment|/* interrupt delay value for ucode */
+name|int
+name|tunable_bundle_max
+decl_stmt|;
+comment|/* max # frames per interrupt (ucode) */
 name|int
 name|eeprom_size
 decl_stmt|;
@@ -314,7 +353,7 @@ name|int
 name|cu_resume_bug
 decl_stmt|;
 name|int
-name|chip
+name|revision
 decl_stmt|;
 name|int
 name|flags
@@ -341,17 +380,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|FXP_CHIP_82557
-value|1
-end_define
-
-begin_comment
-comment|/* 82557 chip type */
-end_comment
 
 begin_define
 define|#
@@ -439,6 +467,17 @@ end_define
 
 begin_comment
 comment|/* requires workaround for CU_RESUME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_UCODE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* ucode is loaded */
 end_comment
 
 begin_comment
