@@ -8,7 +8,7 @@ comment|/*  * Modification history timex.h  *  * 17 Nov 98	David L. Mills  *	Rev
 end_comment
 
 begin_comment
-comment|/*  * This header file defines the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. These are implemented using  * defined syscalls and data structures and require specific kernel  * support.  *  * The original precision time kernels developed from 1993 have an  * ultimate resolution of one microsecond; however, the most recent  * kernels have an ultimate resolution of one nanosecond. In these  * kernels, a ntp_adjtime() syscalls can be used to determine which  * resolution is in use and to select either one at any time. The  * resolution selected affects the scaling of certain fields in the  * ntp_gettime() and ntp_adjtime() syscalls, as described below.  *  * NAME  *	ntp_gettime - NTP user application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *	#include<sys/syscall.h>  *  *	int syscall(SYS_ntp_gettime, tptr);  *	int SYS_ntp_gettime;  *	struct ntptimeval *tptr;  *  * DESCRIPTION  *	The time returned by ntp_gettime() is in a timeval structure,  *	but may be in either microsecond (seconds and microseconds) or  *	nanosecond (seconds and nanoseconds) format. The particular  *	format in use is determined by the STA_NANO bit of the status  *	word returned by the ntp_adjtime() syscall.  *  * NAME  *	ntp_adjtime - NTP daemon application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *	#include<sys/syscall.h>  *  *	int syscall(SYS_ntp_adjtime, tptr);  *	struct timex *tptr;  *  * DESCRIPTION  *	Certain fields of the timex structure are interpreted in either  *	microseconds or nanoseconds according to the state of the  *	STA_NANO bit in the status word. See the description below for  *	further information.  */
+comment|/*  * This header file defines the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. These are implemented using  * defined syscalls and data structures and require specific kernel  * support.  *  * The original precision time kernels developed from 1993 have an  * ultimate resolution of one microsecond; however, the most recent  * kernels have an ultimate resolution of one nanosecond. In these  * kernels, a ntp_adjtime() syscalls can be used to determine which  * resolution is in use and to select either one at any time. The  * resolution selected affects the scaling of certain fields in the  * ntp_gettime() and ntp_adjtime() syscalls, as described below.  *  * NAME  *	ntp_gettime - NTP user application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *  *	int ntp_gettime(struct ntptimeval *ntv);  *  * DESCRIPTION  *	The time returned by ntp_gettime() is in a timespec structure,  *	but may be in either microsecond (seconds and microseconds) or  *	nanosecond (seconds and nanoseconds) format. The particular  *	format in use is determined by the STA_NANO bit of the status  *	word returned by the ntp_adjtime() syscall.  *  * NAME  *	ntp_adjtime - NTP daemon application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *	#include<sys/syscall.h>  *  *	int syscall(SYS_ntp_adjtime, tptr);  *	int SYS_ntp_adjtime;  *	struct timex *tptr;  *  * DESCRIPTION  *	Certain fields of the timex structure are interpreted in either  *	microseconds or nanoseconds according to the state of the  *	STA_NANO bit in the status word. See the description below for  *	further information.  */
 end_comment
 
 begin_ifndef
@@ -21,7 +21,6 @@ begin_define
 define|#
 directive|define
 name|_SYS_TIMEX_H_
-value|1
 end_define
 
 begin_ifndef
@@ -535,7 +534,7 @@ name|struct
 name|timespec
 name|time
 decl_stmt|;
-comment|/* current time (ns) (ro) */
+comment|/* current time (ns/us) (ro) */
 name|long
 name|maxerror
 decl_stmt|;
@@ -646,6 +645,12 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|timecounter
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|void
 name|ntp_update_second
@@ -666,6 +671,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !KERNEL */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -674,22 +683,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-specifier|extern
-name|int
-name|ntp_gettime
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ntptimeval
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|ntp_adjtime
 name|__P
@@ -697,6 +690,20 @@ argument_list|(
 operator|(
 expr|struct
 name|timex
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ntp_gettime
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ntptimeval
 operator|*
 operator|)
 argument_list|)
@@ -713,7 +720,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not KERNEL */
+comment|/* KERNEL */
 end_comment
 
 begin_endif
@@ -731,7 +738,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_TIMEX_H_ */
+comment|/* !_SYS_TIMEX_H_ */
 end_comment
 
 end_unit
