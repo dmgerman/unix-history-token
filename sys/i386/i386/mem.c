@@ -860,12 +860,12 @@ name|offset
 argument_list|)
 argument_list|)
 return|;
-block|}
 default|default:
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 end_function
 
