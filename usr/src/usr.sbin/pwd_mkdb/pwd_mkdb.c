@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	5.3 (Berkeley) %G%"
+literal|"@(#)pwd_mkdb.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1434,7 +1434,10 @@ name|void
 operator|)
 name|fchmod
 argument_list|(
+name|fileno
+argument_list|(
 name|fp
+argument_list|)
 argument_list|,
 name|S_IRUSR
 operator||
