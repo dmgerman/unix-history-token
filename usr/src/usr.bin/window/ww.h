@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.30 84/04/09	  */
+comment|/*  *	@(#)ww.h	3.31 84/04/16	  */
 end_comment
 
 begin_include
@@ -1439,47 +1439,6 @@ parameter_list|)
 value|((x)> (y) ? (x) : (y))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|O_4_1A
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|O_4_1C
-argument_list|)
-end_if
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|sigset
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|signal
-parameter_list|(
-name|s
-parameter_list|,
-name|v
-parameter_list|)
-value|sigset((s), (v))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1489,31 +1448,6 @@ name|s
 parameter_list|)
 value|(1<< (s) - 1)
 end_define
-
-begin_define
-define|#
-directive|define
-name|sighold
-parameter_list|(
-name|s
-parameter_list|)
-value|sigblock(sigmask(s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigrelse
-parameter_list|(
-name|s
-parameter_list|)
-value|sigsetmask(sigblock(0)& ~sigmask(s))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

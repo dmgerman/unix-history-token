@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.23 84/04/08"
+literal|"@(#)main.c	3.24 84/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|"char.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"local.h"
 end_include
 
 begin_define
@@ -267,15 +273,11 @@ expr_stmt|;
 block|}
 name|nbufline
 operator|=
-literal|48
+name|NLINE
 expr_stmt|;
-comment|/* compatible */
 name|escapec
 operator|=
-name|ctrl
-argument_list|(
-name|p
-argument_list|)
+name|ESCAPEC
 expr_stmt|;
 if|if
 condition|(
@@ -292,7 +294,7 @@ literal|0
 condition|)
 name|p
 operator|=
-literal|"/bin/csh"
+name|SHELL
 expr_stmt|;
 if|if
 condition|(
@@ -343,9 +345,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|O_4_1A
 operator|(
 name|void
 operator|)
@@ -362,8 +361,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|wwinit

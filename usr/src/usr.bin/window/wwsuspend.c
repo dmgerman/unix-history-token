@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwsuspend.c	3.3 83/11/02"
+literal|"@(#)wwsuspend.c	3.4 84/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_macro

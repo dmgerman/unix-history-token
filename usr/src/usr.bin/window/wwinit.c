@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.17 84/04/08"
+literal|"@(#)wwinit.c	3.18 84/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,25 +91,14 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|O_4_1A
+name|int
+name|s
+decl_stmt|;
 name|wwdtablesize
 operator|=
 name|getdtablesize
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-include|#
-directive|include
-file|<sys/param.h>
-name|wwdtablesize
-operator|=
-name|NOFILE
-expr_stmt|;
-endif|#
-directive|endif
 name|wwhead
 operator|.
 name|ww_forw
@@ -123,6 +112,16 @@ name|ww_back
 operator|=
 operator|&
 name|wwhead
+expr_stmt|;
+name|s
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGIO
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -139,14 +138,6 @@ return|return
 operator|-
 literal|1
 return|;
-operator|(
-name|void
-operator|)
-name|sighold
-argument_list|(
-name|SIGIO
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|wwgettty
@@ -1081,9 +1072,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGIO
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1116,9 +1107,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGIO
+name|s
 argument_list|)
 expr_stmt|;
 return|return

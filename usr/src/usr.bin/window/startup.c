@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.11 84/04/09"
+literal|"@(#)startup.c	3.12 84/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ directive|include
 file|"char.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_macro
 name|doconfig
 argument_list|()
@@ -66,7 +72,7 @@ name|char
 name|runcom
 index|[]
 init|=
-literal|".windrc"
+name|RUNCOM
 decl_stmt|;
 if|if
 condition|(

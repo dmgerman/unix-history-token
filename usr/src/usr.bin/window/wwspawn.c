@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	3.8 84/04/08"
+literal|"@(#)wwspawn.c	3.9 84/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_comment
@@ -81,12 +81,17 @@ name|erred
 init|=
 literal|0
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sighold
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
 argument_list|(
 name|SIGCHLD
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -178,12 +183,38 @@ block|}
 operator|(
 name|void
 operator|)
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGCHLD
+name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	if (wp->ww_socket>= 0) { 		(void) close(wp->ww_socket); 		wp->ww_socket = -1; 	} 	*/
+if|if
+condition|(
+name|wp
+operator|->
+name|ww_socket
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|wp
+operator|->
+name|ww_socket
+argument_list|)
+expr_stmt|;
+name|wp
+operator|->
+name|ww_socket
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
