@@ -1,10 +1,252 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.11 1996/01/28 22:16:20 wollman Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.12 1996/06/08 10:03:38 bde Exp $  */
+end_comment
+
+begin_comment
+comment|/*  * modified for PC9801 by F.Ukai  *			Kyoto University Microcomputer Club (KMC)  */
 end_comment
 
 begin_comment
 comment|/*  * Disk Controller register definitions.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|wd_data
+value|0x0
+end_define
+
+begin_comment
+comment|/* data register (R/W - 16 bits) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_error
+value|0x2
+end_define
+
+begin_comment
+comment|/* error register (R) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_precomp
+value|wd_error
+end_define
+
+begin_comment
+comment|/* write precompensation (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_features
+value|wd_error
+end_define
+
+begin_comment
+comment|/* features register (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_seccnt
+value|0x4
+end_define
+
+begin_comment
+comment|/* sector count (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_sector
+value|0x6
+end_define
+
+begin_comment
+comment|/* first sector number (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_cyl_lo
+value|0x8
+end_define
+
+begin_comment
+comment|/* cylinder address, low byte (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_cyl_hi
+value|0xa
+end_define
+
+begin_comment
+comment|/* cylinder address, high byte (R/W)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_sdh
+value|0xc
+end_define
+
+begin_comment
+comment|/* sector size/drive/head (R/W)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_command
+value|0xe
+end_define
+
+begin_comment
+comment|/* command register (W)	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_status
+value|wd_command
+end_define
+
+begin_comment
+comment|/* immediate status (R)	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_altsts_nec
+value|0x10c
+end_define
+
+begin_comment
+comment|/*alternate fixed disk status(via 1015) (R)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_ctlr_nec
+value|0x10c
+end_define
+
+begin_comment
+comment|/*fixed disk controller control(via 1015) (W)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_altsts_epson
+value|0x3
+end_define
+
+begin_comment
+comment|/*alternate fixed disk status(via 1015) (R)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_ctlr_epson
+value|0x3
+end_define
+
+begin_comment
+comment|/*fixed disk controller control(via 1015) (W)*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_altsts
+value|wd_alsts_nec
+end_define
+
+begin_define
+define|#
+directive|define
+name|wd_ctlr
+value|wd_ctlr_nec
+end_define
+
+begin_define
+define|#
+directive|define
+name|WDCTL_4BIT
+value|0x8
+end_define
+
+begin_comment
+comment|/* use four head bits (wd1003) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDCTL_RST
+value|0x4
+end_define
+
+begin_comment
+comment|/* reset the controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDCTL_IDS
+value|0x2
+end_define
+
+begin_comment
+comment|/* disable controller interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_digin
+value|0x10e
+end_define
+
+begin_comment
+comment|/* disk controller input(via 1015) (R)*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* IBM-PC */
 end_comment
 
 begin_define
@@ -192,6 +434,15 @@ end_define
 
 begin_comment
 comment|/* disk controller input(via 1015) (R)*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
 end_comment
 
 begin_comment
