@@ -204,7 +204,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ps:qrtx"
+literal|"pqrs:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -355,7 +355,17 @@ name|argv
 condition|)
 do|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|optind
+operator|==
+literal|1
+operator|||
+name|qflag
+operator|||
+name|rflag
+condition|)
 name|MDFilter
 argument_list|(
 literal|0
