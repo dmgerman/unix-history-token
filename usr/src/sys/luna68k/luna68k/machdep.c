@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c   7.36 (Berkeley) 2/10/93  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c   7.37 (Berkeley) 5/20/93  *  *	@(#)machdep.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -96,6 +96,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -109,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_ifdef
@@ -144,6 +162,12 @@ begin_include
 include|#
 directive|include
 file|<machine/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<luna68k/luna68k/cons.h>
 end_include
 
 begin_include
@@ -1175,6 +1199,10 @@ directive|endif
 block|}
 end_block
 
+begin_comment
+comment|/*  * Info for CTL_HW  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -1885,11 +1913,20 @@ name|ft
 operator|!=
 name|FMTB
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sendsig: ft = 0x%x\n"
+argument_list|,
+name|ft
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"sendsig: bogus frame type"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|kfp
@@ -3519,6 +3556,136 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * machine dependent system variables.  */
+end_comment
+
+begin_macro
+name|cpu_sysctl
+argument_list|(
+argument|name
+argument_list|,
+argument|namelen
+argument_list|,
+argument|oldp
+argument_list|,
+argument|oldlenp
+argument_list|,
+argument|newp
+argument_list|,
+argument|newlen
+argument_list|,
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|namelen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|oldp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+modifier|*
+name|oldlenp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|newp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|size_t
+name|newlen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* all sysctl names at this level are terminal */
+if|if
+condition|(
+name|namelen
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+name|ENOTDIR
+operator|)
+return|;
+comment|/* overloaded */
+switch|switch
+condition|(
+name|name
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+name|CPU_CONSDEV
+case|:
+return|return
+operator|(
+name|sysctl_rdstruct
+argument_list|(
+name|oldp
+argument_list|,
+name|oldlenp
+argument_list|,
+name|newp
+argument_list|,
+operator|&
+name|cn_tty
+operator|->
+name|t_dev
+argument_list|,
+sizeof|sizeof
+name|cn_tty
+operator|->
+name|t_dev
+argument_list|)
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
 block|}
 end_block
 
