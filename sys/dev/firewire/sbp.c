@@ -620,8 +620,15 @@ decl_stmt|;
 name|u_int16_t
 name|lun_id
 decl_stmt|;
-name|int
+name|u_int16_t
 name|freeze
+decl_stmt|;
+define|#
+directive|define
+name|ORB_LINK_DEAD
+value|1
+name|u_int16_t
+name|flags
 decl_stmt|;
 name|struct
 name|cam_path
@@ -786,14 +793,6 @@ name|fwb
 decl_stmt|;
 name|bus_dma_tag_t
 name|dmat
-decl_stmt|;
-define|#
-directive|define
-name|SBP_RESOURCE_SHORTAGE
-value|0x10
-name|unsigned
-name|char
-name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -4071,11 +4070,29 @@ literal|"sbp_cmd_callback\n"
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+if|if
+condition|(
+name|xfer
+operator|->
+name|resp
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX */
+name|printf
+argument_list|(
+literal|"%s: xfer->resp != 0\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+block|}
 name|sbp_xfer_free
 argument_list|(
 name|xfer
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -7513,7 +7530,9 @@ argument|; 	}  	if (ocb == NULL) 		goto done;  	switch(ntohl(ocb->orb[
 literal|4
 argument|])& ORB_FMT_MSK){ 	case ORB_FMT_NOP: 		break; 	case ORB_FMT_VED: 		break; 	case ORB_FMT_STD: 		switch(ocb->flags) { 		case OCB_ACT_MGM: 			orb_fun = ntohl(ocb->orb[
 literal|4
-argument|])& ORB_FUN_MSK; 			switch(orb_fun) { 			case ORB_FUN_LGI: 				fwdma_sync(&sdev->dma, BUS_DMASYNC_POSTREAD); 				login_res = sdev->login; 				login_res->len = ntohs(login_res->len); 				login_res->id = ntohs(login_res->id); 				login_res->cmd_hi = ntohs(login_res->cmd_hi); 				login_res->cmd_lo = ntohl(login_res->cmd_lo); 				if (status_valid) { SBP_DEBUG(
+argument|])& ORB_FUN_MSK; 			reset_agent =
+literal|0
+argument|; 			switch(orb_fun) { 			case ORB_FUN_LGI: 				fwdma_sync(&sdev->dma, BUS_DMASYNC_POSTREAD); 				login_res = sdev->login; 				login_res->len = ntohs(login_res->len); 				login_res->id = ntohs(login_res->id); 				login_res->cmd_hi = ntohs(login_res->cmd_hi); 				login_res->cmd_lo = ntohl(login_res->cmd_lo); 				if (status_valid) { SBP_DEBUG(
 literal|0
 argument|) sbp_show_sdev_info(sdev,
 literal|2
@@ -7751,8 +7770,8 @@ literal|"reset start\n"
 argument|); 		sbp_reset_start(sdev); 		break; 	} 			 }  static void sbp_mgm_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev; 	struct sbp_target *target = sdev->target;  	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
-literal|"management ORB timeout\n"
-argument|); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
+literal|"request timeout(mgm orb:0x%08x) ... "
+argument|, 	    (u_int32_t)ocb->bus_addr); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
 if|#
 directive|if
 literal|0
@@ -7769,8 +7788,8 @@ directive|endif
 argument|}  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev;  	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
-literal|"request timeout ... "
-argument|);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
+literal|"request timeout(cmd orb:0x%08x) ... "
+argument|, 	    (u_int32_t)ocb->bus_addr);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
 literal|1
 argument|: 		printf(
 literal|"agent reset\n"
@@ -8081,7 +8100,9 @@ argument|] |= htonl(ORB_CMD_PTBL | seg); 	} 	 	if (seg>
 literal|0
 argument|) 		bus_dmamap_sync(ocb->sdev->target->sbp->dmat, ocb->dmamap, 			(ntohl(ocb->orb[
 literal|4
-argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_PREREAD : BUS_DMASYNC_PREWRITE); 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	fwdma_sync(&ocb->sdev->dma, BUS_DMASYNC_PREWRITE); 	if (prev == NULL) 		sbp_orb_pointer(ocb->sdev, ocb);  }  static void sbp_poll(struct cam_sim *sim) {
+argument|])& ORB_CMD_IN) ? 			BUS_DMASYNC_PREREAD : BUS_DMASYNC_PREWRITE); 	prev = sbp_enqueue_ocb(ocb->sdev, ocb); 	fwdma_sync(&ocb->sdev->dma, BUS_DMASYNC_PREWRITE); 	if (prev == NULL || (ocb->sdev->flags& ORB_LINK_DEAD) !=
+literal|0
+argument|) { 		ocb->sdev->flags&= ~ORB_LINK_DEAD; 		sbp_orb_pointer(ocb->sdev, ocb);  	} }  static void sbp_poll(struct cam_sim *sim) {
 comment|/* should call fwohci_intr? */
 argument|return; } static struct sbp_ocb * sbp_dequeue_ocb(struct sbp_dev *sdev, struct sbp_status *sbp_status) { 	struct sbp_ocb *ocb; 	struct sbp_ocb *next; 	int s = splfw()
 argument_list|,
@@ -8117,9 +8138,11 @@ argument|])&
 literal|0xffff
 argument|) { 				bus_dmamap_sync(sdev->target->sbp->dmat, 					ocb->dmamap, 					(ntohl(ocb->orb[
 literal|4
-argument|])& ORB_CMD_IN) ? 					BUS_DMASYNC_POSTREAD : 					BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(sdev->target->sbp->dmat, 					ocb->dmamap); 			} 			if (next != NULL&& sbp_status->src ==
-literal|1
-argument|) 				sbp_orb_pointer(sdev, next);  			break; 		} else 			order ++; 	} 	splx(s); SBP_DEBUG(
+argument|])& ORB_CMD_IN) ? 					BUS_DMASYNC_POSTREAD : 					BUS_DMASYNC_POSTWRITE); 				bus_dmamap_unload(sdev->target->sbp->dmat, 					ocb->dmamap); 			} 			if (sbp_status->src == SRC_NO_NEXT) { 				if (next != NULL) 					sbp_orb_pointer(sdev, next);  				else if (order>
+literal|0
+argument|) {
+comment|/* 					 * Unordered execution 					 * We need to send pointer for 					 * next ORB 					 */
+argument|sdev->flags |= ORB_LINK_DEAD; 				} 			} 			break; 		} else 			order ++; 	} 	splx(s); SBP_DEBUG(
 literal|0
 argument|) 	if (ocb&& order>
 literal|0
@@ -8149,7 +8172,7 @@ endif|#
 directive|endif
 argument|END_DEBUG 	prev = STAILQ_LAST(&sdev->ocbs, sbp_ocb, ocb); 	STAILQ_INSERT_TAIL(&sdev->ocbs, ocb, ocb);  	if (ocb->ccb != NULL) 		ocb->ccb->ccb_h.timeout_ch = timeout(sbp_timeout, (caddr_t)ocb, 					(ocb->ccb->ccb_h.timeout * hz) /
 literal|1000
-argument|);  	if (prev != NULL ) { SBP_DEBUG(
+argument|);  	if (prev != NULL) { SBP_DEBUG(
 literal|1
 argument|)
 if|#
@@ -8159,12 +8182,12 @@ operator|>=
 literal|500000
 argument|printf(
 literal|"linking chain 0x%jx -> 0x%jx\n"
-argument|, 		(uintmax_t)prev->bus_addr, (uintmax_t)ocb->bus_addr);
+argument|, 		    (uintmax_t)prev->bus_addr, (uintmax_t)ocb->bus_addr);
 else|#
 directive|else
 argument|printf(
 literal|"linking chain 0x%x -> 0x%x\n"
-argument|, prev->bus_addr, ocb->bus_addr);
+argument|, 		    prev->bus_addr, ocb->bus_addr);
 endif|#
 directive|endif
 argument|END_DEBUG 		prev->orb[
