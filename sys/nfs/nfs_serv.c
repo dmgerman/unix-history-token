@@ -13723,7 +13723,6 @@ name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|vput
 argument_list|(
 name|nd
@@ -13737,7 +13736,6 @@ name|ni_vp
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 comment|/* 	 * releases directory prior to potential lookup op. 	 */
 name|vput
 argument_list|(
