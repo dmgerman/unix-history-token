@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.35	82/08/13	*/
+comment|/*	vfs_cluster.c	4.36	82/09/04	*/
 end_comment
 
 begin_include
@@ -177,9 +177,9 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_inblk
+name|ru_inblock
 operator|++
 expr_stmt|;
 comment|/* pay for read */
@@ -314,9 +314,9 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_inblk
+name|ru_inblock
 operator|++
 expr_stmt|;
 comment|/* pay for read */
@@ -418,9 +418,9 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_inblk
+name|ru_inblock
 operator|++
 expr_stmt|;
 comment|/* pay in advance */
@@ -515,9 +515,9 @@ literal|0
 condition|)
 name|u
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_oublk
+name|ru_oublock
 operator|++
 expr_stmt|;
 comment|/* noone paid yet */
@@ -659,9 +659,9 @@ literal|0
 condition|)
 name|u
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_oublk
+name|ru_oublock
 operator|++
 expr_stmt|;
 comment|/* noone paid yet */
