@@ -259,7 +259,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX should lock td->td_proc? */
 if|if
 condition|(
 name|p_cansee
