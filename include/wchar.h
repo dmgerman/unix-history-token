@@ -1077,7 +1077,7 @@ name|getwc
 parameter_list|(
 name|fp
 parameter_list|)
-value|getwc(fp)
+value|fgetwc(fp)
 end_define
 
 begin_define
