@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.44 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7083,6 +7083,8 @@ comment|/* be sure we are immune from the terminal */
 name|disconnect
 argument_list|(
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 ifdef|#
