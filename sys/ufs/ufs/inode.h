@@ -178,7 +178,7 @@ comment|/* Size of found directory entry. */
 name|u_int32_t
 name|i_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* XXX actually non-spare (for ext2fs). */

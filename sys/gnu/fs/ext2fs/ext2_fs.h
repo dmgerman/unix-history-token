@@ -117,14 +117,14 @@ begin_define
 define|#
 directive|define
 name|i_prealloc_block
-value|i_spare[3]
+value|i_din.di_spare[0]
 end_define
 
 begin_define
 define|#
 directive|define
 name|i_prealloc_count
-value|i_din.di_spare[0]
+value|i_din.di_spare[1]
 end_define
 
 begin_comment
