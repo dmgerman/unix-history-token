@@ -81,6 +81,10 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
+name|exca_softc
+name|exca
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|sc_base_res
@@ -113,14 +117,6 @@ decl_stmt|;
 name|u_int32_t
 name|sc_flags
 decl_stmt|;
-define|#
-directive|define
-name|PCCBB_PCIC_IO_RELOC
-value|0x01
-define|#
-directive|define
-name|PCCBB_PCIC_MEM_32
-value|0x02
 define|#
 directive|define
 name|PCCBB_16BIT_CARD
@@ -194,27 +190,6 @@ name|sc_cbdev
 decl_stmt|;
 name|device_t
 name|sc_pccarddev
-decl_stmt|;
-comment|/* PC Card stuff */
-name|int
-name|memalloc
-decl_stmt|;
-name|struct
-name|pccard_mem_handle
-name|mem
-index|[
-name|PCIC_MEM_WINS
-index|]
-decl_stmt|;
-name|int
-name|ioalloc
-decl_stmt|;
-name|struct
-name|pccard_io_handle
-name|io
-index|[
-name|PCIC_IO_WINS
-index|]
 decl_stmt|;
 comment|/* kthread staff */
 name|struct
