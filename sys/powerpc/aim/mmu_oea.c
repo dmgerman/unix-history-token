@@ -164,7 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -678,7 +678,7 @@ comment|/* list of unmanaged pages */
 end_comment
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|pmap_upvo_zone
 decl_stmt|;
 end_decl_stmt
@@ -688,7 +688,7 @@ comment|/* zone for pvo entries for unmanaged pages */
 end_comment
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|pmap_mpvo_zone
 decl_stmt|;
 end_decl_stmt
@@ -1059,7 +1059,7 @@ name|pmap_pvo_enter
 parameter_list|(
 name|pmap_t
 parameter_list|,
-name|vm_zone_t
+name|uma_zone_t
 parameter_list|,
 name|struct
 name|pvo_head
@@ -3840,7 +3840,7 @@ name|pvo_head
 modifier|*
 name|pvo_head
 decl_stmt|;
-name|vm_zone_t
+name|uma_zone_t
 name|zone
 decl_stmt|;
 name|u_int
@@ -4075,7 +4075,7 @@ literal|0
 expr_stmt|;
 name|pmap_upvo_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"UPVO entry"
 argument_list|,
@@ -4085,9 +4085,15 @@ expr|struct
 name|pvo_entry
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
 argument_list|)
@@ -4101,7 +4107,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_mpvo_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"MPVO entry"
 argument_list|,
@@ -4111,11 +4117,17 @@ expr|struct
 name|pvo_entry
 argument_list|)
 argument_list|,
-name|PMAP_PVO_SIZE
+name|NULL
 argument_list|,
-name|ZONE_INTERRUPT
+name|NULL
 argument_list|,
-literal|1
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_allocf
@@ -6552,7 +6564,7 @@ parameter_list|(
 name|pmap_t
 name|pm
 parameter_list|,
-name|vm_zone_t
+name|uma_zone_t
 name|zone
 parameter_list|,
 name|struct
@@ -6683,9 +6695,11 @@ condition|)
 block|{
 name|pvo
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|zone
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -7106,7 +7120,7 @@ operator|&
 name|PVO_BOOTSTRAP
 operator|)
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|pvo
 operator|->
