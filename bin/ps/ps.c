@@ -3927,10 +3927,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ADD_PS_LISTRESET
-comment|/* 			 * This is how the standard expects lists to 			 * be handled. 			 */
+comment|/* 			 * Add this single element to the given list. 			 */
 name|inf
 operator|->
 name|addelem
@@ -3940,39 +3937,6 @@ argument_list|,
 name|elemcopy
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/*- 			 * This would add a simple non-standard-but-convienent 			 * feature. 			 * 			 * XXX - The first time I tried to add this check, 			 *	it increased the total size of `ps' by 3940 			 *	bytes on i386!  That's 12% of the entire 			 *	program!  The `ps.o' file grew by only about 			 *	40 bytes, but the final (stripped) executable 			 *	in /bin/ps grew by 12%.  I have not had time 			 *	to investigate, so skip the feature for now. 			 */
-comment|/* 			 * We now have a single element.  Add it to the 			 * list, unless the element is ":".  In that case, 			 * reset the list so previous entries are ignored. 			 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|elemcopy
-argument_list|,
-literal|":"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|inf
-operator|->
-name|count
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|inf
-operator|->
-name|addelem
-argument_list|(
-name|inf
-argument_list|,
-name|elemcopy
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
