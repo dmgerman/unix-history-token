@@ -182,28 +182,28 @@ begin_define
 define|#
 directive|define
 name|PASSWORD_PROMPT
-value|"Password: "
+value|"Password:"
 end_define
 
 begin_define
 define|#
 directive|define
 name|PASSWORD_PROMPT_EXPIRED
-value|"\nPassword expired\nOld Password: "
+value|"\nPassword expired\nOld Password:"
 end_define
 
 begin_define
 define|#
 directive|define
 name|NEW_PASSWORD_PROMPT_1
-value|"New Password: "
+value|"New Password:"
 end_define
 
 begin_define
 define|#
 directive|define
 name|NEW_PASSWORD_PROMPT_2
-value|"New Password (again): "
+value|"New Password (again):"
 end_define
 
 begin_define
