@@ -430,7 +430,7 @@ name|rcioctl
 block|,
 name|rcstop
 block|,
-name|nxreset
+name|noreset
 block|,
 name|rcdevtotty
 block|,
