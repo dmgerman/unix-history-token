@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: touch.c,v 1.1.1.1.8.2 1997/12/23 07:18:29 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2859,7 +2859,7 @@ name|o_touchedfile
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -3094,7 +3094,7 @@ name|tmpfile
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -3292,7 +3292,10 @@ end_function
 begin_function
 name|void
 name|onintr
-parameter_list|()
+parameter_list|(
+name|int
+name|unused
+parameter_list|)
 block|{
 switch|switch
 condition|(
