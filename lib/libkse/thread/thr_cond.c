@@ -46,16 +46,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|THR_IN_CONDQ
-parameter_list|(
-name|thr
-parameter_list|)
-value|(((thr)->sflags& THR_FLAGS_IN_SYNCQ) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|THR_CONDQ_SET
 parameter_list|(
 name|thr
