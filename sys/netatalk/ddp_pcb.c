@@ -668,9 +668,9 @@ name|error
 operator|=
 name|ddp_output
 argument_list|(
-name|ddp
-argument_list|,
 name|m
+argument_list|,
+name|so
 argument_list|)
 expr_stmt|;
 name|m

@@ -252,18 +252,22 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ddpcb
-operator|*
-name|ddp
-operator|,
-expr|struct
 name|mbuf
 operator|*
 name|m
+operator|,
+expr|struct
+name|socket
+operator|*
+name|so
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*extern int	ddp_output	__P(( struct ddpcb *ddp, struct mbuf *m));*/
+end_comment
 
 begin_endif
 endif|#

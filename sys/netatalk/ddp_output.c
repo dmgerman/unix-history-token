@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -121,23 +127,34 @@ end_decl_stmt
 
 begin_function
 name|int
+comment|/*ddp_output( struct ddpcb *ddp, struct mbuf *m)*/
 name|ddp_output
 parameter_list|(
-name|struct
-name|ddpcb
-modifier|*
-name|ddp
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
 parameter_list|)
 block|{
 name|struct
 name|ddpehdr
 modifier|*
 name|deh
+decl_stmt|;
+name|struct
+name|ddpcb
+modifier|*
+name|ddp
+init|=
+name|sotoddpcb
+argument_list|(
+name|so
+argument_list|)
 decl_stmt|;
 name|M_PREPEND
 argument_list|(
