@@ -479,7 +479,7 @@ name|p
 parameter_list|)
 block|{
 asm|__asm __volatile(
-literal|".byte	0x0f, 0xa2;"
+literal|"cpuid;"
 literal|"movl	%%eax, (%2);"
 literal|"movl	%%ebx, 4(%2);"
 literal|"movl	%%ecx, 8(%2);"

@@ -1076,7 +1076,7 @@ block|{
 name|u_int64_t
 name|rv
 decl_stmt|;
-asm|__asm __volatile(".byte 0x0f, 0x32" : "=A" (rv) : "c" (msr));
+asm|__asm __volatile("rdmsr" : "=A" (rv) : "c" (msr));
 return|return
 operator|(
 name|rv
@@ -1098,7 +1098,7 @@ block|{
 name|u_int64_t
 name|rv
 decl_stmt|;
-asm|__asm __volatile(".byte 0x0f, 0x33" : "=A" (rv) : "c" (pmc));
+asm|__asm __volatile("rdpmc" : "=A" (rv) : "c" (pmc));
 return|return
 operator|(
 name|rv
@@ -1119,7 +1119,7 @@ block|{
 name|u_int64_t
 name|rv
 decl_stmt|;
-asm|__asm __volatile(".byte 0x0f, 0x31" : "=A" (rv));
+asm|__asm __volatile("rdtsc" : "=A" (rv));
 return|return
 operator|(
 name|rv
@@ -1168,7 +1168,7 @@ name|u_int64_t
 name|newval
 parameter_list|)
 block|{
-asm|__asm __volatile(".byte 0x0f, 0x30" : : "A" (newval), "c" (msr));
+asm|__asm __volatile("wrmsr" : : "A" (newval), "c" (msr));
 block|}
 end_function
 
