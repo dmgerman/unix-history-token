@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.8 (Berkeley) %G%"
+literal|"@(#)ac.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,24 +23,6 @@ end_endif
 begin_comment
 comment|/*  * ac [ -w wtmp ] [ -d ] [ -p ] [ people ]  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
 
 begin_include
 include|#
@@ -60,18 +42,36 @@ directive|include
 file|<sys/timeb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|NMAX
-value|sizeof(ibuf.ut_name)
+value|UT_NAMESIZE
 end_define
 
 begin_define
 define|#
 directive|define
 name|LMAX
-value|sizeof(ibuf.ut_line)
+value|UT_LINESIZE
 end_define
 
 begin_comment
@@ -222,7 +222,7 @@ name|wf
 decl_stmt|;
 name|wtmp
 operator|=
-literal|"/usr/adm/wtmp"
+name|_PATH_WTMP
 expr_stmt|;
 while|while
 condition|(
