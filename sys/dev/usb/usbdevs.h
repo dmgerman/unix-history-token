@@ -2537,6 +2537,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_GOHUBS
+value|0x0921
+end_define
+
+begin_comment
+comment|/* GoHubs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_BIOMETRIC
 value|0x0929
 end_define
@@ -3843,6 +3854,39 @@ begin_comment
 comment|/* F5U002 Parallel printer adapter */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BELKIN_USB2LAN
+value|0x0121
+end_define
+
+begin_comment
+comment|/* USB to LAN Converter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BELKIN_F5U103
+value|0x0103
+end_define
+
+begin_comment
+comment|/* F5U103 Serial adapter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BELKIN_F5U120
+value|0x1203
+end_define
+
+begin_comment
+comment|/* F5U120-PC Hub */
+end_comment
+
 begin_comment
 comment|/* Billionton products */
 end_comment
@@ -4819,6 +4863,21 @@ end_define
 
 begin_comment
 comment|/* XTNDAccess IrDA */
+end_comment
+
+begin_comment
+comment|/* GoHubs products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_GOHUBS_GOCOM232
+value|0x1001
+end_define
+
+begin_comment
+comment|/* GoCOM232 Serial converter */
 end_comment
 
 begin_comment
