@@ -2632,12 +2632,42 @@ operator|->
 name|if_noproto
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"vlan_input: tag %d, no interface\n"
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|VLAN_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* XXX extend below? */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"vlan_input: tag %d, parent %s\n"
+argument_list|,
+name|tag
+argument_list|,
+name|ifv
+operator|->
+name|ifv_p
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mtag
