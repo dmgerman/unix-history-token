@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * from hp300:	@(#)pmap.h	7.2 (Berkeley) 12/16/90  *  *	@(#)pmap.h	1.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  * from hp300:	@(#)pmap.h	7.2 (Berkeley) 12/16/90  *  *	@(#)pmap.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -100,12 +100,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_MASK
+value|0x003ff000
+end_define
+
+begin_comment
+comment|/* page table address bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PD_SHIFT
 value|22
 end_define
 
 begin_comment
-comment|/* page directory address bits */
+comment|/* page directory address shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_SHIFT
+value|12
+end_define
+
+begin_comment
+comment|/* page table address shift */
 end_comment
 
 begin_struct
@@ -172,6 +194,27 @@ define|#
 directive|define
 name|PG_V
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_RO
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_RW
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_u
+value|0x00000004
 end_define
 
 begin_define
@@ -264,6 +307,24 @@ define|#
 directive|define
 name|PG_UW
 value|0x00000006
+end_define
+
+begin_comment
+comment|/* Garbage for current bastardized pager that assumes a hp300 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_NV
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_CI
+value|0
 end_define
 
 begin_comment
@@ -384,24 +445,88 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I386_MAX_PTSIZE
-value|I386_UPDES*NBPG
+name|UPTDI
+value|0x3f6
 end_define
 
 begin_comment
-comment|/* max size of UPT */
+comment|/* ptd entry for u./kernel&user stack */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|PTDPTDI
+value|0x3f7
+end_define
+
+begin_comment
+comment|/* ptd entry that points to ptd! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KPTDI_FIRST
+value|0x3f8
+end_define
+
+begin_comment
+comment|/* start of kernel virtual pde's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KPTDI_LAST
+value|0x3fA
+end_define
+
+begin_comment
+comment|/* last of kernel virtual pde's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I386_MAX_PTSIZE
+value|NPTEPG*NBPG
+end_define
+
+begin_comment
+comment|/* max size of PT */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|old
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|I386_MAX_KPTSIZE
-value|I386_KPDES*NBPG
+value|0x100000
 end_define
 
 begin_comment
 comment|/* max memory to allocate to KPT */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|I386_PTBASE
+value|0xfe200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I386_PTMAXSIZE
+value|0x01000000
+end_define
 
 begin_comment
 comment|/*  * Kernel virtual address to page table entry and to physical address.  */
@@ -440,6 +565,165 @@ define|\
 value|((kvtopte(va)->pg_pfnum<< PGSHIFT) | ((int)(va)& PGOFSET))
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|pt_entry_t
+modifier|*
+name|Sysmap
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pte
+name|PTmap
+index|[]
+decl_stmt|,
+name|APTmap
+index|[]
+decl_stmt|,
+name|Upte
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pde
+name|PTD
+index|[]
+decl_stmt|,
+name|APTD
+index|[]
+decl_stmt|,
+name|PTDpde
+decl_stmt|,
+name|APTDpde
+decl_stmt|,
+name|Upde
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|IdlePTD
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vtopte
+parameter_list|(
+name|va
+parameter_list|)
+value|(PTmap + i386_btop(va))
+end_define
+
+begin_define
+define|#
+directive|define
+name|kvtopte
+parameter_list|(
+name|va
+parameter_list|)
+value|vtopte(va)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptetov
+parameter_list|(
+name|pt
+parameter_list|)
+value|(i386_ptob(pt - PTmap))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|(i386_ptob(vtopte(va)->pg_pfnum) | ((int)(va)& PGOFSET))
+end_define
+
+begin_define
+define|#
+directive|define
+name|avtopte
+parameter_list|(
+name|va
+parameter_list|)
+value|(APTmap + i386_btop(va))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptetoav
+parameter_list|(
+name|pt
+parameter_list|)
+value|(i386_ptob(pt - APTmap))
+end_define
+
+begin_define
+define|#
+directive|define
+name|avtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|(i386_ptob(avtopte(va)->pg_pfnum) | ((int)(va)& PGOFSET))
+end_define
+
+begin_comment
+comment|/*  * macros to generate page directory/table indicies  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pdei
+parameter_list|(
+name|va
+parameter_list|)
+value|(((va)&PD_MASK)>>PD_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptei
+parameter_list|(
+name|va
+parameter_list|)
+value|(((va)&PT_MASK)>>PT_SHIFT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Pmap stuff  */
 end_comment
@@ -455,16 +739,12 @@ begin_struct
 struct|struct
 name|pmap
 block|{
-name|pt_entry_t
-modifier|*
-name|pm_ptab
-decl_stmt|;
-comment|/* KVA of page table */
 name|pd_entry_t
 modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
+comment|/* caddr_t			*pm_ptobj;	/* page table object */
 name|boolean_t
 name|pm_pdchanged
 decl_stmt|;
@@ -524,7 +804,9 @@ parameter_list|,
 name|pcbp
 parameter_list|)
 define|\
-value|if ((pmapp) != PMAP_NULL&& (pmapp)->pm_pdchanged) { \ 		(pcbp)->pcb_cr3 = \ 		    i386_btop(pmap_extract(kernel_pmap, (pmapp)->pm_pdir)); \ 		if ((pmapp) == u.u_procp->p_map->pmap) \ 			load_cr3((pcbp)->pcb_cr3); \ 		(pmapp)->pm_pdchanged = FALSE; \ 	}
+value|if ((pmapp) != PMAP_NULL
+comment|/*&& (pmapp)->pm_pdchanged */
+value|) {  \ 		(pcbp)->pcb_cr3 = \ 		    pmap_extract(kernel_pmap, (pmapp)->pm_pdir); \ 		if ((pmapp) == u.u_procp->p_map->pmap) \ 			load_cr3((pcbp)->pcb_cr3); \ 		(pmapp)->pm_pdchanged = FALSE; \ 	}
 end_define
 
 begin_define
@@ -654,14 +936,6 @@ name|pmap
 parameter_list|)
 value|((pmap)->pm_stats.resident_count)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|Sysmap
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
