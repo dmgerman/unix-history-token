@@ -5802,7 +5802,7 @@ argument_list|(
 name|mb_ntry
 argument_list|)
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|mb0
 argument_list|)
@@ -5866,7 +5866,7 @@ argument_list|(
 name|mb_ntry
 argument_list|)
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|mb0
 argument_list|)
@@ -5954,7 +5954,7 @@ argument_list|(
 name|mb_ntry
 argument_list|)
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|mb0
 argument_list|)
@@ -6121,7 +6121,7 @@ argument_list|(
 name|mb_ntry
 argument_list|)
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|mb0
 argument_list|)
