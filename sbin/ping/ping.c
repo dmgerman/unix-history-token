@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.24 1997/07/13 06:16:44 sef Exp $"
+literal|"$Id: ping.c,v 1.25 1997/07/18 17:52:05 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLOOD_BACKOFF
+value|20000
+end_define
+
+begin_comment
+comment|/* usecs to back off if F_FLOOD mode */
+end_comment
+
+begin_comment
+comment|/* runs out of buffer space */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXIPLEN
 value|60
 end_define
@@ -255,21 +270,6 @@ end_define
 
 begin_comment
 comment|/* number of record route slots */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLOOD_BACKOFF
-value|20000
-end_define
-
-begin_comment
-comment|/* usecs to back off if flooding */
-end_comment
-
-begin_comment
-comment|/* reports we are out of buffer space */
 end_comment
 
 begin_define
@@ -609,18 +609,6 @@ begin_comment
 comment|/* interval between packets */
 end_comment
 
-begin_decl_stmt
-name|int
-name|finish_up
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* We've been told to finish up */
-end_comment
-
 begin_comment
 comment|/* timing */
 end_comment
@@ -684,12 +672,24 @@ comment|/* sum of all times squared, for std. dev. */
 end_comment
 
 begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|finish_up
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* nonzero if we've been told to finish up */
+end_comment
+
+begin_decl_stmt
 name|int
 name|reset_kerninfo
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
 name|sig_atomic_t
 name|siginfo_p
 decl_stmt|;
@@ -743,22 +743,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|stopit
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|void
 name|finish
 argument_list|(
-name|int
+name|void
 argument_list|)
 name|__dead2
 decl_stmt|;
@@ -843,6 +833,16 @@ begin_function_decl
 specifier|static
 name|void
 name|status
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|stopit
 parameter_list|(
 name|int
 parameter_list|)
@@ -2355,9 +2355,8 @@ expr_stmt|;
 comment|/* start things going */
 while|while
 condition|(
+operator|!
 name|finish_up
-operator|==
-literal|0
 condition|)
 block|{
 name|struct
@@ -2518,9 +2517,7 @@ condition|)
 break|break;
 block|}
 name|finish
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 name|exit
@@ -2533,16 +2530,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stopit --  *   * set the global bit that cause everything to quit..  * do rNOT quit and exit from the signal handler!  */
+comment|/*  * stopit --  *	Set the global bit that causes the main loop to quit.  * Do NOT call finish() from here, since finish() does far too much  * to be called from a signal handler.  */
 end_comment
 
 begin_function
 name|void
 name|stopit
 parameter_list|(
-name|int
-name|ignored
+name|sig
 parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|finish_up
 operator|=
@@ -2682,7 +2681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in host  * byte-order, to compute the round-trip time.  */
+comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in host  * byte-order, to compute the round-trip time.  *  * bug --  *	this does far too much to be called from a signal handler.  */
 end_comment
 
 begin_function
@@ -2852,17 +2851,13 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|options
 operator|&
 name|F_FLOOD
-operator|)
 operator|&&
-operator|(
 name|errno
 operator|==
 name|ENOBUFS
-operator|)
 condition|)
 block|{
 name|usleep
@@ -2894,12 +2889,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|ntransmitted
 operator|++
 expr_stmt|;
 comment|/* only count those that made it out */
-block|}
 if|if
 condition|(
 operator|!
@@ -3006,8 +2999,6 @@ name|tp
 decl_stmt|;
 name|double
 name|triptime
-init|=
-literal|0.0
 decl_stmt|;
 name|int
 name|hlen
@@ -3118,6 +3109,10 @@ return|return;
 comment|/* 'Twas not our ECHO */
 operator|++
 name|nreceived
+expr_stmt|;
+name|triptime
+operator|=
+literal|0.0
 expr_stmt|;
 if|if
 condition|(
@@ -4445,10 +4440,7 @@ begin_function
 specifier|static
 name|void
 name|finish
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|termios
