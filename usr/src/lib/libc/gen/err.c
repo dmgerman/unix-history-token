@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.1 (Berkeley) %G%"
+literal|"@(#)err.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,6 +228,13 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -247,7 +254,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|": %s\n"
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -377,6 +395,12 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -514,6 +538,13 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -533,7 +564,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|": %s\n"
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -644,6 +686,12 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fmt
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
