@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machAsmDefs.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machAsmDefs.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,11 +29,19 @@ begin_comment
 comment|/*  * Define -pg profile entry code.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GPROF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|PROF
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -56,7 +64,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|PROF
 end_endif
 
 begin_comment
