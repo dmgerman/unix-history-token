@@ -6640,6 +6640,15 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|Dir_Concat
+argument_list|(
+name|suffNull
+operator|->
+name|searchPath
+argument_list|,
+name|dirSearchPath
+argument_list|)
+expr_stmt|;
 name|suffNull
 operator|->
 name|children
