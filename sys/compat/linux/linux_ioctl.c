@@ -565,6 +565,7 @@ block|{
 case|case
 name|LINUX_BLKGETSIZE
 case|:
+comment|/* XXX: wrong, should use DIOCGMEDIASIZE/DIOCGSECTORSIZE */
 name|error
 operator|=
 name|fo_ioctl
