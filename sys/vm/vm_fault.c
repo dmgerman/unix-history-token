@@ -2445,7 +2445,6 @@ decl_stmt|;
 name|vm_prot_t
 name|retry_prot
 decl_stmt|;
-comment|/* 		 * Since map entries may be pageable, make sure we can take a 		 * page fault on them. 		 */
 comment|/* 		 * Unlock vnode before the lookup to avoid deadlock.   E.G. 		 * avoid a deadlock between the inode and exec_map that can 		 * occur due to locks being obtained in different orders. 		 */
 if|if
 condition|(
@@ -2788,10 +2787,11 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|unlock_things
+name|VM_OBJECT_UNLOCK
 argument_list|(
-operator|&
 name|fs
+operator|.
+name|object
 argument_list|)
 expr_stmt|;
 name|pmap_enter
@@ -2848,10 +2848,11 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|VM_OBJECT_LOCK
 argument_list|(
-operator|&
-name|Giant
+name|fs
+operator|.
+name|object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -2916,6 +2917,13 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Unlock everything, and return 	 */
+name|unlock_and_deallocate
+argument_list|(
+operator|&
+name|fs
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|curproc
@@ -2967,14 +2975,6 @@ block|}
 name|PROC_UNLOCK
 argument_list|(
 name|curproc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Unlock everything, and return 	 */
-name|vm_object_deallocate
-argument_list|(
-name|fs
-operator|.
-name|first_object
 argument_list|)
 expr_stmt|;
 return|return
