@@ -20,6 +20,24 @@ comment|/*  * Definitions related to sockets: types, address families, options. 
 end_comment
 
 begin_comment
+comment|/*  * Data types.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_char
+name|sa_family_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Types  */
 end_comment
 
