@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.4
+literal|3.5
 operator|%
 name|G
 operator|%
@@ -511,31 +511,14 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  See if this message has timed out 	*/
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|EF_TIMEOUT
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-operator|&&
-name|queueit
-condition|)
-name|timeout
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
 comment|/* 	**  Arrange to send error messages if there are fatal errors. 	*/
 if|if
 condition|(
 name|bitset
 argument_list|(
 name|EF_FATALERRS
+operator||
+name|EF_TIMEOUT
 argument_list|,
 name|e
 operator|->
