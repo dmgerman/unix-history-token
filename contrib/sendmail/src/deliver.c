@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.56 2000/12/19 01:16:12 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.66 2001/02/25 23:30:35 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4435,7 +4435,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* running SMTP */
+comment|/* running LMTP or SMTP */
 if|#
 directive|if
 name|SMTP
@@ -4463,6 +4463,43 @@ return|;
 endif|#
 directive|endif
 comment|/* SMTP */
+block|}
+elseif|else
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_LMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+comment|/* not running LMTP */
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Warning: mailer %s: LMTP flag (F=z) turned off"
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+name|clrbitn
+argument_list|(
+name|M_LMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	**  At this point *mvp points to the argument with $u.  We 	**  run through our address list and append all the addresses 	**  we can.  If we run out of space, do not fret!  We can 	**  always send another copy later. 	*/
 if|#
@@ -4874,9 +4911,10 @@ block|}
 if|#
 directive|if
 name|NAMED_BIND
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -5979,9 +6017,10 @@ expr_stmt|;
 if|#
 directive|if
 name|NAMED_BIND
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -9586,8 +9625,8 @@ block|{
 name|int
 name|olderrors
 decl_stmt|;
-name|bool
-name|hasdot
+name|int
+name|dotpos
 decl_stmt|;
 name|bool
 name|usetls
@@ -9618,6 +9657,10 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_TLS_CLT1 */
+name|char
+modifier|*
+name|srvname
+decl_stmt|;
 specifier|extern
 name|SOCKADDR
 name|CurHostAddr
@@ -9695,36 +9738,73 @@ block|}
 endif|#
 directive|endif
 comment|/* _FFR_TLS_CLT1 */
-name|hasdot
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_host
+operator|!=
+name|NULL
+condition|)
+block|{
+name|srvname
 operator|=
-name|CurHostName
-index|[
+name|mci
+operator|->
+name|mci_host
+expr_stmt|;
+name|dotpos
+operator|=
 name|strlen
 argument_list|(
-name|CurHostName
+name|srvname
 argument_list|)
 operator|-
 literal|1
-index|]
-operator|==
-literal|'.'
 expr_stmt|;
 if|if
 condition|(
-name|hasdot
+name|dotpos
+operator|>=
+literal|0
 condition|)
-name|CurHostName
+block|{
+if|if
+condition|(
+name|srvname
 index|[
-name|strlen
-argument_list|(
-name|CurHostName
-argument_list|)
-operator|-
-literal|1
+name|dotpos
+index|]
+operator|==
+literal|'.'
+condition|)
+name|srvname
+index|[
+name|dotpos
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+else|else
+name|dotpos
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|srvname
+operator|=
+literal|""
+expr_stmt|;
+name|dotpos
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|define
 argument_list|(
 name|macid
@@ -9736,7 +9816,7 @@ argument_list|)
 argument_list|,
 name|newstr
 argument_list|(
-name|CurHostName
+name|srvname
 argument_list|)
 argument_list|,
 name|e
@@ -9828,7 +9908,7 @@ name|rscheck
 argument_list|(
 literal|"try_tls"
 argument_list|,
-name|CurHostName
+name|srvname
 argument_list|,
 name|NULL
 argument_list|,
@@ -9865,17 +9945,16 @@ endif|#
 directive|endif
 comment|/* _FFR_TLS_O_T */
 block|}
-comment|/* undo change of CurHostName */
+comment|/* undo change of srvname */
 if|if
 condition|(
-name|hasdot
+name|dotpos
+operator|>=
+literal|0
 condition|)
-name|CurHostName
+name|srvname
 index|[
-name|strlen
-argument_list|(
-name|CurHostName
-argument_list|)
+name|dotpos
 index|]
 operator|=
 literal|'.'
@@ -10783,11 +10862,12 @@ expr_stmt|;
 if|#
 directive|if
 name|NAMED_BIND
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 name|mci
 operator|->
 name|mci_herrno
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -10909,6 +10989,40 @@ argument_list|,
 name|pv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rcode
+operator|==
+name|EX_TEMPFAIL
+operator|&&
+name|SmtpError
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* 			**  Need an e_message for mailq display. 			**  We set SmtpError as 			*/
+name|snprintf
+argument_list|(
+name|SmtpError
+argument_list|,
+sizeof|sizeof
+name|SmtpError
+argument_list|,
+literal|"%s mailer (%s) exited with EX_TEMPFAIL"
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|,
+name|m
+operator|->
+name|m_mailer
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 if|#
@@ -13861,9 +13975,10 @@ expr_stmt|;
 if|#
 directive|if
 name|NAMED_BIND
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -21728,6 +21843,11 @@ modifier|*
 name|side
 decl_stmt|;
 block|{
+name|int
+name|ret
+init|=
+name|EX_OK
+decl_stmt|;
 if|if
 condition|(
 name|ssl
@@ -21771,9 +21891,10 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 name|EX_SOFTWARE
-return|;
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -21800,9 +21921,10 @@ argument_list|,
 name|side
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 name|EX_SOFTWARE
-return|;
+expr_stmt|;
 block|}
 name|SSL_free
 argument_list|(
@@ -21815,7 +21937,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|EX_OK
+name|ret
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: listener.c,v 8.38.2.1.2.18 2000/12/29 19:44:28 gshapiro Exp $"
+literal|"@(#)$Id: listener.c,v 8.38.2.1.2.21 2001/02/14 02:20:40 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MI_MILTEROPEN -- setup socket to listen on ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		socksize -- socksize of created socket ** **	Returns: **		socket upon success, error code otherwise. */
+comment|/* **  MI_MILTEROPEN -- setup socket to listen on ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		socksize -- socksize of created socket **		family -- family of created socket **		name -- name for logging ** **	Returns: **		socket upon success, error code otherwise. */
 end_comment
 
 begin_function
@@ -85,6 +85,8 @@ name|backlog
 parameter_list|,
 name|socksize
 parameter_list|,
+name|family
+parameter_list|,
 name|name
 parameter_list|)
 name|char
@@ -97,6 +99,10 @@ decl_stmt|;
 name|SOCKADDR_LEN_T
 modifier|*
 name|socksize
+decl_stmt|;
+name|int
+modifier|*
+name|family
 decl_stmt|;
 name|char
 modifier|*
@@ -1477,6 +1483,15 @@ return|return
 name|INVALID_SOCKET
 return|;
 block|}
+operator|*
+name|family
+operator|=
+name|addr
+operator|.
+name|sa
+operator|.
+name|sa_family
+expr_stmt|;
 return|return
 name|sock
 return|;
@@ -1592,6 +1607,55 @@ begin_comment
 comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		smfi -- filter structure to use **		timeout -- timeout for reads/writes ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|BROKEN_PTHREAD_SLEEP
+end_if
+
+begin_comment
+comment|/* **  Solaris 2.6, perhaps others, gets an internal threads library panic **  when sleep() is used: ** **  thread_create() failed, returned 11 (EINVAL) **  co_enable, thr_create() returned error = 24 **  libthread panic: co_enable failed (PID: 17793 LWP 1) **  stacktrace: **	ef526b10 **	ef52646c **	ef534cbc **	156a4 **	14644 **	1413c **	135e0 **	0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MI_SLEEP
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|{									\ 	int rs = 0;							\ 	struct timeval st;						\ 									\ 	st.tv_sec = (s);						\ 	st.tv_usec = 0;							\ 	if (st.tv_sec> 0)						\ 		rs = select(0, NULL, NULL, NULL,&st);			\ 	if (rs != 0)							\ 	{								\ 		smi_log(SMI_LOG_ERR,					\ 			"MI_SLEEP(): select() returned non-zero result %d, errno = %d",								\ 			rs, errno);					\ 	}								\ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* BROKEN_PTHREAD_SLEEP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MI_SLEEP
+parameter_list|(
+name|s
+parameter_list|)
+value|sleep((s))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BROKEN_PTHREAD_SLEEP */
+end_comment
+
 begin_function
 name|int
 name|mi_listener
@@ -1629,6 +1693,11 @@ init|=
 name|INVALID_SOCKET
 decl_stmt|;
 name|int
+name|family
+init|=
+name|AF_UNSPEC
+decl_stmt|;
+name|int
 name|sockopt
 init|=
 literal|1
@@ -1642,12 +1711,12 @@ init|=
 name|MI_SUCCESS
 decl_stmt|;
 name|int
-name|cnt_m
+name|mcnt
 init|=
 literal|0
 decl_stmt|;
 name|int
-name|cnt_t
+name|tcnt
 init|=
 literal|0
 decl_stmt|;
@@ -1722,6 +1791,9 @@ name|backlog
 argument_list|,
 operator|&
 name|socksize
+argument_list|,
+operator|&
+name|family
 argument_list|,
 name|smfi
 operator|->
@@ -1997,6 +2069,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|cliaddr
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|cliaddr
+argument_list|)
+expr_stmt|;
 name|connfd
 operator|=
 name|accept
@@ -2024,6 +2107,60 @@ operator|&
 name|L_Mutex
 argument_list|)
 expr_stmt|;
+comment|/* 		**  If remote side closes before 		**  accept() finishes, sockaddr 		**  might not be fully filled in. 		*/
+if|if
+condition|(
+name|ValidSocket
+argument_list|(
+name|connfd
+argument_list|)
+operator|&&
+operator|(
+name|clilen
+operator|==
+literal|0
+operator|||
+ifdef|#
+directive|ifdef
+name|BSD4_4_SOCKADDR
+name|cliaddr
+operator|.
+name|sa
+operator|.
+name|sa_len
+operator|==
+literal|0
+operator|||
+endif|#
+directive|endif
+comment|/* BSD4_4_SOCKADDR */
+name|cliaddr
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|!=
+name|family
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|connfd
+argument_list|)
+expr_stmt|;
+name|connfd
+operator|=
+name|INVALID_SOCKET
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2121,15 +2258,17 @@ operator|->
 name|xxfi_name
 argument_list|)
 expr_stmt|;
-name|sleep
-argument_list|(
+name|mcnt
 operator|++
-name|cnt_m
+expr_stmt|;
+name|MI_SLEEP
+argument_list|(
+name|mcnt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt_m
+name|mcnt
 operator|>=
 name|MAX_FAILS_M
 condition|)
@@ -2142,7 +2281,7 @@ break|break;
 block|}
 continue|continue;
 block|}
-name|cnt_m
+name|mcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -2322,10 +2461,12 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|sleep
-argument_list|(
+name|tcnt
 operator|++
-name|cnt_t
+expr_stmt|;
+name|MI_SLEEP
+argument_list|(
+name|tcnt
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2343,7 +2484,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt_t
+name|tcnt
 operator|>=
 name|MAX_FAILS_T
 condition|)
@@ -2356,7 +2497,7 @@ break|break;
 block|}
 continue|continue;
 block|}
-name|cnt_t
+name|tcnt
 operator|=
 literal|0
 expr_stmt|;

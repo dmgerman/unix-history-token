@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.38 2000/12/08 14:33:02 ca Exp $ (with queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.44 2001/02/22 00:55:35 ca Exp $ (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.38 2000/12/08 14:33:02 ca Exp $ (without queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.44 2001/02/22 00:55:35 ca Exp $ (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3865,6 +3865,12 @@ name|BlankEnvelope
 operator|.
 name|e_flags
 expr_stmt|;
+name|e
+operator|->
+name|e_parent
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* make sure we have disconnected from parent */
 if|if
 condition|(
@@ -6584,13 +6590,12 @@ name|w_lock
 return|;
 comment|/* job priority */
 return|return
+name|workcmpf0
+argument_list|(
 name|a
-operator|->
-name|w_pri
-operator|-
+argument_list|,
 name|b
-operator|->
-name|w_pri
+argument_list|)
 return|;
 block|}
 end_function
@@ -6718,13 +6723,12 @@ name|i
 return|;
 comment|/* job priority */
 return|return
+name|workcmpf0
+argument_list|(
 name|a
-operator|->
-name|w_pri
-operator|-
+argument_list|,
 name|b
-operator|->
-name|w_pri
+argument_list|)
 return|;
 block|}
 end_function

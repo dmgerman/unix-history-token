@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: map.c,v 8.414.4.34 2000/12/18 18:00:43 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.414.4.39 2001/02/22 18:56:22 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,6 +329,9 @@ name|extract_canonname
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -3146,14 +3149,16 @@ if|if
 condition|(
 name|got_tempfail
 condition|)
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 name|TRY_AGAIN
+argument_list|)
 expr_stmt|;
 else|else
-name|h_errno
-operator|=
+name|SM_SET_H_ERRNO
+argument_list|(
 name|HOST_NOT_FOUND
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3168,7 +3173,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  EXTRACT_CANONNAME -- extract canonical name from /etc/hosts entry ** **	Parameters: **		name -- the name against which to match. **		line -- the /etc/hosts line. **		cbuf -- the location to store the result. **		cbuflen -- the size of cbuf. ** **	Returns: **		TRUE -- if the line matched the desired name. **		FALSE -- otherwise. */
+comment|/* **  EXTRACT_CANONNAME -- extract canonical name from /etc/hosts entry ** **	Parameters: **		name -- the name against which to match. **		dot -- where to reinsert '.' to get FQDN **		line -- the /etc/hosts line. **		cbuf -- the location to store the result. **		cbuflen -- the size of cbuf. ** **	Returns: **		TRUE -- if the line matched the desired name. **		FALSE -- otherwise. */
 end_comment
 
 begin_function
@@ -3177,6 +3182,8 @@ name|bool
 name|extract_canonname
 parameter_list|(
 name|name
+parameter_list|,
+name|dot
 parameter_list|,
 name|line
 parameter_list|,
@@ -3187,6 +3194,10 @@ parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|char
+modifier|*
+name|dot
 decl_stmt|;
 name|char
 modifier|*
@@ -3338,6 +3349,41 @@ name|found
 operator|=
 name|TRUE
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dot
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* try looking for the FQDN as well */
+operator|*
+name|dot
+operator|=
+literal|'.'
+expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|name
+argument_list|,
+name|p
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|found
+operator|=
+name|TRUE
+expr_stmt|;
+operator|*
+name|dot
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -7303,6 +7349,22 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DB_OLD_VERSION
+if|if
+condition|(
+name|ret
+operator|==
+name|DB_OLD_VERSION
+condition|)
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DB_OLD_VERSION */
 operator|(
 name|void
 operator|)
@@ -10349,6 +10411,9 @@ return|return
 name|FALSE
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|shorten_hostname
 argument_list|(
 name|nbuf
@@ -10575,6 +10640,8 @@ name|extract_canonname
 argument_list|(
 name|nbuf
 argument_list|,
+name|NULL
+argument_list|,
 name|host_record
 argument_list|,
 name|cbuf
@@ -10597,7 +10664,7 @@ block|}
 if|if
 condition|(
 name|hbsize
-operator|<
+operator|<=
 name|strlen
 argument_list|(
 name|cbuf
@@ -11972,6 +12039,9 @@ sizeof|sizeof
 name|nbuf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|shorten_hostname
 argument_list|(
 name|nbuf
@@ -17075,7 +17145,7 @@ literal|'\0'
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"Deref must be [never|always|search|find] not %s in map %s"
+literal|"Deref must be [never|always|search|find] (not %s) in map %s"
 argument_list|,
 name|p
 argument_list|,
@@ -17240,7 +17310,7 @@ literal|'\0'
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"Scope must be [base|one|sub] not %s in map %s"
+literal|"Scope must be [base|one|sub] (not %s) in map %s"
 argument_list|,
 name|p
 argument_list|,
@@ -17585,7 +17655,7 @@ literal|'\0'
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"Method for binding must be [none|simple|krbv4] not %s in map %s"
+literal|"Method for binding must be [none|simple|krbv4] (not %s) in map %s"
 argument_list|,
 name|p
 argument_list|,
@@ -18603,6 +18673,10 @@ modifier|*
 name|spec
 decl_stmt|;
 block|{
+name|STAB
+modifier|*
+name|class
+decl_stmt|;
 name|MAP
 name|map
 decl_stmt|;
@@ -18642,6 +18716,41 @@ sizeof|sizeof
 name|map
 argument_list|)
 expr_stmt|;
+comment|/* look up the class */
+name|class
+operator|=
+name|stab
+argument_list|(
+literal|"ldap"
+argument_list|,
+name|ST_MAPCLASS
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|class
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"readcf: LDAPDefaultSpec: class ldap not available"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|map
+operator|.
+name|map_class
+operator|=
+operator|&
+name|class
+operator|->
+name|s_mapclass
+expr_stmt|;
 name|map
 operator|.
 name|map_db1
@@ -18650,6 +18759,12 @@ operator|(
 name|ARBPTR_T
 operator|)
 name|LDAPDefaults
+expr_stmt|;
+name|map
+operator|.
+name|map_mname
+operator|=
+literal|"O LDAPDefaultSpec"
 expr_stmt|;
 operator|(
 name|void
@@ -23184,6 +23299,9 @@ return|return
 name|FALSE
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|shorten_hostname
 argument_list|(
 name|nbuf
@@ -24835,6 +24953,10 @@ block|{
 name|bool
 name|found
 decl_stmt|;
+name|char
+modifier|*
+name|dot
+decl_stmt|;
 name|FILE
 modifier|*
 name|f
@@ -24913,6 +25035,8 @@ sizeof|sizeof
 name|nbuf
 argument_list|)
 expr_stmt|;
+name|dot
+operator|=
 name|shorten_hostname
 argument_list|(
 name|nbuf
@@ -25000,6 +25124,8 @@ operator|=
 name|extract_canonname
 argument_list|(
 name|nbuf
+argument_list|,
+name|dot
 argument_list|,
 name|linebuf
 argument_list|,
