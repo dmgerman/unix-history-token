@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.13 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -992,7 +992,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|__swflags
 parameter_list|(
