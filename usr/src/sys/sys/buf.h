@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -15,6 +15,7 @@ begin_struct
 struct|struct
 name|bufhd
 block|{
+specifier|volatile
 name|long
 name|b_flags
 decl_stmt|;
@@ -36,6 +37,7 @@ begin_struct
 struct|struct
 name|buf
 block|{
+specifier|volatile
 name|long
 name|b_flags
 decl_stmt|;
