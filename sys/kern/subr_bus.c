@@ -6229,6 +6229,7 @@ specifier|static
 name|int
 name|resource_new_name
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6414,6 +6415,7 @@ parameter_list|(
 name|int
 name|j
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -6639,10 +6641,12 @@ parameter_list|(
 name|int
 name|i
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|value
@@ -6739,6 +6743,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -6991,6 +6996,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7069,6 +7075,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7147,6 +7154,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7221,10 +7229,12 @@ parameter_list|(
 name|int
 name|i
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|value
@@ -7287,6 +7297,7 @@ parameter_list|(
 name|int
 name|i
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7401,6 +7412,7 @@ specifier|static
 name|int
 name|resource_create
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -7408,6 +7420,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7613,6 +7626,7 @@ begin_function
 name|int
 name|resource_set_int
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -7620,6 +7634,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7688,6 +7703,7 @@ begin_function
 name|int
 name|resource_set_long
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -7695,6 +7711,7 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
@@ -7763,6 +7780,7 @@ begin_function
 name|int
 name|resource_set_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -7770,10 +7788,12 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|resname
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|value
