@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)syslog.h	8.1 (Berkeley) 6/2/93  * $Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)syslog.h	8.1 (Berkeley) 6/2/93  * $Id: syslog.h,v 1.8.2.3 1997/10/06 18:22:05 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -213,63 +213,89 @@ name|prioritynames
 index|[]
 init|=
 block|{
+block|{
 literal|"alert"
 block|,
 name|LOG_ALERT
+block|,	}
 block|,
+block|{
 literal|"crit"
 block|,
 name|LOG_CRIT
+block|,	}
 block|,
+block|{
 literal|"debug"
 block|,
 name|LOG_DEBUG
+block|,	}
 block|,
+block|{
 literal|"emerg"
 block|,
 name|LOG_EMERG
+block|,	}
 block|,
+block|{
 literal|"err"
 block|,
 name|LOG_ERR
+block|,	}
 block|,
+block|{
 literal|"error"
 block|,
 name|LOG_ERR
+block|,	}
 block|,
 comment|/* DEPRECATED */
+block|{
 literal|"info"
 block|,
 name|LOG_INFO
+block|,	}
 block|,
+block|{
 literal|"none"
 block|,
 name|INTERNAL_NOPRI
+block|,	}
 block|,
 comment|/* INTERNAL */
+block|{
 literal|"notice"
 block|,
 name|LOG_NOTICE
+block|,	}
 block|,
+block|{
 literal|"panic"
 block|,
 name|LOG_EMERG
+block|,	}
 block|,
 comment|/* DEPRECATED */
+block|{
 literal|"warn"
 block|,
 name|LOG_WARNING
+block|,	}
 block|,
 comment|/* DEPRECATED */
+block|{
 literal|"warning"
 block|,
 name|LOG_WARNING
+block|,	}
 block|,
+block|{
 name|NULL
 block|,
 operator|-
 literal|1
-block|, }
+block|,		}
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +429,18 @@ begin_comment
 comment|/* security/authorization messages (private) */
 end_comment
 
+begin_comment
+comment|/* Facility #10 clashes in DEC UNIX, where */
+end_comment
+
+begin_comment
+comment|/* it's defined as LOG_MEGASAFE for AdvFS  */
+end_comment
+
+begin_comment
+comment|/* event logging.                          */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -412,6 +450,17 @@ end_define
 
 begin_comment
 comment|/* ftp daemon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_NTP
+value|(12<<3)
+end_define
+
+begin_comment
+comment|/* NTP subsystem */
 end_comment
 
 begin_comment
@@ -554,101 +603,153 @@ name|facilitynames
 index|[]
 init|=
 block|{
+block|{
 literal|"auth"
 block|,
 name|LOG_AUTH
+block|,	}
 block|,
+block|{
 literal|"authpriv"
 block|,
 name|LOG_AUTHPRIV
+block|,	}
 block|,
+block|{
 literal|"cron"
 block|,
 name|LOG_CRON
+block|,	}
 block|,
+block|{
 literal|"daemon"
 block|,
 name|LOG_DAEMON
+block|,	}
 block|,
+block|{
 literal|"ftp"
 block|,
 name|LOG_FTP
+block|,	}
 block|,
+block|{
 literal|"kern"
 block|,
 name|LOG_KERN
+block|,	}
 block|,
+block|{
 literal|"lpr"
 block|,
 name|LOG_LPR
+block|,	}
 block|,
+block|{
 literal|"mail"
 block|,
 name|LOG_MAIL
+block|,	}
 block|,
+block|{
 literal|"mark"
 block|,
 name|INTERNAL_MARK
+block|,	}
 block|,
 comment|/* INTERNAL */
+block|{
 literal|"news"
 block|,
 name|LOG_NEWS
+block|,	}
 block|,
+block|{
+literal|"ntp"
+block|,
+name|LOG_NTP
+block|,	}
+block|,
+block|{
 literal|"security"
 block|,
 name|LOG_AUTH
+block|,	}
 block|,
 comment|/* DEPRECATED */
+block|{
 literal|"syslog"
 block|,
 name|LOG_SYSLOG
+block|,	}
 block|,
+block|{
 literal|"user"
 block|,
 name|LOG_USER
+block|,	}
 block|,
+block|{
 literal|"uucp"
 block|,
 name|LOG_UUCP
+block|,	}
 block|,
+block|{
 literal|"local0"
 block|,
 name|LOG_LOCAL0
+block|,	}
 block|,
+block|{
 literal|"local1"
 block|,
 name|LOG_LOCAL1
+block|,	}
 block|,
+block|{
 literal|"local2"
 block|,
 name|LOG_LOCAL2
+block|,	}
 block|,
+block|{
 literal|"local3"
 block|,
 name|LOG_LOCAL3
+block|,	}
 block|,
+block|{
 literal|"local4"
 block|,
 name|LOG_LOCAL4
+block|,	}
 block|,
+block|{
 literal|"local5"
 block|,
 name|LOG_LOCAL5
+block|,	}
 block|,
+block|{
 literal|"local6"
 block|,
 name|LOG_LOCAL6
+block|,	}
 block|,
+block|{
 literal|"local7"
 block|,
 name|LOG_LOCAL7
+block|,	}
 block|,
+block|{
 name|NULL
 block|,
 operator|-
 literal|1
-block|, }
+block|,		}
+block|}
 decl_stmt|;
 end_decl_stmt
 
