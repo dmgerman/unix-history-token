@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)ccitt_proto.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)ccitt_proto.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -64,11 +64,15 @@ directive|ifdef
 name|LLC
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|llc_output
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
 name|llc_ctlinput
 argument_list|()
 decl_stmt|,
@@ -91,11 +95,15 @@ directive|ifdef
 name|HDLC
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|hd_output
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
 name|hd_ctlinput
 argument_list|()
 decl_stmt|,
@@ -117,19 +125,19 @@ name|int
 name|pk_usrreq
 argument_list|()
 decl_stmt|,
-name|pk_timer
-argument_list|()
-decl_stmt|,
-name|pk_init
-argument_list|()
-decl_stmt|,
 name|pk_ctloutput
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+name|pk_timer
+argument_list|()
+decl_stmt|,
+name|pk_init
+argument_list|()
+decl_stmt|,
 name|pk_input
 argument_list|()
 decl_stmt|,

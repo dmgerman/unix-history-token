@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)llc_subr.c	7.2 (Berkeley) %G%  */
+comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)llc_subr.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -902,9 +902,19 @@ name|rtrequest
 argument_list|(
 name|RTM_ADD
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sap_saddr
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sap_sgate
 argument_list|,
@@ -1120,6 +1130,11 @@ name|sirt
 operator|=
 name|rtalloc1
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|si_addr
 argument_list|,

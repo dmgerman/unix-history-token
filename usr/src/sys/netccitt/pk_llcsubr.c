@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_llcsubr.c	7.2 (Berkeley) %G%  */
+comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_llcsubr.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -157,6 +157,16 @@ parameter_list|(
 name|rt
 parameter_list|)
 value|((struct x25_ifaddr *)((rt)->rt_ifa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SA
+parameter_list|(
+name|s
+parameter_list|)
+value|((struct sockaddr *)s)
 end_define
 
 begin_function
@@ -678,7 +688,10 @@ name|nprt
 operator|=
 name|rtalloc1
 argument_list|(
+name|SA
+argument_list|(
 name|key
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -758,12 +771,21 @@ name|rtrequest
 argument_list|(
 name|RTM_ADD
 argument_list|,
+name|SA
+argument_list|(
 name|key
+argument_list|)
 argument_list|,
+name|SA
+argument_list|(
 name|value
+argument_list|)
 argument_list|,
+name|SA
+argument_list|(
 operator|&
 name|npdl_netmask
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -886,6 +908,11 @@ name|rt
 operator|=
 name|rtalloc1
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sdl
 argument_list|,
 literal|0
