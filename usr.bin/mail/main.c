@@ -222,7 +222,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"INT:b:c:dfins:u:v"
+literal|"EINT:b:c:dfins:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -448,13 +448,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'E'
+case|:
+comment|/* 			 * Don't send empty files. 			 */
+name|assign
+argument_list|(
+literal|"dontsendempty"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-iInv] [-s subject] [-c cc-addr] [-b bcc-addr] to-addr ...\n\        %*s [- sendmail-options ...]\n\        %s [-iInNv] -f [name]\n\        %s [-iInNv] [-u user]\n"
+literal|"\ Usage: %s [-EiInv] [-s subject] [-c cc-addr] [-b bcc-addr] to-addr ...\n\        %*s [- sendmail-options ...]\n\        %s [-EiInNv] -f [name]\n\        %s [-EiInNv] [-u user]\n"
 argument_list|,
 name|__progname
 argument_list|,
