@@ -267,12 +267,23 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_SUSPEND_VTYSWITCH
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|sc_cur_scr
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
