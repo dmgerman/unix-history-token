@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.12 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.13 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.12 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.13 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,6 +474,45 @@ sizeof|sizeof
 name|on
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SO_RCVBUF
+if|if
+condition|(
+name|TcpRcvBufferSize
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|DaemonSocket
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|TcpRcvBufferSize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|TcpRcvBufferSize
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"getrequests: setsockopt(SO_RCVBUF)"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|DaemonAddr
@@ -1339,45 +1378,6 @@ condition|)
 name|syserr
 argument_list|(
 literal|"makeconnection: setsockopt(SO_SNDBUF)"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SO_RCVBUF
-if|if
-condition|(
-name|TcpRcvBufferSize
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|setsockopt
-argument_list|(
-name|s
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_RCVBUF
-argument_list|,
-operator|&
-name|TcpRcvBufferSize
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|TcpRcvBufferSize
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syserr
-argument_list|(
-literal|"makeconnection: setsockopt(SO_RCVBUF)"
 argument_list|)
 expr_stmt|;
 block|}
