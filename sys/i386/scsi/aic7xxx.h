@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.25 1996/04/20 21:29:27 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.26 1996/04/28 19:21:20 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -182,11 +182,16 @@ init|=
 literal|0x04
 block|,
 comment|/* Enable SCB paging */
+name|AHC_CHANNEL_B_PRIMARY
+init|=
+literal|0x08
+block|,
+comment|/* 					 * On twin channel adapters, probe 					 * channel B first since it is the 					 * primary bus. 					 */
 name|AHC_USEDEFAULTS
 init|=
 literal|0x10
 block|,
-comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default chip and 					 * target settings. 					 */
+comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default target 					 * settings. 					 */
 name|AHC_CHNLB
 init|=
 literal|0x20
@@ -197,8 +202,64 @@ name|ahc_flag
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|SCB_FREE
+init|=
+literal|0x000
+block|,
+name|SCB_ACTIVE
+init|=
+literal|0x001
+block|,
+name|SCB_ABORTED
+init|=
+literal|0x002
+block|,
+name|SCB_DEVICE_RESET
+init|=
+literal|0x004
+block|,
+name|SCB_IMMED
+init|=
+literal|0x008
+block|,
+name|SCB_SENSE
+init|=
+literal|0x010
+block|,
+name|SCB_TIMEDOUT
+init|=
+literal|0x020
+block|,
+name|SCB_QUEUED_FOR_DONE
+init|=
+literal|0x040
+block|,
+name|SCB_PAGED_OUT
+init|=
+literal|0x080
+block|,
+name|SCB_WAITINGQ
+init|=
+literal|0x100
+block|,
+name|SCB_ASSIGNEDQ
+init|=
+literal|0x200
+block|,
+name|SCB_SENTORDEREDTAG
+init|=
+literal|0x400
+block|}
+name|scb_flag
+typedef|;
+end_typedef
+
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure need to be transfered to the card during  * normal operation.  The fields starting at byte 32 are used for kernel level  * bookkeeping.    */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 28 bytes of the structure need to be transfered to the card during  * normal operation.  The fields starting at byte 28 are used for kernel level  * bookkeeping.    */
 end_comment
 
 begin_struct
@@ -288,57 +349,9 @@ modifier|*
 name|xs
 decl_stmt|;
 comment|/* the scsi_xfer for this cmd */
-name|int
+name|scb_flag
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|SCB_FREE
-value|0x000
-define|#
-directive|define
-name|SCB_ACTIVE
-value|0x001
-define|#
-directive|define
-name|SCB_ABORTED
-value|0x002
-define|#
-directive|define
-name|SCB_DEVICE_RESET
-value|0x004
-define|#
-directive|define
-name|SCB_IMMED
-value|0x008
-define|#
-directive|define
-name|SCB_SENSE
-value|0x010
-define|#
-directive|define
-name|SCB_TIMEDOUT
-value|0x020
-define|#
-directive|define
-name|SCB_QUEUED_FOR_DONE
-value|0x040
-define|#
-directive|define
-name|SCB_PAGED_OUT
-value|0x080
-define|#
-directive|define
-name|SCB_WAITINGQ
-value|0x100
-define|#
-directive|define
-name|SCB_ASSIGNEDQ
-value|0x200
-define|#
-directive|define
-name|SCB_SENTORDEREDTAG
-value|0x400
 name|u_char
 name|position
 decl_stmt|;
