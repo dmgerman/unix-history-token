@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)bad144.c	4.6 (Berkeley) 83/07/26"
+literal|"@(#)bad144.c	4.7 (Berkeley) 83/07/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -1274,13 +1274,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"formatting blk %d..."
-argument_list|,
-name|blk
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -1342,11 +1335,6 @@ condition|)
 name|Perror
 argument_list|(
 literal|"write"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Done..\n"
 argument_list|)
 expr_stmt|;
 block|}
