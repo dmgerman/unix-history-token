@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.44 1997/10/15 09:21:22 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.45 1997/10/15 10:04:43 phk Exp $  */
 end_comment
 
 begin_include
@@ -158,6 +158,244 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|spec_badop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_strategy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_strategy_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_print
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_print_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_lookup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lookup_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_open_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_ioctl_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_poll
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_poll_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_inactive
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_inactive_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_fsync
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_fsync_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_pathconf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_pathconf_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_advlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_advlock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|spec_getpages
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_getpages_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
@@ -203,7 +441,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_abortop
+name|spec_badop
 block|}
 block|,
 block|{
@@ -214,7 +452,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_access
+name|spec_ebadf
 block|}
 block|,
 block|{
@@ -236,7 +474,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_blkatoff
+name|spec_badop
 block|}
 block|,
 block|{
@@ -258,7 +496,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vn_bwrite
+name|nullop
 block|}
 block|,
 block|{
@@ -280,7 +518,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_create
+name|spec_badop
 block|}
 block|,
 block|{
@@ -346,7 +584,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_islocked
+name|vop_noislocked
 block|}
 block|,
 block|{
@@ -357,7 +595,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_lease_check
+name|nullop
 block|}
 block|,
 block|{
@@ -368,7 +606,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_link
+name|spec_badop
 block|}
 block|,
 block|{
@@ -379,7 +617,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_lock
+name|vop_nolock
 block|}
 block|,
 block|{
@@ -401,7 +639,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_mkdir
+name|spec_badop
 block|}
 block|,
 block|{
@@ -412,7 +650,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_mknod
+name|spec_badop
 block|}
 block|,
 block|{
@@ -423,7 +661,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_mmap
+name|spec_badop
 block|}
 block|,
 block|{
@@ -489,7 +727,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_readdir
+name|spec_badop
 block|}
 block|,
 block|{
@@ -500,7 +738,18 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_readlink
+name|spec_badop
+block|}
+block|,
+block|{
+operator|&
+name|vop_reallocblks_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|spec_badop
 block|}
 block|,
 block|{
@@ -511,7 +760,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_reclaim
+name|nullop
 block|}
 block|,
 block|{
@@ -522,7 +771,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_remove
+name|spec_badop
 block|}
 block|,
 block|{
@@ -533,7 +782,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_rename
+name|spec_badop
 block|}
 block|,
 block|{
@@ -544,7 +793,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_revoke
+name|vop_revoke
 block|}
 block|,
 block|{
@@ -555,7 +804,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_rmdir
+name|spec_badop
 block|}
 block|,
 block|{
@@ -566,7 +815,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_seek
+name|spec_badop
 block|}
 block|,
 block|{
@@ -577,7 +826,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_setattr
+name|spec_ebadf
 block|}
 block|,
 block|{
@@ -599,7 +848,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_symlink
+name|spec_badop
 block|}
 block|,
 block|{
@@ -610,7 +859,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_truncate
+name|nullop
 block|}
 block|,
 block|{
@@ -621,7 +870,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_unlock
+name|vop_nounlock
 block|}
 block|,
 block|{
@@ -632,7 +881,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_update
+name|nullop
 block|}
 block|,
 block|{
@@ -643,7 +892,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_valloc
+name|spec_badop
 block|}
 block|,
 block|{
@@ -654,7 +903,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_vfree
+name|spec_badop
 block|}
 block|,
 block|{
@@ -700,6 +949,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+name|int
+name|spec_vnoperate
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_generic_args
+comment|/* { 		struct vnodeop_desc *a_desc;<other random data follows, presumably> 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|VOCALL
+argument_list|(
+name|spec_vnodeop_p
+argument_list|,
+name|ap
+operator|->
+name|a_desc
+operator|->
+name|vdesc_offset
+argument_list|,
+name|ap
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -721,6 +1002,7 @@ comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_lookup
 parameter_list|(
@@ -757,6 +1039,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_open
 parameter_list|(
@@ -1195,6 +1478,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_read
 parameter_list|(
@@ -1721,6 +2005,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_write
 parameter_list|(
@@ -2203,6 +2488,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_ioctl
 parameter_list|(
@@ -2371,6 +2657,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_poll
 parameter_list|(
@@ -2454,6 +2741,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_fsync
 parameter_list|(
@@ -2679,6 +2967,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spec_inactive
 parameter_list|(
@@ -2717,6 +3006,7 @@ comment|/*  * Just call the device strategy routine  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_strategy
 parameter_list|(
@@ -2764,6 +3054,7 @@ comment|/*  * This is a noop, simply returning what one has been given.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_bmap
 parameter_list|(
@@ -2857,6 +3148,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_close
 parameter_list|(
@@ -3164,6 +3456,7 @@ comment|/*  * Print out the contents of a special device vnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_print
 parameter_list|(
@@ -3212,6 +3505,7 @@ comment|/*  * Return POSIX pathconf information applicable to special devices.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_pathconf
 parameter_list|(
@@ -3341,6 +3635,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_advlock
 parameter_list|(
@@ -3392,6 +3687,7 @@ comment|/*  * Special device bad operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spec_badop
 parameter_list|()
@@ -3433,6 +3729,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spec_getpages
 parameter_list|(

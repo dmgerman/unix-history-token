@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fifo_vnops.c	8.10 (Berkeley) 5/27/95  * $Id: fifo_vnops.c,v 1.29 1997/10/15 09:21:00 phk Exp $  */
+comment|/*  * Copyright (c) 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fifo_vnops.c	8.10 (Berkeley) 5/27/95  * $Id: fifo_vnops.c,v 1.30 1997/10/15 10:04:18 phk Exp $  */
 end_comment
 
 begin_include
@@ -131,12 +131,190 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|fifo_badop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|fifo_print
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|vop_print_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_lookup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lookup_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_open_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_ioctl_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_poll
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_poll_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_inactive
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_inactive_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_pathconf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_pathconf_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fifo_advlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_advlock_args
 operator|*
 operator|)
 argument_list|)
@@ -178,7 +356,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_abortop
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -189,7 +367,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_access
+name|fifo_ebadf
 block|}
 block|,
 block|{
@@ -211,7 +389,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_blkatoff
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -233,7 +411,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_bwrite
+name|nullop
 block|}
 block|,
 block|{
@@ -255,7 +433,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_create
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -266,7 +444,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_fsync
+name|nullop
 block|}
 block|,
 block|{
@@ -277,7 +455,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_getattr
+name|fifo_ebadf
 block|}
 block|,
 block|{
@@ -310,7 +488,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_islocked
+name|vop_noislocked
 block|}
 block|,
 block|{
@@ -321,7 +499,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_lease_check
+name|nullop
 block|}
 block|,
 block|{
@@ -332,7 +510,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_link
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -343,7 +521,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_lock
+name|vop_nolock
 block|}
 block|,
 block|{
@@ -365,7 +543,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_mkdir
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -376,7 +554,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_mknod
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -387,7 +565,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_mmap
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -453,7 +631,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_readdir
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -464,7 +642,18 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_readlink
+name|fifo_badop
+block|}
+block|,
+block|{
+operator|&
+name|vop_reallocblks_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -475,7 +664,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_reclaim
+name|nullop
 block|}
 block|,
 block|{
@@ -486,7 +675,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_remove
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -497,7 +686,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_rename
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -508,7 +697,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_revoke
+name|vop_revoke
 block|}
 block|,
 block|{
@@ -519,7 +708,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_rmdir
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -530,7 +719,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_seek
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -541,7 +730,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_setattr
+name|fifo_ebadf
 block|}
 block|,
 block|{
@@ -552,7 +741,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_strategy
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -563,7 +752,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_symlink
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -574,7 +763,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_truncate
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -585,7 +774,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_unlock
+name|vop_nounlock
 block|}
 block|,
 block|{
@@ -596,7 +785,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_update
+name|nullop
 block|}
 block|,
 block|{
@@ -607,7 +796,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_valloc
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -618,7 +807,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_vfree
+name|fifo_badop
 block|}
 block|,
 block|{
@@ -664,6 +853,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+name|int
+name|fifo_vnoperate
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_generic_args
+comment|/* { 		struct vnodeop_desc *a_desc;<other random data follows, presumably> 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|VOCALL
+argument_list|(
+name|fifo_vnodeop_p
+argument_list|,
+name|ap
+operator|->
+name|a_desc
+operator|->
+name|vdesc_offset
+argument_list|,
+name|ap
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
@@ -673,6 +894,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_lookup
 parameter_list|(
@@ -709,6 +931,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_open
 parameter_list|(
@@ -1299,6 +1522,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_read
 parameter_list|(
@@ -1509,6 +1733,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_write
 parameter_list|(
@@ -1669,6 +1894,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_ioctl
 parameter_list|(
@@ -1822,6 +2048,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_poll
 parameter_list|(
@@ -1968,6 +2195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fifo_inactive
 parameter_list|(
@@ -2006,6 +2234,7 @@ comment|/*  * This is a noop, simply returning what one has been given.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_bmap
 parameter_list|(
@@ -2099,6 +2328,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_close
 parameter_list|(
@@ -2352,6 +2582,7 @@ comment|/*  * Return POSIX pathconf information applicable to fifo's.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_pathconf
 parameter_list|(
@@ -2454,6 +2685,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_advlock
 parameter_list|(
@@ -2487,6 +2719,7 @@ comment|/*  * Fifo bad operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fifo_badop
 parameter_list|()
