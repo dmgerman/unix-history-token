@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.3 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3039,6 +3039,9 @@ operator|+
 literal|3
 operator|)
 operator|*
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|short
