@@ -295,7 +295,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Pretend the idle thread was on the run queue. */
+comment|/* Simulate runq_choose() having returned the idle thread */
 name|td
 operator|=
 name|PCPU_GET
@@ -309,7 +309,7 @@ name|td_kse
 operator|->
 name|ke_state
 operator|=
-name|KES_UNQUEUED
+name|KES_RUNNING
 expr_stmt|;
 name|CTR1
 argument_list|(
