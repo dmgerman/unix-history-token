@@ -193,6 +193,17 @@ begin_comment
 comment|/* size of extended local header, inc sig */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RAND_HEAD_LEN
+value|12
+end_define
+
+begin_comment
+comment|/* length of encryption random header */
+end_comment
+
 begin_comment
 comment|/* Globals */
 end_comment
@@ -461,6 +472,11 @@ name|EXTHDR
 index|]
 decl_stmt|;
 comment|/* extended local header */
+name|int
+name|err
+init|=
+name|OK
+decl_stmt|;
 name|ifd
 operator|=
 name|in
@@ -625,20 +641,6 @@ operator|)
 name|get_byte
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CRYPT
-if|if
-condition|(
-name|decrypt
-condition|)
-name|zdecode
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|put_ubyte
 argument_list|(
 name|c
@@ -776,26 +778,54 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|error
+name|fprintf
 argument_list|(
-literal|"invalid compressed data--crc error"
+name|stderr
+argument_list|,
+literal|"\n%s: %s: invalid compressed data--crc error\n"
+argument_list|,
+name|progname
+argument_list|,
+name|ifname
 argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|ERROR
 expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+operator|(
 name|orig_len
-operator|!=
+operator|-
 operator|(
 name|ulg
 operator|)
 name|bytes_out
+operator|)
+operator|&
+literal|0x0ffffffffL
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-name|error
+name|fprintf
 argument_list|(
-literal|"invalid compressed data--length error"
+name|stderr
+argument_list|,
+literal|"\n%s: %s: invalid compressed data--length error\n"
+argument_list|,
+name|progname
+argument_list|,
+name|ifname
 argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|ERROR
 expr_stmt|;
 block|}
 comment|/* Check if there are more entries in a pkzip file */
@@ -852,19 +882,10 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-name|exit_code
+name|err
 operator|=
 name|ERROR
 expr_stmt|;
-name|ext_header
-operator|=
-name|pkzip
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|ERROR
-return|;
 block|}
 block|}
 name|ext_header
@@ -874,8 +895,29 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* for next file */
+if|if
+condition|(
+name|err
+operator|==
+name|OK
+condition|)
 return|return
 name|OK
+return|;
+name|exit_code
+operator|=
+name|ERROR
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|test
+condition|)
+name|abort_gzip
+argument_list|()
+expr_stmt|;
+return|return
+name|err
 return|;
 block|}
 end_function
