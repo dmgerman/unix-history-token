@@ -928,6 +928,28 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"ARCHIVE"
 block|,
+literal|"VIPER 2525 25462"
+block|,
+literal|"-011"
+block|}
+block|,
+name|SA_QUIRK_NOCOMP
+operator||
+name|SA_QUIRK_1FM
+operator||
+name|SA_QUIRK_NODREAD
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"ARCHIVE"
+block|,
 literal|"VIPER 2525*"
 block|,
 literal|"*"
