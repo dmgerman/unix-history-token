@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * %G% (Berkeley) @(#)refresh.c	1.3  */
+comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * %G% (Berkeley) @(#)refresh.c	1.4  */
 end_comment
 
 begin_include
@@ -974,6 +974,8 @@ operator|==
 name|win
 operator|->
 name|_maxy
+operator|-
+literal|1
 condition|)
 if|if
 condition|(
