@@ -449,9 +449,6 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|__sparc_sigtramp_setup
-argument_list|()
-expr_stmt|;
 name|__sparc_utrap_setup
 argument_list|()
 expr_stmt|;
