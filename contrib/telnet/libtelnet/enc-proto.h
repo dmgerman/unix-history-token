@@ -484,6 +484,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DES_ENCRYPTION
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|krbdes_encrypt
@@ -890,6 +896,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DES_ENCRYPTION */
+end_comment
 
 begin_endif
 endif|#

@@ -1684,8 +1684,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUTHTYPE_SRA
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUTHTYPE_CNT
-value|5
+value|7
 end_define
 
 begin_define
@@ -1717,6 +1724,10 @@ block|,
 literal|"SPX"
 block|,
 literal|"MINK"
+block|,
+name|NULL
+block|,
+literal|"SRA"
 block|,
 literal|0
 block|}

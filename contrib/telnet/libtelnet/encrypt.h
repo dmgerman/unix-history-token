@@ -39,6 +39,12 @@ name|DIR_ENCRYPT
 value|2
 end_define
 
+begin_include
+include|#
+directive|include
+file|<des.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -59,20 +65,29 @@ name|BlockT
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|Block
-name|__
-decl_stmt|;
-block|}
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|typedef struct { Block __; } Schedule[16];
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|Schedule
-index|[
-literal|16
-index|]
-typedef|;
-end_typedef
+value|des_key_schedule
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

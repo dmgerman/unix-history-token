@@ -373,6 +373,11 @@ specifier|static
 name|long
 name|i_support_encrypt
 init|=
+literal|0
+ifdef|#
+directive|ifdef
+name|DES_ENCRYPTION
+operator||
 name|typemask
 argument_list|(
 name|ENCTYPE_DES_CFB64
@@ -382,6 +387,10 @@ name|typemask
 argument_list|(
 name|ENCTYPE_DES_OFB64
 argument_list|)
+endif|#
+directive|endif
+operator||
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +399,11 @@ specifier|static
 name|long
 name|i_support_decrypt
 init|=
+literal|0
+ifdef|#
+directive|ifdef
+name|DES_ENCRYPTION
+operator||
 name|typemask
 argument_list|(
 name|ENCTYPE_DES_CFB64
@@ -399,6 +413,10 @@ name|typemask
 argument_list|(
 name|ENCTYPE_DES_OFB64
 argument_list|)
+endif|#
+directive|endif
+operator||
+literal|0
 decl_stmt|;
 end_decl_stmt
 
