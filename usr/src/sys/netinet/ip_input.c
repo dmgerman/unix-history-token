@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.58	82/11/03	*/
+comment|/*	ip_input.c	1.59	82/12/14	*/
 end_comment
 
 begin_include
@@ -1093,6 +1093,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_FTABLE
 argument_list|)
 operator|)
 operator|==
@@ -3000,6 +3002,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if

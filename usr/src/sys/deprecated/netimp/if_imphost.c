@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.15	82/10/09	*/
+comment|/*	if_imphost.c	4.16	82/12/14	*/
 end_comment
 
 begin_include
@@ -347,6 +347,8 @@ operator|=
 name|m_getclr
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HTABLE
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.35	82/11/13	*/
+comment|/*	tcp_subr.c	4.36	82/12/14	*/
 end_comment
 
 begin_include
@@ -212,6 +212,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
@@ -499,6 +501,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
@@ -841,6 +845,8 @@ init|=
 name|m_getclr
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_PCB
 argument_list|)
 decl_stmt|;
 specifier|register

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.82	82/10/30	*/
+comment|/*	tcp_input.c	1.83	82/12/14	*/
 end_comment
 
 begin_include
@@ -566,6 +566,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -960,6 +962,8 @@ init|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_SONAME
 argument_list|)
 decl_stmt|;
 specifier|register

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.25	82/11/13	*/
+comment|/*	ip_icmp.c	4.26	82/12/14	*/
 end_comment
 
 begin_include
@@ -185,6 +185,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if

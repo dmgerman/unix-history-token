@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.14	82/11/13	*/
+comment|/*	raw_cb.c	4.15	82/12/14	*/
 end_comment
 
 begin_include
@@ -96,6 +96,8 @@ operator|=
 name|m_getclr
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_PCB
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.50	82/12/09	*/
+comment|/*	kern_proc.c	4.51	82/12/14	*/
 end_comment
 
 begin_include
@@ -3015,6 +3015,8 @@ init|=
 name|m_getclr
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_ZOMBIE
 argument_list|)
 decl_stmt|;
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.37	82/11/15	*/
+comment|/*	uipc_syscalls.c	4.38	82/12/14	*/
 end_comment
 
 begin_include
@@ -1078,6 +1078,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_SONAME
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2950,6 +2952,8 @@ operator|=
 name|m_getclr
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_SONAME
 argument_list|)
 expr_stmt|;
 name|u
@@ -3082,6 +3086,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_SONAME
 argument_list|)
 expr_stmt|;
 name|m
@@ -3241,6 +3247,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_SOOPTS
 argument_list|)
 expr_stmt|;
 name|m

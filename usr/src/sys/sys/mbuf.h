@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbuf.h	4.15	82/10/20	*/
+comment|/*	mbuf.h	4.16	82/12/14	*/
 end_comment
 
 begin_comment
@@ -153,9 +153,9 @@ name|m_len
 decl_stmt|;
 comment|/* amount of data in this mbuf */
 name|short
-name|m_free
+name|m_type
 decl_stmt|;
-comment|/* is mbuf free? (consistency check) */
+comment|/* mbuf type (0 == free) */
 name|u_char
 name|m_dat
 index|[
@@ -172,6 +172,142 @@ comment|/* link in higher-level mbuf list */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* mbuf types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_FREE
+value|0
+end_define
+
+begin_comment
+comment|/* should be on free list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_DATA
+value|1
+end_define
+
+begin_comment
+comment|/* dynamic (data) allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_HEADER
+value|2
+end_define
+
+begin_comment
+comment|/* packet header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_SOCKET
+value|3
+end_define
+
+begin_comment
+comment|/* socket structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_PCB
+value|4
+end_define
+
+begin_comment
+comment|/* protocol control block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_RTABLE
+value|5
+end_define
+
+begin_comment
+comment|/* routing tables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_HTABLE
+value|6
+end_define
+
+begin_comment
+comment|/* IMP host tables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ATABLE
+value|7
+end_define
+
+begin_comment
+comment|/* address resolution tables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_SONAME
+value|8
+end_define
+
+begin_comment
+comment|/* socket name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ZOMBIE
+value|9
+end_define
+
+begin_comment
+comment|/* zombie proc status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_SOOPTS
+value|10
+end_define
+
+begin_comment
+comment|/* socket options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_FTABLE
+value|11
+end_define
+
+begin_comment
+comment|/* fragment reassembly header */
+end_comment
 
 begin_comment
 comment|/* flags to m_get */
@@ -247,9 +383,11 @@ parameter_list|(
 name|m
 parameter_list|,
 name|i
+parameter_list|,
+name|t
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_free == 0) panic("mget"); (m)->m_free = 0; \ 		  mbstat.m_mbfree--; mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_type != MT_FREE) panic("mget"); (m)->m_type = t; \ 		  mbstat.m_mbfree--; mbstat.m_mtypes[t]++; \ 		  mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i, t); \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -275,7 +413,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_free) panic("mfree"); (m)->m_free = 1; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_mbfree++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; (m)->m_type = MT_FREE; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_mbfree++; \ 	  splx(ms); }
 end_define
 
 begin_comment
@@ -306,6 +444,13 @@ name|short
 name|m_drops
 decl_stmt|;
 comment|/* times failed to find space */
+name|short
+name|m_mtypes
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* type specific mbuf allocations */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.29	82/11/13	*/
+comment|/*	if_ec.c	4.30	82/12/14	*/
 end_comment
 
 begin_include
@@ -2735,6 +2735,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_DONTWAIT
+argument_list|,
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
@@ -3505,7 +3507,9 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_DONTWAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.40	82/10/21	*/
+comment|/*	uipc_mbuf.c	1.41	82/12/14	*/
 end_comment
 
 begin_include
@@ -336,9 +336,17 @@ literal|0
 expr_stmt|;
 name|m
 operator|->
-name|m_free
+name|m_type
 operator|=
-literal|0
+name|MT_DATA
+expr_stmt|;
+name|mbstat
+operator|.
+name|m_mtypes
+index|[
+name|MT_DATA
+index|]
+operator|++
 expr_stmt|;
 name|mbstat
 operator|.
@@ -461,9 +469,13 @@ modifier|*
 name|m_get
 parameter_list|(
 name|canwait
+parameter_list|,
+name|type
 parameter_list|)
 name|int
 name|canwait
+decl_stmt|,
+name|type
 decl_stmt|;
 block|{
 specifier|register
@@ -477,6 +489,8 @@ argument_list|(
 name|m
 argument_list|,
 name|canwait
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -494,9 +508,13 @@ modifier|*
 name|m_getclr
 parameter_list|(
 name|canwait
+parameter_list|,
+name|type
 parameter_list|)
 name|int
 name|canwait
+decl_stmt|,
+name|type
 decl_stmt|;
 block|{
 specifier|register
@@ -510,6 +528,8 @@ operator|=
 name|m_get
 argument_list|(
 name|canwait
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 if|if
@@ -588,9 +608,13 @@ name|mbuf
 modifier|*
 name|m_more
 parameter_list|(
+name|canwait
+parameter_list|,
 name|type
 parameter_list|)
 name|int
+name|canwait
+decl_stmt|,
 name|type
 decl_stmt|;
 block|{
@@ -623,11 +647,15 @@ directive|define
 name|m_more
 parameter_list|(
 name|x
+parameter_list|,
+name|y
 parameter_list|)
 value|(panic("m_more"), (struct mbuf *)0)
 name|MGET
 argument_list|(
 name|m
+argument_list|,
+name|canwait
 argument_list|,
 name|type
 argument_list|)
@@ -753,6 +781,9 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
 if|if
 condition|(
 name|len
@@ -778,6 +809,12 @@ name|panic
 argument_list|(
 literal|"m_copy"
 argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|m
+operator|->
+name|m_type
 expr_stmt|;
 while|while
 condition|(
@@ -859,7 +896,9 @@ name|MGET
 argument_list|(
 name|n
 argument_list|,
-literal|1
+name|M_WAIT
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1378,6 +1417,10 @@ argument_list|(
 name|m
 argument_list|,
 name|M_DONTWAIT
+argument_list|,
+name|n
+operator|->
+name|m_type
 argument_list|)
 expr_stmt|;
 if|if

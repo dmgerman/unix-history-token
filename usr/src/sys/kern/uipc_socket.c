@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.65	82/12/05	*/
+comment|/*	uipc_socket.c	4.66	82/12/14	*/
 end_comment
 
 begin_include
@@ -221,6 +221,8 @@ operator|=
 name|m_getclr
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_SOCKET
 argument_list|)
 expr_stmt|;
 if|if
@@ -1872,7 +1874,9 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-literal|1
+name|M_WAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -2131,6 +2135,8 @@ operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 name|error
