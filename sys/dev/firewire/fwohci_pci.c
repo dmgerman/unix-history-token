@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/firewire/firewirebusreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/firewire/firewirereg.h>
 end_include
 
