@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dcheck.c	1.7 (Berkeley) %G%"
+literal|"@(#)dcheck.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1026,13 +1026,15 @@ condition|(
 operator|(
 name|lbn
 operator|=
+name|lblkno
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|dirp
 operator|->
 name|loc
-operator|/
-name|sblock
-operator|.
-name|fs_bsize
+argument_list|)
 operator|)
 operator|==
 literal|0
@@ -1094,13 +1096,15 @@ name|dirp
 operator|->
 name|dbuf
 operator|+
+name|blkoff
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|dirp
 operator|->
 name|loc
-operator|%
-name|sblock
-operator|.
-name|fs_bsize
+argument_list|)
 operator|)
 expr_stmt|;
 name|dirp

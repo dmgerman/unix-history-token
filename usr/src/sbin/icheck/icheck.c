@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.18 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1946,6 +1946,9 @@ name|n
 operator|,
 name|cg
 expr_stmt|;
+name|int
+name|frags
+decl_stmt|;
 name|cg
 operator|=
 name|dtog
@@ -2040,6 +2043,16 @@ block|}
 block|}
 else|else
 block|{
+name|frags
+operator|=
+name|numfrags
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -2048,11 +2061,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|size
-operator|/
-name|sblock
-operator|.
-name|fs_fsize
+name|frags
 condition|;
 name|n
 operator|++
