@@ -1090,7 +1090,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: open(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|,
 name|pp
 operator|->
@@ -1180,7 +1184,11 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m"
+literal|"%s: chdir(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|,
 name|pp
 operator|->
@@ -1263,7 +1271,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: open(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -1299,7 +1307,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: fcntl(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -1360,7 +1368,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: write(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -1458,7 +1466,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: fchmod(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -1657,7 +1665,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: write(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -1775,7 +1783,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: fchmod(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -1913,7 +1921,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: ftruncate(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -2272,7 +2280,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: fopen(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -8700,7 +8708,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: execl(%s): %m"
 argument_list|,
 name|pp
 operator|->
@@ -9642,7 +9650,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s: %m"
+literal|"%s: open(%s): %m"
 argument_list|,
 name|pp
 operator|->
