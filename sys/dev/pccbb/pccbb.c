@@ -306,6 +306,13 @@ define|\
 value|PCIC_WRITE(SC,REG,(PCIC_READ(SC,REG) MASK) MASK2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCBB_START_MEM
+value|0x84000000
+end_define
+
 begin_struct
 struct|struct
 name|pccbb_sclist
@@ -2564,7 +2571,7 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-literal|0x10000000
+name|PCCBB_START_MEM
 argument_list|,
 operator|~
 literal|0
@@ -7120,11 +7127,11 @@ if|if
 condition|(
 name|start
 operator|<=
-literal|0x44000000
+name|PCCBB_START_MEM
 condition|)
 name|start
 operator|=
-literal|0x44000000
+name|PCCBB_START_MEM
 expr_stmt|;
 if|if
 condition|(
