@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.6	81/11/20	*/
+comment|/*	uipc_syscalls.c	4.7	81/11/20	*/
 end_comment
 
 begin_include
@@ -1991,9 +1991,44 @@ name|ENOTSOCK
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
 name|copyout
 argument_list|(
-argument|fp->f_socket->f_
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|fp
+operator|->
+name|f_socket
+operator|->
+name|so_addr
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|uap
+operator|->
+name|asa
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EFAULT
+expr_stmt|;
+return|return;
+block|}
+block|}
 end_block
 
 end_unit

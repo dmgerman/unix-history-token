@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.c 4.5 81/11/18 */
+comment|/*	ip_icmp.c	4.6	81/11/20	*/
 end_comment
 
 begin_include
@@ -790,7 +790,7 @@ init|=
 name|spl6
 argument_list|()
 decl_stmt|;
-name|long
+name|u_long
 name|t
 decl_stmt|;
 name|t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.8	81/08/31	*/
+comment|/*	subr_xxx.c	4.9	81/11/20	*/
 end_comment
 
 begin_include
@@ -736,6 +736,14 @@ directive|include
 file|"ct.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|NCT
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Pick up and return the next character from the user's  * write call at location u_base;  * update u_base, u_count, and u_offset.  Return -1  * when u_count is exhausted.  u_base is in the user's  * address space unless u_segflg is set.  */
 end_comment
@@ -850,6 +858,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Routine which sets a user error; placed in  * illegal entries in the bdevsw and cdevsw tables.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.43	81/11/18	*/
+comment|/*	conf.c	4.44	81/11/20	*/
 end_comment
 
 begin_include
@@ -2054,9 +2054,6 @@ name|ttselect
 argument_list|()
 decl_stmt|,
 name|seltrue
-argument_list|()
-decl_stmt|,
-name|selectfalse
 argument_list|()
 decl_stmt|;
 end_decl_stmt

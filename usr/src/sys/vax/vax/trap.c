@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.10	81/07/09	*/
+comment|/*	trap.c	4.11	81/11/20	*/
 end_comment
 
 begin_include
@@ -1066,19 +1066,6 @@ operator|=
 literal|100
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
-comment|/*  * Ignored system call  */
-end_comment
-
-begin_macro
-name|nullsys
-argument_list|()
-end_macro
-
-begin_block
-block|{  }
 end_block
 
 end_unit

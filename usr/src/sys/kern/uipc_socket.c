@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.7	81/11/20	*/
+comment|/*	uipc_socket.c	4.8	81/11/20	*/
 end_comment
 
 begin_include
@@ -324,6 +324,9 @@ name|so
 operator|->
 name|so_error
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -406,6 +409,9 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -1731,21 +1737,12 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-name|sleep
+name|sbwait
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
-argument_list|,
-name|PZERO
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 goto|goto

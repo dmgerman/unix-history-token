@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.45	81/11/14	*/
+comment|/*	machdep.c	4.46	81/11/20	*/
 end_comment
 
 begin_include
@@ -2248,6 +2248,20 @@ name|int
 name|devtype
 decl_stmt|;
 comment|/* r10 == major of root dev */
+ifdef|#
+directive|ifdef
+name|lint
+name|printf
+argument_list|(
+literal|"howto %d, devtype %d\n"
+argument_list|,
+name|howto
+argument_list|,
+name|devtype
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|howto
 operator|=
 name|arghowto
@@ -2395,20 +2409,6 @@ init|;
 condition|;
 control|)
 asm|asm("halt");
-ifdef|#
-directive|ifdef
-name|lint
-name|printf
-argument_list|(
-literal|"howto %d, devtype %d\n"
-argument_list|,
-name|howto
-argument_list|,
-name|devtype
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/*NOTREACHED*/
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.31 81/11/20 */
+comment|/* tcp_usrreq.c 1.32 81/11/20 */
 end_comment
 
 begin_include
@@ -659,6 +659,9 @@ condition|(
 name|error
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom

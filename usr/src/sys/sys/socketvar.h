@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* socketvar.h 4.7 81/11/20 */
+comment|/*	socketvar.h	4.8	81/11/20	*/
 end_comment
 
 begin_comment
@@ -86,7 +86,10 @@ directive|define
 name|SB_LOCK
 value|0x01
 comment|/* lock on data queue (so_rcv only) */
-value|#define	SB_WANT		0x02
+define|#
+directive|define
+name|SB_WANT
+value|0x02
 comment|/* someone is waiting to lock */
 define|#
 directive|define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.22	81/11/07	*/
+comment|/*	mba.c	4.23	81/11/20	*/
 end_comment
 
 begin_include
@@ -1485,39 +1485,22 @@ operator|)
 return|;
 end_return
 
-begin_comment
+begin_if
 unit|}
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
 comment|/*  * Init and interrupt enable a massbus adapter.  */
 end_comment
 
-begin_expr_stmt
-unit|mbainit
-operator|(
-name|mp
-operator|)
-expr|struct
-name|mba_regs
-operator|*
-name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|mp
-operator|->
-name|mba_cr
-operator|=
-name|MBCR_INIT
-expr_stmt|;
-name|mp
-operator|->
-name|mba_cr
-operator|=
-name|MBCR_IE
-expr_stmt|;
-block|}
-end_block
+begin_endif
+unit|mbainit(mp) 	struct mba_regs *mp; {  	mp->mba_cr = MBCR_INIT; 	mp->mba_cr = MBCR_IE; }
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

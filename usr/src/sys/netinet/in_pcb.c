@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_pcb.c 4.5 81/11/20 */
+comment|/* in_pcb.c 4.6 81/11/20 */
 end_comment
 
 begin_include
@@ -467,6 +467,9 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m

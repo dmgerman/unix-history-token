@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.14	81/11/18	*/
+comment|/*	Locore.c	4.15	81/11/20	*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"dz.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mba.h"
 end_include
 
 begin_include
@@ -319,6 +325,18 @@ operator|>
 literal|0
 name|dzdma
 argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
+name|mbintr
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
