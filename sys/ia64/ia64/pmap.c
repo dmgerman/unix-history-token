@@ -7974,7 +7974,7 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we need a new RID, get it now. Note that we need to 	 * remove our old mappings (if any) from the VHTP, so we will 	 * run on the old RID for a moment while we invalidate the old  	 * one. XXX maybe we should just clear out the VHTP when the 	 * RID generation rolls over. 	 */
+comment|/* 	 * If we need a new RID, get it now. Note that we need to 	 * remove our old mappings (if any) from the VHPT, so we will 	 * run on the old RID for a moment while we invalidate the old  	 * one. XXX maybe we should just clear out the VHPT when the 	 * RID generation rolls over. 	 */
 if|if
 condition|(
 operator|(
