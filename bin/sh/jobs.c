@@ -2452,10 +2452,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|JOBS
 name|jobmru
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
