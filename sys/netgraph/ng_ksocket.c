@@ -5209,6 +5209,7 @@ return|return
 name|error
 return|;
 block|}
+comment|/* Unlocked read. */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -5298,6 +5299,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|so
 operator|=
 name|TAILQ_FIRST
@@ -5314,8 +5318,13 @@ name|so
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* Should never happen */
+name|ACCEPT_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5333,12 +5342,6 @@ operator|->
 name|so_qlen
 operator|--
 expr_stmt|;
-comment|/* XXX KNOTE(&head->so_rcv.sb_sel.si_note, 0); */
-name|soref
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_qstate
@@ -5348,16 +5351,25 @@ name|SQ_COMP
 expr_stmt|;
 name|so
 operator|->
-name|so_state
-operator||=
-name|SS_NBIO
-expr_stmt|;
-name|so
-operator|->
 name|so_head
 operator|=
 name|NULL
 expr_stmt|;
+name|soref
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_state
+operator||=
+name|SS_NBIO
+expr_stmt|;
+name|ACCEPT_UNLOCK
+argument_list|()
+expr_stmt|;
+comment|/* XXX KNOTE(&head->so_rcv.sb_sel.si_note, 0); */
 name|soaccept
 argument_list|(
 name|so

@@ -77,7 +77,7 @@ comment|/* internal state flags SS_* */
 name|int
 name|so_qstate
 decl_stmt|;
-comment|/* internal state flags SQ_* */
+comment|/* (e) internal state flags SQ_* */
 name|void
 modifier|*
 name|so_pcb
@@ -95,7 +95,7 @@ name|socket
 modifier|*
 name|so_head
 decl_stmt|;
-comment|/* back pointer to accept socket */
+comment|/* (e) back pointer to accept socket */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -103,7 +103,7 @@ argument|socket
 argument_list|)
 name|so_incomp
 expr_stmt|;
-comment|/* queue of partial unaccepted connections */
+comment|/* (e) queue of partial unaccepted connections */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -111,26 +111,26 @@ argument|socket
 argument_list|)
 name|so_comp
 expr_stmt|;
-comment|/* queue of complete unaccepted connections */
+comment|/* (e) queue of complete unaccepted connections */
 name|TAILQ_ENTRY
 argument_list|(
 argument|socket
 argument_list|)
 name|so_list
 expr_stmt|;
-comment|/* list of unaccepted connections */
+comment|/* (e) list of unaccepted connections */
 name|short
 name|so_qlen
 decl_stmt|;
-comment|/* number of unaccepted connections */
+comment|/* (e) number of unaccepted connections */
 name|short
 name|so_incqlen
 decl_stmt|;
-comment|/* number of unaccepted incomplete 					   connections */
+comment|/* (e) number of unaccepted incomplete 					   connections */
 name|short
 name|so_qlimit
 decl_stmt|;
-comment|/* max number queued connections */
+comment|/* (e) max number queued connections */
 name|short
 name|so_timeo
 decl_stmt|;
@@ -359,6 +359,34 @@ parameter_list|)
 value|do {						\ 	if ((sb)->sb_mb == NULL) {					\ 		(sb)->sb_mbtail = NULL;					\ 		(sb)->sb_lastrecord = NULL;				\ 	}								\ } while (
 comment|/*CONSTCOND*/
 value|0)
+end_define
+
+begin_comment
+comment|/*  * Global accept mutex to serialize access to accept queues and  * fields associated with multiple sockets.  This allows us to  * avoid defining a lock order between listen and accept sockets  * until such time as it proves to be a good idea.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|accept_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ACCEPT_LOCK
+parameter_list|()
+value|mtx_lock(&accept_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACCEPT_UNLOCK
+parameter_list|()
+value|mtx_unlock(&accept_mtx)
 end_define
 
 begin_comment
