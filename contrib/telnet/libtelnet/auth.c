@@ -2114,6 +2114,9 @@ name|Name
 argument_list|,
 name|cnt
 argument_list|,
+operator|(
+name|u_int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|savename
