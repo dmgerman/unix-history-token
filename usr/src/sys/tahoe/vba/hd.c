@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Driver for HCX Disk Controller (HDC)  *  *	@(#)hd.c	7.1 (Berkeley) %G%  */
+comment|/*  *  Driver for HCX Disk Controller (HDC)  *  *	@(#)hd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -715,9 +715,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|PADC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the drive has not been initialized yet, abort the dump. 	 * Set dump limits. The dump must fit in the partition. 	 */
@@ -1467,9 +1467,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|PADC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1932,16 +1932,18 @@ condition|)
 block|{
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
 name|master
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|P1DC
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -1954,8 +1956,6 @@ name|HDC_XSTAT_SIZE
 index|]
 operator|-
 literal|1
-argument_list|,
-name|P1DC
 argument_list|)
 expr_stmt|;
 if|if
@@ -3901,9 +3901,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|PADC
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * hdc's are reset and downloaded by the console processor. 	 * Check the module id; the controller is bad if: 	 * 1) it is not an hdc; 	 * 2) the hdc's writeable control store is not loaded; 	 * 3) the hdc failed the functional integrity test; 	 */
@@ -4005,73 +4005,6 @@ expr_stmt|;
 return|return
 name|TRUE
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/************************************************************************* *  Procedure:	hdread * *  Description: Character read routine. This procedure is called by the *               inode read/write routine 'ino_rw'. * *  Returns:     Error status returned by 'physio'. **************************************************************************/
-end_comment
-
-begin_function
-name|int
-name|hdread
-parameter_list|(
-name|dev
-parameter_list|,
-name|uio
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* Device type. Major/minor dev#. 			 */
-name|int
-modifier|*
-name|uio
-decl_stmt|;
-comment|/* Pointer to a uio structure describing 			 * a read request: buffer address; 			 * sector offset; no. of sectors; etc. 			 */
-block|{
-name|hdc_unit_type
-modifier|*
-name|hu
-decl_stmt|;
-comment|/* hdc unit information   */
-name|hu
-operator|=
-operator|&
-name|hdc_units
-index|[
-name|HDC_UNIT
-argument_list|(
-name|dev
-argument_list|)
-index|]
-expr_stmt|;
-comment|/* 	 * 'physio' builds the buf structure, locks the user pages, calls 	 * 'hdstrategy' to do the read, waits until i/o is complete (iodone), 	 * then deallocates the buf structure and unlocks the pages. 	 */
-return|return
-name|physio
-argument_list|(
-name|hdstrategy
-argument_list|,
-comment|/* hdc's strategy routine	    */
-operator|&
-name|hu
-operator|->
-name|raw_buf
-argument_list|,
-comment|/* physio builds a buf struct here  */
-name|dev
-argument_list|,
-comment|/* major/minor device number	    */
-name|B_READ
-argument_list|,
-comment|/* read the buffer 		    */
-name|minphys
-argument_list|,
-comment|/* routine to set max transfer size */
-name|uio
-argument_list|)
-return|;
-comment|/* describes the transfer request   */
 block|}
 end_function
 
@@ -5485,9 +5418,9 @@ name|B_READ
 condition|)
 name|mtpr
 argument_list|(
-name|vaddr
-argument_list|,
 name|P1DC
+argument_list|,
+name|vaddr
 argument_list|)
 expr_stmt|;
 name|bc
@@ -5540,20 +5473,21 @@ name|bc
 operator|/
 literal|4
 expr_stmt|;
+for|for
+control|(
 name|bcremain
 operator|-=
 name|bc
-expr_stmt|;
+operator|,
 name|i
 operator|=
 literal|0
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|bcremain
 operator|>
 literal|0
-condition|)
+condition|;
+control|)
 block|{
 name|vaddr
 operator|+=
@@ -5569,9 +5503,9 @@ name|B_READ
 condition|)
 name|mtpr
 argument_list|(
-name|vaddr
-argument_list|,
 name|P1DC
+argument_list|,
+name|vaddr
 argument_list|)
 expr_stmt|;
 name|bc
@@ -5896,33 +5830,34 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/************************************************************************* *  Procedure:	hdwrite * *  Description:	Character device write routine. It is called by the *               inode read/write routine 'ino_rw'. * *  Returns:     The error status returned by 'physio'. **************************************************************************/
-end_comment
+begin_macro
+name|hdread
+argument_list|(
+argument|dev
+argument_list|,
+argument|uio
+argument_list|)
+end_macro
 
-begin_function
-name|int
-name|hdwrite
-parameter_list|(
-name|dev
-parameter_list|,
-name|uio
-parameter_list|)
+begin_decl_stmt
 name|dev_t
 name|dev
 decl_stmt|;
-comment|/* Device type. Major/minor dev#. 			 */
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 modifier|*
 name|uio
 decl_stmt|;
-comment|/* Pointer to a uio structure describing 			 * a write request: buffer address; 			 * sector offset; no. of sectors; etc. 			 */
+end_decl_stmt
+
+begin_block
 block|{
 name|hdc_unit_type
 modifier|*
 name|hu
 decl_stmt|;
-comment|/* hdc unit information   */
 name|hu
 operator|=
 operator|&
@@ -5934,34 +5869,92 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* 	 * 'physio' builds the buf structure, locks the user pages, calls 	 * 'hdstrategy' to do the write, waits until i/o is complete 	 * (iodone), deallocates the buf structure, and unlocks the pages. 	 */
 return|return
+operator|(
 name|physio
 argument_list|(
 name|hdstrategy
 argument_list|,
-comment|/* hdc's strategy routine	    */
 operator|&
 name|hu
 operator|->
 name|raw_buf
 argument_list|,
-comment|/* physio builds a buf struct here  */
 name|dev
 argument_list|,
-comment|/* major/minor device number	    */
-name|B_WRITE
+name|B_READ
 argument_list|,
-comment|/* write the buffer		    */
 name|minphys
 argument_list|,
-comment|/* routine to set max transfer size */
 name|uio
 argument_list|)
+operator|)
 return|;
-comment|/* describes the transfer request   */
 block|}
-end_function
+end_block
+
+begin_macro
+name|hdwrite
+argument_list|(
+argument|dev
+argument_list|,
+argument|uio
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|hdc_unit_type
+modifier|*
+name|hu
+decl_stmt|;
+name|hu
+operator|=
+operator|&
+name|hdc_units
+index|[
+name|HDC_UNIT
+argument_list|(
+name|dev
+argument_list|)
+index|]
+expr_stmt|;
+return|return
+operator|(
+name|physio
+argument_list|(
+name|hdstrategy
+argument_list|,
+operator|&
+name|hu
+operator|->
+name|raw_buf
+argument_list|,
+name|dev
+argument_list|,
+name|B_WRITE
+argument_list|,
+name|minphys
+argument_list|,
+name|uio
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 
