@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  *  *	@(#)clockreg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  *  *	@(#)clockreg.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -270,24 +270,6 @@ end_comment
 begin_comment
 comment|/* #define CLK_INTERVAL	5000	/* 20msec interval at 250Khz */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PRF_INTERVAL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PRF_INTERVAL
-value|CLK_INTERVAL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * HP300 battery-backed clock  */
