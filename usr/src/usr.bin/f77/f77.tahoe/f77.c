@@ -3293,9 +3293,7 @@ literal|"%s %s %s"
 argument|,
 endif|#
 directive|endif
-argument|pass2opt, asmpass2, optzfname); 		if( sys(buff) ) 			rmf(optzfname); 		else 			{ 			sprintf(buff,
-literal|"mv %s %s"
-argument|, optzfname, asmpass2); 			sys(buff); 			} 		}
+argument|pass2opt, asmpass2, optzfname); 		if( sys(buff) ) 			rmf(optzfname); 		else 			(void)rename(optzfname, asmpass2); 		}
 endif|#
 directive|endif
 endif|#
