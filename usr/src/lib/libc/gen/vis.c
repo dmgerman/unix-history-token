@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vis.c	5.4 (Berkeley) %G%"
+literal|"@(#)vis.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,19 +657,18 @@ decl_stmt|;
 name|char
 modifier|*
 name|start
-init|=
-name|dst
 decl_stmt|;
 for|for
 control|(
+name|start
+operator|=
+name|dst
 init|;
 name|c
 operator|=
 operator|*
 name|src
 condition|;
-name|src
-operator|++
 control|)
 name|dst
 operator|=
@@ -682,12 +681,14 @@ argument_list|,
 name|flag
 argument_list|,
 operator|*
-operator|(
+operator|++
 name|src
-operator|+
-literal|1
-operator|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|dst
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
