@@ -3247,7 +3247,7 @@ name|controller
 operator|->
 name|irq
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 name|BUS_RELEASE_RESOURCE

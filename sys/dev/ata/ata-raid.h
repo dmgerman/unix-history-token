@@ -12,6 +12,10 @@ name|ata_device
 modifier|*
 name|device
 decl_stmt|;
+name|u_int64_t
+name|disk_sectors
+decl_stmt|;
+comment|/* sectors on this disk */
 name|off_t
 name|last_lba
 decl_stmt|;
@@ -635,7 +639,29 @@ end_struct
 
 begin_function_decl
 name|int
-name|ata_raid_probe
+name|ata_raiddisk_probe
+parameter_list|(
+name|struct
+name|ad_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_raiddisk_attach
+parameter_list|(
+name|struct
+name|ad_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_raiddisk_detach
 parameter_list|(
 name|struct
 name|ad_softc
@@ -649,6 +675,15 @@ name|void
 name|ata_raid_attach
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_raid_rebuild
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
