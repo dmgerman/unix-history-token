@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -3440,6 +3452,12 @@ operator|*
 name|acpi_tz_polling_rate
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|devcount
@@ -3484,6 +3502,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|ACPI_UNLOCK
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 block|}
