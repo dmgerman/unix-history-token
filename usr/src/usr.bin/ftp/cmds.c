@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.11 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7936,6 +7936,8 @@ literal|9
 index|]
 decl_stmt|,
 name|toknum
+init|=
+literal|0
 decl_stmt|,
 name|match
 init|=
@@ -8105,6 +8107,8 @@ break|break;
 block|}
 if|if
 condition|(
+name|match
+operator|&&
 operator|*
 name|cp1
 condition|)
@@ -8115,6 +8119,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|match
+operator|&&
 operator|*
 name|cp2
 condition|)
@@ -8123,6 +8129,24 @@ name|cp2
 operator|++
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|match
+operator|&&
+operator|*
+name|cp1
+condition|)
+comment|/* last token mismatch */
+block|{
+name|toks
+index|[
+name|toknum
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|cp1
 operator|=
