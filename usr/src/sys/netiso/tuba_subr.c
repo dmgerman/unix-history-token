@@ -1,180 +1,186 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_subr.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_pcb.h"
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_var.h"
+file|<netinet/ip_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_icmp.h"
+file|<netinet/ip_icmp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp.h"
+file|<netinet/tcp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_fsm.h"
+file|<netinet/tcp_fsm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_seq.h"
+file|<netinet/tcp_seq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_timer.h"
+file|<netinet/tcp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_var.h"
+file|<netinet/tcp_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcpip.h"
+file|<netinet/tcpip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/argo_debug.h"
+file|<netinet/tcp_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/clnp.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso_pcb.h"
+file|<netiso/clnp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso_var.h"
+file|<netiso/iso_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tuba_addr.h"
+file|<netiso/iso_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/tuba_addr.h>
 end_include
 
 begin_decl_stmt
@@ -191,6 +197,51 @@ argument_list|)
 block|,
 name|AF_ISO
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isopcb
+name|tuba_isopcb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tuba_table_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcppcbcachemiss
+decl_stmt|,
+name|tcppredack
+decl_stmt|,
+name|tcppreddat
+decl_stmt|,
+name|tcprexmtthresh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inpcb
+modifier|*
+name|tcp_last_inpcb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tcpiphdr
+name|tcp_saveti
 decl_stmt|;
 end_decl_stmt
 
@@ -219,11 +270,6 @@ comment|/*CLNP Segment*/
 value|+ 20
 comment|/*TCP*/
 value|)
-specifier|extern
-name|struct
-name|isopcb
-name|tuba_isopcb
-decl_stmt|;
 name|tuba_isopcb
 operator|.
 name|isop_next
@@ -240,7 +286,7 @@ operator|.
 name|isop_faddr
 operator|=
 operator|&
-name|tuba_isop
+name|tuba_isopcb
 operator|.
 name|isop_sfaddr
 expr_stmt|;
@@ -249,7 +295,7 @@ operator|.
 name|isop_laddr
 operator|=
 operator|&
-name|tuba_isop
+name|tuba_isopcb
 operator|.
 name|isop_sladdr
 expr_stmt|;
@@ -276,7 +322,7 @@ argument_list|(
 literal|"tuba_init"
 argument_list|)
 expr_stmt|;
-name|tuba_timer_init
+name|tuba_table_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -358,6 +404,7 @@ operator|+=
 name|tc
 operator|->
 name|tc_sum_out
+expr_stmt|;
 block|}
 else|else
 operator|*
@@ -420,7 +467,7 @@ name|n
 operator|=
 name|tp
 operator|->
-name|tp_template
+name|t_template
 operator|)
 operator|==
 literal|0
@@ -456,7 +503,7 @@ argument_list|,
 operator|&
 name|sum
 argument_list|,
-name|tuba_isop
+name|tuba_isopcb
 operator|.
 name|isop_faddr
 argument_list|,
@@ -475,7 +522,7 @@ argument_list|,
 operator|&
 name|sum
 argument_list|,
-name|tuba_isop
+name|tuba_isopcb
 operator|.
 name|isop_laddr
 argument_list|,
@@ -505,7 +552,7 @@ if|if
 condition|(
 name|n
 operator|->
-name|ni_sum
+name|ti_sum
 operator|==
 literal|0
 condition|)
@@ -774,7 +821,7 @@ argument_list|(
 operator|&
 name|isop
 operator|->
-name|isop_faddr
+name|isop_sfaddr
 operator|.
 name|siso_addr
 argument_list|)
@@ -785,7 +832,7 @@ operator|&&
 operator|(
 name|tc
 operator|=
-name|tuba_cache
+name|tuba_table
 index|[
 name|index
 index|]
@@ -821,7 +868,7 @@ argument_list|(
 operator|&
 name|isop
 operator|->
-name|isop_laddr
+name|isop_sladdr
 operator|.
 name|siso_addr
 argument_list|)
@@ -832,7 +879,7 @@ operator|&&
 operator|(
 name|tc
 operator|=
-name|tuba_cache
+name|tuba_table
 index|[
 name|index
 index|]
@@ -944,7 +991,7 @@ name|siso
 init|=
 name|mtod
 argument_list|(
-name|m
+name|nam
 argument_list|,
 expr|struct
 name|sockaddr_iso
@@ -958,7 +1005,7 @@ name|sin
 init|=
 name|mtod
 argument_list|(
-name|m
+name|nam
 argument_list|,
 expr|struct
 name|sockaddr_in
@@ -1006,7 +1053,7 @@ operator|*
 operator|)
 name|tp
 operator|->
-name|tp_tuba_pcb
+name|t_tuba_pcb
 decl_stmt|;
 name|int
 name|error
@@ -1115,38 +1162,40 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * CALLED FROM:  * 	clnp's input routine, indirectly through the protosw.  * FUNCTION and ARGUMENTS:  * Take a packet (m) from clnp, strip off the clnp header and give it to tcp  * or udp.  * No return value.    */
+comment|/*  * CALLED FROM:  * 	clnp's input routine, indirectly through the protosw.  * FUNCTION and ARGUMENTS:  * Take a packet (m) from clnp, strip off the clnp header  * and do tcp input processing.  * No return value.    */
 end_comment
 
-begin_function
-name|ProtoHook
-name|tpclnp_input
-parameter_list|(
+begin_expr_stmt
+name|tuba_tcpinput
+argument_list|(
 name|m
-parameter_list|,
+argument_list|,
 name|src
-parameter_list|,
+argument_list|,
 name|dst
-parameter_list|,
+argument_list|,
 name|clnp_len
-parameter_list|,
+argument_list|,
 name|ce_bit
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|mbuf
-modifier|*
+operator|*
 name|m
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|struct
 name|sockaddr_iso
 modifier|*
 name|src
 decl_stmt|,
-decl|*
+modifier|*
 name|dst
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1166,7 +1215,7 @@ argument_list|()
 decl_stmt|;
 name|unsigned
 name|long
-name|fix_csum
+name|fix_cksum
 decl_stmt|,
 name|lindex
 decl_stmt|,
@@ -1278,6 +1327,7 @@ name|siso_addr
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|||
 operator|(
 name|findex
@@ -1292,7 +1342,7 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-operator|)
+condition|)
 goto|goto
 name|drop
 goto|;
@@ -1464,7 +1514,7 @@ name|m
 operator|->
 name|m_flags
 operator|&
-name|EXT
+name|M_EXT
 operator|)
 condition|?
 operator|(
@@ -1484,6 +1534,8 @@ name|m
 operator|->
 name|m_data
 operator|-
+name|m
+operator|->
 name|m_pktdat
 operator|)
 operator|)
@@ -1501,10 +1553,11 @@ name|m0
 init|=
 name|m_gethdr
 argument_list|(
-argument|M_DONTWAIT
+name|M_DONTWAIT
 argument_list|,
-argument|MT_DATA
+name|MT_DATA
 argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|m0
@@ -1581,7 +1634,7 @@ name|m_flags
 operator|=
 name|m
 operator|->
-name|m_pkthdr
+name|m_flags
 operator|&
 name|M_COPYFLAGS
 expr_stmt|;
@@ -1636,14 +1689,14 @@ expr_stmt|;
 comment|/* 	 * Now include the rest of TCP input 	 */
 define|#
 directive|define
-name|TUBA_INPUT
+name|TUBA_INCLUDE
 define|#
 directive|define
 name|in_pcbconnect
 value|tuba_pcbconnect
 include|#
 directive|include
-file|"../netinet/tcp_input.c"
+file|<netinet/tcp_input.c>
 block|}
 end_block
 

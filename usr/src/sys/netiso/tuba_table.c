@@ -1,90 +1,102 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_table.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/af.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/radix.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso.h"
+file|<net/af.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tuba_addr.h"
+file|<net/radix.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/iso.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/tuba_addr.h>
 end_include
 
 begin_decl_stmt
@@ -140,7 +152,6 @@ decl_stmt|;
 specifier|register
 name|struct
 name|tuba_cache
-modifier|*
 modifier|*
 name|tc
 decl_stmt|;
@@ -253,7 +264,7 @@ block|}
 end_function
 
 begin_macro
-name|tuba_timer_init
+name|tuba_table_init
 argument_list|()
 end_macro
 
@@ -313,12 +324,22 @@ name|struct
 name|radix_node
 modifier|*
 name|rn
+decl_stmt|,
+modifier|*
+name|rn_match
+argument_list|()
 decl_stmt|;
 specifier|register
 name|struct
 name|tuba_cache
 modifier|*
 name|tc
+decl_stmt|;
+name|struct
+name|tuba_cache
+modifier|*
+modifier|*
+name|new
 decl_stmt|;
 name|int
 name|dupentry
@@ -333,7 +354,7 @@ name|sum_odd
 init|=
 literal|0
 decl_stmt|,
-name|delta
+name|old_size
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -410,10 +431,18 @@ operator|)
 return|;
 name|bzero
 argument_list|(
-argument|(caddr_t)tc
+operator|(
+name|caddr_t
+operator|)
+name|tc
 argument_list|,
-argument|sizeof (*tc)
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tc
 argument_list|)
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -479,17 +508,13 @@ name|tc_flags
 operator|=
 name|flags
 expr_stmt|;
-name|sum_even
-operator|=
-name|isoa
-operator|->
-name|isoa_len
-expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-name|sum_even
+name|isoa
+operator|->
+name|isoa_len
 init|;
 operator|--
 name|i
@@ -497,9 +522,16 @@ operator|>=
 literal|0
 condition|;
 control|)
-block|{
-name|delta
-operator|=
+operator|(
+name|i
+operator|&
+literal|1
+condition|?
+name|sum_even
+else|:
+name|sum_odd
+operator|)
+operator|+=
 name|isoa
 operator|->
 name|isoa_genaddr
@@ -507,19 +539,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|i
-operator|&
-literal|1
-condition|?
-name|sum_even
-operator|+=
-name|delta
-else|:
-name|sum_odd
-operator|+=
-name|delta
-expr_stmt|;
-block|}
 name|ICKSUM
 argument_list|(
 name|tc
@@ -543,7 +562,7 @@ name|tc_sum_out
 argument_list|,
 name|tc
 operator|->
-name|sum_in
+name|tc_sum_in
 operator|+
 literal|0x1fffe
 operator|-

@@ -1,174 +1,180 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tuba_usrreq.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_pcb.h"
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_var.h"
+file|<netinet/ip_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp.h"
+file|<netinet/tcp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_fsm.h"
+file|<netinet/tcp_fsm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_seq.h"
+file|<netinet/tcp_seq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_timer.h"
+file|<netinet/tcp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_var.h"
+file|<netinet/tcp_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcpip.h"
+file|<netinet/tcpip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_debug.h"
+file|<netinet/tcp_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/clnp.h"
+file|<netiso/clnp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso_pcb.h"
+file|<netiso/iso_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso_var.h"
+file|<netiso/iso_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netiso/tuba_addr.h>
 end_include
 
 begin_comment
@@ -283,6 +289,7 @@ name|ostate
 decl_stmt|;
 name|struct
 name|sockaddr_iso
+modifier|*
 name|siso
 decl_stmt|;
 if|if
@@ -359,7 +366,7 @@ condition|)
 block|{
 name|tp
 operator|=
-name|inpcbtotcpcb
+name|intotcpcb
 argument_list|(
 name|inp
 argument_list|)
@@ -383,9 +390,14 @@ name|t_state
 expr_stmt|;
 name|isop
 operator|=
+operator|(
+expr|struct
+name|isopcb
+operator|*
+operator|)
 name|tp
 operator|->
-name|tp_tuba_pcb
+name|t_tuba_pcb
 expr_stmt|;
 if|if
 condition|(
@@ -435,7 +447,7 @@ operator|*
 operator|)
 name|tp
 operator|->
-name|tp_tuba_pcb
+name|t_tuba_pcb
 operator|=
 name|so
 operator|->
@@ -665,7 +677,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cmd
+name|req
 operator|==
 name|PRU_LISTEN
 condition|)
@@ -756,7 +768,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|inp
 operator|->
 name|inp_laddr
@@ -784,7 +795,7 @@ argument_list|)
 operator|)
 operator|==
 literal|0
-operator|)
+condition|)
 goto|goto
 name|unconnect
 goto|;
