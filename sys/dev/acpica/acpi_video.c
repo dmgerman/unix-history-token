@@ -771,11 +771,11 @@ name|acpi_video
 argument_list|,
 name|acpi
 argument_list|,
-literal|100
+literal|1
 argument_list|,
-literal|100
+literal|1
 argument_list|,
-literal|100
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
