@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.37	%G%"
+literal|"@(#)deliver.c	3.38	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,12 +166,6 @@ name|buf
 index|[
 name|MAXNAME
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|firstone
 decl_stmt|;
 end_decl_stmt
 
@@ -553,13 +547,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|firstone
-operator|=
-name|TRUE
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|To
 operator|=
 name|tobuf
@@ -584,8 +571,12 @@ block|{
 comment|/* avoid sending multiple recipients to dumb mailers */
 if|if
 condition|(
-operator|!
-name|firstone
+name|tobuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 operator|&&
 operator|!
 name|bitset
