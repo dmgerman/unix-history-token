@@ -1225,29 +1225,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Give this node name * 	bzero(ifname, sizeof(ifname)); 	sprintf(ifname, "if%s%d", ifp->if_name, ifp->if_unit); 	(void) ng_name_node(node, ifname); 	*/
 comment|/* Attach the interface */
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
 name|ETHER_BPF_SUPPORTED
-argument_list|)
-expr_stmt|;
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Done */
