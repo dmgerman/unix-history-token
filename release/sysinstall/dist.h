@@ -113,8 +113,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_EXPERIMENTAL
+name|DIST_KRB
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_EXPERIMENTAL
+value|0x4000
 end_define
 
 begin_define
@@ -249,8 +256,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_SRC_SECURE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_SRC_EBONES
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_SRC_ALL
-value|0xFFFF
+value|0x3FFF
 end_define
 
 begin_comment
