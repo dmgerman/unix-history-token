@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanw.c	5.9 (Berkeley) %G%"
+literal|"@(#)scanw.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-operator|...
+name|va_list
 operator|)
 argument_list|)
 decl_stmt|;
@@ -508,63 +508,30 @@ begin_comment
 comment|/*  * __sscans --  *	This routine actually executes the scanf from the window.  *	THIS SHOULD BE RENAMED vwscanw AND EXPORTED  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
-if|#
-directive|if
-name|__STDC__
 name|__sscans
-argument_list|(
-name|WINDOW
-operator|*
+parameter_list|(
 name|win
-argument_list|,
+parameter_list|,
+name|fmt
+parameter_list|,
+name|ap
+parameter_list|)
+name|WINDOW
+modifier|*
+name|win
+decl_stmt|;
 specifier|const
 name|char
-operator|*
-name|fmt
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|__sscans
-argument_list|(
-name|win
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-name|WINDOW
-modifier|*
-name|win
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|va_dcl
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
-block|{
 name|va_list
 name|ap
 decl_stmt|;
+block|{
 name|char
 name|buf
 index|[
@@ -595,7 +562,7 @@ name|ERR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
