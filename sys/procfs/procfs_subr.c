@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: procfs_subr.c,v 1.2 1993/12/19 00:54:35 wollman Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: procfs_subr.c,v 1.3 1993/12/26 10:40:22 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1100,9 +1100,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Map page into kernel space */
 comment|/* printf("rw: offset: %d, n: %d, resid: %d\n",  			uio->uio_offset, n, uio->uio_resid); */
-ifdef|#
-directive|ifdef
-name|FULLSWAP
 if|if
 condition|(
 name|procp
@@ -1120,8 +1117,6 @@ name|EFAULT
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 name|map
 operator|=
 operator|&
@@ -1144,67 +1139,15 @@ name|uio_offset
 argument_list|)
 expr_stmt|;
 comment|/*  * This code *fakes* the existance of the UPAGES at the address USRSTACK  * in the process address space for versions of the kernel where the  * UPAGES do not exist in the process map.    */
+if|#
+directive|if
+literal|0
 ifndef|#
 directive|ifndef
 name|FULLSWAP
-if|if
-condition|(
-name|offset
-operator|>=
-name|USRSTACK
-condition|)
-block|{
-name|caddr_t
-name|paddr
-decl_stmt|;
-if|if
-condition|(
-name|offset
-operator|>=
-name|USRSTACK
-operator|+
-name|NBPG
-operator|*
-name|UPAGES
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-block|}
-name|paddr
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|procp
-operator|->
-name|p_addr
-expr_stmt|;
-name|error
-operator|=
-name|uiomove
-argument_list|(
-name|paddr
-operator|+
-operator|(
-name|offset
-operator|-
-name|USRSTACK
-operator|)
-argument_list|,
-operator|(
-name|int
-operator|)
-name|n
-argument_list|,
-name|uio
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
+block|if( offset>= USRSTACK) { 			caddr_t paddr; 			if( offset>= USRSTACK + NBPG*UPAGES) { 				error = EINVAL; 				break; 			} 			paddr = (caddr_t) procp->p_addr; 			error = uiomove(paddr + (offset - USRSTACK), (int)n, uio); 			continue; 		}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* make sure that the offset exists in the procs map */
