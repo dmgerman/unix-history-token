@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.3 1996/12/24 18:43:53 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.4 1997/01/07 04:10:51 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2168,6 +2168,31 @@ operator|.
 name|stat
 operator|=
 name|YP_BADARGS
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|result
+operator|)
+return|;
+block|}
+comment|/* 	 * XXX If we hit the child limit, fail the request. 	 * If we don't, and the map is large, we could block for 	 * a long time in the parent. 	 */
+if|if
+condition|(
+name|children
+operator|>=
+name|MAX_CHILDREN
+condition|)
+block|{
+name|result
+operator|.
+name|ypresp_all_u
+operator|.
+name|val
+operator|.
+name|stat
+operator|=
+name|YP_YPERR
 expr_stmt|;
 return|return
 operator|(
