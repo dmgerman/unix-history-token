@@ -1706,7 +1706,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Allocate the private data structure and the generic node  * and link them together.  *  * ng_make_node_common() returns with a generic node struct  * with a single reference for us.. we transfer it to the  * private structure.. when we free the private struct we must  * unref the node so it gets freed too.  *  * If this were a device node than this work would be done in the attach()  * routine and the constructor would return EINVAL as you should not be able  * to creatednodes that depend on hardware (unless you can add the hardware :)  */
+comment|/*  * Allocate the private data structure and the generic node  * and link them together.  *  * ng_make_node_common() returns with a generic node struct  * with a single reference for us.. we transfer it to the  * private structure.. when we free the private struct we must  * unref the node so it gets freed too.  */
 end_comment
 
 begin_function
@@ -1821,7 +1821,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Give our ok for a hook to be added...  * point the hook's private info to the hook structure.  *  * The following hook names are special:  *  Ethernet:  the hook that should be connected to a NIC.  *  debug:	copies of data sent out here  (when I write the code).  */
+comment|/*  * Give our ok for a hook to be added...  * point the hook's private info to the hook structure.  *  * The following hook names are special:  *  Ethernet:  the hook that should be connected to a NIC.  *  debug:	copies of data sent out here  (when I write the code).  * All other hook names need only be unique. (the framework checks this).  */
 end_comment
 
 begin_function
@@ -2077,6 +2077,9 @@ case|:
 case|case
 name|NGM_PPPOE_OFFER
 case|:
+case|case
+name|NGM_PPPOE_SERVICE
+case|:
 name|ourmsg
 operator|=
 operator|(
@@ -2258,6 +2261,20 @@ name|hook
 operator|->
 name|private
 expr_stmt|;
+comment|/* 			 * PPPOE_SERVICE advertisments are set up 			 * on sessions that are in PRIMED state. 			 */
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+operator|==
+name|NGM_PPPOE_SERVICE
+condition|)
+block|{
+break|break;
+block|}
 if|if
 condition|(
 name|sp
@@ -2684,7 +2701,7 @@ break|break;
 case|case
 name|NGM_PPPOE_LISTEN
 case|:
-comment|/* 			 * Check the hook exists and is Uninitialised. 			 * Install the service matching string. 			 * Store the originator of this message so we can send 			 * a success of fail message to them later. 			 * Move the hook to 'LISTENING'  			 */
+comment|/* 			 * Check the hook exists and is Uninitialised. 			 * Install the service matching string. 			 * Store the originator of this message so we can send 			 * a success of fail message to them later. 			 * Move the hook to 'LISTENING' 			 */
 name|neg
 operator|->
 name|service
@@ -2849,6 +2866,96 @@ operator|->
 name|state
 operator|=
 name|PPPOE_PRIMED
+expr_stmt|;
+break|break;
+case|case
+name|NGM_PPPOE_SERVICE
+case|:
+comment|/*  			 * Check the session is primed. 			 * for now just allow ONE service to be advertised. 			 * If you do it twice you just overwrite. 			 */
+if|if
+condition|(
+name|sp
+operator|->
+name|state
+operator|!=
+name|PPPOE_PRIMED
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pppoe: Session not primed\n"
+argument_list|)
+expr_stmt|;
+name|LEAVE
+argument_list|(
+name|EISCONN
+argument_list|)
+expr_stmt|;
+block|}
+name|neg
+operator|=
+name|sp
+operator|->
+name|neg
+expr_stmt|;
+name|neg
+operator|->
+name|service
+operator|.
+name|hdr
+operator|.
+name|tag_type
+operator|=
+name|PTT_SRV_NAME
+expr_stmt|;
+name|neg
+operator|->
+name|service
+operator|.
+name|hdr
+operator|.
+name|tag_len
+operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_int16_t
+operator|)
+name|ourmsg
+operator|->
+name|data_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ourmsg
+operator|->
+name|data_len
+condition|)
+name|bcopy
+argument_list|(
+name|ourmsg
+operator|->
+name|data
+argument_list|,
+name|neg
+operator|->
+name|service
+operator|.
+name|data
+argument_list|,
+name|ourmsg
+operator|->
+name|data_len
+argument_list|)
+expr_stmt|;
+name|neg
+operator|->
+name|service_len
+operator|=
+name|ourmsg
+operator|->
+name|data_len
 expr_stmt|;
 break|break;
 default|default:
@@ -4916,6 +5023,52 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* return service */
+comment|/* 			 * If we have a NULL service request 			 * and have an extra service defined in this hook, 			 * then also add a tag for the extra service. 			 * XXX this is a hack. eventually we should be able 			 * to support advertising many services, not just one  			 */
+if|if
+condition|(
+operator|(
+operator|(
+name|tag
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|tag
+operator|->
+name|tag_len
+operator|==
+literal|0
+operator|)
+operator|)
+operator|&&
+operator|(
+name|neg
+operator|->
+name|service
+operator|.
+name|hdr
+operator|.
+name|tag_len
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|insert_tag
+argument_list|(
+name|sp
+argument_list|,
+operator|&
+name|neg
+operator|->
+name|service
+operator|.
+name|hdr
+argument_list|)
+expr_stmt|;
+comment|/* SERVICE */
+block|}
 if|if
 condition|(
 operator|(
@@ -4947,7 +5100,6 @@ operator|.
 name|hdr
 argument_list|)
 expr_stmt|;
-comment|/* XXX maybe put the tag in the session store */
 name|scan_tags
 argument_list|(
 name|sp
@@ -6214,6 +6366,17 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|msg
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|sts
 operator|=
 operator|(
