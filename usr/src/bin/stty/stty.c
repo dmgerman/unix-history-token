@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.15 (Berkeley) %G%"
+literal|"@(#)stty.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1003,18 +1003,6 @@ block|,
 name|VERASE
 block|,
 name|CERASE
-block|, }
-block|,
-block|{
-block|{
-literal|"erase2"
-block|,
-literal|"era2"
-block|}
-block|,
-name|VERASE2
-block|,
-name|_POSIX_VDISABLE
 block|, }
 block|,
 block|{
