@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getnetent.c	4.3	82/10/06	*/
+comment|/*	getnetent.c	4.4	82/10/07	*/
 end_comment
 
 begin_include
@@ -345,7 +345,7 @@ name|net
 operator|.
 name|n_net
 operator|=
-name|inet_addr
+name|inet_network
 argument_list|(
 name|cp
 argument_list|)
