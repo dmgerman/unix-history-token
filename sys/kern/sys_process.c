@@ -1522,24 +1522,20 @@ case|:
 comment|/* XXX uap->data is used even in the PT_STEP case. */
 if|if
 condition|(
-operator|(
 name|uap
 operator|->
 name|req
 operator|!=
 name|PT_STEP
-operator|)
 operator|&&
-operator|(
 operator|(
 name|unsigned
 operator|)
 name|uap
 operator|->
 name|data
-operator|>=
-name|NSIG
-operator|)
+operator|>
+name|_SIG_MAXSIG
 condition|)
 block|{
 name|error
