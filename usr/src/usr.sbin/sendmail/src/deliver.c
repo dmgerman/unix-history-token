@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.40 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3530,6 +3530,50 @@ specifier|register
 name|u_short
 name|port
 decl_stmt|;
+if|if
+condition|(
+name|pv
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|||
+name|pv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+operator|||
+name|pv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"null host name for %s mailer"
+argument_list|,
+name|m
+operator|->
+name|m_mailer
+argument_list|)
+expr_stmt|;
+name|rcode
+operator|=
+name|EX_CONFIG
+expr_stmt|;
+goto|goto
+name|give_up
+goto|;
+block|}
 name|CurHostName
 operator|=
 name|pv
@@ -3567,7 +3611,12 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"null signature"
+literal|"null host signature for %s"
+argument_list|,
+name|pv
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|rcode
