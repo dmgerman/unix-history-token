@@ -69,6 +69,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIGSET_T_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SIGSET_T_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|__sigset_t
+name|sigset_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Select uses bit masks of file descriptors in longs.  These macros  * manipulate such bit fields (the filesystem macros use chars).  * FD_SETSIZE may be defined by the user, but the default here should  * be enough for most uses.  */
 end_comment

@@ -456,6 +456,34 @@ comment|/* user defined signal 2 */
 end_comment
 
 begin_comment
+comment|/* XXX needs namespace conditional. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIGSET_T_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SIGSET_T_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|__sigset_t
+name|sigset_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*-  * Type of a signal handling function.  *  * Language spec sez signal handlers take exactly one arg, even though we  * actually supply three.  Ugh!  *  * We don't try to hide the difference by leaving out the args because  * that would cause warnings about conformant programs.  Nonconformant  * programs can avoid the warnings by casting to (__sighandler_t *) or  * sig_t before calling signal() or assigning to sa_handler or sv_handler.  *  * The kernel should reverse the cast before calling the function.  It  * has no way to do this, but on most machines 1-arg and 3-arg functions  * have the same calling protocol so there is no problem in practice.  * A bit in sa_flags could be used to specify the number of args.  */
 end_comment
 

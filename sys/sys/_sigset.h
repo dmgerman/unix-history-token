@@ -85,7 +85,7 @@ name|_SIG_WORDS
 index|]
 decl_stmt|;
 block|}
-name|sigset_t
+name|__sigset_t
 typedef|;
 end_typedef
 
