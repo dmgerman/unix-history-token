@@ -4678,6 +4678,12 @@ condition|(
 name|timeout
 operator|->
 name|tv_nsec
+operator|<
+literal|0
+operator|||
+name|timeout
+operator|->
+name|tv_nsec
 operator|>
 literal|1000000000
 condition|)
