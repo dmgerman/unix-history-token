@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpf.c	4.12 (Berkeley) %G%"
+literal|"@(#)lpf.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,6 +721,11 @@ operator|>=
 name|length
 condition|)
 block|{
+name|fflush
+argument_list|(
+name|o
+argument_list|)
+expr_stmt|;
 name|npages
 operator|++
 expr_stmt|;
