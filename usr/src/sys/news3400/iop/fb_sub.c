@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fb_sub.c,v 4.300 91/06/27 20:43:09 root Rel41 $ SONY  *  *	@(#)fb_sub.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fb_sub.c,v 4.300 91/06/27 20:43:09 root Rel41 $ SONY  *  *	@(#)fb_sub.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,12 +20,6 @@ end_if
 begin_comment
 comment|/*  * Frame buffer driver  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_include
 include|#

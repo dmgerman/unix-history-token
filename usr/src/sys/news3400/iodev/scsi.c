@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scsi.c,v 4.300 91/06/27 20:42:51 root Rel41 $ SONY  *  *	@(#)scsi.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scsi.c,v 4.300 91/06/27 20:42:51 root Rel41 $ SONY  *  *	@(#)scsi.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  *	scsi.c	ver 1.1		  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_include
 include|#
@@ -241,6 +235,36 @@ directive|ifdef
 name|NO_SHRINK_RSENSE_MSG
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|MSG
+parameter_list|(
+name|m
+parameter_list|)
+value|m
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MSG
+parameter_list|(
+name|m
+parameter_list|)
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|msg_list
@@ -253,7 +277,10 @@ literal|0x00
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"No Sense"
+argument_list|)
 block|}
 block|,
 block|{
@@ -261,7 +288,10 @@ literal|0x01
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Recoverable Error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -269,7 +299,10 @@ literal|0x02
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Not Ready"
+argument_list|)
 block|}
 block|,
 block|{
@@ -277,7 +310,10 @@ literal|0x03
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Medium Error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -285,7 +321,10 @@ literal|0x04
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Hardware Error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -293,7 +332,10 @@ literal|0x05
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Illegal Request"
+argument_list|)
 block|}
 block|,
 block|{
@@ -301,7 +343,10 @@ literal|0x06
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Unit Attention"
+argument_list|)
 block|}
 block|,
 block|{
@@ -309,7 +354,10 @@ literal|0x07
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Data protect"
+argument_list|)
 block|}
 block|,
 block|{
@@ -317,7 +365,10 @@ literal|0x08
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Blank Check"
+argument_list|)
 block|}
 block|,
 block|{
@@ -325,7 +376,10 @@ literal|0x09
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Vendor Unique"
+argument_list|)
 block|}
 block|,
 block|{
@@ -333,7 +387,10 @@ literal|0x0a
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Copy/Compare Aborted"
+argument_list|)
 block|}
 block|,
 block|{
@@ -341,7 +398,10 @@ literal|0x0b
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Aborted Command"
+argument_list|)
 block|}
 block|,
 block|{
@@ -349,7 +409,10 @@ literal|0x0c
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Equal"
+argument_list|)
 block|}
 block|,
 block|{
@@ -357,7 +420,10 @@ literal|0x0d
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Volume Overflow"
+argument_list|)
 block|}
 block|,
 block|{
@@ -365,7 +431,10 @@ literal|0x0e
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Miscompare"
+argument_list|)
 block|}
 block|,
 block|{
@@ -383,169 +452,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NO_SHRINK_RSENSE_MSG */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|msg_list
-name|skeylist
-index|[]
-init|=
-block|{
-block|{
-literal|0x00
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x01
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x02
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x03
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x04
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x05
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x06
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x07
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x08
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x09
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x0a
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x0b
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x0c
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x0d
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x0e
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_SHRINK_RSENSE_MSG */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_SHRINK_RSENSE_MSG
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|msg_list
@@ -558,7 +464,10 @@ literal|0x00
 block|,
 literal|9
 block|,
+name|MSG
+argument_list|(
 literal|"No Additional Sense Information"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -567,7 +476,10 @@ literal|0x01
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"No Index/Address Mark Found signal"
+argument_list|)
 block|}
 block|,
 block|{
@@ -575,7 +487,10 @@ literal|0x02
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"No Seek Complete"
+argument_list|)
 block|}
 block|,
 block|{
@@ -583,7 +498,10 @@ literal|0x03
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Write Fault"
+argument_list|)
 block|}
 block|,
 block|{
@@ -591,7 +509,10 @@ literal|0x04
 block|,
 literal|9
 block|,
+name|MSG
+argument_list|(
 literal|"Drive Not Ready"
+argument_list|)
 block|}
 block|,
 block|{
@@ -599,7 +520,10 @@ literal|0x05
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Drive Not Selected"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -608,7 +532,10 @@ literal|0x06
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"No Track Zero"
+argument_list|)
 block|}
 block|,
 block|{
@@ -616,7 +543,10 @@ literal|0x07
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Multiple Drives Selected"
+argument_list|)
 block|}
 block|,
 block|{
@@ -624,7 +554,10 @@ literal|0x08
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Logical Unit Communication Failure"
+argument_list|)
 block|}
 block|,
 block|{
@@ -632,7 +565,10 @@ literal|0x09
 block|,
 literal|2
 block|,
+name|MSG
+argument_list|(
 literal|"Track Following Error"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -641,7 +577,10 @@ literal|0x0a
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"No Disk"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -650,7 +589,10 @@ literal|0x0b
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Load/Unload Failure"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -659,7 +601,10 @@ literal|0x0c
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Spindle Failure"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -668,7 +613,10 @@ literal|0x0d
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Focus Failure"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -677,7 +625,10 @@ literal|0x0e
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Tracking Failure"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -686,7 +637,10 @@ literal|0x0f
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Drive Initialization Failure"
+argument_list|)
 block|}
 block|,
 block|{
@@ -694,7 +648,10 @@ literal|0x10
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"ID CRC or ECC error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -702,7 +659,10 @@ literal|0x11
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Unrecoverd Read error"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -711,7 +671,10 @@ literal|0x12
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"No Address Mark (byte sync byte) found in ID field"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -720,7 +683,10 @@ literal|0x13
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"No Address Mark (byte sync byte) found in Data field"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -729,7 +695,10 @@ literal|0x14
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"No record found"
+argument_list|)
 block|}
 block|,
 block|{
@@ -737,7 +706,10 @@ literal|0x15
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Seek Positioning Error"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -746,7 +718,10 @@ literal|0x17
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Recovered Read data with Read retries"
+argument_list|)
 block|}
 block|,
 block|{
@@ -754,7 +729,10 @@ literal|0x18
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Recovered Read data with ECC procedure"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -763,7 +741,10 @@ literal|0x19
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Defect List error"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -772,7 +753,10 @@ literal|0x1a
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Parameter overrun"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -781,7 +765,10 @@ literal|0x1b
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Synchronous transfer error"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -790,7 +777,10 @@ literal|0x1c
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Primary Defect List not found"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -799,7 +789,10 @@ literal|0x1d
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Compare error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -807,7 +800,10 @@ literal|0x20
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Invalid Command Operation Code"
+argument_list|)
 block|}
 block|,
 block|{
@@ -815,7 +811,10 @@ literal|0x21
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Illegal Logical Block Address"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -824,7 +823,10 @@ literal|0x22
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Illegal function for device type"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -833,7 +835,10 @@ literal|0x23
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Illegal function for Medium Type"
+argument_list|)
 block|}
 block|,
 block|{
@@ -841,7 +846,10 @@ literal|0x24
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Illegal Field in CDB"
+argument_list|)
 block|}
 block|,
 block|{
@@ -849,7 +857,10 @@ literal|0x25
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Invalid LUN"
+argument_list|)
 block|}
 block|,
 block|{
@@ -857,7 +868,10 @@ literal|0x26
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Invalid field in Parameter List"
+argument_list|)
 block|}
 block|,
 block|{
@@ -865,7 +879,10 @@ literal|0x27
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Write Protected"
+argument_list|)
 block|}
 block|,
 block|{
@@ -873,7 +890,10 @@ literal|0x28
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Medium Changed"
+argument_list|)
 block|}
 block|,
 block|{
@@ -881,7 +901,10 @@ literal|0x29
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Power On or Reset or Bus Device Reset Occured"
+argument_list|)
 block|}
 block|,
 block|{
@@ -889,7 +912,10 @@ literal|0x2a
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Mode Select Parameters Changed"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -898,7 +924,10 @@ literal|0x2b
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Host cannot Disconnect"
+argument_list|)
 block|}
 block|,
 block|{
@@ -906,7 +935,10 @@ literal|0x31
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Medium Format Corrupted"
+argument_list|)
 block|}
 block|,
 block|{
@@ -914,7 +946,10 @@ literal|0x32
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"No Defect Spare Location Available"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -923,7 +958,10 @@ literal|0x38
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Recovered with Automatic Reallocation"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -932,7 +970,10 @@ literal|0x39
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Automatic Reallocation Failure"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -941,7 +982,10 @@ literal|0x3a
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Defect List Update Failure"
+argument_list|)
 block|}
 block|,
 comment|/*MO*/
@@ -950,7 +994,10 @@ literal|0x3d
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Defect List Not Available"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -959,7 +1006,10 @@ literal|0x40
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"RAM failure"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -968,7 +1018,10 @@ literal|0x41
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Data Path diagnostic failure"
+argument_list|)
 block|}
 block|,
 block|{
@@ -976,7 +1029,10 @@ literal|0x42
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Power On Diagnostic Failure"
+argument_list|)
 block|}
 block|,
 block|{
@@ -984,7 +1040,10 @@ literal|0x43
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Message Reject Error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -992,7 +1051,10 @@ literal|0x44
 block|,
 literal|9
 block|,
+name|MSG
+argument_list|(
 literal|"Internal Controller Error"
+argument_list|)
 block|}
 block|,
 comment|/*HD*/
@@ -1001,7 +1063,10 @@ literal|0x45
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Selection/Reselection failure"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1009,7 +1074,10 @@ literal|0x47
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"SCSI Interface Parity Error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1017,7 +1085,10 @@ literal|0x48
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Initiator Detected Error"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1025,7 +1096,10 @@ literal|0x49
 block|,
 literal|0
 block|,
+name|MSG
+argument_list|(
 literal|"Inappropriate/Illegal Message"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1033,7 +1107,10 @@ literal|0x64
 block|,
 literal|1
 block|,
+name|MSG
+argument_list|(
 literal|"Illegal mode for this track"
+argument_list|)
 block|}
 block|,
 block|{
@@ -1051,525 +1128,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NO_SHRINK_RSENSE_MSG */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|msg_list
-name|ecodelist
-index|[]
-init|=
-block|{
-block|{
-literal|0x00
-block|,
-literal|9
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x01
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x02
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x03
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x04
-block|,
-literal|9
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x05
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x06
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x07
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x08
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x09
-block|,
-literal|2
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x0a
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x0b
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x0c
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x0d
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x0e
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x0f
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x10
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x11
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x12
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x13
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x14
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x15
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x17
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x18
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x19
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x1a
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x1b
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x1c
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x1d
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x20
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x21
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x22
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x23
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x24
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x25
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x26
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x27
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x28
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x29
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x2a
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x2b
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x31
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x32
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x38
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x39
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x3a
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-comment|/*MO*/
-block|{
-literal|0x3d
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x40
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x41
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x42
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x43
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x44
-block|,
-literal|9
-block|,
-name|NULL
-block|}
-block|,
-comment|/*HD*/
-block|{
-literal|0x45
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x47
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x48
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x49
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|0x64
-block|,
-literal|1
-block|,
-name|NULL
-block|}
-block|,
-block|{
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-name|NULL
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_SHRINK_RSENSE_MSG */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|MSG
+end_undef
 
 begin_comment
 comment|/*  * Init a scsi bus.  */

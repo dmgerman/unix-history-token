@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kb.c,v 4.300 91/06/09 06:42:44 root Rel41 $ SONY  *  *	@(#)kb.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kb.c,v 4.300 91/06/09 06:42:44 root Rel41 $ SONY  *  *	@(#)kb.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -16,12 +16,6 @@ name|NKB
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_include
 include|#
@@ -1014,9 +1008,6 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|news700
 if|if
 condition|(
 name|tty00_is_console
@@ -1026,8 +1017,6 @@ argument_list|(
 name|SCC_KEYBOARD
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -1043,9 +1032,6 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|news700
 if|if
 condition|(
 name|tty00_is_console
@@ -1055,8 +1041,6 @@ argument_list|(
 name|SCC_KEYBOARD
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -1322,27 +1306,6 @@ include|#
 directive|include
 file|"../mrx/h/kbms.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1800
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ipc_phys
-parameter_list|(
-name|x
-parameter_list|)
-value|(caddr_t)((int)(x)& ~0x80000000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

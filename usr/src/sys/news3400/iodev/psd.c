@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: psd.c,v 4.300 91/06/09 06:38:07 root Rel41 $ SONY  *  *	@(#)psd.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: psd.c,v 4.300 91/06/09 06:38:07 root Rel41 $ SONY  *  *	@(#)psd.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,12 +10,6 @@ end_comment
 begin_comment
 comment|/*  * psd.c	ver 1.0  *			Fri Mar 31 16:01:42 JST 1989  *  * Probe SCSI device routine  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_include
 include|#
@@ -192,78 +186,6 @@ directive|define
 name|NOSUCHDEV
 value|0x7f
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news800
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXCTLR
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1200
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXCTLR
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1700
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXCTLR
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1800
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXCTLR
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -786,7 +708,6 @@ name|TGSTMASK
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !NO_STATUS_BYTE_MASK */
 if|if
 condition|(
 name|sc

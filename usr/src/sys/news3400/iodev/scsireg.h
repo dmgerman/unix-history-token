@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scsireg.h,v 4.300 91/06/09 06:38:12 root Rel41 $ SONY  *  *	@(#)scsireg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scsireg.h,v 4.300 91/06/09 06:38:12 root Rel41 $ SONY  *  *	@(#)scsireg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,12 +19,6 @@ directive|define
 name|__SCSIREG__
 value|1
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_comment
 comment|/*  *	initiator status byte bit image  */
@@ -1270,66 +1264,6 @@ begin_comment
 comment|/*  *	scsi map table format  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|news800
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|news1800
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NSCMAP
-value|510
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(news800) || defined(news1800) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|news1200
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|news1700
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NSCMAP
-value|129
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news1200 || news1700 */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1348,10 +1282,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* news3400 */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1369,10 +1299,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* news3800 */
-end_comment
 
 begin_struct
 struct|struct
@@ -1393,36 +1319,6 @@ index|[
 name|NSCMAP
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|news800
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|news1800
-argument_list|)
-comment|/*800*/
-endif|#
-directive|endif
-comment|/* defined(news800) || defined(news1800) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|news1200
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|news1700
-argument_list|)
-comment|/*20c*/
-endif|#
-directive|endif
-comment|/* news1200 || news1700 */
 block|}
 struct|;
 end_struct
@@ -2260,56 +2156,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(caddr_t)((int)(x)& ~0x80000000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news800
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|splsc
-value|spl3
-end_define
-
-begin_define
-define|#
-directive|define
-name|splscon
-value|spl2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1800
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|splsc
-value|spl5
-end_define
-
-begin_define
-define|#
-directive|define
-name|splscon
-value|spl4
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kbreg.h,v 4.300 91/06/09 06:42:47 root Rel41 $ SONY  *  *	@(#)kbreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kbreg.h,v 4.300 91/06/09 06:42:47 root Rel41 $ SONY  *  *	@(#)kbreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,12 +15,6 @@ directive|define
 name|__KEYBOARD__
 value|1
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
-end_include
 
 begin_define
 define|#
@@ -51,10 +45,6 @@ name|x
 parameter_list|)
 value|((x)& 0x80)
 end_define
-
-begin_comment
-comment|/*  *  */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -117,25 +107,6 @@ directive|define
 name|KBDPRI
 value|28
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news800
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KB_TEST
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|news800
-end_endif
 
 begin_define
 define|#
@@ -338,34 +309,12 @@ begin_comment
 comment|/* set keyboard status	*/
 end_comment
 
-begin_comment
-comment|/*  *  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|OFF
 value|0x80
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SS2
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SS2
-value|0x8e
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -389,7 +338,7 @@ value|93
 end_define
 
 begin_comment
-comment|/*  *	Programmable function key  */
+comment|/*  * Programmable function key  */
 end_comment
 
 begin_define
