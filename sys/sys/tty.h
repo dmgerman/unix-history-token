@@ -220,6 +220,36 @@ name|termios
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Set modem state */
+name|int
+function_decl|(
+modifier|*
+name|t_modem
+function_decl|)
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Set break state */
+name|int
+function_decl|(
+modifier|*
+name|t_break
+function_decl|)
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|t_sc
