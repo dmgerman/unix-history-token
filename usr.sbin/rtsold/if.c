@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: if.c,v 1.26 2003/05/15 14:38:56 itojun Exp $	*/
+comment|/*	$KAME: if.c,v 1.27 2003/10/05 00:09:36 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -211,7 +211,9 @@ end_decl_stmt
 begin_function
 name|int
 name|ifinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ifsock
 operator|=

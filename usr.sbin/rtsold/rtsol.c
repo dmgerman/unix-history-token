@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: rtsol.c,v 1.26 2003/05/27 06:48:27 jinmei Exp $	*/
+comment|/*	$KAME: rtsol.c,v 1.27 2003/10/05 00:09:36 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -275,7 +275,9 @@ end_decl_stmt
 begin_function
 name|int
 name|sockopen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|u_char
@@ -1829,20 +1831,14 @@ specifier|static
 name|void
 name|call_script
 parameter_list|(
-name|scriptpath
-parameter_list|,
-name|ifname
-parameter_list|)
 name|char
 modifier|*
 name|scriptpath
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|ifname
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|pid_t
 name|pid
@@ -2088,20 +2084,18 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|int
 name|safefile
 parameter_list|(
-name|path
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat

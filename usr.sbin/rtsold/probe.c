@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: probe.c,v 1.16 2002/06/10 20:00:36 itojun Exp $	*/
+comment|/*	$KAME: probe.c,v 1.17 2003/10/05 00:09:36 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -175,7 +175,9 @@ end_decl_stmt
 begin_function
 name|int
 name|probe_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|scmsglen

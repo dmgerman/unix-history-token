@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: dump.c,v 1.12 2003/04/11 10:14:55 jinmei Exp $	*/
+comment|/*	$KAME: dump.c,v 1.13 2003/10/05 00:09:36 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -147,7 +147,9 @@ begin_function
 specifier|static
 name|void
 name|dump_interface_status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ifinfo
@@ -425,12 +427,10 @@ begin_function
 name|void
 name|rtsold_dump_file
 parameter_list|(
-name|dumpfile
-parameter_list|)
 name|char
 modifier|*
 name|dumpfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -483,11 +483,9 @@ name|char
 modifier|*
 name|sec2str
 parameter_list|(
-name|total
-parameter_list|)
 name|time_t
 name|total
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
