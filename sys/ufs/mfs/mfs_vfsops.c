@@ -720,7 +720,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mfs_mount: can't find rootvp - "
+literal|"mfs_mount: can't find rootvp\n"
 argument_list|)
 expr_stmt|;
 return|return

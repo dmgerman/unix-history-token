@@ -401,7 +401,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ffs_mountroot: can't find rootvp"
+literal|"ffs_mountroot: can't find rootvp\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -583,7 +583,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ext2_mountroot: can't find rootvp"
+literal|"ext2_mountroot: can't find rootvp\n"
 argument_list|)
 expr_stmt|;
 return|return
