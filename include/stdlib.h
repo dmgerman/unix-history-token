@@ -1057,6 +1057,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1092,6 +1093,7 @@ name|char
 operator|*
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1123,9 +1125,11 @@ name|cgetmatch
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1160,6 +1164,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1176,6 +1181,7 @@ name|cgetset
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1192,6 +1198,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1212,6 +1219,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
