@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreol.c	3.9 83/09/15"
+literal|"@(#)wwclreol.c	3.10 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +201,10 @@ name|char
 modifier|*
 name|touched
 decl_stmt|;
+name|i
+operator|=
+name|col
+expr_stmt|;
 name|smap
 operator|=
 operator|&
@@ -209,7 +213,7 @@ index|[
 name|row
 index|]
 index|[
-name|col
+name|i
 index|]
 expr_stmt|;
 name|s
@@ -220,7 +224,16 @@ index|[
 name|row
 index|]
 index|[
-name|col
+name|i
+index|]
+expr_stmt|;
+name|win
+operator|=
+name|w
+operator|->
+name|ww_win
+index|[
+name|row
 index|]
 expr_stmt|;
 name|touched
@@ -231,19 +244,6 @@ index|[
 name|row
 index|]
 expr_stmt|;
-name|win
-operator|=
-operator|&
-name|w
-operator|->
-name|ww_win
-index|[
-name|row
-index|]
-index|[
-name|col
-index|]
-expr_stmt|;
 name|ncleared
 operator|=
 name|nblank
@@ -252,21 +252,17 @@ literal|0
 expr_stmt|;
 for|for
 control|(
+init|;
 name|i
-operator|=
+operator|<
 name|w
 operator|->
 name|ww_i
 operator|.
 name|r
-operator|-
-name|col
-init|;
-operator|--
-name|i
-operator|>=
-literal|0
 condition|;
+name|i
+operator|++
 control|)
 block|{
 if|if
@@ -292,9 +288,6 @@ condition|)
 name|nblank
 operator|++
 expr_stmt|;
-name|win
-operator|++
-expr_stmt|;
 continue|continue;
 block|}
 name|ncleared
@@ -307,8 +300,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|win
+index|[
+name|i
+index|]
 operator|==
 literal|0
 condition|)
@@ -323,9 +318,6 @@ name|c_w
 operator|=
 literal|' '
 expr_stmt|;
-name|win
-operator|++
-expr_stmt|;
 block|}
 else|else
 name|s
@@ -335,9 +327,10 @@ name|c_w
 operator|=
 literal|' '
 operator||
-operator|*
 name|win
-operator|++
+index|[
+name|i
+index|]
 operator|<<
 name|WWC_MSHIFT
 expr_stmt|;
