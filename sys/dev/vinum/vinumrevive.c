@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.6 1998/12/28 16:28:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.6 1999/01/17 06:20:44 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -28,7 +28,7 @@ file|<dev/vinum/request.h>
 end_include
 
 begin_comment
-comment|/* revive a block of a plex.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  * XXX We should specify a block size here.  At the moment,  * just take a default value.  FIXME */
+comment|/* revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL means  * that the subdisk isn't associated with a plex (which  * means a programming error if we get here at all;  * FIXME)  * XXX We should specify a block size here.  At the moment,  * just take a default value.  FIXME */
 end_comment
 
 begin_function
@@ -36,19 +36,23 @@ name|int
 name|revive_block
 parameter_list|(
 name|int
-name|plexno
+name|sdno
 parameter_list|)
 block|{
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
 name|struct
 name|plex
 modifier|*
 name|plex
-init|=
-operator|&
-name|PLEX
-index|[
-name|plexno
-index|]
+decl_stmt|;
+name|struct
+name|volume
+modifier|*
+name|vol
 decl_stmt|;
 name|struct
 name|buf
@@ -68,9 +72,72 @@ name|int
 name|s
 decl_stmt|;
 comment|/* priority level */
+name|daddr_t
+name|plexblkno
+decl_stmt|;
+comment|/* lblkno in plex */
+name|plexblkno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* to keep the compiler happy */
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|sdno
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|plexno
+operator|<
+literal|0
+condition|)
+comment|/* no plex? */
+return|return
+name|EINVAL
+return|;
+name|plex
+operator|=
+operator|&
+name|PLEX
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+expr_stmt|;
+comment|/* point to plex */
 if|if
 condition|(
 name|plex
+operator|->
+name|volno
+operator|>=
+literal|0
+condition|)
+name|vol
+operator|=
+operator|&
+name|VOL
+index|[
+name|plex
+operator|->
+name|volno
+index|]
+expr_stmt|;
+else|else
+name|vol
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|sd
 operator|->
 name|revive_blocksize
 operator|==
@@ -86,7 +153,7 @@ operator|!=
 literal|0
 condition|)
 comment|/* we're striped, don't revive more than */
-name|plex
+name|sd
 operator|->
 name|revive_blocksize
 operator|=
@@ -103,7 +170,7 @@ name|DEV_BSHIFT
 argument_list|)
 expr_stmt|;
 else|else
-name|plex
+name|sd
 operator|->
 name|revive_blocksize
 operator|=
@@ -114,17 +181,17 @@ name|size
 operator|=
 name|min
 argument_list|(
-name|plex
+name|sd
 operator|->
 name|revive_blocksize
 operator|>>
 name|DEV_BSHIFT
 argument_list|,
-name|plex
+name|sd
 operator|->
-name|length
+name|sectors
 operator|-
-name|plex
+name|sd
 operator|->
 name|revived
 argument_list|)
@@ -136,7 +203,6 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* Get a buffer */
 name|bp
 operator|=
 name|geteblk
@@ -144,6 +210,7 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* Get a buffer */
 if|if
 condition|(
 name|bp
@@ -174,7 +241,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* remove it */
+comment|/* remove it XXX how can this happen? */
 name|splx
 argument_list|(
 name|s
@@ -199,19 +266,103 @@ name|bp
 operator|->
 name|b_resid
 operator|=
-literal|0x0
+literal|0
 expr_stmt|;
+comment|/* Now decide where to read from */
+switch|switch
+condition|(
+name|plex
+operator|->
+name|organization
+condition|)
+block|{
+name|daddr_t
+name|stripeoffset
+decl_stmt|;
+comment|/* offset in stripe */
+case|case
+name|plex_concat
+case|:
+name|plexblkno
+operator|=
+name|sd
+operator|->
+name|revived
+operator|+
+name|sd
+operator|->
+name|plexoffset
+expr_stmt|;
+comment|/* corresponding address in plex */
+break|break;
+case|case
+name|plex_striped
+case|:
+name|stripeoffset
+operator|=
+name|sd
+operator|->
+name|revived
+operator|%
+name|plex
+operator|->
+name|stripesize
+expr_stmt|;
+comment|/* offset from beginning of stripe */
+name|plexblkno
+operator|=
+name|sd
+operator|->
+name|plexoffset
+comment|/* base */
+operator|+
+operator|(
+name|sd
+operator|->
+name|revived
+operator|-
+name|stripeoffset
+operator|)
+operator|*
+name|plex
+operator|->
+name|subdisks
+comment|/* offset to beginning of stripe */
+operator|+
+name|sd
+operator|->
+name|revived
+operator|%
+name|plex
+operator|->
+name|stripesize
+expr_stmt|;
+comment|/* offset from beginning of stripe */
+break|break;
+case|case
+name|plex_raid5
+case|:
+case|case
+name|plex_disorg
+case|:
+comment|/* to keep the compiler happy */
+block|}
+block|{
 name|bp
 operator|->
 name|b_blkno
 operator|=
-name|plex
-operator|->
-name|revived
+name|plexblkno
 expr_stmt|;
-comment|/* we've got this far */
-comment|/* XXX what about reviving anonymous plexes? */
-comment|/* First, read the data from the volume.  We don't      * care which plex, that's bre's job */
+comment|/* start here */
+if|if
+condition|(
+name|vol
+operator|!=
+name|NULL
+condition|)
+comment|/* it's part of a volume, */
+comment|/* First, read the data from the volume.  We don't 	       * care which plex, that's bre's job */
 name|bp
 operator|->
 name|b_dev
@@ -230,6 +381,22 @@ name|VINUM_VOLUME_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* create the device number */
+else|else
+comment|/* it's an unattached plex */
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|VINUMRBDEV
+argument_list|(
+name|sd
+operator|->
+name|plexno
+argument_list|,
+name|VINUM_RAWPLEX_TYPE
+argument_list|)
+expr_stmt|;
+comment|/* create the device number */
 name|bp
 operator|->
 name|b_flags
@@ -238,6 +405,7 @@ name|B_BUSY
 operator||
 name|B_READ
 expr_stmt|;
+comment|/* either way, read it */
 name|vinumstart
 argument_list|(
 name|bp
@@ -250,6 +418,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bp
@@ -265,7 +434,7 @@ operator|->
 name|b_error
 expr_stmt|;
 else|else
-comment|/* Now write to the plex */
+comment|/* Now write to the subdisk */
 block|{
 name|s
 operator|=
@@ -296,19 +465,11 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|VINUMBDEV
+name|VINUMRBDEV
 argument_list|(
-name|plex
-operator|->
-name|volno
+name|sdno
 argument_list|,
-name|plex
-operator|->
-name|volplexno
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_PLEX_TYPE
+name|VINUM_RAWSD_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* create the device number */
@@ -317,21 +478,31 @@ operator|->
 name|b_flags
 operator|=
 name|B_BUSY
+operator||
+name|B_ORDERED
 expr_stmt|;
-comment|/* make this a write */
+comment|/* and make this an ordered write */
 name|bp
 operator|->
 name|b_resid
 operator|=
 literal|0x0
 expr_stmt|;
-name|vinumstart
+name|bp
+operator|->
+name|b_blkno
+operator|=
+name|sd
+operator|->
+name|revived
+expr_stmt|;
+comment|/* write it to here */
+name|sdio
 argument_list|(
 name|bp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
+comment|/* perform the I/O */
 name|biowait
 argument_list|(
 name|bp
@@ -353,7 +524,7 @@ name|b_error
 expr_stmt|;
 else|else
 block|{
-name|plex
+name|sd
 operator|->
 name|revived
 operator|+=
@@ -366,60 +537,43 @@ expr_stmt|;
 comment|/* moved this much further down */
 if|if
 condition|(
-name|plex
+name|sd
 operator|->
 name|revived
 operator|>=
-name|plex
+name|sd
 operator|->
-name|length
+name|sectors
 condition|)
 block|{
 comment|/* finished */
-name|plex
+name|sd
 operator|->
 name|revived
 operator|=
 literal|0
 expr_stmt|;
-name|plex
-operator|->
-name|state
-operator|=
-name|plex_up
-expr_stmt|;
-comment|/* do we need to do more? */
-if|if
-condition|(
-name|plex
-operator|->
-name|volno
-operator|>=
-literal|0
-condition|)
-comment|/* we have a volume, */
-name|set_volume_state
+name|set_sd_state
 argument_list|(
-name|plex
-operator|->
-name|volno
+name|sdno
 argument_list|,
-name|volume_up
+name|sd_up
 argument_list|,
-literal|0
+name|setstate_force
 argument_list|)
 expr_stmt|;
+comment|/* bring the sd up */
 name|printf
 argument_list|(
-literal|"vinum: plex %s is %s\n"
+literal|"vinum: %s is %s\n"
 argument_list|,
-name|plex
+name|sd
 operator|->
 name|name
 argument_list|,
-name|plex_state
+name|sd_state
 argument_list|(
-name|plex
+name|sd
 operator|->
 name|state
 argument_list|)
@@ -438,15 +592,79 @@ block|}
 block|}
 while|while
 condition|(
-name|plex
+name|sd
 operator|->
 name|waitlist
 condition|)
 block|{
 comment|/* we have waiting requests */
+if|#
+directive|if
+name|VINUMDEBUG
+name|struct
+name|request
+modifier|*
+name|rq
+init|=
+name|sd
+operator|->
+name|waitlist
+decl_stmt|;
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_REVIVECONFLICT
+condition|)
+name|printf
+argument_list|(
+literal|"Relaunch revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+argument_list|,
+name|rq
+operator|->
+name|sdno
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|rq
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|?
+literal|"Read"
+else|:
+literal|"Write"
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|launch_requests
 argument_list|(
-name|plex
+name|sd
 operator|->
 name|waitlist
 argument_list|,
@@ -454,11 +672,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* do them now */
-name|plex
+name|sd
 operator|->
 name|waitlist
 operator|=
-name|plex
+name|sd
 operator|->
 name|waitlist
 operator|->
