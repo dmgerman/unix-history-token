@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.4 (Berkeley) 81/03/22"
+literal|"@(#)arff.c	4.5 (Berkeley) 81/04/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,6 +377,7 @@ index|]
 init|=
 block|{
 block|{
+block|{
 literal|4
 block|,
 literal|0
@@ -410,6 +411,7 @@ block|{
 literal|0
 block|,
 name|RT_ESEG
+block|}
 block|}
 block|}
 decl_stmt|;
@@ -1999,6 +2001,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|dirnum
+operator|=
+literal|1
+expr_stmt|;
 name|rt_entsiz
 operator|=
 literal|2
@@ -4107,11 +4114,19 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|perror
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|dope
@@ -4174,6 +4189,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -4295,9 +4311,17 @@ continue|continue;
 block|}
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"%s: no slot for file\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|3
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -4330,9 +4354,17 @@ literal|0
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"%s: internal error, added then not found\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|7
+operator|-
+literal|1
 operator|)
 return|;
 block|}
