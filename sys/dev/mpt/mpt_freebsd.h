@@ -23,9 +23,12 @@ directive|define
 name|_MPT_FREEBSD_H_
 end_define
 
-begin_comment
-comment|/* #define RELENG_4	1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|RELENG_4
+value|1
+end_define
 
 begin_include
 include|#
@@ -78,18 +81,6 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
