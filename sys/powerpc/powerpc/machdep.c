@@ -1935,8 +1935,16 @@ comment|/* Init basic tunables, hz etc */
 end_comment
 
 begin_expr_stmt
-name|init_param
+name|init_param1
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|init_param2
+argument_list|(
+name|physmem
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

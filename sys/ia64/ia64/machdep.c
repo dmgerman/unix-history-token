@@ -2498,7 +2498,7 @@ name|bi_fpswa
 argument_list|)
 expr_stmt|;
 comment|/* Init basic tunables, including hz */
-name|init_param
+name|init_param1
 argument_list|()
 expr_stmt|;
 name|p
@@ -2872,6 +2872,11 @@ expr_stmt|;
 name|Maxmem
 operator|=
 name|physmem
+expr_stmt|;
+name|init_param2
+argument_list|(
+name|physmem
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 block|{

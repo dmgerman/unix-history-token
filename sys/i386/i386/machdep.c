@@ -7431,7 +7431,7 @@ operator|+
 name|KERNBASE
 expr_stmt|;
 comment|/* Init basic tunables, hz etc */
-name|init_param
+name|init_param1
 argument_list|()
 expr_stmt|;
 comment|/* 	 * make gdt memory segments, the code segment goes up to end of the 	 * page with etext in it, the data segment goes to the end of 	 * the address space 	 */
@@ -8699,6 +8699,11 @@ expr_stmt|;
 name|getmemsize
 argument_list|(
 name|first
+argument_list|)
+expr_stmt|;
+name|init_param2
+argument_list|(
+name|physmem
 argument_list|)
 expr_stmt|;
 comment|/* now running on new page tables, configured,and u/iom is accessible */

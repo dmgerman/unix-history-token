@@ -937,9 +937,15 @@ operator|)
 name|_end
 expr_stmt|;
 block|}
+comment|/* 	 * XXX calculate physmem 	 */
 comment|/* 	 * Initialize tunables. 	 */
-name|init_param
+name|init_param1
 argument_list|()
+expr_stmt|;
+name|init_param2
+argument_list|(
+name|physmem
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
