@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	1.1 (Berkeley) %G%"
+literal|"@(#)langpats.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * In-line assembly code expander for  * the kernel.  This code is stolen from  * pc2 and the old asm.sed script.  */
+comment|/*  * In-line assembly code expander for  * the kernel.  This code is based on  * pc2 and the old asm.sed script.  */
 end_comment
 
 begin_include
@@ -69,350 +69,295 @@ index|[]
 init|=
 block|{
 block|{
-literal|"$0,_spl0\n"
+literal|"_spl0\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0,$18\n"
 block|}
 block|,
 block|{
-literal|"$0,_spl1\n"
+literal|"_spl1\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$1,$18\n"
 block|}
 block|,
 block|{
-literal|"$0,_splsoftclock\n"
+literal|"_splsoftclock\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x8,$18\n"
 block|}
 block|,
 block|{
-literal|"$0,_splnet\n"
+literal|"_splnet\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0xc,$18\n"
 block|}
 block|,
 block|{
-literal|"$0,_splimp\n"
+literal|"_splimp\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x16,$18\n"
 block|}
 block|,
 block|{
-literal|"$0,_spl4\n"
+literal|"_spl4\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x14,$18\n"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
-literal|"r[0-9]*,_spl4\n"
-block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x14,$18\n"
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|"$0,_splbio"
+literal|"_splbio\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x15,$18\n"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
-literal|"r[0-9]*,_splbio"
+literal|"_spltty\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x15,$18\n"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
-literal|"$0,_spltty"
+literal|"_spl5\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x15,$18\n"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
-literal|"r[0-9]*,_spltty\n"
-block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x15,$18\n"
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|"$0,_spl5\n"
-block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x15,$18\n"
-block|}
-block|,
-ifdef|#
-directive|ifdef
-name|notdef
-block|{
-literal|"r[0-9]*,_spl5\n"
-block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x15,$18\n"
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|"$0,_splclock\n"
+literal|"_splclock\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x18,$18\n"
 block|}
 block|,
 block|{
-literal|"$0,_spl6\n"
+literal|"_spl6\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x18,$18\n"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
-literal|"r[0-9]*,_spl6\n"
-block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x18,$18\n"
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|"$0,_spl7\n"
+literal|"_spl7\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x1f,$18\n"
 block|}
 block|,
 block|{
-literal|"$1,_splx\n"
+literal|"_splx\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	(sp)+,$18\n"
 block|}
 block|,
 block|{
-literal|"$1,_mfpr\n"
+literal|"_mfpr\n"
 block|,
 literal|"	mfpr	(sp)+,r0\n"
 block|}
 block|,
 block|{
-literal|"$2,_mtpr\n"
+literal|"_mtpr\n"
 block|,
 literal|"	mtpr	4(sp),(sp)\n\ 	addl2	$8,sp\n"
 block|}
 block|,
 block|{
-literal|"$0,_setsoftclock\n"
+literal|"_setsoftclock\n"
 block|,
 literal|"	mtpr	$0x8,$0x14\n"
 block|}
 block|,
 block|{
-literal|"$1,_resume\n"
+literal|"_resume\n"
 block|,
 literal|"	ashl	$9,(sp)+,r0 \n\ 	movpsl	-(sp) \n\ 	jsb	_Resume\n"
 block|}
 block|,
 block|{
-literal|"$3,_bcopy\n"
+literal|"_bcopy\n"
 block|,
 literal|"	movc3	8(sp),*(sp),*4(sp)\n\ 	addl2	$12,sp\n"
 block|}
 block|,
 block|{
-literal|"$3,_ovbcopy\n"
+literal|"_ovbcopy\n"
 block|,
 literal|"	movc3	8(sp),*(sp),*4(sp)\n\ 	addl2	$12,sp\n"
 block|}
 block|,
 block|{
-literal|"$2,_bzero\n"
+literal|"_bzero\n"
 block|,
 literal|"	movc5	$0,(r0),$0,4(sp),*(sp)\n\ 	addl2	$8,sp\n"
 block|}
 block|,
 block|{
-literal|"$3,_bcmp\n"
+literal|"_bcmp\n"
 block|,
 literal|"	popr	$0x7\n\ 	cmpc3	r2,(r0),(r1)\n"
 block|}
 block|,
 block|{
-literal|"$3,_strncmp\n"
+literal|"_strncmp\n"
 block|,
 literal|"	cmpc3	8(sp),*(sp),*4(sp)\n\ 	addl2	$12,sp\n"
 block|}
 block|,
 block|{
-literal|"$2,_blkclr\n"
+literal|"_blkclr\n"
 block|,
 literal|"	movl	(sp)+,r3\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,(sp)\n\ 	movc5	$0,(r3),$0,r0,(r3)\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	jgtr	1b\n\ 	movl	(sp)+,r0\n\ 	movc5	$0,(r3),$0,r0,(r3)\n"
 block|}
 block|,
 block|{
-literal|"$1,_strlen\n"
+literal|"_strlen\n"
 block|,
 literal|"	movl	(sp),r1\n\ 1:\n\ 	locc	$0,$65535,(r1)\n\ 	jeql	1b\n\ 	subl3	(sp)+,r1,r0\n"
 block|}
 block|,
 block|{
-literal|"$4,_scanc\n"
+literal|"_scanc\n"
 block|,
 literal|"	popr	$0xf\n\ 	scanc	r0,(r1),(r2),r3\n"
 block|}
 block|,
 block|{
-literal|"$3,_copyin\n"
+literal|"_copyin\n"
 block|,
 literal|"	jsb	_Copyin\n\ 	addl2	$12,sp\n"
 block|}
 block|,
 block|{
-literal|"$3,_copyout\n"
+literal|"_copyout\n"
 block|,
 literal|"	jsb	_Copyout\n\ 	addl2	$12,sp\n"
 block|}
 block|,
 block|{
-literal|"$1,_fubyte\n"
+literal|"_fubyte\n"
 block|,
 literal|"	movl	(sp)+,r0\n\ 	jsb	_Fubyte\n"
 block|}
 block|,
 block|{
-literal|"$1,_fuibyte\n"
+literal|"_fuibyte\n"
 block|,
 literal|"	movl (sp)+,r0\n\ 	jsb	_Fubyte\n"
 block|}
 block|,
 block|{
-literal|"$1,_fuword\n"
+literal|"_fuword\n"
 block|,
 literal|"	movl (sp)+,r0\n\ 	jsb	_Fuword\n"
 block|}
 block|,
 block|{
-literal|"$1,_fuiword\n"
+literal|"_fuiword\n"
 block|,
 literal|"	movl (sp)+,r0\n\ 	jsb	_Fuword\n"
 block|}
 block|,
 block|{
-literal|"$2,_subyte\n"
+literal|"_subyte\n"
 block|,
 literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	jsb	_Subyte\n"
 block|}
 block|,
 block|{
-literal|"$2,_suibyte\n"
+literal|"_suibyte\n"
 block|,
 literal|"	movl (sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	jsb	_Subyte\n"
 block|}
 block|,
 block|{
-literal|"$2,_suword\n"
+literal|"_suword\n"
 block|,
 literal|"	movl (sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	jsb	_Suword\n"
 block|}
 block|,
 block|{
-literal|"$2,_suiword\n"
+literal|"_suiword\n"
 block|,
 literal|"	movl (sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	jsb	_Suword\n"
 block|}
 block|,
 block|{
-literal|"$1,_setrq\n"
+literal|"_setrq\n"
 block|,
 literal|"	movl	(sp)+,r0 \n\ 	jsb	_Setrq\n"
 block|}
 block|,
 block|{
-literal|"$1,_remrq\n"
+literal|"_remrq\n"
 block|,
 literal|"	movl	(sp)+,r0 \n\ 	jsb	_Remrq\n"
 block|}
 block|,
 block|{
-literal|"$0,_swtch\n"
+literal|"_swtch\n"
 block|,
 literal|"	movpsl	-(sp)\n\ 	jsb	_Swtch\n"
 block|}
 block|,
 block|{
-literal|"$1,_setjmp\n"
+literal|"_setjmp\n"
 block|,
 literal|"	movl	(sp)+,r0 \n\ 	jsb	_Setjmp\n"
 block|}
 block|,
 block|{
-literal|"$1,_longjmp\n"
+literal|"_longjmp\n"
 block|,
 literal|"	movl	(sp)+,r0 \n\ 	jsb	_Longjmp\n"
 block|}
 block|,
 block|{
-literal|"$1,_ffs\n"
+literal|"_ffs\n"
 block|,
 literal|"	movl	(sp)+,r1\n\ 	ffs	$0,$32,r1,r0 \n\ 	bneq	1f \n\ 	mnegl	$1,r0 \n\ 1: \n\ 	incl	r0\n"
 block|}
 block|,
 block|{
-literal|"$1,_htons\n"
+literal|"_htons\n"
 block|,
 literal|"	rotl	$8,(sp),r0\n\ 	movb	1(sp),r0\n\ 	movzwl	r0,r0\n\ 	addl2	$4,sp\n"
 block|}
 block|,
 block|{
-literal|"$1,_ntohs\n"
+literal|"_ntohs\n"
 block|,
 literal|"	rotl	$8,(sp),r0\n\ 	movb	1(sp),r0\n\ 	movzwl	r0,r0\n\ 	addl2	$4,sp\n"
 block|}
 block|,
 block|{
-literal|"$1,_htonl\n"
+literal|"_htonl\n"
 block|,
 literal|"	rotl	$-8,(sp),r0\n\ 	insv	r0,$16,$8,r0\n\ 	movb	3(sp),r0\n\ 	addl2	$4,sp\n"
 block|}
 block|,
 block|{
-literal|"$1,_ntohl\n"
+literal|"_ntohl\n"
 block|,
 literal|"	rotl	$-8,(sp),r0\n\ 	insv	r0,$16,$8,r0\n\ 	movb	3(sp),r0\n\ 	addl2	$4,sp\n"
 block|}
 block|,
 block|{
-literal|"$2,__insque\n"
+literal|"__insque\n"
 block|,
 literal|"	insque	*(sp)+,*(sp)+\n"
 block|}
 block|,
 block|{
-literal|"$1,__remque\n"
+literal|"__remque\n"
 block|,
 literal|"	remque	*(sp)+,r0\n"
 block|}
 block|,
 block|{
-literal|"$2,__queue\n"
+literal|"__queue\n"
 block|,
 literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	insque	r1,*4(r0)\n"
 block|}
 block|,
 block|{
-literal|"$1,__dequeue\n"
+literal|"__dequeue\n"
 block|,
 literal|"	movl	(sp)+,r0\n\ 	remque	*(r0),r0\n"
 block|}
@@ -676,6 +621,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+for|for
+control|(
 name|cp
 operator|+=
 sizeof|sizeof
@@ -684,6 +631,38 @@ name|CALLS
 argument_list|)
 operator|-
 literal|1
+init|;
+operator|*
+name|cp
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|','
+condition|;
+name|cp
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|','
+condition|)
+block|{
+name|fputs
+argument_list|(
+name|line
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|cp
+operator|++
 expr_stmt|;
 name|HASH
 argument_list|(
