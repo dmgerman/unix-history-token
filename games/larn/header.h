@@ -2431,9 +2431,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|time_t
 name|initialtime
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
 name|outstanding_taxes
 decl_stmt|,
 name|skill

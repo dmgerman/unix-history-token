@@ -126,7 +126,7 @@ name|long
 name|score
 decl_stmt|;
 comment|/* the players score 								*/
-name|long
+name|time_t
 name|diedtime
 decl_stmt|;
 comment|/* time when game was over 							*/
@@ -2430,9 +2430,10 @@ decl_stmt|,
 modifier|*
 name|mod
 decl_stmt|;
-name|long
+name|time_t
 name|zzz
-decl_stmt|,
+decl_stmt|;
+name|long
 name|i
 decl_stmt|;
 name|struct

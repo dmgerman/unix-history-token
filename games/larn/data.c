@@ -1250,7 +1250,7 @@ comment|/* unsigned long randx=33601;      /*      the random number seed       
 end_comment
 
 begin_decl_stmt
-name|long
+name|time_t
 name|initialtime
 init|=
 literal|0

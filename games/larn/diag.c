@@ -29,14 +29,6 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|long
-name|int
-name|initialtime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|rmst
 decl_stmt|,
@@ -1150,8 +1142,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|long
-name|int
+name|time_t
 name|zzz
 init|=
 literal|0
