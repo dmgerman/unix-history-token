@@ -142,6 +142,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
@@ -153,6 +161,11 @@ include|#
 directive|include
 file|<isa/isareg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2499,12 +2512,10 @@ name|start
 operator|=
 operator|(
 name|channel
-operator|==
-literal|0
 condition|?
-name|IO_WD1
+name|ATA_SECONDARY
 else|:
-name|IO_WD2
+name|ATA_PRIMARY
 operator|)
 expr_stmt|;
 name|end
@@ -2601,12 +2612,10 @@ name|start
 operator|=
 operator|(
 name|channel
-operator|==
-literal|0
 condition|?
-name|IO_WD1
+name|ATA_SECONDARY
 else|:
-name|IO_WD2
+name|ATA_PRIMARY
 operator|)
 operator|+
 name|ATA_ALTOFFSET
