@@ -570,10 +570,18 @@ name|int
 name|sigev_notify
 decl_stmt|;
 comment|/* Notification type */
+union|union
+block|{
 name|int
-name|sigev_signo
+name|__sigev_signo
 decl_stmt|;
 comment|/* Signal number */
+name|int
+name|__sigev_notify_kqueue
+decl_stmt|;
+block|}
+name|__sigev_u
+union|;
 name|union
 name|sigval
 name|sigev_value
@@ -582,6 +590,20 @@ comment|/* Signal value */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sigev_signo
+value|__sigev_u.__sigev_signo
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigev_notify_kqueue
+value|__sigev_u.__sigev_notify_kqueue
+end_define
 
 begin_define
 define|#
@@ -603,6 +625,17 @@ end_define
 
 begin_comment
 comment|/* Generate a queued signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGEV_KEVENT
+value|3
+end_define
+
+begin_comment
+comment|/* Generate a kevent */
 end_comment
 
 begin_typedef
