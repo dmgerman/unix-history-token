@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.22	82/10/10	*/
+comment|/*	subr_prf.c	4.23	82/10/31	*/
 end_comment
 
 begin_include
@@ -681,6 +681,16 @@ end_decl_stmt
 
 begin_block
 block|{
+if|#
+directive|if
+name|sun
+specifier|register
+name|int
+modifier|*
+name|a5
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|bootopt
 init|=
@@ -694,6 +704,22 @@ name|bootopt
 operator||=
 name|RB_NOSYNC
 expr_stmt|;
+if|#
+directive|if
+name|sun
+else|else
+block|{
+asm|asm("movl a6, a5");
+name|traceback
+argument_list|(
+name|a5
+argument_list|,
+name|a5
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|panicstr
 operator|=
 name|s
@@ -903,10 +929,15 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+if|#
+directive|if
+name|vax
 include|#
 directive|include
 file|"../vax/mtpr.h"
 comment|/* XXX */
+endif|#
+directive|endif
 if|if
 condition|(
 name|c
@@ -920,11 +951,16 @@ operator|&&
 name|c
 operator|!=
 literal|0177
+if|#
+directive|if
+name|vax
 operator|&&
 name|mfpr
 argument_list|(
 name|MAPEN
 argument_list|)
+endif|#
+directive|endif
 condition|)
 block|{
 if|if
