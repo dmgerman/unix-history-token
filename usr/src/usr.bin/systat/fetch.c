@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fetch.c	1.1 (Lucasfilm) %G%"
+literal|"@(#)fetch.c	1.2 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +304,36 @@ operator|->
 name|p_stat
 operator|==
 name|SZOMB
-operator|||
+condition|)
+return|return
+operator|(
+literal|""
+operator|)
+return|;
+if|if
+condition|(
+name|pid
+operator|==
+literal|1
+condition|)
+return|return
+operator|(
+literal|"swapper"
+operator|)
+return|;
+if|if
+condition|(
+name|pid
+operator|==
+literal|2
+condition|)
+return|return
+operator|(
+literal|"pagedaemon"
+operator|)
+return|;
+if|if
+condition|(
 name|mproc
 operator|->
 name|p_flag
@@ -320,11 +349,20 @@ operator|(
 literal|""
 operator|)
 return|;
+if|if
+condition|(
 name|getu
 argument_list|(
 name|mproc
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|"???"
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -463,17 +501,13 @@ operator|!=
 name|size
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ps: cant read u for pid %d from %s\n"
+literal|"cant read u for pid %d"
 argument_list|,
 name|mproc
 operator|->
 name|p_pid
-argument_list|,
-name|swapf
 argument_list|)
 expr_stmt|;
 return|return
@@ -552,15 +586,13 @@ name|apte
 argument_list|)
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"ps: cant read indir pte to get u for pid %d from %s\n"
+literal|"cant read indir pte to get u for pid %d"
 argument_list|,
 name|mproc
 operator|->
 name|p_pid
-argument_list|,
-name|swapf
 argument_list|)
 expr_stmt|;
 return|return
@@ -624,15 +656,13 @@ name|arguutl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"ps: cant read page table for u of pid %d from %s\n"
+literal|"cant read page table for u of pid %d"
 argument_list|,
 name|mproc
 operator|->
 name|p_pid
-argument_list|,
-name|kmemf
 argument_list|)
 expr_stmt|;
 return|return
@@ -762,9 +792,9 @@ operator|*
 name|NBPG
 condition|)
 block|{
-name|printf
+name|error
 argument_list|(
-literal|"ps: cant read page %d of u of pid %d from %s\n"
+literal|"cant read page %d of u of pid %d\n"
 argument_list|,
 name|arguutl
 index|[
@@ -778,8 +808,6 @@ argument_list|,
 name|mproc
 operator|->
 name|p_pid
-argument_list|,
-name|memf
 argument_list|)
 expr_stmt|;
 return|return

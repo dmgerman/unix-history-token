@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	1.1 (Lucasfilm) %G%"
+literal|"@(#)pigs.c	1.2 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -731,32 +731,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|fetchpigs
+name|initpigs
 argument_list|()
 end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|struct
-name|p_times
-modifier|*
-name|prt
-decl_stmt|;
-specifier|register
-name|float
-name|time
-decl_stmt|;
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|pp
-decl_stmt|;
 if|if
 condition|(
 name|procp
@@ -810,10 +790,10 @@ block|}
 if|if
 condition|(
 name|usrpt
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
+return|return;
 name|usrpt
 operator|=
 operator|(
@@ -860,8 +840,36 @@ name|p_times
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+end_block
+
+begin_macro
+name|fetchpigs
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|register
+name|struct
+name|p_times
+modifier|*
+name|prt
+decl_stmt|;
+specifier|register
+name|float
+name|time
+decl_stmt|;
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|pp
+decl_stmt|;
 name|prt
 operator|=
 name|pt
