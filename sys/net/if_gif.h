@@ -27,20 +27,11 @@ directive|define
 name|_NET_IF_GIF_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_LKM
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -48,10 +39,11 @@ directive|include
 file|"opt_inet.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
 
 begin_include
 include|#
@@ -131,7 +123,7 @@ modifier|*
 name|r_unit
 decl_stmt|;
 comment|/* resource allocated for this unit */
-name|TAILQ_ENTRY
+name|LIST_ENTRY
 argument_list|(
 argument|gif_softc
 argument_list|)
@@ -267,6 +259,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
