@@ -317,6 +317,23 @@ argument_list|(
 name|openDirectories
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dot
+operator|==
+operator|(
+name|Path
+operator|*
+operator|)
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot open current directory"
+argument_list|)
+expr_stmt|;
 comment|/*      * We always need to have dot around, so we increment its reference count      * to make sure it's not destroyed.      */
 name|dot
 operator|->
@@ -3188,23 +3205,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Skip the first two entries -- these will *always* be . and .. 	     */
-operator|(
-name|void
-operator|)
-name|readdir
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|readdir
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3251,6 +3251,24 @@ block|}
 endif|#
 directive|endif
 comment|/* sun&& d_ino */
+comment|/* Skip the '.' and '..' entries by checking for them 		 * specifically instead of assuming readdir() reuturns them in 		 * that order when first going through a directory.  This is 		 * needed for XFS over NFS filesystems since SGI does not 		 * guarantee that these are * the first two entries returned 		 * from readdir(). 		 */
+if|if
+condition|(
+name|ISDOT
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|)
+operator|||
+name|ISDOTDOT
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|)
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)

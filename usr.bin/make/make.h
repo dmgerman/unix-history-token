@@ -43,6 +43,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1287,6 +1293,26 @@ parameter_list|(
 name|module
 parameter_list|)
 value|(debug& CONCAT(DEBUG_,module))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDOT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[0] == '.'&& (((c)[1] == '\0') || ((c)[1] == '/')))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDOTDOT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[0] == '.'&& ISDOT(&((c)[1])))
 end_define
 
 begin_comment
