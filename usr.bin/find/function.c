@@ -1384,7 +1384,8 @@ name|f_acl
 parameter_list|(
 name|PLAN
 modifier|*
-name|plan__unused
+name|plan
+name|__unused
 parameter_list|,
 name|FTSENT
 modifier|*
@@ -1566,7 +1567,8 @@ name|char
 modifier|*
 modifier|*
 modifier|*
-name|argvp__unused
+name|argvp
+name|__unused
 parameter_list|)
 block|{
 name|ftsoptions
