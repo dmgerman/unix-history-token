@@ -152,6 +152,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_LIBMAP_CONF
+value|"/etc/libmap.conf"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_LOGIN
 value|"/usr/bin/login"
 end_define
