@@ -4954,6 +4954,14 @@ name|retval
 init|=
 name|NULL
 decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|p_names
+init|=
+name|names
+decl_stmt|;
 while|while
 condition|(
 name|size
@@ -4983,7 +4991,7 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|names
+name|p_names
 argument_list|)
 expr_stmt|;
 return|return
