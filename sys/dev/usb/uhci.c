@@ -125,12 +125,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 

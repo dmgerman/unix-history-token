@@ -1201,6 +1201,16 @@ define|\
 value|do {						\ 	if (BUF_REFCNT(bp)> 0)			\ 		panic("free locked buf");	\ 	lockdestroy(&(bp)->b_lock);		\ } while (0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_PROC_H_
+end_ifdef
+
+begin_comment
+comment|/* Avoid #include<sys/proc.h> pollution */
+end_comment
+
 begin_comment
 comment|/*  * When initiating asynchronous I/O, change ownership of the lock to the  * kernel. Once done, the lock may legally released by biodone. The  * original owning process can no longer acquire it recursively, but must  * wait until the I/O is completed and the lock has been freed by biodone.  */
 end_comment
@@ -1271,6 +1281,11 @@ name|LK_KERNPROC
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Find out the number of references to a lock.  */
