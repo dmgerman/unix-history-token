@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.8 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/telnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"general.h"
 end_include
 
 begin_include
