@@ -17,6 +17,12 @@ operator|>
 literal|0
 end_if
 
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
+
 begin_comment
 comment|/*  * Driver configuration parameters  */
 end_comment

@@ -117,6 +117,12 @@ directive|include
 file|<sys/dataacq.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

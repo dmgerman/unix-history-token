@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.30 1997/11/07 08:52:48 phk Exp $ */
+comment|/* $Id: matcd.c,v 1.31 1997/12/02 21:06:37 phk Exp $ */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"matcd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
 end_include
 
 begin_include

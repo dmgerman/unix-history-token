@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.33 1997/09/21 21:41:32 gibbs Exp $ */
+comment|/* $Id: scd.c,v 1.34 1997/12/02 21:06:26 phk Exp $ */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ name|NSCD
 operator|>
 literal|0
 end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
 
 begin_include
 include|#

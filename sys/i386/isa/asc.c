@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.26 1997/04/14 16:47:38 jkh Exp $  */
+comment|/*  * $Id: asc.c,v 1.27 1997/09/14 03:19:05 peter Exp $  */
 end_comment
 
 begin_include
@@ -138,6 +138,12 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
 end_include
 
 begin_ifdef
