@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c 4.1 %G%"
+literal|"@(#)ar.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ modifier|*
 name|opt
 init|=
 block|{
-literal|"uvnbail"
+literal|"uvnbailo"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -387,6 +387,15 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|time_t
+name|timep
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|char
 modifier|*
@@ -507,6 +516,9 @@ operator|*
 name|cp
 condition|)
 block|{
+case|case
+literal|'o'
+case|:
 case|case
 literal|'l'
 case|:
@@ -1133,6 +1145,41 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flg
+index|[
+literal|'o'
+operator|-
+literal|'a'
+index|]
+condition|)
+block|{
+name|timep
+index|[
+literal|0
+index|]
+operator|=
+name|timep
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|time_t
+operator|)
+name|larbuf
+operator|.
+name|lar_date
+expr_stmt|;
+name|utime
+argument_list|(
+name|file
+argument_list|,
+name|timep
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 name|sk
@@ -1909,9 +1956,9 @@ name|printf
 argument_list|(
 literal|"usage: ar [%s][%s] archive files ...\n"
 argument_list|,
-name|opt
-argument_list|,
 name|man
+argument_list|,
+name|opt
 argument_list|)
 expr_stmt|;
 name|done
