@@ -3062,7 +3062,7 @@ name|panic
 argument_list|(
 literal|"pmap_new_thread: could not contigmalloc %d pages\n"
 argument_list|,
-name|KSTACK_PAGES
+name|pages
 argument_list|)
 expr_stmt|;
 name|td
@@ -3141,7 +3141,7 @@ name|td_md
 operator|.
 name|md_kstackvirt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|td
 operator|->
@@ -3169,7 +3169,7 @@ name|int
 name|pages
 parameter_list|)
 block|{
-comment|/* shuffle the original stack */
+comment|/* 	 * Shuffle the original stack. Save the virtual kstack address 	 * instead of the physical address because 1) we can derive the 	 * physical address from the virtual address and 2) we need the 	 * virtual address in pmap_dispose_thread. 	 */
 name|td
 operator|->
 name|td_altkstack_obj
@@ -3182,9 +3182,14 @@ name|td
 operator|->
 name|td_altkstack
 operator|=
+operator|(
+name|vm_offset_t
+operator|)
 name|td
 operator|->
-name|td_kstack
+name|td_md
+operator|.
+name|md_kstackvirt
 expr_stmt|;
 name|td
 operator|->
@@ -3219,14 +3224,34 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* restore the original kstack */
+comment|/* 	 * Restore the original kstack. Note that td_altkstack holds the 	 * virtual kstack address of the previous kstack. 	 */
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_kstackvirt
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|td
+operator|->
+name|td_altkstack
+expr_stmt|;
 name|td
 operator|->
 name|td_kstack
 operator|=
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|ia64_tpa
+argument_list|(
 name|td
 operator|->
 name|td_altkstack
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|td
 operator|->
