@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.18 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2105,6 +2105,64 @@ name|fuzzyp
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* DEC Hesiod getpwnam accepts numeric strings -- short circuit it */
+for|for
+control|(
+name|p
+operator|=
+name|name
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"failed (numeric input)\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/* look up this login name using fast path */
 if|if
 condition|(
