@@ -15,6 +15,12 @@ directive|define
 name|_SYS_UCRED_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser()/suser_xxx() function should be used for this.  */
 end_comment
@@ -23,7 +29,12 @@ begin_struct
 struct|struct
 name|ucred
 block|{
-name|u_short
+name|struct
+name|mtx
+name|cr_mtx
+decl_stmt|;
+comment|/* protect refcount */
+name|u_int
 name|cr_ref
 decl_stmt|;
 comment|/* reference count */
@@ -94,7 +105,8 @@ name|crhold
 parameter_list|(
 name|cr
 parameter_list|)
-value|(cr)->cr_ref++
+define|\
+value|do {						\ 		mtx_enter(&(cr)->cr_mtx, MTX_DEF);	\ 		(cr)->cr_ref++;				\ 		mtx_exit(&(cr)->cr_mtx, MTX_DEF);	\ 	} while (0)
 end_define
 
 begin_struct_decl
