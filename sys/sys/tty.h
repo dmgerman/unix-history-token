@@ -24,18 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/select.h>
 end_include
 
 begin_comment
 comment|/* For struct selinfo. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
 
 begin_comment
 comment|/*  * Clists are character lists, which is a variable length linked list  * of cblocks, with a count of the number of characters in the list.  */

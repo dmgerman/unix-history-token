@@ -90,6 +90,16 @@ directive|include
 file|<sys/ucred.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
+end_include
+
+begin_comment
+comment|/* For struct klist */
+end_comment
+
 begin_comment
 comment|/*  * One structure allocated per session.  */
 end_comment
@@ -609,6 +619,11 @@ name|u_long
 name|p_code
 decl_stmt|;
 comment|/* for core dump/debugger XXX */
+name|struct
+name|klist
+name|p_klist
+decl_stmt|;
+comment|/* knotes attached to this process */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define

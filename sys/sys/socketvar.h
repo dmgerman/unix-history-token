@@ -243,6 +243,11 @@ directive|define
 name|SB_AIO
 value|0x80
 comment|/* AIO operations queued */
+define|#
+directive|define
+name|SB_KNOTE
+value|0x100
+comment|/* kernel note attached */
 name|void
 argument_list|(
 argument|*so_upcall
@@ -545,7 +550,7 @@ name|sb_notify
 parameter_list|(
 name|sb
 parameter_list|)
-value|(((sb)->sb_flags& (SB_WAIT | SB_SEL | SB_ASYNC | \     SB_UPCALL | SB_AIO)) != 0)
+value|(((sb)->sb_flags& (SB_WAIT | SB_SEL | SB_ASYNC | \     SB_UPCALL | SB_AIO | SB_KNOTE)) != 0)
 end_define
 
 begin_comment

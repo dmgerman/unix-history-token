@@ -107,6 +107,11 @@ directive|define
 name|DTYPE_FIFO
 value|4
 comment|/* fifo (named pipe) */
+define|#
+directive|define
+name|DTYPE_KQUEUE
+value|5
+comment|/* event queue */
 name|short
 name|f_type
 decl_stmt|;

@@ -33,12 +33,6 @@ directive|include
 file|<sys/signal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
-end_include
-
 begin_comment
 comment|/*  * Returned by aio_cancel:  *  (Note that FreeBSD's aio is not cancellable -- yet.)  */
 end_comment
@@ -507,6 +501,11 @@ modifier|*
 name|uuaiocb
 decl_stmt|;
 comment|/* Pointer in userspace of aiocb */
+name|struct
+name|klist
+name|klist
+decl_stmt|;
+comment|/* list of knotes */
 name|struct
 name|aiocb
 name|uaiocb
