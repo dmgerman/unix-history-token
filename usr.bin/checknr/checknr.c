@@ -29,24 +29,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)checknr.c	8.1 (Berkeley) 6/6/93"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char sccsid[] = "@(#)checknr.c	8.1 (Berkeley) 6/6/93";
 endif|#
 directive|endif
 end_endif
@@ -54,6 +50,25 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * checknr: check an nroff/troff input file for matching macro calls.  * we also attempt to match size and font changes, but only the embedded  * kind.  These must end in \s0 and \fP resp.  Maybe more sophistication  * later but for now think of these restrictions as contributions to  * structured typesetting.  */
@@ -135,6 +150,7 @@ name|addmac
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -148,6 +164,7 @@ name|binsrch
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -202,9 +219,11 @@ name|eq
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -321,10 +340,12 @@ begin_struct
 struct|struct
 name|brstr
 block|{
+specifier|const
 name|char
 modifier|*
 name|opbr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|clbr
@@ -606,6 +627,7 @@ comment|/*  * All commands known to nroff, plus macro packages.  * Used so we ca
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|knowncmds
@@ -1352,19 +1374,7 @@ comment|/* current line number in input file */
 end_comment
 
 begin_decl_stmt
-name|char
-name|line
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the current line */
-end_comment
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|cfilename
@@ -1572,19 +1582,12 @@ index|]
 operator|.
 name|opbr
 operator|=
+name|strncpy
+argument_list|(
 name|malloc
 argument_list|(
 literal|3
 argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|br
-index|[
-name|i
-index|]
-operator|.
-name|opbr
 argument_list|,
 name|cp
 argument_list|,
@@ -1598,19 +1601,12 @@ index|]
 operator|.
 name|clbr
 operator|=
+name|strncpy
+argument_list|(
 name|malloc
 argument_list|(
 literal|3
 argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|br
-index|[
-name|i
-index|]
-operator|.
-name|clbr
 argument_list|,
 name|cp
 operator|+
@@ -1878,7 +1874,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1894,6 +1889,14 @@ comment|/* The current macro or nroff command */
 name|int
 name|pl
 decl_stmt|;
+specifier|static
+name|char
+name|line
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* the current line */
 name|stktop
 operator|=
 operator|-
@@ -2558,13 +2561,13 @@ parameter_list|)
 name|char
 modifier|*
 name|line
+name|__unused
 decl_stmt|;
 name|char
 modifier|*
 name|mac
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2712,7 +2715,6 @@ modifier|*
 name|mac
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2924,6 +2926,7 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s1
@@ -2958,10 +2961,10 @@ begin_function
 name|void
 name|pe
 parameter_list|(
-name|lineno
+name|linen
 parameter_list|)
 name|int
-name|lineno
+name|linen
 decl_stmt|;
 block|{
 if|if
@@ -2981,7 +2984,7 @@ name|printf
 argument_list|(
 literal|"%d: "
 argument_list|,
-name|lineno
+name|linen
 argument_list|)
 expr_stmt|;
 block|}
@@ -3179,12 +3182,13 @@ name|addmac
 parameter_list|(
 name|mac
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|mac
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -3221,7 +3225,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 return|return;
 block|}
 comment|/* binsrch sets slot as a side effect */
@@ -3280,15 +3283,12 @@ expr_stmt|;
 operator|*
 name|loc
 operator|=
+name|strcpy
+argument_list|(
 name|malloc
 argument_list|(
 literal|3
 argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-operator|*
-name|loc
 argument_list|,
 name|mac
 argument_list|)
@@ -3354,28 +3354,26 @@ name|binsrch
 parameter_list|(
 name|mac
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|mac
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|;
 comment|/* pointer to current cmd in list */
-specifier|register
 name|int
 name|d
 decl_stmt|;
 comment|/* difference if any */
-specifier|register
 name|int
 name|mid
 decl_stmt|;
 comment|/* mid point in binary search */
-specifier|register
 name|int
 name|top
 decl_stmt|,
