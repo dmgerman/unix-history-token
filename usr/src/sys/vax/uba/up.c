@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.36	81/04/02	*/
+comment|/*	up.c	4.37	81/04/09	*/
 end_comment
 
 begin_include
@@ -749,17 +749,12 @@ end_expr_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 specifier|register
 name|struct
 name|updevice
 modifier|*
 name|upaddr
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|upwstart
@@ -824,9 +819,6 @@ operator|.
 name|sc_ndrive
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|upaddr
 operator|=
 operator|(
@@ -856,15 +848,13 @@ name|upaddr
 operator|->
 name|uphr
 operator|=
-operator|-
-literal|1
+name|UPHR_MAXTRAK
 expr_stmt|;
-comment|/* ... */
 if|if
 condition|(
 name|upaddr
 operator|->
-expr|...
+name|uphr
 operator|==
 literal|10
 condition|)
@@ -874,8 +864,14 @@ name|ui_type
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* fujitsu hack */
+name|upaddr
+operator|->
+name|upcs2
+operator|=
+name|UPCS2_CLR
+expr_stmt|;
+comment|/* 	upaddr->uphr = UPHR_MAXCYL; 	printf("maxcyl %d\n", upaddr->uphr); 	upaddr->uphr = UPHR_MAXTRAK; 	printf("maxtrak %d\n", upaddr->uphr); 	upaddr->uphr = UPHR_MAXSECT; 	printf("maxsect %d\n", upaddr->uphr); */
 block|}
 end_block
 
