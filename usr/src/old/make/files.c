@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.21 (Berkeley) 91/02/01"
+literal|"@(#)files.c	4.22 (Berkeley) 91/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -512,6 +512,14 @@ name|MAXNAMLEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|amatch
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|struct
@@ -1233,6 +1241,11 @@ name|c
 decl_stmt|,
 name|lc
 decl_stmt|;
+specifier|static
+name|int
+name|umatch
+parameter_list|()
+function_decl|;
 name|scc
 operator|=
 operator|*
@@ -2046,9 +2059,6 @@ directive|endif
 name|int
 name|word
 decl_stmt|;
-include|#
-directive|include
-file|<sys/stat.h>
 name|struct
 name|stat
 name|buf

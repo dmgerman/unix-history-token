@@ -280,7 +280,7 @@ block|}
 end_block
 
 begin_function_decl
-name|int
+name|void
 name|intrupt
 parameter_list|()
 function_decl|;

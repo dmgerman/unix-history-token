@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.12 (Berkeley) 90/03/26"
+literal|"@(#)main.c	4.12 (Berkeley) 91/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,7 +351,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|unix
-name|int
+name|void
 name|intrupt
 parameter_list|()
 function_decl|;
@@ -1032,12 +1032,10 @@ directive|ifdef
 name|unix
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|intrupt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|varblock
@@ -1147,7 +1145,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|isprecious
@@ -1256,7 +1254,7 @@ name|enbint
 function_decl|(
 name|k
 function_decl|)
-name|int
+name|void
 argument_list|(
 argument|*k
 argument_list|)

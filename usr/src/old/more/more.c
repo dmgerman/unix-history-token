@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.24 (Berkeley) %G%"
+literal|"@(#)more.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,24 +282,24 @@ name|int
 name|dum_opt
 decl_stmt|,
 name|dlines
-decl_stmt|,
-name|onquit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|chgwinsz
 argument_list|()
 decl_stmt|,
 name|end_it
 argument_list|()
 decl_stmt|,
-name|chgwinsz
+name|onquit
+argument_list|()
+decl_stmt|,
+name|onsusp
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|onsusp
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|int
@@ -1562,7 +1562,7 @@ argument_list|(
 literal|14
 argument_list|)
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1574,7 +1574,7 @@ condition|)
 name|cleareol
 argument_list|()
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -1591,7 +1591,7 @@ condition|)
 name|cleareol
 argument_list|()
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"::::::::::::::\n"
 argument_list|)
@@ -1939,7 +1939,7 @@ operator|==
 name|S_IFDIR
 condition|)
 block|{
-name|printf
+name|prtf
 argument_list|(
 literal|"\n*** %s: directory ***\n\n"
 argument_list|,
@@ -2062,19 +2062,21 @@ begin_comment
 comment|/*  * magic --  *	check for file magic numbers.  This code would best be shared with  *	the file(1) program or, perhaps, more should not try and be so smart?  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|magic
 argument_list|(
 argument|f
 argument_list|,
 argument|fs
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|FILE
-operator|*
+modifier|*
 name|f
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -2133,7 +2135,7 @@ case|:
 case|case
 literal|0177545
 case|:
-name|printf
+name|prtf
 argument_list|(
 literal|"\n******** %s: Not a text file ********\n\n"
 argument_list|,
@@ -2546,12 +2548,10 @@ begin_comment
 comment|/* ** Come here if a quit signal is received */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onquit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -2632,18 +2632,16 @@ name|onquit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ** Come here if a signal for a window size change is received */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|chgwinsz
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|winsize
@@ -2750,18 +2748,16 @@ name|chgwinsz
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ** Clean up terminal state and exit. Also come here if interrupt signal received */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|end_it
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|reset_tty
 argument_list|()
@@ -2823,7 +2819,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|copy_file
@@ -2869,7 +2865,7 @@ comment|/* Simplified printf function */
 end_comment
 
 begin_expr_stmt
-name|printf
+name|prtf
 argument_list|(
 name|fmt
 argument_list|,
@@ -3417,7 +3413,7 @@ condition|)
 block|{
 name|promptlen
 operator|+=
-name|printf
+name|prtf
 argument_list|(
 literal|"(Next file: %s)"
 argument_list|,
@@ -3434,7 +3430,7 @@ condition|)
 block|{
 name|promptlen
 operator|+=
-name|printf
+name|prtf
 argument_list|(
 literal|"(%d%%)"
 argument_list|,
@@ -4796,7 +4792,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -4808,7 +4804,7 @@ condition|)
 name|cleareol
 argument_list|()
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"...back %d page"
 argument_list|,
@@ -5016,7 +5012,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5028,7 +5024,7 @@ condition|)
 name|cleareol
 argument_list|()
 expr_stmt|;
-name|printf
+name|prtf
 argument_list|(
 literal|"...skipping %d line"
 argument_list|,
@@ -5711,7 +5707,7 @@ name|no_intty
 condition|)
 name|promptlen
 operator|=
-name|printf
+name|prtf
 argument_list|(
 literal|"\"%s\" line %d"
 argument_list|,
@@ -5726,7 +5722,7 @@ expr_stmt|;
 else|else
 name|promptlen
 operator|=
-name|printf
+name|prtf
 argument_list|(
 literal|"[Not a file] line %d"
 argument_list|,
@@ -6058,7 +6054,7 @@ argument_list|()
 expr_stmt|;
 name|promptlen
 operator|=
-name|printf
+name|prtf
 argument_list|(
 literal|"!%s"
 argument_list|,
@@ -8718,12 +8714,10 @@ begin_comment
 comment|/* Come here when we get a suspend signal from the terminal */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onsusp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* ignore SIGTTOU so we don't get stopped if csh grabs the tty */
 name|signal
@@ -8787,10 +8781,12 @@ condition|)
 name|longjmp
 argument_list|(
 name|restore
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
