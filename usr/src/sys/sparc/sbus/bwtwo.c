@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)bwtwo.c	7.3 (Berkeley) %G%  *  * from: $Header: bwtwo.c,v 1.13 92/06/17 06:59:29 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bwtwo.c	7.4 (Berkeley) %G%  *  * from: $Header: bwtwo.c,v 1.14 92/11/26 02:28:04 torek Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * black&white display (bwtwo) driver.  *  * Does not handle interrupts, even though they can occur.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"bwtwo.h"
-end_include
 
 begin_include
 include|#
