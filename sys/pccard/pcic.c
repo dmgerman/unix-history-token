@@ -1395,14 +1395,9 @@ name|int
 name|irq
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NOT_YET_XXX
 name|u_int32_t
 name|reg
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sp
@@ -1414,9 +1409,6 @@ operator|==
 name|pci_parallel
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NOT_YET_XXX
 name|reg
 operator|=
 name|CB_SM_CD
@@ -1436,8 +1428,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
