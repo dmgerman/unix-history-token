@@ -540,6 +540,27 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lastpid
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nextpid
+argument_list|,
+literal|0
+argument_list|,
+literal|"Last used PID"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Random component to nextpid generation.  We mix in a random factor to make  * it a little harder to predict.  We sanity check the modulus value to avoid  * doing it in critical paths.  Don't let it be too small or we pointlessly  * waste randomness entropy, and don't let it be impossibly large.  Using a  * modulus that is too big causes a LOT more process table scans and slows  * down fork processing as the pidchecked caching is defeated.  */
 end_comment
