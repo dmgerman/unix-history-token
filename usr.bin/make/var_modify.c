@@ -363,10 +363,6 @@ condition|(
 name|dot
 operator|++
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -844,10 +840,6 @@ name|VarPattern
 modifier|*
 name|pattern
 init|=
-operator|(
-name|VarPattern
-operator|*
-operator|)
 name|patternp
 decl_stmt|;
 name|wordLen
@@ -1244,10 +1236,6 @@ if|if
 condition|(
 name|cp
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1522,7 +1510,7 @@ directive|define
 name|MAYBE_ADD_SPACE
 parameter_list|()
 define|\
-value|if (addSpace&& !added)		\ 	    Buf_AddByte(buf, ' ');	\ 	added = 1
+value|if (addSpace&& !added)			\ 	    Buf_AddByte(buf, (Byte)' ');	\ 	added = 1
 name|added
 operator|=
 literal|0
@@ -1630,6 +1618,10 @@ index|]
 operator|.
 name|rm_so
 argument_list|,
+operator|(
+name|Byte
+operator|*
+operator|)
 name|wp
 argument_list|)
 expr_stmt|;
@@ -1686,6 +1678,9 @@ name|Buf_AddByte
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|Byte
+operator|)
 name|rp
 index|[
 literal|1
@@ -1944,6 +1939,10 @@ name|buf
 argument_list|,
 name|sublen
 argument_list|,
+operator|(
+name|Byte
+operator|*
+operator|)
 name|subbuf
 argument_list|)
 expr_stmt|;
@@ -1958,6 +1957,9 @@ name|Buf_AddByte
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|Byte
+operator|)
 operator|*
 name|rp
 argument_list|)
@@ -2020,6 +2022,9 @@ name|Buf_AddByte
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|Byte
+operator|)
 operator|*
 name|wp
 argument_list|)
@@ -2055,6 +2060,10 @@ argument_list|(
 name|wp
 argument_list|)
 argument_list|,
+operator|(
+name|Byte
+operator|*
+operator|)
 name|wp
 argument_list|)
 expr_stmt|;
@@ -2095,6 +2104,10 @@ argument_list|(
 name|wp
 argument_list|)
 argument_list|,
+operator|(
+name|Byte
+operator|*
+operator|)
 name|wp
 argument_list|)
 expr_stmt|;

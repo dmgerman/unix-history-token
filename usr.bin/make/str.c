@@ -61,11 +61,6 @@ name|p1
 decl_stmt|;
 name|argv
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 operator|(
@@ -202,16 +197,11 @@ name|result
 operator|=
 name|emalloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|len1
 operator|+
 name|len2
 operator|+
 literal|2
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* copy first string into place */
@@ -533,11 +523,6 @@ expr_stmt|;
 comment|/* ramp up fast */
 name|argv
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|erealloc
 argument_list|(
 name|argv
@@ -566,10 +551,6 @@ name|start
 expr_stmt|;
 name|start
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 if|if
@@ -715,10 +696,6 @@ index|[
 name|argc
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 operator|*

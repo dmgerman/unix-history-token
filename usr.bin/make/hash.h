@@ -143,7 +143,7 @@ name|h
 parameter_list|,
 name|val
 parameter_list|)
-value|((h)->clientData = (void *)(val))
+value|((h)->clientData = (val))
 end_define
 
 begin_comment

@@ -1015,10 +1015,6 @@ name|Lst_AtEnd
 argument_list|(
 name|envFirstVars
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -1052,10 +1048,6 @@ name|Lst_AtEnd
 argument_list|(
 name|makefiles
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -1382,10 +1374,6 @@ name|Lst_AtEnd
 argument_list|(
 name|create
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|estrdup
 argument_list|(
 operator|*
@@ -2587,10 +2575,6 @@ name|char
 modifier|*
 name|name
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|Lst_Datum
 argument_list|(
 name|ln
@@ -2742,10 +2726,6 @@ name|Lst_Find
 argument_list|(
 name|sysMkPath
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|ReadMakefile
@@ -2790,10 +2770,6 @@ name|Lst_Find
 argument_list|(
 name|makefiles
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|ReadMakefile
@@ -3068,10 +3044,6 @@ name|emalloc
 argument_list|(
 name|strlen
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|Lst_Datum
 argument_list|(
 name|ln
@@ -3120,10 +3092,6 @@ name|value
 operator|=
 name|Var_Value
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|Lst_Datum
 argument_list|(
 name|ln

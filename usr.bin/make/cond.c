@@ -642,10 +642,6 @@ operator|*
 name|cp
 argument_list|)
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 operator|&&
@@ -892,10 +888,6 @@ operator|&
 name|p1
 argument_list|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1012,10 +1004,6 @@ name|Lst_Find
 argument_list|(
 name|create
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|arg
 argument_list|,
 name|CondStrMatch
@@ -1103,10 +1091,6 @@ if|if
 condition|(
 name|path
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1357,7 +1341,9 @@ operator|)
 name|i
 expr_stmt|;
 return|return
+operator|(
 name|str
+operator|)
 return|;
 block|}
 name|i
@@ -2150,7 +2136,7 @@ operator|(
 name|int
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|Buf_Destroy
@@ -3603,11 +3589,7 @@ name|ifp
 operator|->
 name|form
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|;
 name|ifp
 operator|++
@@ -3640,11 +3622,7 @@ name|ifp
 operator|->
 name|form
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Nothing fit. If the first word on the line is actually 	 * "else", it's a valid conditional whose value is the inverse 	 * of the previous if we parsed. 	 */

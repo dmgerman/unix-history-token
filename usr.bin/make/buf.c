@@ -76,7 +76,7 @@ parameter_list|,
 name|nb
 parameter_list|)
 define|\
-value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb) + 1, BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *)erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
+value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb) + 1, BUF_ADD_INC); \ 	    Byte  *newBuf = erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
 end_define
 
 begin_define
@@ -321,10 +321,6 @@ name|newBuf
 decl_stmt|;
 name|newBuf
 operator|=
-operator|(
-name|Byte
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 name|bp
@@ -336,20 +332,10 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|newBuf
 operator|+
 name|BUF_UNGET_INC
-operator|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|bp
 operator|->
 name|outPtr
@@ -379,10 +365,6 @@ name|numBytes
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|bp
 operator|->
 name|buffer
@@ -536,10 +518,6 @@ argument_list|)
 decl_stmt|;
 name|newBuf
 operator|=
-operator|(
-name|Byte
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 name|bp
@@ -551,20 +529,10 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|newBuf
 operator|+
 name|newBytes
-operator|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|bp
 operator|->
 name|outPtr
@@ -594,10 +562,6 @@ name|curNumBytes
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|bp
 operator|->
 name|buffer
@@ -641,18 +605,10 @@ name|numBytes
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|bp
 operator|->
 name|outPtr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|bytesPtr
 argument_list|,
 name|numBytes
@@ -888,10 +844,6 @@ if|if
 condition|(
 name|numBytesPtr
 operator|!=
-operator|(
-name|int
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1029,9 +981,6 @@ decl_stmt|;
 comment|/* New Buffer */
 name|bp
 operator|=
-operator|(
-name|Buffer
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
@@ -1067,10 +1016,6 @@ name|bp
 operator|->
 name|buffer
 operator|=
-operator|(
-name|Byte
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 name|size
@@ -1125,10 +1070,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 operator|->
 name|buffer
@@ -1137,10 +1078,6 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 argument_list|)
 expr_stmt|;

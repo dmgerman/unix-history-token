@@ -492,7 +492,7 @@ directive|define
 name|ADDWORD
 parameter_list|()
 define|\
-value|Buf_AddBytes(buf, ptr - wrd, (Byte *)wrd), \ 	Buf_AddByte(buf, (Byte)'\0'), \ 	Lst_AtFront(forLst, (void *)Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
+value|Buf_AddBytes(buf, ptr - wrd, (Byte *)wrd), \ 	Buf_AddByte(buf, (Byte)'\0'), \ 	Lst_AtFront(forLst, Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
 for|for
 control|(
 name|ptr
@@ -841,20 +841,12 @@ name|char
 modifier|*
 name|name
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|namep
 decl_stmt|;
 name|For
 modifier|*
 name|arg
 init|=
-operator|(
-name|For
-operator|*
-operator|)
 name|argp
 decl_stmt|;
 name|int
@@ -1009,10 +1001,6 @@ name|lst
 argument_list|,
 name|ForExec
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|arg
 argument_list|)
