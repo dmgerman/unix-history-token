@@ -1607,7 +1607,7 @@ literal|"%s station %sjoin"
 argument_list|,
 name|ifan
 operator|->
-name|ifna_what
+name|ifan_what
 operator|==
 name|RTM_IEEE80211_REJOIN
 condition|?
