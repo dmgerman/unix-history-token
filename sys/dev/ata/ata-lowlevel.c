@@ -2922,19 +2922,20 @@ name|u_int8_t
 name|mask
 parameter_list|)
 block|{
+name|u_int8_t
+name|status
+decl_stmt|;
 name|int
 name|timeout
 init|=
 literal|0
-decl_stmt|;
-name|u_int8_t
-name|status
 decl_stmt|;
 name|DELAY
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* wait 5 seconds for device to get !BUSY */
 while|while
 condition|(
 name|timeout
@@ -2942,7 +2943,6 @@ operator|<
 literal|5000000
 condition|)
 block|{
-comment|/* timeout 5 secs */
 name|status
 operator|=
 name|ATA_IDX_INB
@@ -3074,7 +3074,12 @@ operator|&
 name|ATA_S_ERROR
 operator|)
 return|;
-comment|/* wait 50 msec for bits wanted. */
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* wait 50 msec for bits wanted */
 name|timeout
 operator|=
 literal|5000
