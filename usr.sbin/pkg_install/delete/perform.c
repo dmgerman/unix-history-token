@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.5 1994/09/29 13:19:39 jkh Exp $"
+literal|"$Id: perform.c,v 1.6 1994/12/06 00:51:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,10 @@ decl_stmt|;
 name|PackingList
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 comment|/* Reset some state */
 if|if
 condition|(
@@ -182,7 +186,18 @@ name|LogDir
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|LOG_DIR
+operator|(
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+operator|)
+condition|?
+name|tmp
+else|:
+name|DEF_LOG_DIR
 argument_list|,
 name|pkg
 argument_list|)
@@ -727,6 +742,10 @@ decl_stmt|,
 modifier|*
 name|fpwr
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -736,7 +755,18 @@ name|fname
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
-name|LOG_DIR
+operator|(
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+operator|)
+condition|?
+name|tmp
+else|:
+name|DEF_LOG_DIR
 argument_list|,
 name|p
 operator|->

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.10 1994/12/06 00:51:45 jkh Exp $"
+literal|"$Id: perform.c,v 1.11 1995/01/05 01:10:12 swallace Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,12 +71,32 @@ name|err_cnt
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|cleanup
 argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tmp
+condition|)
+name|tmp
+operator|=
+name|DEF_LOG_DIR
 expr_stmt|;
 comment|/* Overriding action? */
 if|if
@@ -90,7 +110,7 @@ if|if
 condition|(
 name|isdir
 argument_list|(
-name|LOG_DIR
+name|tmp
 argument_list|)
 condition|)
 block|{
@@ -107,7 +127,7 @@ name|dirp
 operator|=
 name|opendir
 argument_list|(
-name|LOG_DIR
+name|tmp
 argument_list|)
 expr_stmt|;
 if|if
@@ -409,13 +429,28 @@ block|}
 block|}
 else|else
 block|{
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|log_dir
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|LOG_DIR
+operator|(
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+operator|)
+condition|?
+name|tmp
+else|:
+name|DEF_LOG_DIR
 argument_list|,
 name|pkg
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.11 1994/11/17 10:51:46 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.12 1994/12/06 00:51:49 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -174,14 +174,25 @@ value|"rmdir"
 end_define
 
 begin_comment
-comment|/* Where we put logging information */
+comment|/* Where we put logging information by default, else ${PKG_DBDIR} if set */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOG_DIR
+name|DEF_LOG_DIR
 value|"/var/db/pkg"
+end_define
+
+begin_comment
+comment|/* just in case we change the environment variable name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKG_DBDIR
+value|"PKG_DBDIR"
 end_define
 
 begin_comment

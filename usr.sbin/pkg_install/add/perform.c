@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.14 1995/04/09 15:04:52 jkh Exp $"
+literal|"$Id: perform.c,v 1.15 1995/04/10 08:01:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,10 @@ name|home
 index|[
 name|FILENAME_MAX
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|tmp
 decl_stmt|;
 name|FILE
 modifier|*
@@ -544,6 +548,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Protect against old packages with bogus @name fields */
 name|PkgName
 operator|=
 operator|(
@@ -564,14 +569,24 @@ name|name
 else|:
 literal|"anonymous"
 expr_stmt|;
-comment|/* Protect against old packages with bogus @name fields */
 name|sprintf
 argument_list|(
 name|LogDir
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|LOG_DIR
+operator|(
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+operator|)
+condition|?
+name|tmp
+else|:
+name|DEF_LOG_DIR
 argument_list|,
 name|basename_of
 argument_list|(
@@ -1298,14 +1313,24 @@ name|success
 goto|;
 comment|/* well, partial anyway */
 block|}
-comment|/* Protect against old packages with bogus @name fields */
 name|sprintf
 argument_list|(
 name|LogDir
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|LOG_DIR
+operator|(
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+operator|)
+condition|?
+name|tmp
+else|:
+name|DEF_LOG_DIR
 argument_list|,
 name|basename_of
 argument_list|(
@@ -1525,7 +1550,18 @@ name|contents
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
-name|LOG_DIR
+operator|(
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|PKG_DBDIR
+argument_list|)
+operator|)
+condition|?
+name|tmp
+else|:
+name|DEF_LOG_DIR
 argument_list|,
 name|basename_of
 argument_list|(
