@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)main.c	1.6	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
+comment|/* @(#)main.c	1.7	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -436,7 +436,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.6	(Berkeley)	%G%"
+literal|"@(#)main.c	1.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
