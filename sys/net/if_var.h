@@ -928,6 +928,11 @@ name|ifa_netmask
 decl_stmt|;
 comment|/* used to determine subnet */
 name|struct
+name|if_data
+name|if_data
+decl_stmt|;
+comment|/* not all members are meaningful */
+name|struct
 name|ifnet
 modifier|*
 name|ifa_ifp

@@ -1372,6 +1372,8 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|ia
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|i
@@ -2626,6 +2628,34 @@ directive|endif
 return|return;
 name|ours
 label|:
+comment|/* Count the packet in the ip address stats */
+if|if
+condition|(
+name|ia
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|if_ipackets
+operator|++
+expr_stmt|;
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|if_ibytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+block|}
 comment|/* 	 * If offset or IP_MF are set, must reassemble. 	 * Otherwise, nothing need be done. 	 * (We could look in the reassembly queue to see 	 * if the packet was previously fragmented, 	 * but it's not worth the time; just let them time out.) 	 */
 if|if
 condition|(

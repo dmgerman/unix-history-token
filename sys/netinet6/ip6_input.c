@@ -1764,6 +1764,26 @@ operator|->
 name|ia_ifp
 expr_stmt|;
 comment|/* correct? */
+comment|/* Count the packet in the ip address stats */
+name|ia6
+operator|->
+name|ia_ifa
+operator|.
+name|if_ipackets
+operator|++
+expr_stmt|;
+name|ia6
+operator|->
+name|ia_ifa
+operator|.
+name|if_ibytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 goto|goto
 name|hbhcheck
 goto|;
