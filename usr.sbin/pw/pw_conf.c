@@ -133,6 +133,8 @@ block|{
 name|bourne_shell
 block|,
 literal|"csh"
+block|,
+literal|"tcsh"
 block|}
 decl_stmt|;
 end_decl_stmt
