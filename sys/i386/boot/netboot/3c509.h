@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|EP_ID_PORT
-value|0x100
+value|0x110
 end_define
 
 begin_comment
