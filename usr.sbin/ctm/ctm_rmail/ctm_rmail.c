@@ -959,6 +959,9 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|ofd
+decl_stmt|;
+name|int
 name|decoding
 init|=
 literal|0
@@ -1187,17 +1190,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mktemp
+operator|(
+name|ofd
+operator|=
+name|mkstemp
 argument_list|(
 name|tname
 argument_list|)
-operator|==
-name|NULL
+operator|)
+operator|<
+literal|0
 condition|)
 block|{
 name|err
 argument_list|(
-literal|"*mktemp: '%s'"
+literal|"*mkstemp: '%s'"
 argument_list|,
 name|tname
 argument_list|)
@@ -1212,9 +1219,9 @@ condition|(
 operator|(
 name|ofp
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|tname
+name|ofd
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1866,6 +1873,9 @@ modifier|*
 name|pfp
 decl_stmt|;
 name|int
+name|dfd
+decl_stmt|;
+name|int
 name|i
 decl_stmt|,
 name|n
@@ -1894,17 +1904,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mktemp
+operator|(
+name|dfd
+operator|=
+name|mkstemp
 argument_list|(
 name|tname
 argument_list|)
-operator|==
-name|NULL
+operator|)
+operator|<
+literal|0
 condition|)
 block|{
 name|err
 argument_list|(
-literal|"*mktemp: '%s'"
+literal|"*mkstemp: '%s'"
 argument_list|,
 name|tname
 argument_list|)
@@ -1918,9 +1932,9 @@ condition|(
 operator|(
 name|dfp
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|tname
+name|dfd
 argument_list|,
 literal|"w"
 argument_list|)
