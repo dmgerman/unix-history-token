@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.2 (Berkeley) %G%"
+literal|"@(#)misc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,6 +438,30 @@ modifier|*
 name|rname
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|options
+operator|&
+name|AR_S
+condition|)
+return|return
+operator|(
+operator|!
+name|strncmp
+argument_list|(
+name|chdr
+operator|.
+name|name
+argument_list|,
+name|rname
+argument_list|(
+name|dest
+argument_list|)
+argument_list|,
+name|ARNAMEMAX
+argument_list|)
+operator|)
+return|;
 return|return
 operator|(
 operator|!

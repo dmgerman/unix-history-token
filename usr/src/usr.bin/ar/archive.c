@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	5.2 (Berkeley) %G%"
+literal|"@(#)archive.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -944,16 +944,25 @@ argument_list|,
 name|sb
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+comment|/* 		 * If not truncating names and the name is too long or contains 		 * a space, use extended format 1. 		 */
 name|lname
 operator|=
 name|strlen
 argument_list|(
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|options
+operator|&
+name|AR_S
 operator|)
+operator|&&
+operator|(
+name|lname
 operator|>
 sizeof|sizeof
 argument_list|(
@@ -968,6 +977,7 @@ name|name
 argument_list|,
 literal|' '
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
@@ -1011,6 +1021,56 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|lname
+operator|>
+sizeof|sizeof
+argument_list|(
+name|hdr
+operator|->
+name|ar_name
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ar: warning: %s truncated to %.*s\n"
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hdr
+operator|->
+name|ar_name
+argument_list|)
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
 name|lname
 operator|=
 literal|0
