@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.24 1997/09/21 22:01:13 gibbs Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.25 1997/10/10 11:57:43 peter Exp $ */
 end_comment
 
 begin_include
@@ -33,11 +33,30 @@ directive|define
 name|PPP_COMPRESS
 end_define
 
+begin_include
+include|#
+directive|include
+file|"bpfilter.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|PPP_FILTER
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

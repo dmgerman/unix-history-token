@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.46 1997/10/17 00:12:38 brian Exp $ */
+comment|/* $Id: if_ppp.c,v 1.47 1997/10/18 00:46:09 peter Exp $ */
 end_comment
 
 begin_comment
@@ -47,11 +47,30 @@ directive|define
 name|PPP_COMPRESS
 end_define
 
+begin_include
+include|#
+directive|include
+file|"bpfilter.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|PPP_FILTER
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
