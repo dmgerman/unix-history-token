@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.6 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -295,12 +295,45 @@ comment|/* lock has been decommissioned */
 end_comment
 
 begin_comment
+comment|/*  * Control flags  *  * Non-persistent external flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_INTERLOCK
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* unlock passed simple lock after 					   getting lk_interlock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_RETRY
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* vn_lock: retry until locked */
+end_comment
+
+begin_comment
 comment|/*  * Lock return status.  *  * Successfully obtained locks return 0. Locks will always succeed  * unless one of the following is true:  *	LK_FORCEUPGRADE is requested and some other process has already  *	    requested a lock upgrade (returns EBUSY).  *	LK_WAIT is set and a sleep would be required (returns EBUSY).  *	LK_SLEEPFAIL is set and a sleep was done (returns ENOLCK).  *	PCATCH is set in lock priority and a signal arrives (returns  *	    either EINTR or ERESTART if system calls is to be restarted).  *	Non-null lock timeout and timeout expires (returns EWOULDBLOCK).  * A failed lock attempt always returns a non-zero error value. No lock  * is held after an error return (in particular, a failed LK_UPGRADE  * or LK_FORCEUPGRADE will have released its shared access lock).  */
 end_comment
 
 begin_comment
 comment|/*  * Indicator that no process holds exclusive lock  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_KERNPROC
+value|((pid_t) -2)
+end_define
 
 begin_define
 define|#
@@ -351,8 +384,11 @@ name|u_int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|simple_lock
 operator|*
+operator|,
+name|pid_t
+name|pid
 operator|)
 argument_list|)
 decl_stmt|;
