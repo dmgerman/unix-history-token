@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.5	%G%	*/
+comment|/*	tm.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -2586,6 +2586,8 @@ endif|#
 directive|endif
 name|int
 name|blk
+decl_stmt|,
+name|bdp
 decl_stmt|;
 name|TMPHYS
 operator|->
@@ -2666,6 +2668,11 @@ operator|-=
 name|blk
 expr_stmt|;
 block|}
+name|bdp
+operator|=
+literal|1
+expr_stmt|;
+comment|/* crud to fool c compiler */
 operator|(
 operator|(
 expr|struct
@@ -2677,7 +2684,7 @@ operator|)
 operator|->
 name|uba_dpr
 index|[
-literal|1
+name|bdp
 index|]
 operator||=
 name|BNE
@@ -2708,9 +2715,17 @@ name|io
 decl_stmt|,
 name|npf
 decl_stmt|;
+name|int
+name|bdp
+decl_stmt|;
 name|twait
 argument_list|()
 expr_stmt|;
+name|bdp
+operator|=
+literal|1
+expr_stmt|;
+comment|/* more dastardly tricks on pcc */
 operator|(
 operator|(
 expr|struct
@@ -2722,7 +2737,7 @@ operator|)
 operator|->
 name|uba_dpr
 index|[
-literal|1
+name|bdp
 index|]
 operator||=
 name|BNE
