@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)checknr.c	4.4 (Berkeley) %G%"
+literal|"@(#)checknr.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1137,15 +1137,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 comment|/* Figure out how many known commands there are */
 while|while
 condition|(
