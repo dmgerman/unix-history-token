@@ -865,7 +865,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmo"
+literal|"\f qh?en#sdkriIutHmSo"
 decl_stmt|;
 else|#
 directive|else
@@ -874,7 +874,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHm"
+literal|"\f qh?en#sdkriIutHmS"
 decl_stmt|;
 endif|#
 directive|endif
@@ -957,13 +957,17 @@ define|#
 directive|define
 name|CMD_viewtog
 value|17
+define|#
+directive|define
+name|CMD_viewsys
+value|18
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|18
+value|19
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -3648,6 +3652,19 @@ name|i_header
 expr_stmt|;
 name|reset_display
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CMD_viewsys
+case|:
+name|ps
+operator|.
+name|system
+operator|=
+operator|!
+name|ps
+operator|.
+name|system
 expr_stmt|;
 break|break;
 ifdef|#
