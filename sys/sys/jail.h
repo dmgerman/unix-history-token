@@ -19,6 +19,9 @@ begin_struct
 struct|struct
 name|jail
 block|{
+name|u_int32_t
+name|version
+decl_stmt|;
 name|char
 modifier|*
 name|path
