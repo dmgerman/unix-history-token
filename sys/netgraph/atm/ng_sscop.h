@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NETGRAPH_ATM_NG_SSCOP_H
+name|_NETGRAPH_ATM_NG_SSCOP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NETGRAPH_ATM_NG_SSCOP_H
+name|_NETGRAPH_ATM_NG_SSCOP_H_
 end_define
 
 begin_define
