@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.h,v 1.3 1997/03/26 01:19:27 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.h,v 1.2 1997/05/03 20:58:10 peter Exp $ */
+comment|/*	$Id: if_media.h,v 1.3 1999/02/20 11:17:59 julian Exp $ */
 end_comment
 
 begin_comment
@@ -402,6 +402,39 @@ end_define
 
 begin_comment
 comment|/* 100BaseT2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_1000_FX
+value|11
+end_define
+
+begin_comment
+comment|/* 1000BaseFX - gigabit over fiber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10_STP
+value|12
+end_define
+
+begin_comment
+comment|/* 10BaseT over shielded TP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10_FL
+value|13
+end_define
+
+begin_comment
+comment|/* 10baseFL - Fiber */
 end_comment
 
 begin_comment
@@ -849,6 +882,44 @@ parameter_list|)
 value|(((x)& IFM_IMASK)>> IFM_ISHIFT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFM_OPTIONS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& (IFM_OMASK|IFM_GMASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_INST_MAX
+value|IFM_INST(IFM_IMASK)
+end_define
+
+begin_comment
+comment|/*  * Macro to create a media word.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_MAKEWORD
+parameter_list|(
+name|type
+parameter_list|,
+name|subtype
+parameter_list|,
+name|options
+parameter_list|,
+name|instance
+parameter_list|)
+define|\
+value|((type) | (subtype) | (options) | ((instance)<< IFM_ISHIFT))
+end_define
+
 begin_comment
 comment|/*  * NetBSD extension not defined in the BSDI API.  This is used in various  * places to get the canonical description for a given type/subtype.  *  * NOTE: all but the top-level type descriptions must contain NO whitespace!  * Otherwise, parsing these in ifconfig(8) would be a nightmare.  */
 end_comment
@@ -882,14 +953,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_DESCRIPTIONS
-value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_1000_FX,	"1000baseFX" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_ALIASES
-value|{					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_FX,	"100FX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_FX,	"100FX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_1000_FX,	"1000FX" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
