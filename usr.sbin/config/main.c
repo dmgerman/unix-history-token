@@ -245,8 +245,8 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|CONFIG_DONT_CLOBBER
 if|if
 condition|(
@@ -346,8 +346,8 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|CONFIG_DONT_CLOBBER
 block|}
 else|else
