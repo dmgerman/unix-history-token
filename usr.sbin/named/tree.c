@@ -105,30 +105,10 @@ name|ENTER
 parameter_list|(
 name|proc
 parameter_list|)
-value|{ \ 			debugFuncs[debugDepth] = proc; \ 			fprintf(stderr, "ENTER(%d:%s.%s)\n", \ 				debugDepth, DEBUG,
+value|{ \ 			debugFuncs[debugDepth] = proc; \ 			fprintf(stderr, "ENTER(%d:%s.%s)\n", \ 				debugDepth, DEBUG, \ 				debugFuncs[debugDepth]); \ 			debugDepth++; \ 		}
 end_define
 
-begin_expr_stmt
-name|debugFuncs
-index|[
-name|debugDepth
-index|]
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-unit|\
-name|debugDepth
-operator|++
-expr_stmt|;
-end_expr_stmt
-
 begin_define
-unit|\ 		}
 define|#
 directive|define
 name|RET
@@ -228,7 +208,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-unit|static
+specifier|static
 name|tree
 modifier|*
 name|sprout
