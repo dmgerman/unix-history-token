@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.2	83/09/24	*/
+comment|/*	param.h	6.3	84/07/31	*/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ comment|/* number of mountable file systems */
 end_comment
 
 begin_comment
-comment|/* NMOUNT must be<= 15 unless c_mdev (cmap.h) is expanded */
+comment|/* NMOUNT must be<= 255 unless c_mdev (cmap.h) is expanded */
 end_comment
 
 begin_define
@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|CMASK
-value|0
+value|022
 end_define
 
 begin_comment
@@ -318,7 +318,7 @@ value|(dev_t)(-1)
 end_define
 
 begin_comment
-comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from vm.h) pages each... BSIZE must  * be CLSIZE*NBPG in the current implementation, that is the paging subsystem  * deals with the same size blocks that the file system uses.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
+comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from vm.h) pages each.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
 end_comment
 
 begin_define
