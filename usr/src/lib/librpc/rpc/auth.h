@@ -96,6 +96,8 @@ operator|||
 name|tahoe
 operator|||
 name|hp300
+operator|||
+name|mips
 operator|)
 end_if
 
