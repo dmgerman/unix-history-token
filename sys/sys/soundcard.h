@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SOUNDCARD_H
+name|_SYS_SOUNDCARD_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SOUNDCARD_H
+name|_SYS_SOUNDCARD_H_
 end_define
 
 begin_comment
@@ -4838,7 +4838,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SOUNDCARD_H */
+comment|/* !_SYS_SOUNDCARD_H_ */
 end_comment
 
 end_unit
