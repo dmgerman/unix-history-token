@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -271,6 +271,14 @@ name|u_int
 name|hash
 decl_stmt|;
 comment|/* Hash value for the line. */
+name|size_t
+modifier|*
+name|firstchp
+decl_stmt|,
+modifier|*
+name|lastchp
+decl_stmt|;
+comment|/* First and last chngd columns ptrs */
 name|size_t
 name|firstch
 decl_stmt|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtoeol.c	5.9 (Berkeley) %G%"
+literal|"@(#)clrtoeol.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,7 @@ index|]
 operator|->
 name|line
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -210,8 +211,9 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -219,7 +221,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 argument_list|)
 expr_stmt|;
 endif|#

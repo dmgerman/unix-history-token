@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.12 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,7 @@ name|y
 argument_list|,
 name|x
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -359,8 +360,9 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -368,7 +370,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -427,13 +429,15 @@ name|flags
 operator||=
 name|__ISDIRTY
 expr_stmt|;
+operator|*
 name|lp
 operator|->
-name|firstch
+name|firstchp
 operator|=
+operator|*
 name|lp
 operator|->
-name|lastch
+name|lastchp
 operator|=
 name|newx
 expr_stmt|;
@@ -443,13 +447,15 @@ if|if
 condition|(
 name|newx
 operator|<
+operator|*
 name|lp
 operator|->
-name|firstch
+name|firstchp
 condition|)
+operator|*
 name|lp
 operator|->
-name|firstch
+name|firstchp
 operator|=
 name|newx
 expr_stmt|;
@@ -458,13 +464,15 @@ if|if
 condition|(
 name|newx
 operator|>
+operator|*
 name|lp
 operator|->
-name|lastch
+name|lastchp
 condition|)
+operator|*
 name|lp
 operator|->
-name|lastch
+name|lastchp
 operator|=
 name|newx
 expr_stmt|;
@@ -475,25 +483,29 @@ name|__TRACE
 argument_list|(
 literal|"ADDBYTES: change gives f/l: %d/%d [%d/%d]\n"
 argument_list|,
+operator|*
 name|lp
 operator|->
-name|firstch
+name|firstchp
 argument_list|,
+operator|*
 name|lp
 operator|->
-name|lastch
+name|lastchp
 argument_list|,
+operator|*
 name|lp
 operator|->
-name|firstch
+name|firstchp
 operator|-
 name|win
 operator|->
 name|ch_off
 argument_list|,
+operator|*
 name|lp
 operator|->
-name|lastch
+name|lastchp
 operator|-
 name|win
 operator|->
@@ -573,6 +585,7 @@ name|y
 argument_list|,
 name|x
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -580,8 +593,9 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -589,7 +603,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 argument_list|)
 expr_stmt|;
 endif|#

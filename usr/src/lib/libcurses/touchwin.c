@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touchwin.c	5.7 (Berkeley) %G%"
+literal|"@(#)touchwin.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,6 +284,7 @@ name|__TRACE
 argument_list|(
 literal|"touchline: first = %d, last = %d\n"
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -291,8 +292,9 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -300,7 +302,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -360,6 +362,7 @@ name|flags
 operator||=
 name|__ISDIRTY
 expr_stmt|;
+operator|*
 name|win
 operator|->
 name|lines
@@ -367,10 +370,11 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 operator|=
 name|sx
 expr_stmt|;
+operator|*
 name|win
 operator|->
 name|lines
@@ -378,7 +382,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 operator|=
 name|ex
 expr_stmt|;
@@ -387,6 +391,7 @@ else|else
 block|{
 if|if
 condition|(
+operator|*
 name|win
 operator|->
 name|lines
@@ -394,10 +399,11 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 operator|>
 name|sx
 condition|)
+operator|*
 name|win
 operator|->
 name|lines
@@ -405,12 +411,13 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 operator|=
 name|sx
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|win
 operator|->
 name|lines
@@ -418,10 +425,11 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 operator|<
 name|ex
 condition|)
+operator|*
 name|win
 operator|->
 name|lines
@@ -429,7 +437,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 operator|=
 name|ex
 expr_stmt|;
@@ -441,6 +449,7 @@ name|__TRACE
 argument_list|(
 literal|"touchline: first = %d, last = %d\n"
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -448,8 +457,9 @@ index|[
 name|y
 index|]
 operator|->
-name|firstch
+name|firstchp
 argument_list|,
+operator|*
 name|win
 operator|->
 name|lines
@@ -457,7 +467,7 @@ index|[
 name|y
 index|]
 operator|->
-name|lastch
+name|lastchp
 argument_list|)
 expr_stmt|;
 endif|#
