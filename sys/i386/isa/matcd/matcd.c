@@ -4166,22 +4166,6 @@ operator|->
 name|id_iobase
 decl_stmt|;
 comment|/*Take port hint from config file*/
-specifier|static
-name|int
-name|once
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|once
-operator|++
-condition|)
-name|cdevsw_add
-argument_list|(
-operator|&
-name|matcd_cdevsw
-argument_list|)
-expr_stmt|;
 name|cdrive
 operator|=
 name|nextcontroller
