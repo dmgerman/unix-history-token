@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.5 (Berkeley) %G%"
+literal|"@(#)pr.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,6 +1146,8 @@ operator|&
 name|buffer
 index|[
 name|BUFS
+operator|-
+literal|1
 index|]
 expr_stmt|;
 block|}
