@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.12 1996/02/17 14:47:16 peter Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.13 1996/02/22 03:33:52 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -3325,6 +3325,8 @@ name|pipe_buffer
 operator|.
 name|cnt
 expr_stmt|;
+comment|/* Writes of size<= PIPE_BUF must be atomic. */
+comment|/* XXX perhaps they need to be contiguous to be atomic? */
 if|if
 condition|(
 operator|(
@@ -3345,7 +3347,6 @@ name|space
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * We must afford contiguous writes on buffers of size 		 * PIPE_BUF or less. 		 */
 if|if
 condition|(
 name|space
@@ -3591,6 +3592,11 @@ break|break;
 block|}
 block|}
 block|}
+operator|--
+name|wpipe
+operator|->
+name|pipe_busy
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3732,11 +3738,6 @@ name|pipeselwakeup
 argument_list|(
 name|wpipe
 argument_list|)
-expr_stmt|;
-operator|--
-name|wpipe
-operator|->
-name|pipe_busy
 expr_stmt|;
 return|return
 name|error
