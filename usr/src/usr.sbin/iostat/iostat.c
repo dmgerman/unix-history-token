@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.1 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,7 +1011,10 @@ name|dk_wpms
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Choose drives to be displayed.  Priority goes to (in order) drives 	 * supplied as arguments and default drives.  If everything isn't 	 * filled in and there are drives not taken care of, display the first 	 * few that fit. 	 */
+comment|/* 	 * Choose drives to be displayed.  Priority goes to (in order) drives 	 * supplied as arguments and default drives.  If everything isn't 	 * filled in and there are drives not taken care of, display the first 	 * few that fit. 	 * 	 * The backward compatibility #ifdefs permit the syntax: 	 *	iostat [ drives ] [ interval [ count ] ] 	 */
+define|#
+directive|define
+name|BACKWARD_COMPATIBILITY
 for|for
 control|(
 name|ndrives
@@ -1024,6 +1027,22 @@ condition|;
 operator|++
 name|argv
 control|)
+block|{
+ifdef|#
+directive|ifdef
+name|BACKWARD_COMPATIBILITY
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+operator|*
+name|argv
+argument_list|)
+condition|)
+break|break;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -1063,6 +1082,41 @@ operator|++
 name|ndrives
 expr_stmt|;
 block|}
+block|}
+ifdef|#
+directive|ifdef
+name|BACKWARD_COMPATIBILITY
+if|if
+condition|(
+operator|*
+name|argv
+condition|)
+block|{
+name|interval
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|++
+name|argv
+condition|)
+name|reps
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|i
