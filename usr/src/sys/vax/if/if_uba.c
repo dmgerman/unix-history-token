@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	4.6	81/12/09	*/
+comment|/*	if_uba.c	4.7	81/12/21	*/
 end_comment
 
 begin_include
@@ -1018,12 +1018,6 @@ name|COUNT
 argument_list|(
 name|IF_WUBAPUT
 argument_list|)
-expr_stmt|;
-name|ifu
-operator|->
-name|ifu_xswapd
-operator|=
-literal|0
 expr_stmt|;
 name|cp
 operator|=
