@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.7	82/06/08	*/
+comment|/*	defs.h	4.8	82/06/09	*/
 end_comment
 
 begin_comment
@@ -273,6 +273,17 @@ end_define
 
 begin_comment
 comment|/* route is for an interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTS_GLOBAL
+value|0x20
+end_define
+
+begin_comment
+comment|/* entry is non-local, don't lose it */
 end_comment
 
 begin_decl_stmt

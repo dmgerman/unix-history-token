@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	routed.h	82/06/05	4.4	*/
+comment|/*	routed.h	82/06/09	4.5	*/
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ comment|/* max broadcast size */
 end_comment
 
 begin_comment
-comment|/*  * Timer values used in managing the routing table.  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  If there's a reason to look for network  * interface transitions do so every CHECK_INTERVAL seconds.  */
+comment|/*  * Timer values used in managing the routing table.  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  */
 end_comment
 
 begin_define
@@ -166,12 +166,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GARBAGE_TIME
-value|210
+name|SUPPLY_INTERVAL
+value|30
 end_define
 
 begin_comment
-comment|/* time to garbage collect */
+comment|/* time to supply tables */
 end_comment
 
 begin_define
@@ -188,23 +188,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SUPPLY_INTERVAL
-value|30
+name|GARBAGE_TIME
+value|210
 end_define
 
 begin_comment
-comment|/* time to supply tables */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHECK_INTERVAL
-value|300
-end_define
-
-begin_comment
-comment|/* time to check for new interfaces */
+comment|/* time to garbage collect */
 end_comment
 
 end_unit
