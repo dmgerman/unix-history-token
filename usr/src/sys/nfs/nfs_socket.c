@@ -3710,12 +3710,6 @@ operator|=
 name|NFS_MAXCWND
 expr_stmt|;
 block|}
-name|nmp
-operator|->
-name|nm_sent
-operator|-=
-name|NFS_CWNDSCALE
-expr_stmt|;
 comment|/* 				 * Update rtt using a gain of 0.125 on the mean 				 * and a gain of 0.25 on the deviation. 				 */
 if|if
 condition|(
@@ -4687,6 +4681,21 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Decrement the outstanding request count. 	 */
+if|if
+condition|(
+name|rep
+operator|->
+name|r_flags
+operator|&
+name|R_SENT
+condition|)
+name|nmp
+operator|->
+name|nm_sent
+operator|-=
+name|NFS_CWNDSCALE
 expr_stmt|;
 comment|/* 	 * If there was a successful reply and a tprintf msg. 	 * tprintf a response. 	 */
 if|if
