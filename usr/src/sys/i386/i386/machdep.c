@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -484,18 +484,6 @@ name|lim
 parameter_list|)
 define|\
 value|(name) = (type *)v; v = (caddr_t)((lim) = ((name)+(num)))
-name|valloclim
-argument_list|(
-name|file
-argument_list|,
-expr|struct
-name|file
-argument_list|,
-name|nfile
-argument_list|,
-name|fileNFILE
-argument_list|)
-expr_stmt|;
 name|valloc
 argument_list|(
 name|cfree
