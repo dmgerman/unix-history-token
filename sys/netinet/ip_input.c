@@ -931,7 +931,6 @@ name|IPSTEALTH
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ipstealth
 init|=
