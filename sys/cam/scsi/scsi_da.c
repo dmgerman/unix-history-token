@@ -2829,39 +2829,14 @@ return|;
 block|}
 if|if
 condition|(
-name|addr
-operator|%
-operator|(
-literal|1024
-operator|*
-literal|1024
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|HW_WDOG
-if|if
-condition|(
-name|wdog_tickler
-condition|)
-call|(
-modifier|*
-name|wdog_tickler
-call|)
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* HW_WDOG */
-comment|/* Count in MB of data left to write */
-name|printf
+name|dumpstatus
 argument_list|(
-literal|"%d "
+name|addr
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|num
 operator|*
 name|softc
@@ -2869,16 +2844,16 @@ operator|->
 name|params
 operator|.
 name|secsize
-operator|)
-operator|/
-operator|(
-literal|1024
-operator|*
-literal|1024
-operator|)
 argument_list|)
-expr_stmt|;
-block|}
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINTR
+operator|)
+return|;
 comment|/* update block count */
 name|num
 operator|-=
@@ -2897,25 +2872,6 @@ operator|+=
 name|PAGE_SIZE
 operator|*
 name|dumppages
-expr_stmt|;
-comment|/* operator aborting dump? */
-if|if
-condition|(
-name|cncheckc
-argument_list|()
-operator|==
-literal|0x03
-condition|)
-return|return
-operator|(
-name|EINTR
-operator|)
-return|;
-else|else
-name|printf
-argument_list|(
-literal|"[CTRL-C to abort] "
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Sync the disk cache contents to the physical media. 	 */
