@@ -2895,6 +2895,35 @@ comment|/* defined(TN3270) */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Try to guess whether speeds are "encoded" (4.2BSD) or just numeric (4.4BSD).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|B4800
+operator|!=
+literal|4800
+end_if
+
+begin_define
+define|#
+directive|define
+name|DECODE_BAUD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3056,6 +3085,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DECODE_BAUD */
+end_comment
+
 begin_function
 name|void
 name|TerminalSpeeds
@@ -3073,12 +3111,18 @@ modifier|*
 name|ospeed
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
 specifier|register
 name|struct
 name|termspeeds
 modifier|*
 name|tp
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* DECODE_BAUD */
 specifier|register
 name|long
 name|in
@@ -3111,6 +3155,9 @@ name|in
 operator|=
 name|out
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DECODE_BAUD
 name|tp
 operator|=
 name|termspeeds
@@ -3177,6 +3224,22 @@ name|tp
 operator|->
 name|speed
 expr_stmt|;
+else|#
+directive|else
+comment|/* DECODE_BAUD */
+operator|*
+name|ispeed
+operator|=
+name|in
+expr_stmt|;
+operator|*
+name|ospeed
+operator|=
+name|out
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DECODE_BAUD */
 block|}
 end_function
 
