@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.28 1998/11/14 16:15:04 dg Exp $"
+literal|"$Id: main.c,v 1.29 1998/11/15 05:55:58 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1717,6 +1717,15 @@ argument_list|(
 literal|"MACHINE"
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|machine_arch
+init|=
+name|getenv
+argument_list|(
+literal|"MACHINE_ARCH"
+argument_list|)
+decl_stmt|;
 name|Lst
 name|sysMkPath
 decl_stmt|;
@@ -2000,6 +2009,28 @@ directive|else
 name|machine
 operator|=
 name|MACHINE
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+if|if
+condition|(
+operator|!
+name|machine_arch
+condition|)
+block|{
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH
+name|machine_arch
+operator|=
+literal|"unknown"
+expr_stmt|;
+else|#
+directive|else
+name|machine_arch
+operator|=
+name|MACHINE_ARCH
 expr_stmt|;
 endif|#
 directive|endif
@@ -2388,20 +2419,15 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MACHINE_ARCH
 name|Var_Set
 argument_list|(
 literal|"MACHINE_ARCH"
 argument_list|,
-name|MACHINE_ARCH
+name|machine_arch
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * First snag any flags out of the MAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
 ifdef|#
 directive|ifdef
