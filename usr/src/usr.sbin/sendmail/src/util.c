@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.44 (Berkeley) %G%"
+literal|"@(#)util.c	8.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1733,6 +1733,10 @@ name|gr
 operator|->
 name|gr_mem
 init|;
+name|gp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|gp
 operator|!=
@@ -1756,6 +1760,10 @@ condition|)
 break|break;
 if|if
 condition|(
+name|gp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|gp
 operator|!=

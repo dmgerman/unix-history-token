@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.36 (Berkeley) %G%"
+literal|"@(#)headers.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2441,6 +2441,16 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+operator|==
+name|NULL
+condition|?
+literal|"<NONE>"
+else|:
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
 argument_list|,
 name|e
 operator|->
@@ -2576,6 +2586,16 @@ name|e
 operator|->
 name|e_id
 argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+operator|==
+name|NULL
+condition|?
+literal|"<NONE>"
+else|:
 name|shortenstring
 argument_list|(
 name|e
