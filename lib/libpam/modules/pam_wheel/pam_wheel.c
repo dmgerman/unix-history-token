@@ -260,6 +260,7 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
+block|{
 name|pwd
 operator|=
 name|getpwnam
@@ -268,6 +269,16 @@ name|getlogin
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|user
+operator|=
+name|strdup
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|retval
@@ -308,12 +319,27 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"User's primary uid, gid: %d, %d"
+argument_list|,
+name|pwd
+operator|->
+name|pw_uid
+argument_list|,
+name|pwd
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
 comment|/* Ignore if already uid 0 */
 if|if
 condition|(
 name|pwd
 operator|->
 name|pw_uid
+operator|==
+literal|0
 condition|)
 name|PAM_RETURN
 argument_list|(
@@ -400,11 +426,18 @@ name|PAM_IGNORE
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Permission denied"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_AUTH_ERR
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|PAM_LOG
 argument_list|(
@@ -449,11 +482,22 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
+block|{
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Member of group %s; denied"
+argument_list|,
+name|grp
+operator|->
+name|gr_name
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_PERM_DENIED
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pam_test_option
@@ -494,6 +538,15 @@ argument_list|(
 name|PAM_SUCCESS
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Not member of group %s; denied"
+argument_list|,
+name|grp
+operator|->
+name|gr_name
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_PERM_DENIED
@@ -524,9 +577,32 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-return|return
+name|struct
+name|options
+name|options
+decl_stmt|;
+name|pam_std_option
+argument_list|(
+operator|&
+name|options
+argument_list|,
+name|other_options
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
+argument_list|)
+expr_stmt|;
+name|PAM_RETURN
+argument_list|(
 name|PAM_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
