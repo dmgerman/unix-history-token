@@ -3968,6 +3968,17 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|tcp
+operator|->
+name|th_flags
+operator|&
+name|TH_SYN
+condition|)
+name|ack
+operator|++
+expr_stmt|;
 name|seq
 operator|=
 literal|0
