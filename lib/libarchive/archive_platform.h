@@ -84,6 +84,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_POSIX_STRERROR_R
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARCHIVE_ERRNO_FILE_FORMAT
 value|EFTYPE
 end_define
@@ -266,6 +273,13 @@ define|#
 directive|define
 name|st_ctimespec
 value|st_ctim
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GLIBC_STRERROR_R
+value|1
 end_define
 
 begin_endif
