@@ -843,7 +843,7 @@ operator|<
 literal|0
 operator|||
 name|sig
-operator|>
+operator|>=
 name|NSIG
 condition|)
 name|nosig
