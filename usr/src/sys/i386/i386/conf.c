@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1088,6 +1088,31 @@ block|,
 name|NULL
 block|,
 name|cttyselect
+block|,
+name|enodev
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|nullop
+block|,
+name|nullop
+block|,
+name|mmrw
+block|,
+name|mmrw
+block|,
+comment|/*2*/
+name|enodev
+block|,
+name|nullop
+block|,
+name|nullop
+block|,
+name|NULL
+block|,
+name|mmselect
 block|,
 name|enodev
 block|,
