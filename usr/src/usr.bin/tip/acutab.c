@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acutab.c	4.7 (Berkeley) %G%"
+literal|"@(#)acutab.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,15 @@ name|ven_disconnect
 argument_list|()
 decl_stmt|,
 name|ven_abort
+argument_list|()
+decl_stmt|,
+name|hay_dialer
+argument_list|()
+decl_stmt|,
+name|hay_disconnect
+argument_list|()
+decl_stmt|,
+name|hay_abort
 argument_list|()
 decl_stmt|,
 name|v3451_dialer
@@ -200,6 +209,19 @@ block|,
 name|ven_disconnect
 block|,
 name|ven_abort
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAYES
+literal|"hayes"
+block|,
+name|hay_dialer
+block|,
+name|hay_disconnect
+block|,
+name|hay_abort
 block|,
 endif|#
 directive|endif
