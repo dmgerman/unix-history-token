@@ -270,6 +270,13 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* IEEE to h/w rate table ix */
+name|u_int8_t
+name|sc_hwmap
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* h/w rate ix to IEEE table */
 name|HAL_INT
 name|sc_imask
 decl_stmt|;
