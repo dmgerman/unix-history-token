@@ -1325,7 +1325,7 @@ parameter_list|,
 name|FILE
 modifier|*
 parameter_list|,
-name|off_t
+name|size_t
 parameter_list|,
 name|off_t
 parameter_list|,
@@ -9742,7 +9742,7 @@ name|FILE
 modifier|*
 name|outstr
 parameter_list|,
-name|off_t
+name|size_t
 name|blksize
 parameter_list|,
 name|off_t
