@@ -1021,7 +1021,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\r%-46s"
+literal|"\r%-46.46s"
 argument_list|,
 name|xs
 operator|->
