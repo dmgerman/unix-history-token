@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.56 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.57 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1040,14 +1040,49 @@ value|16
 end_define
 
 begin_comment
-comment|/* Low order 16 flag bits are reserved for map flags for vp arguments. */
+comment|/* Low order 16 flag bits are reserved for willrele flags for vp arguments. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VDESC_VP0_WILLRELE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDESC_VP1_WILLRELE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDESC_VP2_WILLRELE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDESC_VP3_WILLRELE
+value|0x0008
+end_define
 
 begin_define
 define|#
 directive|define
 name|VDESC_NOMAP_VPP
 value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDESC_VPP_WILLRELE
+value|0x0200
 end_define
 
 begin_comment
@@ -1082,7 +1117,7 @@ name|int
 name|vdesc_flags
 decl_stmt|;
 comment|/* VDESC_* flags */
-comment|/* 	 * These ops are used by bypass routines to map and locate arguments. 	 * Creds and procs are not needed in bypass routines, but sometimes 	 * they are useful to (for example) transport layers. 	 */
+comment|/* 	 * These ops are used by bypass routines to map and locate arguments. 	 * Creds and procs are not needed in bypass routines, but sometimes 	 * they are useful to (for example) transport layers. 	 * Nameidata is useful because it has a cred in it. 	 */
 name|int
 modifier|*
 name|vdesc_vp_offsets
@@ -1100,6 +1135,10 @@ name|int
 name|vdesc_proc_offset
 decl_stmt|;
 comment|/* proc location, if any */
+name|int
+name|vdesc_componentname_offset
+decl_stmt|;
+comment|/* if any */
 comment|/* 	 * Finally, we've got a list of private data (about each operation) 	 * for each transport layer.  (Support to manage this list is not 	 * yet part of BSD.) 	 */
 name|caddr_t
 modifier|*
