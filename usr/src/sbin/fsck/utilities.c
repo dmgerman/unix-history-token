@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.22 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2061,14 +2061,14 @@ if|if
 condition|(
 name|statemap
 index|[
-name|ino
+name|curdir
 index|]
 operator|!=
 name|DSTATE
 operator|&&
 name|statemap
 index|[
-name|ino
+name|curdir
 index|]
 operator|!=
 name|DFOUND
@@ -2167,7 +2167,7 @@ condition|(
 operator|(
 name|ckinode
 argument_list|(
-name|getcacheino
+name|ginode
 argument_list|(
 name|ino
 argument_list|)
@@ -2215,7 +2215,7 @@ condition|(
 operator|(
 name|ckinode
 argument_list|(
-name|getcacheino
+name|ginode
 argument_list|(
 name|idesc
 operator|.
