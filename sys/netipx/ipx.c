@@ -582,6 +582,11 @@ operator|*
 operator|)
 name|ia
 expr_stmt|;
+name|IFA_LOCK_INIT
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
