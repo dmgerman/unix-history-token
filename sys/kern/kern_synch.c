@@ -2093,6 +2093,12 @@ name|td_flags
 operator||=
 name|TDF_TIMEOUT
 expr_stmt|;
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_SLP
+expr_stmt|;
 name|p
 operator|->
 name|p_stats
