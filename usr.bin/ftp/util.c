@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: util.c,v 1.4 1997/12/16 08:17:26 ache Exp $	*/
+comment|/*	$Id: util.c,v 1.5 1998/02/03 20:53:25 pst Exp $	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.4 1997/12/16 08:17:26 ache Exp $"
+literal|"$Id: util.c,v 1.5 1998/02/03 20:53:25 pst Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2679,7 +2679,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|len
-decl_stmt|,
+decl_stmt|;
+name|off_t
 name|remaining
 decl_stmt|;
 name|char
@@ -3078,10 +3079,7 @@ else|else
 block|{
 name|remaining
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
+operator|(
 operator|(
 name|filesize
 operator|-
@@ -3095,7 +3093,7 @@ name|elapsed
 operator|)
 operator|-
 name|elapsed
-argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
