@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbufs.c	1.3 (Lucasfilm) %G%"
+literal|"@(#)mbufs.c	1.4 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,11 +173,24 @@ expr_stmt|;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|NLINES
+value|15
+end_define
+
+begin_comment
+comment|/* max # which can fit on screen */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
 name|mtnames
-index|[]
+index|[
+name|NLINES
+index|]
 init|=
 block|{
 literal|"free"
@@ -203,7 +216,13 @@ block|,
 literal|"sockopts"
 block|,
 literal|"frags"
-block|, }
+block|,
+literal|"rights"
+block|,
+literal|"ifaddrs"
+block|,
+literal|"#14"
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +264,7 @@ literal|0
 init|;
 name|j
 operator|<
-literal|15
+name|NLINES
 condition|;
 name|j
 operator|++
@@ -268,7 +287,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|15
+name|NLINES
 condition|;
 name|i
 operator|++
@@ -413,7 +432,7 @@ condition|(
 name|j
 operator|++
 operator|<
-literal|15
+name|NLINES
 condition|)
 block|{
 name|wmove
