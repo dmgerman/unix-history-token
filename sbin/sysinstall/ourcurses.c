@@ -752,6 +752,11 @@ operator|+
 name|curpos
 argument_list|)
 expr_stmt|;
+name|wstandend
+argument_list|(
+name|window
+argument_list|)
+expr_stmt|;
 name|field
 index|[
 name|len
