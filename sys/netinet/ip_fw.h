@@ -144,9 +144,6 @@ comment|/* none				*/
 name|O_VERSRCREACH
 block|,
 comment|/* none				*/
-name|O_ANTISPOOF
-block|,
-comment|/* none				*/
 name|O_PROBE_STATE
 block|,
 comment|/* none				*/
@@ -212,6 +209,9 @@ comment|/* arg1=table number, u32=value	*/
 name|O_IP_DST_LOOKUP
 block|,
 comment|/* arg1=table number, u32=value	*/
+name|O_ANTISPOOF
+block|,
+comment|/* none				*/
 name|O_JAIL
 block|,
 comment|/* u32 = id			*/
