@@ -592,6 +592,32 @@ argument_list|,
 literal|"!: nothing between ! and -o"
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If we encounter ! ( expr ) then look for nots in 			 * the expr subplan. 			 */
+if|if
+condition|(
+name|node
+operator|->
+name|type
+operator|==
+name|N_EXPR
+condition|)
+name|node
+operator|->
+name|p_data
+index|[
+literal|0
+index|]
+operator|=
+name|not_squish
+argument_list|(
+name|node
+operator|->
+name|p_data
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|notlevel
@@ -739,7 +765,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* if we encounter a not then look for not's in the subplan */
+comment|/* if we encounter a not then look for or's in the subplan */
 if|if
 condition|(
 name|next
