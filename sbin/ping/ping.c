@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.41 1998/08/26 18:51:37 des Exp $"
+literal|"$Id: ping.c,v 1.42 1999/01/06 07:54:28 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5214,6 +5214,7 @@ if|if
 condition|(
 name|ntransmitted
 condition|)
+block|{
 if|if
 condition|(
 name|nreceived
@@ -5254,6 +5255,7 @@ name|ntransmitted
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

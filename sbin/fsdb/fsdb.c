@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fsdb.c,v 1.10 1998/06/15 07:12:19 charnier Exp $"
+literal|"$Id: fsdb.c,v 1.11 1998/11/09 03:43:55 truckman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,7 +184,7 @@ comment|/*  * We suck in lots of fsck code, and just pick& choose the stuff we w
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
