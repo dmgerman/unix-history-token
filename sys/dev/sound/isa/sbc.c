@@ -1093,6 +1093,13 @@ block|}
 block|,
 comment|/* CPQb0ac */
 block|{
+literal|0x78187316
+block|,
+literal|"ESS ES1878"
+block|}
+block|,
+comment|/* ESS1878 */
+block|{
 literal|0x79187316
 block|,
 literal|"ESS ES1879"
