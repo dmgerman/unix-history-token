@@ -2875,6 +2875,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BUS_DMA_ZERO
+value|0x08
+end_define
+
+begin_comment
+comment|/* allocate zero'ed memory */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BUS_DMA_BUS1
 value|0x10
 end_define
