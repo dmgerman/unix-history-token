@@ -577,7 +577,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"g_dev_taste: %d Mediasize is %lld bytes\n"
+literal|"g_dev_taste: error %d Mediasize is %lld bytes\n"
 argument_list|,
 name|error
 argument_list|,
@@ -1165,6 +1165,24 @@ operator|=
 name|g_io_getattr
 argument_list|(
 literal|"GEOM::fwheads"
+argument_list|,
+name|cp
+argument_list|,
+operator|&
+name|i
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DIOCGFRONTSTUFF
+case|:
+name|error
+operator|=
+name|g_io_getattr
+argument_list|(
+literal|"GEOM::frontstuff"
 argument_list|,
 name|cp
 argument_list|,

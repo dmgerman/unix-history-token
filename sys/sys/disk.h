@@ -270,6 +270,17 @@ begin_comment
 comment|/*- 	 * Enable/Disable (the argument is boolean) the device for kernel 	 * core dumps. 	 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIOCGFRONTSTUFF
+value|_IOR('d', 134, off_t)
+end_define
+
+begin_comment
+comment|/*- 	 * Many disk formats have some amount of space reserved at the 	 * start of the disk to hold bootblocks, various disklabels and 	 * similar stuff.  This ioctl returns the number of such bytes 	 * which may apply to the device. 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

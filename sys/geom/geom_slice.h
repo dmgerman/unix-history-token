@@ -42,6 +42,12 @@ block|{
 name|int
 name|nslice
 decl_stmt|;
+name|off_t
+name|cfrontstuff
+decl_stmt|;
+name|off_t
+name|frontstuff
+decl_stmt|;
 name|struct
 name|g_slice
 modifier|*
