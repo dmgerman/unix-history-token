@@ -9,13 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)init.c	8.1 (Berkeley) 6/4/93";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)init.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id: init.c,v 1.6 1994/08/17 20:10:35 pk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +39,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<termios.h>
 end_include
 
 begin_include
@@ -53,24 +57,8 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sgttyb
+name|termios
 name|tmode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tchars
-name|tc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ltchars
-name|ltc
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +105,10 @@ block|,
 operator|&
 name|tmode
 operator|.
-name|sg_erase
+name|c_cc
+index|[
+name|VERASE
+index|]
 block|}
 block|,
 comment|/* erase character */
@@ -127,7 +118,10 @@ block|,
 operator|&
 name|tmode
 operator|.
-name|sg_kill
+name|c_cc
+index|[
+name|VKILL
+index|]
 block|}
 block|,
 comment|/* kill character */
@@ -135,9 +129,12 @@ block|{
 literal|"et"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_eofc
+name|c_cc
+index|[
+name|VEOF
+index|]
 block|}
 block|,
 comment|/* eof chatacter (eot) */
@@ -181,9 +178,12 @@ block|{
 literal|"in"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_intrc
+name|c_cc
+index|[
+name|VINTR
+index|]
 block|}
 block|,
 comment|/* interrupt char */
@@ -191,9 +191,12 @@ block|{
 literal|"qu"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_quitc
+name|c_cc
+index|[
+name|VQUIT
+index|]
 block|}
 block|,
 comment|/* quit char */
@@ -201,9 +204,12 @@ block|{
 literal|"xn"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_startc
+name|c_cc
+index|[
+name|VSTART
+index|]
 block|}
 block|,
 comment|/* XON (start) char */
@@ -211,9 +217,12 @@ block|{
 literal|"xf"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_stopc
+name|c_cc
+index|[
+name|VSTOP
+index|]
 block|}
 block|,
 comment|/* XOFF (stop) char */
@@ -221,9 +230,12 @@ block|{
 literal|"bk"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_brkc
+name|c_cc
+index|[
+name|VEOL
+index|]
 block|}
 block|,
 comment|/* brk char (alt \n) */
@@ -231,9 +243,12 @@ block|{
 literal|"su"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_suspc
+name|c_cc
+index|[
+name|VSUSP
+index|]
 block|}
 block|,
 comment|/* suspend char */
@@ -241,9 +256,12 @@ block|{
 literal|"ds"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_dsuspc
+name|c_cc
+index|[
+name|VDSUSP
+index|]
 block|}
 block|,
 comment|/* delayed suspend */
@@ -251,9 +269,12 @@ block|{
 literal|"rp"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_rprntc
+name|c_cc
+index|[
+name|VREPRINT
+index|]
 block|}
 block|,
 comment|/* reprint char */
@@ -261,9 +282,12 @@ block|{
 literal|"fl"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_flushc
+name|c_cc
+index|[
+name|VDISCARD
+index|]
 block|}
 block|,
 comment|/* flush output */
@@ -271,9 +295,12 @@ block|{
 literal|"we"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_werasc
+name|c_cc
+index|[
+name|VWERASE
+index|]
 block|}
 block|,
 comment|/* word erase */
@@ -281,9 +308,12 @@ block|{
 literal|"ln"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_lnextc
+name|c_cc
+index|[
+name|VLNEXT
+index|]
 block|}
 block|,
 comment|/* literal next */
@@ -366,6 +396,66 @@ literal|"pf"
 block|}
 block|,
 comment|/* delay before flush at 1st prompt */
+block|{
+literal|"c0"
+block|}
+block|,
+comment|/* output c_flags */
+block|{
+literal|"c1"
+block|}
+block|,
+comment|/* input c_flags */
+block|{
+literal|"c2"
+block|}
+block|,
+comment|/* user mode c_flags */
+block|{
+literal|"i0"
+block|}
+block|,
+comment|/* output i_flags */
+block|{
+literal|"i1"
+block|}
+block|,
+comment|/* input i_flags */
+block|{
+literal|"i2"
+block|}
+block|,
+comment|/* user mode i_flags */
+block|{
+literal|"l0"
+block|}
+block|,
+comment|/* output l_flags */
+block|{
+literal|"l1"
+block|}
+block|,
+comment|/* input l_flags */
+block|{
+literal|"l2"
+block|}
+block|,
+comment|/* user mode l_flags */
+block|{
+literal|"o0"
+block|}
+block|,
+comment|/* output o_flags */
+block|{
+literal|"o1"
+block|}
+block|,
+comment|/* input o_flags */
+block|{
+literal|"o2"
+block|}
+block|,
+comment|/* user mode o_flags */
 block|{
 literal|0
 block|}
@@ -534,6 +624,13 @@ literal|0
 block|}
 block|,
 comment|/* no parity at all (8bit chars) */
+block|{
+literal|"mb"
+block|,
+literal|0
+block|}
+block|,
+comment|/* do MDMBUF flow control */
 block|{
 literal|0
 block|}
