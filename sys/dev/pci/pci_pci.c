@@ -889,8 +889,9 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-operator|-
-literal|1
+name|sc
+operator|->
+name|secbus
 argument_list|)
 expr_stmt|;
 if|if

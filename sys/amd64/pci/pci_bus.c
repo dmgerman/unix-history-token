@@ -1489,7 +1489,7 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-name|device_get_unit
+name|pcib_get_bus
 argument_list|(
 name|dev
 argument_list|)
