@@ -5465,6 +5465,33 @@ condition|)
 name|fxp_rnr
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+comment|/* Pick up a deferred RNR condition if `count' ran out last time. */
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|FXP_FLAG_DEFERRED_RNR
+condition|)
+block|{
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|FXP_FLAG_DEFERRED_RNR
+expr_stmt|;
+name|rnr
+operator|=
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Free any finished transmit mbuf chains. 	 * 	 * Handle the CNA event likt a CXTNO event. It used to 	 * be that this event (control unit not ready) was not 	 * encountered, but it is now with the SMPng modifications. 	 * The exact sequence of events that occur when the interface 	 * is brought up are different now, and if this event 	 * goes unhandled, the configuration/rxfilter setup sequence 	 * can stall for several seconds. The result is that no 	 * packets go out onto the wire for about 5 to 10 seconds 	 * after the interface is ifconfig'ed for the first time. 	 */
 if|if
 condition|(
@@ -5593,31 +5620,19 @@ block|}
 comment|/* 	 * Just return if nothing happened on the receive side. 	 */
 if|if
 condition|(
+operator|!
+name|rnr
+operator|&&
 operator|(
 name|statack
 operator|&
-operator|(
 name|FXP_SCB_STATACK_FR
-operator||
-name|FXP_SCB_STATACK_RNR
-operator|)
 operator|)
 operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 */
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-comment|/* 	 * When using polling, we do not process the list to completion, 	 * so when we get an RNR interrupt we must defer the restart 	 * until we hit the last buffer with the C bit set. 	 * If we run out of cycles and rfa_headm has the C bit set, 	 * record the pending RNR in an unused status bit, so that the 	 * info will be used in the subsequent polling cycle. 	 * 	 * XXX there is absolutely no guarantee that this reserved bit 	 * will be ignored by the hardware! 	 */
-define|#
-directive|define
-name|FXP_RFA_RNRMARK
-value|0x4000
-comment|/* used to mark a pending RNR intr */
-endif|#
-directive|endif
+comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 * 	 * When using polling, we do not process the list to completion, 	 * so when we get an RNR interrupt we must defer the restart 	 * until we hit the last buffer with the C bit set. 	 * If we run out of cycles and rfa_headm has the C bit set, 	 * record the pending RNR in the FXP_FLAG_DEFERRED_RNR flag so 	 * that the info will be used in the subsequent polling cycle. 	 */
 for|for
 control|(
 init|;
@@ -5662,7 +5677,26 @@ operator|--
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|rnr
+condition|)
+block|{
+comment|/* Defer RNR processing until the next time. */
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_DEFERRED_RNR
+expr_stmt|;
+name|rnr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
+block|}
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
@@ -5679,23 +5713,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-if|if
-condition|(
-name|rfa
-operator|->
-name|rfa_status
-operator|&
-name|FXP_RFA_RNRMARK
-condition|)
-name|rnr
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Remove first packet from the chain. 		 */
 name|sc
 operator|->
@@ -5800,27 +5817,6 @@ condition|(
 name|rnr
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-if|if
-condition|(
-name|rfa
-operator|->
-name|rfa_status
-operator|&
-name|FXP_RFA_STATUS_C
-condition|)
-name|rfa
-operator|->
-name|rfa_status
-operator||=
-name|FXP_RFA_RNRMARK
-expr_stmt|;
-else|else
-block|{
-endif|#
-directive|endif
 name|fxp_scb_wait
 argument_list|(
 name|sc
@@ -5853,12 +5849,6 @@ argument_list|,
 name|FXP_SCB_COMMAND_RU_START
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
