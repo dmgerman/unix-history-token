@@ -142,7 +142,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_ar.h>
+file|<dev/ar/if_ar.h>
 end_include
 
 begin_else
@@ -184,13 +184,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/hd64570.h>
+file|<dev/ic/hd64570.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_arregs.h>
+file|<dev/ar/if_arregs.h>
 end_include
 
 begin_ifdef
