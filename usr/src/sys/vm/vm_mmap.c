@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -965,7 +965,39 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 		 * Ensure that file and memory protections are compatible. 		 * Note that we only worry about writability if mapping is 		 * shared; in this case, current and max prot are dictated 		 * by the open file. 		 * XXX use the vnode instead?  Problem is: what credentials 		 * do we use for determination?  What if proc does a setuid? 		 */
+comment|/* 		 * XXX hack to handle use of /dev/zero to map anon 		 * memory (ala SunOS). 		 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+operator|&&
+name|iszerodev
+argument_list|(
+name|vp
+operator|->
+name|v_rdev
+argument_list|)
+condition|)
+block|{
+name|handle
+operator|=
+name|NULL
+expr_stmt|;
+name|maxprot
+operator|=
+name|VM_PROT_ALL
+expr_stmt|;
+name|flags
+operator||=
+name|MAP_ANON
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * Ensure that file and memory protections are 			 * compatible.  Note that we only worry about 			 * writability if mapping is shared; in this case, 			 * current and max prot are dictated by the open file. 			 * XXX use the vnode instead?  Problem is: what 			 * credentials do we use for determination? 			 * What if proc does a setuid? 			 */
 name|maxprot
 operator|=
 name|VM_PROT_EXECUTE
@@ -1039,6 +1071,7 @@ name|caddr_t
 operator|)
 name|vp
 expr_stmt|;
+block|}
 block|}
 name|error
 operator|=
