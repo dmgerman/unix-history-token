@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.7	85/02/15	*/
+comment|/*	param.h	6.8	85/05/05	*/
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|NOFILE
-value|48
+value|64
 end_define
 
 begin_comment
