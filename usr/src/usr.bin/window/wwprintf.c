@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwprintf.c	3.5 %G%"
+literal|"@(#)wwprintf.c	3.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ directive|include
 file|"ww.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
 begin_comment
 comment|/*VARARGS2*/
 end_comment
@@ -41,7 +47,7 @@ argument|w
 argument_list|,
 argument|fmt
 argument_list|,
-argument|args
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -60,6 +66,10 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|va_dcl
+end_macro
+
 begin_block
 block|{
 include|#
@@ -74,6 +84,9 @@ name|buf
 index|[
 literal|1024
 index|]
+decl_stmt|;
+name|va_list
+name|ap
 decl_stmt|;
 comment|/* 	 * A danger is that when buf overflows, _flsbuf() will be 	 * called automatically.  It doesn't check for _IOSTR. 	 * We set the file descriptor to -1 so no actual io will be done. 	 */
 name|_wwbuf
@@ -109,15 +122,24 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* safe */
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|_doprnt
 argument_list|(
 name|fmt
 argument_list|,
-operator|&
-name|args
+name|ap
 argument_list|,
 operator|&
 name|_wwbuf
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 operator|(

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.25 %G%"
+literal|"@(#)lcmd.c	3.26 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_alias
@@ -205,6 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_cursormodes
@@ -213,6 +215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_debug
@@ -221,6 +224,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_echo
@@ -229,6 +233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_escape
@@ -237,6 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_foreground
@@ -245,6 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_label
@@ -253,6 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_nline
@@ -261,6 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_close
@@ -269,6 +278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_select
@@ -277,6 +287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_shell
@@ -285,6 +296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_smooth
@@ -293,6 +305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_source
@@ -301,6 +314,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_terse
@@ -309,6 +323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_time
@@ -317,6 +332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_unalias
@@ -325,6 +341,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_unset
@@ -333,6 +350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_window
@@ -341,6 +359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|lcmd_arg
 name|arg_write

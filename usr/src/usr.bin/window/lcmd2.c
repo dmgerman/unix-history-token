@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.12 %G%"
+literal|"@(#)lcmd2.c	3.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +505,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%D\t%D\t%D\t%D\n"
+literal|"%ld\t%ld\t%ld\t%ld\n"
 argument_list|,
 name|rusage
 operator|.
@@ -535,7 +535,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\n"
+literal|"%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\n"
 argument_list|,
 name|rusage
 operator|.
@@ -642,7 +642,7 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"%D:"
+literal|"%ld:"
 argument_list|,
 name|t
 operator|->
@@ -695,9 +695,9 @@ name|p
 argument_list|,
 name|fill
 condition|?
-literal|"%02D:"
+literal|"%02ld:"
 else|:
-literal|"%D:"
+literal|"%ld:"
 argument_list|,
 name|t
 operator|->
@@ -735,9 +735,9 @@ name|p
 argument_list|,
 name|fill
 condition|?
-literal|"%02D.%02d"
+literal|"%02ld.%02d"
 else|:
-literal|"%D.%02D"
+literal|"%ld.%02ld"
 argument_list|,
 name|t
 operator|->
