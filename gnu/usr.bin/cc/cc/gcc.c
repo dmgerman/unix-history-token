@@ -4157,7 +4157,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_EXEC_PREFIX
-value|"/usr/local/lib/gcc-lib/"
+value|"/usr/libexec/"
 end_define
 
 begin_endif
@@ -4185,7 +4185,7 @@ name|char
 modifier|*
 name|standard_exec_prefix_1
 init|=
-literal|"/usr/lib/gcc/"
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -4220,7 +4220,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_STARTFILE_PREFIX
-value|"/usr/local/lib/"
+value|"/usr/lib/"
 end_define
 
 begin_endif
@@ -4314,7 +4314,7 @@ begin_define
 define|#
 directive|define
 name|TOOLDIR_BASE_PREFIX
-value|"/usr/local/"
+value|""
 end_define
 
 begin_endif
