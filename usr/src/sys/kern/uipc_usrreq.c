@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.3	82/11/13	*/
+comment|/*	uipc_usrreq.c	1.4	82/11/23	*/
 end_comment
 
 begin_include
@@ -1618,13 +1618,6 @@ argument_list|(
 name|unp2
 operator|->
 name|unp_socket
-argument_list|)
-expr_stmt|;
-name|unp_drop
-argument_list|(
-name|unp2
-argument_list|,
-name|ECONNRESET
 argument_list|)
 expr_stmt|;
 break|break;
