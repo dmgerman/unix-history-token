@@ -15858,7 +15858,9 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-name|vp
+name|bp
+operator|->
+name|b_vp
 operator|->
 name|v_mount
 operator|->
