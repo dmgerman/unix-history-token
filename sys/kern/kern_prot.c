@@ -5383,7 +5383,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Test whether the specified credentials imply "super-user" privilege.  * Return 0 or EPERM.  The flag argument is currently used only to  * specify jail interaction.  */
+comment|/*  * Test whether the specified credentials imply "super-user" privilege.  * Return 0 or EPERM.  */
 end_comment
 
 begin_function
@@ -5411,9 +5411,21 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+operator|(
+name|flag
+operator|&
+name|SUSER_RUID
+operator|)
+condition|?
+name|cred
+operator|->
+name|cr_ruid
+else|:
 name|cred
 operator|->
 name|cr_uid
+operator|)
 operator|!=
 literal|0
 condition|)

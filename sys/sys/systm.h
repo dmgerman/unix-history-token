@@ -1850,6 +1850,13 @@ name|PRISON_ROOT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SUSER_RUID
+value|2
+end_define
+
 begin_function_decl
 name|int
 name|suser
