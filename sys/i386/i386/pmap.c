@@ -8817,7 +8817,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ENABLED_SSE
+name|CPU_ENABLE_SSE
 argument_list|)
 if|if
 condition|(
