@@ -3752,18 +3752,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Compatibility with PCI bus (XXX: Do we need this?)			*/
-end_comment
-
-begin_comment
-comment|/************************************************************************/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
