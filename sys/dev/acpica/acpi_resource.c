@@ -3658,6 +3658,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX The resource list may require locking and refcounting. */
+end_comment
+
 begin_function
 name|struct
 name|resource_list_entry
