@@ -284,7 +284,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|decode_prologue
 parameter_list|(
 name|db_addr_t
@@ -324,7 +324,7 @@ define|#
 directive|define
 name|CHECK_FRAMESIZE
 define|\
-value|do {									\ 	if (pi->pi_frame_size != 0) {					\ 		db_printf("frame size botch: adjust register offsets?\n"); \ 	}								\ } while (0)
+value|do {									\ 	if (pi->pi_frame_size != 0) {					\ 		db_printf("frame size botch: adjust register offsets?\n"); \ 		return (1);						\ 	}								\ } while (0)
 for|for
 control|(
 name|pc
@@ -403,6 +403,7 @@ name|signed_immediate
 operator|>
 literal|0
 condition|)
+block|{
 name|db_printf
 argument_list|(
 literal|"prologue botch: displacement %ld\n"
@@ -410,6 +411,12 @@ argument_list|,
 name|signed_immediate
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
 name|CHECK_FRAMESIZE
@@ -539,6 +546,11 @@ name|signed_immediate
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1403,6 +1415,8 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * This is a bit trickier; we must decode the function 		 * prologue to find the saved RA. 		 * 		 * XXX How does this interact w/ alloca()?! 		 */
+if|if
+condition|(
 name|decode_prologue
 argument_list|(
 name|callpc
@@ -1412,7 +1426,8 @@ argument_list|,
 operator|&
 name|pi
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
