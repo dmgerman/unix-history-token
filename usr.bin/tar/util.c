@@ -26,6 +26,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* Linux doesn't define mode_t, etc. in sys/stat.h. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<archive_entry.h>
 end_include
 
