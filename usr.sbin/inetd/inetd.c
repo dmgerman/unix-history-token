@@ -6230,11 +6230,8 @@ name|debug
 operator|!=
 literal|0
 condition|)
-block|{
-name|syslog
+name|warnx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"%s/%s: ipsec initialization failed; %s"
 argument_list|,
 name|sep
@@ -6248,7 +6245,6 @@ argument_list|,
 name|policy_in
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|buf
@@ -6318,11 +6314,8 @@ name|debug
 operator|!=
 literal|0
 condition|)
-block|{
-name|syslog
+name|warnx
 argument_list|(
-name|LOG_ERR
-argument_list|,
 literal|"%s/%s: ipsec initialization failed; %s"
 argument_list|,
 name|sep
@@ -6336,7 +6329,6 @@ argument_list|,
 name|policy_out
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|buf
