@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.16 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -737,12 +737,40 @@ name|e_flags
 operator||=
 name|EF_PM_NOTIFY
 expr_stmt|;
+comment|/* check to see if there are any good addresses */
+for|for
+control|(
 name|q
 operator|=
 name|e
 operator|->
 name|e_errorqueue
-expr_stmt|;
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+operator||
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+break|break;
 if|if
 condition|(
 name|q
