@@ -331,7 +331,7 @@ elseif|else
 if|if
 condition|(
 name|argc
-operator|==
+operator|>
 literal|2
 condition|)
 block|{
