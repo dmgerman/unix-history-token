@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.37 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -93,8 +93,7 @@ decl_stmt|;
 name|int
 name|ip_req
 decl_stmt|;
-name|int
-modifier|*
+name|caddr_t
 name|ip_addr
 decl_stmt|;
 name|int
@@ -116,11 +115,10 @@ block|{
 name|int
 name|req
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
-name|int
-modifier|*
+name|caddr_t
 name|addr
 decl_stmt|;
 name|int
