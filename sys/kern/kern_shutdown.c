@@ -2130,12 +2130,30 @@ begin_comment
 comment|/*  * Support for poweroff delay.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|POWEROFF_DELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|POWEROFF_DELAY
+value|5000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
 name|poweroff_delay
 init|=
-literal|0
+name|POWEROFF_DELAY
 decl_stmt|;
 end_decl_stmt
 
