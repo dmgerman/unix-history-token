@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_alloc.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_alloc.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1353,7 +1353,7 @@ argument_list|(
 name|obp
 argument_list|)
 expr_stmt|;
-name|free
+name|blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -1371,7 +1371,7 @@ name|nsize
 operator|<
 name|request
 condition|)
-name|free
+name|blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -4565,7 +4565,7 @@ comment|/*  * Free a block or fragment.  *  * The specified block or fragment is
 end_comment
 
 begin_expr_stmt
-name|free
+name|blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -4674,7 +4674,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"free: bad size"
+literal|"blkfree: bad size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4871,7 +4871,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"free: freeing free block"
+literal|"blkfree: freeing free block"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5049,7 +5049,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"free: freeing free frag"
+literal|"blkfree: freeing free frag"
 argument_list|)
 expr_stmt|;
 block|}
