@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.7	81/11/22	*/
+comment|/*	uipc_pipe.c	4.8	81/11/22	*/
 end_comment
 
 begin_include
@@ -378,6 +378,12 @@ name|so_pcb
 operator|=
 literal|0
 expr_stmt|;
+name|so2
+operator|->
+name|so_pcb
+operator|=
+literal|0
+expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
@@ -491,6 +497,17 @@ define|#
 directive|define
 name|snd
 value|(&so->so_snd)
+if|if
+condition|(
+name|so2
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"pipe send"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Send to paired receive port, and then 		 * give it enough resources to hold what it already has. 		 * Wake up readers. 		 */
 comment|/* printf("pru_send in: "); psndrcv(snd, rcv); */
 name|sbappend
