@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eval.c,v 1.15.2.2 1999/04/21 11:10:13 cracauer Exp $"
+literal|"$Id: eval.c,v 1.15.2.3 1999/05/08 10:42:55 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3317,6 +3317,14 @@ operator|.
 name|cmdtype
 operator|!=
 name|CMDBUILTIN
+operator|||
+name|cmdentry
+operator|.
+name|u
+operator|.
+name|index
+operator|==
+name|CDCMD
 operator|||
 name|cmdentry
 operator|.
