@@ -204,9 +204,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|mntflags
 operator|=
 literal|0
@@ -376,7 +373,12 @@ name|iov_len
 operator|=
 name|strlen
 argument_list|(
-literal|"nullfs"
+name|iov
+index|[
+literal|1
+index|]
+operator|.
+name|iov_base
 argument_list|)
 operator|+
 literal|1
