@@ -51,20 +51,16 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_comment
-comment|/* XXX should be in<machine/> */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"ppbconf.h"
+file|<dev/ppbus/ppbconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ppi.h"
+file|<dev/ppbus/ppi.h>
 end_include
 
 begin_define
@@ -369,7 +365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int
