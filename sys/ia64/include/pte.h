@@ -257,20 +257,6 @@ name|PTE_AR_X_RX
 value|7
 end_define
 
-begin_define
-define|#
-directive|define
-name|PTE_IG_WIRED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_IG_MANAGED
-value|2
-end_define
-
 begin_comment
 comment|/*  * A short-format VHPT entry. Also matches the TLB insertion format.  */
 end_comment
@@ -279,72 +265,91 @@ begin_struct
 struct|struct
 name|ia64_pte
 block|{
-name|u_int64_t
+name|uint64_t
 name|pte_p
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 0..0 */
-name|u_int64_t
-name|pte_rv1
+comment|/* bit 0 */
+name|uint64_t
+name|__rv1__
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 1..1 */
-name|u_int64_t
+comment|/* bit 1 */
+name|uint64_t
 name|pte_ma
 range|:
 literal|3
 decl_stmt|;
 comment|/* bits 2..4 */
-name|u_int64_t
+name|uint64_t
 name|pte_a
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 5..5 */
-name|u_int64_t
+comment|/* bit 5 */
+name|uint64_t
 name|pte_d
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 6..6 */
-name|u_int64_t
+comment|/* bit 6 */
+name|uint64_t
 name|pte_pl
 range|:
 literal|2
 decl_stmt|;
 comment|/* bits 7..8 */
-name|u_int64_t
+name|uint64_t
 name|pte_ar
 range|:
 literal|3
 decl_stmt|;
 comment|/* bits 9..11 */
-name|u_int64_t
+name|uint64_t
 name|pte_ppn
 range|:
 literal|38
 decl_stmt|;
 comment|/* bits 12..49 */
-name|u_int64_t
-name|pte_rv2
+name|uint64_t
+name|__rv2__
 range|:
 literal|2
 decl_stmt|;
 comment|/* bits 50..51 */
-name|u_int64_t
+name|uint64_t
 name|pte_ed
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 52..52 */
-name|u_int64_t
-name|pte_ig
+comment|/* bit 52 */
+comment|/* The following bits are ignored by the hardware. */
+name|uint64_t
+name|pte_w
 range|:
-literal|11
+literal|1
 decl_stmt|;
-comment|/* bits 53..63 */
+comment|/* bit 53 */
+name|uint64_t
+name|pte_m
+range|:
+literal|1
+decl_stmt|;
+comment|/* bit 54 */
+name|uint64_t
+name|pte_prot
+range|:
+literal|3
+decl_stmt|;
+comment|/* bits 55..57 */
+name|uint64_t
+name|__ig__
+range|:
+literal|6
+decl_stmt|;
+comment|/* bits 58..63 */
 block|}
 struct|;
 end_struct
@@ -357,101 +362,120 @@ begin_struct
 struct|struct
 name|ia64_lpte
 block|{
-name|u_int64_t
+name|uint64_t
 name|pte_p
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 0..0 */
-name|u_int64_t
-name|pte_rv1
+comment|/* bit 0 */
+name|uint64_t
+name|__rv1__
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 1..1 */
-name|u_int64_t
+comment|/* bit 1 */
+name|uint64_t
 name|pte_ma
 range|:
 literal|3
 decl_stmt|;
 comment|/* bits 2..4 */
-name|u_int64_t
+name|uint64_t
 name|pte_a
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 5..5 */
-name|u_int64_t
+comment|/* bit 5 */
+name|uint64_t
 name|pte_d
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 6..6 */
-name|u_int64_t
+comment|/* bit 6 */
+name|uint64_t
 name|pte_pl
 range|:
 literal|2
 decl_stmt|;
 comment|/* bits 7..8 */
-name|u_int64_t
+name|uint64_t
 name|pte_ar
 range|:
 literal|3
 decl_stmt|;
 comment|/* bits 9..11 */
-name|u_int64_t
+name|uint64_t
 name|pte_ppn
 range|:
 literal|38
 decl_stmt|;
 comment|/* bits 12..49 */
-name|u_int64_t
-name|pte_rv2
+name|uint64_t
+name|__rv2__
 range|:
 literal|2
 decl_stmt|;
 comment|/* bits 50..51 */
-name|u_int64_t
+name|uint64_t
 name|pte_ed
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 52..52 */
-name|u_int64_t
-name|pte_ig
+comment|/* bit 52 */
+comment|/* The following 11 bits are ignored by the hardware. */
+name|uint64_t
+name|pte_w
 range|:
-literal|11
+literal|1
 decl_stmt|;
-comment|/* bits 53..63 */
-name|u_int64_t
-name|pte_rv3
+comment|/* bit 53 */
+name|uint64_t
+name|pte_m
+range|:
+literal|1
+decl_stmt|;
+comment|/* bit 54 */
+name|uint64_t
+name|pte_prot
+range|:
+literal|3
+decl_stmt|;
+comment|/* bits 55..57 */
+name|uint64_t
+name|__ig__
+range|:
+literal|6
+decl_stmt|;
+comment|/* bits 58..63 */
+name|uint64_t
+name|__rv3__
 range|:
 literal|2
 decl_stmt|;
 comment|/* bits 0..1 */
-name|u_int64_t
+name|uint64_t
 name|pte_ps
 range|:
 literal|6
 decl_stmt|;
 comment|/* bits 2..7 */
-name|u_int64_t
+name|uint64_t
 name|pte_key
 range|:
 literal|24
 decl_stmt|;
 comment|/* bits 8..31 */
-name|u_int64_t
-name|pte_rv4
+name|uint64_t
+name|__rv4__
 range|:
 literal|32
 decl_stmt|;
 comment|/* bits 32..63 */
-name|u_int64_t
+name|uint64_t
 name|pte_tag
 decl_stmt|;
 comment|/* includes ti */
-name|u_int64_t
+name|uint64_t
 name|pte_chain
 decl_stmt|;
 comment|/* pa of collision chain */
@@ -467,54 +491,30 @@ begin_struct
 struct|struct
 name|ia64_itir
 block|{
-name|u_int64_t
-name|itir_rv1
+name|uint64_t
+name|__rv1__
 range|:
 literal|2
 decl_stmt|;
 comment|/* bits 0..1 */
-name|u_int64_t
+name|uint64_t
 name|itir_ps
 range|:
 literal|6
 decl_stmt|;
 comment|/* bits 2..7 */
-name|u_int64_t
+name|uint64_t
 name|itir_key
 range|:
 literal|24
 decl_stmt|;
 comment|/* bits 8..31 */
-name|u_int64_t
-name|itir_rv2
+name|uint64_t
+name|__rv2__
 range|:
 literal|32
 decl_stmt|;
 comment|/* bits 32..63 */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Layout of cr.ifa.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ia64_ifa
-block|{
-name|u_int64_t
-name|ifa_ig
-range|:
-literal|12
-decl_stmt|;
-comment|/* bits 0..11 */
-name|u_int64_t
-name|ifa_vpn
-range|:
-literal|52
-decl_stmt|;
-comment|/* bits 12..63 */
 block|}
 struct|;
 end_struct
@@ -527,32 +527,32 @@ begin_struct
 struct|struct
 name|ia64_rr
 block|{
-name|u_int64_t
+name|uint64_t
 name|rr_ve
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 0..0 */
-name|u_int64_t
-name|rr_rv1
+comment|/* bit 0 */
+name|uint64_t
+name|__rv1__
 range|:
 literal|1
 decl_stmt|;
-comment|/* bits 1..1 */
-name|u_int64_t
+comment|/* bit 1 */
+name|uint64_t
 name|rr_ps
 range|:
 literal|6
 decl_stmt|;
 comment|/* bits 2..7 */
-name|u_int64_t
+name|uint64_t
 name|rr_rid
 range|:
 literal|24
 decl_stmt|;
 comment|/* bits 8..31 */
-name|u_int64_t
-name|rr_rv2
+name|uint64_t
+name|__rv2__
 range|:
 literal|32
 decl_stmt|;
