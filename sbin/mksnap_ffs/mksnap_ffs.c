@@ -157,6 +157,17 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|args
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|fspec
@@ -389,7 +400,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-literal|"ffs"
+literal|"ufs"
 argument_list|,
 name|dir
 argument_list|,
