@@ -1521,10 +1521,18 @@ name|len
 operator|-
 name|taillen
 operator|<
-name|hlen
+name|off
+operator|+
+name|esplen
+operator|+
+name|ivlen
+operator|+
+sizeof|sizeof
+argument_list|(
+name|esptail
+argument_list|)
 condition|)
 block|{
-comment|/* ? */
 name|ipseclog
 argument_list|(
 operator|(
