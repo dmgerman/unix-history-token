@@ -783,11 +783,6 @@ name|queryType
 operator|!=
 name|T_A
 operator|&&
-name|queryType
-operator|!=
-name|T_AAAA
-operator|&&
-comment|/* A6? */
 operator|!
 operator|(
 name|iquery
