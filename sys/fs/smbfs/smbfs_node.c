@@ -1806,12 +1806,12 @@ operator|&=
 operator|~
 name|NOPEN
 expr_stmt|;
-block|}
 name|smbfs_attr_cacheremove
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|vp
