@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.17	kern_clock.c	*/
+comment|/*	%H%	3.18	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/limit.h"
+file|"../h/vlimit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/clock.h"
 end_include
 
 begin_define
@@ -664,6 +676,10 @@ operator|>=
 name|HZ
 condition|)
 block|{
+specifier|extern
+name|int
+name|hangcnt
+decl_stmt|;
 if|if
 condition|(
 name|BASEPRI
@@ -684,6 +700,14 @@ name|void
 operator|)
 name|spl1
 argument_list|()
+expr_stmt|;
+comment|/* 		 * machdep.c:unhang uses hangcnt to make sure uba 		 * doesn't forget to interrupt (this has been observed). 		 * This prevents an accumulation of< 5 second uba failures 		 * from summing to a uba reset. 		 */
+if|if
+condition|(
+name|hangcnt
+condition|)
+name|hangcnt
+operator|--
 expr_stmt|;
 name|runrun
 operator|++
