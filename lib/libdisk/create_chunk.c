@@ -1828,8 +1828,7 @@ argument_list|)
 condition|)
 name|cmaj
 operator|=
-literal|1i
-literal|47
+literal|147
 operator|,
 name|p
 operator|+=
