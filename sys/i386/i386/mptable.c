@@ -4204,10 +4204,32 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"Multiple entries for PCI IRQ %d"
+literal|"Multiple IRQs for PCI interrupt %d.%d.INT%c: %d and %d\n"
 operator|,
 name|args
 operator|->
+name|bus
+operator|,
+name|args
+operator|->
+name|irq
+operator|>>
+literal|2
+operator|,
+literal|'A'
+operator|+
+operator|(
+name|args
+operator|->
+name|irq
+operator|&
+literal|0x3
+operator|)
+operator|,
+name|args
+operator|->
+name|vector
+operator|,
 name|vector
 operator|)
 argument_list|)
