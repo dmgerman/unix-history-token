@@ -1276,7 +1276,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -1299,13 +1299,11 @@ comment|/* maxsegsize */
 literal|0
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -1334,7 +1332,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate enough s/g maps for all commands and permanently map them into      * controller-visible space.      *	      * XXX this assumes we can get enough space for all the s/g maps in one       * contiguous slab.  We may need to switch to a more complex arrangement where      * we allocate in smaller chunks and keep a lookup table from slot to bus address.      */
+comment|/*      * Allocate enough s/g maps for all commands and permanently map them into      * controller-visible space.      *	      * XXX this assumes we can get enough space for all the s/g maps in one       * contiguous slab.  We may need to switch to a more complex arrangement      * where we allocate in smaller chunks and keep a lookup table from slot      * to bus address.      */
 name|error
 operator|=
 name|bus_dmamem_alloc
