@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.58 (Berkeley) %G%"
+literal|"@(#)login.c	5.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,19 +1221,6 @@ name|salt
 operator|=
 literal|"xx"
 expr_stmt|;
-comment|/* if user not super-user, check for disabled logins */
-if|if
-condition|(
-operator|!
-name|pwd
-operator|||
-name|pwd
-operator|->
-name|pw_uid
-condition|)
-name|checknologin
-argument_list|()
-expr_stmt|;
 comment|/* 		 * Disallow automatic login to root; if not invoked by 		 * root, disallow if the uid's differ. 		 */
 if|if
 condition|(
@@ -1492,6 +1479,16 @@ argument_list|)
 expr_stmt|;
 comment|/* paranoia... */
 name|endpwent
+argument_list|()
+expr_stmt|;
+comment|/* if user not super-user, check for disabled logins */
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_uid
+condition|)
+name|checknologin
 argument_list|()
 expr_stmt|;
 if|if
