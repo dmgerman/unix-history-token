@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.29 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.30 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.29 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.30 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,9 +340,12 @@ name|syslog
 argument_list|(
 name|LOG_ALERT
 argument_list|,
-literal|"queueup: cannot create %s: %s"
+literal|"queueup: cannot create %s, uid=%d: %s"
 argument_list|,
 name|tf
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|,
 name|errstring
 argument_list|(
@@ -352,8 +355,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-continue|continue;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|lockfile
@@ -409,6 +413,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -473,9 +478,12 @@ argument_list|)
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create queue temp file %s"
+literal|"!queueup: cannot create queue temp file %s, uid=%d"
 argument_list|,
 name|tf
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -641,11 +649,14 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create data temp file %s"
+literal|"!queueup: cannot create data temp file %s, uid=%d"
 argument_list|,
 name|e
 operator|->
 name|e_df
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 call|(
@@ -1635,7 +1646,7 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot rename(%s, %s), df=%s"
+literal|"cannot rename(%s, %s), df=%s, uid=%d"
 argument_list|,
 name|tf
 argument_list|,
@@ -1644,6 +1655,9 @@ argument_list|,
 name|e
 operator|->
 name|e_df
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* close and unlock old (locked) qf */
