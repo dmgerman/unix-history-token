@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.91	83/03/27	*/
+comment|/*	tcp_input.c	1.92	83/04/03	*/
 end_comment
 
 begin_include
@@ -447,6 +447,19 @@ name|len
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tcpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"tcp sum: src %x\n"
+argument_list|,
+name|ti
+operator|->
+name|ti_src
+argument_list|)
+expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_badsum
@@ -481,6 +494,21 @@ operator|>
 name|tlen
 condition|)
 block|{
+if|if
+condition|(
+name|tcpprintfs
+condition|)
+name|printf
+argument_list|(
+literal|"tcp off: src %x off %d\n"
+argument_list|,
+name|ti
+operator|->
+name|ti_src
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_badoff
