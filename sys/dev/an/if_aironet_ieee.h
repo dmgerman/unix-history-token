@@ -1538,6 +1538,20 @@ name|AN_TXPOWER_250MW
 value|250
 end_define
 
+begin_define
+define|#
+directive|define
+name|AN_HOME_NETWORK
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_HOME_INSTALL_AP
+value|0x0002
+end_define
+
 begin_struct
 struct|struct
 name|an_ltv_ssidlist
@@ -2074,7 +2088,7 @@ comment|/* 0x7E */
 name|u_int16_t
 name|an_spare
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 block|}
