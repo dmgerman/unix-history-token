@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.53 1997/12/20 00:28:47 bde Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.54 1998/02/20 13:37:39 bde Exp $  */
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -1811,6 +1817,19 @@ decl_stmt|;
 name|u_int32_t
 name|s
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+name|int
+name|iskstack
+init|=
+literal|0
+decl_stmt|;
+comment|/* 0 = "ok", 1 = copied from kernel stack */
 comment|/* 	 * Illegal command lengths will wedge host adapter software. 	 * Reject zero length commands and assert all defined commands 	 * are the correct length. 	 */
 if|if
 condition|(
@@ -1833,9 +1852,15 @@ name|cmdlen
 operator|==
 literal|0
 condition|)
-return|return
+block|{
+name|retval
+operator|=
 name|EFAULT
-return|;
+expr_stmt|;
+goto|goto
+name|bad_with_biodone
+goto|;
+block|}
 else|else
 block|{
 specifier|static
@@ -1887,9 +1912,15 @@ operator|!=
 name|cmdlen
 operator|)
 condition|)
-return|return
+block|{
+name|retval
+operator|=
 name|EIO
-return|;
+expr_stmt|;
+goto|goto
+name|bad_with_biodone
+goto|;
+block|}
 block|}
 block|}
 name|SC_DEBUG
@@ -1917,11 +1948,15 @@ condition|(
 operator|!
 name|xs
 condition|)
-return|return
-operator|(
+block|{
+name|retval
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|bad_with_biodone
+goto|;
+block|}
 comment|/* 	 * Fill out the scsi_xfer structure.  We don't know whose context 	 * the cmd is in, so copy it. 	 */
 name|bcopy
 argument_list|(
@@ -2009,7 +2044,6 @@ condition|(
 name|datalen
 operator|&&
 operator|(
-operator|(
 name|caddr_t
 operator|)
 name|data_addr
@@ -2018,7 +2052,78 @@ operator|(
 name|caddr_t
 operator|)
 name|KERNBASE
+condition|)
+block|{
+comment|/* XXX: should panic */
+name|printf
+argument_list|(
+literal|"scsi_scsi_cmd(): data target is user space!\n"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCSIDEBUG
+name|show_scsi_cmd
+argument_list|(
+name|xs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SCSIDEBUG */
+name|retval
+operator|=
+name|EFAULT
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* XXX theoretically.. in !BOUNCE_BUFFERS, we can still get to all 	 * process's kstack's, *BUT* we can swap a process.  We really don't 	 * need to take a fault in that situation.  Besides, the permanent 	 * KVM space will go away and only the current process will be 	 * reachable once the kthreading is finished. 	 */
+if|if
+condition|(
+name|datalen
+operator|&&
+name|p
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|caddr_t
 operator|)
+name|data_addr
+operator|>
+operator|(
+name|caddr_t
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|&&
+operator|(
+name|caddr_t
+operator|)
+name|data_addr
+operator|<
+operator|(
+name|caddr_t
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|+
+name|UPAGES
+operator|*
+name|PAGE_SIZE
+condition|)
+name|iskstack
+operator|=
+literal|1
+expr_stmt|;
+comment|/* if we are doing a scsi command to/from per-proc kstack, copy it.. */
+if|if
+condition|(
+name|iskstack
 condition|)
 block|{
 if|if
@@ -2371,15 +2476,7 @@ block|}
 comment|/* 	 * If we had to copy the data out of the user's context, 	 * then do the other half (copy it back or whatever) 	 * and free the memory buffer 	 */
 if|if
 condition|(
-name|datalen
-operator|&&
-operator|(
-name|xs
-operator|->
-name|data
-operator|!=
-name|data_addr
-operator|)
+name|iskstack
 condition|)
 block|{
 switch|switch
@@ -2423,6 +2520,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|bad_with_alloc
+label|:
 ifdef|#
 directive|ifdef
 name|BOUNCE_BUFFERS
@@ -2478,6 +2577,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|bad_with_biodone
+label|:
 if|if
 condition|(
 name|bp
