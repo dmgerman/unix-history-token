@@ -468,7 +468,7 @@ name|proc
 operator|.
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|==
 literal|0
 condition|)
@@ -2053,7 +2053,7 @@ name|proc
 operator|.
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 condition|)
 block|{
