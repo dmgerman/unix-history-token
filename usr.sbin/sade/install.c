@@ -2417,7 +2417,7 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Do you want to configure inetd and simple internet services?"
+literal|"Do you want to configure inetd and the network services that it provides?"
 argument_list|)
 condition|)
 name|configInetd
