@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.20 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,29 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STANDALONE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -98,6 +75,29 @@ include|#
 directive|include
 file|<sys/disklabel.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STANDALONE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * make file system for cylinder-group style file systems  */
