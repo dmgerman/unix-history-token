@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *   */
 end_comment
 
 begin_include
@@ -72,16 +72,12 @@ end_include
 begin_if
 if|#
 directive|if
-name|__FreeBSD__
+operator|(
+name|BSD
 operator|>=
-literal|2
+literal|199306
+operator|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<osreldate.h>
-end_include
 
 begin_include
 include|#
@@ -801,9 +797,9 @@ decl_stmt|;
 if|#
 directive|if
 operator|(
-name|__FreeBSD_version
+name|BSD
 operator|>=
-literal|199412
+literal|199306
 operator|)
 name|int
 name|mib
@@ -816,9 +812,9 @@ directive|endif
 if|#
 directive|if
 operator|(
-name|__FreeBSD_version
+name|BSD
 operator|>=
-literal|199412
+literal|199306
 operator|)
 name|mib
 index|[
@@ -841,7 +837,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* protocol */
 name|mib
 index|[
 literal|3
@@ -849,7 +844,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* wildcard address family */
 name|mib
 index|[
 literal|4
@@ -864,9 +858,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no flags */
-name|needed
-operator|=
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|mib
@@ -882,7 +875,21 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"sysctl-estimate"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 else|#
 directive|else
 name|needed
@@ -932,9 +939,9 @@ return|;
 if|#
 directive|if
 operator|(
-name|__FreeBSD_version
+name|BSD
 operator|>=
-literal|199412
+literal|199306
 operator|)
 if|if
 condition|(
@@ -956,11 +963,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|perror
+argument_list|(
+literal|"sysctl-getroute"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 else|#
 directive|else
 if|if
@@ -1332,9 +1346,9 @@ decl_stmt|;
 if|#
 directive|if
 operator|(
-name|__FreeBSD_version
+name|BSD
 operator|>=
-literal|199412
+literal|199306
 operator|)
 name|int
 name|mib
@@ -1359,9 +1373,9 @@ directive|endif
 if|#
 directive|if
 operator|(
-name|__FreeBSD_version
+name|BSD
 operator|>=
-literal|199412
+literal|199306
 operator|)
 name|mib
 index|[
@@ -1384,7 +1398,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* protocol */
 name|mib
 index|[
 literal|3
@@ -1392,7 +1405,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* wildcard address family */
 name|mib
 index|[
 literal|4
@@ -1407,9 +1419,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no flags */
-name|needed
-operator|=
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|mib
@@ -1425,7 +1436,17 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"sysctl-estimate"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 else|#
 directive|else
 name|needed
@@ -1467,9 +1488,9 @@ return|return;
 if|#
 directive|if
 operator|(
-name|__FreeBSD_version
+name|BSD
 operator|>=
-literal|199412
+literal|199306
 operator|)
 if|if
 condition|(
@@ -1495,6 +1516,11 @@ block|{
 name|free
 argument_list|(
 name|sp
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"sysctl-getroute"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2145,23 +2171,9 @@ name|index
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-operator|(
-name|_BSDI_VERSION
-operator|>=
-literal|199312
-operator|)
 name|index
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|len
 operator|-=
@@ -2187,23 +2199,6 @@ expr_stmt|;
 name|ifrp
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_BSDI_VERSION
-argument_list|)
-operator|&&
-operator|(
-name|_BSDI_VERSION
-operator|<
-literal|199312
-operator|)
-name|index
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|close
 argument_list|(

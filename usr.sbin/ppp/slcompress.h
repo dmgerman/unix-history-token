@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Definitions for tcp compression routines.  *  * $Header: /home/tony-o/src/ppp/RCS/slcompress.h,v 1.1 1993/09/11 05:30:49 tony-o Exp tony-o $  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Definitions for tcp compression routines.  *  * $Header: /home/tony-o/src/ppp/RCS/slcompress.h,v 1.1 1993/09/11 05:30:49 tony-o Exp tony-o $  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * $Id:$  *   *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"cdefs.h"
+end_include
 
 begin_define
 define|#
@@ -314,35 +320,69 @@ begin_comment
 comment|/* tossing rcvd frames because of input err */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|sl_compress_init
-parameter_list|(
-comment|/* struct slcompress * */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slcompress
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|u_char
 name|sl_compress_tcp
-parameter_list|(
-comment|/* struct mbuf *, struct ip *, 				struct slcompress *, int compress_cid_flag */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|ip
+operator|*
+operator|,
+expr|struct
+name|slcompress
+operator|*
+operator|,
+name|int
+name|compress_cid_flag
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|sl_uncompress_tcp
-parameter_list|(
-comment|/* u_char **, int,  u_char, struct slcompress * */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|u_int
+operator|,
+expr|struct
+name|slcompress
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

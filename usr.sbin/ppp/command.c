@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * $Id:$  *   */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -55,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
 end_include
 
 begin_include
@@ -134,6 +146,14 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|LocalAuthCommand
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -171,6 +191,14 @@ name|ShowRoute
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pppvars
+name|pppVars
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -534,35 +562,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|modem
-operator|=
-name|OpenModem
-argument_list|(
-name|mode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|modem
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"failed to open modem.\n"
-argument_list|)
-expr_stmt|;
-name|modem
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|argc
@@ -597,6 +596,35 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+name|modem
+operator|=
+name|OpenModem
+argument_list|(
+name|mode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|modem
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"failed to open modem.\n"
+argument_list|)
+expr_stmt|;
+name|modem
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -667,6 +695,8 @@ name|NULL
 block|,
 name|AcceptCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"accept option request"
 block|,
 name|StrOption
@@ -678,6 +708,8 @@ block|,
 name|NULL
 block|,
 name|AddCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"add route"
 block|,
@@ -691,6 +723,8 @@ name|NULL
 block|,
 name|CloseCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Close connection"
 block|,
 name|StrNull
@@ -702,6 +736,8 @@ block|,
 name|NULL
 block|,
 name|DeleteCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"delete route"
 block|,
@@ -715,6 +751,8 @@ name|NULL
 block|,
 name|DenyCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Deny option request"
 block|,
 name|StrOption
@@ -726,6 +764,8 @@ block|,
 literal|"call"
 block|,
 name|DialCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Dial and login"
 block|,
@@ -739,6 +779,8 @@ name|NULL
 block|,
 name|DisableCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Disable option"
 block|,
 name|StrOption
@@ -750,6 +792,8 @@ block|,
 name|NULL
 block|,
 name|DisplayCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Display option configs"
 block|,
@@ -763,7 +807,25 @@ name|NULL
 block|,
 name|EnableCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Enable option"
+block|,
+name|StrOption
+block|}
+block|,
+block|{
+literal|"passwd"
+block|,
+name|NULL
+block|,
+name|LocalAuthCommand
+block|,
+name|LOCAL_NO_AUTH
+operator||
+name|LOCAL_NO_AUTH
+block|,
+literal|"Password for manupilation"
 block|,
 name|StrOption
 block|}
@@ -774,6 +836,8 @@ block|,
 name|NULL
 block|,
 name|LoadCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Load settings"
 block|,
@@ -787,6 +851,8 @@ name|NULL
 block|,
 name|SaveCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Save settings"
 block|,
 name|StrNull
@@ -798,6 +864,8 @@ block|,
 literal|"setup"
 block|,
 name|SetCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set parameters"
 block|,
@@ -811,6 +879,8 @@ name|NULL
 block|,
 name|ShowCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show status and statictics"
 block|,
 literal|"var"
@@ -822,6 +892,8 @@ block|,
 name|NULL
 block|,
 name|TerminalCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Enter to terminal mode"
 block|,
@@ -835,6 +907,8 @@ literal|"bye"
 block|,
 name|QuitCommand
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Quit PPP program"
 block|,
 name|StrNull
@@ -846,6 +920,10 @@ block|,
 literal|"?"
 block|,
 name|HelpCommand
+block|,
+name|LOCAL_AUTH
+operator||
+name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
@@ -864,6 +942,8 @@ block|,
 literal|"down"
 block|,
 name|DownCommand
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Generate down event"
 block|,
@@ -1142,11 +1222,13 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|" Idle Timer: %d secs   LQR Timer: %d secs\n"
+literal|" Idle Timer: %d secs   LQR Timer: %d secs   Retry Timer: %d secs\n"
 argument_list|,
 name|VarIdleTimeout
 argument_list|,
 name|VarLqrTimeout
+argument_list|,
+name|VarRetryTimeout
 argument_list|)
 expr_stmt|;
 return|return
@@ -1240,6 +1322,9 @@ argument_list|()
 decl_stmt|,
 name|ShowDfilter
 argument_list|()
+decl_stmt|,
+name|ShowAfilter
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,16 +1336,32 @@ index|[]
 init|=
 block|{
 block|{
+literal|"afilter"
+block|,
+name|NULL
+block|,
+name|ShowAfilter
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Show keep Alive filters"
+block|,
+name|StrOption
+block|}
+block|,
+block|{
 literal|"auth"
 block|,
 name|NULL
 block|,
 name|ShowAuthKey
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show auth name/key"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"ccp"
@@ -1269,10 +1370,12 @@ name|NULL
 block|,
 name|ReportCcpStatus
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show CCP status"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"compress"
@@ -1280,6 +1383,8 @@ block|,
 name|NULL
 block|,
 name|ReportCompress
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Show compression statictics"
 block|,
@@ -1293,6 +1398,8 @@ name|NULL
 block|,
 name|ShowDebugLevel
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show current debug level"
 block|,
 name|StrNull
@@ -1304,6 +1411,8 @@ block|,
 name|NULL
 block|,
 name|ShowDfilter
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Show Demand filters"
 block|,
@@ -1317,6 +1426,8 @@ name|NULL
 block|,
 name|ShowEscape
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show escape characters"
 block|,
 name|StrNull
@@ -1328,6 +1439,8 @@ block|,
 name|NULL
 block|,
 name|ReportHdlcStatus
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Show HDLC error summary"
 block|,
@@ -1341,6 +1454,8 @@ name|NULL
 block|,
 name|ShowIfilter
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show Input filters"
 block|,
 name|StrOption
@@ -1353,10 +1468,12 @@ name|NULL
 block|,
 name|ReportIpcpStatus
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show IPCP status"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"lcp"
@@ -1365,10 +1482,12 @@ name|NULL
 block|,
 name|ReportLcpStatus
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show LCP status"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"log"
@@ -1377,10 +1496,12 @@ name|NULL
 block|,
 name|ShowLogList
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show log records"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"mem"
@@ -1389,10 +1510,12 @@ name|NULL
 block|,
 name|ShowMemMap
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show memory map"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"modem"
@@ -1401,10 +1524,12 @@ name|NULL
 block|,
 name|ShowModemStatus
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show modem setups"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"ofilter"
@@ -1412,6 +1537,8 @@ block|,
 name|NULL
 block|,
 name|ShowOfilter
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Show Output filters"
 block|,
@@ -1425,10 +1552,12 @@ name|NULL
 block|,
 name|ReportProtStatus
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show protocol summary"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"route"
@@ -1437,10 +1566,12 @@ name|NULL
 block|,
 name|ShowRoute
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show routing table"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"timeout"
@@ -1449,10 +1580,12 @@ name|NULL
 block|,
 name|ShowTimeout
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Show Idle timeout value"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"version"
@@ -1461,10 +1594,14 @@ name|NULL
 block|,
 name|ShowVersion
 block|,
+name|LOCAL_NO_AUTH
+operator||
+name|LOCAL_AUTH
+block|,
 literal|"Show version string"
 block|,
 name|StrNull
-block|, }
+block|}
 block|,
 block|{
 literal|"help"
@@ -1472,6 +1609,10 @@ block|,
 literal|"?"
 block|,
 name|HelpCommand
+block|,
+name|LOCAL_NO_AUTH
+operator||
+name|LOCAL_AUTH
 block|,
 literal|"Display this message"
 block|,
@@ -1680,13 +1821,21 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"Anbiguous.\n"
+literal|"Ambiguous.\n"
 argument_list|)
 expr_stmt|;
 elseif|else
 if|if
 condition|(
 name|cmd
+operator|&&
+operator|(
+name|cmd
+operator|->
+name|lauth
+operator|&
+name|VarLocalAuth
+operator|)
 condition|)
 name|val
 operator|=
@@ -1733,6 +1882,13 @@ name|int
 name|flag
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|pconnect
+decl_stmt|,
+modifier|*
+name|pauth
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1754,6 +1910,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|VarLocalAuth
+operator|==
+name|LOCAL_AUTH
+condition|)
+name|pauth
+operator|=
+literal|" ON "
+expr_stmt|;
+else|else
+name|pauth
+operator|=
+literal|" on "
+expr_stmt|;
+if|if
+condition|(
 name|IpcpFsm
 operator|.
 name|state
@@ -1764,15 +1935,24 @@ name|phase
 operator|==
 name|PHASE_NETWORK
 condition|)
-name|printf
-argument_list|(
-literal|"PPP> "
-argument_list|)
+name|pconnect
+operator|=
+literal|"PPP"
 expr_stmt|;
 else|else
+name|pconnect
+operator|=
+literal|"ppp"
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ppp> "
+literal|"%s%s%s> "
+argument_list|,
+name|pconnect
+argument_list|,
+name|pauth
+argument_list|,
+name|VarShortHost
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2112,6 +2292,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|VarLocalAuth
+operator|=
+name|LOCAL_NO_AUTH
+expr_stmt|;
 name|close
 argument_list|(
 name|netfd
@@ -2182,34 +2366,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|validspeed
-index|[]
-init|=
-block|{
-literal|1200
-block|,
-literal|2400
-block|,
-literal|4800
-block|,
-literal|9600
-block|,
-literal|19200
-block|,
-literal|38400
-block|,
-literal|57600
-block|,
-literal|115200
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -2238,10 +2394,6 @@ block|{
 name|int
 name|speed
 decl_stmt|;
-name|int
-modifier|*
-name|sp
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -2249,6 +2401,29 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"sync"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|VarSpeed
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|speed
 operator|=
 name|atoi
@@ -2257,25 +2432,14 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|sp
-operator|=
-name|validspeed
-init|;
-operator|*
-name|sp
-condition|;
-name|sp
-operator|++
-control|)
-block|{
 if|if
 condition|(
-operator|*
-name|sp
-operator|==
+name|IntToSpeed
+argument_list|(
 name|speed
+argument_list|)
+operator|!=
+name|B0
 condition|)
 block|{
 name|VarSpeed
@@ -2287,7 +2451,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 name|printf
 argument_list|(
@@ -2749,10 +2912,38 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
+operator|--
 operator|>
 literal|0
 condition|)
+block|{
 name|VarLqrTimeout
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+operator|++
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|VarLqrTimeout
+operator|<
+literal|1
+condition|)
+name|VarLqrTimeout
+operator|=
+literal|30
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+condition|)
+block|{
+name|VarRetryTimeout
 operator|=
 name|atoi
 argument_list|(
@@ -2760,6 +2951,22 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|VarRetryTimeout
+operator|<
+literal|1
+operator|||
+name|VarRetryTimeout
+operator|>
+literal|10
+condition|)
+name|VarRetryTimeout
+operator|=
+literal|3
+expr_stmt|;
+block|}
+block|}
 block|}
 return|return
 operator|(
@@ -3030,7 +3237,7 @@ name|mode
 operator|&
 name|MODE_AUTO
 operator|)
-operator||
+operator|||
 operator|(
 operator|(
 name|mode
@@ -3412,6 +3619,9 @@ argument_list|()
 decl_stmt|,
 name|SetDfilter
 argument_list|()
+decl_stmt|,
+name|SetAfilter
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -3429,6 +3639,8 @@ name|NULL
 block|,
 name|SetVariable
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set accmap value"
 block|,
 literal|"hex-value"
@@ -3441,11 +3653,27 @@ name|VAR_ACCMAP
 block|}
 block|,
 block|{
+literal|"afilter"
+block|,
+name|NULL
+block|,
+name|SetAfilter
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set keep Alive filter"
+block|,
+literal|"..."
+block|}
+block|,
+block|{
 literal|"authkey"
 block|,
 literal|"key"
 block|,
 name|SetVariable
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set authentication key"
 block|,
@@ -3465,6 +3693,8 @@ name|NULL
 block|,
 name|SetVariable
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set authentication name"
 block|,
 literal|"name"
@@ -3483,6 +3713,8 @@ name|NULL
 block|,
 name|SetDebugLevel
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set debug level"
 block|,
 name|StrValue
@@ -3494,6 +3726,8 @@ block|,
 literal|"line"
 block|,
 name|SetVariable
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set modem device name"
 block|,
@@ -3513,6 +3747,8 @@ name|NULL
 block|,
 name|SetDfilter
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set demand filter"
 block|,
 literal|"..."
@@ -3524,6 +3760,8 @@ block|,
 name|NULL
 block|,
 name|SetVariable
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set dialing script"
 block|,
@@ -3543,6 +3781,8 @@ name|NULL
 block|,
 name|SetEscape
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set escape characters"
 block|,
 literal|"hex-digit ..."
@@ -3554,6 +3794,8 @@ block|,
 name|NULL
 block|,
 name|SetInterfaceAddr
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set destination address"
 block|,
@@ -3567,6 +3809,8 @@ name|NULL
 block|,
 name|SetIfilter
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set input filter"
 block|,
 literal|"..."
@@ -3578,6 +3822,8 @@ block|,
 name|NULL
 block|,
 name|SetVariable
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set login script"
 block|,
@@ -3597,6 +3843,8 @@ literal|"mtu"
 block|,
 name|SetInitialMRU
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set Initial MRU value"
 block|,
 name|StrValue
@@ -3608,6 +3856,8 @@ block|,
 name|NULL
 block|,
 name|SetOfilter
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set output filter"
 block|,
@@ -3621,6 +3871,8 @@ name|NULL
 block|,
 name|SetOpenMode
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set open mode"
 block|,
 literal|"[active|passive]"
@@ -3633,6 +3885,8 @@ name|NULL
 block|,
 name|SetModemParity
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set modem parity"
 block|,
 literal|"[odd|even|none]"
@@ -3644,6 +3898,8 @@ block|,
 name|NULL
 block|,
 name|SetVariable
+block|,
+name|LOCAL_AUTH
 block|,
 literal|"Set telephone number"
 block|,
@@ -3663,6 +3919,8 @@ name|NULL
 block|,
 name|SetModemSpeed
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set modem speed"
 block|,
 literal|"speed"
@@ -3675,6 +3933,8 @@ name|NULL
 block|,
 name|SetIdleTimeout
 block|,
+name|LOCAL_AUTH
+block|,
 literal|"Set Idle timeout"
 block|,
 name|StrValue
@@ -3686,6 +3946,10 @@ block|,
 literal|"?"
 block|,
 name|HelpCommand
+block|,
+name|LOCAL_AUTH
+operator||
+name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,

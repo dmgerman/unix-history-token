@@ -238,6 +238,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|filterent
+name|afilters
+index|[
+name|MAXFILTERS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* keep Alive packet filter */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

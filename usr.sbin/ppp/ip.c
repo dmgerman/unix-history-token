@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * $Id:$  *   *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_function_decl
 specifier|extern
 name|void
-name|SendPppFlame
+name|SendPppFrame
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -201,14 +201,11 @@ name|mode
 operator|&
 name|MODE_DEDICATED
 operator|)
+operator|&&
+name|ipKeepAlive
 condition|)
 block|{
-name|StopTimer
-argument_list|(
-operator|&
-name|IdleTimer
-argument_list|)
-expr_stmt|;
+comment|/*  StopTimer(&IdleTimer); */
 name|StartTimer
 argument_list|(
 operator|&
@@ -297,6 +294,8 @@ block|,
 literal|"OUT"
 block|,
 literal|"OUT"
+block|,
+literal|"IN/OUT"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -315,6 +314,8 @@ block|,
 name|ofilters
 block|,
 name|dfilters
+block|,
+name|afilters
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -692,6 +693,30 @@ operator|&
 name|TH_ACK
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|estab
+operator|==
+literal|0
+condition|)
+name|logprintf
+argument_list|(
+literal|"flag = %02x, sport = %d, dport = %d\n"
+argument_list|,
+name|th
+operator|->
+name|th_flags
+argument_list|,
+name|sport
+argument_list|,
+name|dport
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 return|return
@@ -729,25 +754,6 @@ operator|.
 name|dstop
 argument_list|,
 name|estab
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|estab
-operator|==
-literal|0
-condition|)
-name|logprintf
-argument_list|(
-literal|"flag = %02x, sport = %d, dport = %d\n"
-argument_list|,
-name|th
-operator|->
-name|th_flags
-argument_list|,
-name|sport
-argument_list|,
-name|dport
 argument_list|)
 expr_stmt|;
 endif|#
@@ -973,7 +979,7 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-name|SendPppFlame
+name|SendPppFrame
 argument_list|(
 name|PRI_URGENT
 argument_list|,
@@ -1522,6 +1528,31 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|FilterCheck
+argument_list|(
+name|pip
+argument_list|,
+literal|3
+argument_list|)
+operator|&
+name|A_DENY
+condition|)
+block|{
+comment|/* Check Keep Alive filter */
+name|ipKeepAlive
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ipKeepAlive
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|pri
@@ -1750,7 +1781,7 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-name|SendPppFlame
+name|SendPppFrame
 argument_list|(
 name|pri
 argument_list|,
@@ -1919,7 +1950,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|SendPppFlame
+name|SendPppFrame
 argument_list|(
 name|pri
 argument_list|,

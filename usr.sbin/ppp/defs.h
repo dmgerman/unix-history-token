@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -78,6 +84,12 @@ begin_comment
 comment|/* Name of log file */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -88,6 +100,27 @@ end_define
 begin_comment
 comment|/* name of tty device */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MODEM_DEV
+value|"/dev/tty01"
+end_define
+
+begin_comment
+comment|/* name of tty device */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -307,6 +340,42 @@ modifier|*
 name|dstsystem
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

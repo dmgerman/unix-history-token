@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * $Id:$  *   *	TODO:  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"lqr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vars.h"
 end_include
 
 begin_struct
@@ -878,6 +884,15 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+name|DEV_IS_SYNC
+condition|)
+name|mfcs
+operator|=
+name|NULLBUFF
+expr_stmt|;
+else|else
 name|mfcs
 operator|=
 name|mballoc
@@ -1143,6 +1158,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|DEV_IS_SYNC
+condition|)
+block|{
 name|fcs
 operator|=
 name|HdlcFcs
@@ -1204,6 +1225,7 @@ name|fcs
 operator|>>
 literal|8
 expr_stmt|;
+block|}
 name|LogDumpBp
 argument_list|(
 name|LOG_HDLC
@@ -1240,6 +1262,18 @@ operator|->
 name|out_count
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|DEV_IS_SYNC
+condition|)
+name|ModemOutput
+argument_list|(
+name|pri
+argument_list|,
+name|mhp
+argument_list|)
+expr_stmt|;
+else|else
 name|AsyncOutput
 argument_list|(
 name|pri
@@ -1350,6 +1384,15 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULLBUFF
+condition|)
+block|{
+break|break;
+block|}
 comment|/* fall down */
 case|case
 name|PROTO_IP
@@ -1685,6 +1728,15 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DEV_IS_SYNC
+condition|)
+name|fcs
+operator|=
+name|GOODFCS
+expr_stmt|;
+else|else
 name|fcs
 operator|=
 name|HdlcFcs
@@ -1767,6 +1819,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|DEV_IS_SYNC
+condition|)
 name|bp
 operator|->
 name|cnt

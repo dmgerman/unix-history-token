@@ -22,6 +22,9 @@ name|func
 function_decl|)
 parameter_list|()
 function_decl|;
+name|u_char
+name|lauth
+decl_stmt|;
 name|char
 modifier|*
 name|helpmes

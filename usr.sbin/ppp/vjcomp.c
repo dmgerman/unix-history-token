@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *   *  TODO:  */
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ end_function
 
 begin_function
 name|void
-name|SendPppFlame
+name|SendPppFrame
 parameter_list|(
 name|pri
 parameter_list|,
@@ -114,7 +114,7 @@ directive|ifdef
 name|DEBUG
 name|logprintf
 argument_list|(
-literal|"SendPppFlame: proto = %x\n"
+literal|"SendPppFrame: proto = %x\n"
 argument_list|,
 name|IpcpInfo
 operator|.
@@ -136,6 +136,11 @@ name|sl_compress_tcp
 argument_list|(
 name|bp
 argument_list|,
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
 name|MBUF_CTOP
 argument_list|(
 name|bp
@@ -309,6 +314,23 @@ operator|&
 name|cslc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+block|{
+name|pfree
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+name|NULLBUFF
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|bp
@@ -362,6 +384,22 @@ operator|&
 name|cslc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+block|{
+name|pfree
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULLBUFF
+return|;
+block|}
 name|len
 operator|-=
 name|olen

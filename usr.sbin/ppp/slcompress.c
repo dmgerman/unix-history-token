@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *   *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_ifndef
@@ -122,21 +122,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|int
-name|reason1
-decl_stmt|,
-name|reason2
-decl_stmt|,
-name|reason3
-decl_stmt|,
-name|reason4
-decl_stmt|,
-name|reason5
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -787,9 +772,6 @@ operator|(
 name|TYPE_IP
 operator|)
 return|;
-name|reason1
-operator|++
-expr_stmt|;
 goto|goto
 name|uncompressed
 goto|;
@@ -1031,9 +1013,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|reason2
-operator|++
-expr_stmt|;
 goto|goto
 name|uncompressed
 goto|;
@@ -1080,9 +1059,6 @@ name|th_urp
 condition|)
 block|{
 comment|/* argh! URG not set but urp changed -- a sensible 		 * implementation should never do this but RFC793 		 * doesn't prohibit the change so we have to deal 		 * with it. */
-name|reason3
-operator|++
-expr_stmt|;
 goto|goto
 name|uncompressed
 goto|;
@@ -1151,9 +1127,6 @@ operator|>
 literal|0xffff
 condition|)
 block|{
-name|reason4
-operator|++
-expr_stmt|;
 goto|goto
 name|uncompressed
 goto|;
@@ -1196,9 +1169,6 @@ operator|>
 literal|0xffff
 condition|)
 block|{
-name|reason4
-operator|++
-expr_stmt|;
 goto|goto
 name|uncompressed
 goto|;
@@ -1254,9 +1224,6 @@ case|case
 name|SPECIAL_D
 case|:
 comment|/* 		 * actual changes match one of our special case encodings -- 		 * send packet uncompressed. 		 */
-name|reason5
-operator|++
-expr_stmt|;
 goto|goto
 name|uncompressed
 goto|;
@@ -1803,6 +1770,12 @@ operator|*
 name|cp
 operator|>=
 name|MAX_STATES
+operator|||
+name|comp
+operator|->
+name|last_recv
+operator|==
+literal|255
 condition|)
 goto|goto
 name|bad
@@ -2445,21 +2418,6 @@ argument_list|,
 name|slstat
 operator|.
 name|sls_tossed
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%d, %d, %d, %d, %d\n"
-argument_list|,
-name|reason1
-argument_list|,
-name|reason2
-argument_list|,
-name|reason3
-argument_list|,
-name|reason4
-argument_list|,
-name|reason5
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	             PPP Async HDLC Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *  */
+comment|/*  *	             PPP Async HDLC Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *   */
 end_comment
 
 begin_include
@@ -33,6 +33,12 @@ directive|include
 file|"modem.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"vars.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -49,11 +55,6 @@ name|mode
 decl_stmt|;
 name|int
 name|length
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|hpacket
 decl_stmt|;
 name|u_char
 name|hbuff
@@ -112,6 +113,12 @@ operator|->
 name|mode
 operator|=
 name|MODE_HUNT
+expr_stmt|;
+name|stp
+operator|->
+name|length
+operator|=
+literal|0
 expr_stmt|;
 name|stp
 operator|->
@@ -728,6 +735,46 @@ argument_list|(
 name|cnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DEV_IS_SYNC
+condition|)
+block|{
+name|bp
+operator|=
+name|mballoc
+argument_list|(
+name|cnt
+argument_list|,
+name|MB_ASYNC
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|buff
+argument_list|,
+name|MBUF_CTOP
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|cnt
+operator|=
+name|cnt
+expr_stmt|;
+name|HdlcInput
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 while|while
 condition|(
 name|cnt
@@ -756,6 +803,7 @@ expr_stmt|;
 name|cnt
 operator|--
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

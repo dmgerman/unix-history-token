@@ -139,23 +139,31 @@ name|DefHisAddress
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|IpcpInit
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|IpcpDefAddress
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
