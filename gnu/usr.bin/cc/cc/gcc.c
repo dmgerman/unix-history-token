@@ -18889,7 +18889,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"No input files"
+literal|"No input files specified"
 argument_list|)
 expr_stmt|;
 comment|/* Make a place to record the compiler output file names      that correspond to the input files.  */
