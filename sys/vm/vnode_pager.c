@@ -1765,6 +1765,17 @@ operator|->
 name|b_runningbufspace
 expr_stmt|;
 comment|/* do the input */
+name|bp
+operator|->
+name|b_offset
+operator|=
+name|dbtob
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
 name|VOP_SPECSTRATEGY
 argument_list|(
 name|bp
@@ -3147,7 +3158,6 @@ name|b_iodone
 operator|=
 name|bdone
 expr_stmt|;
-comment|/* B_PHYS is not set, but it is nice to fill this in */
 name|KASSERT
 argument_list|(
 name|bp
@@ -3247,6 +3257,17 @@ operator|+=
 name|count
 expr_stmt|;
 comment|/* do the input */
+name|bp
+operator|->
+name|b_offset
+operator|=
+name|dbtob
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dp
