@@ -437,10 +437,6 @@ operator|(
 name|off_t
 operator|)
 name|rawoffset
-operator|*
-name|dl
-operator|.
-name|d_secsize
 operator|!=
 name|ms
 operator|->
@@ -464,9 +460,11 @@ argument_list|,
 operator|(
 name|intmax_t
 operator|)
-name|ms
-operator|->
 name|rawoffset
+operator|/
+name|dl
+operator|.
+name|d_secsize
 argument_list|)
 expr_stmt|;
 comment|/* Don't munge open partitions. */
