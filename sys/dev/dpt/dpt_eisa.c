@@ -8,7 +8,7 @@ comment|/* Credits:  Based on and part of the DPT driver for FreeBSD written and
 end_comment
 
 begin_comment
-comment|/*  * $Id: dpt_eisa.c,v 1.1 1998/03/11 00:30:12 julian Exp $  */
+comment|/*  * $Id: dpt_eisa.c,v 1.2 1998/05/17 20:31:50 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -244,6 +244,8 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|bootverbose
+operator|&&
 operator|!
 name|already_announced
 condition|)
