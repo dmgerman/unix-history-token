@@ -7161,7 +7161,7 @@ literal|0x64
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL|ENXIO
 argument_list|,
 literal|"Illegal mode for this track"
 argument_list|)
