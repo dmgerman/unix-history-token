@@ -1170,13 +1170,10 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-goto|goto
-name|restart
-goto|;
+break|break;
+comment|/* restart */
 block|}
 block|}
-name|restart
-label|:
 block|}
 block|}
 block|}
@@ -3931,8 +3928,6 @@ literal|"hardware"
 argument_list|)
 expr_stmt|;
 block|}
-name|skipverbose
-label|:
 block|}
 else|else
 name|sbuf_printf
@@ -3942,6 +3937,8 @@ argument_list|,
 literal|" (mixer only)"
 argument_list|)
 expr_stmt|;
+name|skipverbose
+label|:
 name|snd_mtxunlock
 argument_list|(
 name|d
@@ -4138,9 +4135,7 @@ name|direction
 operator|!=
 name|PCMDIR_PLAY
 condition|)
-goto|goto
-name|addskip
-goto|;
+continue|continue;
 comment|/* not a candidate if a virtual channel */
 if|if
 condition|(
@@ -4150,9 +4145,7 @@ name|flags
 operator|&
 name|CHN_F_VIRTUAL
 condition|)
-goto|goto
-name|addskip
-goto|;
+continue|continue;
 comment|/* not a candidate if it's in use */
 if|if
 condition|(
@@ -4174,15 +4167,11 @@ name|children
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|addskip
-goto|;
+continue|continue;
 comment|/* 				 * if we get here we're a nonvirtual play channel, and either 				 * 1) not busy 				 * 2) busy with children, not directly open 				 * 				 * thus we can add children 				 */
 goto|goto
 name|addok
 goto|;
-name|addskip
-label|:
 block|}
 name|pcm_unlock
 argument_list|(

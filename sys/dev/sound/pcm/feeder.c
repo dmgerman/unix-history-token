@@ -1273,9 +1273,7 @@ name|desc
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|no
-goto|;
+continue|continue;
 if|if
 condition|(
 name|fte
@@ -1286,9 +1284,7 @@ name|type
 operator|!=
 name|FEEDER_FMT
 condition|)
-goto|goto
-name|no
-goto|;
+continue|continue;
 if|if
 condition|(
 name|fte
@@ -1368,8 +1364,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|no
-label|:
 block|}
 comment|/* printf("giving up %s...\n", source->class->name); */
 return|return
