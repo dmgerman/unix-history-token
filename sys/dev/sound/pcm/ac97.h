@@ -20,6 +20,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|AC97_CAP_MICCHANNEL
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_TONE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_SIMSTEREO
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_HEADPHONE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_LOUDNESS
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_DAC_18
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_DAC_20
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_ADC_18
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_CAP_ADC_20
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AC97_MIX_MASTER
 value|0x02
 end_define
@@ -407,6 +470,18 @@ end_function_decl
 begin_function_decl
 name|u_int16_t
 name|ac97_getextcaps
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+name|codec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int16_t
+name|ac97_getcaps
 parameter_list|(
 name|struct
 name|ac97_info
