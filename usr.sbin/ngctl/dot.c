@@ -321,10 +321,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t\t\"%jx\" [ label = \"{%s:|{%s|[%jx]:}}\" ];\n"
+literal|"\t\t\"%lx\" [ label = \"{%s:|{%s|[%lx]:}}\" ];\n"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -370,7 +370,7 @@ operator|.
 name|type
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -435,10 +435,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t\t\"%jx\";\n"
+literal|"\t\t\"%lx\";\n"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -491,7 +491,9 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|NG_PATHSIZ
+name|NG_PATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|u_int
@@ -509,10 +511,10 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"[%jx]:"
+literal|"[%lx]:"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -648,10 +650,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t\t\"%jx.%s\" [ label = \"%s\" ];\n"
+literal|"\t\t\"%lx.%s\" [ label = \"%s\" ];\n"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -714,10 +716,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t\t\"%jx\" -- \"%jx.%s\";\n"
+literal|"\t\t\"%lx\" -- \"%lx.%s\";\n"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -729,7 +731,7 @@ operator|.
 name|id
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -801,10 +803,10 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t\"%jx.%s\" -- \"%jx.%s\";\n"
+literal|"\t\"%lx.%s\" -- \"%lx.%s\";\n"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|nlist
 operator|->
@@ -825,7 +827,7 @@ operator|.
 name|ourhook
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|hlist
 operator|->
