@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /etc/home/slattach2/RCS/slattach.c,v 1.4 1993/08/27 22:10:25 root Exp root $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.4 1993/08/30 09:51:01 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,6 +302,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|modem_control
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* non-zero iff we watch carrier. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|redial_on_startup
 init|=
 literal|0
@@ -424,7 +436,7 @@ name|char
 name|usage_str
 index|[]
 init|=
-literal|"\ usage: %s [-a ][-c ][-d ][-e<command> ][-n ][-s<speed> ]<device>\n\ 	-a	-- autoenable VJ compression\n\ 	-c	-- enable VJ compression\n\ 	-e ECMD	-- execute ECMD before exiting\n\ 	-h	-- turn on cts/rts style flow control\n\ 	-n	-- throw out ICMP packets\n\ 	-r RCMD	-- execute RCMD upon loss of carrier\n\ 	-s #	-- set baud rate (default 9600)\n\ 	-u UCMD	-- execute 'UCMD<old><new>' if slip unit number changes\n\ 	-z	-- execute RCMD upon startup irrespective of carrier\n"
+literal|"\ usage: %s [-a ][-c ][-d ][-e<command> ][-n ][-s<speed> ]<device>\n\ 	-a	-- autoenable VJ compression\n\ 	-c	-- enable VJ compression\n\ 	-e ECMD	-- execute ECMD before exiting\n\ 	-h	-- turn on cts/rts style flow control\n\ 	-l	-- disable modem control (CLOCAL) and ignore carrier detect\n\ 	-n	-- throw out ICMP packets\n\ 	-r RCMD	-- execute RCMD upon loss of carrier\n\ 	-s #	-- set baud rate (default 9600)\n\ 	-u UCMD	-- execute 'UCMD<old><new>' if slip unit number changes\n\ 	-z	-- execute RCMD upon startup irrespective of carrier\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,6 +544,14 @@ case|:
 name|flow_control
 operator||=
 name|CRTSCTS
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|modem_control
+operator||=
+name|CLOCAL
 expr_stmt|;
 break|break;
 case|case
@@ -886,6 +906,11 @@ else|else
 name|attach_line
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|modem_control
+condition|)
+block|{
 name|ioctl
 argument_list|(
 name|fd
@@ -907,6 +932,7 @@ operator|)
 condition|)
 block|{
 comment|/* check for carrier */
+comment|/* force a redial if no carrier */
 name|kill
 argument_list|(
 name|getpid
@@ -915,7 +941,7 @@ argument_list|,
 name|SIGHUP
 argument_list|)
 expr_stmt|;
-comment|/* force a redial if no carrier */
+block|}
 block|}
 for|for
 control|(
@@ -962,6 +988,8 @@ operator||
 name|CS8
 operator||
 name|flow_control
+operator||
+name|modem_control
 expr_stmt|;
 name|tty
 operator|.
