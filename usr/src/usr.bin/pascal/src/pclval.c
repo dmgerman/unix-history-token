@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pclval.c 1.1 %G%"
+literal|"@(#)pclval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,12 +447,16 @@ operator|&
 name|ASGN
 operator|)
 operator|&&
+operator|(
 name|p
 operator|->
 name|value
 index|[
 name|NL_FORV
 index|]
+operator|&
+name|FORBOUND
+operator|)
 condition|)
 block|{
 name|error
@@ -758,6 +762,13 @@ condition|(
 name|f
 condition|)
 block|{
+if|if
+condition|(
+name|required
+operator|==
+name|LREQ
+condition|)
+block|{
 name|putLV
 argument_list|(
 name|firstsymbol
@@ -774,6 +785,26 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|putRV
+argument_list|(
+name|firstsymbol
+argument_list|,
+name|firstbn
+argument_list|,
+name|o
+argument_list|,
+name|p2type
+argument_list|(
+name|p
+operator|->
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -803,7 +834,6 @@ name|P2INT
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|required
@@ -818,6 +848,7 @@ argument_list|,
 argument|p2type( p -> type )
 argument_list|)
 empty_stmt|;
+block|}
 block|}
 return|return
 operator|(
