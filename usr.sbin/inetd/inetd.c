@@ -1008,13 +1008,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NUMINT
-value|(sizeof(intab) / sizeof(struct inent))
-end_define
-
 begin_decl_stmt
 specifier|const
 name|char
