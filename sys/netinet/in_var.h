@@ -184,18 +184,6 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ifqueue
-name|ipintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ip packet input queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|in_addr
 name|zeroin_addr
 decl_stmt|;

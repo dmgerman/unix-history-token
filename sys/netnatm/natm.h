@@ -301,18 +301,6 @@ begin_comment
 comment|/* global list of pcbs */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ifqueue
-name|natmintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* natm packet input queue */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -616,7 +604,9 @@ begin_function_decl
 name|void
 name|natmintr
 parameter_list|(
-name|void
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

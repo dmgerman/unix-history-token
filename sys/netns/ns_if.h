@@ -179,22 +179,12 @@ begin_function_decl
 name|void
 name|nsintr
 parameter_list|(
-name|void
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ifqueue
-name|nsintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XNS input packet queue */
-end_comment
 
 begin_endif
 endif|#

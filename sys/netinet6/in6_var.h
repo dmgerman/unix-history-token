@@ -1448,18 +1448,6 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ifqueue
-name|ip6intrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* IP6 packet input queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|in6_addr
 name|zeroin6_addr
 decl_stmt|;

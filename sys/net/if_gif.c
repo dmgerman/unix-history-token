@@ -1709,13 +1709,6 @@ block|{
 name|int
 name|isr
 decl_stmt|;
-name|struct
-name|ifqueue
-modifier|*
-name|ifq
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1840,11 +1833,6 @@ name|INET
 case|case
 name|AF_INET
 case|:
-name|ifq
-operator|=
-operator|&
-name|ipintrq
-expr_stmt|;
 name|isr
 operator|=
 name|NETISR_IP
@@ -1858,11 +1846,6 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-name|ifq
-operator|=
-operator|&
-name|ip6intrq
-expr_stmt|;
 name|isr
 operator|=
 name|NETISR_IPV6
@@ -1912,25 +1895,13 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|IF_HANDOFF
-argument_list|(
-name|ifq
-argument_list|,
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* we need schednetisr since the address family may change */
-name|schednetisr
+name|netisr_dispatch
 argument_list|(
 name|isr
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

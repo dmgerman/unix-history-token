@@ -3414,14 +3414,11 @@ block|}
 if|if
 condition|(
 operator|!
-name|IF_HANDOFF
+name|netisr_queue
 argument_list|(
-operator|&
-name|ipintrq
+name|NETISR_IP
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{

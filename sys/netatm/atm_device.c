@@ -275,6 +275,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ifqueue
+name|atm_intrq
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * ATM Device Stack Instantiation  *  * Called at splnet.  *  * Arguments  *	ssp		pointer to array of stack definition pointers  *			for connection  *			ssp[0] points to upper layer's stack definition  *			ssp[1] points to this layer's stack definition  *			ssp[2] points to lower layer's stack definition  *	cvcp		pointer to connection vcc for this stack  *  * Returns  *	0		instantiation successful  *	err		instantiation failed - reason indicated  *  */
 end_comment

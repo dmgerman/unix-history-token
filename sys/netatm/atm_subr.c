@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/intrq.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/port.h>
 end_include
 
@@ -278,6 +272,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|ifqueue
+name|atm_intrq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|uma_zone_t
 name|atm_attributes_zone
 decl_stmt|;
@@ -293,6 +294,18 @@ name|KTimeout_ret
 name|atm_timexp
 parameter_list|(
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|atm_intr
+parameter_list|(
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -336,30 +349,6 @@ name|atm_init
 condition|)
 return|return;
 name|atm_init
-operator|=
-literal|1
-expr_stmt|;
-name|atm_intrq
-operator|.
-name|ifq_maxlen
-operator|=
-name|ATM_INTRQ_MAX
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|atm_intrq
-operator|.
-name|ifq_mtx
-argument_list|,
-literal|"atm_inq"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|atmintrq_present
 operator|=
 literal|1
 expr_stmt|;
@@ -448,11 +437,34 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-name|register_netisr
+name|atm_intrq
+operator|.
+name|ifq_maxlen
+operator|=
+name|ATM_INTRQ_MAX
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|atm_intrq
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"atm_inq"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|netisr_register
 argument_list|(
 name|NETISR_ATM
 argument_list|,
 name|atm_intr
+argument_list|,
+operator|&
+name|atm_intrq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize subsystems 	 */
@@ -1492,14 +1504,16 @@ comment|/*  * Process Interrupt Queue  *   * Processes entries on the ATM interr
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|atm_intr
-parameter_list|()
-block|{
-name|KBuffer
+parameter_list|(
+name|struct
+name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
+block|{
 name|caddr_t
 name|cp
 decl_stmt|;
@@ -1510,45 +1524,7 @@ name|void
 modifier|*
 name|token
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-comment|/* 		 * Get next buffer from queue 		 */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-name|IF_DEQUEUE
-argument_list|(
-operator|&
-name|atm_intrq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-break|break;
-comment|/* 		 * Get function to call and token value 		 */
+comment|/* 	 * Get function to call and token value 	 */
 name|KB_DATASTART
 argument_list|(
 name|m
@@ -1628,7 +1604,7 @@ operator|=
 name|m1
 expr_stmt|;
 block|}
-comment|/* 		 * Call processing function 		 */
+comment|/* 	 * Call processing function 	 */
 call|(
 modifier|*
 name|func
@@ -1639,11 +1615,10 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Drain any deferred calls 		 */
+comment|/* 	 * Drain any deferred calls 	 */
 name|STACK_DRAIN
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 end_function
 

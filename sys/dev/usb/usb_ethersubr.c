@@ -152,7 +152,9 @@ begin_function
 name|Static
 name|void
 name|usbintr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -330,11 +332,17 @@ condition|(
 name|mtx_inited
 condition|)
 return|return;
-name|register_netisr
+name|netisr_register
 argument_list|(
 name|NETISR_USB
 argument_list|,
+operator|(
+name|netisr_t
+operator|*
+operator|)
 name|usbintr
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -373,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Must be called at splusp() (actually splbio()). This should be  * the case when called from a transfer callback routine.  */
+comment|/*  * Must be called at splusb() (actually splbio()). This should be  * the case when called from a transfer callback routine.  */
 end_comment
 
 begin_function

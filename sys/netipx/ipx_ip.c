@@ -619,15 +619,6 @@ name|ipx
 modifier|*
 name|ipx
 decl_stmt|;
-specifier|register
-name|struct
-name|ifqueue
-modifier|*
-name|ifq
-init|=
-operator|&
-name|ipxintrq
-decl_stmt|;
 name|int
 name|len
 decl_stmt|,
@@ -916,23 +907,13 @@ block|}
 comment|/* Any extra will be trimmed off by the IPX routines */
 block|}
 comment|/* 	 * Deliver to IPX 	 */
-if|if
-condition|(
-name|IF_HANDOFF
-argument_list|(
-name|ifq
-argument_list|,
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-name|schednetisr
+name|netisr_dispatch
 argument_list|(
 name|NETISR_IPX
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

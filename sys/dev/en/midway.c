@@ -16681,15 +16681,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NATM
-name|printf
-argument_list|(
-literal|"    %d drops at natmintrq\n"
-argument_list|,
-name|natmintrq
-operator|.
-name|ifq_drops
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("    %d drops at natmintrq\n", natmintrq.ifq_drops);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NATM_STAT

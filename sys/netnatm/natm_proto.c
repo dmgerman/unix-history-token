@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/intrq.h>
+file|<net/netisr.h>
 end_include
 
 begin_include
@@ -345,6 +345,14 @@ begin_comment
 comment|/* max # of packets on queue */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ifqueue
+name|natmintrq
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -447,9 +455,15 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|natmintrq_present
-operator|=
-literal|1
+name|netisr_register
+argument_list|(
+name|NETISR_NATM
+argument_list|,
+name|natmintr
+argument_list|,
+operator|&
+name|natmintrq
+argument_list|)
 expr_stmt|;
 block|}
 end_function

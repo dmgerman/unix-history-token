@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -2525,20 +2531,14 @@ name|last_encap_vif
 operator|->
 name|v_ifp
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|IF_HANDOFF
+name|netisr_queue
 argument_list|(
-operator|&
-name|ipintrq
+name|NETISR_IP
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      * normally we would need a "schednetisr(NETISR_IP)"      * here but we were called by ip_input and it is going      * to loop back& try to dequeue the packet we just      * queued as soon as we return so we avoid the      * unnecessary software interrrupt.      */
+comment|/*      * normally we would need a "schednetisr(NETISR_IP)"      * here but we were called by ip_input and it is going      * to loop back& try to dequeue the packet we just      * queued as soon as we return so we avoid the      * unnecessary software interrrupt.      *      * XXX      * This no longer holds - we may have direct-dispatched the packet,      * or there may be a queue processing limit.      */
 block|}
 end_function
 

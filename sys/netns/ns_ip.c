@@ -557,15 +557,6 @@ name|idp
 modifier|*
 name|idp
 decl_stmt|;
-specifier|register
-name|struct
-name|ifqueue
-modifier|*
-name|ifq
-init|=
-operator|&
-name|nsintrq
-decl_stmt|;
 name|int
 name|len
 decl_stmt|,
@@ -861,23 +852,13 @@ operator|=
 name|ifp
 expr_stmt|;
 comment|/* 	 * Deliver to NS 	 */
-if|if
-condition|(
-name|IF_HANDOFF
-argument_list|(
-name|ifq
-argument_list|,
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-name|schednetisr
+name|netisr_dispatch
 argument_list|(
 name|NETISR_NS
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 

@@ -118,6 +118,7 @@ comment|/* the two netisr handlers      */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|netisr_pollmore
 parameter_list|(
@@ -125,19 +126,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|init_device_poll
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* init routine			*/
-end_comment
 
 begin_function_decl
 name|void
@@ -751,26 +739,57 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * register relevant netisr. Called from kern_clock.c:  */
-end_comment
-
 begin_function
+specifier|static
 name|void
 name|init_device_poll
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|register_netisr
+name|netisr_register
 argument_list|(
 name|NETISR_POLL
 argument_list|,
+operator|(
+name|netisr_t
+operator|*
+operator|)
 name|netisr_poll
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|netisr_register
+argument_list|(
+name|NETISR_POLLMORE
+argument_list|,
+operator|(
+name|netisr_t
+operator|*
+operator|)
+name|netisr_pollmore
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|device_poll
+argument_list|,
+argument|SI_SUB_CLOCKS
+argument_list|,
+argument|SI_ORDER_MIDDLE
+argument_list|,
+argument|init_device_poll
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Hook from hardclock. Tries to schedule a netisr, but keeps track  * of lost ticks due to the previous handler taking too long.  * Normally, this should not happen, because polling handler should  * run for a short time. However, in some cases (e.g. when there are  * changes in link status etc.) the drivers take a very long time  * (even in the order of milliseconds) to reset and reconfigure the  * device, causing apparent lost polls.  *  * The first part of the code is just for debugging purposes, and tries  * to count how often hardclock ticks are shorter than they should,  * meaning either stray interrupts or delayed events.  */
@@ -886,9 +905,15 @@ name|phase
 operator|=
 literal|1
 expr_stmt|;
-name|schednetisr
+name|schednetisrbits
 argument_list|(
+literal|1
+operator|<<
 name|NETISR_POLL
+operator||
+literal|1
+operator|<<
+name|NETISR_POLLMORE
 argument_list|)
 expr_stmt|;
 name|phase
@@ -1050,13 +1075,19 @@ operator|>
 literal|0
 condition|)
 block|{
-name|schednetisr
+name|schednetisrbits
 argument_list|(
+literal|1
+operator|<<
 name|NETISR_POLL
+operator||
+literal|1
+operator|<<
+name|NETISR_POLLMORE
 argument_list|)
 expr_stmt|;
 comment|/* will run immediately on return, followed by netisrs */
-return|return ;
+return|return;
 block|}
 comment|/* here we can account time spent in netisr's in this tick */
 name|microuptime
@@ -1170,9 +1201,15 @@ name|poll_burst
 operator|=
 literal|1
 expr_stmt|;
-name|schednetisr
+name|schednetisrbits
 argument_list|(
+literal|1
+operator|<<
 name|NETISR_POLL
+operator||
+literal|1
+operator|<<
+name|NETISR_POLLMORE
 argument_list|)
 expr_stmt|;
 name|phase

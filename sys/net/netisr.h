@@ -59,12 +59,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_ATALK
+name|NETISR_AARP
+value|15
+end_define
+
+begin_comment
+comment|/* Appletalk ARP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_ATALK2
 value|16
 end_define
 
 begin_comment
-comment|/* same as AF_APPLETALK */
+comment|/* Appletalk phase 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_ATALK1
+value|17
+end_define
+
+begin_comment
+comment|/* Appletalk phase 1 */
 end_comment
 
 begin_define
@@ -104,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|NETISR_PPP
-value|27
+value|26
 end_define
 
 begin_comment
@@ -115,44 +137,39 @@ begin_define
 define|#
 directive|define
 name|NETISR_IPV6
-value|28
+value|27
 end_define
-
-begin_comment
-comment|/* same as AF_INET6 */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NETISR_NATM
-value|29
+value|28
 end_define
-
-begin_comment
-comment|/* same as AF_NATM */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NETISR_ATM
-value|30
+value|29
 end_define
-
-begin_comment
-comment|/* same as AF_ATM */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NETISR_NETGRAPH
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETISR_POLLMORE
 value|31
 end_define
 
 begin_comment
-comment|/* same as AF_NETGRAPH */
+comment|/* polling callback, must be last */
 end_comment
 
 begin_ifndef
@@ -189,22 +206,6 @@ begin_comment
 comment|/* scheduling bits for network */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|netisrs
-index|[
-literal|32
-index|]
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -215,23 +216,52 @@ parameter_list|)
 value|do {						\ 	atomic_set_rel_int(&netisr, 1<< (anisr));			\ 	legacy_setsoftnet();						\ } while (0)
 end_define
 
+begin_comment
+comment|/* used to atomically schedule multiple netisrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|schednetisrbits
+parameter_list|(
+name|isrbits
+parameter_list|)
+value|do {					\ 	atomic_set_rel_int(&netisr, isrbits);				\ 	legacy_setsoftnet();						\ } while (0)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|ifqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void
 name|netisr_t
 parameter_list|(
-name|void
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
 
 begin_function_decl
-name|int
-name|register_netisr
+name|void
+name|netisr_dispatch
 parameter_list|(
 name|int
 parameter_list|,
-name|netisr_t
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -239,7 +269,36 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|unregister_netisr
+name|netisr_queue
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netisr_register
+parameter_list|(
+name|int
+parameter_list|,
+name|netisr_t
+modifier|*
+parameter_list|,
+name|struct
+name|ifqueue
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netisr_unregister
 parameter_list|(
 name|int
 parameter_list|)

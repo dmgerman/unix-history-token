@@ -1806,14 +1806,11 @@ block|}
 if|if
 condition|(
 operator|!
-name|IF_HANDOFF
+name|netisr_queue
 argument_list|(
-operator|&
-name|ipintrq
+name|NETISR_IP
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -1834,12 +1831,6 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-name|schednetisr
-argument_list|(
-name|NETISR_IP
-argument_list|)
-expr_stmt|;
-comment|/* can be skipped but to make sure */
 name|nxt
 operator|=
 name|IPPROTO_DONE
@@ -3633,14 +3624,11 @@ block|}
 if|if
 condition|(
 operator|!
-name|IF_HANDOFF
+name|netisr_queue
 argument_list|(
-operator|&
-name|ip6intrq
+name|NETISR_IPV6
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 block|{
@@ -3661,12 +3649,6 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-name|schednetisr
-argument_list|(
-name|NETISR_IPV6
-argument_list|)
-expr_stmt|;
-comment|/* can be skipped but to make sure */
 name|nxt
 operator|=
 name|IPPROTO_DONE

@@ -206,18 +206,6 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ifqueue
-name|ipxintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* IPX input packet queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|ipx_ifaddr
 modifier|*
 name|ipx_ifaddr

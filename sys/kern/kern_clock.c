@@ -167,16 +167,6 @@ end_ifdef
 begin_function_decl
 specifier|extern
 name|void
-name|init_device_poll
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|hardclock_device_poll
 parameter_list|(
 name|void
@@ -321,14 +311,6 @@ comment|/* 	 * Set divisors to 1 (normal case) and let the machine-specific 	 * 
 name|cpu_initclocks
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-name|init_device_poll
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Compute profhz/stathz, and fix profhz if needed. 	 */
 name|i
 operator|=

@@ -160,16 +160,6 @@ name|at_ifaddr
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ifqueue
-name|atintrq1
-decl_stmt|,
-name|atintrq2
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

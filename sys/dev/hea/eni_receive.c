@@ -1742,11 +1742,6 @@ decl_stmt|,
 name|stop
 decl_stmt|;
 name|int
-name|que
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|s
@@ -2151,22 +2146,14 @@ expr_stmt|;
 comment|/* 			 * Schedule callback 			 */
 if|if
 condition|(
-name|IF_HANDOFF
+operator|!
+name|netisr_queue
 argument_list|(
-operator|&
-name|atm_intrq
+name|NETISR_ATM
 argument_list|,
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
-block|{
-name|que
-operator|++
-expr_stmt|;
-block|}
-else|else
 block|{
 name|eup
 operator|->
@@ -2229,16 +2216,6 @@ operator|)
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If we found any completed buffers, schedule a call into 	 * the kernel to process the atm_intrq. 	 */
-if|if
-condition|(
-name|que
-condition|)
-name|schednetisr
-argument_list|(
-name|NETISR_ATM
 argument_list|)
 expr_stmt|;
 return|return;
