@@ -1897,21 +1897,8 @@ name|ucp
 operator|=
 name|ucp
 expr_stmt|;
-comment|/* 	 * XXX Not ready for scope system thread, kernel bits 	 * should involve in 	 */
 if|if
 condition|(
-operator|(
-name|curthread
-operator|->
-name|attr
-operator|.
-name|flags
-operator|&
-name|PTHREAD_SCOPE_SYSTEM
-operator|)
-operator|==
-literal|0
-operator|&&
 operator|(
 name|curthread
 operator|->
