@@ -173,6 +173,7 @@ end_comment
 begin_function
 specifier|static
 name|long
+name|long
 name|find_parsenum
 parameter_list|(
 name|plan
@@ -201,6 +202,7 @@ end_function
 
 begin_block
 block|{
+name|long
 name|long
 name|value
 decl_stmt|;
@@ -258,10 +260,10 @@ name|F_EQUAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Convert the string with strtol().  Note, if strtol() returns zero 	 * and endchar points to the beginning of the string we know we have 	 * a syntax error. 	 */
+comment|/* 	 * Convert the string with strtoq().  Note, if strtoq() returns zero 	 * and endchar points to the beginning of the string we know we have 	 * a syntax error. 	 */
 name|value
 operator|=
-name|strtol
+name|strtoq
 argument_list|(
 name|str
 argument_list|,
