@@ -340,11 +340,12 @@ name|int
 name|rti_time
 decl_stmt|;
 comment|/* # of slow timeouts since last old query */
-name|struct
-name|router_info
-modifier|*
-name|rti_next
-decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|router_info
+argument_list|)
+name|rti_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
