@@ -3608,7 +3608,7 @@ name|kseq
 operator|->
 name|ksq_group
 expr_stmt|;
-comment|/* 	 * If there are any idle groups, give them our extra load.  The 	 * threshold at which we start to reassign kses has a large impact 	 * on the overall performance of the system.  Tuned too high and 	 * some CPUs may idle.  Too low and there will be excess migration 	 * and context swiches. 	 */
+comment|/* 	 * If there are any idle groups, give them our extra load.  The 	 * threshold at which we start to reassign kses has a large impact 	 * on the overall performance of the system.  Tuned too high and 	 * some CPUs may idle.  Too low and there will be excess migration 	 * and context switches. 	 */
 if|if
 condition|(
 name|ksg
