@@ -706,7 +706,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|fcntl_args
 modifier|*
@@ -879,7 +878,6 @@ name|intptr_t
 name|arg
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -890,7 +888,6 @@ name|flock
 modifier|*
 name|flp
 decl_stmt|;
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -901,7 +898,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|pop
@@ -1930,7 +1926,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -3244,13 +3239,11 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -3510,7 +3503,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|ofstat_args
 modifier|*
@@ -3857,7 +3849,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|nfstat_args
 modifier|*
@@ -4032,7 +4023,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|fpathconf_args
 modifier|*
@@ -4277,7 +4267,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -4289,7 +4278,6 @@ name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4763,7 +4751,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -4777,7 +4764,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -4789,14 +4775,12 @@ name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;
-specifier|register
 name|struct
 name|file
 modifier|*
 modifier|*
 name|fpp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -4939,7 +4923,6 @@ name|resultfp
 parameter_list|,
 name|resultfd
 parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -4965,7 +4948,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -5217,7 +5199,6 @@ name|ffree
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -5294,7 +5275,6 @@ modifier|*
 name|fdp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc0
 modifier|*
@@ -5542,7 +5522,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -5551,14 +5530,12 @@ decl_stmt|,
 modifier|*
 name|fdp
 decl_stmt|;
-specifier|register
 name|struct
 name|file
 modifier|*
 modifier|*
 name|fpp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -6179,7 +6156,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filedesc
 modifier|*
@@ -6191,7 +6167,6 @@ modifier|*
 modifier|*
 name|fpp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6476,7 +6451,6 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -6700,7 +6674,6 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -7203,13 +7176,11 @@ name|fp
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|file
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|struct
 name|thread
 modifier|*
@@ -8335,7 +8306,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-specifier|register
 name|struct
 name|flock_args
 modifier|*
@@ -8700,7 +8670,6 @@ name|int
 name|error
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
