@@ -1487,6 +1487,17 @@ begin_comment
 comment|/* Have alternate signal stack. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P_INEXEC
+value|0x8000000
+end_define
+
+begin_comment
+comment|/* Process is in execve(). */
+end_comment
+
 begin_comment
 comment|/* These flags are kept in p_sflag and are protected with sched_lock. */
 end_comment

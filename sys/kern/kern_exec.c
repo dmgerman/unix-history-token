@@ -504,6 +504,47 @@ operator|=
 operator|&
 name|image_params
 expr_stmt|;
+comment|/* 	 * Lock the process and set the P_INEXEC flag to indicate that 	 * it should be left alone until we're done here.  This is 	 * necessary to avoid race conditions - e.g. in ptrace() - 	 * that might allow a local user to illicitly obtain elevated 	 * privileges. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_INEXEC
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+name|__FUNCTION__
+literal|"(): process already has P_INEXEC flag"
+operator|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_INEXEC
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* XXXKSE */
 comment|/* !!!!!!!! we need abort all the other threads of this process before we */
 comment|/* proceed beyond his point! */
@@ -599,12 +640,6 @@ operator|->
 name|auxarg_size
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings 	 */
 name|imgp
@@ -1263,7 +1298,6 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX: Note, the whole execve() is incredibly racey right now 	 * with regards to debugging and privilege/credential management. 	 * In particular, it's possible to race during exec() to attach 	 * debugging to a process that will gain privilege. 	 * 	 * This MUST be fixed prior to any release. 	 */
 comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 */
 name|oldcred
 operator|=
@@ -1619,7 +1653,7 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
-comment|/* 	 * notify others that we exec'd 	 */
+comment|/* 	 * Notify others that we exec'd, and clear the P_INEXEC flag 	 * as we're now a bona fide freshly-execed process. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1635,7 +1669,14 @@ argument_list|,
 name|NOTE_EXEC
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * 	can be set before the program executes. 	 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_INEXEC
+expr_stmt|;
+comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * can be set before the program executes. 	 */
 name|_STOPEVENT
 argument_list|(
 name|p
@@ -1886,6 +1927,24 @@ name|done2
 goto|;
 name|exec_fail
 label|:
+comment|/* we're done here, clear P_INEXEC */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_INEXEC
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|imgp

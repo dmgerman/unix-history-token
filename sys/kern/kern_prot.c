@@ -6376,6 +6376,24 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* can't trace a process that's currently exec'ing */
+if|if
+condition|(
+operator|(
+name|p2
+operator|->
+name|p_flag
+operator|&
+name|P_INEXEC
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EAGAIN
+operator|)
+return|;
 return|return
 operator|(
 literal|0
