@@ -163,11 +163,24 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"zopen.h"
-end_include
+begin_function_decl
+specifier|extern
+name|FILE
+modifier|*
+name|zopen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -697,29 +710,6 @@ argument_list|(
 operator|(
 name|void
 operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|log
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|__printflike
-argument_list|(
-literal|2
-argument_list|,
-literal|3
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1494,7 +1484,7 @@ condition|(
 name|kernel
 condition|)
 return|return;
-name|lseek
+name|Lseek
 argument_list|(
 name|kmem
 argument_list|,
@@ -2115,7 +2105,7 @@ name|bounds
 argument_list|,
 name|compress
 condition|?
-literal|".Z"
+literal|".gz"
 else|:
 literal|""
 argument_list|)
@@ -2131,8 +2121,6 @@ argument_list|(
 name|path
 argument_list|,
 literal|"w"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2289,6 +2277,27 @@ goto|goto
 name|err2
 goto|;
 block|}
+if|if
+condition|(
+name|compress
+condition|)
+block|{
+name|nw
+operator|=
+name|fwrite
+argument_list|(
+name|buf
+argument_list|,
+literal|1
+argument_list|,
+name|nr
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 for|for
 control|(
 name|nw
@@ -2358,7 +2367,7 @@ name|he
 operator|&=
 name|BLOCKMASK
 expr_stmt|;
-comment|/* 			 * 1) Don't go beyond the end of the buffer. 			 * 2) If the end of the buffer is less than 			 *    BLOCKSIZE bytes away, we're at the end 			 *    of the file, so just grab what's left. 			 */
+comment|/* 			     * 1) Don't go beyond the end of the buffer. 			     * 2) If the end of the buffer is less than 			     *    BLOCKSIZE bytes away, we're at the end 			     *    of the file, so just grab what's left. 			     */
 if|if
 condition|(
 name|hs
@@ -2373,7 +2382,7 @@ name|he
 operator|=
 name|nr
 expr_stmt|;
-comment|/* 			 * At this point, we have a partial ordering: 			 *     nw<= hs<= he<= nr 			 * If hs> nw, buf[nw..hs] contains non-zero data. 			 * If he> hs, buf[hs..he] is all zeroes. 			 */
+comment|/* 			     * At this point, we have a partial ordering: 			     *     nw<= hs<= he<= nr 			     * If hs> nw, buf[nw..hs] contains non-zero data. 			     * If he> hs, buf[hs..he] is all zeroes. 			     */
 if|if
 condition|(
 name|hs
@@ -2423,6 +2432,7 @@ operator|-
 literal|1
 condition|)
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -2507,7 +2517,7 @@ name|bounds
 argument_list|,
 name|compress
 condition|?
-literal|".Z"
+literal|".gz"
 else|:
 literal|""
 argument_list|)
@@ -2523,8 +2533,6 @@ argument_list|(
 name|path
 argument_list|,
 literal|"w"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|else
