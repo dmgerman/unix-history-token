@@ -69,36 +69,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -106,12 +76,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -1251,7 +1215,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: chpass%s %s [user]\n"
+literal|"usage: chpass%s %s [user]\n"
 argument_list|,
 ifdef|#
 directive|ifdef
