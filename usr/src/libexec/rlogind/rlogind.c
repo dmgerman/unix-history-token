@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.10 83/01/22"
+literal|"@(#)rlogind.c	4.11 83/02/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,6 +603,14 @@ argument_list|()
 operator|==
 literal|0
 condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|doit
 argument_list|(
 name|s
@@ -611,6 +619,7 @@ operator|&
 name|from
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|s

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.17 83/01/22"
+literal|"@(#)telnetd.c	4.18 83/02/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -777,11 +777,20 @@ name|pid
 operator|==
 literal|0
 condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|doit
 argument_list|(
 name|s2
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|s2
