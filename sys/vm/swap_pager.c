@@ -1527,6 +1527,17 @@ operator||
 name|UMA_ZONE_VM
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|swap_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"failed to create swap_zone."
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -1563,17 +1574,6 @@ operator|>
 literal|0
 condition|)
 do|;
-if|if
-condition|(
-name|swap_zone
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"failed to create swap_zone."
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|n2
