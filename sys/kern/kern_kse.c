@@ -3529,6 +3529,8 @@ block|}
 if|if
 condition|(
 name|first
+operator|&&
+name|sa
 condition|)
 block|{
 name|SIGSETOR
