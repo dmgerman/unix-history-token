@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.25 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.26 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.25 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.26 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,16 @@ begin_comment
 comment|/* fd describing socket */
 end_comment
 
+begin_decl_stmt
+name|SOCKADDR
+name|DaemonAddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* socket for incoming */
+end_comment
+
 begin_macro
 name|getrequests
 argument_list|()
@@ -194,15 +204,63 @@ name|FILE
 modifier|*
 name|pidf
 decl_stmt|;
-name|SOCKADDR
-name|srvraddr
-decl_stmt|;
 specifier|extern
 name|void
 name|reapchild
 parameter_list|()
 function_decl|;
 comment|/* 	**  Set up the address for the mailer. 	*/
+if|if
+condition|(
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_family
+operator|==
+literal|0
+condition|)
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+if|if
+condition|(
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+literal|0
+condition|)
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+if|if
+condition|(
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|==
+literal|0
+condition|)
+block|{
 name|sp
 operator|=
 name|getservbyname
@@ -228,25 +286,7 @@ goto|goto
 name|severe
 goto|;
 block|}
-name|srvraddr
-operator|.
-name|sin
-operator|.
-name|sin_family
-operator|=
-name|AF_INET
-expr_stmt|;
-name|srvraddr
-operator|.
-name|sin
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|INADDR_ANY
-expr_stmt|;
-name|srvraddr
+name|DaemonAddr
 operator|.
 name|sin
 operator|.
@@ -256,6 +296,7 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+block|}
 comment|/* 	**  Try to actually open the connection. 	*/
 if|if
 condition|(
@@ -270,7 +311,7 @@ name|printf
 argument_list|(
 literal|"getrequests: port 0x%x\n"
 argument_list|,
-name|srvraddr
+name|DaemonAddr
 operator|.
 name|sin
 operator|.
@@ -403,12 +444,12 @@ argument_list|(
 name|DaemonSocket
 argument_list|,
 operator|&
-name|srvraddr
+name|DaemonAddr
 operator|.
 name|sa
 argument_list|,
 sizeof|sizeof
-name|srvraddr
+name|DaemonAddr
 argument_list|)
 operator|<
 literal|0
