@@ -1016,12 +1016,13 @@ condition|)
 return|return;
 break|break;
 default|default:
+break|break;
+block|}
 name|trap_fatal
 argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
