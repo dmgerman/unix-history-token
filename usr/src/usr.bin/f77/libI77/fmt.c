@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmt[] = "@(#)fmt.c	1.5";  *  * fortran format parser  */
+comment|/* char id_fmt[] = "@(#)fmt.c	1.6";  *  * fortran format parser  */
 end_comment
 
 begin_include
@@ -667,13 +667,16 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|'\0'
+literal|'n'
 case|:
+name|s
+operator|++
+expr_stmt|;
 name|op_gen
 argument_list|(
-name|BN
+name|BNZ
 argument_list|,
-name|cblank
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -691,7 +694,7 @@ operator|++
 expr_stmt|;
 name|op_gen
 argument_list|(
-name|BZ
+name|BNZ
 argument_list|,
 literal|1
 argument_list|,
@@ -703,16 +706,13 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'n'
-case|:
-name|s
-operator|++
-expr_stmt|;
+ifndef|#
+directive|ifndef
+name|KOSHER
 default|default:
 name|op_gen
 argument_list|(
-name|BN
+name|B
 argument_list|,
 literal|0
 argument_list|,
@@ -724,6 +724,21 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/*** NOT STANDARD FORTRAN ***/
+else|#
+directive|else
+default|default:
+name|fmtptr
+operator|=
+name|s
+expr_stmt|;
+return|return
+operator|(
+name|FMTUNKN
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
