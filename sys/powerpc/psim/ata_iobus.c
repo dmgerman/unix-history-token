@@ -447,20 +447,6 @@ argument_list|,
 name|child
 argument_list|)
 expr_stmt|;
-name|retval
-operator|+=
-name|printf
-argument_list|(
-literal|": at 0x%lx"
-argument_list|,
-name|rman_get_start
-argument_list|(
-name|ch
-operator|->
-name|r_io
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* irq ? */
 name|retval
 operator|+=
