@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -66,6 +72,7 @@ end_include
 begin_struct
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -273,6 +280,7 @@ specifier|static
 name|void
 name|help
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|what
@@ -283,10 +291,12 @@ end_function_decl
 begin_struct
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -580,7 +590,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't allocate %d bytes for %d range descriptors"
+literal|"can't allocate %zd bytes for %d range descriptors"
 argument_list|,
 operator|*
 name|nmr
@@ -796,7 +806,11 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%qx/%qx %.8s "
+literal|"%"
+name|PRIu64
+literal|"x/%"
+name|PRIu64
+literal|"x %.8s "
 argument_list|,
 name|mrd
 index|[
@@ -1660,9 +1674,11 @@ specifier|static
 name|void
 name|helpfunc
 parameter_list|(
+name|__unused
 name|int
 name|memfd
 parameter_list|,
+name|__unused
 name|int
 name|argc
 parameter_list|,
@@ -1688,6 +1704,7 @@ specifier|static
 name|void
 name|help
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|what
