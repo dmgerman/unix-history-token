@@ -10031,12 +10031,6 @@ literal|"%s\n"
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Do not free up the words themselves, since they might be in use by the      * shell specification...      */
-name|free
-argument_list|(
-name|words
-argument_list|)
-expr_stmt|;
 return|return
 name|SUCCESS
 return|;
