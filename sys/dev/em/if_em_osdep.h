@@ -379,10 +379,10 @@ struct|struct
 name|em_osdep
 block|{
 name|bus_space_tag_t
-name|bus_space_tag
+name|mem_bus_space_tag
 decl_stmt|;
 name|bus_space_handle_t
-name|bus_space_handle
+name|mem_bus_space_handle
 decl_stmt|;
 name|struct
 name|device
@@ -402,7 +402,7 @@ name|a
 parameter_list|,
 name|reg
 parameter_list|)
-value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_read_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                      ((struct em_osdep *)(a)->back)->bus_space_handle, \                      E1000_##reg): \    bus_space_read_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                       ((struct em_osdep *)(a)->back)->bus_space_handle, \                        E1000_82542_##reg))
+value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                      E1000_##reg): \    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                        E1000_82542_##reg))
 end_define
 
 begin_define
@@ -416,7 +416,7 @@ name|reg
 parameter_list|,
 name|value
 parameter_list|)
-value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_write_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                      ((struct em_osdep *)(a)->back)->bus_space_handle, \                      E1000_##reg, value): \    bus_space_write_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                       ((struct em_osdep *)(a)->back)->bus_space_handle, \                        E1000_82542_##reg, value))
+value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                      E1000_##reg, value): \    bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                        E1000_82542_##reg, value))
 end_define
 
 begin_define
@@ -430,7 +430,7 @@ name|reg
 parameter_list|,
 name|offset
 parameter_list|)
-value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_read_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                      ((struct em_osdep *)(a)->back)->bus_space_handle, \                      (E1000_##reg + ((offset)<< 2))): \    bus_space_read_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                       ((struct em_osdep *)(a)->back)->bus_space_handle, \                        (E1000_82542_##reg + ((offset)<< 2))))
+value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                      (E1000_##reg + ((offset)<< 2))): \    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                        (E1000_82542_##reg + ((offset)<< 2))))
 end_define
 
 begin_define
@@ -446,7 +446,7 @@ name|offset
 parameter_list|,
 name|value
 parameter_list|)
-value|(\   ((a)->mac_type>= em_82543) ? \       bus_space_write_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                       ((struct em_osdep *)(a)->back)->bus_space_handle, \                       (E1000_##reg + ((offset)<< 2)), value): \       bus_space_write_4( ((struct em_osdep *)(a)->back)->bus_space_tag, \                       ((struct em_osdep *)(a)->back)->bus_space_handle, \                       (E1000_82542_##reg + ((offset)<< 2)), value))
+value|(\   ((a)->mac_type>= em_82543) ? \       bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                       (E1000_##reg + ((offset)<< 2)), value): \       bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                       (E1000_82542_##reg + ((offset)<< 2)), value))
 end_define
 
 begin_endif
