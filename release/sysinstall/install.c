@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70.2.17 1995/06/03 04:52:57 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.70.2.18 1995/06/04 05:27:35 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|Boolean
 name|make_filesystems
 parameter_list|(
 name|void
@@ -63,7 +63,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|Boolean
 name|copy_self
 parameter_list|(
 name|void
@@ -73,7 +73,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|Boolean
 name|root_extract
 parameter_list|(
 name|void
@@ -875,12 +875,38 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+operator|!
 name|make_filesystems
 argument_list|()
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Couldn't make filesystems properly.  Aborting."
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+operator|!
 name|copy_self
 argument_list|()
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Couldn't clone the boot floppy onto the root file system.\nAborting."
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1006,6 +1032,15 @@ argument_list|(
 literal|"Warning: This shell is chroot()'d to /mnt\n"
 argument_list|)
 expr_stmt|;
+name|setenv
+argument_list|(
+literal|"PATH"
+argument_list|,
+literal|"/bin:/sbin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/bin"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|execlp
 argument_list|(
 literal|"sh"
@@ -1086,9 +1121,22 @@ name|configFstab
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|root_extract
 argument_list|()
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Failed to load the ROOT distribution.  Please correct\nthis problem and try again."
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|distExtractAll
 argument_list|()
 expr_stmt|;
@@ -1111,7 +1159,7 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Installation completed successfully, hit return now to go back\nto the main menu. If you have any network devices you have not yet\nconfigured, see the Interface configuration item on the\nConfiguration menu."
+literal|"Installation completed successfully, now  press [ENTER] to return\nto the main menu. If you have any network devices you have not yet\nconfigured, see the Interface configuration item on the\nConfiguration menu."
 argument_list|)
 expr_stmt|;
 name|SystemWasInstalled
@@ -1130,7 +1178,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|Boolean
 name|make_filesystems
 parameter_list|(
 name|void
@@ -1172,6 +1220,9 @@ operator|)
 name|rootdev
 operator|->
 name|private
+decl_stmt|;
+name|Boolean
+name|RootReadOnly
 decl_stmt|;
 name|command_clear
 argument_list|()
@@ -1265,11 +1316,21 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|FALSE
+return|;
 block|}
+name|RootReadOnly
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 else|else
 block|{
+name|RootReadOnly
+operator|=
+name|TRUE
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  You have selected a Read-Only root device\nand may be unable to find the appropriate device entries on it\nif it is from an older pre-slice version of FreeBSD."
@@ -1344,9 +1405,16 @@ argument_list|(
 literal|"Unable to mount the root file system!  Giving up."
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|FALSE
+return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|RootReadOnly
+condition|)
 block|{
 specifier|extern
 name|int
@@ -1452,7 +1520,8 @@ name|disk
 operator|->
 name|chunks
 condition|)
-name|msgFatal
+block|{
+name|msgConfirm
 argument_list|(
 literal|"No chunk list found for %s!"
 argument_list|,
@@ -1461,7 +1530,16 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 comment|/* Make the proper device mount points in /mnt/dev */
+if|if
+condition|(
+operator|!
+name|RootReadOnly
+condition|)
 name|MakeDevDisk
 argument_list|(
 name|disk
@@ -1692,6 +1770,9 @@ operator|&&
 name|c1
 operator|->
 name|private
+operator|&&
+operator|!
+name|RootReadOnly
 condition|)
 name|Mkdir
 argument_list|(
@@ -1718,6 +1799,9 @@ expr_stmt|;
 name|command_execute
 argument_list|()
 expr_stmt|;
+return|return
+name|TRUE
+return|;
 block|}
 end_function
 
@@ -1727,7 +1811,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|Boolean
 name|copy_self
 parameter_list|(
 name|void
@@ -1760,14 +1844,20 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* Copy the /etc files into their rightful place */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+operator|!
 name|vsystem
 argument_list|(
 literal|"cd /mnt/stand; find etc | cpio -pdmv /mnt"
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+name|FALSE
+return|;
 block|}
 end_function
 
@@ -1783,7 +1873,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
+name|Boolean
 name|root_extract
 parameter_list|(
 name|void
@@ -1802,7 +1892,9 @@ if|if
 condition|(
 name|alreadyExtracted
 condition|)
-return|return;
+return|return
+name|TRUE
+return|;
 if|if
 condition|(
 name|OnCDROM
@@ -1844,7 +1936,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|TRUE
+return|;
 block|}
 else|else
 comment|/* Must not be a FreeBSD CDROM */
@@ -2018,6 +2112,9 @@ operator|=
 name|loop_on_root_floppy
 argument_list|()
 expr_stmt|;
+return|return
+name|alreadyExtracted
+return|;
 block|}
 end_function
 

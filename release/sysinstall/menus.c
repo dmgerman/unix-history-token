@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.14 1995/06/04 01:57:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.15 1995/06/04 05:13:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1423,7 +1423,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the distributions you wish to install."
 block|,
-literal|"Please check off the distributions you wish to install.  Some\n of the most generally useful distributions are already checked, and\n\ selecting OK at this stage will chose them as defaults.\n\ WARNING:  Do not export the DES distribution out of the U.S.!"
+literal|"Please check off the distributions you wish to install.  At the\n\ very minimum, this should be \"bin\".  WARNING:  Do not export the\n\ DES distribution out of the U.S.!  It is for U.S. customers only."
 block|,
 name|NULL
 block|,
@@ -1467,7 +1467,7 @@ block|,
 block|{
 literal|"compat1x"
 block|,
-literal|"FreeBSD 1.x binary compatability package [2MB]"
+literal|"FreeBSD 1.x binary compatibility package [2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1484,7 +1484,7 @@ block|,
 block|{
 literal|"compat20"
 block|,
-literal|"FreeBSD 2.0 binary compatability package [2MB]"
+literal|"FreeBSD 2.0 binary compatibility package [2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1619,7 +1619,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.1.1L distribution [?]"
+literal|"The XFree86 3.1.1u1 distribution [?]"
 block|,
 name|DMENU_CALL
 block|,
@@ -2855,9 +2855,9 @@ name|ftpFlagCheck
 block|}
 block|,
 block|{
-literal|"Extra Debugging"
+literal|"Debugging"
 block|,
-literal|"Toggle the extra debugging flag"
+literal|"Turn on the extra debugging flag"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -3473,6 +3473,20 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"Other"
+block|,
+literal|"Select a site not on this list"
+block|,
+name|DMENU_CALL
+block|,
+name|configNTP
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
 block|{
 literal|"Australia"
 block|,
