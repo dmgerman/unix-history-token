@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vasprintf.c,v 1.5 1997/02/22 15:02:39 peter Exp $"
+literal|"$Id: vasprintf.c,v 1.6 1997/07/06 07:54:56 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +423,22 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+comment|/* 	 * clean up the wreckage. Did writehook fail or did something else 	 * in stdio explode perhaps? 	 */
+if|if
+condition|(
+name|h
+operator|.
+name|base
+operator|==
+name|NULL
+condition|)
+comment|/* realloc failed in writehook */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|ret
@@ -430,6 +446,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* something else? */
 name|free
 argument_list|(
 name|h
@@ -444,21 +461,25 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * At this point, we have a non-null terminated string in a 	 * buffer.  There may not be enough room to null-terminate it 	 * (h.left == 0) - if realloc failes to expand it, it's fatal. 	 * If we were merely trying to shrink the buffer, a realloc failure 	 * is not [yet] fatal. Note that when realloc returns NULL, 	 * the original buffer is left allocated and valid. 	 */
 if|if
 condition|(
 name|h
 operator|.
-name|base
+name|left
 operator|==
-name|NULL
-condition|)
-comment|/* failed to realloc in writehook */
-return|return
-operator|(
-operator|-
 literal|1
-operator|)
-return|;
+condition|)
+comment|/* exact fit, do not realloc */
+operator|*
+name|str
+operator|=
+name|h
+operator|.
+name|base
+expr_stmt|;
+else|else
+block|{
 operator|*
 name|str
 operator|=
@@ -492,7 +513,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* failed to realloc it to actual size */
+comment|/* failed to expand? - fatal */
+if|if
+condition|(
+name|h
+operator|.
+name|left
+operator|==
+literal|0
+condition|)
+block|{
 name|free
 argument_list|(
 name|h
@@ -506,6 +536,16 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+operator|*
+name|str
+operator|=
+name|h
+operator|.
+name|base
+expr_stmt|;
+comment|/* use oversize original buffer */
+block|}
 block|}
 operator|(
 operator|*
