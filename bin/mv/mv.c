@@ -1702,6 +1702,8 @@ literal|"-PRpv"
 else|:
 literal|"-PRp"
 argument_list|,
+literal|"--"
+argument_list|,
 name|from
 argument_list|,
 name|to
@@ -1821,6 +1823,8 @@ argument_list|,
 literal|"mv"
 argument_list|,
 literal|"-rf"
+argument_list|,
+literal|"--"
 argument_list|,
 name|from
 argument_list|,
