@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -93,6 +93,16 @@ directive|include
 file|"machine/mtpr.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -121,6 +131,11 @@ name|mfsiobuf
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * mfs vnode operations.  */
@@ -541,6 +556,13 @@ end_decl_stmt
 
 begin_block
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
 specifier|register
 name|struct
 name|pte
@@ -563,11 +585,29 @@ name|npf2
 decl_stmt|,
 name|reg
 decl_stmt|;
+endif|#
+directive|endif
 name|caddr_t
 name|kernaddr
 decl_stmt|,
 name|offset
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+name|kernaddr
+operator|=
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+expr_stmt|;
+else|#
+directive|else
 comment|/* 	 * For phys I/O, map the b_addr into kernel virtual space using 	 * the Mfsiomap pte's. 	 */
 if|if
 condition|(
@@ -793,6 +833,9 @@ name|NBPG
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* !defined(hp300) */
 name|offset
 operator|=
 name|base
@@ -856,6 +899,13 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
 comment|/* 	 * Release pte's used by physical I/O. 	 */
 if|if
 condition|(
@@ -902,6 +952,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|biodone
 argument_list|(
 name|bp
@@ -1330,6 +1382,13 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
 name|rminit
 argument_list|(
 name|mfsmap
@@ -1349,6 +1408,8 @@ argument_list|,
 name|MFS_MAPSIZE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
