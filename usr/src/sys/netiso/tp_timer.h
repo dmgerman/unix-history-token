@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,47 +18,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__TP_CALLOUT__
+name|__TP_TIMER__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__TP_CALLOUT__
+name|__TP_TIMER__
 end_define
-
-begin_comment
-comment|/* C timers - one per tpcb, generally cancelled */
-end_comment
-
-begin_struct
-struct|struct
-name|Ecallarg
-block|{
-name|u_int
-name|c_arg1
-decl_stmt|;
-name|u_int
-name|c_arg2
-decl_stmt|;
-name|int
-name|c_arg3
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|Ccallout
-block|{
-name|int
-name|c_time
-decl_stmt|;
-comment|/* incremental time */
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -67,13 +34,97 @@ name|SET_DELACK
 parameter_list|(
 name|t
 parameter_list|)
-value|{\     (t)->tp_flags |= TPF_DELACK; \     if ((t)->tp_fasttimeo == 0)\ 	{ (t)->tp_fasttimeo = tp_ftimeolist; tp_ftimeolist = (t); } }
+value|{\     (t)->tp_flags |= TPF_DELACK; \     if ((t)->tp_fasttimeo == 0)\ 		{ (t)->tp_fasttimeo = tp_ftimeolist; tp_ftimeolist = (t); } }
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARGO_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TP_DEBUG_TIMERS
 end_define
 
 begin_endif
 endif|#
 directive|endif
-endif|__TP_CALLOUT__
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TP_DEBUG_TIMERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|tp_ctimeout
+parameter_list|(
+name|tpcb
+parameter_list|,
+name|which
+parameter_list|,
+name|timo
+parameter_list|)
+value|((tpcb)->tp_timer[which] = (timo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|tp_cuntimeout
+parameter_list|(
+name|tpcb
+parameter_list|,
+name|which
+parameter_list|)
+value|((tpcb)->tp_timer[which] = 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tp_etimeout
+value|tp_ctimeout
+end_define
+
+begin_define
+define|#
+directive|define
+name|tp_euntimeout
+value|tp_cuntimeout
+end_define
+
+begin_define
+define|#
+directive|define
+name|tp_ctimeout_MIN
+parameter_list|(
+name|p
+parameter_list|,
+name|w
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|{ if((p)->tp_timer[w]> (t)) (p)->tp_timer[w] = (t);}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|TP_DEBUG_TIMERS
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|__TP_TIMER__
 end_endif
 
 end_unit
