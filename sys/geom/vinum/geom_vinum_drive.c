@@ -2410,6 +2410,11 @@ operator|=
 name|VINUMDRIVE_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|taste
 operator|=
 name|gv_drive_taste

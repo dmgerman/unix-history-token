@@ -1356,6 +1356,11 @@ operator|=
 name|BDE_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|destroy_geom
 operator|=
 name|g_bde_destroy_geom

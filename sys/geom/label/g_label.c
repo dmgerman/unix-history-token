@@ -219,6 +219,11 @@ operator|=
 name|G_LABEL_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|ctlreq
 operator|=
 name|g_label_config

@@ -402,6 +402,11 @@ operator|=
 literal|"MD"
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|init
 operator|=
 name|g_md_init

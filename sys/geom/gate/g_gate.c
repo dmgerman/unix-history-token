@@ -224,6 +224,11 @@ operator|=
 name|G_GATE_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|destroy_geom
 operator|=
 name|g_gate_destroy_geom

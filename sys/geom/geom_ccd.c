@@ -3573,6 +3573,11 @@ operator|=
 literal|"CCD"
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|ctlreq
 operator|=
 name|g_ccd_config

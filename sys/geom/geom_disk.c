@@ -181,6 +181,11 @@ operator|=
 literal|"DISK"
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|init
 operator|=
 name|g_disk_init

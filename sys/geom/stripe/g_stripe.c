@@ -202,6 +202,11 @@ operator|=
 name|G_STRIPE_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|ctlreq
 operator|=
 name|g_stripe_config

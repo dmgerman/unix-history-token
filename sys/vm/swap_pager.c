@@ -7710,6 +7710,13 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|g_orphan_t
+name|swapgeom_orphan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|g_class
 name|g_swap_class
@@ -7719,6 +7726,16 @@ operator|.
 name|name
 operator|=
 literal|"SWAP"
+block|,
+operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
+name|orphan
+operator|=
+name|swapgeom_orphan
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -8217,7 +8234,6 @@ name|gp
 operator|==
 name|NULL
 condition|)
-block|{
 name|gp
 operator|=
 name|g_new_geomf
@@ -8230,13 +8246,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|gp
-operator|->
-name|orphan
-operator|=
-name|swapgeom_orphan
-expr_stmt|;
-block|}
 name|cp
 operator|=
 name|g_new_consumer

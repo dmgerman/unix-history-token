@@ -1523,6 +1523,11 @@ operator|=
 name|MBR_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|taste
 operator|=
 name|g_mbr_taste
@@ -2384,6 +2389,11 @@ operator|.
 name|name
 operator|=
 name|MBREXT_CLASS_NAME
+block|,
+operator|.
+name|version
+operator|=
+name|G_VERSION
 block|,
 operator|.
 name|taste

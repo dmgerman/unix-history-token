@@ -1829,6 +1829,11 @@ operator|=
 name|AES_CLASS_NAME
 block|,
 operator|.
+name|version
+operator|=
+name|G_VERSION
+block|,
+operator|.
 name|taste
 operator|=
 name|g_aes_taste
