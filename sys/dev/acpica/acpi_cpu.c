@@ -1880,12 +1880,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|cpu_idle_busy
-operator|>
+if|#
+directive|if
 literal|0
-condition|)
+block|while (cpu_idle_busy> 0)
+endif|#
+directive|endif
 name|DELAY
 argument_list|(
 literal|1
