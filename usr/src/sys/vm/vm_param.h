@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_param.h	7.2 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_param.h	7.3 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -76,6 +76,13 @@ begin_comment
 comment|/*  *	The machine independent pages are refered to as PAGES.  A page  *	is some number of hardware pages, depending on the target machine.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_PAGE_SIZE
+value|4096
+end_define
+
 begin_comment
 comment|/*  *	All references to the size of a page should be done with PAGE_SIZE  *	or PAGE_SHIFT.  The fact they are variables is hidden here so that  *	we can easily make them constant if we so desire.  */
 end_comment
@@ -84,11 +91,11 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE
-value|page_size
+value|vm_stat.page_size
 end_define
 
 begin_comment
-comment|/* size of page in addressible units */
+comment|/* size of page */
 end_comment
 
 begin_define
@@ -99,7 +106,7 @@ value|page_shift
 end_define
 
 begin_comment
-comment|/* number of bits to shift for pages */
+comment|/* bits to shift for pages */
 end_comment
 
 begin_comment
@@ -288,23 +295,12 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|vm_size_t
-name|page_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* machine independent page size */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|vm_size_t
 name|page_mask
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* page_size - 1; mask for 						   offset within page */
+comment|/* vm_stat.page_size - 1; mask for 						   offset within page */
 end_comment
 
 begin_decl_stmt
