@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.19 1998/02/23 09:39:25 ache Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.20 1998/02/23 16:44:30 ache Exp $ */
 end_comment
 
 begin_comment
@@ -858,7 +858,7 @@ name|MSDOSFSMNT_ULTABLE
 argument_list|,
 name|pmp
 operator|->
-name|pm_lu
+name|pm_ul
 argument_list|)
 expr_stmt|;
 continue|continue;

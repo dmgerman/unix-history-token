@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: direntry.h,v 1.9 1998/02/23 09:39:23 ache Exp $ */
+comment|/*	$Id: direntry.h,v 1.10 1998/02/23 16:44:26 ache Exp $ */
 end_comment
 
 begin_comment
@@ -437,6 +437,9 @@ operator|*
 name|un
 operator|,
 name|int
+name|lower
+operator|,
+name|int
 name|d2u_loaded
 operator|,
 name|u_int8_t
@@ -561,11 +564,11 @@ operator|*
 name|u2w
 operator|,
 name|int
-name|lu_loaded
+name|ul_loaded
 operator|,
 name|u_int8_t
 operator|*
-name|lu
+name|ul
 operator|)
 argument_list|)
 decl_stmt|;
