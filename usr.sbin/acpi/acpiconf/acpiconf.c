@@ -89,7 +89,9 @@ begin_function
 specifier|static
 name|int
 name|acpi_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|acpifd
 operator|=
