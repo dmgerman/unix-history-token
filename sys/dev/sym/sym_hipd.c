@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-0.11.0-19991120"
+value|"sym-0.12.0-19991127"
 end_define
 
 begin_include
@@ -1244,7 +1244,7 @@ begin_define
 define|#
 directive|define
 name|DEBUG_FLAGS
-value|(0x0)
+value|(0x00)
 end_define
 
 begin_endif
@@ -15185,6 +15185,17 @@ name|period
 operator|==
 literal|9
 condition|)
+block|{
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|width
+operator|=
+name|BUS_16_BIT
+expr_stmt|;
 name|tp
 operator|->
 name|tinfo
@@ -15192,7 +15203,20 @@ operator|.
 name|goal
 operator|.
 name|options
-operator|=
+operator||=
+name|PPR_OPT_DT
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|goal
+operator|.
+name|options
+operator|&=
+operator|~
 name|PPR_OPT_DT
 expr_stmt|;
 endif|#
@@ -15533,7 +15557,19 @@ name|sym_print_msg
 argument_list|(
 name|cp
 argument_list|,
-literal|"nego msgout:"
+name|nego
+operator|==
+name|NS_SYNC
+condition|?
+literal|"sync msgout"
+else|:
+name|nego
+operator|==
+name|NS_WIDE
+condition|?
+literal|"wide msgout"
+else|:
+literal|"ppr msgout"
 argument_list|,
 name|msgptr
 argument_list|)
@@ -17720,6 +17756,16 @@ name|period
 operator|=
 literal|0
 expr_stmt|;
+name|tp
+operator|->
+name|tinfo
+operator|.
+name|current
+operator|.
+name|options
+operator|=
+literal|0
+expr_stmt|;
 name|neg
 operator|.
 name|bus_width
@@ -18149,23 +18195,9 @@ name|tp
 operator|->
 name|tinfo
 operator|.
-name|current
-operator|.
-name|offset
-operator|=
-name|dt
-condition|?
-name|PPR_OPT_DT
-else|:
-literal|0
-expr_stmt|;
-name|tp
-operator|->
-name|tinfo
-operator|.
 name|goal
 operator|.
-name|offset
+name|options
 operator|=
 name|tp
 operator|->
@@ -18173,9 +18205,9 @@ name|tinfo
 operator|.
 name|current
 operator|.
-name|offset
+name|options
 operator|=
-name|ofs
+name|dt
 expr_stmt|;
 name|neg
 operator|.
@@ -25912,7 +25944,7 @@ name|sym_print_msg
 argument_list|(
 name|cp
 argument_list|,
-literal|"sync msg in"
+literal|"sync msgin"
 argument_list|,
 name|np
 operator|->
@@ -26397,7 +26429,7 @@ name|sym_print_msg
 argument_list|(
 name|cp
 argument_list|,
-literal|"sync msg in"
+literal|"ppr msgin"
 argument_list|,
 name|np
 operator|->
@@ -26670,7 +26702,10 @@ block|{
 if|if
 condition|(
 name|dt
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|per
 operator|<
 name|np
@@ -26688,6 +26723,7 @@ name|np
 operator|->
 name|minsync_dt
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -26966,7 +27002,7 @@ name|sym_print_msg
 argument_list|(
 name|cp
 argument_list|,
-literal|"sync msgout"
+literal|"ppr msgout"
 argument_list|,
 name|np
 operator|->
@@ -35411,6 +35447,22 @@ block|{
 block|{
 name|PCI_ID_SYM53C810
 block|,
+literal|0x0f
+block|,
+literal|"810"
+block|,
+literal|4
+block|,
+literal|8
+block|,
+literal|4
+block|,
+name|FE_ERL
+block|}
+block|,
+block|{
+name|PCI_ID_SYM53C810
+block|,
 literal|0xff
 block|,
 literal|"810a"
@@ -35428,6 +35480,28 @@ operator||
 name|FE_PFEN
 operator||
 name|FE_BOF
+block|}
+block|,
+block|{
+name|PCI_ID_SYM53C825
+block|,
+literal|0x0f
+block|,
+literal|"825"
+block|,
+literal|6
+block|,
+literal|8
+block|,
+literal|4
+block|,
+name|FE_WIDE
+operator||
+name|FE_BOF
+operator||
+name|FE_ERL
+operator||
+name|FE_DIFF
 block|}
 block|,
 block|{
@@ -36043,6 +36117,7 @@ condition|)
 return|return
 name|chip
 return|;
+break|break;
 block|}
 return|return
 literal|0
