@@ -4709,9 +4709,6 @@ argument_list|,
 name|ku
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCHED_4BSD
 if|if
 condition|(
 name|flags
@@ -4736,17 +4733,6 @@ return|return
 name|td2
 return|;
 block|}
-else|#
-directive|else
-name|setrunqueue
-argument_list|(
-name|td2
-argument_list|,
-name|SRQ_YIELDING
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 operator|(
