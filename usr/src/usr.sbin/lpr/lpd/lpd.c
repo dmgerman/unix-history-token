@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	8.1 (Berkeley) %G%"
+literal|"@(#)lpd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1918,10 +1918,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printer
-operator|=
-name|buf
-expr_stmt|;
 for|for
 control|(
 name|cp
@@ -1985,6 +1981,10 @@ operator|!
 name|pid
 condition|)
 block|{
+name|printer
+operator|=
+name|buf
+expr_stmt|;
 name|cgetclose
 argument_list|()
 expr_stmt|;
