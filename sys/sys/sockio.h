@@ -435,6 +435,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGIFMAC
+value|_IOWR('i', 38, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get IF MAC label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFMAC
+value|_IOW('i', 39, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set IF MAC label */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCADDMULTI
 value|_IOW('i', 49, struct ifreq)
 end_define
