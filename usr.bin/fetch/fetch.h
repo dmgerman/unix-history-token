@@ -103,6 +103,10 @@ name|int
 name|fs_reportsize
 decl_stmt|;
 comment|/* -s option */
+name|int
+name|fs_forcerestart
+decl_stmt|;
+comment|/* -F option */
 name|time_t
 name|fs_modtime
 decl_stmt|;

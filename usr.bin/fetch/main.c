@@ -144,7 +144,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fetch [-ADHILMNPRTVablmnpqrstv] [-o outputfile] "
+literal|"usage: fetch [-ADHILMNPRTVablFmnpqrstv] [-o outputfile] "
 literal|"[-S bytes]\n"
 literal|"             [-f file -h host [-c dir] | URL]\n"
 argument_list|)
@@ -239,7 +239,7 @@ expr_stmt|;
 define|#
 directive|define
 name|OPT_STRING
-value|"Aabc:D:f:h:HIlLmMnNo:pPqRrS:stT:vV:"
+value|"Aabc:D:Ff:h:HIlLmMnNo:pPqRrS:stT:vV:"
 while|while
 condition|(
 operator|(
@@ -295,6 +295,16 @@ literal|'V'
 case|:
 break|break;
 comment|/* ncftp compatibility */
+case|case
+literal|'F'
+case|:
+name|fs
+operator|.
+name|fs_forcerestart
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:

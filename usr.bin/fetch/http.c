@@ -2874,6 +2874,14 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|fs
+operator|->
+name|fs_forcerestart
+condition|)
+block|{
 name|addstr
 argument_list|(
 name|iov
@@ -2906,6 +2914,7 @@ argument_list|,
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|rangebuf
