@@ -739,7 +739,7 @@ return|;
 comment|/* now |1-x| is tiny<= 2**-20, suffice to compute 	   log(x) by x-x^2/2+x^3/3-x^4/4 */
 name|t
 operator|=
-name|x
+name|ax
 operator|-
 literal|1
 expr_stmt|;
