@@ -117,6 +117,22 @@ directive|include
 file|"pcib_if.h"
 end_include
 
+begin_function_decl
+name|int
+name|badaddr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_comment
 comment|/*  * Device interface.  */
 end_comment
@@ -1110,7 +1126,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Write out the correct PIC interrupt values to config space  	 * of all devices on the bus. 	 */
+comment|/* 	 * Write out the correct PIC interrupt values to config space 	 * of all devices on the bus. 	 */
 name|ofw_pci_fixup
 argument_list|(
 name|dev
@@ -1250,6 +1266,10 @@ if|if
 condition|(
 name|badaddr
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|sc
 operator|->
 name|sc_data
@@ -1983,7 +2003,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"grackle mapdev: start %x, len %x\n"
+literal|"grackle mapdev: start %x, len %ld\n"
 argument_list|,
 name|start
 argument_list|,
