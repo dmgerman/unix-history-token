@@ -2400,6 +2400,11 @@ operator|==
 literal|0
 operator|&&
 name|pp
+operator|&&
+operator|*
+name|pp
+operator|->
+name|pw_passwd
 condition|)
 block|{
 name|write
