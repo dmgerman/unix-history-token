@@ -19,27 +19,6 @@ directive|define
 name|lib_pcap_h
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIN32
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pcap-stdinc.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* WIN32 */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -52,31 +31,11 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WIN32 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCAP_DONT_INCLUDE_PCAP_BPF_H
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<pcap-bpf.h>
+file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
