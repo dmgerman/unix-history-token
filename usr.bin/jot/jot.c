@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)jot.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)jot.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -223,22 +243,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|error
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|getargs
 name|__P
 argument_list|(
@@ -287,6 +291,19 @@ operator|(
 name|double
 operator|,
 name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -612,11 +629,11 @@ operator|!
 operator|--
 name|ac
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Need context word after -w or -b"
+literal|1
 argument_list|,
-literal|""
+literal|"need context word after -w or -b"
 argument_list|)
 expr_stmt|;
 else|else
@@ -657,11 +674,11 @@ operator|!
 operator|--
 name|ac
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Need string after -s"
+literal|1
 argument_list|,
-literal|""
+literal|"need string after -s"
 argument_list|)
 expr_stmt|;
 else|else
@@ -702,11 +719,11 @@ operator|!
 operator|--
 name|ac
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Need number after -p"
+literal|1
 argument_list|,
-literal|""
+literal|"need number after -p"
 argument_list|)
 expr_stmt|;
 else|else
@@ -725,22 +742,17 @@ name|prec
 operator|<=
 literal|0
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Bad precision value"
+literal|1
 argument_list|,
-literal|""
+literal|"bad precision value"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
-argument_list|(
-literal|"Unknown option %s"
-argument_list|,
-operator|*
-name|av
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 switch|switch
@@ -780,9 +792,11 @@ operator|&
 name|s
 argument_list|)
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Bad s value:  %s"
+literal|1
+argument_list|,
+literal|"bad s value: %s"
 argument_list|,
 name|av
 index|[
@@ -975,9 +989,11 @@ operator|&
 name|reps
 argument_list|)
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Bad reps value:  %s"
+literal|1
+argument_list|,
+literal|"bad reps value: %s"
 argument_list|,
 name|av
 index|[
@@ -994,17 +1010,15 @@ break|break;
 case|case
 literal|0
 case|:
-name|error
-argument_list|(
-literal|"jot - print sequential or random data"
-argument_list|,
-literal|""
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"Too many arguments.  What do you mean by %s?"
+literal|1
+argument_list|,
+literal|"too many arguments. What do you mean by %s?"
 argument_list|,
 name|av
 index|[
@@ -1152,11 +1166,11 @@ name|reps
 operator|<=
 literal|0
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Impossible stepsize"
+literal|1
 argument_list|,
-literal|""
+literal|"impossible stepsize"
 argument_list|)
 expr_stmt|;
 name|mask
@@ -1230,11 +1244,11 @@ name|reps
 operator|==
 literal|0
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Must specify begin if reps == 0"
+literal|1
 argument_list|,
-literal|""
+literal|"must specify begin if reps == 0"
 argument_list|)
 expr_stmt|;
 name|begin
@@ -1327,11 +1341,11 @@ name|reps
 operator|==
 literal|0
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Infinite sequences cannot be bounded"
+literal|1
 argument_list|,
-literal|""
+literal|"infinite sequences cannot be bounded"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1398,11 +1412,11 @@ name|t
 operator|<=
 literal|0
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"Impossible stepsize"
+literal|1
 argument_list|,
-literal|""
+literal|"impossible stepsize"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1423,11 +1437,11 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"Bad mask"
+literal|1
 argument_list|,
-literal|""
+literal|"bad mask"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1522,79 +1536,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|error
-parameter_list|(
-name|msg
-parameter_list|,
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|,
-decl|*
-name|s
-decl_stmt|;
-end_function
-
-begin_block
+name|usage
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"jot: "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-name|msg
+literal|"usage: jot [-cnr] [-b word] [-w word] [-s string] [-p precision]"
 argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\nusage:  jot [ options ] [ reps [ begin [ end [ s ] ] ] ]\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strncmp
-argument_list|(
-literal|"jot - "
-argument_list|,
-name|msg
-argument_list|,
-literal|6
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n\t%s\t%s\t%s\t%s\t%s\t%s\t%s"
-argument_list|,
-literal|"-r		random data\n"
-argument_list|,
-literal|"-c		character data\n"
-argument_list|,
-literal|"-n		no final newline\n"
-argument_list|,
-literal|"-b word		repeated word\n"
-argument_list|,
-literal|"-w word		context word\n"
-argument_list|,
-literal|"-s string	data separator\n"
-argument_list|,
-literal|"-p precision	number of characters\n"
+literal|"           [ reps [ begin [ end [ s ] ] ] ]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1603,7 +1558,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -1832,11 +1787,11 @@ break|break;
 case|case
 literal|'s'
 case|:
-name|error
+name|errx
 argument_list|(
-literal|"Cannot convert numeric data to strings"
+literal|1
 argument_list|,
-literal|""
+literal|"cannot convert numeric data to strings"
 argument_list|)
 expr_stmt|;
 break|break;
