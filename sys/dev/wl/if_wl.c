@@ -1581,19 +1581,15 @@ index|]
 operator|&
 literal|1
 condition|)
-block|{
 name|j
 operator|=
 name|WLPSA_LOCALMAC
 expr_stmt|;
-block|}
 else|else
-block|{
 name|j
 operator|=
 name|WLPSA_UNIMAC
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -1607,7 +1603,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 name|sc
 operator|->
 name|wl_addr
@@ -1624,7 +1619,6 @@ operator|+
 name|i
 index|]
 expr_stmt|;
-block|}
 comment|/* enter normal 16 bit mode operation */
 name|sc
 operator|->
@@ -3311,7 +3305,7 @@ literal|0
 operator|)
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|i
@@ -9163,14 +9157,12 @@ operator||
 name|MOD_ENAL
 operator|)
 condition|)
-block|{
 name|configure
 operator|.
 name|hardware
 operator||=
 literal|1
 expr_stmt|;
-block|}
 name|outw
 argument_list|(
 name|PIOR1
@@ -10228,7 +10220,7 @@ literal|0
 operator|)
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|i
@@ -10938,7 +10930,7 @@ argument_list|)
 operator|&
 name|HASR_MMC_BUSY
 condition|)
-empty_stmt|;
+continue|continue;
 name|outw
 argument_list|(
 name|MMCR
@@ -10963,7 +10955,7 @@ argument_list|)
 operator|&
 name|HASR_MMC_BUSY
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|u_short
