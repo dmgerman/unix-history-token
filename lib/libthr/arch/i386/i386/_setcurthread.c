@@ -294,9 +294,6 @@ decl_stmt|;
 name|int
 name|ldt_index
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 operator|*
 name|err
 operator|=
@@ -395,13 +392,6 @@ name|void
 operator|*
 operator|)
 name|thr
-expr_stmt|;
-name|ldt_index
-operator|=
-name|LDT_INDEX
-argument_list|(
-name|ldt_entry
-argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -511,11 +501,12 @@ name|ldt_entry
 operator|>>
 literal|24
 expr_stmt|;
-name|error
+comment|/* Get a slot from the process' LDT list */
+name|ldt_index
 operator|=
 name|i386_set_ldt
 argument_list|(
-name|ldt_index
+name|LDT_AUTO_ALLOC
 argument_list|,
 operator|&
 name|desc
@@ -525,7 +516,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|ldt_index
 operator|==
 operator|-
 literal|1
