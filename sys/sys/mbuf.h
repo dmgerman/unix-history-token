@@ -1146,7 +1146,7 @@ name|MBTOM
 parameter_list|(
 name|how
 parameter_list|)
-value|((how) == M_TRYWAIT ? M_WAITOK : M_NOWAIT)
+value|((how)& M_TRYWAIT ? M_WAITOK : M_NOWAIT)
 end_define
 
 begin_ifdef
