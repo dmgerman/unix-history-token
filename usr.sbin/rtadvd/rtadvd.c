@@ -1111,9 +1111,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sock_open
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1125,6 +1122,9 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|sock_open
+argument_list|()
 expr_stmt|;
 comment|/* record the current PID */
 name|pid
