@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boot.c	7.1 (Berkeley) %G%"
+literal|"@(#)boot.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,37 +55,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/reboot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/disk.h"
+file|"reboot.h"
 end_include
 
 begin_include
@@ -97,11 +73,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"saio.h"
 end_include
 
 begin_comment
-comment|/*  * Boot program... arguments passed in r6 and r7 determine  * whether boot stops to ask for system name and which device  * boot comes from.  */
+comment|/*  * Boot program... arguments from lower-level bootstrap determine  * whether boot stops to ask for system name and which device  * boot comes from.  */
 end_comment
 
 begin_define
@@ -123,37 +105,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|line2
-index|[
-literal|100
-index|]
-init|=
-literal|"/stand/"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|howto
-decl_stmt|,
-name|bootdev
-decl_stmt|,
-name|unit
-decl_stmt|,
-name|cyloffset
-decl_stmt|,
-name|boottype
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|opendev
 decl_stmt|,
-name|openfirst
+name|bootdev
+decl_stmt|,
+name|cyloffset
 decl_stmt|;
 end_decl_stmt
 
@@ -165,19 +123,80 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|jmp_buf
+name|exception
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
-parameter_list|()
+parameter_list|(
+name|howto
+parameter_list|,
+name|dev
+parameter_list|,
+name|off
+parameter_list|)
 block|{
 name|int
 name|io
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|dev
+operator|&
+name|B_MAGICMASK
+operator|)
+operator|==
+name|B_DEVMAGIC
+condition|)
+block|{
+name|bootdev
+operator|=
+name|dev
+expr_stmt|;
+name|cyloffset
+operator|=
+name|off
+expr_stmt|;
+block|}
+else|else
+goto|goto
+name|again
+goto|;
+if|if
+condition|(
+name|_setjmp
+argument_list|(
+name|exception
+argument_list|)
+condition|)
+block|{
+name|close
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"- load aborted\n"
+argument_list|)
+expr_stmt|;
+name|again
+label|:
 name|howto
 operator|=
 name|RB_SINGLE
 operator||
 name|RB_ASKNAME
 expr_stmt|;
+name|cyloffset
+operator|=
+literal|0
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -191,6 +210,10 @@ operator|&
 name|RB_ASKNAME
 condition|)
 block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Boot: "
@@ -200,6 +223,44 @@ name|gets
 argument_list|(
 name|line
 argument_list|)
+expr_stmt|;
+comment|/* process additional flags if any */
+if|if
+condition|(
+name|cp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|index
+argument_list|(
+name|line
+argument_list|,
+literal|' '
+argument_list|)
+condition|)
+block|{
+name|howto
+operator|=
+name|strtol
+argument_list|(
+name|cp
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+name|cyloffset
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -244,7 +305,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*if (io< 0) { 			strcat(line2,line) ; 			io = open(line2, 0); 		}*/
 if|if
 condition|(
 name|io
@@ -252,20 +312,18 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|bootdev
-operator|=
-name|opendev
-expr_stmt|;
 name|copyunix
 argument_list|(
 name|io
+argument_list|,
+name|howto
 argument_list|)
 expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
-name|openfirst
-operator|=
-literal|1
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|++
@@ -273,12 +331,9 @@ name|retry
 operator|>
 literal|2
 condition|)
-name|howto
-operator|=
-name|RB_SINGLE
-operator||
-name|RB_ASKNAME
-expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
 block|}
 end_function
@@ -291,6 +346,8 @@ begin_expr_stmt
 name|copyunix
 argument_list|(
 name|io
+argument_list|,
+name|howto
 argument_list|)
 specifier|register
 name|io
@@ -309,6 +366,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|addr
+decl_stmt|,
+name|c
 decl_stmt|;
 name|i
 operator|=
@@ -354,11 +413,14 @@ operator|!=
 literal|0410
 operator|)
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
 literal|"Bad format\n"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"%d"
@@ -528,6 +590,13 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+comment|/* mask high order bits corresponding to relocated system base */
+name|x
+operator|.
+name|a_entry
+operator|&=
+literal|0xfff00000
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" start 0x%x\n"
@@ -537,8 +606,20 @@ operator|.
 name|a_entry
 argument_list|)
 expr_stmt|;
-name|setregs
+if|if
+condition|(
+name|c
+operator|=
+name|scankbd
 argument_list|()
+condition|)
+name|_longjmp
+argument_list|(
+operator|&
+name|exception
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
@@ -558,6 +639,13 @@ name|a_entry
 operator|)
 operator|)
 operator|(
+name|howto
+operator|,
+name|opendev
+operator|,
+literal|0
+operator|,
+name|cyloffset
 operator|)
 expr_stmt|;
 if|if
@@ -574,11 +662,12 @@ expr_stmt|;
 return|return;
 name|shread
 label|:
-name|_stop
+name|printf
 argument_list|(
 literal|"Short read\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_block
 
