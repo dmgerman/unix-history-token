@@ -84,6 +84,70 @@ directive|include
 file|"../general/globals.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_SETSIZE
+end_ifndef
+
+begin_comment
+comment|/*  * The following is defined just in case someone should want to run  * this telnet on a 4.2 system.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FD_SET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[0] |= (1<<(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_CLR
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[0]&= ~(1<<(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ISSET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[0]& (1<<(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->fds_bits[0] = 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
 begin_decl_stmt
 specifier|static
 name|int
