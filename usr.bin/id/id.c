@@ -1820,13 +1820,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: id [user]"
 argument_list|,
 literal|"       id -G [-n] [user]"
 argument_list|,
+literal|"       id -P [user]"
+argument_list|,
 literal|"       id -g [-nr] [user]"
+argument_list|,
+literal|"       id -p [user]"
 argument_list|,
 literal|"       id -u [-nr] [user]"
 argument_list|)
