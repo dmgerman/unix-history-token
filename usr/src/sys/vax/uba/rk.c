@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.35	81/05/10	*/
+comment|/*	rk.c	4.36	81/07/25	*/
 end_comment
 
 begin_include
@@ -4283,7 +4283,7 @@ literal|0
 init|;
 name|unit
 operator|<
-name|NHK
+name|NRK
 condition|;
 name|unit
 operator|++
@@ -4310,6 +4310,12 @@ operator|->
 name|ui_alive
 operator|==
 literal|0
+operator|||
+name|ui
+operator|->
+name|ui_mi
+operator|!=
+name|um
 condition|)
 continue|continue;
 name|rkutab
