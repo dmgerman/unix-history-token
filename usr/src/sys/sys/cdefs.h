@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -280,7 +280,7 @@ name|__volatile
 end_define
 
 begin_comment
-comment|/*  * In non-ANSI C environments, new programs will want ANSI C keywords  * deleted from the program and old programs will want them left alone.  * Programs using the ANSI C keywords const, inline etc. as variables  * should define -DNO_ANSI_KEYWORDS.  */
+comment|/*  * In non-ANSI C environments, new programs will want ANSI-only C keywords  * deleted from the program and old programs will want them left alone.  * When using a compiler other than gcc, programs using the ANSI C keywords  * const, inline etc. as normal identifiers should define -DNO_ANSI_KEYWORDS.  * When using "gcc -traditional", we assume that this is the intent; if  * __GNUC__ is defined but __STDC__ is not, we leave the new keywords alone.  */
 end_comment
 
 begin_ifndef
