@@ -224,42 +224,26 @@ begin_comment
 comment|/* when set skip to next file arg */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ftree_arg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * ftree_start()  *	initialize the options passed to fts_open() during this run of pax  *	options are based on the selection of pax options by the user  *	fts_start() also calls fts_arg() to open the first valid file arg. We  *	also attempt to reset directory access times when -t (tflag) is set.  * Return:  *	0 if there is at least one valid file arg to process, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|ftree_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|ftree_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 comment|/* 	 * set up the operation mode of fts, open the first file arg. We must 	 * use FTS_NOCHDIR, as the user may have to open multiple archives and 	 * if fts did a chdir off into the boondocks, we may create an archive 	 * volume in an place where the user did not expect to. 	 */
 name|ftsopts
@@ -387,58 +371,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * ftree_add()  *	add the arg to the linked list of files to process. Each will be  *	processed by fts one at a time  * Return:  *	0 if added to the linked list, -1 if failed  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|ftree_add
-argument_list|(
+parameter_list|(
 specifier|register
-name|char
-operator|*
-name|str
-argument_list|,
-name|int
-name|chflg
-argument_list|)
-else|#
-directive|else
-name|int
-name|ftree_add
-argument_list|(
-name|str
-argument_list|,
-name|chflg
-argument_list|)
-decl|register
 name|char
 modifier|*
 name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|chflg
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|FTREE
@@ -608,47 +558,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ftree_sel()  *	this entry has been selected by pax. bump up reference count and handle  *	-n and -d processing.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|ftree_sel
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|)
-else|#
-directive|else
-name|void
-name|ftree_sel
-argument_list|(
-name|arcn
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 comment|/* 	 * set reference bit for this pattern. This linked list is only used 	 * when file trees are supplied pax as args. The list is not used when 	 * the trees are read from stdin. 	 */
 if|if
@@ -705,31 +629,18 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ftree_chk()  *	called at end on pax execution. Prints all those file args that did not  *	have a selected member (reference count still 0)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|ftree_chk
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|ftree_chk
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|register
 name|FTREE
@@ -817,33 +728,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * ftree_arg()  *	Get the next file arg for fts to process. Can be from either the linked  *	list or read from stdin when the user did not them as args to pax. Each  *	arg is processed until the first successful fts_open().  * Return:  *	0 when the next arg is ready to go, -1 if out of file args (or EOF on  *	stdin).  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|ftree_arg
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-decl|static
-name|int
-name|ftree_arg
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1071,47 +968,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * next_file()  *	supplies the next file to process in the supplied archd structure.  * Return:  *	0 when contents of arcn have been set with the next file, -1 when done.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|next_file
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|)
-else|#
-directive|else
-name|int
-name|next_file
-argument_list|(
-name|arcn
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1412,7 +1283,7 @@ literal|'\0'
 argument|; 	arcn->org_name = ftent->fts_path; 	return(
 literal|0
 argument|); }
-end_block
+end_function
 
 end_unit
 

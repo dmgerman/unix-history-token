@@ -231,21 +231,18 @@ begin_comment
 comment|/* tmp file for file time table name storage */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|DEVT
 modifier|*
 name|chk_dev
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|dev_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * hard link table routines  *  * The hard link table tries to detect hard links to files using the device and  * inode values. We do this when writing an archive, so we can tell the format  * write routine that this file is a hard link to another file. The format  * write routine then can store this file in whatever way it wants (as a hard  * link if the format supports that like tar, or ignore this info like cpio).  * (Actually a field in the format driver table tells us if the format wants  * hard link info. if not, we do not waste time looking for them). We also use  * the same table when reading an archive. In that situation, this table is  * used by the format read routine to detect hard links from stored dev and  * inode numbers (like cpio). This will allow pax to create a link when one  * can be detected by the archive format.  */
@@ -255,25 +252,12 @@ begin_comment
 comment|/*  * lnk_start  *	Creates the hard link table.  * Return:  *	0 if created, -1 if failure  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|lnk_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|lnk_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -331,47 +315,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * chk_lnk()  *	Looks up entry in hard link hash table. If found, it copies the name  *	of the file it is linked to (we already saw that file) into ln_name.  *	lnkcnt is decremented and if goes to 1 the node is deleted from the  *	database. (We have seen all the links to this file). If not found,  *	we add the file to the database if it has the potential for having  *	hard links to other files we may process (it has a link count> 1)  * Return:  *	if found returns 1; if not found returns 0; -1 on error  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|chk_lnk
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|)
-else|#
-directive|else
-name|int
-name|chk_lnk
-argument_list|(
-name|arcn
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|HRDLNK
@@ -752,47 +710,21 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * purg_lnk  *	remove reference for a file that we may have added to the data base as  *	a potential source for hard links. We ended up not using the file, so  *	we do not want to accidently point another file at it later on.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|purg_lnk
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|)
-else|#
-directive|else
-name|void
-name|purg_lnk
-argument_list|(
-name|arcn
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|HRDLNK
@@ -987,31 +919,18 @@ name|pt
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lnk_end()  *	pull apart a existing link table so we can reuse it. We do this between  *	read and write phases of append with update. (The format may have  *	used the link table, and we need to start with a fresh table for the  *	write phase  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|lnk_end
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|lnk_end
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1120,7 +1039,7 @@ block|}
 block|}
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * modification time table routines  *  * The modification time table keeps track of last modification times for all  * files stored in an archive during a write phase when -u is set. We only  * add a file to the archive if it is newer than a file with the same name  * already stored on the archive (if there is no other file with the same  * name on the archive it is added). This applies to writes and appends.  * An append with an -u must read the archive and store the modification time  * for every file on that archive before starting the write phase. It is clear  * that this is one HUGE database. To save memory space, the actual file names  * are stored in a scatch file and indexed by an in memory hash table. The  * hash table is indexed by hashing the file path. The nodes in the table store  * the length of the filename and the lseek offset within the scratch file  * where the actual name is stored. Since there are never any deletions to this  * table, fragmentation of the scratch file is never a issue. Lookups seem to  * not exhibit any locality at all (files in the database are rarely  * looked up more than once...). So caching is just a waste of memory. The  * only limitation is the amount of scatch file space available to store the  * path names.  */
@@ -1130,25 +1049,12 @@ begin_comment
 comment|/*  * ftime_start()  *	create the file time hash table and open for read/write the scratch  *	file. (after created it is unlinked, so when we exit we leave  *	no witnesses).  * Return:  *	0 if the table and file was created ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|ftime_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|ftime_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1259,47 +1165,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * chk_ftime()  *	looks up entry in file time hash table. If not found, the file is  *	added to the hash table and the file named stored in the scratch file.  *	If a file with the same name is found, the file times are compared and  *	the most recent file time is retained. If the new file was younger (or  *	was not in the database) the new file is selected for storage.  * Return:  *	0 if file should be added to the archive, 1 if it should be skipped,  *	-1 on error  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|chk_ftime
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|)
-else|#
-directive|else
-name|int
-name|chk_ftime
-argument_list|(
-name|arcn
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|FTM
@@ -1675,7 +1555,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Interactive rename table routines  *  * The interactive rename table keeps track of the new names that the user  * assigns to files from tty input. Since this map is unique for each file  * we must store it in case there is a reference to the file later in archive  * (a link). Otherwise we will be unable to find the file we know was  * extracted. The remapping of these files is stored in a memory based hash  * table (it is assumed since input must come from /dev/tty, it is unlikely to  * be a very large table).  */
@@ -1685,25 +1565,12 @@ begin_comment
 comment|/*  * name_start()  *	create the interactive rename table  * Return:  *	0 if successful, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|name_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|name_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1761,71 +1628,28 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * add_name()  *	add the new name to old name mapping just created by the user.  *	If an old name mapping is found (there may be duplicate names on an  *	archive) only the most recent is kept.  * Return:  *	0 if added, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|add_name
-argument_list|(
+parameter_list|(
 specifier|register
 name|char
-operator|*
-name|oname
-argument_list|,
-name|int
-name|onamelen
-argument_list|,
-name|char
-operator|*
-name|nname
-argument_list|)
-else|#
-directive|else
-name|int
-name|add_name
-argument_list|(
-name|oname
-argument_list|,
-name|onamelen
-argument_list|,
-name|nname
-argument_list|)
-decl|register
-name|char
 modifier|*
 name|oname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|onamelen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|nname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|NAMT
@@ -2106,71 +1930,28 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * sub_name()  *	look up a link name to see if it points at a file that has been  *	remapped by the user. If found, the link is adjusted to contain the  *	new name (oname is the link to name)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|sub_name
-argument_list|(
+parameter_list|(
 specifier|register
 name|char
-operator|*
-name|oname
-argument_list|,
-name|int
-operator|*
-name|onamelen
-argument_list|,
-name|size_t
-name|onamesize
-argument_list|)
-else|#
-directive|else
-name|void
-name|sub_name
-argument_list|(
-name|oname
-argument_list|,
-name|onamelen
-argument_list|,
-name|onamesize
-argument_list|)
-decl|register
-name|char
 modifier|*
 name|oname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|onamelen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|size_t
 name|onamesize
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|NAMT
@@ -2274,7 +2055,7 @@ block|}
 comment|/* 	 * no match, just return 	 */
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * device/inode mapping table routines  * (used with formats that store device and inodes fields)  *  * device/inode mapping tables remap the device field in a archive header. The  * device/inode fields are used to determine when files are hard links to each  * other. However these values have very little meaning outside of that. This  * database is used to solve one of two different problems.  *  * 1) when files are appended to an archive, while the new files may have hard  * links to each other, you cannot determine if they have hard links to any  * file already stored on the archive from a prior run of pax. We must assume  * that these inode/device pairs are unique only within a SINGLE run of pax  * (which adds a set of files to an archive). So we have to make sure the  * inode/dev pairs we add each time are always unique. We do this by observing  * while the inode field is very dense, the use of the dev field is fairly  * sparse. Within each run of pax, we remap any device number of a new archive  * member that has a device number used in a prior run and already stored in a  * file on the archive. During the read phase of the append, we store the  * device numbers used and mark them to not be used by any file during the  * write phase. If during write we go to use one of those old device numbers,  * we remap it to a new value.  *  * 2) Often the fields in the archive header used to store these values are  * too small to store the entire value. The result is an inode or device value  * which can be truncated. This really can foul up an archive. With truncation  * we end up creating links between files that are really not links (after  * truncation the inodes are the same value). We address that by detecting  * truncation and forcing a remap of the device field to split truncated  * inodes away from each other. Each truncation creates a pattern of bits that  * are removed. We use this pattern of truncated bits to partition the inodes  * on a single device to many different devices (each one represented by the  * truncated bit pattern). All inodes on the same device that have the same  * truncation pattern are mapped to the same new device. Two inodes that  * truncate to the same value clearly will always have different truncation  * bit patterns, so they will be split from away each other. When we spot  * device truncation we remap the device number to a non truncated value.  * (for more info see table.h for the data structures involved).  */
@@ -2284,25 +2065,12 @@ begin_comment
 comment|/*  * dev_start()  *	create the device mapping table  * Return:  *	0 if successful, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|dev_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|dev_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2360,47 +2128,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * add_dev()  *	add a device number to the table. this will force the device to be  *	remapped to a new value if it be used during a write phase. This  *	function is called during the read phase of an append to prohibit the  *	use of any device number already in the archive.  * Return:  *	0 if added ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|add_dev
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|)
-else|#
-directive|else
-name|int
-name|add_dev
-argument_list|(
-name|arcn
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2429,17 +2171,11 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * chk_dev()  *	check for a device value in the device table. If not found and the add  *	flag is set, it is added. This does NOT assign any mapping values, just  *	adds the device number as one that need to be remapped. If this device  *	is already mapped, just return with a pointer to that entry.  * Return:  *	pointer to the entry for this device in the device map table. Null  *	if the add flag is not set and the device is not in the table (it is  *	not been seen yet). If add is set and the device cannot be added, null  *	is returned (indicates an error).  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 specifier|static
@@ -2453,22 +2189,6 @@ parameter_list|,
 name|int
 name|add
 parameter_list|)
-else|#
-directive|else
-function|static DEVT * chk_dev
-parameter_list|(
-name|dev
-parameter_list|,
-name|add
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|add
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|DEVT
@@ -2638,63 +2358,21 @@ begin_comment
 comment|/*  * map_dev()  *	given an inode and device storage mask (the mask has a 1 for each bit  *	the archive format is able to store in a header), we check for inode  *	and device truncation and remap the device as required. Device mapping  *	can also occur when during the read phase of append a device number was  *	seen (and was marked as do not use during the write phase). WE ASSUME  *	that unsigned longs are the same size or bigger than the fields used  *	for ino_t and dev_t. If not the types will have to be changed.  * Return:  *	0 if all ok, -1 otherwise.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|map_dev
-argument_list|(
+parameter_list|(
 specifier|register
-name|ARCHD
-operator|*
-name|arcn
-argument_list|,
-name|u_long
-name|dev_mask
-argument_list|,
-name|u_long
-name|ino_mask
-argument_list|)
-else|#
-directive|else
-name|int
-name|map_dev
-argument_list|(
-name|arcn
-argument_list|,
-name|dev_mask
-argument_list|,
-name|ino_mask
-argument_list|)
-decl|register
 name|ARCHD
 modifier|*
 name|arcn
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|u_long
 name|dev_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|u_long
 name|ino_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|DEVT
@@ -3160,7 +2838,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * directory access/mod time reset table routines (for directories READ by pax)  *  * The pax -t flag requires that access times of archive files to be the same  * before being read by pax. For regular files, access time is restored after  * the file has been copied. This database provides the same functionality for  * directories read during file tree traversal. Restoring directory access time  * is more complex than files since directories may be read several times until  * all the descendants in their subtree are visited by fts. Directory access  * and modification times are stored during the fts pre-order visit (done  * before any descendants in the subtree is visited) and restored after the  * fts post-order visit (after all the descendants have been visited). In the  * case of premature exit from a subtree (like from the effects of -n), any  * directory entries left in this database are reset during final cleanup  * operations of pax. Entries are hashed by inode number for fast lookup.  */
@@ -3170,25 +2848,12 @@ begin_comment
 comment|/*  * atdir_start()  *	create the directory access time database for directories READ by pax.  * Return:  *	0 is created ok, -1 otherwise.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|atdir_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|atdir_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3246,31 +2911,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * atdir_end()  *	walk through the directory access time table and reset the access time  *	of any directory who still has an entry left in the database. These  *	entries are for directories READ by pax  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|atdir_end
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|atdir_end
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|register
 name|ATDIR
@@ -3350,17 +3002,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * add_atdir()  *	add a directory to the directory access time table. Table is hashed  *	and chained by inode number. This is for directories READ by pax  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|void
@@ -3382,38 +3028,6 @@ parameter_list|,
 name|time_t
 name|atime
 parameter_list|)
-else|#
-directive|else
-function|void add_atdir
-parameter_list|(
-name|fname
-parameter_list|,
-name|dev
-parameter_list|,
-name|ino
-parameter_list|,
-name|mtime
-parameter_list|,
-name|atime
-parameter_list|)
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|dev_t
-name|dev
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|time_t
-name|mtime
-decl_stmt|;
-name|time_t
-name|atime
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|ATDIR
@@ -3607,12 +3221,6 @@ begin_comment
 comment|/*  * get_atdir()  *	look up a directory by inode and device number to obtain the access  *	and modification time you want to set to. If found, the modification  *	and access time parameters are set and the entry is removed from the  *	table (as it is no longer needed). These are for directories READ by  *	pax  * Return:  *	0 if found, -1 if not found.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|int
 name|get_atdir
@@ -3631,34 +3239,6 @@ name|time_t
 modifier|*
 name|atime
 parameter_list|)
-else|#
-directive|else
-function|int get_atdir
-parameter_list|(
-name|dev
-parameter_list|,
-name|ino
-parameter_list|,
-name|mtime
-parameter_list|,
-name|atime
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|time_t
-modifier|*
-name|mtime
-decl_stmt|;
-name|time_t
-modifier|*
-name|atime
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|ATDIR
@@ -3848,25 +3428,12 @@ begin_comment
 comment|/*  * dir_start()  *	set up the directory time and file mode storage for directories CREATED  *	by pax.  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|dir_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|dir_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3937,17 +3504,11 @@ literal|1
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * add_dir()  *	add the mode and times for a newly CREATED directory  *	name is name of the directory, psb the stat buffer with the data in it,  *	frc_mode is a flag that says whether to force the setting of the mode  *	(ignoring the user set values for preserving file mode). Frc_mode is  *	for the case where we created a file and found that the resulting  *	directory was not writeable and the user asked for file modes to NOT  *	be preserved. (we have to preserve what was created by default, so we  *	have to force the setting at the end. this is stated explicitly in the  *	pax spec)  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|void
@@ -3968,35 +3529,6 @@ parameter_list|,
 name|int
 name|frc_mode
 parameter_list|)
-else|#
-directive|else
-function|void add_dir
-parameter_list|(
-name|name
-parameter_list|,
-name|nlen
-parameter_list|,
-name|psb
-parameter_list|,
-name|frc_mode
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|nlen
-decl_stmt|;
-name|struct
-name|stat
-modifier|*
-name|psb
-decl_stmt|;
-name|int
-name|frc_mode
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|DIRDATA
 name|dblk
@@ -4147,25 +3679,12 @@ begin_comment
 comment|/*  * proc_dir()  *	process all file modes and times stored for directories CREATED  *	by pax  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|proc_dir
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|proc_dir
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 name|char
 name|name
@@ -4370,7 +3889,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * database independent routines  */
@@ -4379,12 +3898,6 @@ end_comment
 begin_comment
 comment|/*  * st_hash()  *	hashes filenames to a u_int for hashing into a table. Looks at the tail  *	end of file, as this provides far better distribution than any other  *	part of the name. For performance reasons we only care about the last  *	MAXKEYLEN chars (should be at LEAST large enough to pick off the file  *	name). Was tested on 500,000 name file tree traversal from the root  *	and gave almost a perfectly uniform distribution of keys when used with  *	prime sized tables (MAXKEYLEN was 128 in test). Hashes (sizeof int)  *	chars at a time and pads with 0 for last addition.  * Return:  *	the hash value of the string MOD (%) the table size.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|u_int
@@ -4400,28 +3913,6 @@ parameter_list|,
 name|int
 name|tabsz
 parameter_list|)
-else|#
-directive|else
-function|u_int st_hash
-parameter_list|(
-name|name
-parameter_list|,
-name|len
-parameter_list|,
-name|tabsz
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|tabsz
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|char

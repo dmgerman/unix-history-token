@@ -201,25 +201,12 @@ begin_comment
 comment|/*  * uidtb_start  *	creates an an empty uidtb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|uidtb_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|uidtb_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -296,31 +283,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * gidtb_start  *	creates an an empty gidtb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|gidtb_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|gidtb_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -397,31 +371,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * usrtb_start  *	creates an an empty usrtb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|usrtb_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|usrtb_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -498,31 +459,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * grptb_start  *	creates an an empty grptb  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|int
 name|grptb_start
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|int
-name|grptb_start
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -599,17 +547,11 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * name_uid()  *	caches the name (if any) for the uid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or a empty string)  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|char
@@ -622,22 +564,6 @@ parameter_list|,
 name|int
 name|frc
 parameter_list|)
-else|#
-directive|else
-function|char * name_uid
-parameter_list|(
-name|uid
-parameter_list|,
-name|frc
-parameter_list|)
-name|uid_t
-name|uid
-decl_stmt|;
-name|int
-name|frc
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -942,12 +868,6 @@ begin_comment
 comment|/*  * name_gid()  *	caches the name (if any) for the gid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or a empty string)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|char
 modifier|*
@@ -959,22 +879,6 @@ parameter_list|,
 name|int
 name|frc
 parameter_list|)
-else|#
-directive|else
-function|char * name_gid
-parameter_list|(
-name|gid
-parameter_list|,
-name|frc
-parameter_list|)
-name|gid_t
-name|gid
-decl_stmt|;
-name|int
-name|frc
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -1279,12 +1183,6 @@ begin_comment
 comment|/*  * uid_name()  *	caches the uid for a given user name. We use a simple hash table.  * Return  *	the uid (if any) for a user name, or a -1 if no match can be found  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|int
 name|uid_name
@@ -1297,24 +1195,6 @@ name|uid_t
 modifier|*
 name|uid
 parameter_list|)
-else|#
-directive|else
-function|int uid_name
-parameter_list|(
-name|name
-parameter_list|,
-name|uid
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|uid_t
-modifier|*
-name|uid
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -1622,12 +1502,6 @@ begin_comment
 comment|/*  * gid_name()  *	caches the gid for a given group name. We use a simple hash table.  * Return  *	the gid (if any) for a group name, or a -1 if no match can be found  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|int
 name|gid_name
@@ -1640,24 +1514,6 @@ name|gid_t
 modifier|*
 name|gid
 parameter_list|)
-else|#
-directive|else
-function|int gid_name
-parameter_list|(
-name|name
-parameter_list|,
-name|gid
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|gid_t
-modifier|*
-name|gid
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct

@@ -102,7 +102,9 @@ end_comment
 begin_function
 name|int
 name|donlist
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|size_t
 name|oldlen

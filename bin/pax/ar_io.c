@@ -380,18 +380,15 @@ begin_comment
 comment|/* pid of child process */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|get_phys
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -400,34 +397,25 @@ name|s_mask
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ar_start_gzip
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * ar_open()  *	Opens the next archive volume. Determines the type of the device and  *	sets up block sizes as required by the archive device and the format.  *	Note: we may be called with name == NULL on the first open only.  * Return:  *	-1 on failure, 0 otherwise  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|int
@@ -437,18 +425,6 @@ name|char
 modifier|*
 name|name
 parameter_list|)
-else|#
-directive|else
-function|int ar_open
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|struct
 name|mtget
@@ -1179,25 +1155,12 @@ begin_comment
 comment|/*  * ar_close()  *	closes archive device, increments volume number, and prints i/o summary  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|ar_close
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|ar_close
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1518,16 +1481,7 @@ argument|, flcnt, rdcnt, wrcnt); 	(void)fflush(listf); 	flcnt =
 literal|0
 argument|; }
 comment|/*  * ar_drain()  *	drain any archive format independent padding from an archive read  *	from a socket or a pipe. This is to prevent the process on the  *	other side of the pipe from getting a SIGPIPE (pax will stop  *	reading an archive once a format dependent trailer is detected).  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|void ar_drain(void)
-else|#
-directive|else
-argument|void ar_drain()
-endif|#
-directive|endif
-argument|{ 	register int res; 	char drbuf[MAXBLK];
+argument|void ar_drain(void) { 	register int res; 	char drbuf[MAXBLK];
 comment|/* 	 * we only drain from a pipe/socket. Other devices can be closed 	 * without reading up to end of file. We sure hope that pipe is closed 	 * on the other side so we will get an EOF. 	 */
 argument|if ((artyp != ISPIPE) || (lstrval<=
 literal|0
@@ -1537,16 +1491,7 @@ argument|while ((res = read(arfd, drbuf, sizeof(drbuf)))>
 literal|0
 argument|) 		; 	lstrval = res; }
 comment|/*  * ar_set_wr()  *	Set up device right before switching from read to write in an append.  *	device dependent code (if required) to do this should be added here.  *	For all archive devices we are already positioned at the place we want  *	to start writing when this routine is called.  * Return:  *	0 if all ready to write, -1 otherwise  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_set_wr(void)
-else|#
-directive|else
-argument|int ar_set_wr()
-endif|#
-directive|endif
-argument|{ 	off_t cpos;
+argument|int ar_set_wr(void) { 	off_t cpos;
 comment|/* 	 * we must make sure the trailer is rewritten on append, ar_next() 	 * will stop us if the archive containing the trailer was not written 	 */
 argument|wr_trail =
 literal|0
@@ -1572,16 +1517,7 @@ argument|); 	} 	return(
 literal|0
 argument|); }
 comment|/*  * ar_app_ok()  *	check if the last volume in the archive allows appends. We cannot check  *	this until we are ready to write since there is no spec that says all  *	volumes in a single archive have to be of the same type...  * Return:  *	0 if we can append, -1 otherwise.  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_app_ok(void)
-else|#
-directive|else
-argument|int ar_app_ok()
-endif|#
-directive|endif
-argument|{ 	if (artyp == ISPIPE) { 		paxwarn(
+argument|int ar_app_ok(void) { 	if (artyp == ISPIPE) { 		paxwarn(
 literal|1
 argument|,
 literal|"Cannot append to an archive obtained from a pipe."
@@ -1597,16 +1533,7 @@ argument|, 		rdblksz, argv0); 	return(-
 literal|1
 argument|); }
 comment|/*  * ar_read()  *	read up to a specified number of bytes from the archive into the  *	supplied buffer. When dealing with tapes we may not always be able to  *	read what we want.  * Return:  *	Number of bytes in buffer. 0 for end of file, -1 for a read error.  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_read(register char *buf, register int cnt)
-else|#
-directive|else
-argument|int ar_read(buf, cnt) 	register char *buf; 	register int cnt;
-endif|#
-directive|endif
-argument|{ 	register int res =
+argument|int ar_read(register char *buf, register int cnt) { 	register int res =
 literal|0
 argument|;
 comment|/* 	 * if last i/o was in error, no more reads until reset or new volume 	 */
@@ -1644,16 +1571,7 @@ argument|,
 literal|"End of archive volume %d reached"
 argument|, arvol); 	return(res); }
 comment|/*  * ar_write()  *	Write a specified number of bytes in supplied buffer to the archive  *	device so it appears as a single "block". Deals with errors and tries  *	to recover when faced with short writes.  * Return:  *	Number of bytes written. 0 indicates end of volume reached and with no  *	flaws (as best that can be detected). A -1 indicates an unrecoverable  *	error in the archive occured.  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_write(register char *buf, register int bsz)
-else|#
-directive|else
-argument|int ar_write(buf, bsz) 	register char *buf; 	register int bsz;
-endif|#
-directive|endif
-argument|{ 	register int res; 	off_t cpos;
+argument|int ar_write(register char *buf, register int bsz) { 	register int res; 	off_t cpos;
 comment|/* 	 * do not allow pax to create a "bad" archive. Once a write fails on 	 * an archive volume prevent further writes to it. 	 */
 argument|if (lstrval<=
 literal|0
@@ -1743,16 +1661,7 @@ argument|,
 literal|"WARNING: partial archive write. Archive IS FLAWED"
 argument|); 	return(res); }
 comment|/*  * ar_rdsync()  *	Try to move past a bad spot on a flawed archive as needed to continue  *	I/O. Clears error flags to allow I/O to continue.  * Return:  *	0 when ok to try i/o again, -1 otherwise.  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_rdsync(void)
-else|#
-directive|else
-argument|int ar_rdsync()
-endif|#
-directive|endif
-argument|{ 	long fsbz; 	off_t cpos; 	off_t mpos; 	struct mtop mb;
+argument|int ar_rdsync(void) { 	long fsbz; 	off_t cpos; 	off_t mpos; 	struct mtop mb;
 comment|/* 	 * Fail resync attempts at user request (done) or this is going to be 	 * an update/append to a existing archive. if last i/o hit media end, 	 * we need to go to the next volume not try a resync 	 */
 argument|if ((done>
 literal|0
@@ -1814,16 +1723,7 @@ argument|); 	return(
 literal|0
 argument|); }
 comment|/*  * ar_fow()  *	Move the I/O position within the archive foward the specified number of  *	bytes as supported by the device. If we cannot move the requested  *	number of bytes, return the actual number of bytes moved in skipped.  * Return:  *	0 if moved the requested distance, -1 on complete failure, 1 on  *	partial move (the amount moved is in skipped)  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_fow(off_t sksz, off_t *skipped)
-else|#
-directive|else
-argument|int ar_fow(sksz, skipped) 	off_t sksz; 	off_t *skipped;
-endif|#
-directive|endif
-argument|{ 	off_t cpos; 	off_t mpos;  	*skipped =
+argument|int ar_fow(off_t sksz, off_t *skipped) { 	off_t cpos; 	off_t mpos;  	*skipped =
 literal|0
 argument|; 	if (sksz<=
 literal|0
@@ -1859,16 +1759,7 @@ argument|; 	return(-
 literal|1
 argument|); }
 comment|/*  * ar_rev()  *	move the i/o position within the archive backwards the specified byte  *	count as supported by the device. With tapes drives we RESET rdblksz to  *	the PHYSICAL blocksize.  *	NOTE: We should only be called to move backwards so we can rewrite the  *	last records (the trailer) of an archive (APPEND).  * Return:  *	0 if moved the requested distance, -1 on complete failure  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_rev(off_t sksz)
-else|#
-directive|else
-argument|int ar_rev(sksz) 	off_t sksz;
-endif|#
-directive|endif
-argument|{ 	off_t cpos; 	struct mtop mb; 	register int phyblk;
+argument|int ar_rev(off_t sksz) { 	off_t cpos; 	struct mtop mb; 	register int phyblk;
 comment|/* 	 * make sure we do not have try to reverse on a flawed archive 	 */
 argument|if (lstrval<
 literal|0
@@ -1970,16 +1861,7 @@ argument|; 	return(
 literal|0
 argument|); }
 comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with  *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	physical block size if ok (ok> 0), -1 otherwise  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|static int get_phys(void)
-else|#
-directive|else
-argument|static int get_phys()
-endif|#
-directive|endif
-argument|{ 	register int padsz =
+argument|static int get_phys(void) { 	register int padsz =
 literal|0
 argument|; 	register int res; 	register int phyblk; 	struct mtop mb; 	char scbuf[MAXBLK];
 comment|/* 	 * move to the file mark, and then back up one record and read it. 	 * this should tell us the physical record size the tape is using. 	 */
@@ -2079,16 +1961,7 @@ argument|, 		    mb.mt_count); 		return(-
 literal|1
 argument|); 	} 	return(phyblk); }
 comment|/*  * ar_next()  *	prompts the user for the next volume in this archive. For some devices  *	we may allow the media to be changed. Otherwise a new archive is  *	prompted for. By pax spec, if there is no controlling tty or an eof is  *	read on tty input, we must quit pax.  * Return:  *	0 when ready to continue, -1 when all done  */
-ifdef|#
-directive|ifdef
-name|__STDC__
-argument|int ar_next(void)
-else|#
-directive|else
-argument|int ar_next()
-endif|#
-directive|endif
-argument|{ 	char buf[PAXPATHLEN+
+argument|int ar_next(void) { 	char buf[PAXPATHLEN+
 literal|2
 argument|]; 	static int freeit =
 literal|0
@@ -2285,7 +2158,7 @@ literal|"could not exec"
 argument|);
 comment|/* NOTREACHED */
 argument|} }
-end_decl_stmt
+end_function
 
 end_unit
 

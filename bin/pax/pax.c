@@ -163,18 +163,15 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|gen_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * PAX main routines, general globals and some simple start up routines  */
@@ -538,12 +535,6 @@ begin_comment
 comment|/*  * main()  *	parse options, set up and operate as specified by the user.  *	any operational flaw will set exit_val to non-zero  * Return: 0 if ok, 1 otherwise  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|int
 name|main
@@ -553,27 +544,9 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|)
-else|#
-directive|else
-function|int main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|char
 modifier|*
@@ -832,12 +805,6 @@ begin_comment
 comment|/*  * sig_cleanup()  *	when interrupted we try to do whatever delayed processing we can.  *	This is not critical, but we really ought to limit our damage when we  *	are aborted by the user.  * Return:  *	never....  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|void
 name|sig_cleanup
@@ -845,17 +812,6 @@ parameter_list|(
 name|int
 name|which_sig
 parameter_list|)
-else|#
-directive|else
-function|void sig_cleanup
-parameter_list|(
-name|which_sig
-parameter_list|)
-name|int
-name|which_sig
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 comment|/* 	 * restore modes and times for any dirs we may have created 	 * or any dirs we may have read. Set vflag and vfpart so the user 	 * will clearly see the message on a line by itself. 	 */
 name|vflag
@@ -910,27 +866,13 @@ begin_comment
 comment|/*  * gen_init()  *	general setup routines. Not all are required, but they really help  *	when dealing with a medium to large sized archives.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|gen_init
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-else|#
-directive|else
-decl|static
-name|int
-name|gen_init
-argument_list|()
-endif|#
-directive|endif
+parameter_list|)
 block|{
 name|struct
 name|rlimit
@@ -1500,7 +1442,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 
