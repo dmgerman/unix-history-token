@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3395,6 +3395,38 @@ argument_list|)
 expr_stmt|;
 name|nfsm_srvfillattr
 expr_stmt|;
+if|if
+condition|(
+name|nfsd
+operator|->
+name|nd_nqlflag
+operator|!=
+name|NQL_NOVAL
+condition|)
+block|{
+name|nfsm_build
+argument_list|(
+name|tl
+argument_list|,
+name|u_long
+operator|*
+argument_list|,
+literal|2
+operator|*
+name|NFSX_UNSIGNED
+argument_list|)
+expr_stmt|;
+name|txdr_hyper
+argument_list|(
+operator|&
+name|vap
+operator|->
+name|va_filerev
+argument_list|,
+name|tl
+argument_list|)
+expr_stmt|;
+block|}
 name|nfsm_srvdone
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6033,15 +6033,6 @@ operator|&=
 operator|~
 name|NQNFSEVICTED
 expr_stmt|;
-block|}
-else|else
-name|vflushbuf
-argument_list|(
-name|vp
-argument_list|,
-name|B_SYNC
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -6050,6 +6041,15 @@ argument_list|(
 name|vp
 argument_list|,
 name|cred
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|vflushbuf
+argument_list|(
+name|vp
+argument_list|,
+name|B_SYNC
 argument_list|)
 expr_stmt|;
 block|}
