@@ -280,7 +280,7 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_ebp
+name|mc_esi
 operator|=
 name|ucp
 operator|->
