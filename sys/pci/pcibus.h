@@ -189,6 +189,9 @@ name|struct
 name|pci_device
 modifier|*
 name|dvp
+parameter_list|,
+name|int
+name|if_revision
 parameter_list|)
 function_decl|;
 end_function_decl
