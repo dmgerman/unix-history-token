@@ -1150,9 +1150,10 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
-modifier|*
 name|dumpfmt
+index|[]
 init|=
 literal|"`%s'\t`%s'\n"
 decl_stmt|;

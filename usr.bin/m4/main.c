@@ -352,6 +352,17 @@ comment|/* filename for diversions     */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|m4dir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* directory for diversions    */
+end_comment
+
+begin_decl_stmt
 name|int
 name|ilevel
 init|=
@@ -820,14 +831,29 @@ name|stdout
 expr_stmt|;
 comment|/* default active output     */
 comment|/* filename for diversions   */
-name|m4temp
+name|m4dir
 operator|=
-name|mktemp
+name|mkdtemp
 argument_list|(
 name|xstrdup
 argument_list|(
-name|_PATH_DIVNAME
+name|_PATH_DIVDIRNAME
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|asprintf
+argument_list|(
+operator|&
+name|m4temp
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|m4dir
+argument_list|,
+name|_PATH_DIVNAME
 argument_list|)
 expr_stmt|;
 name|bbase
@@ -1084,6 +1110,14 @@ operator|)
 name|unlink
 argument_list|(
 name|m4temp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rmdir
+argument_list|(
+name|m4dir
 argument_list|)
 expr_stmt|;
 endif|#
