@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.59 1995/07/13 08:47:26 davidg Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.60 1995/07/28 11:21:06 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/msgbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -80,17 +86,6 @@ include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
-
-begin_comment
-comment|/*  * Allocate various and sundry SYSMAPs used in the days of old VM  * and not yet converted.  XXX.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSDVM_COMPAT
-value|1
-end_define
 
 begin_comment
 comment|/*  * Get PDEs and PTEs for user/kernel address space  */
@@ -293,16 +288,6 @@ comment|/* VA of last avail page (end of kernel AS) */
 end_comment
 
 begin_decl_stmt
-name|int
-name|i386pagesperpage
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PAGE_SIZE / I386_PAGE_SIZE */
-end_comment
-
-begin_decl_stmt
 name|boolean_t
 name|pmap_initialized
 init|=
@@ -378,18 +363,6 @@ name|cpu_class
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|BSDVM_COMPAT
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
-end_include
-
 begin_comment
 comment|/*  * All those kernel PT submaps that BSD is so fond of  */
 end_comment
@@ -437,11 +410,6 @@ modifier|*
 name|msgbufp
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -1085,15 +1053,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Bootstrap the system enough to run with virtual memory.  *	Map the kernel's code and data, and allocate the system page table.  *  *	On the I386 this is called after mapping has already been enabled  *	and just syncs the pmap module with what has already been done.  *	[We can't call it easily with mapping off since the kernel is not  *	mapped with PA == VA, hence we would have to relocate every address  *	from the linked base (virtual) address "KERNBASE" to the actual  *	(physical) address starting relative to 0]  */
+comment|/*  *	Bootstrap the system enough to run with virtual memory.  *  *	On the i386 this is called after mapping has already been enabled  *	and just syncs the pmap module with what has already been done.  *	[We can't call it easily with mapping off since the kernel is not  *	mapped with PA == VA, hence we would have to relocate every address  *	from the linked base (virtual) address "KERNBASE" to the actual  *	(physical) address starting relative to 0]  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DMAPAGES
-value|8
-end_define
 
 begin_function
 name|void
@@ -1110,9 +1071,6 @@ name|vm_offset_t
 name|loadaddr
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|BSDVM_COMPAT
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -1120,16 +1078,11 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-endif|#
-directive|endif
 name|avail_start
 operator|=
 name|firstaddr
-operator|+
-name|DMAPAGES
-operator|*
-name|NBPG
 expr_stmt|;
+comment|/* 	 * XXX The calculation of virtual_avail is wrong. It's NKPT*NBPG too 	 * large. It should instead be correctly calculated in locore.s and 	 * not based on 'first' (which is a physical address, not a virtual 	 * address, for the start of unused physical memory). The kernel 	 * page tables are NOT double mapped and thus should not be included 	 * in this calculation. 	 */
 name|virtual_avail
 operator|=
 operator|(
@@ -1137,17 +1090,11 @@ name|vm_offset_t
 operator|)
 name|KERNBASE
 operator|+
-name|avail_start
+name|firstaddr
 expr_stmt|;
 name|virtual_end
 operator|=
 name|VM_MAX_KERNEL_ADDRESS
-expr_stmt|;
-name|i386pagesperpage
-operator|=
-name|PAGE_SIZE
-operator|/
-name|NBPG
 expr_stmt|;
 comment|/* 	 * Initialize protection array. 	 */
 name|i386_protection_init
@@ -1183,10 +1130,7 @@ name|nkpt
 operator|=
 name|NKPT
 expr_stmt|;
-if|#
-directive|if
-name|BSDVM_COMPAT
-comment|/* 	 * Allocate all the submaps we need 	 */
+comment|/* 	 * Reserve some special page table entries/VA space for temporary 	 * mapping of pages. 	 */
 define|#
 directive|define
 name|SYSMAP
@@ -1214,6 +1158,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+comment|/* 	 * CMAP1/CMAP2 are used for zeroing and copying pages. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
@@ -1234,6 +1179,7 @@ argument|CADDR2
 argument_list|,
 literal|1
 argument_list|)
+comment|/* 	 * ptmmap is used for reading arbitrary physical pages via /dev/mem. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
@@ -1244,6 +1190,7 @@ argument|ptvmmap
 argument_list|,
 literal|1
 argument_list|)
+comment|/* 	 * msgbufmap is used to map the system message buffer. 	 */
 name|SYSMAP
 argument_list|(
 argument|struct msgbuf *
@@ -1258,32 +1205,6 @@ name|virtual_avail
 operator|=
 name|va
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Reserve special hunk of memory for use by bus dma as a bounce 	 * buffer (contiguous virtual *and* physical memory). 	 */
-block|{
-name|isaphysmem
-operator|=
-name|va
-expr_stmt|;
-name|virtual_avail
-operator|=
-name|pmap_map
-argument_list|(
-name|va
-argument_list|,
-name|firstaddr
-argument_list|,
-name|firstaddr
-operator|+
-name|DMAPAGES
-operator|*
-name|NBPG
-argument_list|,
-name|VM_PROT_ALL
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 operator|(
 name|int
@@ -1342,76 +1263,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Now that kernel map has been allocated, we can mark as unavailable 	 * regions which we have mapped in locore. 	 */
-name|addr
-operator|=
-name|atdevbase
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vm_map_find
-argument_list|(
-name|kernel_map
-argument_list|,
-name|NULL
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-literal|0
-argument_list|,
-operator|&
-name|addr
-argument_list|,
-operator|(
-literal|0x100000
-operator|-
-literal|0xa0000
-operator|)
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|addr
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|KERNBASE
-operator|+
-name|IdlePTD
-expr_stmt|;
-name|vm_object_reference
-argument_list|(
-name|kernel_object
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vm_map_find
-argument_list|(
-name|kernel_map
-argument_list|,
-name|kernel_object
-argument_list|,
-name|addr
-argument_list|,
-operator|&
-name|addr
-argument_list|,
-operator|(
-literal|4
-operator|+
-name|NKPDE
-operator|)
-operator|*
-name|NBPG
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * calculate the number of pv_entries needed 	 */
 name|vm_first_phys
 operator|=
