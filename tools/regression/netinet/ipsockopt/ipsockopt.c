@@ -74,6 +74,174 @@ comment|/*  * The test tool exercises IP-level socket options by interrogating t
 end_comment
 
 begin_comment
+comment|/*  * get_socket() is a wrapper function that returns a socket of the specified  * type, and created with or without restored root privilege (if running  * with a real uid of root and an effective uid of some other user).  This  * us to test whether the same rights are granted using a socket with a  * privileged cached credential vs. a socket with a regular credential.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_ASIS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_GETROOT
+value|1
+end_define
+
+begin_function
+specifier|static
+name|int
+name|get_socket_unpriv
+parameter_list|(
+name|int
+name|type
+parameter_list|)
+block|{
+return|return
+operator|(
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|type
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|get_socket_priv
+parameter_list|(
+name|int
+name|type
+parameter_list|)
+block|{
+name|uid_t
+name|olduid
+decl_stmt|;
+name|int
+name|sock
+decl_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_sock_priv: running without real uid 0"
+argument_list|)
+expr_stmt|;
+name|olduid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|seteuid
+argument_list|(
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_sock_priv: seteuid(0)"
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|type
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|seteuid
+argument_list|(
+name|olduid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_sock_priv: seteuid(%d)"
+argument_list|,
+name|olduid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sock
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|get_socket
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|priv
+parameter_list|)
+block|{
+if|if
+condition|(
+name|priv
+condition|)
+return|return
+operator|(
+name|get_socket_priv
+argument_list|(
+name|type
+argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|get_socket_unpriv
+argument_list|(
+name|type
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Exercise the IP_OPTIONS socket option.  Confirm the following properties:  *  * - That there is no initial set of options (length returned is 0).  * - That if we set a specific set of options, we can read it back.  * - That if we then reset the options, they go away.  *  * Use a UDP socket for this.  */
 end_comment
 
@@ -82,7 +250,13 @@ specifier|static
 name|void
 name|test_ip_options
 parameter_list|(
-name|void
+name|int
+name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|socktypename
 parameter_list|)
 block|{
 name|u_int32_t
@@ -96,35 +270,6 @@ decl_stmt|;
 name|socklen_t
 name|len
 decl_stmt|;
-name|int
-name|sock
-decl_stmt|;
-name|sock
-operator|=
-name|socket
-argument_list|(
-name|PF_INET
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sock
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"test_ip_options: socket(SOCK_DGRAM)"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Start off by confirming the default IP options on a socket are to 	 * have no options set. 	 */
 name|len
 operator|=
@@ -156,7 +301,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: initial getsockopt()"
+literal|"test_ip_options(%s): initial getsockopt()"
+argument_list|,
+name|socktypename
 argument_list|)
 expr_stmt|;
 if|if
@@ -170,8 +317,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: initial getsockopt() returned "
+literal|"test_ip_options(%s): initial getsockopt() returned "
 literal|"%d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|len
 argument_list|)
@@ -215,7 +364,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: setsockopt(NOP|NOP|NOP|EOL)"
+literal|"test_ip_options(%s): setsockopt(NOP|NOP|NOP|EOL)"
+argument_list|,
+name|socktypename
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Store some random cruft in a local variable and retrieve the 	 * options to make sure they set.  Note that we pass in an array 	 * of u_int32_t's so that if whatever ended up in the option was 	 * larger than what we put in, we find out about it here. 	 */
@@ -263,7 +414,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: getsockopt() after set"
+literal|"test_ip_options(%s): getsockopt() after set"
+argument_list|,
+name|socktypename
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Getting the right amount back is important. 	 */
@@ -281,8 +434,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: getsockopt() after set returned "
-literal|"%d bytes of data"
+literal|"test_ip_options(%s): getsockopt() after set "
+literal|"returned %d bytes of data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|len
 argument_list|)
@@ -302,8 +457,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: getsockopt() after set didn't "
+literal|"test_ip_options(%s): getsockopt() after set didn't "
 literal|"return data"
+argument_list|,
+name|socktypename
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure we get back what we wrote on. 	 */
@@ -321,8 +478,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: getsockopt() after set returned "
-literal|"wrong options (%08x, %08x)"
+literal|"test_ip_options(%s): getsockopt() after set "
+literal|"returned wrong options (%08x, %08x)"
+argument_list|,
+name|socktypename
 argument_list|,
 name|new_options
 argument_list|,
@@ -355,7 +514,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: setsockopt() to reset"
+literal|"test_ip_options(%s): setsockopt() to reset"
+argument_list|,
+name|socktypename
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure it was really cleared. 	 */
@@ -403,7 +564,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: getsockopt() after reset"
+literal|"test_ip_options(%s): getsockopt() after reset"
+argument_list|,
+name|socktypename
 argument_list|)
 expr_stmt|;
 if|if
@@ -417,22 +580,19 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_options: getsockopt() after reset returned "
-literal|"%d bytes"
+literal|"test_ip_options(%s): getsockopt() after reset "
+literal|"returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|len
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|sock
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * This test checks the behavior of the IP_HDRINCL socket option, which  * allows users with privilege to specify the full header on an IP raw  * socket.  We test that the option can only be used with raw IP sockets, not  * with UDP or TCP sockets.  We also confirm that the raw socket is only  * available to a privileged user (subject to the UID when called).  We  * confirm that it defaults to off  */
+comment|/*  * This test checks the behavior of the IP_HDRINCL socket option, which  * allows users with privilege to specify the full header on an IP raw  * socket.  We test that the option can only be used with raw IP sockets, not  * with UDP or TCP sockets.  We also confirm that the raw socket is only  * available to a privileged user (subject to the UID when called).  We  * confirm that it defaults to off  *  * Unlike other tests, doesn't use caller-provided socket.  Probably should  * be fixed.  */
 end_comment
 
 begin_function
@@ -473,19 +633,14 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): socket(SOCK_STREAM)"
 argument_list|)
 expr_stmt|;
-block|}
 name|flag
 index|[
 literal|0
@@ -522,34 +677,27 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"getsockopt(IP_HDRINCL) on TCP succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): initial getsockopt(IP_HDRINCL)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|ENOPROTOOPT
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"getsockopt(IP_HDRINCL) on TCP returned %d "
-literal|"(%s) not ENOPROTOOPT\n"
+literal|"test_ip_hdrincl(): initial getsockopt(IP_HDRINC) "
+literal|"returned %d (%s) not ENOPROTOOPT"
 argument_list|,
 name|errno
 argument_list|,
@@ -559,13 +707,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|flag
 index|[
 literal|0
@@ -596,34 +737,28 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"setsockopt(IP_HDRINCL) on TCP succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): setsockopt(IP_HDRINCL) on TCP "
+literal|"succeeded\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|ENOPROTOOPT
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"setsockopt(IP_HDRINCL) on TCP returned %d "
-literal|"(%s) not ENOPROTOOPT\n"
+literal|"test_ip_hdrincl(): setsockopt(IP_HDRINCL) on TCP "
+literal|"returned %d (%s) not ENOPROTOOPT\n"
 argument_list|,
 name|errno
 argument_list|,
@@ -633,13 +768,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|sock
@@ -664,19 +792,14 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): socket(SOCK_DGRAM"
 argument_list|)
 expr_stmt|;
-block|}
 name|flag
 index|[
 literal|0
@@ -713,34 +836,28 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"getsockopt(IP_HDRINCL) on UDP succeeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) on UDP "
+literal|"succeeded\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|ENOPROTOOPT
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"getsockopt(IP_HDRINCL) on UDP returned %d "
-literal|"(%s) not ENOPROTOOPT\n"
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) on UDP "
+literal|"returned %d (%s) not ENOPROTOOPT\n"
 argument_list|,
 name|errno
 argument_list|,
@@ -750,13 +867,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|setsockopt
@@ -780,34 +890,28 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"setsockopt(IP_HDRINCL) on UDPsucceeded\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): setsockopt(IP_HDRINCL) on UDP "
+literal|"succeeded\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
 operator|!=
 name|ENOPROTOOPT
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"setsockopt(IP_HDRINCL) on UDP returned %d "
-literal|"(%s) not ENOPROTOOPT\n"
+literal|"test_ip_hdrincl(): setsockopt(IP_HDRINCL) on UDP "
+literal|"returned %d (%s) not ENOPROTOOPT\n"
 argument_list|,
 name|errno
 argument_list|,
@@ -817,13 +921,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|sock
@@ -877,19 +974,14 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"test_ip_hdrincl: socket(PF_INET, SOCK_RAW)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): socket(PF_INET, SOCK_RAW)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Make sure the initial value of the flag is 0 (disabled). 	 */
 name|flag
 index|[
@@ -932,19 +1024,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"test_ip_hdrincl: getsockopt(IP_HDRINCL) on raw"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) on raw "
+literal|"socket"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -957,24 +1045,17 @@ literal|0
 index|]
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"test_ip_hdrincl: %d bytes returned on "
+literal|"test_ip_hdrincl(): %d bytes returned on "
 literal|"initial get\n"
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|flag
@@ -984,12 +1065,12 @@ index|]
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"test_ip_hdrincl: initial flag value of %d\n"
+literal|"test_ip_hdrincl(): initial flag value of %d\n"
 argument_list|,
 name|flag
 index|[
@@ -997,13 +1078,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Enable the IP_HDRINCL flag. 	 */
 name|flag
 index|[
@@ -1035,19 +1109,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"test_ip_hdrincl: setsockopt(IP_HDRINCL, 1)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): setsockopt(IP_HDRINCL, 1)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Check that the IP_HDRINCL flag was set. 	 */
 name|flag
 index|[
@@ -1090,19 +1159,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"test_ip_hdrincl: getsockopt(IP_HDRINCL) after set"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) after "
+literal|"set"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|flag
@@ -1112,12 +1177,12 @@ index|]
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"test_ip_hdrincl: getsockopt(IP_HDRINCL) "
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) "
 literal|"after set had flag of %d\n"
 argument_list|,
 name|flag
@@ -1126,13 +1191,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 define|#
 directive|define
 name|HISTORICAL_INP_HDRINCL
@@ -1146,12 +1204,9 @@ index|]
 operator|!=
 name|HISTORICAL_INP_HDRINCL
 condition|)
-block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"test_ip_hdrincl: WARNING: getsockopt(IP_H"
+literal|"test_ip_hdrincl(): WARNING: getsockopt(IP_H"
 literal|"DRINCL) after set had non-historical value of %d\n"
 argument_list|,
 name|flag
@@ -1160,7 +1215,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Reset the IP_HDRINCL flag to 0. 	 */
 name|flag
 index|[
@@ -1192,19 +1246,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"test_ip_hdrincl: setsockopt(IP_HDRINCL, 0)"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): setsockopt(IP_HDRINCL, 0)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Check that the IP_HDRINCL flag was reset to 0. 	 */
 name|flag
 index|[
@@ -1247,19 +1296,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"test_ip_hdrincl: getsockopt(IP_HDRINCL) after reset"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) after "
+literal|"reset"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|flag
@@ -1269,12 +1314,12 @@ index|]
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+operator|-
+literal|1
 argument_list|,
-literal|"test_ip_hdrincl: getsockopt(IP_HDRINCL) "
+literal|"test_ip_hdrincl(): getsockopt(IP_HDRINCL) "
 literal|"after set had flag of %d\n"
 argument_list|,
 name|flag
@@ -1283,13 +1328,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|sock
@@ -1308,8 +1346,17 @@ name|void
 name|test_ip_uchar
 parameter_list|(
 name|int
+name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|socktypename
+parameter_list|,
+name|int
 name|option
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|optionname
@@ -1319,8 +1366,6 @@ name|initial
 parameter_list|)
 block|{
 name|int
-name|sock
-decl_stmt|,
 name|val
 index|[
 literal|2
@@ -1329,34 +1374,6 @@ decl_stmt|;
 name|socklen_t
 name|len
 decl_stmt|;
-name|sock
-operator|=
-name|socket
-argument_list|(
-name|PF_INET
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sock
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"test_ip_tosttl(%s): socket"
-argument_list|,
-name|optionname
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check that the initial value is 0, and that the size is one 	 * u_char; 	 */
 name|val
 index|[
@@ -1404,7 +1421,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl: initial getsockopt(%s)"
+literal|"test_ip_uchar(%s, %s): initial getsockopt()"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1426,8 +1445,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): initial getsockopt() returned "
-literal|"%d bytes"
+literal|"test_ip_uchar(%s, %s): initial getsockopt() "
+literal|"returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1449,8 +1470,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): initial getsockopt() didn't "
+literal|"test_ip_uchar(%s, %s): initial getsockopt() didn't "
 literal|"return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1469,8 +1492,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): initial getsockopt() returned "
-literal|"value of %d, not %d"
+literal|"test_ip_uchar(%s, %s): initial getsockopt() "
+literal|"returned value of %d, not %d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1526,7 +1551,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): setsockopt(128)"
+literal|"test_ip_uchar(%s, %s): setsockopt(128)"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1578,7 +1605,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 128"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"128"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1600,8 +1630,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 128 "
-literal|"returned %d bytes"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"128 returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1623,8 +1655,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 128 "
-literal|"didn't return data"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"128 didn't return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1643,8 +1677,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 128 "
-literal|"returned %d"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"128 returned %d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1697,7 +1733,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): setsockopt() to reset from 128"
+literal|"test_ip_uchar(%s, %s): setsockopt() to reset from "
+literal|"128"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1719,8 +1758,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after reset from "
-literal|"128 returned %d bytes"
+literal|"test_ip_uchar(%s, %s): getsockopt() after reset "
+literal|"from 128 returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1742,8 +1783,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after reset from "
-literal|"128 didn't return data"
+literal|"test_ip_uchar(%s, %s): getsockopt() after reset "
+literal|"from 128 didn't return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1762,8 +1805,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after reset from "
-literal|"128 returned %d"
+literal|"test_ip_uchar(%s, %s): getsockopt() after reset "
+literal|"from 128 returned %d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1820,20 +1865,15 @@ name|errno
 operator|==
 name|EINVAL
 condition|)
-block|{
-name|close
-argument_list|(
-name|sock
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|err
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt(32000)"
+literal|"test_ip_uchar(%s, %s): getsockopt(32000)"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1885,7 +1925,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 32000"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"32000"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1907,8 +1950,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 32000"
-literal|"returned %d bytes"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"32000 returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -1930,8 +1975,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 32000"
-literal|"didn't return data"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"32000 didn't return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -1950,22 +1997,19 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_tosttl(%s): getsockopt() after set to 32000"
-literal|"returned 32000: failed to truncate"
+literal|"test_ip_uchar(%s, %s): getsockopt() after set to "
+literal|"32000 returned 32000: failed to truncate"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|sock
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Generic test for a boolean socket option.  Caller provides the option  * number, string name, expected default (initial) value, and whether or not  * the option is root-only.  For each option, test:  *  * - That we can read the option.  * - That the initial value is as expected.  * - That we can modify the value.  * - That on modification, the new value can be read back.  * - That we can reset the value.  * - that on reset, the new value can be read back.  *  * Test using a UDP socket.  */
+comment|/*  * Generic test for a boolean socket option.  Caller provides the option  * number, string name, expected default (initial) value, and whether or not  * the option is root-only.  For each option, test:  *  * - That we can read the option.  * - That the initial value is as expected.  * - That we can modify the value.  * - That on modification, the new value can be read back.  * - That we can reset the value.  * - that on reset, the new value can be read back.  */
 end_comment
 
 begin_define
@@ -1988,6 +2032,14 @@ name|void
 name|test_ip_boolean
 parameter_list|(
 name|int
+name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|socktypename
+parameter_list|,
+name|int
 name|option
 parameter_list|,
 name|char
@@ -2004,8 +2056,6 @@ block|{
 name|int
 name|newvalue
 decl_stmt|,
-name|sock
-decl_stmt|,
 name|val
 index|[
 literal|2
@@ -2014,34 +2064,6 @@ decl_stmt|;
 name|socklen_t
 name|len
 decl_stmt|;
-name|sock
-operator|=
-name|socket
-argument_list|(
-name|PF_INET
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sock
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"test_ip_boolean(%s): socket"
-argument_list|,
-name|optionname
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The default for a boolean might be true or false.  If it's false, 	 * we will try setting it to true (but using a non-1 value of true). 	 * If it's true, we'll set it to false. 	 */
 if|if
 condition|(
@@ -2124,8 +2146,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): initial getsockopt() returned "
-literal|"%d bytes"
+literal|"test_ip_boolean(%s, %s): initial getsockopt() "
+literal|"returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2147,8 +2171,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): initial getsockopt() didn't "
-literal|"return data"
+literal|"test_ip_boolean(%s, %s): initial getsockopt() "
+literal|"didn't return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -2167,8 +2193,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): initial getsockopt() returned "
-literal|"%d (expected %d)"
+literal|"test_ip_boolean(%s, %s): initial getsockopt() "
+literal|"returned %d (expected %d)"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2207,7 +2235,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): setsockopt() to %d"
+literal|"test_ip_boolean(%s, %s): setsockopt() to %d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2261,7 +2291,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after set to %d"
+literal|"test_ip_boolean(%s, %s): getsockopt() after set to "
+literal|"%d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2285,8 +2318,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after set to %d "
-literal|"returned %d bytes"
+literal|"test_ip_boolean(%s, %s): getsockopt() after set "
+literal|"to %d returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2310,8 +2345,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after set to %d "
-literal|"didn't return data"
+literal|"test_ip_boolean(%s, %s): getsockopt() after set "
+literal|"to %d didn't return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2339,8 +2376,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after set to %d "
-literal|"returned %d"
+literal|"test_ip_boolean(%s, %s): getsockopt() after set "
+literal|"to %d returned %d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2383,7 +2422,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): setsockopt() to reset"
+literal|"test_ip_boolean(%s, %s): setsockopt() to reset"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -2435,7 +2476,9 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after reset"
+literal|"test_ip_boolean(%s, %s): getsockopt() after reset"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -2457,8 +2500,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after reset "
+literal|"test_ip_boolean(%s, %s): getsockopt() after reset "
 literal|"returned %d bytes"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
@@ -2480,8 +2525,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after reset "
+literal|"test_ip_boolean(%s, %s): getsockopt() after reset "
 literal|"didn't return data"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|)
@@ -2500,17 +2547,14 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"test_ip_boolean(%s): getsockopt() after reset "
+literal|"test_ip_boolean(%s, %s): getsockopt() after reset "
 literal|"returned %d"
+argument_list|,
+name|socktypename
 argument_list|,
 name|optionname
 argument_list|,
 name|newvalue
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|sock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2525,7 +2569,13 @@ specifier|static
 name|void
 name|test_ip_multicast_if
 parameter_list|(
-name|void
+name|int
+name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|socktypename
 parameter_list|)
 block|{
 comment|/* 	 * It's probably worth trying INADDR_ANY and INADDR_LOOPBACK here 	 * to see what happens. 	 */
@@ -2541,7 +2591,13 @@ specifier|static
 name|void
 name|test_ip_multicast_vif
 parameter_list|(
-name|void
+name|int
+name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|socktypename
 parameter_list|)
 block|{
 comment|/* 	 * This requires some knowledge of the number of virtual interfaces, 	 * and what is valid. 	 */
@@ -2557,7 +2613,13 @@ specifier|static
 name|void
 name|test_ip_multicast_membership
 parameter_list|(
-name|void
+name|int
+name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|socktypename
 parameter_list|)
 block|{  }
 end_function
@@ -2565,58 +2627,137 @@ end_function
 begin_function
 specifier|static
 name|void
-name|test_ip_multicast
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|test_ip_multicast_if
-argument_list|()
-expr_stmt|;
-name|test_ip_multicast_vif
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Test the multicast TTL exactly as we would the regular TTL, only 	 * expect a different default. 	 */
-name|test_ip_uchar
-argument_list|(
-name|IP_MULTICAST_TTL
-argument_list|,
-literal|"IP_MULTICAST_TTL"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * The multicast loopback flag can be tested using our boolean 	 * tester, but only because the FreeBSD API is a bit more flexible 	 * than earlir APIs and will accept an int as well as a u_char. 	 * Loopback is enabled by default. 	 */
-name|test_ip_boolean
-argument_list|(
-name|IP_MULTICAST_LOOP
-argument_list|,
-literal|"IP_MULTICAST_LOOP"
-argument_list|,
-literal|1
-argument_list|,
-name|BOOLEAN_ANYONE
-argument_list|)
-expr_stmt|;
-name|test_ip_multicast_membership
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|testsuite
 parameter_list|(
-name|void
+name|int
+name|priv
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|socktypenameset
+index|[]
+init|=
+block|{
+literal|"SOCK_DGRAM"
+block|,
+literal|"SOCK_STREAM"
+block|,
+literal|"SOCK_RAW"
+block|}
+decl_stmt|;
+name|int
+name|socktypeset
+index|[]
+init|=
+block|{
+name|SOCK_DGRAM
+block|,
+name|SOCK_STREAM
+block|,
+name|SOCK_RAW
+block|}
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|socktypename
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|sock
+decl_stmt|,
+name|socktype
+decl_stmt|;
 name|test_ip_hdrincl
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|socktypeset
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|socktype
+operator|=
+name|socktypeset
+index|[
+name|i
+index|]
+expr_stmt|;
+name|socktypename
+operator|=
+name|socktypenameset
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* 		 * If we can't acquire root privilege, we can't open raw 		 * sockets, so don't actually try. 		 */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+operator|&&
+name|socktype
+operator|==
+name|SOCK_RAW
+condition|)
+continue|continue;
+comment|/* 		 * XXXRW: On 5.3, this seems not to work for SOCK_RAW. 		 */
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_uchar(IP_TOS)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_uchar
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_TOS
 argument_list|,
 literal|"IP_TOS"
@@ -2624,8 +2765,45 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s %d) for test_ip_uchar(IP_TTL)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_uchar
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_TTL
 argument_list|,
 literal|"IP_TTL"
@@ -2633,8 +2811,46 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_RECVOPTS)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_RECVOPTS
 argument_list|,
 literal|"IP_RECVOPTS"
@@ -2644,8 +2860,46 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_RECVRETOPTS)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_RECVRETOPTS
 argument_list|,
 literal|"IP_RECVRETOPTS"
@@ -2655,8 +2909,46 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_RECVDSTADDR)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_RECVDSTADDR
 argument_list|,
 literal|"IP_RECVDSTADDR"
@@ -2666,8 +2958,46 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_RECVTTL)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_RECVTTL
 argument_list|,
 literal|"IP_RECVTTL"
@@ -2677,8 +3007,46 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_RECVIF)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_RECVIF
 argument_list|,
 literal|"IP_RECVIF"
@@ -2688,8 +3056,46 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_FAITH)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_FAITH
 argument_list|,
 literal|"IP_FAITH"
@@ -2699,8 +3105,46 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_boolean"
+literal|"(IP_ONESBCAST)"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
 name|test_ip_boolean
 argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
 name|IP_ONESBCAST
 argument_list|,
 literal|"IP_ONESBCAST"
@@ -2710,13 +3154,164 @@ argument_list|,
 name|BOOLEAN_ANYONE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Still need to test: 	 * IP_PORTRANGE 	 * IP_IPSEC_POLICY? 	 */
-name|test_ip_multicast
-argument_list|()
+name|close
+argument_list|(
+name|sock
+argument_list|)
 expr_stmt|;
-name|test_ip_options
-argument_list|()
+comment|/* 		 * Test the multicast TTL exactly as we would the regular 		 * TTL, only expect a different default. 		 */
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for IP_MULTICAST_TTL"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+name|test_ip_uchar
+argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
+name|IP_MULTICAST_TTL
+argument_list|,
+literal|"IP_MULTICAST_TTL"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+comment|/* 		 * The multicast loopback flag can be tested using our 		 * boolean tester, but only because the FreeBSD API is a bit 		 * more flexible than earlir APIs and will accept an int as 		 * well as a u_char.  Loopback is enabled by default. 		 */
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for IP_MULTICAST_LOOP"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+name|test_ip_boolean
+argument_list|(
+name|sock
+argument_list|,
+name|socktypename
+argument_list|,
+name|IP_MULTICAST_LOOP
+argument_list|,
+literal|"IP_MULTICAST_LOOP"
+argument_list|,
+literal|1
+argument_list|,
+name|BOOLEAN_ANYONE
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|sock
+operator|=
+name|get_socket
+argument_list|(
+name|socktype
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|"get_socket(%s, %d) for test_ip_options"
+argument_list|,
+name|socktypename
+argument_list|,
+name|priv
+argument_list|)
+expr_stmt|;
+comment|//test_ip_options(sock, socktypename);
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|test_ip_multicast_if
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|test_ip_multicast_vif
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|test_ip_multicast_membership
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX: Still need to test: 		 * IP_PORTRANGE 		 * IP_IPSEC_POLICY? 		 */
+block|}
 block|}
 end_function
 
@@ -2747,7 +3342,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Not running as root, can't run as-root tests"
+literal|"Not running as root, can't run tests as root"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2761,20 +3356,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Running tests with uid %d\n"
+literal|"Running tests with uid %d sock uid %d\n"
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|,
 name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
 name|testsuite
-argument_list|()
-expr_stmt|;
-name|fprintf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS\n"
+name|PRIV_ASIS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2784,15 +3377,23 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Running tests with uid 0\n"
+literal|"Running tests with ruid %d euid %d sock uid 0\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|testsuite
-argument_list|()
+argument_list|(
+name|PRIV_ASIS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setuid
+name|seteuid
 argument_list|(
 literal|65534
 argument_list|)
@@ -2804,19 +3405,46 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"setuid(65534)"
+literal|"seteuid(65534)"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Running tests with uid 65535\n"
+literal|"Running tests with ruid %d euid %d sock uid 0\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|testsuite
-argument_list|()
+argument_list|(
+name|PRIV_GETROOT
+argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Running tests with ruid %d euid %d sock uid 65534\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|testsuite
+argument_list|(
+name|PRIV_ASIS
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -2824,7 +3452,6 @@ argument_list|,
 literal|"PASS\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
