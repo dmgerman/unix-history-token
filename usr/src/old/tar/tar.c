@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.12 (Berkeley) %G%"
+literal|"@(#)tar.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,12 +59,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -72,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -114,6 +114,18 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_define
@@ -574,30 +586,6 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|strcat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|getcwd
 parameter_list|()
 function_decl|;
@@ -619,6 +607,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -631,8 +626,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|char
@@ -745,6 +740,9 @@ break|break;
 case|case
 literal|'u'
 case|:
+operator|(
+name|void
+operator|)
 name|mktemp
 argument_list|(
 name|tname
@@ -1317,12 +1315,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: %s: %s\n"
+argument_list|,
 name|tape
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|done
@@ -1545,13 +1545,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: can't change directories to "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: can't change directories to %s: %s\n"
+argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1625,13 +1627,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: can't change directories to "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: can't change directories to %s: %s\n"
+argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1672,20 +1676,20 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: cannot change back?: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: cannot change back?: %s: %s\n"
+argument_list|,
 name|wdir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|putempty
 argument_list|()
@@ -2239,12 +2243,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: %s: %s\n"
+argument_list|,
 name|longname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2445,9 +2451,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"tar: chdir %s: %s\n"
+argument_list|,
 name|shortname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2489,12 +2504,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: cannot change back?: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: cannot change back?: %s: %s\n"
+argument_list|,
 name|parent
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2604,12 +2621,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: cannot change back?: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: cannot change back?: %s: %s\n"
+argument_list|,
 name|parent
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2705,12 +2724,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: can't read symbolic link "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: can't read symbolic link %s: %s\n"
+argument_list|,
 name|longname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2823,12 +2844,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: %s: %s\n"
+argument_list|,
 name|longname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3291,12 +3314,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: Read error on "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"tar: Read error on %s: %s\n"
+argument_list|,
 name|longname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3363,10 +3388,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|long
 name|blocks
 decl_stmt|,
@@ -3583,18 +3604,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: %s: symbolic link failed: "
+literal|"tar: %s: symbolic link failed: %s\n"
 argument_list|,
 name|dblock
 operator|.
 name|dbuf
 operator|.
 name|name
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3752,7 +3773,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: can't link %s to %s: "
+literal|"tar: can't link %s to %s: %s\n"
 argument_list|,
 name|dblock
 operator|.
@@ -3765,11 +3786,11 @@ operator|.
 name|dbuf
 operator|.
 name|linkname
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3827,18 +3848,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: can't create %s: "
+literal|"tar: can't create %s: %s\n"
 argument_list|,
 name|dblock
 operator|.
 name|dbuf
 operator|.
 name|name
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|passtape
@@ -3983,18 +4004,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: %s: HELP - extract write error: "
+literal|"tar: %s: HELP - extract write error: %s\n"
 argument_list|,
 name|dblock
 operator|.
 name|dbuf
 operator|.
 name|name
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|done
@@ -4288,7 +4309,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%3d/%1d"
+literal|"%3u/%1u"
 argument_list|,
 name|st
 operator|->
@@ -4792,7 +4813,7 @@ name|access
 argument_list|(
 name|name
 argument_list|,
-literal|0
+name|F_OK
 argument_list|)
 operator|==
 literal|0
@@ -4854,7 +4875,7 @@ name|access
 argument_list|(
 name|name
 argument_list|,
-literal|0
+name|F_OK
 argument_list|)
 operator|<
 literal|0
@@ -4872,9 +4893,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"tar: mkdir: %s: %s\n"
+argument_list|,
 name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -6821,12 +6851,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: tape backspace error: "
-argument_list|)
-expr_stmt|;
-name|perror
+literal|"tar: tape backspace error: %s\n"
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|done
@@ -6837,6 +6867,9 @@ expr_stmt|;
 block|}
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|mt
@@ -6935,28 +6968,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: tape %s error: "
+literal|"tar: tape %s error: %s\n"
 argument_list|,
 name|operation
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
 name|i
 operator|<
 literal|0
-condition|)
-name|perror
+condition|?
+name|strerror
 argument_list|(
-literal|""
+name|errno
 argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unexpected EOF\n"
+else|:
+literal|"unexpected EOF"
 argument_list|)
 expr_stmt|;
 name|done
@@ -7537,22 +7562,20 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tar: can't set time on %s: "
+literal|"tar: can't set time on %s: %s\n"
 argument_list|,
 name|path
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|""
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
