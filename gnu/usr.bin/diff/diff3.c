@@ -520,7 +520,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If nonzero, show information for DIFF_2ND diffs.  */
+comment|/* If nonzero, show information for 3_way and DIFF_2ND diffs.      1= show 2nd only when 1st and 3rd differ    2= show 2nd when DIFF_2ND (1 and 3 have same change relative to 2) */
 end_comment
 
 begin_decl_stmt
@@ -1106,6 +1106,16 @@ literal|'A'
 block|}
 block|,
 block|{
+literal|"show-bogus-conflicts"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'B'
+block|}
+block|,
+block|{
 literal|"ed"
 block|,
 literal|0
@@ -1315,7 +1325,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aeimvx3AEL:TX"
+literal|"aeimvx3ABEL:TX"
 argument_list|,
 name|longopts
 argument_list|,
@@ -1340,11 +1350,17 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'B'
+case|:
+operator|++
+name|show_2nd
+expr_stmt|;
+comment|/* Falls through */
+case|case
 literal|'A'
 case|:
+operator|++
 name|show_2nd
-operator|=
-literal|1
 expr_stmt|;
 name|flagging
 operator|=
@@ -2044,7 +2060,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ Usage: %s [options] my-file older-file your-file\n\ Options:\n\ 	[-exAEX3aTv] [-i|-m] [-L label1 [-L label2 [-L label3]]]\n\ 	[--easy-only] [--ed] [--help] [--initial-tab]\n\ 	[--label=label1 [--label=label2 [--label=label3]]] [--merge]\n\ 	[--overlap-only] [--show-all] [--show-overlap] [--text] [--version]\n\ 	Only one of [exAEX3] is allowed\n"
+literal|"\ Usage: %s [options] my-file older-file your-file\n\ Options:\n\ 	[-exABEX3aTv] [-i|-m] [-L label1 [-L label2 [-L label3]]]\n\ 	[--easy-only] [--ed] [--help] [--initial-tab]\n\ 	[--label=label1 [--label=label2 [--label=label3]]] [--merge]\n\ 	[--overlap-only] [--show-all] [ --show-bogus-conflicts ]\n\ 	[--show-overlap] [--text] [--version]\n\ 	Only one of [exABEX3] is allowed\n"
 argument_list|,
 name|argv0
 argument_list|)
@@ -6199,8 +6215,9 @@ name|DIFF_2ND
 case|:
 if|if
 condition|(
-operator|!
 name|show_2nd
+operator|<
+literal|2
 condition|)
 continue|continue;
 name|conflict
@@ -6868,8 +6885,9 @@ name|DIFF_2ND
 case|:
 if|if
 condition|(
-operator|!
 name|show_2nd
+operator|<
+literal|2
 condition|)
 continue|continue;
 name|conflict
