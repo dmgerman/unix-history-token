@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.11 (Berkeley) %G%"
+literal|"@(#)input.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,28 +59,34 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|struct
 name|rt_entry
 modifier|*
 name|rt
 decl_stmt|;
+specifier|register
 name|struct
 name|netinfo
 modifier|*
 name|n
 decl_stmt|;
+specifier|register
 name|struct
 name|interface
 modifier|*
 name|ifp
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|interface
 modifier|*
 name|if_ifwithdstaddr
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 name|int
 name|newsize
 decl_stmt|;
+specifier|register
 name|struct
 name|afswitch
 modifier|*
@@ -617,7 +623,7 @@ operator|)
 name|n
 operator|->
 name|rip_metric
-operator|>=
+operator|>
 name|HOPCNT_INFINITY
 condition|)
 continue|continue;
@@ -681,6 +687,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|n
+operator|->
+name|rip_metric
+operator|<
+name|HOPCNT_INFINITY
+condition|)
 name|rtadd
 argument_list|(
 operator|&
@@ -713,6 +727,22 @@ name|rt_router
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|n
+operator|->
+name|rip_metric
+operator|==
+name|HOPCNT_INFINITY
+condition|)
+block|{
+name|rtdelete
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|n
