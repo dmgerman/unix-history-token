@@ -1363,8 +1363,9 @@ block|}
 else|else
 block|{
 comment|/* 		 * If global icmp flag set we will do 		 * something here...later.. 		 */
+goto|goto
 name|return_0
-expr_stmt|;
+goto|;
 block|}
 name|return_0
 label|:
