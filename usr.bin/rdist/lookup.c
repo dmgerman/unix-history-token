@@ -122,6 +122,8 @@ name|struct
 name|namelist
 modifier|*
 name|value
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -418,7 +420,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"lookup(%s, %d, %x)\n"
+literal|"lookup(%s, %d, %p)\n"
 argument_list|,
 name|name
 argument_list|,

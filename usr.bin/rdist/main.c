@@ -254,6 +254,19 @@ comment|/* user's group ID */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|path_rsh
+init|=
+name|_PATH_RSH
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rsh (or equiv command) path */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|passwd
 modifier|*
@@ -503,6 +516,26 @@ operator|*
 name|arg
 condition|)
 block|{
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+operator|--
+name|argc
+operator|<=
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|path_rsh
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
@@ -885,12 +918,17 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"Usage: rdist [-nqbhirvwyD] [-f distfile] [-d var=value] [-m host] [file ...]\n"
+literal|"Usage: rdist [-nqbhirvwyD] [-P /path/to/rsh ] [-f distfile] [-d var=value]\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"or: rdist [-nqbhirvwyD] -c source [...] machine[:dest]\n"
+literal|"             [-m host] [file ...]\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"or:    rdist [-nqbhirvwyD] [-P /path/to/rsh ] -c source [...] machine[:dest]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -941,6 +979,8 @@ name|struct
 name|namelist
 modifier|*
 name|files
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|hosts

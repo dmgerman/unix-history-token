@@ -390,7 +390,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"expand(%x, %d)\nlist = "
+literal|"expand(%p, %d)\nlist = "
 argument_list|,
 name|list
 argument_list|,
@@ -1079,6 +1079,7 @@ name|cp
 operator|=
 name|path
 init|;
+operator|(
 operator|*
 name|cp
 operator|++
@@ -1086,6 +1087,7 @@ operator|=
 operator|*
 name|cp1
 operator|++
+operator|)
 condition|;
 control|)
 empty_stmt|;
@@ -2144,11 +2146,13 @@ literal|077777
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|cc
 operator|=
 operator|*
 name|p
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -2511,11 +2515,13 @@ literal|077777
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|cc
 operator|=
 operator|*
 name|p
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -2779,6 +2785,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|s
 operator|++
@@ -2788,6 +2795,7 @@ name|s1
 operator|++
 operator|&
 name|TRIM
+operator|)
 condition|)
 empty_stmt|;
 name|s
@@ -2795,6 +2803,7 @@ operator|--
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|s
 operator|++
@@ -2804,6 +2813,7 @@ name|s2
 operator|++
 operator|&
 name|TRIM
+operator|)
 condition|)
 empty_stmt|;
 block|}
@@ -3063,6 +3073,7 @@ name|s1
 operator|=
 name|buf
 init|;
+operator|(
 operator|*
 name|s1
 operator|++
@@ -3070,6 +3081,7 @@ operator|=
 operator|*
 name|s2
 operator|++
+operator|)
 condition|;
 control|)
 empty_stmt|;
@@ -3090,6 +3102,7 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|s1
 operator|++
@@ -3097,6 +3110,7 @@ operator|=
 operator|*
 name|s3
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 block|}

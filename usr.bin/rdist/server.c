@@ -1793,12 +1793,14 @@ name|target
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|readdir
 argument_list|(
 name|d
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -1873,6 +1875,7 @@ name|d_name
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|tp
 operator|++
@@ -1880,6 +1883,7 @@ operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 name|tp
@@ -2601,6 +2605,7 @@ name|f
 operator|<
 literal|0
 operator|||
+operator|(
 name|f
 operator|==
 literal|0
@@ -2609,6 +2614,7 @@ operator|(
 name|opts
 operator|&
 name|COMPARE
+operator|)
 operator|)
 condition|)
 return|return;
@@ -2958,7 +2964,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"update(%s, %x, %x)\n"
+literal|"update(%s, %x, %p)\n"
 argument_list|,
 name|rname
 argument_list|,
@@ -3592,6 +3598,9 @@ name|cp
 decl_stmt|;
 name|int
 name|f
+init|=
+operator|-
+literal|1
 decl_stmt|,
 name|mode
 decl_stmt|,
@@ -3947,6 +3956,7 @@ literal|'/'
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|tp
 operator|++
@@ -3954,6 +3964,7 @@ operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 name|tp
@@ -4078,11 +4089,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|errno
 operator|==
 name|ENOENT
 operator|&&
-operator|(
 name|mkdir
 argument_list|(
 name|target
@@ -4091,7 +4102,9 @@ name|mode
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|||
+operator|(
 name|chkparent
 argument_list|(
 name|target
@@ -4957,6 +4970,13 @@ condition|)
 block|{
 name|badnew2
 label|:
+if|if
+condition|(
+name|f
+operator|!=
+operator|-
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
@@ -5892,6 +5912,7 @@ name|ok
 label|:
 if|if
 condition|(
+operator|(
 name|fd
 operator|!=
 operator|-
@@ -5907,6 +5928,7 @@ name|gid
 argument_list|)
 operator|<
 literal|0
+operator|)
 operator|||
 name|chown
 argument_list|(
@@ -5941,6 +5963,7 @@ operator|&
 literal|07000
 operator|&&
 operator|(
+operator|(
 name|fd
 operator|!=
 operator|-
@@ -5954,6 +5977,7 @@ name|mode
 argument_list|)
 operator|<
 literal|0
+operator|)
 operator|||
 name|chmod
 argument_list|(
@@ -6504,12 +6528,14 @@ name|target
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|readdir
 argument_list|(
 name|d
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -6587,6 +6613,7 @@ expr_stmt|;
 empty_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|tp
 operator|++
@@ -6594,6 +6621,7 @@ operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 name|tp
@@ -6935,12 +6963,14 @@ name|target
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|readdir
 argument_list|(
 name|d
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -7018,6 +7048,7 @@ expr_stmt|;
 empty_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|tp
 operator|++
@@ -7025,6 +7056,7 @@ operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 name|tp

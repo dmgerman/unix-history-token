@@ -16,5 +16,12 @@ name|_PATH_RDIST
 value|"rdist"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_RSH
+value|"/usr/bin/rsh"
+end_define
+
 end_unit
 

@@ -387,6 +387,17 @@ parameter_list|)
 value|(struct x *) malloc(sizeof(struct x))
 end_define
 
+begin_comment
+comment|/*  * RSH Time Out interval (in seconds).  * Should be long enough to allow rsh to even the slowest hosts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTIMEOUT
+value|180
+end_define
+
 begin_struct
 struct|struct
 name|namelist
@@ -657,6 +668,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* general purpose buffer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|path_rsh
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rsh command to use */
 end_comment
 
 begin_decl_stmt
@@ -1002,6 +1025,34 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rshrcmd
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|u_short
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
