@@ -30,13 +30,13 @@ name|u_int64_t
 name|bi_version
 decl_stmt|;
 comment|/* version 1 */
-name|char
-name|bi_kernel
+name|u_int64_t
+name|bi_spare
 index|[
-literal|64
+literal|8
 index|]
 decl_stmt|;
-comment|/* name of booted kernel */
+comment|/* was: name of booted kernel */
 name|u_int64_t
 name|bi_boothowto
 decl_stmt|;
