@@ -9354,30 +9354,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|#
-directive|if
-literal|1
-if|if
-condition|(
-name|ep
-operator|!=
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"The topology lock is already held.\n"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|tsleep(&ep, PRIBIO, "r3:hmm", hz * 3);
-endif|#
-directive|endif
-block|}
-endif|#
-directive|endif
 comment|/* 		 * Now I/O requests. 		 */
 comment|/* Get first request from the queue. */
 name|mtx_lock
@@ -9427,7 +9403,7 @@ name|ep
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"r3:hmm1"
+literal|"r3:top1"
 argument_list|,
 name|hz
 operator|/
@@ -9836,7 +9812,7 @@ name|ep
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"r3:hmm2"
+literal|"r3:top2"
 argument_list|,
 name|hz
 operator|/
