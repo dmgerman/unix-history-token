@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: toke.c,v $$Revision: 1.2 $$Date: 1995/05/30 05:03:26 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: toke.c,v $  * Revision 1.2  1995/05/30 05:03:26  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1.1.1  1994/09/10  06:27:34  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:40  nate  * PERL!  *  * Revision 4.0.1.9  1993/02/05  19:48:43  lwall  * patch36: now detects ambiguous use of filetest operators as well as unary  * patch36: fixed ambiguity on - within tr///  *  * Revision 4.0.1.8  92/06/23  12:33:45  lwall  * patch35: bad interaction between backslash and hyphen in tr///  *  * Revision 4.0.1.7  92/06/11  21:16:30  lwall  * patch34: expectterm incorrectly set to indicate start of program or block  *  * Revision 4.0.1.6  92/06/08  16:03:49  lwall  * patch20: an EXPR may now start with a bareword  * patch20: print $fh EXPR can now expect term rather than operator in EXPR  * patch20: added ... as variant on ..  * patch20: new warning on spurious backslash  * patch20: new warning on missing $ for foreach variable  * patch20: "foo"x1024 now legal without space after x  * patch20: new warning on print accidentally used as function  * patch20: tr/stuff// wasn't working right  * patch20: 2. now eats the dot  * patch20:<@ARGV> now notices @ARGV  * patch20: tr/// now lets you say \-  *  * Revision 4.0.1.5  91/11/11  16:45:51  lwall  * patch19: default arg for shift was wrong after first subroutine definition  *  * Revision 4.0.1.4  91/11/05  19:02:48  lwall  * patch11: \x and \c were subject to double interpretation in regexps  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: nested list operators could miscount parens  * patch11: once-thru blocks didn't display right in the debugger  * patch11: sort eval "whatever" didn't work  * patch11: underscore is now allowed within literal octal and hex numbers  *  * Revision 4.0.1.3  91/06/10  01:32:26  lwall  * patch10: m'$foo' now treats string as single quoted  * patch10: certain pattern optimizations were botched  *  * Revision 4.0.1.2  91/06/07  12:05:56  lwall  * patch4: new copyright notice  * patch4: debugger lost track of lines in eval  * patch4: //o and s///o now optimize themselves fully at runtime  * patch4: added global modifier for pattern matches  *  * Revision 4.0.1.1  91/04/12  09:18:18  lwall  * patch1: perl -de "print" wouldn't stop at the first statement  *  * Revision 4.0  91/03/20  01:42:14  lwall  * 4.0 baseline.  *  */
+comment|/* $RCSfile: toke.c,v $$Revision: 1.3 $$Date: 1997/08/08 20:53:59 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: toke.c,v $  * Revision 1.3  1997/08/08 20:53:59  joerg  * Fix a buffer overflow condition (that causes a security hole in suidperl).  *  * Closes: CERT Advisory CA-97.17 - Vulnerability in suidperl  * Obtained from: (partly) the fix in CA-97.17  *  * Revision 1.2  1995/05/30 05:03:26  rgrimes  * Remove trailing whitespace.  *  * Revision 1.1.1.1  1994/09/10  06:27:34  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:40  nate  * PERL!  *  * Revision 4.0.1.9  1993/02/05  19:48:43  lwall  * patch36: now detects ambiguous use of filetest operators as well as unary  * patch36: fixed ambiguity on - within tr///  *  * Revision 4.0.1.8  92/06/23  12:33:45  lwall  * patch35: bad interaction between backslash and hyphen in tr///  *  * Revision 4.0.1.7  92/06/11  21:16:30  lwall  * patch34: expectterm incorrectly set to indicate start of program or block  *  * Revision 4.0.1.6  92/06/08  16:03:49  lwall  * patch20: an EXPR may now start with a bareword  * patch20: print $fh EXPR can now expect term rather than operator in EXPR  * patch20: added ... as variant on ..  * patch20: new warning on spurious backslash  * patch20: new warning on missing $ for foreach variable  * patch20: "foo"x1024 now legal without space after x  * patch20: new warning on print accidentally used as function  * patch20: tr/stuff// wasn't working right  * patch20: 2. now eats the dot  * patch20:<@ARGV> now notices @ARGV  * patch20: tr/// now lets you say \-  *  * Revision 4.0.1.5  91/11/11  16:45:51  lwall  * patch19: default arg for shift was wrong after first subroutine definition  *  * Revision 4.0.1.4  91/11/05  19:02:48  lwall  * patch11: \x and \c were subject to double interpretation in regexps  * patch11: prepared for ctype implementations that don't define isascii()  * patch11: nested list operators could miscount parens  * patch11: once-thru blocks didn't display right in the debugger  * patch11: sort eval "whatever" didn't work  * patch11: underscore is now allowed within literal octal and hex numbers  *  * Revision 4.0.1.3  91/06/10  01:32:26  lwall  * patch10: m'$foo' now treats string as single quoted  * patch10: certain pattern optimizations were botched  *  * Revision 4.0.1.2  91/06/07  12:05:56  lwall  * patch4: new copyright notice  * patch4: debugger lost track of lines in eval  * patch4: //o and s///o now optimize themselves fully at runtime  * patch4: added global modifier for pattern matches  *  * Revision 4.0.1.1  91/04/12  09:18:18  lwall  * patch1: perl -de "print" wouldn't stop at the first statement  *  * Revision 4.0  91/03/20  01:42:14  lwall  * 4.0 baseline.  *  */
 end_comment
 
 begin_include
@@ -9610,6 +9610,9 @@ argument_list|,
 name|bufend
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9681,6 +9684,9 @@ argument_list|,
 name|bufend
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9711,6 +9717,9 @@ name|d
 argument_list|,
 name|bufend
 argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
@@ -10223,6 +10232,9 @@ argument_list|,
 name|e
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -10283,6 +10295,9 @@ argument_list|,
 name|e
 argument_list|,
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -10321,6 +10336,9 @@ name|d
 argument_list|,
 name|e
 argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
@@ -14038,6 +14056,9 @@ argument_list|,
 name|send
 argument_list|,
 name|tokenbuf
+argument_list|,
+sizeof|sizeof
+name|tokenbuf
 argument_list|)
 operator|-
 name|s
@@ -15563,6 +15584,9 @@ name|s
 argument_list|,
 name|eol
 argument_list|,
+name|tokenbuf
+argument_list|,
+sizeof|sizeof
 name|tokenbuf
 argument_list|)
 expr_stmt|;
