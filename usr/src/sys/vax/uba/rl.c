@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rl.c	4.1	83/02/08	*/
+comment|/*	rl.c	4.2	83/05/14	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NHL
+name|NRL
 operator|>
 literal|0
 end_if
@@ -560,7 +560,11 @@ expr_stmt|;
 comment|/* Disable intrpt */
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rldevice
+argument_list|)
 operator|)
 return|;
 block|}
@@ -919,6 +923,74 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|rlopen
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|unit
+init|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|>>
+literal|3
+decl_stmt|;
+specifier|register
+name|struct
+name|uba_device
+modifier|*
+name|mi
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|NRL
+operator|||
+operator|(
+name|ui
+operator|=
+name|rldinfo
+index|[
+name|unit
+index|]
+operator|)
+operator|==
+literal|0
+operator|||
+name|ui
+operator|->
+name|ui_alive
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -2989,12 +3061,22 @@ begin_macro
 name|rlread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -3017,13 +3099,13 @@ name|unit
 operator|>=
 name|NRL
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|rlstrategy
@@ -3039,8 +3121,11 @@ argument_list|,
 name|B_READ
 argument_list|,
 name|minphys
+argument_list|,
+name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3048,12 +3133,22 @@ begin_macro
 name|rlwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -3076,13 +3171,13 @@ name|unit
 operator|>=
 name|NRL
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-else|else
+operator|)
+return|;
+return|return
+operator|(
 name|physio
 argument_list|(
 name|rlstrategy
@@ -3098,8 +3193,11 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minphys
+argument_list|,
+name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -3262,10 +3360,11 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|ubadone
-argument_list|(
 name|um
-argument_list|)
+operator|->
+name|um_ubinfo
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* reset controller */
