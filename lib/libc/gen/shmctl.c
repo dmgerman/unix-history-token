@@ -20,7 +20,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: shmctl.c,v 1.2 1993/08/26 15:26:19 brezak Exp $"
+literal|"$Id: shmctl.c,v 1.1 1993/09/27 00:57:47 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,8 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|buf
 parameter_list|)
 else|#
@@ -86,7 +87,8 @@ decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|buf
 decl_stmt|;
 endif|#

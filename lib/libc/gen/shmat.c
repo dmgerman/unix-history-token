@@ -20,7 +20,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: shmat.c,v 1.2 1993/08/26 15:26:18 brezak Exp $"
+literal|"$Id: shmat.c,v 1.1 1993/09/27 00:57:45 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,13 +58,15 @@ name|__STDC__
 end_if
 
 begin_function
-name|int
+name|void
+modifier|*
 name|shmat
 parameter_list|(
 name|int
 name|shmid
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|shmaddr
 parameter_list|,
 name|int
@@ -72,7 +74,7 @@ name|shmflg
 parameter_list|)
 else|#
 directive|else
-function|int shmat
+function|void *shmat
 parameter_list|(
 name|shmid
 parameter_list|,
@@ -83,7 +85,8 @@ parameter_list|)
 name|int
 name|shmid
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|shmaddr
 decl_stmt|;
 name|int
@@ -94,6 +97,10 @@ directive|endif
 block|{
 return|return
 operator|(
+operator|(
+name|void
+operator|*
+operator|)
 name|shmsys
 argument_list|(
 literal|0

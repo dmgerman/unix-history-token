@@ -20,7 +20,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: shmdt.c,v 1.2 1993/08/26 15:26:20 brezak Exp $"
+literal|"$Id: shmdt.c,v 1.1 1993/09/27 00:57:48 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,8 @@ begin_function
 name|int
 name|shmdt
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|shmaddr
 parameter_list|)
 else|#
@@ -70,7 +71,8 @@ function|int shmdt
 parameter_list|(
 name|shmaddr
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|shmaddr
 decl_stmt|;
 endif|#
