@@ -91,6 +91,27 @@ begin_comment
 comment|/* Max. size of directory read */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_ASYNCDAEMON
+value|20
+end_define
+
+begin_comment
+comment|/* Max. number of async_daemons runnable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NMOD
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) % nfs_asyncdaemons)
+end_define
+
 begin_comment
 comment|/*  * Nfs outstanding request list element  */
 end_comment
@@ -134,6 +155,9 @@ name|r_msiz
 decl_stmt|;
 name|u_long
 name|r_xid
+decl_stmt|;
+name|u_long
+name|r_inaddr
 decl_stmt|;
 name|u_long
 name|r_retry

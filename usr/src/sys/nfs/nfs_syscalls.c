@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_syscalls.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_syscalls.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -143,7 +143,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|nfs_asyncdaemons
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
 name|nfs_iodwant
+index|[
+name|MAX_ASYNCDAEMON
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -943,14 +955,8 @@ block|}
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|notyet
-end_ifndef
-
 begin_comment
-comment|/*  * Nfs pseudo system call for asynchronous i/o daemons.  * These babies just pretend to be disk interrupt service routines  * for client nfs. They are mainly here for read ahead  * Never returns unless it fails or gets killed  */
+comment|/*  * Nfs pseudo system call for asynchronous i/o daemons.  * These babies just pretend to be disk interrupt service routines  * for client nfs. They are mainly here for read ahead/write behind.  * Never returns unless it fails or gets killed  */
 end_comment
 
 begin_macro
@@ -971,6 +977,9 @@ name|dp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|int
+name|myiod
 decl_stmt|;
 comment|/* 	 * Must be super user 	 */
 if|if
@@ -994,12 +1003,29 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Assign my position or return error if too many already running 	 */
+if|if
+condition|(
+name|nfs_asyncdaemons
+operator|>
+name|MAX_ASYNCDAEMON
+condition|)
+name|RETURN
+argument_list|(
+name|EBUSY
+argument_list|)
+expr_stmt|;
+name|myiod
+operator|=
+name|nfs_asyncdaemons
+operator|++
+expr_stmt|;
 name|dp
 operator|=
 operator|&
 name|nfs_bqueue
 expr_stmt|;
-comment|/* 	 * Just loop arround doin our stuff until SIGKILL 	 */
+comment|/* 	 * Just loop around doin our stuff until SIGKILL 	 */
 for|for
 control|(
 init|;
@@ -1016,7 +1042,13 @@ name|NULL
 condition|)
 block|{
 name|nfs_iodwant
-operator|++
+index|[
+name|myiod
+index|]
+operator|=
+name|u
+operator|.
+name|u_procp
 expr_stmt|;
 name|sleep
 argument_list|(
@@ -1025,6 +1057,9 @@ name|caddr_t
 operator|)
 operator|&
 name|nfs_iodwant
+index|[
+name|myiod
+index|]
 argument_list|,
 name|PZERO
 operator|+
@@ -1094,11 +1129,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
