@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)px_header.c 1.4 %G%"
+literal|"@(#)px_header.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,8 @@ begin_define
 define|#
 directive|define
 name|ADDR_LC
-value|HEADER_BYTES - sizeof (struct exec) - sizeof (struct pxhdr)
+define|\
+value|(START + HEADER_BYTES - sizeof (struct exec) - sizeof (struct pxhdr))
 end_define
 
 begin_define
