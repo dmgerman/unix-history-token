@@ -136,7 +136,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|maxslp
 init|=
@@ -365,22 +364,6 @@ name|loadav
 argument_list|(
 operator|&
 name|averunnable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|proc0
-operator|.
-name|p_slptime
-operator|>
-name|maxslp
-operator|/
-literal|2
-condition|)
-name|wakeup
-argument_list|(
-operator|&
-name|proc0
 argument_list|)
 expr_stmt|;
 block|}

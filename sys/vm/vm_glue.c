@@ -153,6 +153,13 @@ directive|include
 file|<sys/user.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxslp
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * System initialization  *  * Note: proc0 from proc.h  */
 end_comment
@@ -1356,7 +1363,11 @@ name|PVM
 argument_list|,
 literal|"sched"
 argument_list|,
-literal|0
+name|maxslp
+operator|*
+name|hz
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -1623,11 +1634,6 @@ name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1657,6 +1663,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 switch|switch
@@ -1671,6 +1682,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1697,6 +1713,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1729,6 +1750,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1773,6 +1799,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|mtx_unlock_spin
@@ -1781,52 +1812,15 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-operator|++
-name|vm
-operator|->
-name|vm_refcnt
-expr_stmt|;
-comment|/* 			 * do not swapout a process that is waiting for VM 			 * data structures there is a possible deadlock. 			 */
-if|if
-condition|(
-name|lockmgr
-argument_list|(
-operator|&
-name|vm
-operator|->
-name|vm_map
-operator|.
-name|lock
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_NOWAIT
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
+if|#
+directive|if
 literal|0
-argument_list|,
-name|curproc
-argument_list|)
-condition|)
-block|{
-name|vmspace_free
-argument_list|(
-name|vm
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-name|vm_map_unlock
-argument_list|(
-operator|&
-name|vm
-operator|->
-name|vm_map
-argument_list|)
-expr_stmt|;
+comment|/* 			 * XXX: This is broken.  We release the lock we 			 * acquire before calling swapout, so we could 			 * still deadlock if another CPU locks this process' 			 * VM data structures after we release the lock but 			 * before we call swapout(). 			 */
+block|++vm->vm_refcnt;
+comment|/* 			 * do not swapout a process that is waiting for VM 			 * data structures there is a possible deadlock. 			 */
+block|if (lockmgr(&vm->vm_map.lock, 					LK_EXCLUSIVE | LK_NOWAIT, 					(void *)0, curproc)) { 				vmspace_free(vm); 				PROC_UNLOCK(p); 				continue; 			} 			vm_map_unlock(&vm->vm_map);
+endif|#
+directive|endif
 comment|/* 			 * If the process has been asleep for awhile and had 			 * most of its pages taken away already, swap it out. 			 */
 if|if
 condition|(
@@ -1870,6 +1864,11 @@ goto|goto
 name|retry
 goto|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|sx_sunlock
@@ -1906,6 +1905,13 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -1964,6 +1970,11 @@ operator|->
 name|p_sflag
 operator||=
 name|PS_SWAPPING
+expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
