@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mouse.h,v 1.2 1996/11/14 22:18:25 sos Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mouse.h,v 1.1 1994/09/09 11:27:31 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ file|<sys/ioccom.h>
 end_include
 
 begin_comment
-comment|/*  * NOTE: MOUSEIOC and MOUSEIOCREAD are now obsolete, but will stay   * for compatibility reasons. But, remember, the MOUSEIOCREAD ioctl  * command doesn't work and never worked before.  Some day we shall   * get rid of these...  */
+comment|/*  * NOTE: MOUSEIOC, MOUSEIOCREAD, and mouseinfo are now obsolete,   * but will stay for compatibility reasons. But, remember,   * the MOUSEIOCREAD ioctl command doesn't work and never worked before.    * Some day we shall get rid of these...   */
 end_comment
 
 begin_define
@@ -43,34 +43,6 @@ define|#
 directive|define
 name|MOUSEIOCREAD
 value|(MOUSEIOC|60)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUSE_GETSTATE
-value|_IOR('M',0,mouseinfo_t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUSE_GETINFO
-value|_IOR('M',1,mousehw_t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUSE_GETMODE
-value|_IOR('M',2,mousemode_t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOUSE_SETMODE
-value|_IOW('M',3,mousemode_t)
 end_define
 
 begin_typedef
@@ -194,6 +166,162 @@ end_define
 
 begin_comment
 comment|/* Mouse movement detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_GETSTATE
+value|_IOR('M',0,mousestatus_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_GETINFO
+value|_IOR('M',1,mousehw_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_GETMODE
+value|_IOR('M',2,mousemode_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SETMODE
+value|_IOW('M',3,mousemode_t)
+end_define
+
+begin_comment
+comment|/* new ioctls */
+end_comment
+
+begin_comment
+comment|/* mouse status block */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|mousestatus
+block|{
+name|int
+name|button
+decl_stmt|;
+comment|/* button status */
+name|int
+name|obutton
+decl_stmt|;
+comment|/* previous button status */
+name|int
+name|dx
+decl_stmt|;
+comment|/* x movement */
+name|int
+name|dy
+decl_stmt|;
+comment|/* y movement */
+block|}
+name|mousestatus_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* button */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON1DOWN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON2DOWN
+value|0x0002
+end_define
+
+begin_comment
+comment|/* middle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON3DOWN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* right */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON4DOWN
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON5DOWN
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON6DOWN
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON7DOWN
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_BUTTON8DOWN
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_STDBUTTONS
+value|0x0007
+end_define
+
+begin_comment
+comment|/* buttons 1-3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_EXTBUTTONS
+value|0x00f8
+end_define
+
+begin_comment
+comment|/* the others */
 end_comment
 
 begin_typedef
@@ -480,6 +608,21 @@ comment|/* right */
 end_comment
 
 begin_comment
+comment|/* Logitech MouseMan data packet (M+ protocol) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_LMAN_BUTTON2DOWN
+value|0x20
+end_define
+
+begin_comment
+comment|/* middle button, in the 4th byte */
+end_comment
+
+begin_comment
 comment|/* Mouse Systems Corp. mouse data packet */
 end_comment
 
@@ -543,6 +686,85 @@ end_define
 begin_comment
 comment|/* right */
 end_comment
+
+begin_comment
+comment|/* MM series mouse data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_PACKETSIZE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_SYNCMASK
+value|0xe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_SYNC
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_BUTTONS
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_BUTTON1DOWN
+value|0x04
+end_define
+
+begin_comment
+comment|/* left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_BUTTON2DOWN
+value|0x02
+end_define
+
+begin_comment
+comment|/* middle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_BUTTON3DOWN
+value|0x01
+end_define
+
+begin_comment
+comment|/* right */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_XPOSITIVE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MM_YPOSITIVE
+value|0x08
+end_define
 
 begin_comment
 comment|/* PS/2 mouse data packet */
@@ -619,6 +841,17 @@ end_define
 
 begin_comment
 comment|/* right */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2_BUTTON4UP
+value|0x08
+end_define
+
+begin_comment
+comment|/* GlidePoint tapping feature  					 * Yes! this is the same bit as SYNC! 					 */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*-  * Copyright (c) 1996 Kazutaka YOKOTA (yokota@zodiac.mech.utsunomiya-u.ac.jp)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote   *    products derived from this software without specific prior written   *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kbdio.h,v 1.1 1996/11/14 22:19:09 sos Exp $  */
 end_comment
 
 begin_ifndef
@@ -161,6 +161,13 @@ define|#
 directive|define
 name|KBD_RESERVED_BITS
 value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBD_OVERRIDE_KBD_LOCK
+value|0x0008
 end_define
 
 begin_define
@@ -342,6 +349,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PSMC_SEND_DEV_DATA
+value|0x00eb
+end_define
+
+begin_define
+define|#
+directive|define
 name|PSMC_SET_SCALING11
 value|0x00e6
 end_define
@@ -365,6 +379,13 @@ define|#
 directive|define
 name|PSMC_SET_STREAM_MODE
 value|0x00ea
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSMC_SET_REMOTE_MODE
+value|0x00f0
 end_define
 
 begin_define
@@ -505,7 +526,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|KBDS_CONTROLLER_BUSY
+name|KBDS_INPUT_BUFFER_FULL
 value|0x0002
 end_define
 
@@ -759,19 +780,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|wait_until_controller_is_really_idle
-name|__P
-argument_list|(
-operator|(
-name|int
-name|port
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|wait_for_data
 name|__P
 argument_list|(
@@ -810,7 +818,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|write_controller_command
 name|__P
 argument_list|(
@@ -826,7 +834,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|write_controller_data
 name|__P
 argument_list|(
@@ -842,7 +850,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|write_kbd_command
 name|__P
 argument_list|(
@@ -858,7 +866,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|write_aux_command
 name|__P
 argument_list|(
@@ -1003,6 +1011,9 @@ argument_list|(
 operator|(
 name|int
 name|port
+operator|,
+name|int
+name|t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1016,6 +1027,9 @@ argument_list|(
 operator|(
 name|int
 name|port
+operator|,
+name|int
+name|t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1029,6 +1043,9 @@ argument_list|(
 operator|(
 name|int
 name|port
+operator|,
+name|int
+name|t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1100,7 +1117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|set_controller_command_byte
 name|__P
 argument_list|(

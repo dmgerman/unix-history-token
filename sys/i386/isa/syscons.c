@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.188 1996/11/15 08:45:24 sos Exp $  */
+comment|/*-  * Copyright (c) 1992-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.189 1996/11/19 17:08:10 nate Exp $  */
 end_comment
 
 begin_include
@@ -2027,14 +2027,45 @@ name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
+comment|/* discard anything left after UserConfig */
+name|empty_both_buffers
+argument_list|(
+name|sc_port
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 comment|/* save the current keyboard controller command byte */
+name|c
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|write_controller_command
 argument_list|(
 name|sc_port
 argument_list|,
 name|KBDC_GET_COMMAND_BYTE
 argument_list|)
+condition|)
+block|{
+comment|/* CONTROLLER ERROR */
+name|printf
+argument_list|(
+literal|"sc%d: unable to get the current command byte value.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
+argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|c
 operator|=
 name|read_controller_data
@@ -2050,6 +2081,7 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* CONTROLLER ERROR */
 name|printf
 argument_list|(
 literal|"sc%d: unable to get the current command byte value.\n"
@@ -2063,14 +2095,17 @@ goto|goto
 name|fail
 goto|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* override the keyboard lock switch */
+block|c |= KBD_OVERRIDE_KBD_LOCK;
+endif|#
+directive|endif
 comment|/*      * enable the keyboard port, but disable the keyboard intr.       * the aux port (mouse port) is disabled too.      */
-name|write_controller_command
-argument_list|(
-name|sc_port
-argument_list|,
-name|KBDC_DISABLE_KBD_PORT
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|!
 name|set_controller_command_byte
 argument_list|(
 name|sc_port
@@ -2092,13 +2127,22 @@ name|KBD_DISABLE_AUX_PORT
 operator||
 name|KBD_DISABLE_AUX_INT
 argument_list|)
-expr_stmt|;
-comment|/* flush any noise in the buffer */
-name|empty_both_buffers
+condition|)
+block|{
+comment|/* CONTROLLER ERROR  	 * there is very little we can do... 	 */
+name|printf
 argument_list|(
-name|sc_port
+literal|"sc%d: unable to set the command byte.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* reset keyboard hardware */
 if|if
 condition|(
@@ -2109,7 +2153,14 @@ name|sc_port
 argument_list|)
 condition|)
 block|{
-comment|/*  	 * Keyboard reset may fail either because the keyboard doen't exist,          * or because the keyboard doesn't pass the self-test, or the keyboard           * controller on the motherboard and the keyboard somehow fail to           * shake hands. It is just possible, particularly in the last case,          * that the keyoard controller may be left in a hung state.           * test_controller() and test_kbd_port() appear to bring the keyboard          * controller back (I don't know why and how, though.) 	 */
+comment|/* KEYBOARD ERROR 	 * Keyboard reset may fail either because the keyboard doen't exist,          * or because the keyboard doesn't pass the self-test, or the keyboard           * controller on the motherboard and the keyboard somehow fail to           * shake hands. It is just possible, particularly in the last case,          * that the keyoard controller may be left in a hung state.           * test_controller() and test_kbd_port() appear to bring the keyboard          * controller back (I don't know why and how, though.) 	 */
+name|empty_both_buffers
+argument_list|(
+name|sc_port
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 name|test_controller
 argument_list|(
 name|sc_port
@@ -2120,14 +2171,18 @@ argument_list|(
 name|sc_port
 argument_list|)
 expr_stmt|;
-comment|/* We could disable the keyboard port and interrupt... but,  	 * the keyboard may still exist (see above). Just leave the command 	 *  byte as before. 	 */
-name|set_controller_command_byte
+comment|/* We could disable the keyboard port and interrupt... but,  	 * the keyboard may still exist (see above).  	 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
 argument_list|(
-name|sc_port
+literal|"sc%d: failed to reset the keyboard.\n"
 argument_list|,
-name|c
-argument_list|,
-literal|0
+name|dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2157,19 +2212,35 @@ argument_list|)
 operator|==
 name|KBD_ACK
 condition|)
+block|{
 comment|/* XT kbd doesn't need scan code translation */
 name|c
 operator|&=
 operator|~
 name|KBD_TRANSLATION
 expr_stmt|;
-name|wait_while_controller_busy
+block|}
+else|else
+block|{
+comment|/* KEYBOARD ERROR  	     * The XT kbd isn't usable unless the proper scan code set 	     * is selected.  	     */
+name|printf
 argument_list|(
-name|sc_port
+literal|"sc%d: unable to set the XT keyboard mode.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 block|}
 comment|/* enable the keyboard port and intr. */
+if|if
+condition|(
+operator|!
 name|set_controller_command_byte
 argument_list|(
 name|sc_port
@@ -2183,7 +2254,22 @@ name|KBD_ENABLE_KBD_PORT
 operator||
 name|KBD_ENABLE_KBD_INT
 argument_list|)
+condition|)
+block|{
+comment|/* CONTROLLER ERROR  	 * This is serious; we are left with the disabled keyboard intr.  	 */
+name|printf
+argument_list|(
+literal|"sc%d: unable to enable the keyboard port and intr.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
+argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|succeed
 label|:
 return|return
@@ -2193,6 +2279,23 @@ operator|)
 return|;
 name|fail
 label|:
+if|if
+condition|(
+name|c
+operator|!=
+operator|-
+literal|1
+condition|)
+comment|/* try to restore the command byte as before, if possible */
+name|set_controller_command_byte
+argument_list|(
+name|sc_port
+argument_list|,
+name|c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
