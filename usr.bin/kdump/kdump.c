@@ -444,7 +444,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:dlm:np:ERTt:"
+literal|"f:dElm:np:RTt:"
 argument_list|)
 operator|)
 operator|!=
@@ -3094,7 +3094,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kdump [-dnlRT] [-f trfile] [-m maxdata] [-t [cnisuw]]\n"
+literal|"usage: kdump [-dEnlRT] [-f trfile] [-m maxdata] [-p pid] [-t [cnisuw]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
