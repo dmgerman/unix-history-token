@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	8.4 (Berkeley) %G%"
+literal|"@(#)mountd.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|CD9660
-end_define
 
 begin_include
 include|#
