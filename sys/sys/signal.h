@@ -574,6 +574,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * XXX Should this follow any _VISIBLE tag?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGTHR
+value|32
+end_define
+
+begin_comment
+comment|/* Thread interrupt. */
+end_comment
+
+begin_comment
 comment|/*  * XXX missing SIGRTMIN, SIGRTMAX.  */
 end_comment
 
