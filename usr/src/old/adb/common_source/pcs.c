@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcs.c	5.2 (Berkeley) %G%"
+literal|"@(#)pcs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,17 +197,6 @@ name|SINGLESTEP
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|NEW
-value|2
-end_define
-
-begin_comment
-comment|/* starting new process, no pc to set */
-end_comment
-
 begin_comment
 comment|/* sub process control */
 end_comment
@@ -231,18 +220,16 @@ specifier|register
 name|int
 name|check
 decl_stmt|;
-name|int
-name|execsig
-init|=
-literal|0
-decl_stmt|,
-name|runmode
-decl_stmt|;
 specifier|register
 name|struct
 name|bkpt
 modifier|*
 name|bp
+decl_stmt|;
+name|int
+name|execsig
+decl_stmt|,
+name|runmode
 decl_stmt|;
 name|char
 modifier|*
@@ -538,8 +525,6 @@ expr_stmt|;
 name|runmode
 operator|=
 name|CONTINUOUS
-operator||
-name|NEW
 expr_stmt|;
 name|execsig
 operator|=
@@ -618,12 +603,13 @@ expr_stmt|;
 name|runmode
 operator|=
 name|SINGLESTEP
-operator||
-name|NEW
 expr_stmt|;
 name|execsig
 operator|=
 literal|0
+expr_stmt|;
+name|runcount
+operator|--
 expr_stmt|;
 block|}
 break|break;
@@ -672,6 +658,7 @@ argument_list|(
 name|BADMOD
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
@@ -682,15 +669,8 @@ operator|&&
 name|runpcs
 argument_list|(
 name|runmode
-operator|&
-operator|~
-name|NEW
 argument_list|,
 name|execsig
-argument_list|,
-name|runmode
-operator|&
-name|NEW
 argument_list|)
 condition|)
 name|adbprintf
@@ -993,15 +973,11 @@ parameter_list|(
 name|runmode
 parameter_list|,
 name|execsig
-parameter_list|,
-name|newproc
 parameter_list|)
 name|int
 name|runmode
 decl_stmt|,
 name|execsig
-decl_stmt|,
-name|newproc
 decl_stmt|;
 block|{
 specifier|register
@@ -1019,11 +995,6 @@ argument_list|(
 name|gavedot
 condition|?
 name|dot
-else|:
-name|newproc
-condition|?
-name|entrypc
-argument_list|()
 else|:
 name|getpc
 argument_list|()
@@ -1046,28 +1017,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|adbprintf
-argument_list|(
-literal|"\n%s @ %X sig %D\n"
-argument_list|,
-name|newproc
-condition|?
-literal|"start"
-else|:
-literal|"continue"
-argument_list|,
-name|getpc
-argument_list|()
-argument_list|,
-name|execsig
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 comment|/* BEGIN XXX (machine dependent?, delete ptrace, etc) */
 if|if
 condition|(
@@ -1084,9 +1033,6 @@ block|{
 comment|/* continuing from a breakpoint is hard */
 if|if
 condition|(
-operator|!
-name|newproc
-operator|&&
 operator|(
 name|bkpt
 operator|=
@@ -1135,14 +1081,8 @@ operator|(
 name|int
 operator|*
 operator|)
-operator|(
-name|newproc
-condition|?
-literal|1
-else|:
 name|getpc
 argument_list|()
-operator|)
 argument_list|,
 name|execsig
 argument_list|)
@@ -1871,7 +1811,7 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
-name|exect
+name|execve
 argument_list|(
 name|symfile
 operator|.
