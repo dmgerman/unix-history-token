@@ -8708,6 +8708,11 @@ operator||
 name|SK_LINKLED_BLINK_OFF
 argument_list|)
 expr_stmt|;
+name|mii_pollstat
+argument_list|(
+name|mii
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -10588,6 +10593,15 @@ name|SK_RXBMU_RX_START
 argument_list|)
 expr_stmt|;
 comment|/* Enable XMACs TX and RX state machines */
+name|SK_XM_CLRBIT_2
+argument_list|(
+name|sc_if
+argument_list|,
+name|XM_MMUCMD
+argument_list|,
+name|XM_MMUCMD_IGNPAUSE
+argument_list|)
+expr_stmt|;
 name|SK_XM_SETBIT_2
 argument_list|(
 name|sc_if
