@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.31	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.32	%G% */
 end_comment
 
 begin_include
@@ -693,6 +693,17 @@ begin_comment
 comment|/* force this field, even if default */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|H_ADDR
+value|00200
+end_define
+
+begin_comment
+comment|/* this field contains addresses */
+end_comment
+
 begin_comment
 comment|/* **  Rewrite rules. */
 end_comment
@@ -1103,6 +1114,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* set if blow-by-blow desired */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|GrabTo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if set, get recipients from msg */
 end_comment
 
 begin_decl_stmt

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.4	%G%"
+literal|"@(#)headers.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +394,31 @@ operator|=
 name|newstr
 argument_list|(
 name|fvalue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|def
+operator|&&
+name|GrabTo
+operator|&&
+name|bitset
+argument_list|(
+name|H_ADDR
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+name|sendto
+argument_list|(
+name|h
+operator|->
+name|h_value
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
