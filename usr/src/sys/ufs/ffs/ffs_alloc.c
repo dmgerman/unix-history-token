@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.11	82/09/06	*/
+comment|/*	ffs_alloc.c	2.12	82/10/10	*/
 end_comment
 
 begin_include
@@ -5539,7 +5539,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCK
+name|ILOCKED
 operator|)
 operator|!=
 literal|0
@@ -5555,7 +5555,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ILOCK
+name|ILOCKED
 expr_stmt|;
 name|ip
 operator|->

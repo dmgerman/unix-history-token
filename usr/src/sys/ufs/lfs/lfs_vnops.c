@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.37	82/09/06	*/
+comment|/*	lfs_vnops.c	4.38	82/10/10	*/
 end_comment
 
 begin_include
@@ -68,28 +68,6 @@ include|#
 directive|include
 file|"../h/proc.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inline.h"
-end_include
-
-begin_comment
-comment|/* no reason to inline expand these guys here */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ilock
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|iunlock
-end_undef
 
 begin_include
 include|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.24	82/09/06	*/
+comment|/*	ufs_inode.c	4.25	82/10/10	*/
 end_comment
 
 begin_include
@@ -55,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../h/buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inline.h"
 end_include
 
 begin_ifdef
@@ -595,7 +589,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCK
+name|ILOCKED
 operator|)
 operator|!=
 literal|0
@@ -756,7 +750,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ILOCK
+name|ILOCKED
 expr_stmt|;
 return|return
 operator|(
@@ -870,7 +864,7 @@ name|ip
 operator|->
 name|i_flag
 operator|=
-name|ILOCK
+name|ILOCKED
 expr_stmt|;
 name|ip
 operator|->
@@ -1065,7 +1059,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCK
+name|ILOCKED
 operator|)
 operator|==
 literal|0
@@ -1131,7 +1125,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ILOCK
+name|ILOCKED
 expr_stmt|;
 if|if
 condition|(
@@ -2424,40 +2418,6 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ilock
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|ilock
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|iunlock
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|iunlock
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Lock an inode. If its already locked, set the WANT bit and sleep.  */
 end_comment
@@ -2477,37 +2437,10 @@ end_expr_stmt
 
 begin_block
 block|{
-while|while
-condition|(
-name|ip
-operator|->
-name|i_flag
-operator|&
 name|ILOCK
-condition|)
-block|{
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IWANT
-expr_stmt|;
-name|sleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ip
-argument_list|,
-name|PINOD
 argument_list|)
-expr_stmt|;
-block|}
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|ILOCK
 expr_stmt|;
 block|}
 end_block
@@ -2531,38 +2464,11 @@ end_expr_stmt
 
 begin_block
 block|{
-name|ip
-operator|->
-name|i_flag
-operator|&=
-operator|~
-name|ILOCK
-expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|IWANT
-condition|)
-block|{
-name|ip
-operator|->
-name|i_flag
-operator|&=
-operator|~
-name|IWANT
-expr_stmt|;
-name|wakeup
+name|IUNLOCK
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ip
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
