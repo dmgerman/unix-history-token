@@ -3099,6 +3099,17 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
+name|td
+operator|->
+name|td_kse
+operator|->
+name|ke_oncpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Setup the sched_lock state so that we can release it. 	 */
 name|sched_lock
 operator|.
@@ -3122,15 +3133,23 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|CTR3
 argument_list|(
-operator|&
-name|sched_lock
+name|KTR_PROC
+argument_list|,
+literal|"fork_exit: new proc %p (pid %d, %s)"
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 if|if
 condition|(
 name|PCPU_GET
@@ -3157,8 +3176,12 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * cpu_set_fork_handler intercepts this function call to          * have this call a non-return function to stay in kernel mode.          * initproc has its own fork handler, but it does return.          */
 name|KASSERT
 argument_list|(
