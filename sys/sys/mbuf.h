@@ -206,7 +206,8 @@ name|ext_free
 function_decl|)
 comment|/* free routine if not the usual */
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -1885,7 +1886,8 @@ modifier|*
 name|free
 function_decl|)
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|void
 modifier|*
