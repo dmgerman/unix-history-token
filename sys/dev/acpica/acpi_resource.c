@@ -2858,9 +2858,7 @@ name|count
 operator|=
 name|end
 operator|-
-name|rle
-operator|->
-name|end
+name|start
 operator|+
 literal|1
 expr_stmt|;
