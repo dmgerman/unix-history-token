@@ -1422,11 +1422,11 @@ name|bp
 operator|->
 name|ut_line
 argument_list|,
-literal|"uucp"
+literal|"uu"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-literal|"uucp"
+literal|"uu"
 argument_list|)
 operator|-
 literal|1
@@ -1436,7 +1436,7 @@ name|bp
 operator|->
 name|ut_line
 index|[
-literal|4
+literal|2
 index|]
 operator|=
 literal|'\0'
