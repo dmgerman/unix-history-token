@@ -7037,8 +7037,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-operator|++
 name|index
+operator|++
 index|]
 operator|=
 name|m3_rd_assp_code
@@ -7065,8 +7065,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-operator|++
 name|index
+operator|++
 index|]
 operator|=
 name|m3_rd_assp_data
