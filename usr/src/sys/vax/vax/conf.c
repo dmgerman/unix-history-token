@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.30	81/03/21	*/
+comment|/*	conf.c	4.31	81/04/13	*/
 end_comment
 
 begin_include
@@ -2198,7 +2198,7 @@ begin_decl_stmt
 name|int
 name|nldisp
 init|=
-literal|4
+literal|3
 decl_stmt|;
 end_decl_stmt
 
