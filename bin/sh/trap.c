@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.11 1998/05/18 06:44:22 charnier Exp $"
+literal|"$Id: trap.c,v 1.12 1998/08/24 10:20:36 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,7 +978,7 @@ endif|#
 directive|endif
 name|action
 operator|=
-name|S_IGN
+name|S_CATCH
 expr_stmt|;
 break|break;
 case|case
