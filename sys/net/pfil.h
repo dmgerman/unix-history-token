@@ -137,7 +137,6 @@ name|int
 name|ph_init
 decl_stmt|;
 block|}
-name|pfil_head_t
 struct|;
 end_struct
 
