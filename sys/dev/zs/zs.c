@@ -2138,11 +2138,12 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-operator|!
 name|suser
 argument_list|(
 name|td
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
