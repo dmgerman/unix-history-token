@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -1478,7 +1478,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|100
+name|MAXLINE
 index|]
 decl_stmt|;
 operator|(
