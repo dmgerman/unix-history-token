@@ -298,23 +298,8 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-if|if
-condition|(
 name|srandomdev
 argument_list|()
-operator|<
-literal|0
-condition|)
-name|srandom
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-name|getpid
-argument_list|()
-argument_list|)
 expr_stmt|;
 comment|/* Compute a random exit status between 0 and denom - 1. */
 if|if
