@@ -4023,11 +4023,18 @@ operator|=
 literal|"SoundBlaster %d.%d"
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|sb_dsp_operations
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sb_dsp_operations
+operator|.
+name|name
+argument_list|)
 argument_list|,
 name|fmt
 argument_list|,

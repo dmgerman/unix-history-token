@@ -1064,9 +1064,14 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|temp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
 argument_list|,
 literal|"%s rev %d"
 argument_list|,

@@ -661,9 +661,14 @@ name|name
 operator|)
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"0x%x"
 argument_list|,
@@ -1017,9 +1022,14 @@ operator|(
 name|name
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?arit 0x%x?"
 argument_list|,
@@ -1288,9 +1298,14 @@ operator|(
 name|name
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?logical 0x%x?"
 argument_list|,
@@ -1582,9 +1597,14 @@ operator|(
 name|name
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?bit 0x%x?"
 argument_list|,
@@ -1703,9 +1723,14 @@ operator|(
 name|name
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?mul 0x%x?"
 argument_list|,
@@ -1826,9 +1851,14 @@ operator|(
 name|name
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?special 0x%x?"
 argument_list|,
@@ -2024,9 +2054,14 @@ literal|"ftois"
 operator|)
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?intmisc 0x%x?"
 argument_list|,
@@ -2145,9 +2180,14 @@ name|name
 operator|)
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|unk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|unk
+argument_list|)
 argument_list|,
 literal|"?%s 0x%x?"
 argument_list|,

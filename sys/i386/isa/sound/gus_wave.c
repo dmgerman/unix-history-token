@@ -22055,11 +22055,18 @@ condition|(
 name|gus_pnp_seen
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|gus_info
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gus_info
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"Gravis %s (%dk)"
 argument_list|,
@@ -22076,11 +22083,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|gus_info
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gus_info
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"Gravis UltraSound %s (%dk)"
 argument_list|,

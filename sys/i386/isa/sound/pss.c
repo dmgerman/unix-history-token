@@ -1512,9 +1512,14 @@ name|pss_initialized
 operator|=
 literal|1
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
 argument_list|,
 literal|"ECHO-PSS  Rev. %d"
 argument_list|,

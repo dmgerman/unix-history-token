@@ -607,9 +607,16 @@ name|int
 name|len
 decl_stmt|;
 comment|/* Get the domain name */
-name|strcpy
+name|snprintf
 argument_list|(
 name|hname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hname
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|hostname
 argument_list|)
@@ -776,9 +783,16 @@ return|return
 name|EINVAL
 return|;
 comment|/* Get the host's unqualified name (strip off the domain) */
-name|strcpy
+name|snprintf
 argument_list|(
 name|hname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hname
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|hostname
 argument_list|)

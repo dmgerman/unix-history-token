@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: espvar.h,v 1.1 1998/08/20 08:27:10 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	if (n< (sizeof((ecb)->trace)-100)) \ 		sprintf((ecb)->trace + n, f,  a, b); \ } while(0)
+value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	snprintf((ecb)->trace + n, sizeof((ecb)->trace) - n, f, a, b); \ } while(0)
 end_define
 
 begin_else

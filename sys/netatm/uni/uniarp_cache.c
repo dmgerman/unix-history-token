@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: uniarp_cache.c,v 1.1 1998/09/15 08:23:09 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: uniarp_cache.c,v 1.2 1998/10/31 20:07:00 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: uniarp_cache.c,v 1.1 1998/09/15 08:23:09 phk Exp $"
+literal|"@(#) $Id: uniarp_cache.c,v 1.2 1998/10/31 20:07:00 phk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -143,6 +143,18 @@ argument_list|(
 name|abuf
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|abuf
+index|[
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|ATM_DEBUG4
 argument_list|(
@@ -436,6 +448,18 @@ name|abuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|abuf
+index|[
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -545,6 +569,18 @@ argument_list|(
 name|abuf
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|abuf
+index|[
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|log
 argument_list|(
@@ -1073,6 +1109,18 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|ATM_DEBUG5
 argument_list|(

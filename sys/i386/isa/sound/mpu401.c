@@ -4353,7 +4353,7 @@ literal|'M'
 else|:
 literal|' '
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|mpu_synth_info
 index|[
@@ -4361,6 +4361,16 @@ name|num_midis
 index|]
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mpu_synth_info
+index|[
+name|num_midis
+index|]
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"MQX-%d%c MIDI Interface #%d"
 argument_list|,
@@ -4415,7 +4425,7 @@ name|MPU_CAP_SYNC
 operator||
 name|MPU_CAP_FSK
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|mpu_synth_info
 index|[
@@ -4423,6 +4433,16 @@ name|num_midis
 index|]
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mpu_synth_info
+index|[
+name|num_midis
+index|]
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"MPU-401 %d.%d%c Midi interface #%d"
 argument_list|,

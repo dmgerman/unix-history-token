@@ -1940,11 +1940,18 @@ literal|4
 condition|)
 return|return;
 comment|/* Not a SB16 */
-name|sprintf
+name|snprintf
 argument_list|(
 name|sb16_dsp_operations
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sb16_dsp_operations
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"SoundBlaster 16 %d.%d"
 argument_list|,

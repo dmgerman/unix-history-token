@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ip_divert.c,v 1.33 1998/07/02 06:31:25 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ip_divert.c,v 1.34 1998/07/06 09:06:58 julian Exp $  */
 end_comment
 
 begin_include
@@ -604,6 +604,21 @@ break|break;
 block|}
 block|}
 comment|/* 	 * Record the incoming interface name whenever we have one. 	 */
+name|bzero
+argument_list|(
+operator|&
+name|divsrc
+operator|.
+name|sin_zero
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|divsrc
+operator|.
+name|sin_zero
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -613,16 +628,19 @@ operator|.
 name|rcvif
 condition|)
 block|{
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 comment|/* 		 * Hide the actual interface name in there in the  		 * sin_zero array. XXX This needs to be moved to a 		 * different sockaddr type for divert, e.g. 		 * sockaddr_div with multiple fields like  		 * sockaddr_dl. Presently we have only 7 bytes 		 * but that will do for now as most interfaces 		 * are 4 or less + 2 or less bytes for unit. 		 * There is probably a faster way of doing this, 		 * possibly taking it from the sockaddr_dl on the iface. 		 * This solves the problem of a P2P link and a LAN interface 		 * having the same address, which can result in the wrong 		 * interface being assigned to the packet when fed back 		 * into the divert socket. Theoretically if the daemon saves 		 * and re-uses the sockaddr_in as suggested in the man pages, 		 * this iface name will come along for the ride. 		 * (see div_output for the other half of this.) 		 */
-name|sprintf
+name|snprintf
 argument_list|(
-name|name
+name|divsrc
+operator|.
+name|sin_zero
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|divsrc
+operator|.
+name|sin_zero
+argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -641,17 +659,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_unit
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|divsrc
-operator|.
-name|sin_zero
-argument_list|,
-name|name
-argument_list|,
-literal|7
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.22 1998/10/09 00:24:49 jdp Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.23 1998/10/31 17:21:31 peter Exp $  */
 end_comment
 
 begin_include
@@ -1487,9 +1487,14 @@ index|[
 literal|14
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tmpbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpbuf
+argument_list|)
 argument_list|,
 literal|"\nITEM            SIZE     LIMIT    USED    FREE  REQUESTS\n"
 argument_list|)
@@ -1651,10 +1656,17 @@ operator|=
 literal|'\n'
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|tmpbuf
 operator|+
+name|offset
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpbuf
+argument_list|)
+operator|-
 name|offset
 argument_list|,
 literal|"%s %6.6u, %8.8u, %6.6u, %6.6u, %8.8u\n"

@@ -1247,9 +1247,14 @@ name|tlsb_line
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tlsb_line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tlsb_line
+argument_list|)
 argument_list|,
 literal|"unknown, dtype 0x%x"
 argument_list|,

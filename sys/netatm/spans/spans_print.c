@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_print.c,v 1.2 1998/09/17 09:35:00 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_print.c,v 1.3 1998/10/31 20:06:56 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: spans_print.c,v 1.2 1998/09/17 09:35:00 phk Exp $"
+literal|"@(#) $Id: spans_print.c,v 1.3 1998/10/31 20:06:56 phk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -68,6 +68,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -99,6 +101,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -148,6 +152,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -165,6 +171,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -182,6 +190,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -837,6 +847,8 @@ parameter_list|(
 name|objp
 parameter_list|,
 name|dest
+parameter_list|,
+name|len
 parameter_list|)
 name|spans_aal
 modifier|*
@@ -845,6 +857,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|dest
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|static
@@ -880,9 +895,11 @@ operator|>
 name|SPANS_AAL5
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"Invalid (%d)"
 argument_list|,
@@ -896,9 +913,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"%s (%d)"
 argument_list|,
@@ -935,6 +954,8 @@ parameter_list|(
 name|objp
 parameter_list|,
 name|dest
+parameter_list|,
+name|len
 parameter_list|)
 name|spans_result
 modifier|*
@@ -943,6 +964,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|dest
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|static
@@ -976,9 +1000,11 @@ operator|>
 name|SPANS_BADDEST
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"Invalid (%d)"
 argument_list|,
@@ -992,9 +1018,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"%s (%d)"
 argument_list|,
@@ -1026,6 +1054,8 @@ parameter_list|(
 name|objp
 parameter_list|,
 name|dest
+parameter_list|,
+name|len
 parameter_list|)
 name|spans_msgtype
 modifier|*
@@ -1034,6 +1064,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|dest
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 name|int
@@ -1276,9 +1309,11 @@ operator|.
 name|type
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"%s (%d)"
 argument_list|,
@@ -1300,9 +1335,11 @@ return|return;
 block|}
 block|}
 comment|/* 	 * Type was not found--return an error indicator 	 */
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"Invalid (%d)"
 argument_list|,
@@ -1330,6 +1367,8 @@ parameter_list|(
 name|objp
 parameter_list|,
 name|dest
+parameter_list|,
+name|len
 parameter_list|)
 name|spans_query_type
 modifier|*
@@ -1338,6 +1377,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|dest
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|static
@@ -1367,9 +1409,11 @@ operator|>
 name|SPANS_QUERY_END_TO_END
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"Invalid (%d)"
 argument_list|,
@@ -1383,9 +1427,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"%s (%d)"
 argument_list|,
@@ -1417,6 +1463,8 @@ parameter_list|(
 name|objp
 parameter_list|,
 name|dest
+parameter_list|,
+name|len
 parameter_list|)
 name|spans_query_type
 modifier|*
@@ -1425,6 +1473,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|dest
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|static
@@ -1456,9 +1507,11 @@ operator|>
 name|SPANS_CONN_CLOSED
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"Invalid (%d)"
 argument_list|,
@@ -1472,9 +1525,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|dest
+argument_list|,
+name|len
 argument_list|,
 literal|"%s (%d)"
 argument_list|,
@@ -1824,6 +1879,11 @@ argument_list|(
 name|objp
 argument_list|,
 name|aal_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|aal_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1861,6 +1921,11 @@ argument_list|(
 name|objp
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1898,6 +1963,11 @@ argument_list|(
 name|objp
 argument_list|,
 name|msgtype_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msgtype_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3331,6 +3401,11 @@ operator|->
 name|qyreq_type
 argument_list|,
 name|query_type_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|query_type_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3397,6 +3472,11 @@ operator|->
 name|qyrsp_type
 argument_list|,
 name|query_type_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|query_type_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3416,6 +3496,11 @@ operator|->
 name|qyrsp_state
 argument_list|,
 name|state_type_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|state_type_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4065,6 +4150,11 @@ operator|->
 name|mb_type
 argument_list|,
 name|msgtype_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msgtype_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4147,7 +4237,7 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|daddr
+name|saddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4485,6 +4575,11 @@ operator|->
 name|oprsp_result
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4585,6 +4680,11 @@ operator|->
 name|opcnf_result
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4833,6 +4933,11 @@ operator|->
 name|clrsp_result
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4919,6 +5024,11 @@ operator|->
 name|clcnf_result
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5153,6 +5263,11 @@ operator|->
 name|rcrsp_result
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5239,6 +5354,11 @@ operator|->
 name|rccnf_result
 argument_list|,
 name|result_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_str
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf

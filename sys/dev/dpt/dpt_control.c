@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.8 1998/08/05 00:54:36 eivind Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.9 1998/09/15 08:33:31 gibbs Exp $"
 end_empty
 
 begin_include
@@ -3757,7 +3757,12 @@ name|board_data
 operator|.
 name|firmware
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+name|compat_softc
+operator|.
+name|ha_fw_version
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|compat_softc

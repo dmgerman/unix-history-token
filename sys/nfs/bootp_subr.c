@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.15 1998/08/23 03:07:16 wollman Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.16 1998/12/03 20:28:23 dillon Exp $	*/
 end_comment
 
 begin_comment
@@ -4079,11 +4079,18 @@ name|if_link
 argument_list|)
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ireq
 operator|.
 name|ifr_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ireq
+operator|.
+name|ifr_name
+argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
@@ -4735,9 +4742,14 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|lookup_path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lookup_path
+argument_list|)
 argument_list|,
 literal|"swap.%d.%d.%d.%d"
 argument_list|,

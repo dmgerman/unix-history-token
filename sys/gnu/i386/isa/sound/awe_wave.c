@@ -3430,11 +3430,18 @@ comment|/* intialize AWE32 hardware */
 name|awe_initialize
 argument_list|()
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|awe_info
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|awe_info
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"AWE32-%s (RAM%dk)"
 argument_list|,

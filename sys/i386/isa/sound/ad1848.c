@@ -6568,7 +6568,7 @@ index|]
 operator|!=
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ad1848_pcm_operations
 index|[
@@ -6576,6 +6576,16 @@ name|nr_ad1848_devs
 index|]
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ad1848_pcm_operations
+index|[
+name|nr_ad1848_devs
+index|]
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -6587,7 +6597,7 @@ name|chip_name
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|ad1848_pcm_operations
 index|[
@@ -6595,6 +6605,16 @@ name|nr_ad1848_devs
 index|]
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ad1848_pcm_operations
+index|[
+name|nr_ad1848_devs
+index|]
+operator|.
+name|name
+argument_list|)
 argument_list|,
 literal|"Generic audio codec (%s)"
 argument_list|,

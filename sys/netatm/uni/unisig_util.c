@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_util.c,v 1.2 1998/09/17 09:35:02 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_util.c,v 1.3 1998/10/31 20:07:01 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: unisig_util.c,v 1.2 1998/09/17 09:35:02 phk Exp $"
+literal|"@(#) $Id: unisig_util.c,v 1.3 1998/10/31 20:07:01 phk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -649,9 +649,14 @@ literal|'X'
 condition|)
 block|{
 comment|/* 				 * If format character is an 'X', put a 				 * two-digit hex representation of the 				 * NSAP byte in the output buffer 				 */
-name|sprintf
+name|snprintf
 argument_list|(
 name|t_buff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t_buff
+argument_list|)
 argument_list|,
 literal|"%x"
 argument_list|,
@@ -725,16 +730,24 @@ name|i
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
-operator|&
 name|strbuff
-index|[
+operator|+
 name|strlen
 argument_list|(
 name|strbuff
 argument_list|)
-index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|strbuff
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|strbuff
+argument_list|)
 argument_list|,
 literal|"%c"
 argument_list|,
@@ -937,9 +950,14 @@ literal|7
 index|]
 expr_stmt|;
 comment|/* 		 * Print the address as two words xxxxx.yyyyyyyy 		 */
-name|sprintf
+name|snprintf
 argument_list|(
 name|strbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|strbuff
+argument_list|)
 argument_list|,
 literal|"%x.%x"
 argument_list|,

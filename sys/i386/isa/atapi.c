@@ -1594,9 +1594,14 @@ literal|"READ_CD"
 operator|)
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"[0x%x]"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.6 1998/11/18 23:51:40 dfr Exp $ */
+comment|/* $Id: trap.c,v 1.7 1998/12/04 10:52:47 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -640,9 +640,14 @@ literal|"system call"
 expr_stmt|;
 break|break;
 default|default:
-name|sprintf
+name|snprintf
 argument_list|(
 name|ubuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ubuf
+argument_list|)
 argument_list|,
 literal|"type %lx"
 argument_list|,
