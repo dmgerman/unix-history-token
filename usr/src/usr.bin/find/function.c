@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	8.2 (Berkeley) %G%"
+literal|"@(#)function.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1647,7 +1647,7 @@ name|strcmp
 argument_list|(
 name|arg
 argument_list|,
-literal|"pc"
+literal|"msdos"
 argument_list|)
 condition|)
 block|{

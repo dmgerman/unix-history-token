@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -347,8 +347,8 @@ value|\ 	"nfs",
 comment|/*  2 MOUNT_NFS */
 value|\ 	"mfs",
 comment|/*  3 MOUNT_MFS */
-value|\ 	"pc",
-comment|/*  4 MOUNT_PC */
+value|\ 	"msdos",
+comment|/*  4 MOUNT_MSDOS */
 value|\ 	"lfs",
 comment|/*  5 MOUNT_LFS */
 value|\ 	"lofs",
