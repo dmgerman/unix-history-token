@@ -503,9 +503,6 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|char
-modifier|*
-parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -804,9 +801,6 @@ specifier|static
 name|int
 name|nfs_mountdiskless
 parameter_list|(
-name|char
-modifier|*
-parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -2669,8 +2663,6 @@ name|nfs_mountdiskless
 argument_list|(
 name|buf
 argument_list|,
-literal|"/"
-argument_list|,
 name|MNT_RDONLY
 argument_list|,
 operator|&
@@ -2776,10 +2768,6 @@ name|char
 modifier|*
 name|path
 parameter_list|,
-name|char
-modifier|*
-name|which
-parameter_list|,
 name|int
 name|mountflag
 parameter_list|,
@@ -2857,8 +2845,6 @@ name|mp
 argument_list|,
 name|nam
 argument_list|,
-name|which
-argument_list|,
 name|path
 argument_list|,
 name|vpp
@@ -2874,11 +2860,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nfs_mountroot: mount %s on %s: %d\n"
+literal|"nfs_mountroot: mount %s on /: %d\n"
 argument_list|,
 name|path
-argument_list|,
-name|which
 argument_list|,
 name|error
 argument_list|)
@@ -2889,26 +2873,6 @@ name|error
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|copystr
-argument_list|(
-name|which
-argument_list|,
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-argument_list|,
-name|MNAMELEN
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3886,12 +3850,6 @@ index|[
 name|NFSX_V3FHMAX
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|path
-init|=
-literal|"XXX: foo"
-decl_stmt|;
 if|if
 condition|(
 name|vfs_filteropt
@@ -4193,8 +4151,6 @@ name|mp
 argument_list|,
 name|nam
 argument_list|,
-name|path
-argument_list|,
 name|hst
 argument_list|,
 operator|&
@@ -4331,10 +4287,6 @@ name|struct
 name|sockaddr
 modifier|*
 name|nam
-parameter_list|,
-name|char
-modifier|*
-name|pth
 parameter_list|,
 name|char
 modifier|*
@@ -4643,19 +4595,6 @@ operator|->
 name|mnt_stat
 operator|.
 name|f_mntfromname
-argument_list|,
-name|MNAMELEN
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|pth
-argument_list|,
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
 argument_list|,
 name|MNAMELEN
 argument_list|)
