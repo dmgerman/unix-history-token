@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup.h	4.1	82/02/15	*/
+comment|/*	pup.h	4.2	82/03/03	*/
 end_comment
 
 begin_comment
@@ -21,8 +21,15 @@ name|u_long
 name|pp_socket
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * PUP header.  */
-decl|struct
+end_comment
+
+begin_struct
+struct|struct
 name|pup_header
 block|{
 name|u_short
@@ -84,6 +91,34 @@ end_define
 begin_comment
 comment|/* trace pup in network */
 end_comment
+
+begin_comment
+comment|/*  * A sockaddr, as seen through the eyes of PUP.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sockaddr_pup
+block|{
+name|short
+name|spup_family
+decl_stmt|;
+name|short
+name|spup_zero1
+decl_stmt|;
+name|struct
+name|pupport
+name|spup_addr
+decl_stmt|;
+name|char
+name|spup_zero2
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
