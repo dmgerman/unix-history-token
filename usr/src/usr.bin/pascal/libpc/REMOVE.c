@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)REMOVE.c 1.3 %G%"
+literal|"@(#)REMOVE.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,8 @@ name|cnt
 operator|<
 name|maxnamlen
 condition|;
+name|cnt
+operator|++
 control|)
 if|if
 condition|(
@@ -83,7 +85,6 @@ operator|||
 name|name
 index|[
 name|cnt
-operator|++
 index|]
 operator|==
 literal|' '
