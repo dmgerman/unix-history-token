@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whatis.c	5.1 (Berkeley) %G%"
+literal|"@(#)whatis.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,6 +679,11 @@ operator|*
 name|bp
 operator|&&
 operator|(
+operator|*
+name|bp
+operator|==
+literal|'_'
+operator|||
 name|isdigit
 argument_list|(
 operator|*
