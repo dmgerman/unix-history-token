@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -155,7 +161,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|dump_scope
 parameter_list|(
 name|scope_t
@@ -1428,7 +1434,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|dump_scope
 parameter_list|(
 name|scope_t
@@ -1439,11 +1445,6 @@ block|{
 name|scope_t
 modifier|*
 name|cur_scope
-decl_stmt|;
-name|int
-name|patches_emitted
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	 * Emit the first patch for this scope 	 */
 name|emit_patch
@@ -2876,6 +2877,17 @@ operator|->
 name|begin_addr
 expr_stmt|;
 break|break;
+case|case
+name|SCOPE_ROOT
+case|:
+name|stop
+argument_list|(
+literal|"Unexpected scope type encountered"
+argument_list|,
+name|EX_SOFTWARE
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|cur_scope
 operator|=
