@@ -6,19 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -36,13 +24,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_function_decl
@@ -272,8 +278,6 @@ parameter_list|)
 block|{
 name|int
 name|error
-decl_stmt|,
-name|i
 decl_stmt|;
 name|int
 name|ch
