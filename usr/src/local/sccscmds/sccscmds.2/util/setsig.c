@@ -5,7 +5,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)setsig.c	1.2	%G%"
+literal|"@(#)setsig.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,26 @@ include|#
 directive|include
 file|"../hdr/macros.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|syswrite
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|syscall(SYS_write,a,b,c)
+end_define
 
 begin_comment
 comment|/* 	General-purpose signal setting routine. 	All non-ignored, non-caught signals are caught. 	If a signal other than hangup, interrupt, or quit is caught, 	a "user-oriented" message is printed on file descriptor 2 with 	a number for help(I). 	If hangup, interrupt or quit is caught, that signal	 	is set to ignore. 	Termination is like that of "fatal", 	via "clean_up(sig)" (sig is the signal number) 	and "exit(userexit(1))".   	If the file "dump.core" exists in the current directory 	the function commits 	suicide to produce a core dump 	(after calling clean_up, but before calling userexit). */

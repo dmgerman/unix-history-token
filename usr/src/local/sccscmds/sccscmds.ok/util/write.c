@@ -11,6 +11,26 @@ directive|include
 file|"../hdr/macros.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|syswrite
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|syscall(SYS_write,a,b,c)
+end_define
+
 begin_expr_stmt
 name|SCCSID
 argument_list|(
