@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)leave.c	4.1 (Berkeley) %G%"
+literal|"@(#)leave.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,10 +304,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|setexit
-argument_list|()
-expr_stmt|;
-comment|/* refigure time if killed */
 name|time
 argument_list|(
 operator|&
