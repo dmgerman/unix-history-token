@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)col.c	8.3 (Berkeley) %G%"
+literal|"@(#)col.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,6 +1252,18 @@ name|cur_col
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|max_line
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* no lines, so just exit */
 comment|/* goto the last line that had a character on it */
 for|for
 control|(
