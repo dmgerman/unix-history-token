@@ -497,6 +497,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|400000
+operator|)
+end_if
+
+begin_comment
+comment|/* FreeBSD 3.x needs DRIVER_TYPE_MISC */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -517,6 +531,45 @@ argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|400000
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|bti2c_driver
+init|=
+block|{
+literal|"bti2c"
+block|,
+name|bti2c_methods
+block|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bti2c_softc
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Call this to pass the base address of the bktr device to the  * bti2c_i2c layer and initialize all the I2C bus architecture  */
@@ -554,6 +607,13 @@ operator|=
 name|base
 expr_stmt|;
 comment|/* XXX add the I2C interface to the root_bus until pcibus is ready */
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|400000
+operator|)
 name|interface
 operator|=
 name|device_add_child
@@ -567,7 +627,29 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|interface
+operator|=
+name|device_add_child
+argument_list|(
+name|root_bus
+argument_list|,
+literal|"bti2c"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* add bit-banging generic code onto bti2c interface */
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|400000
+operator|)
 name|bitbang
 operator|=
 name|device_add_child
@@ -582,6 +664,22 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|bitbang
+operator|=
+name|device_add_child
+argument_list|(
+name|interface
+argument_list|,
+literal|"iicbb"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* probe and attach the interface, we need it NOW 	 * bit-banging code is also probed and attached */
 name|device_probe_and_attach
 argument_list|(

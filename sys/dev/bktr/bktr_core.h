@@ -45,10 +45,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|msp_reset
+name|msp_dpl_reset
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2d_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -56,10 +59,13 @@ end_function_decl
 begin_function_decl
 name|unsigned
 name|int
-name|msp_read
+name|msp_dpl_read
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|,
 name|unsigned
 name|char
@@ -74,10 +80,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|msp_write
+name|msp_dpl_write
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|,
 name|unsigned
 name|char

@@ -166,6 +166,24 @@ value|0x81
 end_define
 
 begin_comment
+comment|/* address of DPL3518A chip */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPL3518A_WADDR
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPL3518A_RADDR
+value|0x85
+end_define
+
+begin_comment
 comment|/* EEProm (128 * 8) on an STB card */
 end_comment
 
@@ -270,6 +288,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm unknown */
 literal|0
 block|,
@@ -306,6 +326,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx unknown */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -347,6 +369,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|PFC8582_WADDR
@@ -395,6 +419,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|X24C01_WADDR
@@ -448,6 +474,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 block|{
 literal|0
 block|,
@@ -481,6 +509,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|PFC8582_WADDR
@@ -533,6 +563,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -540,17 +572,17 @@ comment|/* EEProm size */
 block|{
 literal|0x0c
 block|,
+literal|0x08
+block|,
+literal|0x04
+block|,
 literal|0x00
-block|,
-literal|0x0b
-block|,
-literal|0x0b
 block|,
 literal|1
 block|}
 block|,
 comment|/* audio MUX values */
-literal|0x0f
+literal|0x1f
 block|}
 block|,
 comment|/* GPIO mask */
@@ -570,6 +602,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|PFC8582_WADDR
@@ -622,6 +656,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -659,6 +695,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -703,6 +741,9 @@ comment|/* dbx is optional */
 literal|0
 block|,
 comment|/* msp34xx is optional */
+literal|0
+block|,
+comment|/* dpl3518a is optional */
 literal|0xac
 block|,
 comment|/* EEProm type */
@@ -754,6 +795,9 @@ block|,
 comment|/* msp34xx is optional */
 literal|0
 block|,
+comment|/* dpl3518a is optional */
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -796,6 +840,9 @@ block|,
 comment|/* msp34xx is optional */
 literal|0
 block|,
+comment|/* dpl3518a is optional */
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -827,6 +874,8 @@ comment|/* the 'name' */
 name|NULL
 block|,
 comment|/* the tuner */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -874,24 +923,26 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
 comment|/* EEProm size */
 block|{
-literal|0x00
+literal|0x400
 block|,
-literal|0x00
+literal|0xE00
 block|,
-literal|0x00
+literal|0x400
 block|,
-literal|0x00
+literal|0xC00
 block|,
-literal|0
+literal|1
 block|}
 block|,
 comment|/* audio MUX values */
-literal|0x00
+literal|0xE00
 block|}
 block|,
 comment|/* GPIO mask */
@@ -905,6 +956,8 @@ comment|/* the 'name' */
 name|NULL
 block|,
 comment|/* the tuner */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -2853,18 +2906,6 @@ operator|.
 name|card
 index|]
 expr_stmt|;
-name|select_tuner
-argument_list|(
-name|bktr
-argument_list|,
-name|bt848_card_signature
-index|[
-name|i
-index|]
-operator|.
-name|tuner
-argument_list|)
-expr_stmt|;
 name|eeprom_i2c_address
 operator|=
 name|locate_eeprom_address
@@ -2923,6 +2964,25 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|tuner_i2c_address
+operator|=
+name|locate_tuner_address
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|bt848_card_signature
+index|[
+name|i
+index|]
+operator|.
+name|tuner
+argument_list|)
+expr_stmt|;
 goto|goto
 name|checkDBX
 goto|;
@@ -3218,7 +3278,7 @@ case|:
 comment|/* Hauppauge kindly supplied the following Tuner Table */
 comment|/* FIXME: I think the tuners the driver selects for types */
 comment|/* 0x08 and 0x15 may be incorrect but no one has complained. */
-comment|/*    	    	ID Tuner Model          Format         	We select Format 	   	 0 NONE                		 1 EXTERNAL              		 2 OTHER                 		 3 Philips FI1216       BG  		 4 Philips FI1216MF     BGLL'  		 5 Philips FI1236       MN 		PHILIPS_NTSC 		 6 Philips FI1246       I 		PHILIPS_PALI 		 7 Philips FI1256       DK  		 8 Philips FI1216 MK2   BG 		PHILIPS_PALI 		 9 Philips FI1216MF MK2 BGLL'  		 a Philips FI1236 MK2   MN 		PHILIPS_NTSC 		 b Philips FI1246 MK2   I 		PHILIPS_PALI 		 c Philips FI1256 MK2   DK  		 d Temic 4032FY5        NTSC		TEMIC_NTSC 		 e Temic 4002FH5        BG		TEMIC_PAL 		 f Temic 4062FY5        I 		TEMIC_PALI 		10 Philips FR1216 MK2   BG  		11 Philips FR1216MF MK2 BGLL'  		12 Philips FR1236 MK2   MN 		PHILIPS_FR1236_NTSC 		13 Philips FR1246 MK2   I  		14 Philips FR1256 MK2   DK  		15 Philips FM1216       BG 		PHILIPS_FR1216_PAL 		16 Philips FM1216MF     BGLL'  		17 Philips FM1236       MN 		PHILIPS_FR1236_NTSC 		18 Philips FM1246       I  		19 Philips FM1256       DK  		1a Temic 4036FY5        MN - FI1236 MK2 clone 		1b Samsung TCPN9082D    MN  		1c Samsung TCPM9092P    Pal BG/I/DK  		1d Temic 4006FH5        BG 		PHILIPS_PALI clone 		1e Samsung TCPN9085D    MN/Radio  		1f Samsung TCPB9085P    Pal BG/I/DK / Radio  		20 Samsung TCPL9091P    Pal BG& Secam L/L'  		21 Temic 4039FY5        NTSC Radio  	    */
+comment|/*    	    	ID Tuner Model          Format         	We select Format 	   	 0 NONE                		 1 EXTERNAL              		 2 OTHER                 		 3 Philips FI1216       BG  		 4 Philips FI1216MF     BGLL'		PHILIPS_SECAM 		 5 Philips FI1236       MN 		PHILIPS_NTSC 		 6 Philips FI1246       I 		PHILIPS_PALI 		 7 Philips FI1256       DK  		 8 Philips FI1216 MK2   BG 		PHILIPS_PALI 		 9 Philips FI1216MF MK2 BGLL' 		PHILIPS_SECAM 		 a Philips FI1236 MK2   MN 		PHILIPS_NTSC 		 b Philips FI1246 MK2   I 		PHILIPS_PALI 		 c Philips FI1256 MK2   DK  		 d Temic 4032FY5        NTSC		TEMIC_NTSC 		 e Temic 4002FH5        BG		TEMIC_PAL 		 f Temic 4062FY5        I 		TEMIC_PALI 		10 Philips FR1216 MK2   BG  		11 Philips FR1216MF MK2 BGLL' 		PHILIPS_FR1236_SECAM 		12 Philips FR1236 MK2   MN 		PHILIPS_FR1236_NTSC 		13 Philips FR1246 MK2   I  		14 Philips FR1256 MK2   DK  		15 Philips FM1216       BG 		PHILIPS_FR1216_PAL 		16 Philips FM1216MF     BGLL' 		PHILIPS_FR1236_SECAM 		17 Philips FM1236       MN 		PHILIPS_FR1236_NTSC 		18 Philips FM1246       I  		19 Philips FM1256       DK  		1a Temic 4036FY5        MN - FI1236 MK2 clone PHILIPS_NTSC 		1b Samsung TCPN9082D    MN  		1c Samsung TCPM9092P    Pal BG/I/DK  		1d Temic 4006FH5        BG 		PHILIPS_PALI clone 		1e Samsung TCPN9085D    MN/Radio  		1f Samsung TCPB9085P    Pal BG/I/DK / Radio  		20 Samsung TCPL9091P    Pal BG& Secam L/L'  		21 Temic 4039FY5        NTSC Radio  	    */
 comment|/* Determine the model number from the eeprom */
 if|if
 condition|(
@@ -3380,6 +3440,38 @@ argument_list|(
 name|bktr
 argument_list|,
 name|PHILIPS_NTSC
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
+case|case
+literal|0x4
+case|:
+case|case
+literal|0x9
+case|:
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|PHILIPS_SECAM
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
+case|case
+literal|0x11
+case|:
+case|case
+literal|0x16
+case|:
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|PHILIPS_FR1236_SECAM
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4087,6 +4179,45 @@ name|msp_addr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Check for Dolby Surround Sound DPL3518A sound chip */
+if|if
+condition|(
+name|i2cRead
+argument_list|(
+name|bktr
+argument_list|,
+name|DPL3518A_RADDR
+argument_list|)
+operator|!=
+name|ABSENT
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+block|{
+name|bktr
+operator|->
+name|dpl_addr
+operator|=
+name|DPL3518A_WADDR
+expr_stmt|;
+comment|/*		dpl_read_id( bktr ); 		printf("bktr%d: Detected a DPL%s at 0x%x\n", unit, 				bktr->dpl_version_string, 				bktr->dpl_addr); */
+block|}
 comment|/* Start of Check Remote */
 comment|/* Check for the Hauppauge IR Remote Control */
 comment|/* If there is an external unit, the internal will be ignored */
@@ -4241,102 +4372,9 @@ name|BT848_USE_PLL
 expr_stmt|;
 comment|/* Most (perhaps all) Bt878 cards need to be switched to PLL mode */
 comment|/* as they only fit the NTSC crystal to their cards */
-comment|/* Enable PLL mode for PAL/SECAM users on Hauppauge 878 cards */
+comment|/* Default to enabling PLL mode for all Bt878/879 cards */
 if|if
 condition|(
-operator|(
-name|card
-operator|==
-name|CARD_HAUPPAUGE
-operator|)
-operator|&&
-operator|(
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_878
-operator|||
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_879
-operator|)
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
-comment|/* Enable PLL mode for PAL/SECAM users on FlyVideo 878 cards */
-if|if
-condition|(
-operator|(
-name|card
-operator|==
-name|CARD_FLYVIDEO
-operator|)
-operator|&&
-operator|(
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_878
-operator|||
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_879
-operator|)
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
-comment|/* Enable PLL mode for Askey Dynalink users */
-if|if
-condition|(
-operator|(
-name|card
-operator|==
-name|CARD_ASKEY_DYNALINK_MAGIC_TVIEW
-operator|)
-operator|&&
-operator|(
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_878
-operator|||
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_879
-operator|)
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
-comment|/* Enable PLL mode for Leadtek users */
-if|if
-condition|(
-operator|(
-name|card
-operator|==
-name|CARD_LEADTEK
-operator|)
-operator|&&
 operator|(
 name|bktr
 operator|->
@@ -4436,6 +4474,19 @@ condition|)
 name|printf
 argument_list|(
 literal|", msp3400c stereo"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+name|printf
+argument_list|(
+literal|", dpl3518a dolby"
 argument_list|)
 expr_stmt|;
 if|if

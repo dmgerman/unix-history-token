@@ -7824,6 +7824,20 @@ argument_list|(
 name|bktr
 argument_list|)
 expr_stmt|;
+comment|/* after every channel change, we must restart the DPL35xx */
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+name|dpl_autodetect
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
 name|temp_mute
 argument_list|(
 name|bktr
@@ -8010,6 +8024,20 @@ operator|.
 name|msp3400c
 condition|)
 name|msp_autodetect
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+comment|/* after every channel change, we must restart the DPL35xx */
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+name|dpl_autodetect
 argument_list|(
 name|bktr
 argument_list|)
@@ -17436,15 +17464,18 @@ parameter_list|(
 name|bktr
 parameter_list|)
 value|((bktr)->i2c_sc.iicbus)
-comment|/* The MSP34xx Audio chip require i2c bus writes of up to 5 bytes which the */
-comment|/* bt848 automated i2c bus controller cannot handle */
+comment|/* The MSP34xx and DPL35xx Audio chip require i2c bus writes of up */
+comment|/* to 5 bytes which the bt848 automated i2c bus controller cannot handle */
 comment|/* Therefore we need low level control of the i2c bus hardware */
-comment|/* Write to the MSP registers */
+comment|/* Write to the MSP or DPL registers */
 name|void
-name|msp_write
+name|msp_dpl_write
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|,
 name|unsigned
 name|char
@@ -17508,9 +17539,7 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|,
 literal|0
 comment|/* no timeout? */
@@ -17586,13 +17615,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Write to the MSP registers */
+comment|/* Read from the MSP or DPL registers */
 name|unsigned
 name|int
-name|msp_read
+name|msp_dpl_read
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|,
 name|unsigned
 name|char
@@ -17654,9 +17686,7 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|,
 literal|0
 comment|/* no timeout? */
@@ -17705,9 +17735,7 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 operator|+
 literal|1
 argument_list|,
@@ -17764,13 +17792,16 @@ name|data
 operator|)
 return|;
 block|}
-comment|/* Reset the MSP chip */
-comment|/* The user can block the reset (which is handy if you initialise the  * MSP audio in another operating system first (eg in Windows)  */
+comment|/* Reset the MSP or DPL chip */
+comment|/* The user can block the reset (which is handy if you initialise the  * MSP and/or DPL audio in another operating system first (eg in Windows)  */
 name|void
-name|msp_reset
+name|msp_dpl_reset
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|)
 block|{
 ifndef|#
@@ -17784,9 +17815,7 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|,
 literal|0
 comment|/* no timeout? */
@@ -17844,9 +17873,7 @@ argument_list|(
 name|bktr
 argument_list|)
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|,
 literal|0
 comment|/* no timeout? */
@@ -18837,12 +18864,15 @@ block|}
 undef|#
 directive|undef
 name|BITD
-comment|/* Write to the MSP registers */
+comment|/* Write to the MSP or DPL registers */
 name|void
-name|msp_write
+name|msp_dpl_write
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|,
 name|unsigned
 name|char
@@ -18861,9 +18891,7 @@ name|unsigned
 name|int
 name|msp_w_addr
 init|=
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 decl_stmt|;
 name|unsigned
 name|char
@@ -18960,13 +18988,16 @@ name|bktr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Write to the MSP registers */
+comment|/* Read from the MSP or DPL registers */
 name|unsigned
 name|int
-name|msp_read
+name|msp_dpl_read
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|,
 name|unsigned
 name|char
@@ -19024,9 +19055,7 @@ name|i2c_write_byte
 argument_list|(
 name|bktr
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|)
 expr_stmt|;
 name|i2c_write_byte
@@ -19059,9 +19088,7 @@ name|i2c_write_byte
 argument_list|(
 name|bktr
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 operator|+
 literal|1
 argument_list|)
@@ -19105,13 +19132,16 @@ return|return
 name|data
 return|;
 block|}
-comment|/* Reset the MSP chip */
+comment|/* Reset the MSP or DPL chip */
 comment|/* The user can block the reset (which is handy if you initialise the  * MSP audio in another operating system first (eg in Windows)  */
 name|void
-name|msp_reset
+name|msp_dpl_reset
 parameter_list|(
 name|bktr_ptr_t
 name|bktr
+parameter_list|,
+name|int
+name|i2c_addr
 parameter_list|)
 block|{
 ifndef|#
@@ -19127,9 +19157,7 @@ name|i2c_write_byte
 argument_list|(
 name|bktr
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|)
 expr_stmt|;
 name|i2c_write_byte
@@ -19168,9 +19196,7 @@ name|i2c_write_byte
 argument_list|(
 name|bktr
 argument_list|,
-name|bktr
-operator|->
-name|msp_addr
+name|i2c_addr
 argument_list|)
 expr_stmt|;
 name|i2c_write_byte
