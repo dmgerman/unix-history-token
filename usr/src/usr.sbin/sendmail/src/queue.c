@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.31 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.32 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.31 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.32 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2282,14 +2282,23 @@ name|d_name
 argument_list|)
 condition|)
 continue|continue;
-if|if
-condition|(
+comment|/* 		**  Check queue name for plausibility.  This handles 		**  both old and new type ids. 		*/
+name|i
+operator|=
 name|strlen
 argument_list|(
 name|d
 operator|->
 name|d_name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+literal|9
+operator|&&
+name|i
 operator|!=
 literal|10
 condition|)
