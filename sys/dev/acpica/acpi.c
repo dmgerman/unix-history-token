@@ -4362,7 +4362,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -4588,7 +4588,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,

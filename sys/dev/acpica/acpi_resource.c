@@ -3567,7 +3567,7 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|dev_rle
 argument_list|,
@@ -3619,7 +3619,7 @@ name|done
 operator|=
 name|FALSE
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|bus_rle
 argument_list|,
