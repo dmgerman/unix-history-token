@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_fbsd.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_fbsd.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: cfs_fbsd.c,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_include
@@ -282,7 +282,7 @@ argument_list|)
 expr_stmt|;
 name|VCDEBUG
 argument_list|(
-literal|"cfs: vccdevsw entry installed at %d.\n"
+literal|"coda: vccdevsw entry installed at %d.\n"
 argument_list|,
 name|major
 argument_list|(
@@ -365,7 +365,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_fbsd_getpages
+name|coda_fbsd_getpages
 parameter_list|(
 name|v
 parameter_list|)
@@ -534,7 +534,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfs_getp: Internally Opening %p\n"
+literal|"coda_getp: Internally Opening %p\n"
 argument_list|,
 name|vp
 argument_list|)
@@ -546,7 +546,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_getpage: VOP_OPEN on container failed %d\n"
+literal|"coda_getpage: VOP_OPEN on container failed %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -588,7 +588,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_getpage: vfs_object_create() returns %d\n"
+literal|"coda_getpage: vfs_object_create() returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -616,7 +616,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"cfs_getp: has container %p\n"
+literal|"coda_getp: has container %p\n"
 argument_list|,
 name|cfvp
 argument_list|)
@@ -624,7 +624,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"cfs_fbsd_getpages: using container "
+literal|"coda_fbsd_getpages: using container "
 argument_list|)
 expr_stmt|;
 comment|/*     error = vnode_pager_generic_getpages(cfvp, ap->a_m, ap->a_count, 	ap->a_reqpage); */
@@ -692,7 +692,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_fbsd_putpages
+name|coda_fbsd_putpages
 parameter_list|(
 name|v
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_vfsops.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_vfsops.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda_vfsops.h,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_struct_decl
 
 begin_function_decl
 name|int
-name|cfs_vfsopstats_init
+name|coda_vfsopstats_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -41,7 +41,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_mount
+name|coda_mount
 parameter_list|(
 name|struct
 name|mount
@@ -65,7 +65,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_start
+name|coda_start
 parameter_list|(
 name|struct
 name|mount
@@ -82,7 +82,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_unmount
+name|coda_unmount
 parameter_list|(
 name|struct
 name|mount
@@ -99,7 +99,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_root
+name|coda_root
 parameter_list|(
 name|struct
 name|mount
@@ -115,7 +115,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_quotactl
+name|coda_quotactl
 parameter_list|(
 name|struct
 name|mount
@@ -136,7 +136,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_nb_statfs
+name|coda_nb_statfs
 parameter_list|(
 name|struct
 name|mount
@@ -155,7 +155,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_sync
+name|coda_sync
 parameter_list|(
 name|struct
 name|mount
@@ -176,7 +176,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_vget
+name|coda_vget
 parameter_list|(
 name|struct
 name|mount
@@ -194,7 +194,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_fhtovp
+name|coda_fhtovp
 parameter_list|(
 name|struct
 name|mount
@@ -226,7 +226,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_vptofh
+name|coda_vptofh
 parameter_list|(
 name|struct
 name|vnode
@@ -241,7 +241,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_init
+name|coda_init
 parameter_list|(
 name|struct
 name|vfsconf

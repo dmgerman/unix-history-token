@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_opstats.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_opstats.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda_opstats.h,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -14,49 +14,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CFS_MOUNT_STATS
+name|CODA_MOUNT_STATS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_UMOUNT_STATS
+name|CODA_UMOUNT_STATS
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_ROOT_STATS
+name|CODA_ROOT_STATS
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_STATFS_STATS
+name|CODA_STATFS_STATS
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SYNC_STATS
+name|CODA_SYNC_STATS
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_VGET_STATS
+name|CODA_VGET_STATS
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_VFSOPS_SIZE
+name|CODA_VFSOPS_SIZE
 value|6
 end_define
 
@@ -67,147 +67,147 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CFS_OPEN_STATS
+name|CODA_OPEN_STATS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_CLOSE_STATS
+name|CODA_CLOSE_STATS
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_IOCTL_STATS
+name|CODA_IOCTL_STATS
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SELECT_STATS
+name|CODA_SELECT_STATS
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_GETATTR_STATS
+name|CODA_GETATTR_STATS
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SETATTR_STATS
+name|CODA_SETATTR_STATS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_ACCESS_STATS
+name|CODA_ACCESS_STATS
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_READLINK_STATS
+name|CODA_READLINK_STATS
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_FSYNC_STATS
+name|CODA_FSYNC_STATS
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_INACTIVE_STATS
+name|CODA_INACTIVE_STATS
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_LOOKUP_STATS
+name|CODA_LOOKUP_STATS
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_CREATE_STATS
+name|CODA_CREATE_STATS
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_REMOVE_STATS
+name|CODA_REMOVE_STATS
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_LINK_STATS
+name|CODA_LINK_STATS
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_RENAME_STATS
+name|CODA_RENAME_STATS
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_MKDIR_STATS
+name|CODA_MKDIR_STATS
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_RMDIR_STATS
+name|CODA_RMDIR_STATS
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SYMLINK_STATS
+name|CODA_SYMLINK_STATS
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_READDIR_STATS
+name|CODA_READDIR_STATS
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_VNODEOPS_SIZE
+name|CODA_VNODEOPS_SIZE
 value|20
 end_define
 
@@ -217,7 +217,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|cfs_op_stats
+name|coda_op_stats
 block|{
 name|int
 name|opcode

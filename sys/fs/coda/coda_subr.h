@@ -7,7 +7,7 @@ begin_function_decl
 name|struct
 name|cnode
 modifier|*
-name|cfs_alloc
+name|coda_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -16,7 +16,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_free
+name|coda_free
 parameter_list|(
 name|struct
 name|cnode
@@ -30,7 +30,7 @@ begin_function_decl
 name|struct
 name|cnode
 modifier|*
-name|cfs_find
+name|coda_find
 parameter_list|(
 name|ViceFid
 modifier|*
@@ -41,7 +41,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_flush
+name|coda_flush
 parameter_list|(
 name|enum
 name|dc_status
@@ -52,7 +52,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_testflush
+name|coda_testflush
 parameter_list|(
 name|void
 parameter_list|)
@@ -60,8 +60,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|cfs_checkunmounting
+name|int
+name|coda_checkunmounting
 parameter_list|(
 name|struct
 name|mount
@@ -72,8 +72,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|cfs_cacheprint
+name|int
+name|coda_cacheprint
 parameter_list|(
 name|struct
 name|mount
@@ -85,7 +85,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_debugon
+name|coda_debugon
 parameter_list|(
 name|void
 parameter_list|)
@@ -94,7 +94,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_debugoff
+name|coda_debugoff
 parameter_list|(
 name|void
 parameter_list|)
@@ -103,7 +103,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_kill
+name|coda_kill
 parameter_list|(
 name|struct
 name|mount
@@ -119,7 +119,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_save
+name|coda_save
 parameter_list|(
 name|struct
 name|cnode
@@ -131,7 +131,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cfs_unsave
+name|coda_unsave
 parameter_list|(
 name|struct
 name|cnode

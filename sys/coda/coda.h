@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda.h,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CFS_HEADER_
+name|_CODA_HEADER_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CFS_HEADER_
+name|_CODA_HEADER_
 end_define
 
 begin_comment
@@ -157,27 +157,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Cfs constants  */
+comment|/*  * Coda constants  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 value|255
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_MAXPATHLEN
+name|CODA_MAXPATHLEN
 value|1024
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_MAXSYMLINK
+name|CODA_MAXSYMLINK
 value|10
 end_define
 
@@ -317,7 +317,7 @@ comment|/* length of string in d_name */
 name|char
 name|d_name
 index|[
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 operator|+
 literal|1
 index|]
@@ -340,7 +340,7 @@ name|DIRSIZ
 parameter_list|(
 name|dp
 parameter_list|)
-value|((sizeof (struct venus_dirent) - (CFS_MAXNAMLEN+1)) + \                          (((dp)->d_namlen+1 + 3)&~ 3))
+value|((sizeof (struct venus_dirent) - (CODA_MAXNAMLEN+1)) + \                          (((dp)->d_namlen+1 + 3)&~ 3))
 end_define
 
 begin_comment
@@ -821,210 +821,210 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CFS_ROOT
+name|CODA_ROOT
 value|((u_long) 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SYNC
+name|CODA_SYNC
 value|((u_long) 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_OPEN
+name|CODA_OPEN
 value|((u_long) 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_CLOSE
+name|CODA_CLOSE
 value|((u_long) 5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_IOCTL
+name|CODA_IOCTL
 value|((u_long) 6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_GETATTR
+name|CODA_GETATTR
 value|((u_long) 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SETATTR
+name|CODA_SETATTR
 value|((u_long) 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_ACCESS
+name|CODA_ACCESS
 value|((u_long) 9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_LOOKUP
+name|CODA_LOOKUP
 value|((u_long) 10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_CREATE
+name|CODA_CREATE
 value|((u_long) 11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_REMOVE
+name|CODA_REMOVE
 value|((u_long) 12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_LINK
+name|CODA_LINK
 value|((u_long) 13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_RENAME
+name|CODA_RENAME
 value|((u_long) 14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_MKDIR
+name|CODA_MKDIR
 value|((u_long) 15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_RMDIR
+name|CODA_RMDIR
 value|((u_long) 16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_READDIR
+name|CODA_READDIR
 value|((u_long) 17)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SYMLINK
+name|CODA_SYMLINK
 value|((u_long) 18)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_READLINK
+name|CODA_READLINK
 value|((u_long) 19)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_FSYNC
+name|CODA_FSYNC
 value|((u_long) 20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_INACTIVE
+name|CODA_INACTIVE
 value|((u_long) 21)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_VGET
+name|CODA_VGET
 value|((u_long) 22)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_SIGNAL
+name|CODA_SIGNAL
 value|((u_long) 23)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_REPLACE
+name|CODA_REPLACE
 value|((u_long) 24)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_FLUSH
+name|CODA_FLUSH
 value|((u_long) 25)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_PURGEUSER
+name|CODA_PURGEUSER
 value|((u_long) 26)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_ZAPFILE
+name|CODA_ZAPFILE
 value|((u_long) 27)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_ZAPDIR
+name|CODA_ZAPDIR
 value|((u_long) 28)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_ZAPVNODE
+name|CODA_ZAPVNODE
 value|((u_long) 29)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_PURGEFID
+name|CODA_PURGEFID
 value|((u_long) 30)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_NCALLS
+name|CODA_NCALLS
 value|31
 end_define
 
@@ -1035,7 +1035,7 @@ name|DOWNCALL
 parameter_list|(
 name|opcode
 parameter_list|)
-value|(opcode>= CFS_REPLACE&& opcode<= CFS_PURGEFID)
+value|(opcode>= CODA_REPLACE&& opcode<= CODA_PURGEFID)
 end_define
 
 begin_define
@@ -1058,7 +1058,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 block|{
 name|unsigned
 name|long
@@ -1096,7 +1096,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 block|{
 name|unsigned
 name|long
@@ -1115,15 +1115,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_root: NO_IN */
+comment|/* coda_root: NO_IN */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_root_out
+name|coda_root_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1135,10 +1135,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_root_in
+name|coda_root_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|in
 decl_stmt|;
 block|}
@@ -1146,23 +1146,23 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_sync: */
+comment|/* coda_sync: */
 end_comment
 
 begin_comment
-comment|/* Nothing needed for cfs_sync */
+comment|/* Nothing needed for coda_sync */
 end_comment
 
 begin_comment
-comment|/* cfs_open: */
+comment|/* coda_open: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_open_in
+name|coda_open_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1177,10 +1177,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_open_out
+name|coda_open_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|cdev_t
@@ -1194,15 +1194,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_close: */
+comment|/* coda_close: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_close_in
+name|coda_close_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1217,10 +1217,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_close_out
+name|coda_close_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1228,15 +1228,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_ioctl: */
+comment|/* coda_ioctl: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_ioctl_in
+name|coda_ioctl_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1262,10 +1262,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_ioctl_out
+name|coda_ioctl_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|int
@@ -1280,15 +1280,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_getattr: */
+comment|/* coda_getattr: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_getattr_in
+name|coda_getattr_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1300,10 +1300,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_getattr_out
+name|coda_getattr_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|struct
@@ -1315,15 +1315,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_setattr: NO_OUT */
+comment|/* coda_setattr: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_setattr_in
+name|coda_setattr_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1339,10 +1339,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_setattr_out
+name|coda_setattr_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1350,15 +1350,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_access: NO_OUT */
+comment|/* coda_access: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_access_in
+name|coda_access_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1373,10 +1373,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_access_out
+name|coda_access_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1384,15 +1384,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_lookup: */
+comment|/* coda_lookup: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_lookup_in
+name|coda_lookup_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1408,10 +1408,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_lookup_out
+name|coda_lookup_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1425,15 +1425,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_create: */
+comment|/* coda_create: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_create_in
+name|coda_create_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1459,10 +1459,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_create_out
+name|coda_create_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1477,15 +1477,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_remove: NO_OUT */
+comment|/* coda_remove: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_remove_in
+name|coda_remove_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1501,10 +1501,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_remove_out
+name|coda_remove_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1512,15 +1512,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_link: NO_OUT */
+comment|/* coda_link: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_link_in
+name|coda_link_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1541,10 +1541,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_link_out
+name|coda_link_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1552,15 +1552,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_rename: NO_OUT */
+comment|/* coda_rename: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_rename_in
+name|coda_rename_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1581,10 +1581,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_rename_out
+name|coda_rename_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1592,15 +1592,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_mkdir: */
+comment|/* coda_mkdir: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_mkdir_in
+name|coda_mkdir_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1620,10 +1620,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_mkdir_out
+name|coda_mkdir_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1638,15 +1638,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_rmdir: NO_OUT */
+comment|/* coda_rmdir: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_rmdir_in
+name|coda_rmdir_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1662,10 +1662,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_rmdir_out
+name|coda_rmdir_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1673,15 +1673,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_readdir: */
+comment|/* coda_readdir: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_readdir_in
+name|coda_readdir_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1699,10 +1699,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_readdir_out
+name|coda_readdir_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|int
@@ -1717,15 +1717,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_symlink: NO_OUT */
+comment|/* coda_symlink: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_symlink_in
+name|coda_symlink_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1748,10 +1748,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_symlink_out
+name|coda_symlink_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1759,15 +1759,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_readlink: */
+comment|/* coda_readlink: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_readlink_in
+name|coda_readlink_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1779,10 +1779,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_readlink_out
+name|coda_readlink_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|int
@@ -1797,15 +1797,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_fsync: NO_OUT */
+comment|/* coda_fsync: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_fsync_in
+name|coda_fsync_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1817,10 +1817,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_fsync_out
+name|coda_fsync_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|out
 decl_stmt|;
 block|}
@@ -1828,15 +1828,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_inactive: NO_OUT */
+comment|/* coda_inactive: NO_OUT */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_inactive_in
+name|coda_inactive_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1847,15 +1847,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_vget: */
+comment|/* coda_vget: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_vget_in
+name|coda_vget_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -1867,10 +1867,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_vget_out
+name|coda_vget_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1884,31 +1884,31 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* CFS_SIGNAL is out-of-band, doesn't need data. */
+comment|/* CODA_SIGNAL is out-of-band, doesn't need data. */
 end_comment
 
 begin_comment
-comment|/* CFS_INVALIDATE is a venus->kernel call */
+comment|/* CODA_INVALIDATE is a venus->kernel call */
 end_comment
 
 begin_comment
-comment|/* CFS_FLUSH is a venus->kernel call */
+comment|/* CODA_FLUSH is a venus->kernel call */
 end_comment
 
 begin_comment
-comment|/* cfs_purgeuser: */
+comment|/* coda_purgeuser: */
 end_comment
 
 begin_comment
-comment|/* CFS_PURGEUSER is a venus->kernel call */
+comment|/* CODA_PURGEUSER is a venus->kernel call */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_purgeuser_out
+name|coda_purgeuser_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|struct
@@ -1920,19 +1920,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_zapfile: */
+comment|/* coda_zapfile: */
 end_comment
 
 begin_comment
-comment|/* CFS_ZAPFILE is a venus->kernel call */
+comment|/* CODA_ZAPFILE is a venus->kernel call */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_zapfile_out
+name|coda_zapfile_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1943,19 +1943,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_zapdir: */
+comment|/* coda_zapdir: */
 end_comment
 
 begin_comment
-comment|/* CFS_ZAPDIR is a venus->kernel call */
+comment|/* CODA_ZAPDIR is a venus->kernel call */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_zapdir_out
+name|coda_zapdir_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -1966,19 +1966,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_zapnode: */
+comment|/* coda_zapnode: */
 end_comment
 
 begin_comment
-comment|/* CFS_ZAPVNODE is a venus->kernel call */
+comment|/* CODA_ZAPVNODE is a venus->kernel call */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_zapvnode_out
+name|coda_zapvnode_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|struct
@@ -1993,19 +1993,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_purgefid: */
+comment|/* coda_purgefid: */
 end_comment
 
 begin_comment
-comment|/* CFS_PURGEFID is a venus->kernel call */
+comment|/* CODA_PURGEFID is a venus->kernel call */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_purgefid_out
+name|coda_purgefid_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -2016,15 +2016,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_rdwr: */
+comment|/* coda_rdwr: */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_rdwr_in
+name|coda_rdwr_in
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 name|ViceFid
@@ -2052,10 +2052,10 @@ end_struct
 
 begin_struct
 struct|struct
-name|cfs_rdwr_out
+name|coda_rdwr_out
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|int
@@ -2073,20 +2073,20 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* cfs_replace: */
+comment|/* coda_replace: */
 end_comment
 
 begin_comment
-comment|/* CFS_REPLACE is a venus->kernel call */
+comment|/* CODA_REPLACE is a venus->kernel call */
 end_comment
 
 begin_struct
 struct|struct
-name|cfs_replace_out
+name|coda_replace_out
 block|{
-comment|/* cfs_replace is a venus->kernel call */
+comment|/* coda_replace is a venus->kernel call */
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 name|ViceFid
@@ -2100,13 +2100,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Occasionally, don't cache the fid returned by CFS_LOOKUP. For instance, if  * the fid is inconsistent. This case is handled by setting the top bit of the  * return result parameter.  */
+comment|/*   * Occasionally, don't cache the fid returned by CODA_LOOKUP. For instance, if  * the fid is inconsistent. This case is handled by setting the top bit of the  * return result parameter.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CFS_NOCACHE
+name|CODA_NOCACHE
 value|0x80000000
 end_define
 
@@ -2115,89 +2115,89 @@ union|union
 name|inputArgs
 block|{
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 name|ih
 decl_stmt|;
 comment|/* NB: every struct below begins with an ih */
 name|struct
-name|cfs_open_in
-name|cfs_open
+name|coda_open_in
+name|coda_open
 decl_stmt|;
 name|struct
-name|cfs_close_in
-name|cfs_close
+name|coda_close_in
+name|coda_close
 decl_stmt|;
 name|struct
-name|cfs_ioctl_in
-name|cfs_ioctl
+name|coda_ioctl_in
+name|coda_ioctl
 decl_stmt|;
 name|struct
-name|cfs_getattr_in
-name|cfs_getattr
+name|coda_getattr_in
+name|coda_getattr
 decl_stmt|;
 name|struct
-name|cfs_setattr_in
-name|cfs_setattr
+name|coda_setattr_in
+name|coda_setattr
 decl_stmt|;
 name|struct
-name|cfs_access_in
-name|cfs_access
+name|coda_access_in
+name|coda_access
 decl_stmt|;
 name|struct
-name|cfs_lookup_in
-name|cfs_lookup
+name|coda_lookup_in
+name|coda_lookup
 decl_stmt|;
 name|struct
-name|cfs_create_in
-name|cfs_create
+name|coda_create_in
+name|coda_create
 decl_stmt|;
 name|struct
-name|cfs_remove_in
-name|cfs_remove
+name|coda_remove_in
+name|coda_remove
 decl_stmt|;
 name|struct
-name|cfs_link_in
-name|cfs_link
+name|coda_link_in
+name|coda_link
 decl_stmt|;
 name|struct
-name|cfs_rename_in
-name|cfs_rename
+name|coda_rename_in
+name|coda_rename
 decl_stmt|;
 name|struct
-name|cfs_mkdir_in
-name|cfs_mkdir
+name|coda_mkdir_in
+name|coda_mkdir
 decl_stmt|;
 name|struct
-name|cfs_rmdir_in
-name|cfs_rmdir
+name|coda_rmdir_in
+name|coda_rmdir
 decl_stmt|;
 name|struct
-name|cfs_readdir_in
-name|cfs_readdir
+name|coda_readdir_in
+name|coda_readdir
 decl_stmt|;
 name|struct
-name|cfs_symlink_in
-name|cfs_symlink
+name|coda_symlink_in
+name|coda_symlink
 decl_stmt|;
 name|struct
-name|cfs_readlink_in
-name|cfs_readlink
+name|coda_readlink_in
+name|coda_readlink
 decl_stmt|;
 name|struct
-name|cfs_fsync_in
-name|cfs_fsync
+name|coda_fsync_in
+name|coda_fsync
 decl_stmt|;
 name|struct
-name|cfs_inactive_in
-name|cfs_inactive
+name|coda_inactive_in
+name|coda_inactive
 decl_stmt|;
 name|struct
-name|cfs_vget_in
-name|cfs_vget
+name|coda_vget_in
+name|coda_vget
 decl_stmt|;
 name|struct
-name|cfs_rdwr_in
-name|cfs_rdwr
+name|coda_rdwr_in
+name|coda_rdwr
 decl_stmt|;
 block|}
 union|;
@@ -2208,77 +2208,77 @@ union|union
 name|outputArgs
 block|{
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 name|oh
 decl_stmt|;
 comment|/* NB: every struct below begins with an oh */
 name|struct
-name|cfs_root_out
-name|cfs_root
+name|coda_root_out
+name|coda_root
 decl_stmt|;
 name|struct
-name|cfs_open_out
-name|cfs_open
+name|coda_open_out
+name|coda_open
 decl_stmt|;
 name|struct
-name|cfs_ioctl_out
-name|cfs_ioctl
+name|coda_ioctl_out
+name|coda_ioctl
 decl_stmt|;
 name|struct
-name|cfs_getattr_out
-name|cfs_getattr
+name|coda_getattr_out
+name|coda_getattr
 decl_stmt|;
 name|struct
-name|cfs_lookup_out
-name|cfs_lookup
+name|coda_lookup_out
+name|coda_lookup
 decl_stmt|;
 name|struct
-name|cfs_create_out
-name|cfs_create
+name|coda_create_out
+name|coda_create
 decl_stmt|;
 name|struct
-name|cfs_mkdir_out
-name|cfs_mkdir
+name|coda_mkdir_out
+name|coda_mkdir
 decl_stmt|;
 name|struct
-name|cfs_readdir_out
-name|cfs_readdir
+name|coda_readdir_out
+name|coda_readdir
 decl_stmt|;
 name|struct
-name|cfs_readlink_out
-name|cfs_readlink
+name|coda_readlink_out
+name|coda_readlink
 decl_stmt|;
 name|struct
-name|cfs_vget_out
-name|cfs_vget
+name|coda_vget_out
+name|coda_vget
 decl_stmt|;
 name|struct
-name|cfs_purgeuser_out
-name|cfs_purgeuser
+name|coda_purgeuser_out
+name|coda_purgeuser
 decl_stmt|;
 name|struct
-name|cfs_zapfile_out
-name|cfs_zapfile
+name|coda_zapfile_out
+name|coda_zapfile
 decl_stmt|;
 name|struct
-name|cfs_zapdir_out
-name|cfs_zapdir
+name|coda_zapdir_out
+name|coda_zapdir
 decl_stmt|;
 name|struct
-name|cfs_zapvnode_out
-name|cfs_zapvnode
+name|coda_zapvnode_out
+name|coda_zapvnode
 decl_stmt|;
 name|struct
-name|cfs_purgefid_out
-name|cfs_purgefid
+name|coda_purgefid_out
+name|coda_purgefid
 decl_stmt|;
 name|struct
-name|cfs_rdwr_out
-name|cfs_rdwr
+name|coda_rdwr_out
+name|coda_rdwr
 decl_stmt|;
 name|struct
-name|cfs_replace_out
-name|cfs_replace
+name|coda_replace_out
+name|coda_replace
 decl_stmt|;
 block|}
 union|;
@@ -2286,32 +2286,32 @@ end_union
 
 begin_union
 union|union
-name|cfs_downcalls
+name|coda_downcalls
 block|{
-comment|/* CFS_INVALIDATE is a venus->kernel call */
-comment|/* CFS_FLUSH is a venus->kernel call */
+comment|/* CODA_INVALIDATE is a venus->kernel call */
+comment|/* CODA_FLUSH is a venus->kernel call */
 name|struct
-name|cfs_purgeuser_out
+name|coda_purgeuser_out
 name|purgeuser
 decl_stmt|;
 name|struct
-name|cfs_zapfile_out
+name|coda_zapfile_out
 name|zapfile
 decl_stmt|;
 name|struct
-name|cfs_zapdir_out
+name|coda_zapdir_out
 name|zapdir
 decl_stmt|;
 name|struct
-name|cfs_zapvnode_out
+name|coda_zapvnode_out
 name|zapvnode
 decl_stmt|;
 name|struct
-name|cfs_purgefid_out
+name|coda_purgefid_out
 name|purgefid
 decl_stmt|;
 name|struct
-name|cfs_replace_out
+name|coda_replace_out
 name|replace
 decl_stmt|;
 block|}
@@ -2374,14 +2374,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CFS_CONTROL
+name|CODA_CONTROL
 value|".CONTROL"
 end_define
 
 begin_define
 define|#
 directive|define
-name|CFS_CONTROLLEN
+name|CODA_CONTROLLEN
 value|8
 end_define
 

@@ -12,15 +12,15 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_namecache.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:16  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:14  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:39  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:10  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:39  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.6.2.4  98/01/23  11:21:02  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.3  97/12/16  12:40:03  rvb  * Sync with 1.3  *   * Revision 1.6.2.2  97/12/09  16:07:10  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.6.2.1  97/12/06  17:41:18  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:13  rvb  * Read CHANGES  *   * Revision 1.5.4.7  97/11/25  08:08:43  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.5.4.6  97/11/24  15:44:43  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.5.4.5  97/11/20  11:46:38  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.4  97/11/18  10:27:13  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.3  97/11/13  22:02:57  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.2  97/11/12  12:09:35  rvb  * reorg pass1  *   * Revision 1.5.4.1  97/10/28  23:10:12  rvb  *>64Meg; venus can be killed!  *   * Revision 1.5  97/08/05  11:08:01  lily  * Removed cfsnc_replace, replaced it with a cfs_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:57  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *   * Revision 1.3  1996/11/08 18:06:09  bnoble  * Minor changes in vnode operation signature, VOP_UPDATE signature, and  * some newly defined bits in the include files.  *  * Revision 1.2  1996/01/02 16:56:50  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:15  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:57  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:56  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.3  1994/10/14  09:57:54  dcs  * Made changes 'cause sun4s have braindead compilers  *  * Revision 2.2  94/08/28  19:37:35  luqi  * Add a new CFS_REPLACE call to allow venus to replace a ViceFid in the  * mini-cache.   *   * In "cfs.h":  * Add CFS_REPLACE decl.  *   * In "cfs_namecache.c":  * Add routine cfsnc_replace.  *   * In "cfs_subr.c":  * Add case-statement to process CFS_REPLACE.  *   * In "cfsnc.h":  * Add decl for CFSNC_REPLACE.  *   *   * Revision 2.1  94/07/21  16:25:15  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *  * Revision 1.2  92/10/27  17:58:21  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.3  92/09/30  14:16:20  mja  * 	call cfs_flush instead of calling inode_uncache_try directly   * 	(from dcs). Also...  *   * 	Substituted rvb's history blurb so that we agree with Mach 2.5 sources.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.2  90/07/05  11:26:30  mrt  * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.3  90/05/31  17:01:24  dcs  * Prepare for merge with facilities kernel.  *   *   */
+comment|/*  * HISTORY  * $Log: cfs_namecache.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:16  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:14  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:39  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:10  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:39  rvb  * Bring RVB_CODA1_1 to HEAD  *   * Revision 1.6.2.4  98/01/23  11:21:02  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.3  97/12/16  12:40:03  rvb  * Sync with 1.3  *   * Revision 1.6.2.2  97/12/09  16:07:10  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.6.2.1  97/12/06  17:41:18  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:13  rvb  * Read CHANGES  *   * Revision 1.5.4.7  97/11/25  08:08:43  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.5.4.6  97/11/24  15:44:43  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.5.4.5  97/11/20  11:46:38  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.4  97/11/18  10:27:13  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.3  97/11/13  22:02:57  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.2  97/11/12  12:09:35  rvb  * reorg pass1  *   * Revision 1.5.4.1  97/10/28  23:10:12  rvb  *>64Meg; venus can be killed!  *   * Revision 1.5  97/08/05  11:08:01  lily  * Removed cfsnc_replace, replaced it with a coda_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:57  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *   * Revision 1.3  1996/11/08 18:06:09  bnoble  * Minor changes in vnode operation signature, VOP_UPDATE signature, and  * some newly defined bits in the include files.  *  * Revision 1.2  1996/01/02 16:56:50  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:15  bnoble  * Added CODA-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:57  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:56  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.3  1994/10/14  09:57:54  dcs  * Made changes 'cause sun4s have braindead compilers  *  * Revision 2.2  94/08/28  19:37:35  luqi  * Add a new CODA_REPLACE call to allow venus to replace a ViceFid in the  * mini-cache.   *   * In "cfs.h":  * Add CODA_REPLACE decl.  *   * In "cfs_namecache.c":  * Add routine cfsnc_replace.  *   * In "cfs_subr.c":  * Add case-statement to process CODA_REPLACE.  *   * In "cfsnc.h":  * Add decl for CODA_NC_REPLACE.  *   *   * Revision 2.1  94/07/21  16:25:15  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *  * Revision 1.2  92/10/27  17:58:21  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.3  92/09/30  14:16:20  mja  * 	call coda_flush instead of calling inode_uncache_try directly   * 	(from dcs). Also...  *   * 	Substituted rvb's history blurb so that we agree with Mach 2.5 sources.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.2  90/07/05  11:26:30  mrt  * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.3  90/05/31  17:01:24  dcs  * Prepare for merge with facilities kernel.  *   *   */
 end_comment
 
 begin_comment
-comment|/*  * This module contains the routines to implement the CFS name cache. The  * purpose of this cache is to reduce the cost of translating pathnames   * into Vice FIDs. Each entry in the cache contains the name of the file,  * the vnode (FID) of the parent directory, and the cred structure of the  * user accessing the file.  *  * The first time a file is accessed, it is looked up by the local Venus  * which first insures that the user has access to the file. In addition  * we are guaranteed that Venus will invalidate any name cache entries in  * case the user no longer should be able to access the file. For these  * reasons we do not need to keep access list information as well as a  * cred structure for each entry.  *  * The table can be accessed through the routines cnc_init(), cnc_enter(),  * cnc_lookup(), cnc_rmfidcred(), cnc_rmfid(), cnc_rmcred(), and cnc_purge().  * There are several other routines which aid in the implementation of the  * hash table.  */
+comment|/*  * This module contains the routines to implement the CODA name cache. The  * purpose of this cache is to reduce the cost of translating pathnames   * into Vice FIDs. Each entry in the cache contains the name of the file,  * the vnode (FID) of the parent directory, and the cred structure of the  * user accessing the file.  *  * The first time a file is accessed, it is looked up by the local Venus  * which first insures that the user has access to the file. In addition  * we are guaranteed that Venus will invalidate any name cache entries in  * case the user no longer should be able to access the file. For these  * reasons we do not need to keep access list information as well as a  * cred structure for each entry.  *  * The table can be accessed through the routines cnc_init(), cnc_enter(),  * cnc_lookup(), cnc_rmfidcred(), cnc_rmfid(), cnc_rmcred(), and cnc_purge().  * There are several other routines which aid in the implementation of the  * hash table.  */
 end_comment
 
 begin_comment
-comment|/*  * NOTES: rvb@cs  * 1.	The name cache holds a reference to every vnode in it.  Hence files can not be  *	 closed or made inactive until they are released.  * 2.	cfsnc_name(cp) was added to get a name for a cnode pointer for debugging.  * 3.	cfsnc_find() has debug code to detect when entries are stored with different  *	 credentials.  We don't understand yet, if/how entries are NOT EQ but still  *	 EQUAL  * 4.	I wonder if this name cache could be replace by the vnode name cache.  *	The latter has no zapping functions, so probably not.  */
+comment|/*  * NOTES: rvb@cs  * 1.	The name cache holds a reference to every vnode in it.  Hence files can not be  *	 closed or made inactive until they are released.  * 2.	coda_nc_name(cp) was added to get a name for a cnode pointer for debugging.  * 3.	coda_nc_find() has debug code to detect when entries are stored with different  *	 credentials.  We don't understand yet, if/how entries are NOT EQ but still  *	 EQUAL  * 4.	I wonder if this name cache could be replace by the vnode name cache.  *	The latter has no zapping functions, so probably not.  */
 end_comment
 
 begin_include
@@ -104,48 +104,27 @@ directive|include
 file|<cfs/cfsnc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_comment
-comment|/* for printcred */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<cfs/cfs_vnodeops.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*   * Declaration of the name cache data structure.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|cfsnc_use
+name|coda_nc_use
 init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Indicate use of CFS Name Cache */
+comment|/* Indicate use of CODA Name Cache */
 end_comment
 
 begin_decl_stmt
 name|int
-name|cfsnc_size
+name|coda_nc_size
 init|=
-name|CFSNC_CACHESIZE
+name|CODA_NC_CACHESIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -155,9 +134,9 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 init|=
-name|CFSNC_HASHSIZE
+name|CODA_NC_HASHSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -167,9 +146,9 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
-name|cfsncheap
+name|coda_nc_heap
 decl_stmt|;
 end_decl_stmt
 
@@ -179,20 +158,20 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|cfshash
+name|coda_hash
 modifier|*
-name|cfsnchash
+name|coda_nc_hash
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash table of cfscache pointers */
+comment|/* hash table of coda_cache pointers */
 end_comment
 
 begin_decl_stmt
 name|struct
-name|cfslru
-name|cfsnc_lru
+name|coda_lru
+name|coda_nc_lru
 decl_stmt|;
 end_decl_stmt
 
@@ -202,8 +181,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|cfsnc_statistics
-name|cfsnc_stat
+name|coda_nc_statistics
+name|coda_nc_stat
 decl_stmt|;
 end_decl_stmt
 
@@ -217,22 +196,22 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfsnc_debug
+name|coda_nc_debug
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Entry points for the CFS Name Cache  */
+comment|/*  * Entry points for the CODA Name Cache  */
 end_comment
 
 begin_function_decl
 specifier|static
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
-name|cfsnc_find
+name|coda_nc_find
 parameter_list|(
 name|struct
 name|cnode
@@ -261,10 +240,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cfsnc_remove
+name|coda_nc_remove
 parameter_list|(
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 parameter_list|,
@@ -283,19 +262,19 @@ begin_define
 define|#
 directive|define
 name|TOTAL_CACHE_SIZE
-value|(sizeof(struct cfscache) * cfsnc_size)
+value|(sizeof(struct coda_cache) * coda_nc_size)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TOTAL_HASH_SIZE
-value|(sizeof(struct cfshash)  * cfsnc_hashsize)
+value|(sizeof(struct coda_hash)  * coda_nc_hashsize)
 end_define
 
 begin_decl_stmt
 name|int
-name|cfsnc_initialized
+name|coda_nc_initialized
 init|=
 literal|0
 decl_stmt|;
@@ -307,7 +286,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_init
+name|coda_nc_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -319,65 +298,65 @@ comment|/* zero the statistics structure */
 name|bzero
 argument_list|(
 operator|&
-name|cfsnc_stat
+name|coda_nc_stat
 argument_list|,
 operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cfsnc_statistics
+name|coda_nc_statistics
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"CFS NAME CACHE: CACHE %d, HASH TBL %d\n"
+literal|"CODA NAME CACHE: CACHE %d, HASH TBL %d\n"
 argument_list|,
-name|CFSNC_CACHESIZE
+name|CODA_NC_CACHESIZE
 argument_list|,
-name|CFSNC_HASHSIZE
+name|CODA_NC_HASHSIZE
 argument_list|)
 expr_stmt|;
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
-name|cfsncheap
+name|coda_nc_heap
 argument_list|,
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 argument_list|,
 name|TOTAL_CACHE_SIZE
 argument_list|)
 expr_stmt|;
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
-name|cfsnchash
+name|coda_nc_hash
 argument_list|,
 expr|struct
-name|cfshash
+name|coda_hash
 operator|*
 argument_list|,
 name|TOTAL_HASH_SIZE
 argument_list|)
 expr_stmt|;
-name|cfsnc_lru
+name|coda_nc_lru
 operator|.
 name|lru_next
 operator|=
-name|cfsnc_lru
+name|coda_nc_lru
 operator|.
 name|lru_prev
 operator|=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 name|LRU_PART
 argument_list|(
 operator|&
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 expr_stmt|;
 for|for
@@ -388,42 +367,42 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_size
+name|coda_nc_size
 condition|;
 name|i
 operator|++
 control|)
 block|{
 comment|/* initialize the heap */
-name|CFSNC_LRUINS
+name|CODA_NC_LRUINS
 argument_list|(
 operator|&
-name|cfsncheap
+name|coda_nc_heap
 index|[
 name|i
 index|]
 argument_list|,
 operator|&
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 expr_stmt|;
-name|CFSNC_HSHNUL
+name|CODA_NC_HSHNUL
 argument_list|(
 operator|&
-name|cfsncheap
+name|coda_nc_heap
 index|[
 name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|cfsncheap
+name|coda_nc_heap
 index|[
 name|i
 index|]
 operator|.
 name|cp
 operator|=
-name|cfsncheap
+name|coda_nc_heap
 index|[
 name|i
 index|]
@@ -446,29 +425,29 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
 control|)
 block|{
 comment|/* initialize the hashtable */
-name|CFSNC_HSHNUL
+name|CODA_NC_HSHNUL
 argument_list|(
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|cfsnc_initialized
+name|coda_nc_initialized
 operator|++
 expr_stmt|;
 block|}
@@ -481,9 +460,9 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
-name|cfsnc_find
+name|coda_nc_find
 parameter_list|(
 name|dcp
 parameter_list|,
@@ -519,7 +498,7 @@ decl_stmt|;
 block|{
 comment|/*  	 * hash to find the appropriate bucket, look through the chain 	 * for the right entry (especially right cred, unless cred == 0)  	 */
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
@@ -528,19 +507,19 @@ name|count
 init|=
 literal|1
 decl_stmt|;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_FIND
+argument|CODA_NC_FIND
 argument_list|,
 argument|myprintf((
-literal|"cfsnc_find(dcp %p, name %s, len %d, cred %p, hash %d\n"
+literal|"coda_nc_find(dcp %p, name %s, len %d, cred %p, hash %d\n"
 argument|, 			   dcp, name, namelen, cred, hash));
 argument_list|)
 for|for
 control|(
 name|cncp
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -551,11 +530,11 @@ name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -573,7 +552,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|CFS_NAMEMATCH
+name|CODA_NAMEMATCH
 argument_list|(
 name|cncp
 argument_list|,
@@ -603,7 +582,7 @@ operator|)
 condition|)
 block|{
 comment|/* compare cr_uid instead */
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|Search_len
 operator|+=
@@ -621,7 +600,7 @@ name|DEBUG
 elseif|else
 if|if
 condition|(
-name|CFS_NAMEMATCH
+name|CODA_NAMEMATCH
 argument_list|(
 name|cncp
 argument_list|,
@@ -635,7 +614,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfsnc_find: name %s, new cred = %p, cred = %p\n"
+literal|"coda_nc_find: name %s, new cred = %p, cred = %p\n"
 argument_list|,
 name|name
 argument_list|,
@@ -701,7 +680,7 @@ return|return
 operator|(
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 literal|0
@@ -716,7 +695,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_enter
+name|coda_nc_enter
 parameter_list|(
 name|dcp
 parameter_list|,
@@ -753,7 +732,7 @@ name|cp
 decl_stmt|;
 block|{
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
@@ -762,15 +741,15 @@ name|hash
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_ENTER
+argument|CODA_NC_ENTER
 argument_list|,
 argument|myprintf((
 literal|"Enter: dcp %p cp %p name %s cred %p \n"
@@ -780,18 +759,18 @@ if|if
 condition|(
 name|namelen
 operator|>
-name|CFSNC_NAMELEN
+name|CODA_NC_NAMELEN
 condition|)
 block|{
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_ENTER
+argument|CODA_NC_ENTER
 argument_list|,
 argument|myprintf((
 literal|"long name enter %s\n"
 argument|,name));
 argument_list|)
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|long_name_enters
 operator|++
@@ -801,7 +780,7 @@ return|return;
 block|}
 name|hash
 operator|=
-name|CFSNC_HASH
+name|CODA_NC_HASH
 argument_list|(
 name|name
 argument_list|,
@@ -812,7 +791,7 @@ argument_list|)
 expr_stmt|;
 name|cncp
 operator|=
-name|cfsnc_find
+name|coda_nc_find
 argument_list|(
 name|dcp
 argument_list|,
@@ -831,13 +810,13 @@ name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 literal|0
 condition|)
 block|{
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|dbl_enters
 operator|++
@@ -845,7 +824,7 @@ expr_stmt|;
 comment|/* duplicate entry */
 return|return;
 block|}
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|enters
 operator|++
@@ -854,12 +833,12 @@ comment|/* record the enters statistic */
 comment|/* Grab the next element in the lru chain */
 name|cncp
 operator|=
-name|CFSNC_LRUGET
+name|CODA_NC_LRUGET
 argument_list|(
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 expr_stmt|;
-name|CFSNC_LRUREM
+name|CODA_NC_LRUREM
 argument_list|(
 name|cncp
 argument_list|)
@@ -867,16 +846,16 @@ expr_stmt|;
 comment|/* remove it from the lists */
 if|if
 condition|(
-name|CFSNC_VALID
+name|CODA_NC_VALID
 argument_list|(
 name|cncp
 argument_list|)
 condition|)
 block|{
 comment|/* Seems really ugly, but we have to decrement the appropriate 	   hash bucket length here, so we have to find the hash bucket 	   */
-name|cfsnchash
+name|coda_nc_hash
 index|[
-name|CFSNC_HASH
+name|CODA_NC_HASH
 argument_list|(
 name|cncp
 operator|->
@@ -895,13 +874,13 @@ operator|.
 name|length
 operator|--
 expr_stmt|;
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|lru_rm
 operator|++
 expr_stmt|;
 comment|/* zapped a valid entry */
-name|CFSNC_HSHREM
+name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
 argument_list|)
@@ -995,26 +974,26 @@ name|namelen
 argument_list|)
 expr_stmt|;
 comment|/* Insert into the lru and hash chains. */
-name|CFSNC_LRUINS
+name|CODA_NC_LRUINS
 argument_list|(
 name|cncp
 argument_list|,
 operator|&
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 expr_stmt|;
-name|CFSNC_HSHINS
+name|CODA_NC_HSHINS
 argument_list|(
 name|cncp
 argument_list|,
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
 argument_list|)
 expr_stmt|;
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -1023,11 +1002,11 @@ name|length
 operator|++
 expr_stmt|;
 comment|/* Used for tuning */
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_PRINTCFSNC
+argument|CODA_NC_PRINTCODA_NC
 argument_list|,
-argument|print_cfsnc();
+argument|print_coda_nc();
 argument_list|)
 block|}
 end_function
@@ -1040,7 +1019,7 @@ begin_function
 name|struct
 name|cnode
 modifier|*
-name|cfsnc_lookup
+name|coda_nc_lookup
 parameter_list|(
 name|dcp
 parameter_list|,
@@ -1073,13 +1052,13 @@ name|int
 name|hash
 decl_stmt|;
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
@@ -1098,18 +1077,18 @@ if|if
 condition|(
 name|namelen
 operator|>
-name|CFSNC_NAMELEN
+name|CODA_NC_NAMELEN
 condition|)
 block|{
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_LOOKUP
+argument|CODA_NC_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"long name lookup %s\n"
 argument|,name));
 argument_list|)
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|long_name_lookups
 operator|++
@@ -1129,7 +1108,7 @@ block|}
 comment|/* Use the hash function to locate the starting point, 	   then the search routine to go down the list looking for 	   the correct cred.  	 */
 name|hash
 operator|=
-name|CFSNC_HASH
+name|CODA_NC_HASH
 argument_list|(
 name|name
 argument_list|,
@@ -1140,7 +1119,7 @@ argument_list|)
 expr_stmt|;
 name|cncp
 operator|=
-name|cfsnc_find
+name|coda_nc_find
 argument_list|(
 name|dcp
 argument_list|,
@@ -1159,13 +1138,13 @@ name|cncp
 operator|==
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 literal|0
 condition|)
 block|{
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|misses
 operator|++
@@ -1182,46 +1161,46 @@ literal|0
 operator|)
 return|;
 block|}
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|hits
 operator|++
 expr_stmt|;
 comment|/* put this entry at the end of the LRU */
-name|CFSNC_LRUREM
+name|CODA_NC_LRUREM
 argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-name|CFSNC_LRUINS
+name|CODA_NC_LRUINS
 argument_list|(
 name|cncp
 argument_list|,
 operator|&
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 expr_stmt|;
 comment|/* move it to the front of the hash chain */
 comment|/* don't need to change the hash bucket length */
-name|CFSNC_HSHREM
+name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-name|CFSNC_HSHINS
+name|CODA_NC_HSHINS
 argument_list|(
 name|cncp
 argument_list|,
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
 argument_list|)
 expr_stmt|;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_LOOKUP
+argument|CODA_NC_LOOKUP
 argument_list|,
 argument|printf(
 literal|"lookup: dcp %p, name %s, cred %p = cp %p\n"
@@ -1240,14 +1219,14 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cfsnc_remove
+name|coda_nc_remove
 parameter_list|(
 name|cncp
 parameter_list|,
 name|dcstat
 parameter_list|)
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
@@ -1257,20 +1236,20 @@ name|dcstat
 decl_stmt|;
 block|{
 comment|/*  	 * remove an entry -- vrele(cncp->dcp, cp), crfree(cred), 	 * remove it from it's hash chain, and 	 * place it at the head of the lru list. 	 */
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_REMOVE
+argument|CODA_NC_REMOVE
 argument_list|,
 argument|myprintf((
-literal|"cfsnc_remove %s from parent %lx.%lx.%lx\n"
+literal|"coda_nc_remove %s from parent %lx.%lx.%lx\n"
 argument|, 			   cncp->name, (cncp->dcp)->c_fid.Volume, 			   (cncp->dcp)->c_fid.Vnode, (cncp->dcp)->c_fid.Unique));
 argument_list|)
-name|CFSNC_HSHREM
+name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-name|CFSNC_HSHNUL
+name|CODA_NC_HSHNUL
 argument_list|(
 name|cncp
 argument_list|)
@@ -1377,18 +1356,18 @@ argument_list|)
 expr_stmt|;
 comment|/* Put the null entry just after the least-recently-used entry */
 comment|/* LRU_TOP adjusts the pointer to point to the top of the structure. */
-name|CFSNC_LRUREM
+name|CODA_NC_LRUREM
 argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
-name|CFSNC_LRUINS
+name|CODA_NC_LRUINS
 argument_list|(
 name|cncp
 argument_list|,
 name|LRU_TOP
 argument_list|(
-name|cfsnc_lru
+name|coda_nc_lru
 operator|.
 name|lru_prev
 argument_list|)
@@ -1403,7 +1382,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_zapParentfid
+name|coda_nc_zapParentfid
 parameter_list|(
 name|fid
 parameter_list|,
@@ -1420,7 +1399,7 @@ decl_stmt|;
 block|{
 comment|/* To get to a specific fid, we might either have another hashing 	   function or do a sequential search through the cache for the 	   appropriate entries. The later may be acceptable since I don't 	   think callbacks or whatever Case 1 covers are frequent occurences. 	 */
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|,
@@ -1432,21 +1411,21 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_ZAPPFID
+argument|CODA_NC_ZAPPFID
 argument_list|,
 argument|myprintf((
 literal|"ZapParent: fid 0x%lx, 0x%lx, 0x%lx \n"
 argument|, 			fid->Volume, fid->Vnode, fid->Unique));
 argument_list|)
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|zapPfids
 operator|++
@@ -1459,7 +1438,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
@@ -1470,7 +1449,7 @@ for|for
 control|(
 name|cncp
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -1481,11 +1460,11 @@ name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -1546,7 +1525,7 @@ name|Unique
 operator|)
 condition|)
 block|{
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -1555,7 +1534,7 @@ name|length
 operator|--
 expr_stmt|;
 comment|/* Used for tuning */
-name|cfsnc_remove
+name|coda_nc_remove
 argument_list|(
 name|cncp
 argument_list|,
@@ -1574,7 +1553,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_zapfid
+name|coda_nc_zapfid
 parameter_list|(
 name|fid
 parameter_list|,
@@ -1591,7 +1570,7 @@ decl_stmt|;
 block|{
 comment|/* See comment for zapParentfid. This routine will be used 	   if attributes are being cached.  	 */
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|,
@@ -1603,21 +1582,21 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_ZAPFID
+argument|CODA_NC_ZAPFID
 argument_list|,
 argument|myprintf((
 literal|"Zapfid: fid 0x%lx, 0x%lx, 0x%lx \n"
 argument|, 			fid->Volume, fid->Vnode, fid->Unique));
 argument_list|)
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|zapFids
 operator|++
@@ -1630,7 +1609,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
@@ -1640,7 +1619,7 @@ for|for
 control|(
 name|cncp
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -1651,11 +1630,11 @@ name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -1716,7 +1695,7 @@ name|Unique
 operator|)
 condition|)
 block|{
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -1725,7 +1704,7 @@ name|length
 operator|--
 expr_stmt|;
 comment|/* Used for tuning */
-name|cfsnc_remove
+name|coda_nc_remove
 argument_list|(
 name|cncp
 argument_list|,
@@ -1744,7 +1723,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_zapvnode
+name|coda_nc_zapvnode
 parameter_list|(
 name|fid
 parameter_list|,
@@ -1769,15 +1748,15 @@ block|{
 comment|/* See comment for zapfid. I don't think that one would ever 	   want to zap a file with a specific cred from the kernel. 	   We'll leave this one unimplemented. 	 */
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_ZAPVNODE
+argument|CODA_NC_ZAPVNODE
 argument_list|,
 argument|myprintf((
 literal|"Zapvnode: fid 0x%lx, 0x%lx, 0x%lx cred %p\n"
@@ -1792,7 +1771,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_zapfile
+name|coda_nc_zapfile
 parameter_list|(
 name|dcp
 parameter_list|,
@@ -1816,7 +1795,7 @@ decl_stmt|;
 block|{
 comment|/* use the hash function to locate the file, then zap all  	   entries of it regardless of the cred. 	 */
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
@@ -1825,15 +1804,15 @@ name|hash
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_ZAPFILE
+argument|CODA_NC_ZAPFILE
 argument_list|,
 argument|myprintf((
 literal|"Zapfile: dcp %p name %s \n"
@@ -1843,10 +1822,10 @@ if|if
 condition|(
 name|namelen
 operator|>
-name|CFSNC_NAMELEN
+name|CODA_NC_NAMELEN
 condition|)
 block|{
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|long_remove
 operator|++
@@ -1854,14 +1833,14 @@ expr_stmt|;
 comment|/* record stats */
 return|return;
 block|}
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|zapFile
 operator|++
 expr_stmt|;
 name|hash
 operator|=
-name|CFSNC_HASH
+name|CODA_NC_HASH
 argument_list|(
 name|name
 argument_list|,
@@ -1872,7 +1851,7 @@ argument_list|)
 expr_stmt|;
 name|cncp
 operator|=
-name|cfsnc_find
+name|coda_nc_find
 argument_list|(
 name|dcp
 argument_list|,
@@ -1890,7 +1869,7 @@ condition|(
 name|cncp
 condition|)
 block|{
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -1899,7 +1878,7 @@ name|length
 operator|--
 expr_stmt|;
 comment|/* Used for tuning */
-name|cfsnc_remove
+name|coda_nc_remove
 argument_list|(
 name|cncp
 argument_list|,
@@ -1908,7 +1887,7 @@ argument_list|)
 expr_stmt|;
 name|cncp
 operator|=
-name|cfsnc_find
+name|coda_nc_find
 argument_list|(
 name|dcp
 argument_list|,
@@ -1931,7 +1910,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_purge_user
+name|coda_nc_purge_user
 parameter_list|(
 name|uid
 parameter_list|,
@@ -1947,7 +1926,7 @@ decl_stmt|;
 block|{
 comment|/*  	 * I think the best approach is to go through the entire cache 	 * via HASH or whatever and zap all entries which match the 	 * input cred. Or just flush the whole cache.  It might be 	 * best to go through on basis of LRU since cache will almost 	 * always be full and LRU is more straightforward.   	 */
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|,
@@ -1959,21 +1938,21 @@ name|hash
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|CFSNC_DEBUG
+name|CODA_NC_DEBUG
 argument_list|(
-argument|CFSNC_PURGEUSER
+argument|CODA_NC_PURGEUSER
 argument_list|,
 argument|myprintf((
 literal|"ZapDude: uid %lx\n"
 argument|, uid));
 argument_list|)
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|zapUsers
 operator|++
@@ -1982,21 +1961,21 @@ for|for
 control|(
 name|cncp
 operator|=
-name|CFSNC_LRUGET
+name|CODA_NC_LRUGET
 argument_list|(
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 init|;
 name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|(
 operator|&
-name|cfsnc_lru
+name|coda_nc_lru
 operator|)
 condition|;
 name|cncp
@@ -2006,7 +1985,7 @@ control|)
 block|{
 name|ncncp
 operator|=
-name|CFSNC_LRUGET
+name|CODA_NC_LRUGET
 argument_list|(
 operator|*
 name|cncp
@@ -2015,7 +1994,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|CFSNC_VALID
+name|CODA_NC_VALID
 argument_list|(
 name|cncp
 argument_list|)
@@ -2037,7 +2016,7 @@ block|{
 comment|/* Seems really ugly, but we have to decrement the appropriate 			   hash bucket length here, so we have to find the hash bucket 			   */
 name|hash
 operator|=
-name|CFSNC_HASH
+name|CODA_NC_HASH
 argument_list|(
 name|cncp
 operator|->
@@ -2052,7 +2031,7 @@ operator|->
 name|dcp
 argument_list|)
 expr_stmt|;
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -2061,7 +2040,7 @@ name|length
 operator|--
 expr_stmt|;
 comment|/* For performance tuning */
-name|cfsnc_remove
+name|coda_nc_remove
 argument_list|(
 name|cncp
 argument_list|,
@@ -2079,7 +2058,7 @@ end_comment
 
 begin_function
 name|void
-name|cfsnc_flush
+name|coda_nc_flush
 parameter_list|(
 name|dcstat
 parameter_list|)
@@ -2091,7 +2070,7 @@ block|{
 comment|/* One option is to deallocate the current name cache and 	   call init to start again. Or just deallocate, then rebuild. 	   Or again, we could just go through the array and zero the  	   appropriate fields.  	 */
 comment|/*  	 * Go through the whole lru chain and kill everything as we go. 	 * I don't use remove since that would rebuild the lru chain 	 * as it went and that seemed unneccesary. 	 */
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
@@ -2100,13 +2079,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
 comment|/* Cache is off */
 return|return;
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|Flushes
 operator|++
@@ -2115,24 +2094,24 @@ for|for
 control|(
 name|cncp
 operator|=
-name|CFSNC_LRUGET
+name|CODA_NC_LRUGET
 argument_list|(
-name|cfsnc_lru
+name|coda_nc_lru
 argument_list|)
 init|;
 name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnc_lru
+name|coda_nc_lru
 condition|;
 name|cncp
 operator|=
-name|CFSNC_LRUGET
+name|CODA_NC_LRUGET
 argument_list|(
 operator|*
 name|cncp
@@ -2141,19 +2120,19 @@ control|)
 block|{
 if|if
 condition|(
-name|CFSNC_VALID
+name|CODA_NC_VALID
 argument_list|(
 name|cncp
 argument_list|)
 condition|)
 block|{
-name|CFSNC_HSHREM
+name|CODA_NC_HSHREM
 argument_list|(
 name|cncp
 argument_list|)
 expr_stmt|;
 comment|/* only zero valid nodes */
-name|CFSNC_HSHNUL
+name|CODA_NC_HSHNUL
 argument_list|(
 name|cncp
 argument_list|)
@@ -2215,19 +2194,19 @@ condition|)
 block|{
 if|if
 condition|(
-name|cfs_vmflush
+name|coda_vmflush
 argument_list|(
 name|cncp
 operator|->
 name|cp
 argument_list|)
 condition|)
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_FLUSH
+argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
-literal|"cfsnc_flush: (%lx.%lx.%lx) busy\n"
+literal|"coda_nc_flush: (%lx.%lx.%lx) busy\n"
 argument|, cncp->cp->c_fid.Volume, cncp->cp->c_fid.Vnode, cncp->cp->c_fid.Unique));
 argument_list|)
 block|}
@@ -2299,12 +2278,12 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
 control|)
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2326,7 +2305,7 @@ end_comment
 
 begin_function
 name|void
-name|print_cfsnc
+name|print_coda_nc
 parameter_list|(
 name|void
 parameter_list|)
@@ -2335,7 +2314,7 @@ name|int
 name|hash
 decl_stmt|;
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|;
@@ -2347,7 +2326,7 @@ literal|0
 init|;
 name|hash
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|hash
 operator|++
@@ -2366,7 +2345,7 @@ for|for
 control|(
 name|cncp
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -2377,11 +2356,11 @@ name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|hash
 index|]
@@ -2423,7 +2402,7 @@ end_function
 
 begin_function
 name|void
-name|cfsnc_gather_stats
+name|coda_nc_gather_stats
 parameter_list|(
 name|void
 parameter_list|)
@@ -2457,7 +2436,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
@@ -2465,7 +2444,7 @@ control|)
 block|{
 if|if
 condition|(
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2475,7 +2454,7 @@ condition|)
 block|{
 name|sum
 operator|+=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2491,7 +2470,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2502,7 +2481,7 @@ name|max
 condition|)
 name|max
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2511,19 +2490,19 @@ name|length
 expr_stmt|;
 block|}
 comment|/* 	 * When computing the Arithmetic mean, only count slots which  	 * are not empty in the distribution. 	 */
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|Sum_bucket_len
 operator|=
 name|sum
 expr_stmt|;
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|Num_zero_len
 operator|=
 name|zeros
 expr_stmt|;
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|Max_bucket_len
 operator|=
@@ -2534,7 +2513,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 operator|-
 name|zeros
 operator|)
@@ -2564,7 +2543,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
@@ -2572,7 +2551,7 @@ control|)
 block|{
 if|if
 condition|(
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2582,7 +2561,7 @@ condition|)
 block|{
 name|temp
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2599,7 +2578,7 @@ name|temp
 expr_stmt|;
 block|}
 block|}
-name|cfsnc_stat
+name|coda_nc_stat
 operator|.
 name|Sum2_bucket_len
 operator|=
@@ -2614,7 +2593,7 @@ end_comment
 
 begin_function
 name|int
-name|cfsnc_resize
+name|coda_nc_resize
 parameter_list|(
 name|hashsize
 parameter_list|,
@@ -2654,45 +2633,45 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|cfsnc_use
+name|coda_nc_use
 operator|=
 literal|0
 expr_stmt|;
 comment|/* Turn the cache off */
-name|cfsnc_flush
+name|coda_nc_flush
 argument_list|(
 name|dcstat
 argument_list|)
 expr_stmt|;
 comment|/* free any cnodes in the cache */
 comment|/* WARNING: free must happen *before* size is reset */
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
-name|cfsncheap
+name|coda_nc_heap
 argument_list|,
 name|TOTAL_CACHE_SIZE
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
-name|cfsnchash
+name|coda_nc_hash
 argument_list|,
 name|TOTAL_HASH_SIZE
 argument_list|)
 expr_stmt|;
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 operator|=
 name|hashsize
 expr_stmt|;
-name|cfsnc_size
+name|coda_nc_size
 operator|=
 name|heapsize
 expr_stmt|;
-name|cfsnc_init
+name|coda_nc_init
 argument_list|()
 expr_stmt|;
 comment|/* Set up a cache with the new size */
-name|cfsnc_use
+name|coda_nc_use
 operator|=
 literal|1
 expr_stmt|;
@@ -2705,11 +2684,23 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|DEBUG
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_decl_stmt
 name|char
-name|cfsnc_name_buf
+name|coda_nc_name_buf
 index|[
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 operator|+
 literal|1
 index|]
@@ -2718,7 +2709,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|cfsnc_name
+name|coda_nc_name
 parameter_list|(
 name|struct
 name|cnode
@@ -2727,7 +2718,7 @@ name|cp
 parameter_list|)
 block|{
 name|struct
-name|cfscache
+name|coda_cache
 modifier|*
 name|cncp
 decl_stmt|,
@@ -2739,7 +2730,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 operator|==
 literal|0
 condition|)
@@ -2753,7 +2744,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cfsnc_hashsize
+name|coda_nc_hashsize
 condition|;
 name|i
 operator|++
@@ -2763,7 +2754,7 @@ for|for
 control|(
 name|cncp
 operator|=
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2774,11 +2765,11 @@ name|cncp
 operator|!=
 operator|(
 expr|struct
-name|cfscache
+name|coda_cache
 operator|*
 operator|)
 operator|&
-name|cfsnchash
+name|coda_nc_hash
 index|[
 name|i
 index|]
@@ -2809,14 +2800,14 @@ name|cncp
 operator|->
 name|name
 argument_list|,
-name|cfsnc_name_buf
+name|coda_nc_name_buf
 argument_list|,
 name|cncp
 operator|->
 name|namelen
 argument_list|)
 expr_stmt|;
-name|cfsnc_name_buf
+name|coda_nc_name_buf
 index|[
 name|cncp
 operator|->
@@ -2829,7 +2820,7 @@ name|printf
 argument_list|(
 literal|" is %s (%p,%p)@%p"
 argument_list|,
-name|cfsnc_name_buf
+name|coda_nc_name_buf
 argument_list|,
 name|cncp
 operator|->
@@ -2847,6 +2838,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

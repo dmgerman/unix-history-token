@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/coda_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_venus.c,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct cfs_in_hdr *inp;				\     struct name ## _out *outp;				\     int name ## _size = sizeof (struct cfs_in_hdr);	\     int Isize = sizeof (struct cfs_in_hdr);		\     int Osize = sizeof (struct name ## _out);		\     int error
+value|struct coda_in_hdr *inp;				\     struct name ## _out *outp;				\     int name ## _size = sizeof (struct coda_in_hdr);	\     int Isize = sizeof (struct coda_in_hdr);		\     int Osize = sizeof (struct name ## _out);		\     int error
 end_define
 
 begin_define
@@ -99,7 +99,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|struct name ## _in *inp;				\     struct cfs_out_hdr *outp;				\     int name ## _size = sizeof (struct name ## _in);	\     int Isize = sizeof (struct name ## _in);		\     int Osize = sizeof (struct cfs_out_hdr);		\     int error
+value|struct name ## _in *inp;				\     struct coda_out_hdr *outp;				\     int name ## _size = sizeof (struct name ## _in);	\     int Isize = sizeof (struct name ## _in);		\     int Osize = sizeof (struct coda_out_hdr);		\     int error
 end_define
 
 begin_define
@@ -110,7 +110,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CFS_ALLOC(inp, struct cfs_in_hdr *, name ## _size);\     outp = (struct name ## _out *) inp
+value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CODA_ALLOC(inp, struct coda_in_hdr *, name ## _size);\     outp = (struct name ## _out *) inp
 end_define
 
 begin_define
@@ -121,7 +121,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CFS_ALLOC(inp, struct name ## _in *, name ## _size);\     outp = (struct name ## _out *) inp
+value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CODA_ALLOC(inp, struct name ## _in *, name ## _size);\     outp = (struct name ## _out *) inp
 end_define
 
 begin_define
@@ -132,7 +132,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CFS_ALLOC(inp, struct name ## _in *, name ## _size);\     outp = (struct cfs_out_hdr *) inp
+value|if (Osize> name ## _size)				\     	name ## _size = Osize;				\     CODA_ALLOC(inp, struct name ## _in *, name ## _size);\     outp = (struct coda_out_hdr *) inp
 end_define
 
 begin_define
@@ -219,13 +219,13 @@ parameter_list|)
 block|{
 name|DECL_NO_IN
 argument_list|(
-name|cfs_root
+name|coda_root
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC_NO_IN
 argument_list|(
-name|cfs_root
+name|coda_root
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -234,7 +234,7 @@ name|INIT_IN
 argument_list|(
 name|inp
 argument_list|,
-name|CFS_ROOT
+name|CODA_ROOT
 argument_list|,
 name|cred
 argument_list|,
@@ -243,7 +243,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -271,11 +271,11 @@ name|outp
 operator|->
 name|VFid
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_root_size
+name|coda_root_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -324,13 +324,13 @@ name|cflag
 decl_stmt|;
 name|DECL
 argument_list|(
-name|cfs_open
+name|coda_open
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC
 argument_list|(
-name|cfs_open
+name|coda_open
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -342,7 +342,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_OPEN
+name|CODA_OPEN
 argument_list|,
 name|cred
 argument_list|,
@@ -371,7 +371,7 @@ name|cflag
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -408,11 +408,11 @@ operator|->
 name|inode
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_open_size
+name|coda_open_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -452,13 +452,13 @@ name|cflag
 decl_stmt|;
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_close
+name|coda_close
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_close
+name|coda_close
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -469,7 +469,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_CLOSE
+name|CODA_CLOSE
 argument_list|,
 name|cred
 argument_list|,
@@ -498,7 +498,7 @@ name|cflag
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -514,11 +514,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_close_size
+name|coda_close_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -587,7 +587,7 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_ioctl
+name|coda_ioctl
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
@@ -606,13 +606,13 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
-name|cfs_ioctl_size
+name|coda_ioctl_size
 operator|=
 name|VC_MAXMSGSIZE
 expr_stmt|;
 name|ALLOC
 argument_list|(
-name|cfs_ioctl
+name|coda_ioctl
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -623,7 +623,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_IOCTL
+name|CODA_IOCTL
 argument_list|,
 name|cred
 argument_list|,
@@ -716,7 +716,7 @@ operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cfs_ioctl_in
+name|coda_ioctl_in
 argument_list|)
 operator|)
 expr_stmt|;
@@ -755,11 +755,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_ioctl_size
+name|coda_ioctl_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -774,7 +774,7 @@ name|VC_MAXMSGSIZE
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -855,11 +855,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_ioctl_size
+name|coda_ioctl_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -899,13 +899,13 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_getattr
+name|coda_getattr
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC
 argument_list|(
-name|cfs_getattr
+name|coda_getattr
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -917,7 +917,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_GETATTR
+name|CODA_GETATTR
 argument_list|,
 name|cred
 argument_list|,
@@ -933,7 +933,7 @@ name|fid
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -966,11 +966,11 @@ name|attr
 argument_list|)
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_getattr_size
+name|coda_getattr_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1009,13 +1009,13 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_setattr
+name|coda_setattr
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_setattr
+name|coda_setattr
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1027,7 +1027,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_SETATTR
+name|CODA_SETATTR
 argument_list|,
 name|cred
 argument_list|,
@@ -1053,7 +1053,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1069,11 +1069,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_setattr_size
+name|coda_setattr_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1110,13 +1110,13 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_access
+name|coda_access
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_access
+name|coda_access
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1128,7 +1128,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_ACCESS
+name|CODA_ACCESS
 argument_list|,
 name|cred
 argument_list|,
@@ -1153,7 +1153,7 @@ literal|6
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1169,11 +1169,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_access_size
+name|coda_access_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1217,17 +1217,17 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_readlink
+name|coda_readlink
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_readlink_size
+name|coda_readlink_size
 operator|+=
-name|CFS_MAXPATHLEN
+name|CODA_MAXPATHLEN
 expr_stmt|;
 name|ALLOC
 argument_list|(
-name|cfs_readlink
+name|coda_readlink
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1239,7 +1239,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_READLINK
+name|CODA_READLINK
 argument_list|,
 name|cred
 argument_list|,
@@ -1255,11 +1255,11 @@ name|fid
 expr_stmt|;
 name|Osize
 operator|+=
-name|CFS_MAXPATHLEN
+name|CODA_MAXPATHLEN
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1281,7 +1281,7 @@ operator|!
 name|error
 condition|)
 block|{
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
 operator|*
 name|str
@@ -1324,11 +1324,11 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_readlink_size
+name|coda_readlink_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1362,13 +1362,13 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_fsync
+name|coda_fsync
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_fsync
+name|coda_fsync
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1380,7 +1380,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_FSYNC
+name|CODA_FSYNC
 argument_list|,
 name|cred
 argument_list|,
@@ -1396,7 +1396,7 @@ name|fid
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1412,11 +1412,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_fsync_size
+name|coda_fsync_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1467,11 +1467,11 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_lookup
+name|coda_lookup
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_lookup_size
+name|coda_lookup_size
 operator|+=
 name|len
 operator|+
@@ -1479,7 +1479,7 @@ literal|1
 expr_stmt|;
 name|ALLOC
 argument_list|(
-name|cfs_lookup
+name|coda_lookup
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1491,7 +1491,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_LOOKUP
+name|CODA_LOOKUP
 argument_list|,
 name|cred
 argument_list|,
@@ -1523,7 +1523,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1560,11 +1560,11 @@ operator|->
 name|vtype
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_lookup_size
+name|coda_lookup_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1627,11 +1627,11 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_create
+name|coda_create
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_create_size
+name|coda_create_size
 operator|+=
 name|len
 operator|+
@@ -1639,7 +1639,7 @@ literal|1
 expr_stmt|;
 name|ALLOC
 argument_list|(
-name|cfs_create
+name|coda_create
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1651,7 +1651,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_CREATE
+name|CODA_CREATE
 argument_list|,
 name|cred
 argument_list|,
@@ -1709,7 +1709,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1749,11 +1749,11 @@ name|attr
 argument_list|)
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_create_size
+name|coda_create_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1795,11 +1795,11 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_remove
+name|coda_remove
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_remove_size
+name|coda_remove_size
 operator|+=
 name|len
 operator|+
@@ -1807,7 +1807,7 @@ literal|1
 expr_stmt|;
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_remove
+name|coda_remove
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1819,7 +1819,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_REMOVE
+name|CODA_REMOVE
 argument_list|,
 name|cred
 argument_list|,
@@ -1851,7 +1851,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1867,11 +1867,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_remove_size
+name|coda_remove_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1917,11 +1917,11 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_link
+name|coda_link
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_link_size
+name|coda_link_size
 operator|+=
 name|len
 operator|+
@@ -1929,7 +1929,7 @@ literal|1
 expr_stmt|;
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_link
+name|coda_link
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -1941,7 +1941,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_LINK
+name|CODA_LINK
 argument_list|,
 name|cred
 argument_list|,
@@ -1980,7 +1980,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -1996,11 +1996,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_link_size
+name|coda_link_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -2054,11 +2054,11 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_rename
+name|coda_rename
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_rename_size
+name|coda_rename_size
 operator|+=
 name|len
 operator|+
@@ -2070,7 +2070,7 @@ literal|1
 expr_stmt|;
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_rename
+name|coda_rename
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -2082,7 +2082,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_RENAME
+name|CODA_RENAME
 argument_list|,
 name|cred
 argument_list|,
@@ -2137,7 +2137,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -2153,11 +2153,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_rename_size
+name|coda_rename_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -2214,11 +2214,11 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_mkdir
+name|coda_mkdir
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_mkdir_size
+name|coda_mkdir_size
 operator|+=
 name|len
 operator|+
@@ -2226,7 +2226,7 @@ literal|1
 expr_stmt|;
 name|ALLOC
 argument_list|(
-name|cfs_mkdir
+name|coda_mkdir
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -2238,7 +2238,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_MKDIR
+name|CODA_MKDIR
 argument_list|,
 name|cred
 argument_list|,
@@ -2280,7 +2280,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -2320,11 +2320,11 @@ name|attr
 argument_list|)
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_mkdir_size
+name|coda_mkdir_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -2366,11 +2366,11 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_rmdir
+name|coda_rmdir
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_rmdir_size
+name|coda_rmdir_size
 operator|+=
 name|len
 operator|+
@@ -2378,7 +2378,7 @@ literal|1
 expr_stmt|;
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_rmdir
+name|coda_rmdir
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -2390,7 +2390,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_RMDIR
+name|CODA_RMDIR
 argument_list|,
 name|cred
 argument_list|,
@@ -2422,7 +2422,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -2438,11 +2438,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_rmdir_size
+name|coda_rmdir_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -2497,11 +2497,11 @@ parameter_list|)
 block|{
 name|DECL_NO_OUT
 argument_list|(
-name|cfs_symlink
+name|coda_symlink
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_symlink_size
+name|coda_symlink_size
 operator|+=
 name|llen
 operator|+
@@ -2513,7 +2513,7 @@ literal|1
 expr_stmt|;
 name|ALLOC_NO_OUT
 argument_list|(
-name|cfs_symlink
+name|coda_symlink
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -2525,7 +2525,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_SYMLINK
+name|CODA_SYMLINK
 argument_list|,
 name|cred
 argument_list|,
@@ -2583,7 +2583,7 @@ expr_stmt|;
 comment|/* increments Isize */
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -2599,11 +2599,11 @@ operator|)
 name|inp
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_symlink_size
+name|coda_symlink_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -2652,17 +2652,17 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_readdir
+name|coda_readdir
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
-name|cfs_readdir_size
+name|coda_readdir_size
 operator|=
 name|VC_MAXMSGSIZE
 expr_stmt|;
 name|ALLOC
 argument_list|(
-name|cfs_readdir
+name|coda_readdir
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -2674,7 +2674,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_READDIR
+name|CODA_READDIR
 argument_list|,
 name|cred
 argument_list|,
@@ -2706,7 +2706,7 @@ name|VC_MAXMSGSIZE
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -2758,11 +2758,11 @@ operator|->
 name|size
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_readdir_size
+name|coda_readdir_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -2805,13 +2805,13 @@ parameter_list|)
 block|{
 name|DECL
 argument_list|(
-name|cfs_vget
+name|coda_vget
 argument_list|)
 expr_stmt|;
 comment|/* sets Isize& Osize */
 name|ALLOC
 argument_list|(
-name|cfs_vget
+name|coda_vget
 argument_list|)
 expr_stmt|;
 comment|/* sets inp& outp */
@@ -2823,7 +2823,7 @@ name|inp
 operator|->
 name|ih
 argument_list|,
-name|CFS_VGET
+name|CODA_VGET
 argument_list|,
 name|cred
 argument_list|,
@@ -2839,7 +2839,7 @@ name|fid
 expr_stmt|;
 name|error
 operator|=
-name|cfscall
+name|coda_call
 argument_list|(
 name|mdp
 argument_list|,
@@ -2876,11 +2876,11 @@ operator|->
 name|vtype
 expr_stmt|;
 block|}
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|inp
 argument_list|,
-name|cfs_vget_size
+name|coda_vget_size
 argument_list|)
 expr_stmt|;
 return|return

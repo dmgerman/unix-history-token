@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_psdev.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_psdev.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: cfs_psdev.c,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*   * These routines define the psuedo device for communication between
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_psdev.c,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.9  1998/08/28 18:12:17  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.8  1998/08/18 17:05:15  rvb  * Don't use __RCSID now  *  * Revision 1.7  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  1998/06/09 23:30:42  rvb  * Try to allow ^C -- take 1  *  * Revision 1.5.2.8  98/01/23  11:21:04  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  98/01/22  22:22:21  rvb  * sync 1.2 and 1.3  *   * Revision 1.5.2.6  98/01/22  13:11:24  rvb  * Move makecfsnode ctlfid later so vfsp is known; work on ^c and ^z  *   * Revision 1.5.2.5  97/12/16  22:01:27  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.4  97/12/16  12:40:05  rvb  * Sync with 1.3  *   * Revision 1.5.2.3  97/12/10  14:08:24  rvb  * Fix O_ flags; check result in cfscall  *   * Revision 1.5.2.2  97/12/10  11:40:24  rvb  * No more ody  *   * Revision 1.5.2.1  97/12/06  17:41:20  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:16  rvb  * Read CHANGES  *   * Revision 1.4.18.9  97/12/05  08:58:07  rvb  * peter found this one  *   * Revision 1.4.18.8  97/11/26  15:28:57  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.4.18.7  97/11/25  09:40:49  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.18.6  97/11/20  11:46:41  rvb  * Capture current cfs_venus  *   * Revision 1.4.18.5  97/11/18  10:27:15  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.18.4  97/11/13  22:02:59  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.18.3  97/11/12  12:09:38  rvb  * reorg pass1  *   * Revision 1.4.18.2  97/10/29  16:06:09  rvb  * Kill DYING  *   * Revision 1.4.18.1  1997/10/28 23:10:15  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1996/12/12 22:10:58  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.3  1996/11/13 04:14:20  bnoble  * Merging BNOBLE_WORK_6_20_96 into main line  *  * Revision 1.2.8.1  1996/08/22 14:25:04  bnoble  * Added a return code from vc_nb_close  *  * Revision 1.2  1996/01/02 16:56:58  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:24  bnoble  * Added CFS-specific files  *  * Revision 1.1  1995/03/14  20:52:15  bnoble  * Initial revision  *  */
+comment|/*  * HISTORY  * $Log: cfs_psdev.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.9  1998/08/28 18:12:17  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.8  1998/08/18 17:05:15  rvb  * Don't use __RCSID now  *  * Revision 1.7  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  1998/06/09 23:30:42  rvb  * Try to allow ^C -- take 1  *  * Revision 1.5.2.8  98/01/23  11:21:04  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  98/01/22  22:22:21  rvb  * sync 1.2 and 1.3  *   * Revision 1.5.2.6  98/01/22  13:11:24  rvb  * Move make_coda_node ctlfid later so vfsp is known; work on ^c and ^z  *   * Revision 1.5.2.5  97/12/16  22:01:27  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.4  97/12/16  12:40:05  rvb  * Sync with 1.3  *   * Revision 1.5.2.3  97/12/10  14:08:24  rvb  * Fix O_ flags; check result in coda_call  *   * Revision 1.5.2.2  97/12/10  11:40:24  rvb  * No more ody  *   * Revision 1.5.2.1  97/12/06  17:41:20  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:16  rvb  * Read CHANGES  *   * Revision 1.4.18.9  97/12/05  08:58:07  rvb  * peter found this one  *   * Revision 1.4.18.8  97/11/26  15:28:57  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.4.18.7  97/11/25  09:40:49  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.18.6  97/11/20  11:46:41  rvb  * Capture current cfs_venus  *   * Revision 1.4.18.5  97/11/18  10:27:15  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.18.4  97/11/13  22:02:59  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.18.3  97/11/12  12:09:38  rvb  * reorg pass1  *   * Revision 1.4.18.2  97/10/29  16:06:09  rvb  * Kill DYING  *   * Revision 1.4.18.1  1997/10/28 23:10:15  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1996/12/12 22:10:58  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.3  1996/11/13 04:14:20  bnoble  * Merging BNOBLE_WORK_6_20_96 into main line  *  * Revision 1.2.8.1  1996/08/22 14:25:04  bnoble  * Added a return code from vc_nb_close  *  * Revision 1.2  1996/01/02 16:56:58  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:24  bnoble  * Added CODA-specific files  *  * Revision 1.1  1995/03/14  20:52:15  bnoble  * Initial revision  *  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|cfsnc_initialized
+name|coda_nc_initialized
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vcfs.h>
+file|<vcoda.h>
 end_include
 
 begin_include
@@ -132,7 +132,7 @@ end_define
 
 begin_decl_stmt
 name|int
-name|cfs_psdev_print_entry
+name|coda_psdev_print_entry
 init|=
 literal|0
 decl_stmt|;
@@ -142,12 +142,12 @@ begin_define
 define|#
 directive|define
 name|ENTRY
-value|if(cfs_psdev_print_entry) myprintf(("Entered %s\n",__FUNCTION__))
+value|if(coda_psdev_print_entry) myprintf(("Entered %s\n",__FUNCTION__))
 end_define
 
 begin_function_decl
 name|void
-name|vcfsattach
+name|vcodaattach
 parameter_list|(
 name|int
 name|n
@@ -333,12 +333,12 @@ value|4
 end_define
 
 begin_comment
-comment|/* vcfsattach: do nothing */
+comment|/* vcodaattach: do nothing */
 end_comment
 
 begin_function
 name|void
-name|vcfsattach
+name|vcodaattach
 parameter_list|(
 name|n
 parameter_list|)
@@ -391,7 +391,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NVCFS
+name|NVCODA
 operator|||
 name|minor
 argument_list|(
@@ -408,15 +408,15 @@ return|;
 if|if
 condition|(
 operator|!
-name|cfsnc_initialized
+name|coda_nc_initialized
 condition|)
-name|cfsnc_init
+name|coda_nc_init
 argument_list|()
 expr_stmt|;
 name|vcp
 operator|=
 operator|&
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -473,7 +473,7 @@ argument_list|(
 name|vcp
 argument_list|)
 expr_stmt|;
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -485,7 +485,7 @@ name|mi_vfsp
 operator|=
 name|NULL
 expr_stmt|;
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -545,7 +545,7 @@ modifier|*
 name|vmp
 decl_stmt|;
 name|struct
-name|cfs_mntinfo
+name|coda_mntinfo
 modifier|*
 name|mi
 decl_stmt|;
@@ -561,7 +561,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NVCFS
+name|NVCODA
 operator|||
 name|minor
 argument_list|(
@@ -578,7 +578,7 @@ return|;
 name|mi
 operator|=
 operator|&
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -628,7 +628,7 @@ name|c_flags
 operator||=
 name|C_UNMOUNTING
 expr_stmt|;
-name|cfs_unmounting
+name|coda_unmounting
 argument_list|(
 name|mi
 operator|->
@@ -716,10 +716,10 @@ name|vmp
 operator|->
 name|vm_opcode
 operator|==
-name|CFS_SIGNAL
+name|CODA_SIGNAL
 condition|)
 block|{
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 operator|(
 name|caddr_t
@@ -734,7 +734,7 @@ operator|)
 name|VC_IN_NO_DATA
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 operator|(
 name|caddr_t
@@ -871,7 +871,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NVCFS
+name|NVCODA
 operator|||
 name|minor
 argument_list|(
@@ -888,7 +888,7 @@ return|;
 name|vcp
 operator|=
 operator|&
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -1011,12 +1011,12 @@ name|vmp
 operator|->
 name|vm_opcode
 operator|==
-name|CFS_SIGNAL
+name|CODA_SIGNAL
 condition|)
 block|{
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 name|myprintf
 argument_list|(
@@ -1033,7 +1033,7 @@ name|vm_unique
 operator|)
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 operator|(
 name|caddr_t
@@ -1048,7 +1048,7 @@ operator|)
 name|VC_IN_NO_DATA
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 operator|(
 name|caddr_t
@@ -1131,7 +1131,7 @@ modifier|*
 name|vmp
 decl_stmt|;
 name|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 modifier|*
 name|out
 decl_stmt|;
@@ -1161,7 +1161,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NVCFS
+name|NVCODA
 operator|||
 name|minor
 argument_list|(
@@ -1178,7 +1178,7 @@ return|;
 name|vcp
 operator|=
 operator|&
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -1250,7 +1250,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 name|myprintf
 argument_list|(
@@ -1292,7 +1292,7 @@ operator|)
 operator|&
 name|pbuf
 operator|.
-name|cfs_purgeuser
+name|coda_purgeuser
 operator|.
 name|oh
 operator|.
@@ -1415,7 +1415,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 name|myprintf
 argument_list|(
@@ -1447,7 +1447,7 @@ name|out
 operator|=
 operator|(
 expr|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 operator|*
 operator|)
 name|vmp
@@ -1651,24 +1651,24 @@ name|cmd
 condition|)
 block|{
 case|case
-name|CFSRESIZE
+name|CODARESIZE
 case|:
 block|{
 name|struct
-name|cfs_resize
+name|coda_resize
 modifier|*
 name|data
 init|=
 operator|(
 expr|struct
-name|cfs_resize
+name|coda_resize
 operator|*
 operator|)
 name|addr
 decl_stmt|;
 return|return
 operator|(
-name|cfsnc_resize
+name|coda_nc_resize
 argument_list|(
 name|data
 operator|->
@@ -1685,14 +1685,14 @@ return|;
 break|break;
 block|}
 case|case
-name|CFSSTATS
+name|CODASTATS
 case|:
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 condition|)
 block|{
-name|cfsnc_gather_stats
+name|coda_nc_gather_stats
 argument_list|()
 expr_stmt|;
 return|return
@@ -1711,14 +1711,14 @@ return|;
 block|}
 break|break;
 case|case
-name|CFSPRINT
+name|CODAPRINT
 case|:
 if|if
 condition|(
-name|cfsnc_use
+name|coda_nc_use
 condition|)
 block|{
-name|print_cfsnc
+name|print_coda_nc
 argument_list|()
 expr_stmt|;
 return|return
@@ -1789,7 +1789,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NVCFS
+name|NVCODA
 operator|||
 name|minor
 argument_list|(
@@ -1806,7 +1806,7 @@ return|;
 name|vcp
 operator|=
 operator|&
-name|cfs_mnttbl
+name|coda_mnttbl
 index|[
 name|minor
 argument_list|(
@@ -1883,8 +1883,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|cfs_clstat
-name|cfs_clstat
+name|coda_clstat
+name|coda_clstat
 decl_stmt|;
 end_decl_stmt
 
@@ -1894,7 +1894,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfscall_sleep
+name|coda_call_sleep
 init|=
 name|PZERO
 operator|-
@@ -1910,7 +1910,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|cfs_pcatch
+name|coda_pcatch
 init|=
 name|PCATCH
 decl_stmt|;
@@ -1928,7 +1928,7 @@ end_endif
 
 begin_function
 name|int
-name|cfscall
+name|coda_call
 parameter_list|(
 name|mntinfo
 parameter_list|,
@@ -1939,7 +1939,7 @@ parameter_list|,
 name|buffer
 parameter_list|)
 name|struct
-name|cfs_mntinfo
+name|coda_mntinfo
 modifier|*
 name|mntinfo
 decl_stmt|;
@@ -2011,19 +2011,19 @@ operator|->
 name|mi_vcomm
 operator|)
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
 operator|(
 operator|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 operator|*
 block|)
 function|buffer
@@ -2055,7 +2055,7 @@ return|;
 end_if
 
 begin_expr_stmt
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
 name|vmp
 argument_list|,
@@ -2130,7 +2130,7 @@ operator|=
 operator|(
 operator|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 operator|*
 operator|)
 name|buffer
@@ -2155,7 +2155,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 name|myprintf
 argument_list|(
@@ -2182,7 +2182,7 @@ begin_expr_stmt
 operator|(
 operator|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 operator|*
 operator|)
 name|buffer
@@ -2242,7 +2242,7 @@ name|CTL_C
 end_ifdef
 
 begin_comment
-comment|/* This is work in progress.  Setting cfs_pcatch lets tsleep reawaken 	   on a ^c or ^z.  The problem is that emacs sets certain interrupts 	   as SA_RESTART.  This means that we should exit sleep handle the 	   "signal" and then go to sleep again.  Mostly this is done by letting 	   the syscall complete and be restarted.  We are not idempotent and  	   can not do this.  A better solution is necessary. 	 */
+comment|/* This is work in progress.  Setting coda_pcatch lets tsleep reawaken 	   on a ^c or ^z.  The problem is that emacs sets certain interrupts 	   as SA_RESTART.  This means that we should exit sleep handle the 	   "signal" and then go to sleep again.  Mostly this is done by letting 	   the syscall complete and be restarted.  We are not idempotent and  	   can not do this.  A better solution is necessary. 	 */
 end_comment
 
 begin_expr_stmt
@@ -2265,12 +2265,12 @@ operator|->
 name|vm_sleep
 argument_list|,
 operator|(
-name|cfscall_sleep
+name|coda_call_sleep
 operator||
-name|cfs_pcatch
+name|coda_pcatch
 operator|)
 argument_list|,
-literal|"cfscall"
+literal|"coda_call"
 argument_list|,
 name|hz
 operator|*
@@ -2294,7 +2294,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfscall: tsleep TIMEOUT %d sec\n"
+literal|"coda_call: tsleep TIMEOUT %d sec\n"
 argument_list|,
 literal|2
 operator|+
@@ -2327,7 +2327,7 @@ name|p_siglist
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfscall: tsleep returns %d SIGIO, cnt %d\n"
+literal|"coda_call: tsleep returns %d SIGIO, cnt %d\n"
 argument_list|,
 name|error
 argument_list|,
@@ -2339,7 +2339,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"cfscall: tsleep returns %d, cnt %d\n"
+literal|"coda_call: tsleep returns %d, cnt %d\n"
 argument_list|,
 name|error
 argument_list|,
@@ -2348,7 +2348,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfscall: siglist = %x, sigmask = %x, mask %x\n"
+literal|"coda_call: siglist = %x, sigmask = %x, mask %x\n"
 argument_list|,
 name|p
 operator|->
@@ -2379,7 +2379,7 @@ name|p_siglist
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfscall: new mask, siglist = %x, sigmask = %x, mask %x\n"
+literal|"coda_call: new mask, siglist = %x, sigmask = %x, mask %x\n"
 argument_list|,
 name|p
 operator|->
@@ -2438,9 +2438,9 @@ name|vmp
 operator|->
 name|vm_sleep
 argument_list|,
-name|cfscall_sleep
+name|coda_call_sleep
 argument_list|,
-literal|"cfscall"
+literal|"coda_call"
 argument_list|,
 literal|0
 argument_list|)
@@ -2500,7 +2500,7 @@ block|{
 comment|/* Interrupted before venus read it. */
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 operator|||
 literal|1
 condition|)
@@ -2540,7 +2540,7 @@ block|{
 comment|/* (!(vmp->vm_flags& VM_WRITE)) means interrupted after                    upcall started */
 comment|/* Interrupted after start of upcall, send venus a signal */
 name|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 modifier|*
 name|dog
 decl_stmt|;
@@ -2551,7 +2551,7 @@ name|svmp
 decl_stmt|;
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 operator|||
 literal|1
 condition|)
@@ -2585,7 +2585,7 @@ name|error
 operator|=
 name|EINTR
 expr_stmt|;
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
 name|svmp
 argument_list|,
@@ -2600,7 +2600,7 @@ name|vmsg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
 operator|(
 name|svmp
@@ -2614,7 +2614,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2622,7 +2622,7 @@ name|dog
 operator|=
 operator|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 operator|*
 operator|)
 name|svmp
@@ -2643,7 +2643,7 @@ name|svmp
 operator|->
 name|vm_opcode
 operator|=
-name|CFS_SIGNAL
+name|CODA_SIGNAL
 expr_stmt|;
 name|dog
 operator|->
@@ -2664,7 +2664,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 argument_list|)
 expr_stmt|;
 comment|/*??? rvb */
@@ -2675,17 +2675,17 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|cfs_in_hdr
+name|coda_in_hdr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 name|myprintf
 argument_list|(
 operator|(
-literal|"cfscall: enqueing signal msg (%d, %d)\n"
+literal|"coda_call: enqueing signal msg (%d, %d)\n"
 operator|,
 name|svmp
 operator|->
@@ -2726,7 +2726,7 @@ block|{
 comment|/* If venus died (!VC_OPEN(vcp)) */
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 name|myprintf
 argument_list|(
@@ -2755,7 +2755,7 @@ block|}
 end_if
 
 begin_expr_stmt
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|vmp
 argument_list|,
@@ -2779,7 +2779,7 @@ operator|=
 operator|(
 operator|(
 expr|struct
-name|cfs_out_hdr
+name|coda_out_hdr
 operator|*
 operator|)
 name|buffer

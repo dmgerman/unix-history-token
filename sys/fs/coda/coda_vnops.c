@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/cfs/cfs_vnodeops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/cfs/cfs_vnodeops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: cfs_vnodeops.c,v 1.2 1998/09/02 19:09:53 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_vnodeops.c,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.12  1998/08/28 18:28:00  rvb  * NetBSD -current is stricter!  *  * Revision 1.11  1998/08/28 18:12:23  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:21  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:46  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/02/24  22:22:50  rvb  * Fixes up mainly to flush iopen and friends  *   * Revision 1.7  98/01/31  20:53:15  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.6  98/01/23  11:53:47  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.5.2.8  98/01/23  11:21:11  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  97/12/19  14:26:08  rvb  * session id  *   * Revision 1.5.2.6  97/12/16  22:01:34  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.5  97/12/16  12:40:14  rvb  * Sync with 1.3  *   * Revision 1.5.2.4  97/12/10  14:08:31  rvb  * Fix O_ flags; check result in cfscall  *   * Revision 1.5.2.3  97/12/10  11:40:27  rvb  * No more ody  *   * Revision 1.5.2.2  97/12/09  16:07:15  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.5.2.1  97/12/06  17:41:25  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:23  rvb  * Read CHANGES  *   * Revision 1.4.14.10  97/11/25  08:08:48  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.4.14.9  97/11/24  15:44:48  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.14.8  97/11/21  11:28:04  rvb  * cfs_venus.c is done: first pass  *   * Revision 1.4.14.7  97/11/20  11:46:51  rvb  * Capture current cfs_venus  *   * Revision 1.4.14.6  97/11/18  10:27:19  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.14.5  97/11/13  22:03:03  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.14.4  97/11/12  12:09:42  rvb  * reorg pass1  *   * Revision 1.4.14.3  97/11/06  21:03:28  rvb  * don't include headers in headers  *   * Revision 1.4.14.2  97/10/29  16:06:30  rvb  * Kill DYING  *   * Revision 1.4.14.1  1997/10/28 23:10:18  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1997/02/20 13:54:50  lily  * check for NULL return from cfsnc_lookup before CTOV  *  * Revision 1.3  1996/12/12 22:11:02  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.2  1996/01/02 16:57:07  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:34  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:08:06  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:08:04  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.6  1995/02/17  16:25:26  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *  * Revision 2.5  94/11/09  20:29:27  dcs  * Small bug in remove dealing with hard links and link counts was fixed.  *   * Revision 2.4  94/10/14  09:58:42  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:37  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 2.2  94/09/20  14:12:41  dcs  * Fixed bug in rename when moving a directory.  *   * Revision 2.1  94/07/21  16:25:22  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *   * Revision 1.4  93/12/17  01:38:01  luqi  * Changes made for kernel to pass process info to Venus:  *   * (1) in file cfs.h  * add process id and process group id in most of the cfs argument types.  *   * (2) in file cfs_vnodeops.c  * add process info passing in most of the cfs vnode operations.  *   * (3) in file cfs_xdr.c  * expand xdr routines according changes in (1).   * add variable pass_process_info to allow venus for kernel version checking.  *   * Revision 1.3  93/05/28  16:24:33  bnoble  * *** empty log message ***  *   * Revision 1.2  92/10/27  17:58:25  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:37  mja  * 	Redid buffer allocation so that it does kmem_{alloc,free} for all  * 	architectures.  Zone allocation, previously used on the 386, caused  * 	panics if it was invoked repeatedly.  Stack allocation, previously  * 	used on all other architectures, tickled some Mach bug that appeared  * 	with large stack frames.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.3  90/07/26  15:50:09  mrt  * 	    Fixed fix to rename to remove .. from moved directories.  * 	[90/06/28            dcs]  *   * Revision 1.7  90/06/28  16:24:25  dcs  * Fixed bug with moving directories, we weren't flushing .. for the moved directory.  *   * Revision 1.6  90/05/31  17:01:47  dcs  * Prepare for merge with facilities kernel.  *   *   */
+comment|/*  * HISTORY  * $Log: cfs_vnodeops.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.12  1998/08/28 18:28:00  rvb  * NetBSD -current is stricter!  *  * Revision 1.11  1998/08/28 18:12:23  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:21  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:46  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/02/24  22:22:50  rvb  * Fixes up mainly to flush iopen and friends  *   * Revision 1.7  98/01/31  20:53:15  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.6  98/01/23  11:53:47  rvb  * Bring RVB_CODA1_1 to HEAD  *   * Revision 1.5.2.8  98/01/23  11:21:11  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  97/12/19  14:26:08  rvb  * session id  *   * Revision 1.5.2.6  97/12/16  22:01:34  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.5  97/12/16  12:40:14  rvb  * Sync with 1.3  *   * Revision 1.5.2.4  97/12/10  14:08:31  rvb  * Fix O_ flags; check result in coda_call  *   * Revision 1.5.2.3  97/12/10  11:40:27  rvb  * No more ody  *   * Revision 1.5.2.2  97/12/09  16:07:15  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.5.2.1  97/12/06  17:41:25  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:23  rvb  * Read CHANGES  *   * Revision 1.4.14.10  97/11/25  08:08:48  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.4.14.9  97/11/24  15:44:48  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.14.8  97/11/21  11:28:04  rvb  * cfs_venus.c is done: first pass  *   * Revision 1.4.14.7  97/11/20  11:46:51  rvb  * Capture current cfs_venus  *   * Revision 1.4.14.6  97/11/18  10:27:19  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.14.5  97/11/13  22:03:03  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.14.4  97/11/12  12:09:42  rvb  * reorg pass1  *   * Revision 1.4.14.3  97/11/06  21:03:28  rvb  * don't include headers in headers  *   * Revision 1.4.14.2  97/10/29  16:06:30  rvb  * Kill DYING  *   * Revision 1.4.14.1  1997/10/28 23:10:18  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1997/02/20 13:54:50  lily  * check for NULL return from coda_nc_lookup before CTOV  *  * Revision 1.3  1996/12/12 22:11:02  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.2  1996/01/02 16:57:07  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:34  bnoble  * Added CODA-specific files  *  * Revision 3.1.1.1  1995/03/04  19:08:06  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:08:04  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.6  1995/02/17  16:25:26  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *  * Revision 2.5  94/11/09  20:29:27  dcs  * Small bug in remove dealing with hard links and link counts was fixed.  *   * Revision 2.4  94/10/14  09:58:42  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:37  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 2.2  94/09/20  14:12:41  dcs  * Fixed bug in rename when moving a directory.  *   * Revision 2.1  94/07/21  16:25:22  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *   * Revision 1.4  93/12/17  01:38:01  luqi  * Changes made for kernel to pass process info to Venus:  *   * (1) in file cfs.h  * add process id and process group id in most of the cfs argument types.  *   * (2) in file cfs_vnodeops.c  * add process info passing in most of the cfs vnode operations.  *   * (3) in file cfs_xdr.c  * expand xdr routines according changes in (1).   * add variable pass_process_info to allow venus for kernel version checking.  *   * Revision 1.3  93/05/28  16:24:33  bnoble  * *** empty log message ***  *   * Revision 1.2  92/10/27  17:58:25  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:37  mja  * 	Redid buffer allocation so that it does kmem_{alloc,free} for all  * 	architectures.  Zone allocation, previously used on the 386, caused  * 	panics if it was invoked repeatedly.  Stack allocation, previously  * 	used on all other architectures, tickled some Mach bug that appeared  * 	with large stack frames.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.3  90/07/26  15:50:09  mrt  * 	    Fixed fix to rename to remove .. from moved directories.  * 	[90/06/28            dcs]  *   * Revision 1.7  90/06/28  16:24:25  dcs  * Fixed bug with moving directories, we weren't flushing .. for the moved directory.  *   * Revision 1.6  90/05/31  17:01:47  dcs  * Prepare for merge with facilities kernel.  *   *   */
 end_comment
 
 begin_include
@@ -177,7 +177,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_attr_cache
+name|coda_attr_cache
 init|=
 literal|1
 decl_stmt|;
@@ -189,7 +189,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_symlink_cache
+name|coda_symlink_cache
 init|=
 literal|1
 decl_stmt|;
@@ -201,7 +201,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_access_cache
+name|coda_access_cache
 init|=
 literal|1
 decl_stmt|;
@@ -217,10 +217,10 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|cfs_op_stats
-name|cfs_vnodeopstats
+name|coda_op_stats
+name|coda_vnodeopstats
 index|[
-name|CFS_VNODEOPS_SIZE
+name|CODA_VNODEOPS_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -232,7 +232,7 @@ name|MARK_ENTRY
 parameter_list|(
 name|op
 parameter_list|)
-value|(cfs_vnodeopstats[op].entries++)
+value|(coda_vnodeopstats[op].entries++)
 end_define
 
 begin_define
@@ -242,7 +242,7 @@ name|MARK_INT_SAT
 parameter_list|(
 name|op
 parameter_list|)
-value|(cfs_vnodeopstats[op].sat_intrn++)
+value|(coda_vnodeopstats[op].sat_intrn++)
 end_define
 
 begin_define
@@ -252,7 +252,7 @@ name|MARK_INT_FAIL
 parameter_list|(
 name|op
 parameter_list|)
-value|(cfs_vnodeopstats[op].unsat_intrn++)
+value|(coda_vnodeopstats[op].unsat_intrn++)
 end_define
 
 begin_define
@@ -262,7 +262,7 @@ name|MARK_INT_GEN
 parameter_list|(
 name|op
 parameter_list|)
-value|(cfs_vnodeopstats[op].gen_intrn++)
+value|(coda_vnodeopstats[op].gen_intrn++)
 end_define
 
 begin_comment
@@ -271,7 +271,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_printf_delay
+name|coda_printf_delay
 init|=
 literal|0
 decl_stmt|;
@@ -283,7 +283,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_vnop_print_entry
+name|coda_vnop_print_entry
 init|=
 literal|0
 decl_stmt|;
@@ -292,7 +292,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|cfs_lockdebug
+name|coda_lockdebug
 init|=
 literal|0
 decl_stmt|;
@@ -303,14 +303,14 @@ comment|/* Definition of the vfs operation vector */
 end_comment
 
 begin_comment
-comment|/*  * Some NetBSD details:  *   *   cfs_start is called at the end of the mount syscall.  *   cfs_init is called at boot time.  */
+comment|/*  * Some NetBSD details:  *   *   coda_start is called at the end of the mount syscall.  *   coda_init is called at boot time.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ENTRY
-value|if(cfs_vnop_print_entry) myprintf(("Entered %s\n",__FUNCTION__))
+value|if(coda_vnop_print_entry) myprintf(("Entered %s\n",__FUNCTION__))
 end_define
 
 begin_comment
@@ -320,7 +320,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|vnodeopv_entry_desc
-name|cfs_vnodeop_entries
+name|coda_vnodeop_entries
 index|[]
 init|=
 block|{
@@ -328,14 +328,14 @@ block|{
 operator|&
 name|vop_default_desc
 block|,
-name|cfs_vop_error
+name|coda_vop_error
 block|}
 block|,
 block|{
 operator|&
 name|vop_lookup_desc
 block|,
-name|cfs_lookup
+name|coda_lookup
 block|}
 block|,
 comment|/* lookup */
@@ -343,7 +343,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|cfs_create
+name|coda_create
 block|}
 block|,
 comment|/* create */
@@ -351,7 +351,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|cfs_vop_error
+name|coda_vop_error
 block|}
 block|,
 comment|/* mknod */
@@ -359,7 +359,7 @@ block|{
 operator|&
 name|vop_open_desc
 block|,
-name|cfs_open
+name|coda_open
 block|}
 block|,
 comment|/* open */
@@ -367,7 +367,7 @@ block|{
 operator|&
 name|vop_close_desc
 block|,
-name|cfs_close
+name|coda_close
 block|}
 block|,
 comment|/* close */
@@ -375,7 +375,7 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
-name|cfs_access
+name|coda_access
 block|}
 block|,
 comment|/* access */
@@ -383,7 +383,7 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
-name|cfs_getattr
+name|coda_getattr
 block|}
 block|,
 comment|/* getattr */
@@ -391,7 +391,7 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
-name|cfs_setattr
+name|coda_setattr
 block|}
 block|,
 comment|/* setattr */
@@ -399,7 +399,7 @@ block|{
 operator|&
 name|vop_read_desc
 block|,
-name|cfs_read
+name|coda_read
 block|}
 block|,
 comment|/* read */
@@ -407,7 +407,7 @@ block|{
 operator|&
 name|vop_write_desc
 block|,
-name|cfs_write
+name|coda_write
 block|}
 block|,
 comment|/* write */
@@ -415,7 +415,7 @@ block|{
 operator|&
 name|vop_ioctl_desc
 block|,
-name|cfs_ioctl
+name|coda_ioctl
 block|}
 block|,
 comment|/* ioctl */
@@ -423,7 +423,7 @@ block|{
 operator|&
 name|vop_mmap_desc
 block|,
-name|cfs_vop_error
+name|coda_vop_error
 block|}
 block|,
 comment|/* mmap */
@@ -431,7 +431,7 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
-name|cfs_fsync
+name|coda_fsync
 block|}
 block|,
 comment|/* fsync */
@@ -439,7 +439,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|cfs_remove
+name|coda_remove
 block|}
 block|,
 comment|/* remove */
@@ -447,7 +447,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|cfs_link
+name|coda_link
 block|}
 block|,
 comment|/* link */
@@ -455,7 +455,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|cfs_rename
+name|coda_rename
 block|}
 block|,
 comment|/* rename */
@@ -463,7 +463,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|cfs_mkdir
+name|coda_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -471,7 +471,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|cfs_rmdir
+name|coda_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -479,7 +479,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|cfs_symlink
+name|coda_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -487,7 +487,7 @@ block|{
 operator|&
 name|vop_readdir_desc
 block|,
-name|cfs_readdir
+name|coda_readdir
 block|}
 block|,
 comment|/* readdir */
@@ -495,7 +495,7 @@ block|{
 operator|&
 name|vop_readlink_desc
 block|,
-name|cfs_readlink
+name|coda_readlink
 block|}
 block|,
 comment|/* readlink */
@@ -503,7 +503,7 @@ block|{
 operator|&
 name|vop_abortop_desc
 block|,
-name|cfs_abortop
+name|coda_abortop
 block|}
 block|,
 comment|/* abortop */
@@ -511,7 +511,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|cfs_inactive
+name|coda_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -519,7 +519,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|cfs_reclaim
+name|coda_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -527,7 +527,7 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
-name|cfs_lock
+name|coda_lock
 block|}
 block|,
 comment|/* lock */
@@ -535,7 +535,7 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
-name|cfs_unlock
+name|coda_unlock
 block|}
 block|,
 comment|/* unlock */
@@ -543,7 +543,7 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
-name|cfs_bmap
+name|coda_bmap
 block|}
 block|,
 comment|/* bmap */
@@ -551,7 +551,7 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
-name|cfs_strategy
+name|coda_strategy
 block|}
 block|,
 comment|/* strategy */
@@ -559,7 +559,7 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
-name|cfs_vop_error
+name|coda_vop_error
 block|}
 block|,
 comment|/* print */
@@ -567,7 +567,7 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
-name|cfs_islocked
+name|coda_islocked
 block|}
 block|,
 comment|/* islocked */
@@ -575,7 +575,7 @@ block|{
 operator|&
 name|vop_pathconf_desc
 block|,
-name|cfs_vop_error
+name|coda_vop_error
 block|}
 block|,
 comment|/* pathconf */
@@ -583,7 +583,7 @@ block|{
 operator|&
 name|vop_advlock_desc
 block|,
-name|cfs_vop_nop
+name|coda_vop_nop
 block|}
 block|,
 comment|/* advlock */
@@ -591,7 +591,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|cfs_vop_error
+name|coda_vop_error
 block|}
 block|,
 comment|/* bwrite */
@@ -599,7 +599,7 @@ block|{
 operator|&
 name|vop_lease_desc
 block|,
-name|cfs_vop_nop
+name|coda_vop_nop
 block|}
 block|,
 comment|/* lease */
@@ -618,7 +618,7 @@ block|{
 operator|&
 name|vop_getpages_desc
 block|,
-name|cfs_fbsd_getpages
+name|coda_fbsd_getpages
 block|}
 block|,
 comment|/* pager intf.*/
@@ -626,7 +626,7 @@ block|{
 operator|&
 name|vop_putpages_desc
 block|,
-name|cfs_fbsd_putpages
+name|coda_fbsd_putpages
 block|}
 block|,
 comment|/* pager intf.*/
@@ -730,13 +730,13 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|vnodeopv_desc
-name|cfs_vnodeop_opv_desc
+name|coda_vnodeop_opv_desc
 init|=
 block|{
 operator|&
-name|cfs_vnodeop_p
+name|coda_vnodeop_p
 block|,
-name|cfs_vnodeop_entries
+name|coda_vnodeop_entries
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -744,7 +744,7 @@ end_decl_stmt
 begin_expr_stmt
 name|VNODEOP_SET
 argument_list|(
-name|cfs_vnodeop_opv_desc
+name|coda_vnodeop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -755,7 +755,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_vop_error
+name|coda_vop_error
 parameter_list|(
 name|void
 modifier|*
@@ -792,7 +792,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"cfs_vop_error"
+literal|"coda_vop_error"
 argument_list|)
 expr_stmt|;
 return|return
@@ -807,7 +807,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_vop_nop
+name|coda_vop_nop
 parameter_list|(
 name|void
 modifier|*
@@ -830,7 +830,7 @@ name|anon
 decl_stmt|;
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 condition|)
 block|{
 name|myprintf
@@ -858,7 +858,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_vnodeopstats_init
+name|coda_vnodeopstats_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -875,13 +875,13 @@ literal|0
 init|;
 name|i
 operator|<
-name|CFS_VNODEOPS_SIZE
+name|CODA_VNODEOPS_SIZE
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|cfs_vnodeopstats
+name|coda_vnodeopstats
 index|[
 name|i
 index|]
@@ -890,7 +890,7 @@ name|opcode
 operator|=
 name|i
 expr_stmt|;
-name|cfs_vnodeopstats
+name|coda_vnodeopstats
 index|[
 name|i
 index|]
@@ -899,7 +899,7 @@ name|entries
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_vnodeopstats
+name|coda_vnodeopstats
 index|[
 name|i
 index|]
@@ -908,7 +908,7 @@ name|sat_intrn
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_vnodeopstats
+name|coda_vnodeopstats
 index|[
 name|i
 index|]
@@ -917,7 +917,7 @@ name|unsat_intrn
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_vnodeopstats
+name|coda_vnodeopstats
 index|[
 name|i
 index|]
@@ -934,12 +934,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * cfs_open calls Venus to return the device, inode pair of the cache  * file holding the data. Using iget, cfs_open finds the vnode of the  * cache file, and then opens it.  */
+comment|/*   * coda_open calls Venus to return the device, inode pair of the cache  * file holding the data. Using iget, coda_open finds the vnode of the  * cache file, and then opens it.  */
 end_comment
 
 begin_function
 name|int
-name|cfs_open
+name|coda_open
 parameter_list|(
 name|v
 parameter_list|)
@@ -1029,7 +1029,7 @@ name|inode
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_OPEN_STATS
+name|CODA_OPEN_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for open of control file. */
@@ -1061,7 +1061,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_OPEN_STATS
+name|CODA_OPEN_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1072,7 +1072,7 @@ return|;
 block|}
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_OPEN_STATS
+name|CODA_OPEN_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1126,9 +1126,9 @@ operator|!
 name|error
 condition|)
 block|{
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_OPEN
+argument|CODA_OPEN
 argument_list|,
 argument|myprintf((
 literal|"open: dev %d inode %d result %d\n"
@@ -1138,7 +1138,7 @@ block|}
 comment|/* Translate the<device, inode> pair for the cache file into        an inode pointer. */
 name|error
 operator|=
-name|cfs_grab_vnode
+name|coda_grab_vnode
 argument_list|(
 name|dev
 argument_list|,
@@ -1203,7 +1203,7 @@ name|vp
 condition|)
 name|panic
 argument_list|(
-literal|"cfs_open:  cp->c_ovp != ITOV(ip)"
+literal|"coda_open:  cp->c_ovp != ITOV(ip)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1267,7 +1267,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_open: VOP_OPEN on container failed %d\n"
+literal|"coda_open: VOP_OPEN on container failed %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1309,7 +1309,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_open: vfs_object_create() returns %d\n"
+literal|"coda_open: vfs_object_create() returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1335,7 +1335,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_close
+name|coda_close
 parameter_list|(
 name|v
 parameter_list|)
@@ -1402,7 +1402,7 @@ name|error
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_CLOSE_STATS
+name|CODA_CLOSE_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for close of control file. */
@@ -1416,7 +1416,7 @@ condition|)
 block|{
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_CLOSE_STATS
+name|CODA_CLOSE_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1442,7 +1442,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_close: destroying container ref %d, ufs vp %p of vp %p/cp %p\n"
+literal|"coda_close: destroying container ref %d, ufs vp %p of vp %p/cp %p\n"
 argument_list|,
 name|vp
 operator|->
@@ -1469,7 +1469,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"cfs_close: NO container vp %p/cp %p\n"
+literal|"coda_close: NO container vp %p/cp %p\n"
 argument_list|,
 name|vp
 argument_list|,
@@ -1561,9 +1561,9 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_CLOSE
+argument|CODA_CLOSE
 argument_list|,
 argument|myprintf((
 literal|"close: result %d\n"
@@ -1579,7 +1579,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_read
+name|coda_read
 parameter_list|(
 name|v
 parameter_list|)
@@ -1599,7 +1599,7 @@ name|ENTRY
 expr_stmt|;
 return|return
 operator|(
-name|cfs_rdwr
+name|coda_rdwr
 argument_list|(
 name|ap
 operator|->
@@ -1632,7 +1632,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_write
+name|coda_write
 parameter_list|(
 name|v
 parameter_list|)
@@ -1652,7 +1652,7 @@ name|ENTRY
 expr_stmt|;
 return|return
 operator|(
-name|cfs_rdwr
+name|coda_rdwr
 argument_list|(
 name|ap
 operator|->
@@ -1685,7 +1685,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_rdwr
+name|coda_rdwr
 parameter_list|(
 name|vp
 parameter_list|,
@@ -1766,15 +1766,15 @@ literal|0
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_RDWR
+argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
-literal|"cfs_rdwr(%d, %p, %d, %qd, %d)\n"
+literal|"coda_rdwr(%d, %p, %d, %qd, %d)\n"
 argument|, rw,  			      uiop->uio_iov->iov_base, uiop->uio_resid,  			      uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
 comment|/* Check for rdwr of control object. */
@@ -1788,7 +1788,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1834,7 +1834,7 @@ literal|1
 expr_stmt|;
 name|error
 operator|=
-name|cfs_grab_vnode
+name|coda_grab_vnode
 argument_list|(
 name|cp
 operator|->
@@ -1855,7 +1855,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1883,7 +1883,7 @@ literal|1
 expr_stmt|;
 name|MARK_INT_GEN
 argument_list|(
-name|CFS_OPEN_STATS
+name|CODA_OPEN_STATS
 argument_list|)
 expr_stmt|;
 name|error
@@ -1909,7 +1909,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfs_rdwr: Internally Opening %p\n"
+literal|"coda_rdwr: Internally Opening %p\n"
 argument_list|,
 name|vp
 argument_list|)
@@ -1921,7 +1921,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_rdwr: VOP_OPEN on container failed %d\n"
+literal|"coda_rdwr: VOP_OPEN on container failed %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1963,7 +1963,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_rdwr: vfs_object_create() returns %d\n"
+literal|"coda_rdwr: vfs_object_create() returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1982,7 +1982,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2000,9 +2000,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Have UFS handle the call. */
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_RDWR
+argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
 literal|"indirect rdwr: fid = (%lx.%lx.%lx), refcnt = %d\n"
@@ -2085,13 +2085,13 @@ name|error
 condition|)
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
 else|else
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_RDWR_STATS
+name|CODA_RDWR_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Do an internal close if necessary. */
@@ -2102,7 +2102,7 @@ condition|)
 block|{
 name|MARK_INT_GEN
 argument_list|(
-name|CFS_CLOSE_STATS
+name|CODA_CLOSE_STATS
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2152,7 +2152,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_ioctl
+name|coda_ioctl
 parameter_list|(
 name|v
 parameter_list|)
@@ -2244,15 +2244,15 @@ name|data
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_IOCTL_STATS
+name|CODA_IOCTL_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_IOCTL
+argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
-literal|"in cfs_ioctl on %s\n"
+literal|"in coda_ioctl on %s\n"
 argument|, iap->path));
 argument_list|)
 comment|/* Don't check for operation on a dying object, for ctlvp it        shouldn't matter */
@@ -2268,15 +2268,15 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_IOCTL_STATS
+name|CODA_IOCTL_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_IOCTL
+argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
-literal|"cfs_ioctl error: vp != ctlvp"
+literal|"coda_ioctl error: vp != ctlvp"
 argument|));
 argument_list|)
 return|return
@@ -2339,15 +2339,15 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_IOCTL_STATS
+name|CODA_IOCTL_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_IOCTL
+argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
-literal|"cfs_ioctl error: lookup returns %d\n"
+literal|"coda_ioctl error: lookup returns %d\n"
 argument|, 				   error));
 argument_list|)
 return|return
@@ -2364,7 +2364,7 @@ name|tvp
 operator|->
 name|v_tag
 operator|!=
-name|VT_CFS
+name|VT_CODA
 condition|)
 block|{
 name|vrele
@@ -2374,15 +2374,15 @@ argument_list|)
 expr_stmt|;
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_IOCTL_STATS
+name|CODA_IOCTL_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_IOCTL
+argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
-literal|"cfs_ioctl error: %s not a coda object\n"
+literal|"coda_ioctl error: %s not a coda object\n"
 argument|,  			iap->path));
 argument_list|)
 return|return
@@ -2451,13 +2451,13 @@ name|error
 condition|)
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_IOCTL_STATS
+name|CODA_IOCTL_STATS
 argument_list|)
 expr_stmt|;
 else|else
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_IOCTL
+argument|CODA_IOCTL
 argument_list|,
 argument|myprintf((
 literal|"Ioctl returns %d \n"
@@ -2482,7 +2482,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_getattr
+name|coda_getattr
 parameter_list|(
 name|v
 parameter_list|)
@@ -2551,7 +2551,7 @@ name|error
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_GETATTR_STATS
+name|CODA_GETATTR_STATS
 argument_list|)
 expr_stmt|;
 if|if
@@ -2575,7 +2575,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_GETATTR_STATS
+name|CODA_GETATTR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2593,20 +2593,20 @@ name|cp
 argument_list|)
 condition|)
 block|{
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_GETATTR
+argument|CODA_GETATTR
 argument_list|,
 argument|{ myprintf((
 literal|"attr cache hit: (%lx.%lx.%lx)\n"
 argument|, 				       cp->c_fid.Volume, 				       cp->c_fid.Vnode, 				       cp->c_fid.Unique));}
 argument_list|)
 empty_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_GETATTR
+argument|CODA_GETATTR
 argument_list|,
-argument|if (!(cfsdebug& ~CFS_GETATTR)) 		 print_vattr(&cp->c_vattr);
+argument|if (!(codadebug& ~CODA_GETATTR)) 		 print_vattr(&cp->c_vattr);
 argument_list|)
 empty_stmt|;
 operator|*
@@ -2618,7 +2618,7 @@ name|c_vattr
 expr_stmt|;
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_GETATTR_STATS
+name|CODA_GETATTR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2654,19 +2654,19 @@ operator|!
 name|error
 condition|)
 block|{
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_GETATTR
+argument|CODA_GETATTR
 argument_list|,
 argument|myprintf((
 literal|"getattr miss (%lx.%lx.%lx): result %d\n"
 argument|, 				     cp->c_fid.Volume, 				     cp->c_fid.Vnode, 				     cp->c_fid.Unique, 				     error));
 argument_list|)
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_GETATTR
+argument|CODA_GETATTR
 argument_list|,
-argument|if (!(cfsdebug& ~CFS_GETATTR)) 		 print_vattr(vap);
+argument|if (!(codadebug& ~CODA_GETATTR)) 		 print_vattr(vap);
 argument_list|)
 empty_stmt|;
 block|{
@@ -2719,7 +2719,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|cfs_attr_cache
+name|coda_attr_cache
 operator|)
 condition|)
 block|{
@@ -2748,7 +2748,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_setattr
+name|coda_setattr
 parameter_list|(
 name|v
 parameter_list|)
@@ -2819,7 +2819,7 @@ name|error
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_SETATTR_STATS
+name|CODA_SETATTR_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for setattr of control object. */
@@ -2833,7 +2833,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_SETATTR_STATS
+name|CODA_SETATTR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2844,11 +2844,11 @@ return|;
 block|}
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 operator|&
-name|CFSDBGMSK
+name|CODADBGMSK
 argument_list|(
-name|CFS_SETATTR
+name|CODA_SETATTR
 argument_list|)
 condition|)
 block|{
@@ -2933,9 +2933,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_SETATTR
+argument|CODA_SETATTR
 argument_list|,
 argument|myprintf((
 literal|"setattr %d\n"
@@ -2951,7 +2951,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_access
+name|coda_access
 parameter_list|(
 name|v
 parameter_list|)
@@ -3018,7 +3018,7 @@ name|error
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_ACCESS_STATS
+name|CODA_ACCESS_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for access of control object.  Only read access is        allowed on it. */
@@ -3033,7 +3033,7 @@ block|{
 comment|/* bogus hack - all will be marked as successes */
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_ACCESS_STATS
+name|CODA_ACCESS_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -3066,7 +3066,7 @@ block|}
 comment|/*      * if the file is a directory, and we are checking exec (eg lookup)       * access, and the file is in the namecache, then the user must have       * lookup access to it.      */
 if|if
 condition|(
-name|cfs_access_cache
+name|coda_access_cache
 condition|)
 block|{
 if|if
@@ -3088,7 +3088,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|cfsnc_lookup
+name|coda_nc_lookup
 argument_list|(
 name|cp
 argument_list|,
@@ -3102,7 +3102,7 @@ condition|)
 block|{
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_ACCESS_STATS
+name|CODA_ACCESS_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -3144,7 +3144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * CFS abort op, called after namei() when a CREATE/DELETE isn't actually  * done. If a buffer has been saved in anticipation of a cfs_create or  * a cfs_remove, delete it.  */
+comment|/*  * CODA abort op, called after namei() when a CREATE/DELETE isn't actually  * done. If a buffer has been saved in anticipation of a coda_create or  * a coda_remove, delete it.  */
 end_comment
 
 begin_comment
@@ -3153,7 +3153,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_abortop
+name|coda_abortop
 parameter_list|(
 name|v
 parameter_list|)
@@ -3212,7 +3212,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_readlink
+name|coda_readlink
 parameter_list|(
 name|v
 parameter_list|)
@@ -3290,7 +3290,7 @@ name|len
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_READLINK_STATS
+name|CODA_READLINK_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for readlink of control object. */
@@ -3304,7 +3304,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_READLINK_STATS
+name|CODA_READLINK_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -3316,7 +3316,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|cfs_symlink_cache
+name|coda_symlink_cache
 operator|)
 operator|&&
 operator|(
@@ -3358,13 +3358,13 @@ name|error
 condition|)
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_READLINK_STATS
+name|CODA_READLINK_STATS
 argument_list|)
 expr_stmt|;
 else|else
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_READLINK_STATS
+name|CODA_READLINK_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -3423,7 +3423,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cfs_symlink_cache
+name|coda_symlink_cache
 condition|)
 block|{
 name|cp
@@ -3446,7 +3446,7 @@ name|C_SYMLINK
 expr_stmt|;
 block|}
 else|else
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|str
 argument_list|,
@@ -3454,9 +3454,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_READLINK
+argument|CODA_READLINK
 argument_list|,
 argument|myprintf((
 literal|"in readlink result %d\n"
@@ -3472,7 +3472,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_fsync
+name|coda_fsync
 parameter_list|(
 name|v
 parameter_list|)
@@ -3541,7 +3541,7 @@ name|error
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_FSYNC_STATS
+name|CODA_FSYNC_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for fsync on an unmounting object */
@@ -3571,7 +3571,7 @@ condition|)
 block|{
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_FSYNC_STATS
+name|CODA_FSYNC_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -3596,7 +3596,7 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/*      * We see fsyncs with usecount == 1 then usecount == 0.      * For now we ignore them.      */
-comment|/*     if (!vp->v_usecount) {     	printf("cfs_fsync on vnode %p with %d usecount.  c_flags = %x (%x)\n", 		vp, vp->v_usecount, cp->c_flags, cp->c_flags&C_PURGING);     }     */
+comment|/*     if (!vp->v_usecount) {     	printf("coda_fsync on vnode %p with %d usecount.  c_flags = %x (%x)\n", 		vp, vp->v_usecount, cp->c_flags, cp->c_flags&C_PURGING);     }     */
 comment|/*      * We can expect fsync on any vnode at all if venus is pruging it.      * Venus can't very well answer the fsync request, now can it?      * Hopefully, it won't have to, because hopefully, venus preserves      * the (possibly untrue) invariant that it never purges an open      * vnode.  Hopefully.      */
 if|if
 condition|(
@@ -3636,9 +3636,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_FSYNC
+argument|CODA_FSYNC
 argument_list|,
 argument|myprintf((
 literal|"in fsync result %d\n"
@@ -3655,7 +3655,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_inactive
+name|coda_inactive
 parameter_list|(
 name|v
 parameter_list|)
@@ -3723,7 +3723,7 @@ comment|/* locals */
 comment|/* We don't need to send inactive to venus - DCS */
 name|MARK_ENTRY
 argument_list|(
-name|CFS_INACTIVE_STATS
+name|CODA_INACTIVE_STATS
 argument_list|)
 expr_stmt|;
 if|if
@@ -3736,16 +3736,16 @@ condition|)
 block|{
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_INACTIVE_STATS
+name|CODA_INACTIVE_STATS
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_INACTIVE
+argument|CODA_INACTIVE
 argument_list|,
 argument|myprintf((
 literal|"in inactive, %lx.%lx.%lx. vfsp %p\n"
@@ -3755,7 +3755,7 @@ comment|/* If an array has been allocated to hold the symlink, deallocate it */
 if|if
 condition|(
 operator|(
-name|cfs_symlink_cache
+name|coda_symlink_cache
 operator|)
 operator|&&
 operator|(
@@ -3776,10 +3776,10 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"cfs_inactive: null symlink pointer in cnode"
+literal|"coda_inactive: null symlink pointer in cnode"
 argument_list|)
 expr_stmt|;
-name|CFS_FREE
+name|CODA_FREE
 argument_list|(
 name|cp
 operator|->
@@ -3805,7 +3805,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* Remove it from the table so it can't be found. */
-name|cfs_unsave
+name|coda_unsave
 argument_list|(
 name|cp
 argument_list|)
@@ -3814,7 +3814,7 @@ if|if
 condition|(
 operator|(
 expr|struct
-name|cfs_mntinfo
+name|coda_mntinfo
 operator|*
 operator|)
 operator|(
@@ -3839,7 +3839,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"badness in cfs_inactive\n"
+literal|"badness in coda_inactive\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3856,7 +3856,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"cfs_inactive: IS_UNMOUNTING use %d: vp %p, cp %p\n"
+literal|"coda_inactive: IS_UNMOUNTING use %d: vp %p, cp %p\n"
 argument_list|,
 name|vp
 operator|->
@@ -3877,7 +3877,7 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"cfs_inactive: cp->ovp != NULL use %d: vp %p, cp %p\n"
+literal|"coda_inactive: cp->ovp != NULL use %d: vp %p, cp %p\n"
 argument_list|,
 name|vp
 operator|->
@@ -3925,7 +3925,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cfs_inactive: nonzero reference count"
+literal|"coda_inactive: nonzero reference count"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3940,7 +3940,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cfs_inactive:  cp->ovp != NULL"
+literal|"coda_inactive:  cp->ovp != NULL"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3963,7 +3963,7 @@ expr_stmt|;
 block|}
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_INACTIVE_STATS
+name|CODA_INACTIVE_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -3984,7 +3984,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_lookup
+name|coda_lookup
 parameter_list|(
 name|v
 parameter_list|)
@@ -4093,12 +4093,12 @@ literal|0
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_LOOKUP_STATS
+name|CODA_LOOKUP_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_LOOKUP
+argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"lookup: %s in %lx.%lx.%lx\n"
@@ -4121,7 +4121,7 @@ block|{
 operator|*
 name|vpp
 operator|=
-name|cfs_ctlvp
+name|coda_ctlvp
 expr_stmt|;
 name|vref
 argument_list|(
@@ -4131,7 +4131,7 @@ argument_list|)
 expr_stmt|;
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_LOOKUP_STATS
+name|CODA_LOOKUP_STATS
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4144,17 +4144,17 @@ name|len
 operator|+
 literal|1
 operator|>
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_LOOKUP_STATS
+name|CODA_LOOKUP_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_LOOKUP
+argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"name too long: lookup, %lx.%lx.%lx(%s)\n"
@@ -4183,7 +4183,7 @@ comment|/* First try to look the file up in the cfs name cache */
 comment|/* lock the parent vnode? */
 name|cp
 operator|=
-name|cfsnc_lookup
+name|coda_nc_lookup
 argument_list|(
 name|dcp
 argument_list|,
@@ -4213,9 +4213,9 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_LOOKUP
+argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"lookup result %d vpp %p\n"
@@ -4261,12 +4261,12 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_LOOKUP_STATS
+name|CODA_LOOKUP_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_LOOKUP
+argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"lookup error on %lx.%lx.%lx(%s)%d\n"
@@ -4287,12 +4287,12 @@ else|else
 block|{
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_LOOKUP_STATS
+name|CODA_LOOKUP_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_LOOKUP
+argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
 literal|"lookup: vol %lx vno %lx uni %lx type %o result %d\n"
@@ -4300,7 +4300,7 @@ argument|, 			    VFid.Volume, VFid.Vnode, VFid.Unique, vtype, 			    error));
 argument_list|)
 name|cp
 operator|=
-name|makecfsnode
+name|make_coda_node
 argument_list|(
 operator|&
 name|VFid
@@ -4328,10 +4328,10 @@ operator|!
 operator|(
 name|vtype
 operator|&
-name|CFS_NOCACHE
+name|CODA_NOCACHE
 operator|)
 condition|)
-name|cfsnc_enter
+name|coda_nc_enter
 argument_list|(
 name|VTOC
 argument_list|(
@@ -4409,7 +4409,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*       * If we are removing, and we are at the last element, and we      * found it, then we need to keep the name around so that the      * removal will go ahead as planned.  Unfortunately, this will      * probably also lock the to-be-removed vnode, which may or may      * not be a good idea.  I'll have to look at the bits of      * cfs_remove to make sure.  We'll only save the name if we did in      * fact find the name, otherwise cfs_remove won't have a chance      * to free the pathname.        */
+comment|/*       * If we are removing, and we are at the last element, and we      * found it, then we need to keep the name around so that the      * removal will go ahead as planned.  Unfortunately, this will      * probably also lock the to-be-removed vnode, which may or may      * not be a good idea.  I'll have to look at the bits of      * coda_remove to make sure.  We'll only save the name if we did in      * fact find the name, otherwise coda_remove won't have a chance      * to free the pathname.        */
 if|if
 condition|(
 operator|(
@@ -4523,7 +4523,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_lookup: "
+literal|"coda_lookup: "
 argument_list|)
 expr_stmt|;
 name|panic
@@ -4576,7 +4576,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_lookup: "
+literal|"coda_lookup: "
 argument_list|)
 expr_stmt|;
 name|panic
@@ -4614,7 +4614,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_create
+name|coda_create
 parameter_list|(
 name|v
 parameter_list|)
@@ -4744,7 +4744,7 @@ name|attr
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_CREATE_STATS
+name|CODA_CREATE_STATS
 argument_list|)
 expr_stmt|;
 comment|/* All creates are exclusive XXX */
@@ -4774,7 +4774,7 @@ literal|0
 expr_stmt|;
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_CREATE_STATS
+name|CODA_CREATE_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -4835,7 +4835,7 @@ literal|1
 operator|)
 operator|&&
 operator|(
-name|cfs_find
+name|coda_find
 argument_list|(
 operator|&
 name|VFid
@@ -4851,7 +4851,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|makecfsnode
+name|make_coda_node
 argument_list|(
 operator|&
 name|VFid
@@ -4884,7 +4884,7 @@ expr_stmt|;
 comment|/* Update the attribute cache and mark it as valid */
 if|if
 condition|(
-name|cfs_attr_cache
+name|coda_attr_cache
 condition|)
 block|{
 name|VTOC
@@ -4920,7 +4920,7 @@ operator|~
 name|C_VATTR
 expr_stmt|;
 comment|/* enter the new vnode in the Name Cache */
-name|cfsnc_enter
+name|coda_nc_enter
 argument_list|(
 name|VTOC
 argument_list|(
@@ -4940,9 +4940,9 @@ name|vpp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_CREATE
+argument|CODA_CREATE
 argument_list|,
 argument|myprintf((
 literal|"create: (%lx.%lx.%lx), result %d\n"
@@ -4961,9 +4961,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_CREATE
+argument|CODA_CREATE
 argument_list|,
 argument|myprintf((
 literal|"create error %d\n"
@@ -5006,7 +5006,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_create: "
+literal|"coda_create: "
 argument_list|)
 expr_stmt|;
 name|panic
@@ -5023,7 +5023,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"cfs_create: LOCKLEAF not set!\n"
+literal|"coda_create: LOCKLEAF not set!\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5066,7 +5066,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_remove
+name|coda_remove
 parameter_list|(
 name|v
 parameter_list|)
@@ -5156,24 +5156,24 @@ name|tp
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_REMOVE_STATS
+name|CODA_REMOVE_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_REMOVE
+argument|CODA_REMOVE
 argument_list|,
 argument|myprintf((
 literal|"remove: %s in %lx.%lx.%lx\n"
 argument|, 				   nm, cp->c_fid.Volume, cp->c_fid.Vnode, 				   cp->c_fid.Unique));
 argument_list|)
 empty_stmt|;
-comment|/* Remove the file's entry from the CFS Name Cache */
+comment|/* Remove the file's entry from the CODA Name Cache */
 comment|/* We're being conservative here, it might be that this person      * doesn't really have sufficient access to delete the file      * but we feel zapping the entry won't really hurt anyone -- dcs      */
 comment|/* I'm gonna go out on a limb here. If a file and a hardlink to it      * exist, and one is removed, the link count on the other will be      * off by 1. We could either invalidate the attrs if cached, or      * fix them. I'll try to fix them. DCS 11/8/94      */
 name|tp
 operator|=
-name|cfsnc_lookup
+name|coda_nc_lookup
 argument_list|(
 name|VTOC
 argument_list|(
@@ -5222,7 +5222,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-name|cfsnc_zapfile
+name|coda_nc_zapfile
 argument_list|(
 name|VTOC
 argument_list|(
@@ -5262,7 +5262,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_REMOVE_STATS
+name|CODA_REMOVE_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -5294,9 +5294,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_REMOVE
+argument|CODA_REMOVE
 argument_list|,
 argument|myprintf((
 literal|"in remove result %d\n"
@@ -5335,7 +5335,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_link
+name|coda_link
 parameter_list|(
 name|v
 parameter_list|)
@@ -5439,16 +5439,16 @@ name|cn_namelen
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_LINK_STATS
+name|CODA_LINK_STATS
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 operator|&
-name|CFSDBGMSK
+name|CODADBGMSK
 argument_list|(
-name|CFS_LINK
+name|CODA_LINK
 argument_list|)
 condition|)
 block|{
@@ -5505,11 +5505,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cfsdebug
+name|codadebug
 operator|&
-name|CFSDBGMSK
+name|CODADBGMSK
 argument_list|(
-name|CFS_LINK
+name|CODA_LINK
 argument_list|)
 condition|)
 block|{
@@ -5584,7 +5584,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_LINK_STATS
+name|CODA_LINK_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -5642,9 +5642,9 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_LINK
+argument|CODA_LINK
 argument_list|,
 argument|myprintf((
 literal|"in link result %d\n"
@@ -5686,7 +5686,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_rename
+name|coda_rename
 parameter_list|(
 name|v
 parameter_list|)
@@ -5815,7 +5815,7 @@ name|cn_namelen
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_RENAME_STATS
+name|CODA_RENAME_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Hmmm.  The vnodes are already looked up.  Perhaps they are locked?        This could be Bad. XXX */
@@ -5847,7 +5847,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cfs_rename: component names don't agree"
+literal|"coda_rename: component names don't agree"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5878,7 +5878,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RENAME_STATS
+name|CODA_RENAME_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -5900,7 +5900,7 @@ name|cnode
 modifier|*
 name|ovcp
 init|=
-name|cfsnc_lookup
+name|coda_nc_lookup
 argument_list|(
 name|VTOC
 argument_list|(
@@ -5944,7 +5944,7 @@ name|VDIR
 operator|)
 condition|)
 comment|/* If it's a directory */
-name|cfsnc_zapfile
+name|coda_nc_zapfile
 argument_list|(
 name|VTOC
 argument_list|(
@@ -5959,7 +5959,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Remove the entries for both source and target files */
-name|cfsnc_zapfile
+name|coda_nc_zapfile
 argument_list|(
 name|VTOC
 argument_list|(
@@ -5971,7 +5971,7 @@ argument_list|,
 name|flen
 argument_list|)
 expr_stmt|;
-name|cfsnc_zapfile
+name|coda_nc_zapfile
 argument_list|(
 name|VTOC
 argument_list|(
@@ -6010,12 +6010,12 @@ name|flen
 operator|+
 literal|1
 operator|>
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RENAME_STATS
+name|CODA_RENAME_STATS
 argument_list|)
 expr_stmt|;
 name|error
@@ -6032,12 +6032,12 @@ name|tlen
 operator|+
 literal|1
 operator|>
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RENAME_STATS
+name|CODA_RENAME_STATS
 argument_list|)
 expr_stmt|;
 name|error
@@ -6082,9 +6082,9 @@ argument_list|)
 expr_stmt|;
 name|exit
 label|:
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_RENAME
+argument|CODA_RENAME
 argument_list|,
 argument|myprintf((
 literal|"in rename result %d\n"
@@ -6162,7 +6162,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_mkdir
+name|coda_mkdir
 parameter_list|(
 name|v
 parameter_list|)
@@ -6279,7 +6279,7 @@ name|ova
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_MKDIR_STATS
+name|CODA_MKDIR_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for mkdir of target object. */
@@ -6307,7 +6307,7 @@ literal|0
 expr_stmt|;
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_MKDIR_STATS
+name|CODA_MKDIR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -6322,7 +6322,7 @@ name|len
 operator|+
 literal|1
 operator|>
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 condition|)
 block|{
 operator|*
@@ -6337,7 +6337,7 @@ literal|0
 expr_stmt|;
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_MKDIR_STATS
+name|CODA_MKDIR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -6385,7 +6385,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|cfs_find
+name|coda_find
 argument_list|(
 operator|&
 name|VFid
@@ -6400,7 +6400,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|makecfsnode
+name|make_coda_node
 argument_list|(
 operator|&
 name|VFid
@@ -6423,7 +6423,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 comment|/* enter the new vnode in the Name Cache */
-name|cfsnc_enter
+name|coda_nc_enter
 argument_list|(
 name|VTOC
 argument_list|(
@@ -6444,7 +6444,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* as a side effect, enter "." and ".." for the directory */
-name|cfsnc_enter
+name|coda_nc_enter
 argument_list|(
 name|VTOC
 argument_list|(
@@ -6465,7 +6465,7 @@ name|vpp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cfsnc_enter
+name|coda_nc_enter
 argument_list|(
 name|VTOC
 argument_list|(
@@ -6487,7 +6487,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cfs_attr_cache
+name|coda_attr_cache
 condition|)
 block|{
 name|VTOC
@@ -6524,9 +6524,9 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_MKDIR
+argument|CODA_MKDIR
 argument_list|,
 argument|myprintf((
 literal|"mkdir: (%lx.%lx.%lx) result %d\n"
@@ -6545,9 +6545,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_MKDIR
+argument|CODA_MKDIR
 argument_list|,
 argument|myprintf((
 literal|"mkdir error %d\n"
@@ -6575,7 +6575,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_rmdir
+name|coda_rmdir
 parameter_list|(
 name|v
 parameter_list|)
@@ -6665,7 +6665,7 @@ name|cp
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_RMDIR_STATS
+name|CODA_RMDIR_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for rmdir of control object. */
@@ -6683,7 +6683,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_RMDIR_STATS
+name|CODA_RMDIR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -6696,7 +6696,7 @@ comment|/* We're being conservative here, it might be that this person      * do
 comment|/*      * As a side effect of the rmdir, remove any entries for children of      * the directory, especially "." and "..".      */
 name|cp
 operator|=
-name|cfsnc_lookup
+name|coda_nc_lookup
 argument_list|(
 name|dcp
 argument_list|,
@@ -6711,7 +6711,7 @@ if|if
 condition|(
 name|cp
 condition|)
-name|cfsnc_zapParentfid
+name|coda_nc_zapParentfid
 argument_list|(
 operator|&
 operator|(
@@ -6723,8 +6723,8 @@ argument_list|,
 name|NOT_DOWNCALL
 argument_list|)
 expr_stmt|;
-comment|/* Remove the file's entry from the CFS Name Cache */
-name|cfsnc_zapfile
+comment|/* Remove the file's entry from the CODA Name Cache */
+name|coda_nc_zapfile
 argument_list|(
 name|dcp
 argument_list|,
@@ -6764,9 +6764,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_RMDIR
+argument|CODA_RMDIR
 argument_list|,
 argument|myprintf((
 literal|"in rmdir result %d\n"
@@ -6805,7 +6805,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_symlink
+name|coda_symlink
 parameter_list|(
 name|v
 parameter_list|)
@@ -6889,7 +6889,7 @@ comment|/* locals */
 name|int
 name|error
 decl_stmt|;
-comment|/*       * XXX I'm assuming the following things about cfs_symlink's      * arguments:       *       t(foo) is the new name/parent/etc being created.      *       lname is the contents of the new symlink.       */
+comment|/*       * XXX I'm assuming the following things about coda_symlink's      * arguments:       *       t(foo) is the new name/parent/etc being created.      *       lname is the contents of the new symlink.       */
 name|char
 modifier|*
 name|nm
@@ -6917,7 +6917,7 @@ comment|/* XXX What about the vpp argument?  Do we need it? */
 comment|/*       * Here's the strategy for the moment: perform the symlink, then      * do a lookup to grab the resulting vnode.  I know this requires      * two communications with Venus for a new sybolic link, but      * that's the way the ball bounces.  I don't yet want to change      * the way the Mach symlink works.  When Mach support is      * deprecated, we should change symlink so that the common case      * returns the resultant vnode in a vpp argument.      */
 name|MARK_ENTRY
 argument_list|(
-name|CFS_SYMLINK_STATS
+name|CODA_SYMLINK_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Check for symlink of control object. */
@@ -6935,7 +6935,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_SYMLINK_STATS
+name|CODA_SYMLINK_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -6950,12 +6950,12 @@ name|plen
 operator|+
 literal|1
 operator|>
-name|CFS_MAXPATHLEN
+name|CODA_MAXPATHLEN
 condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_SYMLINK_STATS
+name|CODA_SYMLINK_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -6970,12 +6970,12 @@ name|len
 operator|+
 literal|1
 operator|>
-name|CFS_MAXNAMLEN
+name|CODA_MAXNAMLEN
 condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_SYMLINK_STATS
+name|CODA_SYMLINK_STATS
 argument_list|)
 expr_stmt|;
 name|error
@@ -7049,9 +7049,9 @@ expr_stmt|;
 block|}
 name|exit
 label|:
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_SYMLINK
+argument|CODA_SYMLINK
 argument_list|,
 argument|myprintf((
 literal|"in symlink result %d\n"
@@ -7071,7 +7071,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_readdir
+name|coda_readdir
 parameter_list|(
 name|v
 parameter_list|)
@@ -7171,15 +7171,15 @@ literal|0
 decl_stmt|;
 name|MARK_ENTRY
 argument_list|(
-name|CFS_READDIR_STATS
+name|CODA_READDIR_STATS
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_READDIR
+argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
-literal|"cfs_readdir(%p, %d, %qd, %d)\n"
+literal|"coda_readdir(%p, %d, %qd, %d)\n"
 argument|, uiop->uio_iov->iov_base, uiop->uio_resid, uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
 comment|/* Check for readdir of control object. */
@@ -7193,7 +7193,7 @@ condition|)
 block|{
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_READDIR_STATS
+name|CODA_READDIR_STATS
 argument_list|)
 expr_stmt|;
 return|return
@@ -7224,7 +7224,7 @@ literal|1
 expr_stmt|;
 name|MARK_INT_GEN
 argument_list|(
-name|CFS_OPEN_STATS
+name|CODA_OPEN_STATS
 argument_list|)
 expr_stmt|;
 name|error
@@ -7242,7 +7242,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cfs_readdir: Internally Opening %p\n"
+literal|"coda_readdir: Internally Opening %p\n"
 argument_list|,
 name|vp
 argument_list|)
@@ -7254,7 +7254,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_readdir: VOP_OPEN on container failed %d\n"
+literal|"coda_readdir: VOP_OPEN on container failed %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -7296,7 +7296,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_readdir: vfs_object_create() returns %d\n"
+literal|"coda_readdir: vfs_object_create() returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -7319,9 +7319,9 @@ operator|)
 return|;
 block|}
 comment|/* Have UFS handle the call. */
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_READDIR
+argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
 literal|"indirect readdir: fid = (%lx.%lx.%lx), refcnt = %d\n"
@@ -7352,13 +7352,13 @@ name|error
 condition|)
 name|MARK_INT_FAIL
 argument_list|(
-name|CFS_READDIR_STATS
+name|CODA_READDIR_STATS
 argument_list|)
 expr_stmt|;
 else|else
 name|MARK_INT_SAT
 argument_list|(
-name|CFS_READDIR_STATS
+name|CODA_READDIR_STATS
 argument_list|)
 expr_stmt|;
 comment|/* Do an "internal close" if necessary. */
@@ -7369,7 +7369,7 @@ condition|)
 block|{
 name|MARK_INT_GEN
 argument_list|(
-name|CFS_CLOSE_STATS
+name|CODA_CLOSE_STATS
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7402,7 +7402,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_bmap
+name|coda_bmap
 parameter_list|(
 name|v
 parameter_list|)
@@ -7517,7 +7517,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_bmap: container .. "
+literal|"coda_bmap: container .. "
 argument_list|)
 expr_stmt|;
 name|ret
@@ -7576,7 +7576,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"cfs_bmap: no container\n"
+literal|"coda_bmap: no container\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7594,7 +7594,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_strategy
+name|coda_strategy
 parameter_list|(
 name|v
 parameter_list|)
@@ -7644,7 +7644,7 @@ comment|/* upcall decl */
 comment|/* locals */
 name|printf
 argument_list|(
-literal|"cfs_strategy: called ???\n"
+literal|"coda_strategy: called ???\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7657,7 +7657,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_reclaim
+name|coda_reclaim
 parameter_list|(
 name|v
 parameter_list|)
@@ -7728,7 +7728,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"cfs_reclaim: c_ovp not void: vp %p, cp %p\n"
+literal|"coda_reclaim: c_ovp not void: vp %p, cp %p\n"
 argument_list|,
 name|vp
 argument_list|,
@@ -7754,7 +7754,7 @@ literal|0
 condition|)
 name|vprint
 argument_list|(
-literal|"cfs_reclaim: pushing active"
+literal|"coda_reclaim: pushing active"
 argument_list|,
 name|vp
 argument_list|)
@@ -7771,7 +7771,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cfs_reclaim: c_ovp not void"
+literal|"coda_reclaim: c_ovp not void"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7784,7 +7784,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|cfs_free
+name|coda_free
 argument_list|(
 name|VTOC
 argument_list|(
@@ -7809,7 +7809,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_lock
+name|coda_lock
 parameter_list|(
 name|v
 parameter_list|)
@@ -7860,7 +7860,7 @@ name|ENTRY
 expr_stmt|;
 if|if
 condition|(
-name|cfs_lockdebug
+name|coda_lockdebug
 condition|)
 block|{
 name|myprintf
@@ -7916,7 +7916,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_unlock
+name|coda_unlock
 parameter_list|(
 name|v
 parameter_list|)
@@ -7967,7 +7967,7 @@ name|ENTRY
 expr_stmt|;
 if|if
 condition|(
-name|cfs_lockdebug
+name|coda_lockdebug
 condition|)
 block|{
 name|myprintf
@@ -8025,7 +8025,7 @@ end_function
 
 begin_function
 name|int
-name|cfs_islocked
+name|coda_islocked
 parameter_list|(
 name|v
 parameter_list|)
@@ -8076,7 +8076,7 @@ end_comment
 
 begin_function
 name|int
-name|cfs_grab_vnode
+name|coda_grab_vnode
 parameter_list|(
 name|dev_t
 name|dev
@@ -8116,7 +8116,7 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"cfs_grab_vnode: devtomp(%d) returns NULL\n"
+literal|"coda_grab_vnode: devtomp(%d) returns NULL\n"
 operator|,
 name|dev
 operator|)
@@ -8148,7 +8148,7 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"cfs_grab_vnode: iget/vget(%d, %d) returns %p, err %d\n"
+literal|"coda_grab_vnode: iget/vget(%d, %d) returns %p, err %d\n"
 operator|,
 name|dev
 operator|,
@@ -8536,14 +8536,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a vnode for the given fid.  * If no cnode exists for this fid create one and put it  * in a table hashed by fid.Volume and fid.Vnode.  If the cnode for  * this fid is already in the table return it (ref count is  * incremented by cfs_find.  The cnode will be flushed from the  * table when cfs_inactive calls cfs_unsave.  */
+comment|/*  * Return a vnode for the given fid.  * If no cnode exists for this fid create one and put it  * in a table hashed by fid.Volume and fid.Vnode.  If the cnode for  * this fid is already in the table return it (ref count is  * incremented by coda_find.  The cnode will be flushed from the  * table when coda_inactive calls coda_unsave.  */
 end_comment
 
 begin_function
 name|struct
 name|cnode
 modifier|*
-name|makecfsnode
+name|make_coda_node
 parameter_list|(
 name|fid
 parameter_list|,
@@ -8577,7 +8577,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|cfs_find
+name|coda_find
 argument_list|(
 name|fid
 argument_list|)
@@ -8593,7 +8593,7 @@ name|vp
 decl_stmt|;
 name|cp
 operator|=
-name|cfs_alloc
+name|coda_alloc
 argument_list|()
 expr_stmt|;
 name|lockinit
@@ -8623,11 +8623,11 @@ name|err
 operator|=
 name|getnewvnode
 argument_list|(
-name|VT_CFS
+name|VT_CODA
 argument_list|,
 name|vfsp
 argument_list|,
-name|cfs_vnodeop_p
+name|coda_vnodeop_p
 argument_list|,
 operator|&
 name|vp
@@ -8640,7 +8640,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"cfs: getnewvnode returned error %d\n"
+literal|"coda: getnewvnode returned error %d\n"
 argument_list|,
 name|err
 argument_list|)
@@ -8664,7 +8664,7 @@ name|c_vnode
 operator|=
 name|vp
 expr_stmt|;
-name|cfs_save
+name|coda_save
 argument_list|(
 name|cp
 argument_list|)

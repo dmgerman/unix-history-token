@@ -12,17 +12,17 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_subr.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:18  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:16  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:12  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:42  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.6.2.3  98/01/23  11:21:05  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.2  97/12/16  12:40:06  rvb  * Sync with 1.3  *   * Revision 1.6.2.1  97/12/06  17:41:21  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:17  rvb  * Read CHANGES  *   * Revision 1.5.4.8  97/11/26  15:28:58  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.5.4.7  97/11/20  11:46:42  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.6  97/11/18  10:27:16  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.5  97/11/13  22:03:00  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.4  97/11/12  12:09:39  rvb  * reorg pass1  *   * Revision 1.5.4.3  97/11/06  21:02:38  rvb  * first pass at ^c ^z  *   * Revision 1.5.4.2  97/10/29  16:06:27  rvb  * Kill DYING  *   * Revision 1.5.4.1  97/10/28 23:10:16  rvb  *>64Meg; venus can be killed!  *  * Revision 1.5  97/08/05  11:08:17  lily  * Removed cfsnc_replace, replaced it with a cfs_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:59  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.   * There may be more  *   * Revision 1.3  1996/12/05 16:20:15  bnoble  * Minor debugging aids  *  * Revision 1.2  1996/01/02 16:57:01  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:27  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:59  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:58  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.8  1995/03/03  17:00:04  dcs  * Fixed kernel bug involving sleep and upcalls. Basically if you killed  * a job waiting on venus, the venus upcall queues got trashed. Depending  * on luck, you could kill the kernel or not.  * (mods to cfs_subr.c and cfs_mach.d)  *  * Revision 2.7  95/03/02  22:45:21  dcs  * Sun4 compatibility  *   * Revision 2.6  95/02/17  16:25:17  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *   * Revision 2.5  94/11/09  15:56:26  dcs  * Had the thread sleeping on the wrong thing!  *   * Revision 2.4  94/10/14  09:57:57  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:26  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 1.2  92/10/27  17:58:22  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:26  mja  * 	Incorporated Dave Steere's fix for the GNU-Emacs bug.  * 	Also, included his cfs_flush routine in place of the former cfsnc_flush.  * 	[91/02/07            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * 	Hack to allow users to keep coda venus calls uninterruptible. THis  * 	basically prevents the Gnu-emacs bug from appearing, in which a call  * 	was being interrupted, and return EINTR, but gnu didn't check for the  * 	error and figured the file was buggered.  * 	[90/12/09            dcs]  *   * Revision 2.3  90/08/10  10:23:20  mrt  * 	Removed include of vm/vm_page.h as it no longer exists.  * 	[90/08/10            mrt]  *   * Revision 2.2  90/07/05  11:26:35  mrt  * 	Initialize name cache on first call to vcopen.  * 	[90/05/23            dcs]  *   * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.5  90/05/31  17:01:35  dcs  * Prepare for merge with facilities kernel.  *   * Revision 1.2  90/03/19  15:56:25  dcs  * Initialize name cache on first call to vcopen.  *   * Revision 1.1  90/03/15  10:43:26  jjk  * Initial revision  *   */
+comment|/*  * HISTORY  * $Log: cfs_subr.c,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:18  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:16  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:12  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:42  rvb  * Bring RVB_CODA1_1 to HEAD  *   * Revision 1.6.2.3  98/01/23  11:21:05  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.2  97/12/16  12:40:06  rvb  * Sync with 1.3  *   * Revision 1.6.2.1  97/12/06  17:41:21  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:17  rvb  * Read CHANGES  *   * Revision 1.5.4.8  97/11/26  15:28:58  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.5.4.7  97/11/20  11:46:42  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.6  97/11/18  10:27:16  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.5  97/11/13  22:03:00  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.4  97/11/12  12:09:39  rvb  * reorg pass1  *   * Revision 1.5.4.3  97/11/06  21:02:38  rvb  * first pass at ^c ^z  *   * Revision 1.5.4.2  97/10/29  16:06:27  rvb  * Kill DYING  *   * Revision 1.5.4.1  97/10/28 23:10:16  rvb  *>64Meg; venus can be killed!  *  * Revision 1.5  97/08/05  11:08:17  lily  * Removed cfsnc_replace, replaced it with a coda_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:59  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.   * There may be more  *   * Revision 1.3  1996/12/05 16:20:15  bnoble  * Minor debugging aids  *  * Revision 1.2  1996/01/02 16:57:01  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:27  bnoble  * Added CODA-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:59  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:58  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.8  1995/03/03  17:00:04  dcs  * Fixed kernel bug involving sleep and upcalls. Basically if you killed  * a job waiting on venus, the venus upcall queues got trashed. Depending  * on luck, you could kill the kernel or not.  * (mods to cfs_subr.c and cfs_mach.d)  *  * Revision 2.7  95/03/02  22:45:21  dcs  * Sun4 compatibility  *   * Revision 2.6  95/02/17  16:25:17  dcs  * These versions represent several changes:  * 1. Allow venus to restart even if outstanding references exist.  * 2. Have only one ctlvp per client, as opposed to one per mounted cfs device.d  * 3. Allow ody_expand to return many members, not just one.  *   * Revision 2.5  94/11/09  15:56:26  dcs  * Had the thread sleeping on the wrong thing!  *   * Revision 2.4  94/10/14  09:57:57  dcs  * Made changes 'cause sun4s have braindead compilers  *   * Revision 2.3  94/10/12  16:46:26  dcs  * Cleaned kernel/venus interface by removing XDR junk, plus  * so cleanup to allow this code to be more easily ported.  *   * Revision 1.2  92/10/27  17:58:22  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.4  92/09/30  14:16:26  mja  * 	Incorporated Dave Steere's fix for the GNU-Emacs bug.  * 	Also, included his coda_flush routine in place of the former coda_nc_flush.  * 	[91/02/07            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * 	Hack to allow users to keep coda venus calls uninterruptible. THis  * 	basically prevents the Gnu-emacs bug from appearing, in which a call  * 	was being interrupted, and return EINTR, but gnu didn't check for the  * 	error and figured the file was buggered.  * 	[90/12/09            dcs]  *   * Revision 2.3  90/08/10  10:23:20  mrt  * 	Removed include of vm/vm_page.h as it no longer exists.  * 	[90/08/10            mrt]  *   * Revision 2.2  90/07/05  11:26:35  mrt  * 	Initialize name cache on first call to vcopen.  * 	[90/05/23            dcs]  *   * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.5  90/05/31  17:01:35  dcs  * Prepare for merge with facilities kernel.  *   * Revision 1.2  90/03/19  15:56:25  dcs  * Initialize name cache on first call to vcopen.  *   * Revision 1.1  90/03/15  10:43:26  jjk  * Initial revision  *   */
 end_comment
 
 begin_comment
-comment|/* NOTES: rvb  * 1.	Added cfs_unmounting to mark all cnodes as being UNMOUNTING.  This has to  *	 be done before dounmount is called.  Because some of the routines that  *	 dounmount calls before cfs_unmounted might try to force flushes to venus.  *	 The vnode pager does this.  * 2.	cfs_unmounting marks all cnodes scanning cfs_cache.  * 3.	cfs_checkunmounting (under DEBUG) checks all cnodes by chasing the vnodes  *	 under the /coda mount point.  * 4.	cfs_cacheprint (under DEBUG) prints names with vnode/cnode address  */
+comment|/* NOTES: rvb  * 1.	Added coda_unmounting to mark all cnodes as being UNMOUNTING.  This has to  *	 be done before dounmount is called.  Because some of the routines that  *	 dounmount calls before coda_unmounted might try to force flushes to venus.  *	 The vnode pager does this.  * 2.	coda_unmounting marks all cnodes scanning coda_cache.  * 3.	cfs_checkunmounting (under DEBUG) checks all cnodes by chasing the vnodes  *	 under the /coda mount point.  * 4.	coda_cacheprint (under DEBUG) prints names with vnode/cnode address  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<vcfs.h>
+file|<vcoda.h>
 end_include
 
 begin_include
@@ -87,7 +87,7 @@ end_include
 
 begin_decl_stmt
 name|int
-name|cfs_active
+name|coda_active
 init|=
 literal|0
 decl_stmt|;
@@ -95,7 +95,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_reuse
+name|coda_reuse
 init|=
 literal|0
 decl_stmt|;
@@ -103,7 +103,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_new
+name|coda_new
 init|=
 literal|0
 decl_stmt|;
@@ -113,7 +113,7 @@ begin_decl_stmt
 name|struct
 name|cnode
 modifier|*
-name|cfs_freelist
+name|coda_freelist
 init|=
 name|NULL
 decl_stmt|;
@@ -123,9 +123,9 @@ begin_decl_stmt
 name|struct
 name|cnode
 modifier|*
-name|cfs_cache
+name|coda_cache
 index|[
-name|CFS_CACHESIZE
+name|CODA_CACHESIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -133,11 +133,11 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|cfshash
+name|coda_hash
 parameter_list|(
 name|fid
 parameter_list|)
-value|(((fid)->Volume + (fid)->Vnode)& (CFS_CACHESIZE-1))
+value|(((fid)->Volume + (fid)->Vnode)& (CODA_CACHESIZE-1))
 end_define
 
 begin_define
@@ -168,7 +168,7 @@ begin_function
 name|struct
 name|cnode
 modifier|*
-name|cfs_alloc
+name|coda_alloc
 parameter_list|(
 name|void
 parameter_list|)
@@ -180,27 +180,27 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|cfs_freelist
+name|coda_freelist
 condition|)
 block|{
 name|cp
 operator|=
-name|cfs_freelist
+name|coda_freelist
 expr_stmt|;
-name|cfs_freelist
+name|coda_freelist
 operator|=
 name|CNODE_NEXT
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-name|cfs_reuse
+name|coda_reuse
 operator|++
 expr_stmt|;
 block|}
 else|else
 block|{
-name|CFS_ALLOC
+name|CODA_ALLOC
 argument_list|(
 name|cp
 argument_list|,
@@ -231,7 +231,7 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cfs_new
+name|coda_new
 operator|++
 expr_stmt|;
 block|}
@@ -260,7 +260,7 @@ end_comment
 
 begin_function
 name|void
-name|cfs_free
+name|coda_free
 parameter_list|(
 name|cp
 parameter_list|)
@@ -276,9 +276,9 @@ argument_list|(
 name|cp
 argument_list|)
 operator|=
-name|cfs_freelist
+name|coda_freelist
 expr_stmt|;
-name|cfs_freelist
+name|coda_freelist
 operator|=
 name|cp
 expr_stmt|;
@@ -291,7 +291,7 @@ end_comment
 
 begin_function
 name|void
-name|cfs_save
+name|coda_save
 parameter_list|(
 name|cp
 parameter_list|)
@@ -306,9 +306,9 @@ argument_list|(
 name|cp
 argument_list|)
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
-name|cfshash
+name|coda_hash
 argument_list|(
 operator|&
 name|cp
@@ -317,9 +317,9 @@ name|c_fid
 argument_list|)
 index|]
 expr_stmt|;
-name|cfs_cache
+name|coda_cache
 index|[
-name|cfshash
+name|coda_hash
 argument_list|(
 operator|&
 name|cp
@@ -339,7 +339,7 @@ end_comment
 
 begin_function
 name|void
-name|cfs_unsave
+name|coda_unsave
 parameter_list|(
 name|cp
 parameter_list|)
@@ -363,9 +363,9 @@ name|NULL
 decl_stmt|;
 name|ptr
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
-name|cfshash
+name|coda_hash
 argument_list|(
 operator|&
 name|cp
@@ -395,9 +395,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|cfs_cache
+name|coda_cache
 index|[
-name|cfshash
+name|coda_hash
 argument_list|(
 operator|&
 name|cp
@@ -462,7 +462,7 @@ begin_function
 name|struct
 name|cnode
 modifier|*
-name|cfs_find
+name|coda_find
 parameter_list|(
 name|fid
 parameter_list|)
@@ -478,9 +478,9 @@ name|cp
 decl_stmt|;
 name|cp
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
-name|cfshash
+name|coda_hash
 argument_list|(
 name|fid
 argument_list|)
@@ -538,7 +538,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|cfs_active
+name|coda_active
 operator|++
 expr_stmt|;
 return|return
@@ -564,12 +564,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cfs_kill is called as a side effect to vcopen. To prevent any  * cnodes left around from an earlier run of a venus or warden from  * causing problems with the new instance, mark any outstanding cnodes  * as dying. Future operations on these cnodes should fail (excepting  * cfs_inactive of course!). Since multiple venii/wardens can be  * running, only kill the cnodes for a particular entry in the  * cfs_mnttbl. -- DCS 12/1/94 */
+comment|/*  * coda_kill is called as a side effect to vcopen. To prevent any  * cnodes left around from an earlier run of a venus or warden from  * causing problems with the new instance, mark any outstanding cnodes  * as dying. Future operations on these cnodes should fail (excepting  * coda_inactive of course!). Since multiple venii/wardens can be  * running, only kill the cnodes for a particular entry in the  * coda_mnttbl. -- DCS 12/1/94 */
 end_comment
 
 begin_function
 name|int
-name|cfs_kill
+name|coda_kill
 parameter_list|(
 name|whoIam
 parameter_list|,
@@ -599,7 +599,7 @@ name|cp
 decl_stmt|;
 comment|/*  	 * Algorithm is as follows:  	 *     Second, flush whatever vnodes we can from the name cache. 	 *  	 *     Finally, step through whatever is left and mark them dying. 	 *        This prevents any operation at all. 	 */
 comment|/* This is slightly overkill, but should work. Eventually it'd be 	 * nice to only flush those entries from the namecache that 	 * reference a vnode in this vfs.  */
-name|cfsnc_flush
+name|coda_nc_flush
 argument_list|(
 name|dcstat
 argument_list|)
@@ -612,7 +612,7 @@ literal|0
 init|;
 name|hash
 operator|<
-name|CFS_CACHESIZE
+name|CODA_CACHESIZE
 condition|;
 name|hash
 operator|++
@@ -622,7 +622,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
 name|hash
 index|]
@@ -656,7 +656,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"cfs_kill: vp %p, cp %p\n"
+literal|"coda_kill: vp %p, cp %p\n"
 argument_list|,
 name|CTOV
 argument_list|(
@@ -671,9 +671,9 @@ directive|endif
 name|count
 operator|++
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_FLUSH
+argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
 literal|"Live cnode fid %lx.%lx.%lx flags %d count %d\n"
@@ -695,7 +695,7 @@ end_comment
 
 begin_function
 name|void
-name|cfs_flush
+name|coda_flush
 parameter_list|(
 name|dcstat
 parameter_list|)
@@ -712,20 +712,20 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_FLUSH
+name|CODA_FLUSH
 index|]
 operator|++
 expr_stmt|;
-name|cfsnc_flush
+name|coda_nc_flush
 argument_list|(
 name|dcstat
 argument_list|)
@@ -739,7 +739,7 @@ literal|0
 init|;
 name|hash
 operator|<
-name|CFS_CACHESIZE
+name|CODA_CACHESIZE
 condition|;
 name|hash
 operator|++
@@ -749,7 +749,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
 name|hash
 index|]
@@ -779,7 +779,7 @@ name|Vnode
 argument_list|)
 condition|)
 comment|/* only files can be executed */
-name|cfs_vmflush
+name|coda_vmflush
 argument_list|(
 name|cp
 argument_list|)
@@ -795,7 +795,7 @@ end_comment
 
 begin_function
 name|void
-name|cfs_testflush
+name|coda_testflush
 parameter_list|(
 name|void
 parameter_list|)
@@ -816,7 +816,7 @@ literal|0
 init|;
 name|hash
 operator|<
-name|CFS_CACHESIZE
+name|CODA_CACHESIZE
 condition|;
 name|hash
 operator|++
@@ -826,7 +826,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
 name|hash
 index|]
@@ -892,7 +892,7 @@ end_comment
 
 begin_function
 name|void
-name|cfs_unmounting
+name|coda_unmounting
 parameter_list|(
 name|whoIam
 parameter_list|)
@@ -918,7 +918,7 @@ literal|0
 init|;
 name|hash
 operator|<
-name|CFS_CACHESIZE
+name|CODA_CACHESIZE
 condition|;
 name|hash
 operator|++
@@ -928,7 +928,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
 name|hash
 index|]
@@ -972,7 +972,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_unmounting: Unlocking %p\n"
+literal|"coda_unmounting: Unlocking %p\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -1015,17 +1015,22 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_function
-name|void
-name|cfs_checkunmounting
-parameter_list|(
-name|mp
-parameter_list|)
+begin_macro
+name|coda_checkunmounting
+argument_list|(
+argument|mp
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -1131,11 +1136,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_function
-name|void
-name|cfs_cacheprint
+name|int
+name|coda_cacheprint
 parameter_list|(
 name|whoIam
 parameter_list|)
@@ -1160,22 +1165,19 @@ literal|0
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"cfs_cacheprint: cfs_ctlvp %p, cp %p"
+literal|"coda_cacheprint: coda_ctlvp %p, cp %p"
 argument_list|,
-name|cfs_ctlvp
+name|coda_ctlvp
 argument_list|,
 name|VTOC
 argument_list|(
-name|cfs_ctlvp
+name|coda_ctlvp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cfsnc_name
+name|coda_nc_name
 argument_list|(
-name|VTOC
-argument_list|(
-name|cfs_ctlvp
-argument_list|)
+name|coda_ctlvp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1191,7 +1193,7 @@ literal|0
 init|;
 name|hash
 operator|<
-name|CFS_CACHESIZE
+name|CODA_CACHESIZE
 condition|;
 name|hash
 operator|++
@@ -1201,7 +1203,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|cfs_cache
+name|coda_cache
 index|[
 name|hash
 index|]
@@ -1232,7 +1234,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfs_cacheprint: vp %p, cp %p"
+literal|"coda_cacheprint: vp %p, cp %p"
 argument_list|,
 name|CTOV
 argument_list|(
@@ -1242,7 +1244,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|cfsnc_name
+name|coda_nc_name
 argument_list|(
 name|cp
 argument_list|)
@@ -1260,7 +1262,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"cfs_cacheprint: count %d\n"
+literal|"coda_cacheprint: count %d\n"
 argument_list|,
 name|count
 argument_list|)
@@ -1274,7 +1276,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * There are 6 cases where invalidations occur. The semantics of each  * is listed here.  *  * CFS_FLUSH     -- flush all entries from the name cache and the cnode cache.  * CFS_PURGEUSER -- flush all entries from the name cache for a specific user  *                  This call is a result of token expiration.  *  * The next two are the result of callbacks on a file or directory.  * CFS_ZAPDIR    -- flush the attributes for the dir from its cnode.  *                  Zap all children of this directory from the namecache.  * CFS_ZAPFILE   -- flush the attributes for a file.  *  * The fifth is a result of Venus detecting an inconsistent file.  * CFS_PURGEFID  -- flush the attribute for the file  *                  If it is a dir (odd vnode), purge its   *                  children from the namecache  *                  remove the file from the namecache.  *  * The sixth allows Venus to replace local fids with global ones  * during reintegration.  *  * CFS_REPLACE -- replace one ViceFid with another throughout the name cache   */
+comment|/*  * There are 6 cases where invalidations occur. The semantics of each  * is listed here.  *  * CODA_FLUSH     -- flush all entries from the name cache and the cnode cache.  * CODA_PURGEUSER -- flush all entries from the name cache for a specific user  *                  This call is a result of token expiration.  *  * The next two are the result of callbacks on a file or directory.  * CODA_ZAPDIR    -- flush the attributes for the dir from its cnode.  *                  Zap all children of this directory from the namecache.  * CODA_ZAPFILE   -- flush the attributes for a file.  *  * The fifth is a result of Venus detecting an inconsistent file.  * CODA_PURGEFID  -- flush the attribute for the file  *                  If it is a dir (odd vnode), purge its   *                  children from the namecache  *                  remove the file from the namecache.  *  * The sixth allows Venus to replace local fids with global ones  * during reintegration.  *  * CODA_REPLACE -- replace one ViceFid with another throughout the name cache   */
 end_comment
 
 begin_function
@@ -1304,19 +1306,19 @@ name|opcode
 condition|)
 block|{
 case|case
-name|CFS_FLUSH
+name|CODA_FLUSH
 case|:
 block|{
-name|cfs_flush
+name|coda_flush
 argument_list|(
 name|IS_DOWNCALL
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_FLUSH
+argument|CODA_FLUSH
 argument_list|,
-argument|cfs_testflush();
+argument|coda_testflush();
 argument_list|)
 comment|/* print remaining cnodes */
 return|return
@@ -1326,28 +1328,28 @@ operator|)
 return|;
 block|}
 case|case
-name|CFS_PURGEUSER
+name|CODA_PURGEUSER
 case|:
 block|{
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_PURGEUSER
+name|CODA_PURGEUSER
 index|]
 operator|++
 expr_stmt|;
 comment|/* XXX - need to prevent fsync's */
-name|cfsnc_purge_user
+name|coda_nc_purge_user
 argument_list|(
 name|out
 operator|->
-name|cfs_purgeuser
+name|coda_purgeuser
 operator|.
 name|cred
 operator|.
@@ -1363,7 +1365,7 @@ operator|)
 return|;
 block|}
 case|case
-name|CFS_ZAPFILE
+name|CODA_ZAPFILE
 case|:
 block|{
 name|struct
@@ -1375,27 +1377,27 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_ZAPFILE
+name|CODA_ZAPFILE
 index|]
 operator|++
 expr_stmt|;
 name|cp
 operator|=
-name|cfs_find
+name|coda_find
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_zapfile
+name|coda_zapfile
 operator|.
 name|CodaFid
 argument_list|)
@@ -1435,14 +1437,14 @@ name|VTEXT
 condition|)
 name|error
 operator|=
-name|cfs_vmflush
+name|coda_vmflush
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_ZAPFILE
+argument|CODA_ZAPFILE
 argument_list|,
 argument|myprintf((
 literal|"zapfile: fid = (%lx.%lx.%lx),                                                refcnt = %d, error = %d\n"
@@ -1486,7 +1488,7 @@ operator|)
 return|;
 block|}
 case|case
-name|CFS_ZAPDIR
+name|CODA_ZAPDIR
 case|:
 block|{
 name|struct
@@ -1494,27 +1496,27 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_ZAPDIR
+name|CODA_ZAPDIR
 index|]
 operator|++
 expr_stmt|;
 name|cp
 operator|=
-name|cfs_find
+name|coda_find
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_zapdir
+name|coda_zapdir
 operator|.
 name|CodaFid
 argument_list|)
@@ -1541,21 +1543,21 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-name|cfsnc_zapParentfid
+name|coda_nc_zapParentfid
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_zapdir
+name|coda_zapdir
 operator|.
 name|CodaFid
 argument_list|,
 name|IS_DOWNCALL
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_ZAPDIR
+argument|CODA_ZAPDIR
 argument_list|,
 argument|myprintf((
 literal|"zapdir: fid = (%lx.%lx.%lx),                                            refcnt = %d\n"
@@ -1599,31 +1601,31 @@ operator|)
 return|;
 block|}
 case|case
-name|CFS_ZAPVNODE
+name|CODA_ZAPVNODE
 case|:
 block|{
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_ZAPVNODE
+name|CODA_ZAPVNODE
 index|]
 operator|++
 expr_stmt|;
 name|myprintf
 argument_list|(
 operator|(
-literal|"CFS_ZAPVNODE: Called, but uniplemented\n"
+literal|"CODA_ZAPVNODE: Called, but uniplemented\n"
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	   * Not that below we must really translate the returned coda_cred to 	   * a netbsd cred.  This is a bit muddled at present and the cfsnc_zapnode 	   * is further unimplemented, so punt! 	   * I suppose we could use just the uid. 	   */
-comment|/* cfsnc_zapvnode(&out->cfs_zapvnode.VFid,&out->cfs_zapvnode.cred, 			 IS_DOWNCALL); */
+comment|/* coda_nc_zapvnode(&out->coda_zapvnode.VFid,&out->coda_zapvnode.cred, 			 IS_DOWNCALL); */
 return|return
 operator|(
 literal|0
@@ -1631,7 +1633,7 @@ operator|)
 return|;
 block|}
 case|case
-name|CFS_PURGEFID
+name|CODA_PURGEFID
 case|:
 block|{
 name|struct
@@ -1643,27 +1645,27 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_PURGEFID
+name|CODA_PURGEFID
 index|]
 operator|++
 expr_stmt|;
 name|cp
 operator|=
-name|cfs_find
+name|coda_find
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_purgefid
+name|coda_purgefid
 operator|.
 name|CodaFid
 argument_list|)
@@ -1689,7 +1691,7 @@ name|ODD
 argument_list|(
 name|out
 operator|->
-name|cfs_purgefid
+name|coda_purgefid
 operator|.
 name|CodaFid
 operator|.
@@ -1698,12 +1700,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* Vnode is a directory */
-name|cfsnc_zapParentfid
+name|coda_nc_zapParentfid
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_purgefid
+name|coda_purgefid
 operator|.
 name|CodaFid
 argument_list|,
@@ -1718,12 +1720,12 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-name|cfsnc_zapfid
+name|coda_nc_zapfid
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_purgefid
+name|coda_purgefid
 operator|.
 name|CodaFid
 argument_list|,
@@ -1738,7 +1740,7 @@ name|ODD
 argument_list|(
 name|out
 operator|->
-name|cfs_purgefid
+name|coda_purgefid
 operator|.
 name|CodaFid
 operator|.
@@ -1760,15 +1762,15 @@ condition|)
 block|{
 name|error
 operator|=
-name|cfs_vmflush
+name|coda_vmflush
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
 block|}
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_PURGEFID
+argument|CODA_PURGEFID
 argument_list|,
 argument|myprintf((
 literal|"purgefid: fid = (%lx.%lx.%lx), refcnt = %d, error = %d\n"
@@ -1812,7 +1814,7 @@ operator|)
 return|;
 block|}
 case|case
-name|CFS_REPLACE
+name|CODA_REPLACE
 case|:
 block|{
 name|struct
@@ -1822,27 +1824,27 @@ name|cp
 init|=
 name|NULL
 decl_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|ncalls
 operator|++
 expr_stmt|;
-name|cfs_clstat
+name|coda_clstat
 operator|.
 name|reqs
 index|[
-name|CFS_REPLACE
+name|CODA_REPLACE
 index|]
 operator|++
 expr_stmt|;
 name|cp
 operator|=
-name|cfs_find
+name|coda_find
 argument_list|(
 operator|&
 name|out
 operator|->
-name|cfs_replace
+name|coda_replace
 operator|.
 name|OldFid
 argument_list|)
@@ -1863,7 +1865,7 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cfs_unsave
+name|coda_unsave
 argument_list|(
 name|cp
 argument_list|)
@@ -1874,22 +1876,22 @@ name|c_fid
 operator|=
 name|out
 operator|->
-name|cfs_replace
+name|coda_replace
 operator|.
 name|NewFid
 expr_stmt|;
-name|cfs_save
+name|coda_save
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-name|CFSDEBUG
+name|CODADEBUG
 argument_list|(
-argument|CFS_REPLACE
+argument|CODA_REPLACE
 argument_list|,
 argument|myprintf((
 literal|"replace: oldfid = (%lx.%lx.%lx), newfid = (%lx.%lx.%lx), cp = %p\n"
-argument|, 					   out->cfs_replace.OldFid.Volume, 					   out->cfs_replace.OldFid.Vnode, 					   out->cfs_replace.OldFid.Unique, 					   cp->c_fid.Volume, cp->c_fid.Vnode,  					   cp->c_fid.Unique, cp));
+argument|, 					   out->coda_replace.OldFid.Volume, 					   out->coda_replace.OldFid.Vnode, 					   out->coda_replace.OldFid.Unique, 					   cp->c_fid.Volume, cp->c_fid.Vnode,  					   cp->c_fid.Unique, cp));
 argument_list|)
 name|vrele
 argument_list|(
@@ -1926,12 +1928,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* cfs_grab_vnode: lives in either cfs_mach.c or cfs_nbsd.c */
+comment|/* coda_grab_vnode: lives in either cfs_mach.c or cfs_nbsd.c */
 end_comment
 
 begin_function
 name|int
-name|cfs_vmflush
+name|coda_vmflush
 parameter_list|(
 name|cp
 parameter_list|)
@@ -1953,30 +1955,30 @@ end_comment
 
 begin_function
 name|void
-name|cfs_debugon
+name|coda_debugon
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|cfsdebug
+name|codadebug
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|cfsnc_debug
+name|coda_nc_debug
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|cfs_vnop_print_entry
+name|coda_vnop_print_entry
 operator|=
 literal|1
 expr_stmt|;
-name|cfs_psdev_print_entry
+name|coda_psdev_print_entry
 operator|=
 literal|1
 expr_stmt|;
-name|cfs_vfsop_print_entry
+name|coda_vfsop_print_entry
 operator|=
 literal|1
 expr_stmt|;
@@ -1985,28 +1987,28 @@ end_function
 
 begin_function
 name|void
-name|cfs_debugoff
+name|coda_debugoff
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|cfsdebug
+name|codadebug
 operator|=
 literal|0
 expr_stmt|;
-name|cfsnc_debug
+name|coda_nc_debug
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_vnop_print_entry
+name|coda_vnop_print_entry
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_psdev_print_entry
+name|coda_psdev_print_entry
 operator|=
 literal|0
 expr_stmt|;
-name|cfs_vfsop_print_entry
+name|coda_vfsop_print_entry
 operator|=
 literal|0
 expr_stmt|;

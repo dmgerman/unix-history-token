@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_vnodeops.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *    */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_vnodeops.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: cfs_vnodeops.h,v 1.2 1998/09/02 19:09:53 rvb Exp $  *    */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_vnodeops.h,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.7  1998/08/28 18:12:24  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.6  1998/08/18 17:05:22  rvb  * Don't use __RCSID now  *  * Revision 1.5  1998/08/18 16:31:47  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.4  98/01/23  11:53:49  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.3.2.3  98/01/23  11:21:13  rvb  * Sync with 2.2.5  *   * Revision 1.3.2.2  97/12/16  12:40:20  rvb  * Sync with 1.3  *   * Revision 1.3.2.1  97/12/10  14:08:34  rvb  * Fix O_ flags; check result in cfscall  *   * Revision 1.3  97/12/05  10:39:25  rvb  * Read CHANGES  *   * Revision 1.2.34.2  97/11/20  11:46:54  rvb  * Capture current cfs_venus  *   * Revision 1.2.34.1  97/11/13  22:03:04  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.2  96/01/02  16:57:14  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *   * Revision 1.1.2.1  1995/12/20 01:57:40  bnoble  * Added CFS-specific files  *  */
+comment|/*  * HISTORY  * $Log: cfs_vnodeops.h,v $  * Revision 1.2  1998/09/02 19:09:53  rvb  * Pass2 complete  *  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.7  1998/08/28 18:12:24  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.6  1998/08/18 17:05:22  rvb  * Don't use __RCSID now  *  * Revision 1.5  1998/08/18 16:31:47  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.4  98/01/23  11:53:49  rvb  * Bring RVB_CODA1_1 to HEAD  *   * Revision 1.3.2.3  98/01/23  11:21:13  rvb  * Sync with 2.2.5  *   * Revision 1.3.2.2  97/12/16  12:40:20  rvb  * Sync with 1.3  *   * Revision 1.3.2.1  97/12/10  14:08:34  rvb  * Fix O_ flags; check result in coda_call  *   * Revision 1.3  97/12/05  10:39:25  rvb  * Read CHANGES  *   * Revision 1.2.34.2  97/11/20  11:46:54  rvb  * Capture current cfs_venus  *   * Revision 1.2.34.1  97/11/13  22:03:04  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.2  96/01/02  16:57:14  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *   * Revision 1.1.2.1  1995/12/20 01:57:40  bnoble  * Added CODA-specific files  *  */
 end_comment
 
 begin_comment
@@ -21,7 +21,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_open
+name|coda_open
 name|__P
 argument_list|(
 operator|(
@@ -34,7 +34,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_close
+name|coda_close
 name|__P
 argument_list|(
 operator|(
@@ -47,7 +47,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_read
+name|coda_read
 name|__P
 argument_list|(
 operator|(
@@ -60,7 +60,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_write
+name|coda_write
 name|__P
 argument_list|(
 operator|(
@@ -73,7 +73,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_ioctl
+name|coda_ioctl
 name|__P
 argument_list|(
 operator|(
@@ -90,7 +90,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cfs_getattr
+name|coda_getattr
 name|__P
 argument_list|(
 operator|(
@@ -103,7 +103,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_setattr
+name|coda_setattr
 name|__P
 argument_list|(
 operator|(
@@ -116,7 +116,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_access
+name|coda_access
 name|__P
 argument_list|(
 operator|(
@@ -129,7 +129,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_abortop
+name|coda_abortop
 name|__P
 argument_list|(
 operator|(
@@ -142,7 +142,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_readlink
+name|coda_readlink
 name|__P
 argument_list|(
 operator|(
@@ -155,7 +155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_fsync
+name|coda_fsync
 name|__P
 argument_list|(
 operator|(
@@ -168,7 +168,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_inactive
+name|coda_inactive
 name|__P
 argument_list|(
 operator|(
@@ -181,7 +181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_lookup
+name|coda_lookup
 name|__P
 argument_list|(
 operator|(
@@ -194,7 +194,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_create
+name|coda_create
 name|__P
 argument_list|(
 operator|(
@@ -207,7 +207,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_remove
+name|coda_remove
 name|__P
 argument_list|(
 operator|(
@@ -220,7 +220,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_link
+name|coda_link
 name|__P
 argument_list|(
 operator|(
@@ -233,7 +233,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_rename
+name|coda_rename
 name|__P
 argument_list|(
 operator|(
@@ -246,7 +246,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_mkdir
+name|coda_mkdir
 name|__P
 argument_list|(
 operator|(
@@ -259,7 +259,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_rmdir
+name|coda_rmdir
 name|__P
 argument_list|(
 operator|(
@@ -272,7 +272,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_symlink
+name|coda_symlink
 name|__P
 argument_list|(
 operator|(
@@ -285,7 +285,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_readdir
+name|coda_readdir
 name|__P
 argument_list|(
 operator|(
@@ -298,7 +298,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_bmap
+name|coda_bmap
 name|__P
 argument_list|(
 operator|(
@@ -311,7 +311,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_strategy
+name|coda_strategy
 name|__P
 argument_list|(
 operator|(
@@ -324,7 +324,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_reclaim
+name|coda_reclaim
 name|__P
 argument_list|(
 operator|(
@@ -337,7 +337,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_lock
+name|coda_lock
 name|__P
 argument_list|(
 operator|(
@@ -350,7 +350,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_unlock
+name|coda_unlock
 name|__P
 argument_list|(
 operator|(
@@ -363,7 +363,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_islocked
+name|coda_islocked
 name|__P
 argument_list|(
 operator|(
@@ -376,7 +376,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_vop_error
+name|coda_vop_error
 name|__P
 argument_list|(
 operator|(
@@ -389,7 +389,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_vop_nop
+name|coda_vop_nop
 name|__P
 argument_list|(
 operator|(
@@ -402,7 +402,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_fbsd_getpages
+name|coda_fbsd_getpages
 name|__P
 argument_list|(
 operator|(
@@ -415,7 +415,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cfs_fbsd_putpages
+name|coda_fbsd_putpages
 name|__P
 argument_list|(
 operator|(
@@ -431,7 +431,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|cfs_vnodeop_p
+name|coda_vnodeop_p
 function_decl|)
 parameter_list|(
 name|void
@@ -442,7 +442,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_rdwr
+name|coda_rdwr
 parameter_list|(
 name|struct
 name|vnode
@@ -476,7 +476,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cfs_grab_vnode
+name|coda_grab_vnode
 parameter_list|(
 name|dev_t
 name|dev
