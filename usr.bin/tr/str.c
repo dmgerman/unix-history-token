@@ -231,6 +231,9 @@ switch|switch
 condition|(
 name|ch
 operator|=
+operator|(
+name|u_char
+operator|)
 operator|*
 name|s
 operator|->
@@ -1202,6 +1205,9 @@ argument_list|(
 name|s
 argument_list|)
 else|:
+operator|(
+name|u_char
+operator|)
 operator|*
 name|s
 operator|->
