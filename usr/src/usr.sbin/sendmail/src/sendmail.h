@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.90		%G%"
+literal|"@(#)sendmail.h	3.91		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1963,25 +1963,25 @@ comment|/* set if fatal errors during processing */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|bool
 name|SuperSafe
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* be extra careful, despite cost [conf.c] */
+comment|/* be extra careful, even if expensive */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|time_t
 name|TimeOut
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time until timeout [conf.c] */
+comment|/* time until timeout */
 end_comment
 
 begin_decl_stmt
@@ -2055,25 +2055,25 @@ comment|/* when Daemon, real gid of caller */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|DefUid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default uid to run as [conf.c] */
+comment|/* default uid to run as */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|int
 name|DefGid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default gid to run as [conf.c] */
+comment|/* default gid to run as */
 end_comment
 
 begin_decl_stmt
@@ -2155,6 +2155,28 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|ReadTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout on reads */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|LogLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* level of logging to perform */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|time_t
 name|QueueIntvl
 decl_stmt|;
@@ -2189,19 +2211,7 @@ comment|/* the transcript file name */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|XcriptFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* template for Transcript [conf.c] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
 modifier|*
 name|AliasFile
@@ -2209,23 +2219,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of alias file [conf.c] */
+comment|/* location of alias file */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
 modifier|*
-name|ConfFile
+name|HelpFile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of configuration file [conf.c] */
+comment|/* location of SMTP help file */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
 modifier|*
 name|StatFile
@@ -2233,11 +2243,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of statistics summary [conf.c] */
+comment|/* location of statistics summary */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
 modifier|*
 name|QueueDir
@@ -2245,19 +2255,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of queue directory [conf.c] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|Arpa_Info
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the reply code for Arpanet info [conf.c] */
+comment|/* location of queue directory */
 end_comment
 
 begin_decl_stmt
@@ -2284,24 +2282,38 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|ReadTimeout
+name|char
+modifier|*
+name|XcriptFile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* timeout on reads [conf.c] */
+comment|/* template for Transcript [conf.c] */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|LogLevel
+name|char
+modifier|*
+name|ConfFile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* level of logging to perform [conf.c] */
+comment|/* location of configuration file [conf.c] */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|Arpa_Info
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the reply code for Arpanet info [conf.c] */
 end_comment
 
 begin_escape

@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -1438,11 +1438,13 @@ decl_stmt|;
 name|bool
 name|noinfo
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
+if|if
+condition|(
 name|HelpFile
-decl_stmt|;
+operator|==
+name|NULL
+operator|||
+operator|(
 name|hf
 operator|=
 name|fopen
@@ -1451,10 +1453,7 @@ name|HelpFile
 argument_list|,
 literal|"r"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hf
+operator|)
 operator|==
 name|NULL
 condition|)

@@ -12,7 +12,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		V6 -- running on a version 6 system.  This determines **			whether to define certain routines between **			the two systems.  If you are running a funny **			system, e.g., V6 with long tty names, this **			should be checked carefully. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. **		StdTimezone -- name of local timezone in standard time **			(V6 only). **		DstTimezone -- name of local timezone in daylight savings **			time (V6 only). ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
+comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		V6 -- running on a version 6 system.  This determines **			whether to define certain routines between **			the two systems.  If you are running a funny **			system, e.g., V6 with long tty names, this **			should be checked carefully. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
 end_comment
 
 begin_expr_stmt
@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -288,19 +288,6 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|AliasFile
-init|=
-literal|"/usr/lib/aliases"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* alias file */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
 name|ConfFile
 init|=
 literal|"/usr/lib/sendmail.cf"
@@ -314,76 +301,6 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|StatFile
-init|=
-literal|"/usr/lib/sendmail.st"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* statistics summary */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|HelpFile
-init|=
-literal|"/usr/lib/sendmail.hf"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* help file */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUEUE
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|QueueDir
-init|=
-literal|"/usr/spool/mqueue"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue of saved mail */
-end_comment
-
-begin_else
-else|#
-directive|else
-else|QUEUE
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|QueueDir
-init|=
-literal|"/tmp"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location of temp files */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|QUEUE
-end_endif
-
-begin_decl_stmt
-name|char
-modifier|*
 name|XcriptFile
 init|=
 literal|"/tmp/mailxXXXXXX"
@@ -393,132 +310,6 @@ end_decl_stmt
 begin_comment
 comment|/* template for transcript */
 end_comment
-
-begin_comment
-comment|/* **  Other configuration. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|DefUid
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the uid to execute mailers as */
-end_comment
-
-begin_decl_stmt
-name|int
-name|DefGid
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ditto for gid */
-end_comment
-
-begin_decl_stmt
-name|time_t
-name|TimeOut
-init|=
-literal|3
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60L
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default timeout for queue files */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ReadTimeout
-init|=
-literal|10
-operator|*
-literal|60
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* timeout on external reads */
-end_comment
-
-begin_decl_stmt
-name|int
-name|LogLevel
-init|=
-literal|9
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default logging level */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|SuperSafe
-init|=
-name|TRUE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* always create qf file */
-end_comment
-
-begin_comment
-comment|/* **  V6 system configuration. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V6
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|StdTimezone
-init|=
-literal|"PST"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* std time timezone */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|DstTimezone
-init|=
-literal|"PDT"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* daylight time timezone */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|V6
-end_endif
 
 begin_escape
 end_escape
