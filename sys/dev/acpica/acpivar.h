@@ -864,6 +864,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|ACPI_STATUS
+name|acpi_Startup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ACPI_STATUS
 name|acpi_Enable
 parameter_list|(
 name|struct
