@@ -23,6 +23,12 @@ directive|include
 file|<i386/isa/sound/coproc.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|EXCLUDE_NATIVE_PCM
+end_define
+
 begin_comment
 comment|/*  * I/O ports  */
 end_comment
@@ -1196,6 +1202,8 @@ name|debug
 init|=
 literal|0
 decl_stmt|;
+name|DEB
+argument_list|(
 name|printf
 argument_list|(
 literal|"sscapeintr(0x%02x)\n"
@@ -1210,6 +1218,7 @@ argument_list|,
 name|GA_INTSTAT_REG
 argument_list|)
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

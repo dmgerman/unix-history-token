@@ -9,6 +9,12 @@ directive|include
 file|<i386/isa/sound/sound_config.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/include/md_var.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -22,6 +28,56 @@ argument_list|(
 name|CONFIG_GUS
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_POLL
+end_ifdef
+
+begin_function_decl
+name|int
+name|DMAbuf_poll
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|fileinfo
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|events
+parameter_list|,
+name|select_table
+modifier|*
+name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+endif|;
+end_endif
+
+begin_function_decl
+specifier|static
+name|void
+name|reorganize_buffers
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|dma_buffparms
+modifier|*
+name|dmap
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -7224,7 +7280,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ALLOW_SELECT
+name|ALLOW_POLL
 end_ifdef
 
 begin_function
@@ -7723,7 +7779,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ALLOW_SELECT */
+comment|/* ALLOW_POLL */
 end_comment
 
 begin_endif

@@ -41,6 +41,50 @@ name|OFF
 value|0
 end_define
 
+begin_function_decl
+name|int
+name|DMAbuf_poll
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|fileinfo
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|events
+parameter_list|,
+name|select_table
+modifier|*
+name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|audio_poll
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|struct
+name|fileinfo
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|events
+parameter_list|,
+name|select_table
+modifier|*
+name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -2142,11 +2186,11 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ALLOW_SELECT
+name|ALLOW_POLL
 end_ifdef
 
 begin_comment
-comment|/*  * XXX should we use spltty() in the select calls ? - lr970714  * 	 */
+comment|/*  * XXX should we use spltty() in the select calls ? - lr970714  *  */
 end_comment
 
 begin_function
@@ -2307,7 +2351,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ALLOW_SELECT */
+comment|/* ALLOW_POLL */
 end_comment
 
 begin_endif

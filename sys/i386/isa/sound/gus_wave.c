@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|MAX_GUS_PNP
-value|8
+value|12
 end_define
 
 begin_comment
@@ -154,13 +154,6 @@ define|#
 directive|define
 name|MAX_PATCH
 value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_GUS_PNP
-value|12
 end_define
 
 begin_decl_stmt

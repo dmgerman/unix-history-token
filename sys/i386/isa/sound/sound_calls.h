@@ -218,7 +218,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ALLOW_SELECT
+name|ALLOW_POLL
 end_ifdef
 
 begin_function_decl

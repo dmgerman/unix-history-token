@@ -259,7 +259,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ALLOW_SELECT
+name|ALLOW_POLL
 end_ifdef
 
 begin_typedef

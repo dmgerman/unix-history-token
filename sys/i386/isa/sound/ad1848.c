@@ -1757,7 +1757,7 @@ operator|=
 name|left
 operator||
 operator|(
-name|left
+name|right
 operator|<<
 literal|8
 operator|)
@@ -4336,11 +4336,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|flags
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|fs
 operator|=
 name|devc
@@ -4370,6 +4365,11 @@ expr_stmt|;
 name|old_fs
 operator|=
 name|fs
+expr_stmt|;
+name|flags
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4466,34 +4466,6 @@ literal|10000
 argument_list|)
 expr_stmt|;
 block|}
-name|ad_leave_MCE
-argument_list|(
-name|devc
-argument_list|)
-expr_stmt|;
-comment|/* Starts the calibration process. */
-comment|/* amancio */
-name|ad_enter_MCE
-argument_list|(
-name|devc
-argument_list|)
-expr_stmt|;
-comment|/* Enables changes to the format select reg */
-name|ad_write
-argument_list|(
-name|devc
-argument_list|,
-literal|8
-argument_list|,
-name|fs
-argument_list|)
-expr_stmt|;
-comment|/*      * Write to I8 starts resyncronization. Wait until it completes.      */
-name|AD_WAIT_INIT
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
 name|ad_write
 argument_list|(
 name|devc
@@ -4511,40 +4483,11 @@ operator|~
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/* ad_write (devc, 9, ad_read (devc, 9) | 0x08);	 */
-comment|/*      * If mode == 2 (CS4231), set I28 also. It's the capture format      * register.      */
-if|if
-condition|(
-name|devc
-operator|->
-name|mode
-operator|!=
-name|MD_1848
-condition|)
-block|{
-name|ad_write
-argument_list|(
-name|devc
-argument_list|,
-literal|28
-argument_list|,
-name|fs
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Write to I28 starts resyncronization. Wait until it 	 * completes. 	 */
-name|AD_WAIT_INIT
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-block|}
 name|ad_leave_MCE
 argument_list|(
 name|devc
 argument_list|)
 expr_stmt|;
-comment|/* Starts the calibration process. */
-comment|/* amancio */
 name|splx
 argument_list|(
 name|flags
@@ -4655,11 +4598,6 @@ argument_list|(
 name|devc
 argument_list|)
 expr_stmt|;
-name|ad_enter_MCE
-argument_list|(
-name|devc
-argument_list|)
-expr_stmt|;
 name|ad_write
 argument_list|(
 name|devc
@@ -4682,37 +4620,22 @@ name|ad_write
 argument_list|(
 name|devc
 argument_list|,
-literal|9
+literal|14
 argument_list|,
-name|ad_read
-argument_list|(
-name|devc
-argument_list|,
-literal|9
-argument_list|)
-operator||
-literal|0x8
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Clear DMA counter */
 name|ad_write
 argument_list|(
 name|devc
 argument_list|,
-literal|9
+literal|15
 argument_list|,
-name|ad_read
-argument_list|(
-name|devc
-argument_list|,
-literal|9
-argument_list|)
-operator|&
-operator|~
-literal|0x03
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Stop DMA */
-comment|/*      * ad_write (devc, 15, 0);	 Clear DMA counter ad_write (devc,      * 14, 0);	 Clear DMA counter      */
+comment|/* Clear DMA counter */
 if|if
 condition|(
 name|devc
@@ -4763,7 +4686,7 @@ name|devc
 argument_list|)
 argument_list|)
 operator|&
-literal|0x80
+literal|0x01
 operator|)
 condition|;
 name|timeout
@@ -4771,35 +4694,6 @@ operator|++
 control|)
 empty_stmt|;
 comment|/* Wait for interrupt */
-name|ad_write
-argument_list|(
-name|devc
-argument_list|,
-literal|9
-argument_list|,
-name|ad_read
-argument_list|(
-name|devc
-argument_list|,
-literal|9
-argument_list|)
-operator|&
-operator|~
-literal|0x03
-argument_list|)
-expr_stmt|;
-comment|/* Stop DMA */
-name|outb
-argument_list|(
-name|io_Status
-argument_list|(
-name|devc
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Clear interrupt status */
 name|outb
 argument_list|(
 name|io_Status
@@ -4816,11 +4710,6 @@ operator|->
 name|irq_mode
 operator|=
 literal|0
-expr_stmt|;
-name|ad_leave_MCE
-argument_list|(
-name|devc
-argument_list|)
 expr_stmt|;
 comment|/* DMAbuf_reset_dma (dev); */
 name|splx
@@ -6906,7 +6795,7 @@ name|my_dev
 index|]
 operator|->
 name|flags
-operator|=
+operator||=
 name|DMA_AUTOMODE
 operator||
 name|DMA_DUPLEX
