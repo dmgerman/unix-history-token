@@ -1339,7 +1339,7 @@ name|buf
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"/usr/src/release/sysinstall/help/%s.hlp"
+literal|"/usr/src/usr.sbin/sysinstall/help/%s.hlp"
 argument_list|,
 name|file
 argument_list|)
@@ -1360,7 +1360,7 @@ name|buf
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"/usr/src/release/sysinstall/help/%s.TXT"
+literal|"/usr/src/usr.sbin/sysinstall/help/%s.TXT"
 argument_list|,
 name|file
 argument_list|)
