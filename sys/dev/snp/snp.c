@@ -9,14 +9,6 @@ directive|include
 file|"snp.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NSNP
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -2447,12 +2439,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|snp_cdevsw
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2501,11 +2487,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
