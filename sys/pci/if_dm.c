@@ -1035,7 +1035,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|if_dm
+name|dm
 argument_list|,
 name|pci
 argument_list|,
@@ -1055,7 +1055,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|miibus
 argument_list|,
-name|if_dm
+name|dm
 argument_list|,
 name|miibus_driver
 argument_list|,
