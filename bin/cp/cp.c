@@ -152,12 +152,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uid_t
-name|myuid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|Rflag
 decl_stmt|,
@@ -170,12 +164,6 @@ decl_stmt|,
 name|fflag
 decl_stmt|,
 name|vflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|myumask
 decl_stmt|;
 end_decl_stmt
 
@@ -515,27 +503,6 @@ operator||=
 name|FTS_LOGICAL
 expr_stmt|;
 block|}
-name|myuid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-comment|/* Copy the umask for explicit mode setting. */
-name|myumask
-operator|=
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-name|myumask
-argument_list|)
-expr_stmt|;
 comment|/* Save the target base in "to". */
 name|target
 operator|=
