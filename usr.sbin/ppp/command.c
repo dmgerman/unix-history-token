@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.115 1997/12/19 18:11:05 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.116 1997/12/21 03:16:09 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -4216,7 +4216,11 @@ argument_list|,
 name|label
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
+operator|-
+literal|3
 argument_list|)
 expr_stmt|;
 name|buf
@@ -5453,7 +5457,11 @@ argument_list|,
 name|passwd
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|VarLocalAuthKey
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|VarLocalAuthKey
@@ -7397,6 +7405,8 @@ sizeof|sizeof
 argument_list|(
 name|VarPhoneCopy
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|VarPhoneCopy
