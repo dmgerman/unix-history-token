@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.106 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.107 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -456,6 +456,14 @@ block|,
 comment|/* islocked */
 block|{
 operator|&
+name|vop_pathconf_desc
+block|,
+name|nfs_pathconf
+block|}
+block|,
+comment|/* pathconf */
+block|{
+operator|&
 name|vop_advlock_desc
 block|,
 name|nfs_advlock
@@ -829,6 +837,14 @@ name|nfs_islocked
 block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_pathconf_desc
+block|,
+name|spec_pathconf
+block|}
+block|,
+comment|/* pathconf */
 block|{
 operator|&
 name|vop_advlock_desc
@@ -1206,6 +1222,14 @@ name|nfs_islocked
 block|}
 block|,
 comment|/* islocked */
+block|{
+operator|&
+name|vop_pathconf_desc
+block|,
+name|fifo_pathconf
+block|}
+block|,
+comment|/* pathconf */
 block|{
 operator|&
 name|vop_advlock_desc
@@ -11877,6 +11901,40 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Return POSIX pathconf information applicable to nfs.  *  * Currently the NFS protocol does not support getting such  * information from the remote server.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_macro
+name|nfs_pathconf
+argument_list|(
+argument|ap
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vop_pathconf_args
+comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * NFS advisory byte-level locks.  * Currently unsupported.  */
