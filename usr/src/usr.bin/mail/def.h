@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.10 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.11 %G%";  */
 end_comment
 
 begin_comment
@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|MUSED
-value|1
+value|(1<<0)
 end_define
 
 begin_comment
@@ -242,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|MDELETED
-value|2
+value|(1<<1)
 end_define
 
 begin_comment
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|MSAVED
-value|4
+value|(1<<2)
 end_define
 
 begin_comment
@@ -264,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|MTOUCH
-value|8
+value|(1<<3)
 end_define
 
 begin_comment
@@ -275,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|MPRESERVE
-value|16
+value|(1<<4)
 end_define
 
 begin_comment
@@ -286,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|MMARK
-value|32
+value|(1<<5)
 end_define
 
 begin_comment
@@ -297,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|MODIFY
-value|64
+value|(1<<6)
 end_define
 
 begin_comment
@@ -308,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|MNEW
-value|128
+value|(1<<7)
 end_define
 
 begin_comment
@@ -319,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|MREAD
-value|256
+value|(1<<8)
 end_define
 
 begin_comment
@@ -330,11 +330,22 @@ begin_define
 define|#
 directive|define
 name|MSTATUS
-value|512
+value|(1<<9)
 end_define
 
 begin_comment
 comment|/* message status has changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBOX
+value|(1<<10)
+end_define
+
+begin_comment
+comment|/* Send this to mbox, regardless */
 end_comment
 
 begin_comment
