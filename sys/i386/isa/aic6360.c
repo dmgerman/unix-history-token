@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.3 1994/10/23 21:27:07 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.4 1994/11/15 14:54:13 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -2735,20 +2735,23 @@ end_define
 begin_escape
 end_escape
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DDB
-argument_list|)
-end_if
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|fatal_if_no_DDB
+parameter_list|()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
