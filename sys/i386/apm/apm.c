@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.20 1995/12/08 11:13:09 julian Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.21 1995/12/22 13:08:27 phk Exp $  */
 end_comment
 
 begin_include
@@ -1690,12 +1690,17 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notused
+end_ifdef
+
 begin_comment
 comment|/* disestablish an apm hook */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|apm_hook_disestablish
 parameter_list|(
@@ -1732,6 +1737,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notused */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2146,12 +2160,17 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APM_SLOWSTART
+end_ifdef
+
 begin_comment
 comment|/* inform APM BIOS that CPU is idle */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|apm_cpu_idle
 parameter_list|(
@@ -2203,12 +2222,28 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APM_SLOWSTART */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|APM_SLOWSTART
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/* inform APM BIOS that CPU is busy */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|apm_cpu_busy
 parameter_list|(
@@ -2238,6 +2273,15 @@ asm|__asm("movw $0x5306, %ax; lcall _apm_addr");
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APM_SLOWSTART> 0 */
+end_comment
 
 begin_comment
 comment|/*  * APM timeout routine:  *  * This routine is automatically called by timer once per second.  */
