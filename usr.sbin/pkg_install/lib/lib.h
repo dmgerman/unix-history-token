@@ -980,6 +980,8 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
