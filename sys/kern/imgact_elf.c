@@ -1311,7 +1311,17 @@ name|int
 name|cow
 parameter_list|)
 block|{
+name|vm_offset_t
+name|data_buf
+decl_stmt|,
+name|off
+decl_stmt|;
+name|vm_size_t
+name|sz
+decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|rv
 decl_stmt|;
 if|if
@@ -1448,17 +1458,6 @@ operator|&
 name|PAGE_MASK
 condition|)
 block|{
-name|vm_offset_t
-name|data_buf
-decl_stmt|,
-name|off
-decl_stmt|;
-name|vm_size_t
-name|sz
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 comment|/* 			 * The mapping is not page aligned. This means we have 			 * to copy the data. Sigh. 			 */
 name|rv
 operator|=
@@ -1495,6 +1494,10 @@ operator|(
 name|rv
 operator|)
 return|;
+name|data_buf
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|start
