@@ -5546,6 +5546,12 @@ name|SF_RXFILT_BROAD
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Load the multicast filter. 	 */
+name|sf_setmulti
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Init the completion queue indexes */
 name|csr_write_4
 argument_list|(
