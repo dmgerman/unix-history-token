@@ -731,7 +731,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_STPCPY
-value|0
+value|1
 end_define
 
 begin_comment
@@ -2196,9 +2196,12 @@ begin_comment
 comment|/* Define to 1 if you have the `stpcpy' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STPCPY */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STPCPY
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strcasecmp' function. */

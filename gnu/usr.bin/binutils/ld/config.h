@@ -240,9 +240,12 @@ begin_comment
 comment|/* Define if you have the stpcpy function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STPCPY */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STPCPY
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the strcasecmp function.  */
@@ -458,9 +461,12 @@ begin_comment
 comment|/* Define if you have the stpcpy function */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STPCPY */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STPCPY
+value|1
+end_define
 
 begin_comment
 comment|/* Define if your locale.h file contains LC_MESSAGES. */
