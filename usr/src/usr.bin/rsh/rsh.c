@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.4 83/01/13"
+literal|"@(#)rsh.c	4.5 83/01/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,6 +395,31 @@ expr_stmt|;
 name|options
 operator||=
 name|SO_DEBUG
+expr_stmt|;
+goto|goto
+name|another
+goto|;
+block|}
+comment|/* 	 * Ignore the -e flag to allow aliases with rlogin 	 * to work 	 */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-e"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
 expr_stmt|;
 goto|goto
 name|another
