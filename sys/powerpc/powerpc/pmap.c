@@ -4036,7 +4036,7 @@ name|vm_offset_t
 name|phys_end
 parameter_list|)
 block|{
-name|CTR
+name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
@@ -4053,7 +4053,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|CTR
+name|CTR0
 argument_list|(
 name|KTR_PMAP
 argument_list|,
