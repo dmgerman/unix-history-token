@@ -317,6 +317,16 @@ literal|"Siemens SpeedStream"
 block|}
 block|,
 block|{
+literal|0x16ec
+block|,
+literal|0x3685
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"US Robotics 2415"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
