@@ -5956,7 +5956,7 @@ define|#
 directive|define
 name|IFCAPBITS
 define|\
-value|"\003\1rxcsum\2txcsum\3netcons"
+value|"\003\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU"
 end_define
 
 begin_comment
