@@ -2165,6 +2165,8 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+default|default:
+continue|continue;
 block|}
 if|if
 condition|(
