@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.33 (Berkeley) %G%"
+literal|"@(#)conf.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2762,8 +2762,17 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETPROCTITLE -- set process title for ps ** **	Parameters: **		fmt -- a printf style format string. **		a, b, c -- possible parameters to fmt. ** **	Returns: **		none. ** **	Side Effects: **		Clobbers argv of our main procedure so ps(1) will **		display the title. */
+comment|/* **  SETPROCTITLE -- set process title for ps ** **	Parameters: **		fmt -- a printf style format string.  If NULL, the first **			parameter is a literal proctitle previously **			returned by getproctitle. **		va_alist -- possible parameters to fmt. ** **	Returns: **		none. ** **	Side Effects: **		Clobbers argv of our main procedure so ps(1) will **		display the title. */
 end_comment
+
+begin_decl_stmt
+name|char
+name|ProcTitleBuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*VARARGS1*/
@@ -2828,12 +2837,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
 name|VA_LOCAL_DECL
 specifier|extern
 name|char
@@ -2846,9 +2849,41 @@ name|char
 modifier|*
 name|LastArgv
 decl_stmt|;
+name|VA_START
+argument_list|(
+name|fmt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fmt
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* restore old proctitle */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|ProcTitleBuf
+argument_list|,
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|p
 operator|=
-name|buf
+name|ProcTitleBuf
 expr_stmt|;
 comment|/* print sendmail: heading for grep */
 operator|(
@@ -2869,11 +2904,6 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* print the argument string */
-name|VA_START
-argument_list|(
-name|fmt
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2886,13 +2916,14 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+block|}
 name|VA_END
 expr_stmt|;
 name|i
 operator|=
 name|strlen
 argument_list|(
-name|buf
+name|ProcTitleBuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -2920,7 +2951,7 @@ index|]
 operator|-
 literal|2
 expr_stmt|;
-name|buf
+name|ProcTitleBuf
 index|[
 name|i
 index|]
@@ -2938,7 +2969,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|buf
+name|ProcTitleBuf
 argument_list|)
 expr_stmt|;
 name|p
