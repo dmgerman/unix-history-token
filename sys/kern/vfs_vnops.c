@@ -2668,17 +2668,13 @@ name|error
 operator|)
 return|;
 comment|/* 	 * Zero the spare stat fields 	 */
+name|bzero
+argument_list|(
 name|sb
-operator|->
-name|st_lspare
-operator|=
-literal|0
-expr_stmt|;
+argument_list|,
+sizeof|sizeof
 name|sb
-operator|->
-name|st_qspare
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy from vattr table 	 */
 if|if

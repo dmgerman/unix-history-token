@@ -300,17 +300,72 @@ name|u_int32_t
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
+name|int32_t
+name|st_lspare
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
 name|struct
 name|timespec
 name|st_createtimespec
 decl_stmt|;
 comment|/* time of file creation */
-name|int32_t
-name|st_lspare
+else|#
+directive|else
+name|time_t
+name|st_createtime
 decl_stmt|;
-name|int64_t
-name|st_qspare
+comment|/* time of file creation */
+name|long
+name|st_createtimensec
 decl_stmt|;
+comment|/* nsec of file creation */
+endif|#
+directive|endif
+comment|/* 	 * Explicitly pad st_createtimespec to 16 bytes so that the size of 	 * struct stat is backwards compatible.  We use bitfields instead 	 * of an array of chars so that this doesn't require a C99 compiler 	 * to compile if the size of the padding is 0.  We use 2 bitfields 	 * to cover up to 64 bits on 32-bit machines.  We assume that 	 * CHAR_BIT is 8... 	 */
+name|int
+label|:
+operator|(
+literal|8
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+literal|16
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timespec
+argument_list|)
+operator|)
+expr_stmt|;
+name|int
+label|:
+operator|(
+literal|8
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+literal|16
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timespec
+argument_list|)
+operator|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -353,9 +408,6 @@ name|__dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
 name|struct
 name|timespec
 name|st_atimespec
@@ -371,34 +423,6 @@ name|timespec
 name|st_ctimespec
 decl_stmt|;
 comment|/* time of last file status change */
-else|#
-directive|else
-name|time_t
-name|st_atime
-decl_stmt|;
-comment|/* time of last access */
-name|long
-name|st_atimensec
-decl_stmt|;
-comment|/* nsec of last access */
-name|time_t
-name|st_mtime
-decl_stmt|;
-comment|/* time of last data modification */
-name|long
-name|st_mtimensec
-decl_stmt|;
-comment|/* nsec of last data modification */
-name|time_t
-name|st_ctime
-decl_stmt|;
-comment|/* time of last file status change */
-name|long
-name|st_ctimensec
-decl_stmt|;
-comment|/* nsec of last file status change */
-endif|#
-directive|endif
 name|off_t
 name|st_size
 decl_stmt|;
@@ -424,9 +448,49 @@ name|timespec
 name|st_createtimespec
 decl_stmt|;
 comment|/* time of file creation */
-name|int64_t
-name|st_qspare
-decl_stmt|;
+comment|/* 	 * See above about the following padding. 	 */
+name|int
+label|:
+operator|(
+literal|8
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+literal|16
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timespec
+argument_list|)
+operator|)
+expr_stmt|;
+name|int
+label|:
+operator|(
+literal|8
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+literal|16
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timespec
+argument_list|)
+operator|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -467,6 +531,13 @@ define|#
 directive|define
 name|st_ctime
 value|st_ctimespec.tv_sec
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_createtime
+value|st_createtimespec.tv_sec
 end_define
 
 begin_endif
