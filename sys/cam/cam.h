@@ -347,7 +347,6 @@ comment|/* SIM has this command in it's queue */
 name|CAM_STATUS_MASK
 init|=
 literal|0x3F
-block|,
 comment|/* Mask bits for just the status # */
 block|}
 name|cam_status

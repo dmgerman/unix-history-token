@@ -340,7 +340,6 @@ comment|/* Disconnects are mandatory     */
 name|CAM_SEND_STATUS
 init|=
 literal|0x80000000
-block|,
 comment|/* Send status after data phase  */
 block|}
 name|ccb_flags
@@ -1589,7 +1588,6 @@ comment|/* Supports tag queue messages */
 name|PI_SOFT_RST
 init|=
 literal|0x01
-block|,
 comment|/* Supports soft reset alternative */
 block|}
 name|pi_inqflag
@@ -1628,7 +1626,6 @@ comment|/* Group 6 commands supported */
 name|PIT_GRP_7
 init|=
 literal|0x04
-block|,
 comment|/* Group 7 commands supported */
 block|}
 name|pi_tmflag
@@ -1657,7 +1654,6 @@ comment|/* Initiator role not supported. */
 name|PIM_NOBUSRESET
 init|=
 literal|0x10
-block|,
 comment|/* User has disabled initial BUS RESET */
 block|}
 name|pi_miscflag
@@ -2464,7 +2460,6 @@ name|EAD_LZ2V1
 block|,
 comment|/* Engine algorithm ID: LZ2 var.1 */
 name|EAD_LZ2V2
-block|,
 comment|/* Engine algorithm ID: LZ2 var.2 */
 block|}
 name|ei_algo
