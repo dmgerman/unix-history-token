@@ -805,7 +805,7 @@ literal|'\0'
 expr_stmt|;
 name|cp2
 operator|=
-name|getenv
+name|variable_get
 argument_list|(
 name|tmp
 argument_list|)
@@ -842,7 +842,7 @@ return|;
 block|}
 else|else
 return|return
-name|getenv
+name|variable_get
 argument_list|(
 name|tmp
 argument_list|)
