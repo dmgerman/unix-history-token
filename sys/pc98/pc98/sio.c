@@ -5295,6 +5295,27 @@ argument_list|,
 literal|"still open, forcing close\n"
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+name|linesw
+index|[
+name|com
+operator|->
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_close
+operator|)
+operator|(
+name|com
+operator|->
+name|tp
+operator|,
+literal|0
+operator|)
+expr_stmt|;
 name|com
 operator|->
 name|tp
@@ -5414,11 +5435,20 @@ block|,
 block|{
 literal|0x048011c1
 block|,
-literal|"ActionTec 56k FAX PCI Modem"
+literal|"Lucent kermit based PCI Modem"
 block|,
 literal|0x14
 block|}
 block|,
+block|{
+literal|0x0000151f
+block|,
+literal|"SmartLink 5634PCV SurfRider"
+block|,
+literal|0x10
+block|}
+block|,
+comment|/* { 0xXXXXXXXX, "Xircom Cardbus modem", 0x10 }, */
 block|{
 literal|0x00000000
 block|,
@@ -23122,6 +23152,24 @@ argument_list|(
 name|sio
 argument_list|,
 name|pci
+argument_list|,
+name|sio_pci_driver
+argument_list|,
+name|sio_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|sio
+argument_list|,
+name|cardbus
 argument_list|,
 name|sio_pci_driver
 argument_list|,
