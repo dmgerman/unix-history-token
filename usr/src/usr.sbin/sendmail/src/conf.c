@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.36	%G%"
+literal|"@(#)conf.c	3.37	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,32 @@ begin_comment
 comment|/* help file */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|QueueDir
+init|=
+literal|"/usr/spool/mqueue"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* queue of saved mail */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|XcriptFile
+init|=
+literal|"/tmp/mailxXXXXXX"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* template for transcript */
+end_comment
+
 begin_comment
 comment|/* **  Other configuration. */
 end_comment
@@ -416,6 +442,24 @@ end_decl_stmt
 
 begin_comment
 comment|/* ditto for gid */
+end_comment
+
+begin_decl_stmt
+name|time_t
+name|TimeOut
+init|=
+literal|3
+operator|*
+literal|24
+operator|*
+literal|60
+operator|*
+literal|60
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default timeout for queue files */
 end_comment
 
 begin_comment
@@ -1023,11 +1067,17 @@ modifier|*
 name|to
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|ING70
 specifier|register
 name|STAB
 modifier|*
 name|s
 decl_stmt|;
+endif|#
+directive|endif
+endif|ING70
 if|if
 condition|(
 name|to

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.31	%G%"
+literal|"@(#)parseaddr.c	3.32	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1940,6 +1940,9 @@ operator|*
 name|pp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -2211,10 +2214,6 @@ modifier|*
 name|a
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 specifier|static
 name|char
 name|buf

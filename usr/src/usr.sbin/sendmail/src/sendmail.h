@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.49	%G%"
+literal|"@(#)sendmail.h	3.50	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,24 @@ begin_endif
 endif|#
 directive|endif
 endif|_DEFINE
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|major
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|major
 end_endif
 
 begin_include
@@ -293,6 +311,10 @@ modifier|*
 name|q_alias
 decl_stmt|;
 comment|/* address this results from */
+name|time_t
+name|q_timeout
+decl_stmt|;
+comment|/* timeout for this address */
 block|}
 struct|;
 end_struct
@@ -347,6 +369,17 @@ end_define
 
 begin_comment
 comment|/* set from argv */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QQUEUEUP
+value|000020
+end_define
+
+begin_comment
+comment|/* queue for later transmission */
 end_comment
 
 begin_comment
@@ -774,6 +807,107 @@ end_define
 
 begin_comment
 comment|/* this field contains addresses */
+end_comment
+
+begin_comment
+comment|/* **  Work queue. */
+end_comment
+
+begin_struct
+struct|struct
+name|work
+block|{
+name|char
+modifier|*
+name|w_name
+decl_stmt|;
+comment|/* name of control file */
+name|short
+name|w_pri
+decl_stmt|;
+comment|/* priority of message, see below */
+name|long
+name|w_size
+decl_stmt|;
+comment|/* length of data file */
+name|struct
+name|work
+modifier|*
+name|w_next
+decl_stmt|;
+comment|/* next in queue */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|work
+name|WORK
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|EXTERN
+name|WORK
+modifier|*
+name|WorkQ
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* queue of things to be done */
+end_comment
+
+begin_comment
+comment|/* **  Message priorities. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_NORMAL
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_SECONDCL
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_THIRDCL
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_QUICK
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_PRIORITY
+value|40
+end_define
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MsgPriority
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* priority of this message */
 end_comment
 
 begin_comment
@@ -1325,12 +1459,34 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|HasXscrpt
+name|QueueUp
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set if we have a transcript */
+comment|/* queue this message for future xmission */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|QueueRun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* currently running something from the queue */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|TimeOut
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time until timeout */
 end_comment
 
 begin_decl_stmt
@@ -1470,6 +1626,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|time_t
+name|QueueIntvl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* intervals between running the queue */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|char
 modifier|*
 name|OrigFrom
@@ -1505,10 +1672,10 @@ comment|/* name of this host for SMTP messages */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
+modifier|*
 name|InFileName
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1517,15 +1684,75 @@ comment|/* input file name */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
+modifier|*
 name|Transcript
-index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* the transcript file name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|XcriptFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* template for Transcript */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|AliasFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of alias file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ConfFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of configuration file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|StatFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of statistics summary */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|QueueDir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of queue directory */
 end_comment
 
 begin_decl_stmt
@@ -1552,7 +1779,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|long
+name|time_t
 name|CurTime
 decl_stmt|;
 end_decl_stmt

@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	3.3.1.1	%G%"
+literal|"@(#)rmail.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +232,9 @@ operator|!=
 literal|0
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|sscanf
 argument_list|(
 name|lbuf
@@ -305,6 +308,9 @@ literal|0
 condition|)
 break|break;
 block|}
+operator|(
+name|void
+operator|)
 name|sscanf
 argument_list|(
 name|cp

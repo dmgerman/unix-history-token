@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.25	%G%"
+literal|"@(#)collect.c	3.26	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,17 +33,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* size of message in bytes */
-end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|TempFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the tempfile (after creation) */
 end_comment
 
 begin_macro
@@ -96,6 +85,18 @@ modifier|*
 name|mktemp
 parameter_list|()
 function_decl|;
+specifier|static
+name|char
+name|tempfname
+index|[
+literal|40
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|QueueDir
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -103,12 +104,26 @@ name|index
 parameter_list|()
 function_decl|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
+name|strcpy
+argument_list|(
+name|tempfname
+argument_list|,
+name|QueueDir
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|tempfname
+argument_list|,
+literal|"/dfaXXXXXX"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|mktemp
 argument_list|(
-name|InFileName
+name|tempfname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -118,7 +133,7 @@ name|close
 argument_list|(
 name|creat
 argument_list|(
-name|InFileName
+name|tempfname
 argument_list|,
 literal|0600
 argument_list|)
@@ -131,7 +146,7 @@ name|tf
 operator|=
 name|fopen
 argument_list|(
-name|InFileName
+name|tempfname
 argument_list|,
 literal|"w"
 argument_list|)
@@ -144,11 +159,15 @@ name|syserr
 argument_list|(
 literal|"Cannot create %s"
 argument_list|,
-name|InFileName
+name|tempfname
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|InFileName
+operator|=
+name|tempfname
+expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
@@ -267,6 +286,8 @@ name|buf
 argument_list|,
 name|stdin
 argument_list|)
+operator|!=
+name|NULL
 control|)
 block|{
 specifier|register
@@ -679,6 +700,27 @@ name|tf
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
+comment|/* message priority */
+name|p
+operator|=
+name|hvalue
+argument_list|(
+literal|"priority"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+name|MsgPriority
+operator|=
+name|priencode
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* from person */
 name|xfrom
 operator|=
@@ -1386,6 +1428,132 @@ endif|#
 directive|endif
 endif|NOTUNIX
 end_endif
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  PRIENCODE -- encode external priority names into internal values. ** **	Parameters: **		p -- priority in ascii. ** **	Returns: **		priority as a numeric level. ** **	Side Effects: **		none. */
+end_comment
+
+begin_struct
+struct|struct
+name|prio
+block|{
+name|char
+modifier|*
+name|pri_name
+decl_stmt|;
+comment|/* external name of priority */
+name|int
+name|pri_val
+decl_stmt|;
+comment|/* internal value for same */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|prio
+name|Prio
+index|[]
+init|=
+block|{
+literal|"normal"
+block|,
+name|PRI_NORMAL
+block|,
+literal|"quick"
+block|,
+name|PRI_QUICK
+block|,
+literal|"priority"
+block|,
+name|PRI_PRIORITY
+block|,
+literal|"first-class"
+block|,
+name|PRI_NORMAL
+block|,
+literal|"second-class"
+block|,
+name|PRI_SECONDCL
+block|,
+literal|"third-class"
+block|,
+name|PRI_THIRDCL
+block|,
+name|NULL
+block|,
+name|PRI_NORMAL
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|priencode
+argument_list|(
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|prio
+modifier|*
+name|pl
+decl_stmt|;
+for|for
+control|(
+name|pl
+operator|=
+name|Prio
+init|;
+name|pl
+operator|->
+name|pri_name
+operator|!=
+name|NULL
+condition|;
+name|pl
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+name|pl
+operator|->
+name|pri_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+return|return
+operator|(
+name|pl
+operator|->
+name|pri_val
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 

@@ -29,14 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.12	%G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|HasXscrpt
+literal|"@(#)err.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,8 +237,9 @@ name|ArpaMode
 operator|!=
 name|ARPA_NONE
 operator|&&
-operator|!
-name|HasXscrpt
+name|Transcript
+operator|==
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -482,8 +476,9 @@ name|ArpaMode
 operator|!=
 name|ARPA_NONE
 operator|&&
-operator|!
-name|HasXscrpt
+name|Transcript
+operator|==
+name|NULL
 condition|)
 block|{
 specifier|register
@@ -565,8 +560,9 @@ name|ArpaMode
 operator|!=
 name|ARPA_NONE
 operator|&&
-operator|!
-name|HasXscrpt
+name|Transcript
+operator|==
+name|NULL
 condition|)
 name|fprintf
 argument_list|(

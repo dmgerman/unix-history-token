@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"sendmail.h"
 end_include
 
 begin_include
@@ -17,19 +17,13 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
-end_include
-
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.27	%G%"
+literal|"@(#)recipient.c	3.28	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,6 +415,11 @@ modifier|*
 name|getctladdr
 parameter_list|()
 function_decl|;
+specifier|extern
+name|bool
+name|safefile
+parameter_list|()
+function_decl|;
 name|To
 operator|=
 name|a
@@ -476,7 +475,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	**  Do sickly crude mapping for program mailing, etc. 	*/
+comment|/* 	**  Finish setting up address structure. 	*/
+name|a
+operator|->
+name|q_timeout
+operator|=
+name|TimeOut
+expr_stmt|;
+comment|/* do sickly crude mapping for program mailing, etc. */
 if|if
 condition|(
 name|a
@@ -522,6 +528,9 @@ operator|&&
 name|Debug
 operator|==
 literal|0
+operator|&&
+operator|!
+name|QueueRun
 condition|)
 block|{
 name|usrerr
@@ -717,6 +726,9 @@ operator|&&
 name|Debug
 operator|==
 literal|0
+operator|&&
+operator|!
+name|QueueRun
 condition|)
 name|usrerr
 argument_list|(
@@ -890,6 +902,9 @@ operator|&&
 name|Debug
 operator|==
 literal|0
+operator|&&
+operator|!
+name|QueueRun
 condition|)
 block|{
 name|usrerr
@@ -1830,6 +1845,10 @@ name|p
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -11,20 +11,13 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	3.1	%G%"
+literal|"@(#)daemon.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  DAEMON.C -- routines to use when running as a daemon. */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|DaemonPipe
-decl_stmt|;
-end_decl_stmt
 
 begin_escape
 end_escape
@@ -45,11 +38,15 @@ argument_list|(
 literal|"Daemon mode not yet implemented"
 argument_list|)
 expr_stmt|;
+name|getrecipients
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_USAGE
 argument_list|)
 expr_stmt|;
+comment|/* initsys(); */
 block|}
 end_block
 

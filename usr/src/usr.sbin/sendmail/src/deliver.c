@@ -14,19 +14,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"sendmail.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
 end_include
 
 begin_ifdef
@@ -53,18 +47,18 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.49	%G%"
+literal|"@(#)deliver.c	3.50	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. ** **	Parameters: **		to -- head of the address list to deliver to. **		editfcn -- if non-NULL, we want to call this function **			to output the letter (instead of just out- **			putting it raw). ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
+comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. ** **	Parameters: **		firstto -- head of the address list to deliver to. **		editfcn -- if non-NULL, we want to call this function **			to output the letter (instead of just out- **			putting it raw). ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
 end_comment
 
 begin_macro
 name|deliver
 argument_list|(
-argument|to
+argument|firstto
 argument_list|,
 argument|editfcn
 argument_list|)
@@ -73,7 +67,7 @@ end_macro
 begin_decl_stmt
 name|ADDRESS
 modifier|*
-name|to
+name|firstto
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +208,16 @@ name|prescan
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|register
+name|ADDRESS
+modifier|*
+name|to
+init|=
+name|firstto
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|errno
@@ -1211,6 +1215,61 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* 	**  If we got a temporary failure, arrange to queue the 	**  addressees. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+name|i
+operator|==
+name|EX_TEMPFAIL
+condition|)
+block|{
+name|QueueUp
+operator|=
+name|TRUE
+expr_stmt|;
+for|for
+control|(
+name|to
+operator|=
+name|firstto
+init|;
+name|to
+operator|!=
+name|NULL
+condition|;
+name|to
+operator|=
+name|to
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+continue|continue;
+name|to
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+expr_stmt|;
+block|}
+block|}
+end_if
+
 begin_expr_stmt
 name|errno
 operator|=
@@ -2064,6 +2123,26 @@ name|statmsg
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|stat
+operator|==
+name|EX_TEMPFAIL
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"transmission deferred"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|Errors
@@ -2212,6 +2291,12 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
+if|if
+condition|(
+name|stat
+operator|!=
+name|EX_TEMPFAIL
+condition|)
 name|setstat
 argument_list|(
 name|stat
@@ -2743,6 +2828,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|fp
@@ -3283,6 +3371,9 @@ name|chmod
 argument_list|(
 name|filename
 argument_list|,
+operator|(
+name|int
+operator|)
 name|stb
 operator|.
 name|st_mode

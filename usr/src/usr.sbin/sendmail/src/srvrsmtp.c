@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.5	%G%"
+literal|"@(#)srvrsmtp.c	3.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -555,6 +555,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -700,6 +704,10 @@ name|p
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1209,6 +1217,9 @@ argument_list|,
 literal|"End of HELP info"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|hf

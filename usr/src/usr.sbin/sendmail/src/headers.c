@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.9	%G%"
+literal|"@(#)headers.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,14 @@ name|hdrinfo
 modifier|*
 name|hi
 decl_stmt|;
+name|u_long
+name|mopts
+decl_stmt|;
+specifier|extern
+name|u_long
+name|mfencode
+parameter_list|()
+function_decl|;
 comment|/* strip off trailing newline */
 name|p
 operator|=
@@ -103,16 +111,85 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* strip off options */
+name|mopts
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|=
+name|line
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'?'
+condition|)
+block|{
+comment|/* have some */
+specifier|register
+name|char
+modifier|*
+name|q
+init|=
+name|index
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|,
+operator|*
+name|p
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|q
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|q
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|mopts
+operator|=
+name|mfencode
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|q
+expr_stmt|;
+block|}
+else|else
+name|syserr
+argument_list|(
+literal|"chompheader: syntax error, line \"%s\""
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* find canonical name */
 name|fname
 operator|=
-name|line
+name|p
 expr_stmt|;
 name|p
 operator|=
 name|index
 argument_list|(
-name|line
+name|p
 argument_list|,
 literal|':'
 argument_list|)
@@ -359,6 +436,8 @@ name|h
 operator|->
 name|h_mflags
 operator|=
+name|mopts
+operator||
 name|hi
 operator|->
 name|hi_mflags
@@ -374,7 +453,13 @@ name|h_flags
 operator||=
 name|H_DEFAULT
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|mopts
+operator|==
+literal|0
+condition|)
 name|h
 operator|->
 name|h_flags
@@ -430,6 +515,10 @@ name|h_value
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
