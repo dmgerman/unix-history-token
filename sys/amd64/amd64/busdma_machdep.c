@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: busdma_machdep.c,v 1.11 1998/10/13 08:24:33 dg Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: busdma_machdep.c,v 1.12 1998/12/14 05:35:56 dillon Exp $  */
 end_comment
 
 begin_include
@@ -562,6 +562,12 @@ operator|->
 name|parent
 operator|=
 name|parent
+expr_stmt|;
+name|newtag
+operator|->
+name|alignment
+operator|=
+name|alignment
 expr_stmt|;
 name|newtag
 operator|->
@@ -1381,6 +1387,14 @@ name|dmat
 operator|->
 name|lowaddr
 argument_list|,
+name|dmat
+operator|->
+name|alignment
+condition|?
+name|dmat
+operator|->
+name|alignment
+else|:
 literal|1ul
 argument_list|,
 name|dmat
@@ -1547,6 +1561,9 @@ name|seg
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|vm_offset_t
+name|nextpaddr
 decl_stmt|;
 if|if
 condition|(
@@ -1756,13 +1773,10 @@ name|ds_len
 operator|=
 literal|0
 expr_stmt|;
-block|{
-comment|/* 		 * note: nextpaddr not used on first loop 		 */
-name|vm_offset_t
 name|nextpaddr
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 do|do
 block|{
 name|bus_size_t
@@ -1915,7 +1929,6 @@ operator|>
 literal|0
 condition|)
 do|;
-block|}
 if|if
 condition|(
 name|buflen
