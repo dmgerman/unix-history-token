@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/bin/ls/print.c,v 1.3 1993/03/23 00:26:10 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/bin/ls/print.c,v 1.2 1993/06/29 02:59:33 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1152,6 +1152,22 @@ operator|)
 name|putchar
 argument_list|(
 literal|'='
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|S_IFIFO
+case|:
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'|'
 argument_list|)
 expr_stmt|;
 return|return
