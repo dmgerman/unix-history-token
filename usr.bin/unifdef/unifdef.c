@@ -57,7 +57,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.73 2002/05/21 17:33:41 fanf Exp $"
+literal|"$dotat: things/unifdef.c,v 1.75 2002/09/24 19:16:29 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -662,6 +662,16 @@ begin_comment
 comment|/* start of current coment or quote */
 end_comment
 
+begin_decl_stmt
+name|bool
+name|keepthis
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ignore this #if's value 'cause it's const */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -724,6 +734,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* -d option in effect: debugging reports */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|killconsts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -k option in effect: eval constant #ifs */
 end_comment
 
 begin_decl_stmt
@@ -1095,7 +1115,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:D:U:I:cdlst"
+literal|"i:D:U:I:cdklst"
 argument_list|)
 operator|)
 operator|!=
@@ -1192,6 +1212,15 @@ literal|'c'
 case|:
 comment|/* treat -D as -U and vice versa */
 name|complement
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+comment|/* process constant #ifs */
+name|killconsts
 operator|=
 name|true
 expr_stmt|;
@@ -1386,7 +1415,7 @@ name|stderr
 argument_list|,
 literal|"usage: %s"
 argument_list|,
-literal|"unifdef [-cdlst] [[-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym]] ... [file]\n"
+literal|"unifdef [-cdklst] [[-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym]] ... [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2347,6 +2376,8 @@ operator|*
 name|cp
 operator|!=
 literal|'\n'
+operator|||
+name|keepthis
 condition|)
 name|retval
 operator|=
@@ -2388,6 +2419,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\n'
+operator|||
+name|keepthis
+condition|)
+name|retval
+operator|=
+name|LT_ELIF
+expr_stmt|;
+if|if
+condition|(
 name|retval
 operator|==
 name|LT_IF
@@ -2415,17 +2459,6 @@ condition|)
 name|retval
 operator|=
 name|LT_ELFALSE
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|cp
-operator|!=
-literal|'\n'
-condition|)
-name|retval
-operator|=
-name|LT_ELIF
 expr_stmt|;
 operator|*
 name|cursym
@@ -2648,7 +2681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function for evaluating the innermost parts of expressions,  * viz. !expr (expr) defined(symbol) symbol number  */
+comment|/*  * Function for evaluating the innermost parts of expressions,  * viz. !expr (expr) defined(symbol) symbol number  * We reset the keepthis flag when we find a non-constant subexpression.  */
 end_comment
 
 begin_function
@@ -2952,6 +2985,10 @@ condition|)
 return|return
 name|LT_IF
 return|;
+name|keepthis
+operator|=
+name|false
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3048,6 +3085,10 @@ name|skipsym
 argument_list|(
 name|cp
 argument_list|)
+expr_stmt|;
+name|keepthis
+operator|=
+name|false
 expr_stmt|;
 block|}
 else|else
@@ -3301,7 +3342,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Evaluate the expression on a #if or #elif line. If we can work out  * the result we return LT_TRUE or LT_FALSE accordingly, otherwise we  * return just a generic LT_IF.  */
+comment|/*  * Evaluate the expression on a #if or #elif line. If we can work out  * the result we return LT_TRUE or LT_FALSE accordingly, otherwise we  * return just a generic LT_IF. If the expression is constant and  * we are not processing constant #ifs then the keepthis flag is true.  */
 end_comment
 
 begin_function
@@ -3325,6 +3366,14 @@ argument_list|,
 operator|*
 name|cpp
 argument_list|)
+expr_stmt|;
+name|keepthis
+operator|=
+name|killconsts
+condition|?
+name|false
+else|:
+name|true
 expr_stmt|;
 return|return
 name|eval_table
