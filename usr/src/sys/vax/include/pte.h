@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pte.h	7.3.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)pte.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -241,17 +241,44 @@ parameter_list|)
 value|((pte)->pg_m)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
+begin_comment
+comment|/*  * Kernel virtual address to page table entry and to physical address.  */
+end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_define
+define|#
+directive|define
+name|kvtopte
+parameter_list|(
+name|va
+parameter_list|)
+value|(&Sysmap[((unsigned)(va)&~ KERNBASE)>> PGSHIFT])
+end_define
+
+begin_define
+define|#
+directive|define
+name|kvtophys
+parameter_list|(
+name|x
+parameter_list|)
+value|((kvtopte(x)->pg_pfnum<< PGSHIFT) | ((int)(x)& PGOFSET))
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
 
 begin_comment
 comment|/* utilities defined in locore.s */
@@ -380,6 +407,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -392,30 +425,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VAX630
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|Clockmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|Ka630map
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -426,10 +435,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* defined(KERNEL)&& !defined(LOCORE) */
+end_comment
 
 end_unit
 
