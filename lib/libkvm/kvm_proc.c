@@ -3360,10 +3360,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|cp
-operator|=
-name|buf
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|procfile
@@ -3417,6 +3413,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|cp
+operator|=
+name|buf
+expr_stmt|;
 while|while
 condition|(
 name|len
@@ -3424,6 +3424,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -3481,7 +3485,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|_kvm_err
+name|_kvm_syserr
 argument_list|(
 name|kd
 argument_list|,
@@ -3490,6 +3494,28 @@ operator|->
 name|program
 argument_list|,
 literal|"error reading %s"
+argument_list|,
+name|procfile
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|amount
+operator|==
+literal|0
+condition|)
+block|{
+name|_kvm_err
+argument_list|(
+name|kd
+argument_list|,
+name|kd
+operator|->
+name|program
+argument_list|,
+literal|"EOF reading %s"
 argument_list|,
 name|procfile
 argument_list|)
@@ -3515,6 +3541,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 call|(
 name|ssize_t
 call|)
@@ -3523,6 +3550,7 @@ name|cp
 operator|-
 name|buf
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
