@@ -337,13 +337,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|TARG_CDEV_MAJOR
-value|65
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -385,11 +378,6 @@ operator|.
 name|d_name
 operator|=
 literal|"targ"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|TARG_CDEV_MAJOR
 block|,
 operator|.
 name|d_kqfilter

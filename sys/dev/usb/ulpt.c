@@ -589,13 +589,6 @@ name|ulptioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|ULPT_CDEV_MAJOR
-value|113
-end_define
-
 begin_decl_stmt
 name|Static
 name|struct
@@ -627,11 +620,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ulpt"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|ULPT_CDEV_MAJOR
 block|,
 if|#
 directive|if

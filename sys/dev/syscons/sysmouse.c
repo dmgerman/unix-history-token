@@ -80,17 +80,6 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|12
-end_define
-
-begin_comment
-comment|/* major number, shared with syscons */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SC_MOUSE
 value|128
 end_define
@@ -156,11 +145,6 @@ operator|.
 name|d_name
 operator|=
 literal|"sysmouse"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags
@@ -1211,7 +1195,7 @@ argument|sysmouse
 argument_list|,
 argument|SI_SUB_DRIVERS
 argument_list|,
-argument|SI_ORDER_MIDDLE + CDEV_MAJOR
+argument|SI_ORDER_MIDDLE
 argument_list|,
 argument|sm_attach_mouse
 argument_list|,

@@ -590,13 +590,6 @@ name|uhidpoll
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|UHID_CDEV_MAJOR
-value|122
-end_define
-
 begin_decl_stmt
 name|Static
 name|struct
@@ -638,11 +631,6 @@ operator|.
 name|d_name
 operator|=
 literal|"uhid"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|UHID_CDEV_MAJOR
 block|,
 if|#
 directive|if

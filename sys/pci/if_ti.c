@@ -492,13 +492,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|TI_CDEV_MAJOR
-value|153
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -546,11 +539,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ti"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|TI_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

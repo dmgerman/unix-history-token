@@ -1458,13 +1458,6 @@ name|uscannerpoll
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|USCANNER_CDEV_MAJOR
-value|156
-end_define
-
 begin_decl_stmt
 name|Static
 name|struct
@@ -1501,11 +1494,6 @@ operator|.
 name|d_name
 operator|=
 literal|"uscanner"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|USCANNER_CDEV_MAJOR
 block|,
 if|#
 directive|if

@@ -201,13 +201,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|148
-end_define
-
 begin_comment
 comment|/* agp_drv.c */
 end_comment
@@ -271,11 +264,6 @@ operator|.
 name|d_name
 operator|=
 literal|"agp"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

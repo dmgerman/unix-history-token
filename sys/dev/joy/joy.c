@@ -151,13 +151,6 @@ parameter_list|)
 value|(struct joy_softc *) \         devclass_get_softc(joy_devclass,(unit))
 end_define
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|51
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -217,11 +210,6 @@ operator|.
 name|d_name
 operator|=
 literal|"joy"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -1217,13 +1217,6 @@ name|ciss_ioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CISS_CDEV_MAJOR
-value|166
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1250,11 +1243,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ciss"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CISS_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

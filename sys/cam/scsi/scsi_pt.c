@@ -461,13 +461,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|PT_CDEV_MAJOR
-value|61
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -509,11 +502,6 @@ operator|.
 name|d_name
 operator|=
 literal|"pt"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|PT_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -1109,13 +1109,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|MLY_CDEV_MAJOR
-value|158
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1142,11 +1135,6 @@ operator|.
 name|d_name
 operator|=
 literal|"mly"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|MLY_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -501,13 +501,6 @@ name|urioioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|URIO_CDEV_MAJOR
-value|143
-end_define
-
 begin_decl_stmt
 name|Static
 name|struct
@@ -544,11 +537,6 @@ operator|.
 name|d_name
 operator|=
 literal|"urio"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|URIO_CDEV_MAJOR
 block|,
 if|#
 directive|if

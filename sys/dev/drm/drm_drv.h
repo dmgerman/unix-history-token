@@ -1444,10 +1444,6 @@ function_decl|.d_name
 init|=
 name|DRIVER_NAME
 operator|,
-function_decl|.d_maj
-init|=
-name|CDEV_MAJOR
-operator|,
 function_decl|.d_flags
 init|=
 name|D_TRACKCLOSE

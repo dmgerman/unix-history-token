@@ -138,13 +138,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|127
-end_define
-
-begin_define
-define|#
-directive|define
 name|FWNODE_INVAL
 value|0xffff
 end_define
@@ -264,11 +257,6 @@ operator|.
 name|d_name
 operator|=
 literal|"fw"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags

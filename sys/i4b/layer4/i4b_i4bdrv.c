@@ -232,13 +232,6 @@ name|i4bpoll
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|60
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -275,11 +268,6 @@ operator|.
 name|d_name
 operator|=
 literal|"i4b"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

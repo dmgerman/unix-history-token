@@ -225,13 +225,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|184
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -299,11 +292,6 @@ operator|.
 name|d_name
 operator|=
 literal|"dcons"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 else|#
 directive|else

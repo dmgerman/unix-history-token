@@ -247,13 +247,6 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|USB_CDEV_MAJOR
-value|108
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -14,20 +14,6 @@ name|TWE_DRIVER_VERSION_STRING
 value|"1.50.00.000"
 end_define
 
-begin_define
-define|#
-directive|define
-name|TWE_CDEV_MAJOR
-value|146
-end_define
-
-begin_define
-define|#
-directive|define
-name|TWED_CDEV_MAJOR
-value|147
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -130,13 +130,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|162
-end_define
-
-begin_define
-define|#
-directive|define
 name|CTRL_DEV
 value|0x800000
 end_define
@@ -769,11 +762,6 @@ operator|.
 name|d_name
 operator|=
 name|driver_name
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags

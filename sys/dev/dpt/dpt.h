@@ -29,13 +29,6 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DPT_CDEV_MAJOR
-value|88
-end_define
-
 begin_undef
 undef|#
 directive|undef

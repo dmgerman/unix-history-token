@@ -593,13 +593,6 @@ name|ums_poll
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|UMS_CDEV_MAJOR
-value|111
-end_define
-
 begin_decl_stmt
 name|Static
 name|struct
@@ -636,11 +629,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ums"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|UMS_CDEV_MAJOR
 block|,
 if|#
 directive|if

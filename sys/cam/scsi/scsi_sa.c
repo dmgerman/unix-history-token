@@ -1852,13 +1852,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|SA_CDEV_MAJOR
-value|14
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1900,11 +1893,6 @@ operator|.
 name|d_name
 operator|=
 literal|"sa"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|SA_CDEV_MAJOR
 block|,
 operator|.
 name|d_flags

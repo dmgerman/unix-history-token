@@ -598,13 +598,6 @@ name|ugenpoll
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|UGEN_CDEV_MAJOR
-value|114
-end_define
-
 begin_decl_stmt
 name|Static
 name|struct
@@ -646,11 +639,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ugen"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|UGEN_CDEV_MAJOR
 block|,
 if|#
 directive|if

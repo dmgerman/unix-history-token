@@ -230,11 +230,6 @@ operator|.
 name|d_name
 operator|=
 literal|"spic"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

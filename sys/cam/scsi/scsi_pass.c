@@ -216,13 +216,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|PASS_CDEV_MAJOR
-value|31
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -423,11 +416,6 @@ operator|.
 name|d_name
 operator|=
 literal|"pass"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|PASS_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -3452,13 +3452,6 @@ begin_comment
 comment|/* PC98 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|9
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -3500,11 +3493,6 @@ operator|.
 name|d_name
 operator|=
 literal|"fd"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags

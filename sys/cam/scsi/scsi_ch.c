@@ -401,13 +401,6 @@ parameter_list|)
 value|(minor((x)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|CH_CDEV_MAJOR
-value|17
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -705,11 +698,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ch"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CH_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -595,11 +595,6 @@ name|d_name
 operator|=
 literal|"usb"
 block|,
-operator|.
-name|d_maj
-operator|=
-name|USB_CDEV_MAJOR
-block|,
 if|#
 directive|if
 name|__FreeBSD_version

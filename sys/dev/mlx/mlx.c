@@ -115,13 +115,6 @@ directive|include
 file|<dev/mlx/mlxreg.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MLX_CDEV_MAJOR
-value|130
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -148,11 +141,6 @@ operator|.
 name|d_name
 operator|=
 literal|"mlx"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|MLX_CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

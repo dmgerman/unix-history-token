@@ -326,13 +326,6 @@ name|ucomioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|UCOM_CDEV_MAJOR
-value|138
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -374,11 +367,6 @@ operator|.
 name|d_name
 operator|=
 literal|"ucom"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|UCOM_CDEV_MAJOR
 block|,
 operator|.
 name|d_flags

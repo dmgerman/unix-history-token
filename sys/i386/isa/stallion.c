@@ -2177,13 +2177,6 @@ begin_comment
 comment|/*  *	FreeBSD-2.2+ kernel linkage.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|72
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2225,11 +2218,6 @@ operator|.
 name|d_name
 operator|=
 literal|"stl"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|,
 operator|.
 name|d_flags

@@ -46,13 +46,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|107
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCI_DEVICE_ALLIANCE_AT3D
 value|0x643d1142
 end_define

@@ -469,13 +469,6 @@ name|DRM_DEV_GID
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|145
-end_define
-
 begin_if
 if|#
 directive|if
