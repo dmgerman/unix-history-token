@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.63
+literal|3.64
 operator|%
 name|G
 operator|%
@@ -542,7 +542,7 @@ name|B
 block|,
 name|QST
 operator||
-name|MB
+name|B
 block|,
 name|SPC
 operator||
@@ -561,7 +561,7 @@ name|ATM
 block|,
 name|QST
 operator||
-name|MB
+name|B
 block|,
 name|SPC
 operator||
@@ -577,8 +577,6 @@ block|,
 name|QST
 block|,
 name|OPR
-operator||
-name|MB
 block|,
 name|QST
 block|,
