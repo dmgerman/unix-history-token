@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signalvar.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/signalvar.h>
 end_include
 
 begin_include
