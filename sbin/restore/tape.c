@@ -1608,7 +1608,7 @@ literal|" file(s) are on you should start\n"
 argument_list|,
 literal|"with the last volume and work"
 argument_list|,
-literal|" towards towards the first.\n"
+literal|" towards the first.\n"
 argument_list|)
 expr_stmt|;
 block|}
