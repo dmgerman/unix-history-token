@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|PIO_MODE
-value|1
+value|0x100
 end_define
 
 begin_comment

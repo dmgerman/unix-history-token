@@ -236,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|KME_KXLC004_01
-value|0x1
+value|0x100
 end_define
 
 begin_define
