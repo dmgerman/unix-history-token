@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.8 (Berkeley) %G%"
+literal|"@(#)init.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2284,6 +2284,17 @@ condition|)
 name|_exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|password
+operator|=
+name|crypt
+argument_list|(
+name|password
+argument_list|,
+name|pp
+operator|->
+name|pw_passwd
 argument_list|)
 expr_stmt|;
 if|if
@@ -4626,6 +4637,10 @@ name|session_index
 init|=
 literal|0
 decl_stmt|;
+specifier|register
+name|int
+name|devlen
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4637,6 +4652,13 @@ name|state_func_t
 operator|)
 name|multi_user
 return|;
+name|devlen
+operator|=
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|typ
@@ -4674,9 +4696,17 @@ name|typ
 operator|->
 name|ty_name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|sp
 operator|->
 name|se_device
+operator|+
+name|devlen
+operator|)
 argument_list|)
 operator|==
 literal|0
