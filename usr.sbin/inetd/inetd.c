@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.37 1998/07/23 20:05:02 ache Exp $"
+literal|"$Id: inetd.c,v 1.38 1998/07/24 08:28:33 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9078,11 +9078,11 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
-literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s class=%s builtin=%x server=%s\n"
+literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s class=%s builtin=%p server=%s\n"
 argument_list|,
 else|#
 directive|else
-literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s builtin=%x server=%s\n"
+literal|"%s: %s proto=%s accept=%d max=%d user=%s group=%s builtin=%p server=%s\n"
 argument_list|,
 endif|#
 directive|endif
@@ -9121,9 +9121,6 @@ name|se_class
 argument_list|,
 endif|#
 directive|endif
-operator|(
-name|int
-operator|)
 name|sep
 operator|->
 name|se_bi
