@@ -4,7 +4,7 @@ comment|/* hash.h - for hash.c    Copyright (C) 1987, 1992 Free Software Foundat
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

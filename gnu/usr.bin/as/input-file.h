@@ -8,7 +8,7 @@ comment|/*"input_file.c":Operating-system dependant functions to read source fil
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

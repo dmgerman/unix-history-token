@@ -4,7 +4,7 @@ comment|/* flonum.h - Floating point package     Copyright (C) 1987, 1990, 1991,
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

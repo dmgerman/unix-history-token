@@ -46,7 +46,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 end_unit

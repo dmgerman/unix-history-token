@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|revId
 argument_list|,
-literal|"$Id$"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

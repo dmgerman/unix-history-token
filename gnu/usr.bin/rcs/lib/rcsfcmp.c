@@ -34,7 +34,7 @@ name|libId
 argument_list|(
 argument|fcmpId
 argument_list|,
-literal|"$Id$"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

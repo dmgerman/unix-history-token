@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tlocnm_rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

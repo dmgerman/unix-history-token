@@ -4,7 +4,7 @@ comment|/* bignum.h-arbitrary precision integers    Copyright (C) 1987, 1992 Fre
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

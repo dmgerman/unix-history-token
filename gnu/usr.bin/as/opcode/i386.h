@@ -4,7 +4,7 @@ comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright (C) 1989, 1991
 end_comment
 
 begin_comment
-comment|/* $Id: i386.h,v 1.8 1997/07/15 07:56:53 dyson Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_decl_stmt

@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.16 1998/06/30 20:48:39 bde Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/* This file is output-file.h     Copyright (C) 1987-1992 Free Software 
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifdef

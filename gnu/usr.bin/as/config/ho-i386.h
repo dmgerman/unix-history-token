@@ -4,7 +4,7 @@ comment|/* ho-i386.h  i386 specific header file.    Copyright (C) 1987, 1991, 19
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_define

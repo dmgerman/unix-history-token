@@ -121,7 +121,7 @@ specifier|const
 name|partimeId
 index|[]
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
