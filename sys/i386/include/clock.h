@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.29 1997/12/28 13:36:06 phk Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.30 1997/12/28 17:33:08 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -410,7 +410,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When we update `time', on we also update `tsc_bias'  * atomically.  `tsc_bias' is the best available approximation to  * the value of the TSC (mod 2^32) at the time of the i8254  * counter transition that caused the clock interrupt that caused the  * update.  clock_latency() gives the time between the transition and  * the update to within a few usec provided another such transition  * hasn't occurred.  We don't bother checking for counter overflow as  * in microtime(), since if it occurs then we're close to losing clock  * interrupts.  */
+comment|/*  * When we update `time', we also update `tsc_bias' atomically (if we  * are using the TSC).  `tsc_bias' is the best available approximation  * to the value of the TSC (mod 2^32) at the time of the i8254  * counter transition that caused the clock interrupt that caused the  * update.  clock_latency() gives the time between the transition and  * the update to within a few usec provided another such transition  * hasn't occurred.  We don't bother checking for counter overflow as  * in microtime(), since if it occurs then we're close to losing clock  * interrupts.  */
 end_comment
 
 begin_function
