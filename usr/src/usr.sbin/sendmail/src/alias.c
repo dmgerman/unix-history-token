@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -1378,6 +1378,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|p
 operator|=
 operator|&
@@ -1387,8 +1388,16 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
+operator|-
+literal|1
 index|]
 expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 comment|/* see if there should be a continuation line */
 name|c
 operator|=
