@@ -1915,6 +1915,8 @@ name|error
 operator|=
 name|dsioctl
 argument_list|(
+literal|"vn"
+argument_list|,
 name|dev
 argument_list|,
 name|cmd
@@ -1923,6 +1925,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
+operator|&
 name|vn
 operator|->
 name|sc_slices
