@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.3";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.4";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -34,6 +34,24 @@ argument_list|()
 decl_stmt|,
 name|x_tab
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|rsfe
+index|[]
+init|=
+literal|"read sfe"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|wsfe
+index|[]
+init|=
+literal|"write sfe"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,12 +103,21 @@ condition|(
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|rsfe
+argument_list|)
 name|getn
 operator|=
 name|x_getc
@@ -128,7 +155,7 @@ argument|errflag
 argument_list|,
 argument|F_ERFMT
 argument_list|,
-literal|"read sfe"
+argument|rsfe
 argument_list|)
 name|fmt_bg
 argument_list|()
@@ -418,7 +445,9 @@ name|errflag
 argument_list|,
 name|F_ERUNIT
 argument_list|,
-literal|"sfe"
+name|rsfe
+operator|+
+literal|5
 argument_list|)
 expr_stmt|;
 name|curunit
@@ -462,7 +491,8 @@ argument|errflag
 argument_list|,
 argument|n
 argument_list|,
-literal|"sfe"
+argument|rsfe+
+literal|5
 argument_list|)
 name|cf
 operator|=
@@ -493,7 +523,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNOFIO
 argument_list|,
-literal|"sfe"
+argument|rsfe+
+literal|5
 argument_list|)
 if|if
 condition|(
@@ -507,7 +538,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNOSIO
 argument_list|,
-literal|"sfe"
+argument|rsfe+
+literal|5
 argument_list|)
 name|cursor
 operator|=
@@ -631,12 +663,21 @@ operator|!
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowwriting
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|wsfe
+argument_list|)
 name|curunit
 operator|->
 name|uend
@@ -697,7 +738,7 @@ argument|errflag
 argument_list|,
 argument|F_ERFMT
 argument_list|,
-literal|"write sfe"
+argument|wsfe
 argument_list|)
 name|fmt_bg
 argument_list|()

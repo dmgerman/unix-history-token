@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lwrite[] = "@(#)lwrite.c	1.2";  *  * list directed write  */
+comment|/* char id_lwrite[] = "@(#)lwrite.c	1.3";  *  * list directed write  */
 end_comment
 
 begin_include
@@ -22,6 +22,15 @@ argument_list|()
 decl_stmt|,
 name|t_putc
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|lwrt
+index|[]
+init|=
+literal|"list write"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,12 +101,21 @@ operator|!
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowwriting
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|lwrt
+argument_list|)
 return|return
 operator|(
 name|OK

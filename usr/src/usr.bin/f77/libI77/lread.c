@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.2";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.3";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -129,8 +129,8 @@ end_define
 
 begin_decl_stmt
 name|char
-modifier|*
 name|lrd
+index|[]
 init|=
 literal|"list read"
 decl_stmt|;
@@ -539,12 +539,21 @@ condition|(
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|lrd
+argument_list|)
 return|return
 operator|(
 name|OK

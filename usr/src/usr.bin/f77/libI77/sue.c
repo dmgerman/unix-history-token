@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sue[] = "@(#)sue.c	1.2";  *  * sequential unformatted external read/write routines  */
+comment|/* char id_sue[] = "@(#)sue.c	1.3";  *  * sequential unformatted external read/write routines  */
 end_comment
 
 begin_include
@@ -24,8 +24,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|rsue
+index|[]
 init|=
 literal|"read sue"
 decl_stmt|;
@@ -33,10 +33,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
-name|sue
+name|wsue
+index|[]
 init|=
-literal|"sue"
+literal|"write sue"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,12 +84,21 @@ condition|(
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|rsue
+argument_list|)
 name|recpos
 operator|=
 literal|0
@@ -202,12 +211,21 @@ operator|!
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowwriting
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|wsue
+argument_list|)
 name|reclen
 operator|=
 literal|0
@@ -318,7 +336,8 @@ argument|errflag
 argument_list|,
 argument|F_ERUNIT
 argument_list|,
-argument|sue
+argument|rsue+
+literal|5
 argument_list|)
 name|curunit
 operator|=
@@ -359,7 +378,8 @@ argument|errflag
 argument_list|,
 argument|n
 argument_list|,
-argument|sue
+argument|rsue+
+literal|5
 argument_list|)
 name|cf
 operator|=
@@ -389,7 +409,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNOUIO
 argument_list|,
-argument|sue
+argument|rsue+
+literal|5
 argument_list|)
 if|if
 condition|(
@@ -403,7 +424,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNOSIO
 argument_list|,
-argument|sue
+argument|rsue+
+literal|5
 argument_list|)
 if|if
 condition|(
@@ -418,7 +440,8 @@ argument|errflag
 argument_list|,
 argument|F_ERSEEK
 argument_list|,
-argument|sue
+argument|rsue+
+literal|5
 argument_list|)
 return|return
 operator|(
