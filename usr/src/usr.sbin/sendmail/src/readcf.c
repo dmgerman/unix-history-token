@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.79 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.80 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5285,6 +5285,16 @@ name|O_MAXMSGSIZE
 block|,
 name|FALSE
 block|,
+define|#
+directive|define
+name|O_COLONOKINADDR
+value|0x8b
+literal|"ColonOkInAddr"
+block|,
+name|O_COLONOKINADDR
+block|,
+name|TRUE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -7639,6 +7649,18 @@ comment|/* maximum message size */
 name|MaxMessageSize
 operator|=
 name|atol
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_COLONOKINADDR
+case|:
+comment|/* old style handling of colon addresses */
+name|ColonOkInAddr
+operator|=
+name|atobool
 argument_list|(
 name|p
 argument_list|)
