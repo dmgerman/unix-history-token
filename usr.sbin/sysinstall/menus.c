@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.67 1996/06/13 17:07:39 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.68 1996/06/16 21:57:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -580,6 +580,785 @@ begin_comment
 comment|/* All the system menus go here.  *  * Hardcoded things like version number strings will disappear from  * these menus just as soon as I add the code for doing inline variable  * expansion.  */
 end_comment
 
+begin_decl_stmt
+name|DMenu
+name|MenuIndex
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+block|,
+literal|"Glossary of functions"
+block|,
+literal|"This menu contains an alphabetized index of all top level\n"
+literal|"functions in this program (sysinstall).  Please select the\n"
+literal|"function you wish to invoke below and press [ENTER] or\n"
+literal|"Cancel to leave this menu."
+block|,
+literal|"Use PageUp or PageDown to move through this menu faster!"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"Add User"
+block|,
+literal|"Add users to the system."
+block|,
+name|NULL
+block|,
+name|dmenuSystemCommand
+block|,
+name|NULL
+block|,
+literal|"adduser -config_create ; adduser -s"
+block|}
+block|,
+block|{
+literal|"Anon FTP"
+block|,
+literal|"Configure anonymous FTP logins."
+block|,
+name|dmenuVarCheck
+block|,
+name|configAnonFTP
+block|,
+name|NULL
+block|,
+literal|"anon_ftp"
+block|}
+block|,
+block|{
+literal|"Console settings"
+block|,
+literal|"Customize system console behavior."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSyscons
+block|}
+block|,
+block|{
+literal|"Configure"
+block|,
+literal|"The system configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuConfigure
+block|}
+block|,
+block|{
+literal|"Device, Mouse"
+block|,
+literal|"The mouse configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMouse
+block|}
+block|,
+block|{
+literal|"Dists, All"
+block|,
+literal|"Root of the distribution tree."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuDistributions
+block|}
+block|,
+block|{
+literal|"Dists, Basic"
+block|,
+literal|"Basic FreeBSD distribution menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSubDistributions
+block|}
+block|,
+block|{
+literal|"Dists, DES"
+block|,
+literal|"DES distribution menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuDESDistributions
+block|}
+block|,
+block|{
+literal|"Dists, Developer"
+block|,
+literal|"Select developer's distribution."
+block|,
+name|checkDistDeveloper
+block|,
+name|distSetDeveloper
+block|}
+block|,
+block|{
+literal|"Dists, Src"
+block|,
+literal|"Src distribution menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSrcDistributions
+block|}
+block|,
+block|{
+literal|"Dists, X Developer"
+block|,
+literal|"Select X developer's distribution."
+block|,
+name|checkDistXDeveloper
+block|,
+name|distSetXDeveloper
+block|}
+block|,
+block|{
+literal|"Dists, Kern Developer"
+block|,
+literal|"Select kernel developer's distribution."
+block|,
+name|checkDistKernDeveloper
+block|,
+name|distSetKernDeveloper
+block|}
+block|,
+block|{
+literal|"Dists, User"
+block|,
+literal|"Select average user distribution."
+block|,
+name|checkDistUser
+block|,
+name|distSetUser
+block|}
+block|,
+block|{
+literal|"Dists, X User"
+block|,
+literal|"Select average X user distribution."
+block|,
+name|checkDistXUser
+block|,
+name|distSetXUser
+block|}
+block|,
+block|{
+literal|"Distributions, XFree86"
+block|,
+literal|"XFree86 distribution menu."
+block|,
+name|NULL
+block|,
+name|distSetXF86
+block|}
+block|,
+block|{
+literal|"Doc Menu"
+block|,
+literal|"Installation instructions, README, etc."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuDocumentation
+block|}
+block|,
+block|{
+literal|"Doc, README"
+block|,
+literal|"The distribution README file."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"readme"
+block|}
+block|,
+block|{
+literal|"Doc, Hardware"
+block|,
+literal|"The distribution hardware guide."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"hardware"
+block|}
+block|,
+block|{
+literal|"Doc, Install"
+block|,
+literal|"The distribution installation guide."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"install"
+block|}
+block|,
+block|{
+literal|"Doc, Copyright"
+block|,
+literal|"The distribution copyright notices."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"COPYRIGHT"
+block|}
+block|,
+block|{
+literal|"Doc, Release"
+block|,
+literal|"The distribution release notes."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"relnotes"
+block|}
+block|,
+block|{
+literal|"Doc, HTML"
+block|,
+literal|"The HTML documentation menu."
+block|,
+name|NULL
+block|,
+name|docBrowser
+block|}
+block|,
+block|{
+literal|"Fixit"
+block|,
+literal|"Repair mode with CDROM or floppy."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuFixit
+block|}
+block|,
+block|{
+literal|"FTP sites"
+block|,
+literal|"The FTP mirror site listing."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMediaFTP
+block|}
+block|,
+block|{
+literal|"Gated"
+block|,
+literal|"Load and configure gated instead of routed."
+block|,
+name|dmenuVarCheck
+block|,
+name|configGated
+block|,
+name|NULL
+block|,
+literal|"gated"
+block|}
+block|,
+block|{
+literal|"Gateway"
+block|,
+literal|"Set flag to route packets between interfaces."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"gateway=YES"
+block|}
+block|,
+block|{
+literal|"Install, Novice"
+block|,
+literal|"A novice system installation."
+block|,
+name|NULL
+block|,
+name|installNovice
+block|}
+block|,
+block|{
+literal|"Install, Express"
+block|,
+literal|"An express system installation."
+block|,
+name|NULL
+block|,
+name|installExpress
+block|}
+block|,
+block|{
+literal|"Install, Custom Menu"
+block|,
+literal|"The custom installation menu"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuInstallCustom
+block|}
+block|,
+block|{
+literal|"Media, All"
+block|,
+literal|"Top level media selection menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMedia
+block|}
+block|,
+block|{
+literal|"Media, Tape"
+block|,
+literal|"Select tape installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetTape
+block|}
+block|,
+block|{
+literal|"Media, NFS"
+block|,
+literal|"Select NFS installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetNFS
+block|}
+block|,
+block|{
+literal|"Media, Floppy"
+block|,
+literal|"Select floppy installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetFloppy
+block|}
+block|,
+block|{
+literal|"Media, CDROM"
+block|,
+literal|"Select CDROM installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetCDROM
+block|}
+block|,
+block|{
+literal|"Media, DOS"
+block|,
+literal|"Select DOS installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetDOS
+block|}
+block|,
+block|{
+literal|"Media, UFS"
+block|,
+literal|"Select UFS installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetUFS
+block|}
+block|,
+block|{
+literal|"Media, FTP"
+block|,
+literal|"Select FTP installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetFTP
+block|}
+block|,
+block|{
+literal|"Media, FTP Passive"
+block|,
+literal|"Select passive FTP installation media."
+block|,
+name|NULL
+block|,
+name|mediaSetFTPPassive
+block|}
+block|,
+block|{
+literal|"Networking Menu"
+block|,
+literal|"The network configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuNetworking
+block|}
+block|,
+block|{
+literal|"NFS, client"
+block|,
+literal|"Set NFS client flag."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"nfs_client=YES"
+block|}
+block|,
+block|{
+literal|"NFS, server"
+block|,
+literal|"Set NFS server flag."
+block|,
+name|dmenuVarCheck
+block|,
+name|configNFSServer
+block|,
+name|NULL
+block|,
+literal|"nfs_server"
+block|}
+block|,
+block|{
+literal|"NTP Menu"
+block|,
+literal|"The NTP configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuNTP
+block|}
+block|,
+block|{
+literal|"Options"
+block|,
+literal|"The options editor."
+block|,
+name|NULL
+block|,
+name|optionsEditor
+block|}
+block|,
+block|{
+literal|"PCNFSD"
+block|,
+literal|"Run authentication server for PC-NFS."
+block|,
+name|dmenuVarCheck
+block|,
+name|configPCNFSD
+block|,
+name|NULL
+block|,
+literal|"pcnfsd"
+block|}
+block|,
+block|{
+literal|"Ports"
+block|,
+literal|"Link to FreeBSD ports collection."
+block|,
+name|NULL
+block|,
+name|configPorts
+block|}
+block|,
+block|{
+literal|"Root Password"
+block|,
+literal|"Set the system manager's password."
+block|,
+name|NULL
+block|,
+name|dmenuSystemCommand
+block|,
+name|NULL
+block|,
+literal|"passwd root"
+block|}
+block|,
+block|{
+literal|"Routed"
+block|,
+literal|"Set flags for routed (default: -q)"
+block|,
+name|dmenuVarCheck
+block|,
+name|configRoutedFlags
+block|,
+name|NULL
+block|,
+literal|"routed"
+block|}
+block|,
+block|{
+literal|"Samba"
+block|,
+literal|"Configure Samba for LanManager access."
+block|,
+name|dmenuVarCheck
+block|,
+name|configSamba
+block|,
+name|NULL
+block|,
+literal|"samba"
+block|}
+block|,
+block|{
+literal|"Syscons Menu"
+block|,
+literal|"The system console configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSyscons
+block|}
+block|,
+block|{
+literal|"Syscons Menu, Keymap"
+block|,
+literal|"The console keymap configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsKeymap
+block|}
+block|,
+block|{
+literal|"Syscons Menu, Keyrate"
+block|,
+literal|"The console key rate configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsKeyrate
+block|}
+block|,
+block|{
+literal|"Syscons Menu, Saver"
+block|,
+literal|"The console screen saver configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsSaver
+block|}
+block|,
+block|{
+literal|"Time Zone"
+block|,
+literal|"Set the system's time zone."
+block|,
+name|NULL
+block|,
+name|dmenuSystemCommand
+block|,
+name|NULL
+block|,
+literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
+block|}
+block|,
+block|{
+literal|"Upgrade"
+block|,
+literal|"Upgrade an existing system."
+block|,
+name|NULL
+block|,
+name|installUpgrade
+block|}
+block|,
+block|{
+literal|"Usage"
+block|,
+literal|"Quick start - How to use this menu system."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"usage"
+block|}
+block|,
+block|{
+literal|"WEB Server"
+block|,
+literal|"Configure host as a WWW server."
+block|,
+name|dmenuVarCheck
+block|,
+name|configApache
+block|,
+name|NULL
+block|,
+literal|"apache_httpd"
+block|}
+block|,
+block|{
+literal|"XFree86, Fonts"
+block|,
+literal|"XFree86 Font selection menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuXF86SelectFonts
+block|}
+block|,
+block|{
+literal|"XFree86, Server"
+block|,
+literal|"XFree86 Server selection menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuXF86SelectServer
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The initial installation menu */
 end_comment
@@ -594,13 +1373,17 @@ block|,
 literal|"Welcome to FreeBSD!"
 block|,
 comment|/* title */
-literal|"This is the main menu of the FreeBSD installation system.  Please\n\ select one of the options below by using the arrow keys or typing the\n\ first character of the option name you're interested in.  Invoke an\n\ option by pressing [ENTER]."
+literal|"This is the main menu of the FreeBSD installation system.  Please\n"
+literal|"select one of the options below by using the arrow keys or typing the\n"
+literal|"first character of the option name you're interested in.  Invoke an\n"
+literal|"option by pressing [ENTER].  Exit the installation by selecting\n"
+literal|"Cancel [TAB-ENTER]."
 block|,
 comment|/* prompt */
-literal|"Press F1 for usage instructions"
+literal|"Press F1 for Installation Guide"
 block|,
 comment|/* help line */
-literal|"usage"
+literal|"install"
 block|,
 comment|/* help file */
 block|{
@@ -719,13 +1502,18 @@ name|MenuConfigure
 block|}
 block|,
 block|{
-literal|"0 Exit"
+literal|"0 Index"
 block|,
-literal|"Exit this menu (and the installation)"
+literal|"Glossary list of all possible operations."
 block|,
 name|NULL
 block|,
-name|dmenuExit
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuIndex
 block|}
 block|,
 block|{
