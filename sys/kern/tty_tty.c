@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/mac.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mac.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
