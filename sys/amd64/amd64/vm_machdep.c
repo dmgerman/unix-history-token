@@ -13,7 +13,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/vm_machdep.c,v 1.3 1993/07/27 10:52:21 davidg Exp $"
+literal|"$Header: /usr/chroot/CVS/386BSD/src/sys/i386/i386/vm_machdep.c,v 1.3 1993/07/27 10:52:21 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,7 +421,6 @@ directive|else
 end_else
 
 begin_function
-specifier|volatile
 name|void
 name|cpu_exit
 parameter_list|(
@@ -450,13 +449,12 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
-for|for
-control|(
-init|;
-condition|;
-control|)
-empty_stmt|;
+comment|/*  	 * This is to shutup the compiler, and if swtch() failed I suppose 	 * this would be a good thing.  This keeps gcc happy because panic 	 * is a volatile void function as well. 	 */
+name|panic
+argument_list|(
+literal|"cpu_exit"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
