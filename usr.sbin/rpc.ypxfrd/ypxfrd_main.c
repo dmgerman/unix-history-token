@@ -76,6 +76,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<rpc/rpc_com.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
