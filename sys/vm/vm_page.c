@@ -172,6 +172,20 @@ comment|/* Mask for hash function */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|mtx
+name|vm_page_queue_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|vm_page_queue_free_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_page_t
 name|vm_page_array
 init|=
@@ -453,6 +467,31 @@ name|biggestone
 operator|+
 literal|1
 index|]
+expr_stmt|;
+comment|/* 	 * Initialize the locks. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+literal|"vm page queue mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|,
+literal|"vm page queue free mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the queue headers for the free queue, the active queue 	 * and the inactive queue. 	 */
 name|vm_pageq_init
@@ -2008,6 +2047,9 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_remove
 argument_list|(
 name|m
@@ -2044,6 +2086,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2071,7 +2116,13 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2286,6 +2337,12 @@ argument_list|()
 expr_stmt|;
 name|loop
 label|:
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -2367,7 +2424,19 @@ operator|!=
 name|VM_ALLOC_INTERRUPT
 condition|)
 block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Allocatable from cache (non-interrupt only).  On success, 		 * we must free the page and try again, thus ensuring that 		 * cnt.v_*_free_min counters are replenished. 		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|m
 operator|=
 name|vm_page_select_cache
@@ -2376,14 +2445,14 @@ name|object
 argument_list|,
 name|pindex
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
+operator|)
 operator|==
 name|NULL
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2458,6 +2527,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
@@ -2465,6 +2537,12 @@ block|}
 else|else
 block|{
 comment|/* 		 * Not allocatable from cache from interrupt, give up. 		 */
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2574,6 +2652,12 @@ literal|"vm_page_alloc: free/cache page %p was dirty"
 operator|,
 name|m
 operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * vm_page_insert() is safe prior to the splx().  Note also that 	 * inserting a page here does not insert it into the pmap (which 	 * could cause us to block allocating memory).  We cannot block  	 * anywhere. 	 */
@@ -3273,6 +3357,12 @@ operator|->
 name|queue
 index|]
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|pq
 operator|->
 name|lcnt
@@ -3327,6 +3417,12 @@ name|pageq
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|vm_page_free_wakeup
 argument_list|()
 expr_stmt|;

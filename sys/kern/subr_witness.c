@@ -1064,6 +1064,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"vm page queue free mutex"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"icu"
 block|,
 operator|&
