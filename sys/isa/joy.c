@@ -346,6 +346,13 @@ block|}
 block|,
 comment|/* YMH0022 */
 block|{
+literal|0x82719304
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ADS7182 */
+block|{
 literal|0
 block|}
 block|}
