@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -69,12 +69,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"param.h"
 end_include
 
@@ -123,6 +117,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"disklabel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dkstat.h"
 end_include
 
@@ -154,6 +160,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
 end_include
 
 begin_include
@@ -3025,16 +3037,30 @@ condition|)
 block|{
 name|hard
 label|:
-name|harderr
+name|diskerr
 argument_list|(
 name|bp
 argument_list|,
 literal|"rb"
+argument_list|,
+literal|"hard error"
+argument_list|,
+name|LOG_PRINTF
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"csr=%b ds=%b\n"
+literal|" csr=%b ds=%b\n"
 argument_list|,
 name|er
 argument_list|,
@@ -4167,49 +4193,29 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Either complete or continuing... */
-name|log
+name|diskerr
 argument_list|(
+name|bp
+argument_list|,
+literal|"rb"
+argument_list|,
+literal|"soft ecc"
+argument_list|,
 name|LOG_WARNING
 argument_list|,
-literal|"rb%d%c: soft ecc sn%d\n"
-argument_list|,
-name|idcunit
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
-literal|'a'
-operator|+
-operator|(
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|&
-literal|07
-operator|)
-argument_list|,
-operator|(
-name|cn
-operator|*
-name|st
-operator|->
-name|ntrak
-operator|+
-name|tn
-operator|)
-operator|*
-name|st
-operator|->
-name|nsect
-operator|+
-name|sn
-operator|+
 name|npf
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|addlog
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|mask

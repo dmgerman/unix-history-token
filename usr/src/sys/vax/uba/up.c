@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)up.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)up.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|"dkbad.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"disklabel.h"
 end_include
 
 begin_include
@@ -3407,13 +3419,6 @@ name|hard
 label|:
 name|hard
 label|:
-name|harderr
-argument_list|(
-name|bp
-argument_list|,
-literal|"up"
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"cn=%d tn=%d sn=%d cs2=%b er1=%b er2=%b\n"
