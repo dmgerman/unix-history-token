@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	4.12	81/12/03	*/
+comment|/*	swapgeneric.c	4.2	82/05/27	*/
 end_comment
 
 begin_include
@@ -162,6 +162,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|uba_driver
+name|idcdriver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uba_driver
 name|udadriver
 decl_stmt|;
 end_decl_stmt
@@ -259,6 +267,48 @@ operator|-
 literal|10
 operator|*
 literal|2048
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|idcdriver
+block|,
+literal|"rb"
+block|,
+name|makedev
+argument_list|(
+literal|11
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|33440
+block|,
+literal|33440
+operator|-
+literal|10
+operator|*
+literal|2048
+block|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|idcdriver
+block|,
+literal|"rl"
+block|,
+name|makedev
+argument_list|(
+literal|11
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|4480
+block|,
+literal|0
 block|,
 operator|(
 name|caddr_t
@@ -438,7 +488,7 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"use hp%%d, up%%d, ra%%d or hk%%d\n"
+literal|"use hp%%d, up%%d, ra%%d, rb%%d, rl%%d or hk%%d\n"
 argument_list|)
 expr_stmt|;
 goto|goto
