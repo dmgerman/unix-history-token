@@ -3418,9 +3418,7 @@ parameter_list|,
 name|int
 name|flag
 parameter_list|,
-name|struct
-name|proc
-modifier|*
+name|usb_proc_ptr
 name|p
 parameter_list|)
 block|{

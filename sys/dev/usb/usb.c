@@ -531,9 +531,7 @@ name|dev_t
 parameter_list|,
 name|int
 parameter_list|,
-name|struct
-name|proc
-modifier|*
+name|usb_proc_ptr
 parameter_list|)
 function_decl|;
 end_function_decl
