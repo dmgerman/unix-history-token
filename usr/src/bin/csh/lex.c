@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.20 (Berkeley) %G%"
+literal|"@(#)lex.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7178,9 +7178,29 @@ argument_list|,
 name|L_XTND
 argument_list|)
 expr_stmt|;
+name|aret
+operator|=
+name|F_SEEK
+expr_stmt|;
 name|fseekp
 operator|=
 name|feobp
+expr_stmt|;
+name|alvec
+operator|=
+name|NULL
+expr_stmt|;
+name|alvecp
+operator|=
+name|NULL
+expr_stmt|;
+name|evalvec
+operator|=
+name|NULL
+expr_stmt|;
+name|evalp
+operator|=
+name|NULL
 expr_stmt|;
 name|wfree
 argument_list|()
