@@ -214,9 +214,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
+specifier|const
 name|pam_ssh_agent_argv
 index|[]
 init|=
@@ -232,9 +232,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 modifier|*
+specifier|const
 name|pam_ssh_agent_envp
 index|[]
 init|=
@@ -1376,7 +1376,6 @@ operator|*
 name|kfn
 argument_list|,
 operator|(
-specifier|const
 name|void
 operator|*
 operator|*
@@ -1541,7 +1540,6 @@ name|char
 modifier|*
 name|user
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|data

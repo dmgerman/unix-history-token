@@ -252,6 +252,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got ruser: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ruser
 argument_list|)
 expr_stmt|;

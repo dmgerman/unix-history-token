@@ -220,6 +220,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got TTY: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|tty
 argument_list|)
 expr_stmt|;

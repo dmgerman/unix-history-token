@@ -307,6 +307,10 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+name|void
+modifier|*
+name|ccache_data
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -322,9 +326,6 @@ name|sourceuser
 decl_stmt|,
 modifier|*
 name|service
-decl_stmt|,
-modifier|*
-name|item
 decl_stmt|;
 name|char
 modifier|*
@@ -806,27 +807,6 @@ condition|)
 goto|goto
 name|cleanup2
 goto|;
-name|retval
-operator|=
-name|pam_get_item
-argument_list|(
-name|pamh
-argument_list|,
-name|PAM_USER
-argument_list|,
-operator|&
-name|item
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|retval
-operator|!=
-name|PAM_SUCCESS
-condition|)
-goto|goto
-name|cleanup2
-goto|;
 name|PAM_LOG
 argument_list|(
 literal|"PAM_USER Redone"
@@ -1173,7 +1153,7 @@ argument_list|,
 literal|"ccache"
 argument_list|,
 operator|&
-name|item
+name|ccache_data
 argument_list|)
 expr_stmt|;
 if|if
@@ -1430,7 +1410,8 @@ specifier|const
 name|void
 modifier|*
 name|user
-decl_stmt|,
+decl_stmt|;
+name|void
 modifier|*
 name|cache_data
 decl_stmt|;
@@ -2487,7 +2468,8 @@ specifier|const
 name|void
 modifier|*
 name|user
-decl_stmt|,
+decl_stmt|;
+name|void
 modifier|*
 name|ccache_name
 decl_stmt|;
@@ -3086,7 +3068,7 @@ condition|)
 block|{
 name|PAM_LOG
 argument_list|(
-literal|"Error krb5_get_init_creds_password()"
+literal|"Error krb5_get_init_creds_password(): %s"
 argument_list|,
 name|krb5_get_err_text
 argument_list|(

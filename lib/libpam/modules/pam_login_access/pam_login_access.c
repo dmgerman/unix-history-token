@@ -154,6 +154,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 expr_stmt|;
@@ -232,8 +237,18 @@ name|PAM_LOG
 argument_list|(
 literal|"Checking login.access for user %s on tty %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|tty
 argument_list|)
 expr_stmt|;
@@ -269,8 +284,18 @@ name|PAM_LOG
 argument_list|(
 literal|"Checking login.access for user %s from host %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|rhost
 argument_list|)
 expr_stmt|;
