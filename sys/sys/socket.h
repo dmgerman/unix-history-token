@@ -835,14 +835,14 @@ begin_define
 define|#
 directive|define
 name|_SS_PAD1SIZE
-value|(_SS_ALIGNSIZE - sizeof(u_char) * 2)
+value|(_SS_ALIGNSIZE - sizeof(u_char) - sizeof(sa_family_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|_SS_PAD2SIZE
-value|(_SS_MAXSIZE - sizeof(u_char) * 2 - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
+value|(_SS_MAXSIZE - sizeof(u_char) - sizeof(sa_family_t) - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
 end_define
 
 begin_struct
