@@ -396,6 +396,25 @@ argument_list|(
 literal|"Ringing your party again"
 argument_list|)
 expr_stmt|;
+name|waddch
+argument_list|(
+name|my_win
+operator|.
+name|x_win
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|current_line
+operator|<
+name|my_win
+operator|.
+name|x_nlines
+operator|-
+literal|1
+condition|)
 name|current_line
 operator|++
 expr_stmt|;
