@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	8.1 (Berkeley) %G%"
+literal|"@(#)scroll.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
 end_include
 
 begin_comment
