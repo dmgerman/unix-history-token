@@ -2427,7 +2427,7 @@ comment|/* Self snoop */
 literal|"\035HTT"
 comment|/* Hyperthreading (see EBX bit 16-23) */
 literal|"\036TM"
-comment|/* Thermal Monintor clock slowdown */
+comment|/* Thermal Monitor clock slowdown */
 literal|"\035<b28>"
 literal|"\036ACC"
 comment|/* Auto Clock Correction (TCC/ACPI) */
