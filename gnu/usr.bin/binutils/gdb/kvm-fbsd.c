@@ -2590,7 +2590,10 @@ literal|0
 expr_stmt|;
 name|prv_space
 operator|=
-literal|0
+name|ksym_lookup
+argument_list|(
+literal|"__globaldata"
+argument_list|)
 expr_stmt|;
 name|prv_space_size
 operator|=
