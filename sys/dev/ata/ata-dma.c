@@ -2376,23 +2376,23 @@ name|ata_find_dev
 argument_list|(
 name|parent
 argument_list|,
-literal|0x05961106
+literal|0x06861106
 argument_list|,
 literal|0
 argument_list|)
 operator|||
-comment|/* 82C596a */
+comment|/* 82C686a */
 name|ata_find_dev
 argument_list|(
 name|parent
 argument_list|,
-literal|0x05861106
+literal|0x05961106
 argument_list|,
-literal|0x02
+literal|0x12
 argument_list|)
 condition|)
 block|{
-comment|/* 82C586b */
+comment|/* 82C596b */
 if|if
 condition|(
 name|udmamode
