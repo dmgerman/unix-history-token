@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.6	%H%	*/
+comment|/*	kern_proc.c	3.7	%H%	*/
 end_comment
 
 begin_include
@@ -2692,15 +2692,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Stopped or traced processes are killed 			 * since their existence means someone is screwing up. 			 */
+comment|/* 			 * Traced processes are killed 			 * since their existence means someone is screwing up. 			 * Traced processes are sent a hangup and a continue. 			 * This is designed to be ``safe'' for setuid 			 * processes since they must be willing to tolerate 			 * hangups anyways. 			 */
 if|if
 condition|(
-name|q
-operator|->
-name|p_stat
-operator|==
-name|SSTOP
-operator|||
 name|q
 operator|->
 name|p_flag
@@ -2721,6 +2715,53 @@ name|q
 argument_list|,
 name|SIGKILL
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|q
+operator|->
+name|p_stat
+operator|==
+name|SSTOP
+condition|)
+block|{
+name|psignal
+argument_list|(
+name|q
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|psignal
+argument_list|(
+name|q
+argument_list|,
+name|SIGCONT
+argument_list|)
+expr_stmt|;
+comment|/* 				 * Protect this process from future 				 * tty signals, and clear TSTP if pending. 				 */
+name|q
+operator|->
+name|p_pgrp
+operator|=
+literal|0
+expr_stmt|;
+name|q
+operator|->
+name|p_sig
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+operator|(
+name|SIGTSTP
+operator|-
+literal|1
+operator|)
+operator|)
 expr_stmt|;
 block|}
 block|}

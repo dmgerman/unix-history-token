@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.6	%H%	*/
+comment|/*	tty.c	3.7	%H%	*/
 end_comment
 
 begin_comment
@@ -2027,6 +2027,42 @@ argument_list|(
 name|tp
 operator|->
 name|t_local
+argument_list|)
+argument_list|)
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|EFAULT
+expr_stmt|;
+break|break;
+case|case
+name|TIOCOUTQ
+case|:
+if|if
+condition|(
+name|copyout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
+argument_list|,
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
 argument_list|)
 argument_list|)
 condition|)
