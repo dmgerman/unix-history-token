@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.2 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -935,6 +935,33 @@ operator|!=
 name|d
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|tahoe
+comment|/* tahoe compiler workaround */
+name|int
+name|x
+init|=
+name|frags
+operator|-
+name|dbase
+decl_stmt|;
+name|blk
+operator|=
+name|blkmap
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|newcg
+operator|->
+name|cg_free
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|blk
 operator|=
 name|blkmap
@@ -953,6 +980,8 @@ name|dbase
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fragacct
 argument_list|(
 operator|&
