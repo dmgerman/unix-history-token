@@ -21248,6 +21248,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|nfsm_srvdone
 expr_stmt|;
 block|}
