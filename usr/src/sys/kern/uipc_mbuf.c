@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.15	81/11/21	*/
+comment|/*	uipc_mbuf.c	1.16	81/11/22	*/
 end_comment
 
 begin_include
@@ -82,13 +82,18 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* 	printf("reserve %d\n", mbufs); */
 if|if
 condition|(
 name|mbstat
 operator|.
 name|m_lowat
 operator|+
+operator|(
 name|mbufs
+operator|>>
+literal|1
+operator|)
 operator|>
 name|NMBPAGES
 operator|*
@@ -103,19 +108,19 @@ operator|)
 return|;
 name|mbstat
 operator|.
-name|m_lowat
+name|m_hiwat
 operator|+=
 name|mbufs
 expr_stmt|;
 name|mbstat
 operator|.
-name|m_hiwat
+name|m_lowat
 operator|=
-literal|2
-operator|*
 name|mbstat
 operator|.
-name|m_lowat
+name|m_hiwat
+operator|>>
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -140,21 +145,22 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* 	printf("release %d\n", mbufs); */
 name|mbstat
 operator|.
-name|m_lowat
+name|m_hiwat
 operator|-=
 name|mbufs
 expr_stmt|;
 name|mbstat
 operator|.
-name|m_hiwat
+name|m_lowat
 operator|=
-literal|2
-operator|*
 name|mbstat
 operator|.
-name|m_lowat
+name|m_hiwat
+operator|>>
+literal|1
 expr_stmt|;
 block|}
 end_block
