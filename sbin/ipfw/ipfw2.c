@@ -17245,8 +17245,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|unsigned
-name|int
+name|uint32_t
 operator|)
 name|jid
 expr_stmt|;
