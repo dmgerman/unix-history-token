@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_h4.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_h4.c,v 1.5 2003/05/10 05:51:25 max Exp $  * $FreeBSD$  *   * Based on:  * ---------  *  * FreeBSD: src/sys/netgraph/ng_tty.c  * Author: Archie Cobbs<archie@freebsd.org>  *  */
+comment|/*  * ng_h4.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_h4.c,v 1.7 2004/08/23 18:08:15 max Exp $  * $FreeBSD$  *   * Based on:  * ---------  *  * FreeBSD: src/sys/netgraph/ng_tty.c  * Author: Archie Cobbs<archie@freebsd.org>  *  */
 end_comment
 
 begin_include
@@ -126,6 +126,14 @@ end_include
 begin_comment
 comment|/*****************************************************************************  *****************************************************************************  ** This node implements a Bluetooth HCI UART transport layer as per chapter  ** H4 of the Bluetooth Specification Book v1.1. It is a terminal line   ** discipline that is also a netgraph node. Installing this line discipline   ** on a terminal device instantiates a new netgraph node of this type, which   ** allows access to the device via the "hook" hook of the node.  **  ** Once the line discipline is installed, you can find out the name of the   ** corresponding netgraph node via a NGIOCGINFO ioctl().  *****************************************************************************  *****************************************************************************/
 end_comment
+
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"ng_h4"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* MALLOC define */
@@ -846,7 +854,7 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 operator|=
 operator|(
 name|caddr_t
@@ -957,7 +965,7 @@ name|ng_h4_info_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 name|int
 name|s
@@ -994,7 +1002,7 @@ condition|)
 block|{
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 operator|=
 name|NULL
 expr_stmt|;
@@ -1197,7 +1205,7 @@ name|ng_h4_info_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 name|int
 name|s
@@ -1395,7 +1403,7 @@ name|ng_h4_info_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 if|if
 condition|(
@@ -2308,7 +2316,7 @@ name|ng_h4_info_p
 operator|)
 name|tp
 operator|->
-name|t_sc
+name|t_lsc
 decl_stmt|;
 if|if
 condition|(
