@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.38 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,15 +1085,6 @@ name|q
 operator|->
 name|q_flags
 argument_list|)
-operator|||
-name|bitset
-argument_list|(
-name|QSELFREF
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
 condition|)
 block|{
 if|if
@@ -1104,16 +1095,6 @@ argument_list|(
 name|QDONTSEND
 argument_list|,
 name|a
-operator|->
-name|q_flags
-argument_list|)
-operator|&&
-operator|!
-name|bitset
-argument_list|(
-name|QSELFREF
-argument_list|,
-name|q
 operator|->
 name|q_flags
 argument_list|)
@@ -1130,11 +1111,31 @@ operator||=
 name|a
 operator|->
 name|q_flags
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|q
+operator|->
+name|q_flags
+operator||=
+name|a
+operator|->
+name|q_flags
 operator|&
 operator|~
 name|QDONTSEND
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -3331,13 +3332,6 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|usrerr
-argument_list|(
-literal|"451 open timeout on %s"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
 comment|/* return pseudo-error code */
 name|rval
 operator|=
@@ -3535,6 +3529,19 @@ argument_list|()
 argument_list|,
 name|geteuid
 argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+name|EOPENTIMEOUT
+condition|)
+name|usrerr
+argument_list|(
+literal|"451 open timeout on %s"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 if|if
