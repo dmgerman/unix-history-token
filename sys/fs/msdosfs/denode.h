@@ -156,7 +156,9 @@ name|u_long
 name|de_flag
 decl_stmt|;
 comment|/* flag bits */
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|de_dev
 decl_stmt|;
 comment|/* device where direntry lives */
