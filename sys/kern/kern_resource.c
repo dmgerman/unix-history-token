@@ -3665,6 +3665,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX Unlocked access to p_stats->p_ru or p_cru. */
 name|error
 operator|=
 name|copyout
