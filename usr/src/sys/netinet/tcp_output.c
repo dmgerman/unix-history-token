@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.51	83/02/10	*/
+comment|/*	tcp_output.c	4.52	83/03/25	*/
 end_comment
 
 begin_include
@@ -531,14 +531,14 @@ name|m
 argument_list|,
 name|M_DONTWAIT
 argument_list|,
-name|MT_DATA
+name|MT_HEADER
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|m
 operator|==
-name|INADDR_ANY
+name|NULL
 condition|)
 return|return
 operator|(
