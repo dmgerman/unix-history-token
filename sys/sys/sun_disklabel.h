@@ -14,6 +14,27 @@ name|SUN_DKMAGIC
 value|55998
 end_define
 
+begin_define
+define|#
+directive|define
+name|SUN_NPART
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUN_RAWPART
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SUN_SIZE
+value|512
+end_define
+
 begin_comment
 comment|/* geometry info */
 end_comment
@@ -189,7 +210,7 @@ name|struct
 name|sun_dkpart
 name|sl_part
 index|[
-literal|8
+name|SUN_NPART
 index|]
 decl_stmt|;
 comment|/* partition layout */
