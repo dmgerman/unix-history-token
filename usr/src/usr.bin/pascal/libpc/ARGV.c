@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ARGV.c 1.3 %G%"
+literal|"@(#)ARGV.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,9 @@ name|siz
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|subscript
 operator|>=
 name|_argc
