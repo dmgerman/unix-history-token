@@ -2184,18 +2184,14 @@ block|}
 comment|/* 		 * Have word in line. Get or create its node and stick it at 		 * the end of the targets list 		 */
 if|if
 condition|(
-operator|(
 name|specType
 operator|==
 name|Not
-operator|)
 operator|&&
-operator|(
 operator|*
 name|line
 operator|!=
 literal|'\0'
-operator|)
 condition|)
 block|{
 comment|/* target names to be found and added to targets list */
@@ -2366,19 +2362,15 @@ name|FALSE
 decl_stmt|;
 while|while
 condition|(
-operator|(
 operator|*
 name|cp
 operator|!=
 literal|'!'
-operator|)
 operator|&&
-operator|(
 operator|*
 name|cp
 operator|!=
 literal|':'
-operator|)
 operator|&&
 operator|*
 name|cp
@@ -2450,19 +2442,15 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-operator|(
 operator|*
 name|line
 operator|!=
 literal|'!'
-operator|)
 operator|&&
-operator|(
 operator|*
 name|line
 operator|!=
 literal|':'
-operator|)
 operator|&&
 operator|*
 name|line
@@ -2744,17 +2732,13 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|specType
 operator|==
 name|NotParallel
-operator|)
 operator|||
-operator|(
 name|specType
 operator|==
 name|SingleShell
-operator|)
 condition|)
 block|{
 operator|*
@@ -2766,35 +2750,25 @@ block|}
 comment|/* 	* NOW GO FOR THE SOURCES 	*/
 if|if
 condition|(
-operator|(
 name|specType
 operator|==
 name|Suffixes
-operator|)
 operator|||
-operator|(
 name|specType
 operator|==
 name|ExPath
-operator|)
 operator|||
-operator|(
 name|specType
 operator|==
 name|Includes
-operator|)
 operator|||
-operator|(
 name|specType
 operator|==
 name|Libs
-operator|)
 operator|||
-operator|(
 name|specType
 operator|==
 name|Null
-operator|)
 condition|)
 block|{
 while|while
@@ -3261,24 +3235,20 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|(((c) == '+') || ((c) == ':') || ((c) == '?') || ((c) == '!'))
+value|((c) == '+' || (c) == ':' || (c) == '?' || (c) == '!')
 comment|/* 	 * Skip to variable name 	 */
 for|for
 control|(
 init|;
-operator|(
 operator|*
 name|line
 operator|==
 literal|' '
-operator|)
 operator|||
-operator|(
 operator|*
 name|line
 operator|==
 literal|'\t'
-operator|)
 condition|;
 name|line
 operator|++
@@ -3506,19 +3476,15 @@ directive|endif
 comment|/* 	 * Skip to variable name 	 */
 while|while
 condition|(
-operator|(
 operator|*
 name|line
 operator|==
 literal|' '
-operator|)
 operator|||
-operator|(
 operator|*
 name|line
 operator|==
 literal|'\t'
-operator|)
 condition|)
 block|{
 name|line
@@ -4243,19 +4209,15 @@ decl_stmt|;
 comment|/* 	 * Skip to delimiter character so we know where to look 	 */
 while|while
 condition|(
-operator|(
 operator|*
 name|file
 operator|==
 literal|' '
-operator|)
 operator|||
-operator|(
 operator|*
 name|file
 operator|==
 literal|'\t'
-operator|)
 condition|)
 block|{
 name|file
@@ -4264,19 +4226,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 operator|*
 name|file
 operator|!=
 literal|'"'
-operator|)
 operator|&&
-operator|(
 operator|*
 name|file
 operator|!=
 literal|'<'
-operator|)
 condition|)
 block|{
 name|Parse_Error
@@ -4873,19 +4831,15 @@ decl_stmt|;
 comment|/* 	 * Skip over whitespace 	 */
 while|while
 condition|(
-operator|(
 operator|*
 name|file
 operator|==
 literal|' '
-operator|)
 operator|||
-operator|(
 operator|*
 name|file
 operator|==
 literal|'\t'
-operator|)
 condition|)
 block|{
 name|file
@@ -5802,18 +5756,14 @@ operator|)
 operator|!=
 literal|'\n'
 operator|||
-operator|(
 name|lastc
 operator|==
 literal|'\\'
 operator|)
-operator|)
 operator|&&
-operator|(
 name|c
 operator|!=
 name|EOF
-operator|)
 condition|)
 block|{
 name|test_char
@@ -6650,12 +6600,10 @@ operator|*
 name|cp2
 argument_list|)
 operator|&&
-operator|(
 operator|*
 name|cp2
 operator|!=
 literal|'\0'
-operator|)
 condition|;
 name|cp2
 operator|++
@@ -6929,12 +6877,10 @@ condition|)
 block|{
 while|while
 condition|(
-operator|(
 operator|*
 name|cp
 operator|!=
 literal|'\0'
-operator|)
 operator|&&
 name|isspace
 argument_list|(
