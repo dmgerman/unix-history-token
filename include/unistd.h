@@ -2109,6 +2109,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern optreset;
+end_extern
+
+begin_comment
+comment|/* getopt(3) external variable */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
