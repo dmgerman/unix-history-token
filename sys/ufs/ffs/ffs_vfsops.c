@@ -3014,6 +3014,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|fs
+operator|->
+name|fs_active
+operator|=
+literal|0
+expr_stmt|;
 comment|/* XXX updating 4.2 FFS superblocks trashes rotational layout tables */
 if|if
 condition|(

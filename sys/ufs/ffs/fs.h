@@ -628,10 +628,15 @@ name|int32_t
 name|fs_avgfpdir
 decl_stmt|;
 comment|/* expected # of files per directory */
+name|u_int8_t
+modifier|*
+name|fs_active
+decl_stmt|;
+comment|/* used by snapshots to track fs */
 name|int32_t
 name|fs_sparecon
 index|[
-literal|26
+literal|25
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
