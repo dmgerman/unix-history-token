@@ -2846,24 +2846,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|int
 name|pct
-argument_list|(
-argument|top
-argument_list|,
-argument|bot
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|long
+parameter_list|(
+name|top
+parameter_list|,
+name|bot
+parameter_list|)
+name|u_long
 name|top
 decl_stmt|,
 name|bot
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2877,18 +2872,21 @@ literal|0
 operator|)
 return|;
 return|return
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
-operator|(
-name|top
+literal|100.0
 operator|*
-literal|100
+name|top
 operator|)
 operator|/
 name|bot
-operator|)
+argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2899,7 +2897,7 @@ name|top
 parameter_list|,
 name|bot
 parameter_list|)
-value|pct((long)(top), (long)(bot))
+value|pct((u_long)(top), (u_long)(bot))
 end_define
 
 begin_if
