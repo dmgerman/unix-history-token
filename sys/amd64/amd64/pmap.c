@@ -567,13 +567,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|vm_object_t
-name|kptobj
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|nkpt
 decl_stmt|;
@@ -1865,16 +1858,6 @@ decl_stmt|;
 name|int
 name|initial_pvs
 decl_stmt|;
-comment|/* 	 * object for kernel page table pages 	 */
-name|kptobj
-operator|=
-name|vm_object_allocate
-argument_list|(
-name|OBJT_DEFAULT
-argument_list|,
-name|NKPDE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate memory for random pmap data structures.  Includes the 	 * pv_head_table. 	 */
 for|for
 control|(
@@ -5943,10 +5926,12 @@ name|nkpg
 operator|=
 name|vm_page_alloc
 argument_list|(
-name|kptobj
+name|NULL
 argument_list|,
 name|nkpt
 argument_list|,
+name|VM_ALLOC_NOOBJ
+operator||
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_WIRED
