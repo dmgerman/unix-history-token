@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.9 1996/06/20 18:33:44 jkh Exp $"
+literal|"$Id: perform.c,v 1.10 1996/07/30 10:48:16 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,11 +410,6 @@ argument_list|(
 name|cfile
 argument_list|)
 expr_stmt|;
-name|setenv
-argument_list|(
-name|PKG_PREFIX_VNAME
-argument_list|,
-operator|(
 name|p
 operator|=
 name|find_plist
@@ -424,13 +419,31 @@ name|Plist
 argument_list|,
 name|PLIST_CWD
 argument_list|)
-operator|)
-condition|?
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Package '%s' doesn't have a prefix."
+argument_list|,
+name|pkg
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|setenv
+argument_list|(
+name|PKG_PREFIX_VNAME
+argument_list|,
 name|p
 operator|->
 name|name
-else|:
-name|NULL
 argument_list|,
 literal|1
 argument_list|)
