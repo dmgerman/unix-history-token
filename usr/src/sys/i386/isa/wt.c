@@ -1,4 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wt.c	7.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  *  * Copyright (c) 1989 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Robert Baron  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -12,10 +20,6 @@ name|NWT
 operator|>
 literal|0
 end_if
-
-begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  *	@(#)wt.c	1.4 (Berkeley) 1/18/91  */
-end_comment
 
 begin_comment
 comment|/*   * HISTORY  * $Log:	wt.c,v $  * Revision 2.2.1.3  90/01/08  13:29:38  rvb  * 	Add Intel copyright.  * 	[90/01/08            rvb]  *   * Revision 2.2.1.2  89/12/21  18:00:09  rvb  * 	Change WTPRI to make the streamer tape read/write  * 	interruptible. 		[lin]  *   * Revision 2.2.1.1  89/11/10  09:49:49  rvb  * 	ORC likes their streamer port at 0x288.  * 	[89/11/08            rvb]  *   * Revision 2.2  89/09/25  12:33:02  rvb  * 	Driver was provided by Intel 9/18/89.  * 	[89/09/23            rvb]  *   */

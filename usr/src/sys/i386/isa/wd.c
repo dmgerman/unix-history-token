@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* TODO:peel out buffer at low ipl,    speed improvement, rewrite to clean code from garbage artifacts */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)wd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist%  *  *	@(#)wd.c	7.1 (Berkeley) %G%  */
+comment|/* TODO:peel out buffer at low ipl,    speed improvement, rewrite to clean code from garbage artifacts */
 end_comment
 
 begin_include
