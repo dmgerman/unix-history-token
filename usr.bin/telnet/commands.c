@@ -320,6 +320,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -332,6 +338,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -10898,8 +10909,13 @@ name|res0
 operator|=
 name|res
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|af_again
 label|:
+endif|#
+directive|endif
 if|if
 condition|(
 name|srcroute
@@ -13398,11 +13414,6 @@ name|ALIGNBYTES
 index|]
 decl_stmt|;
 comment|/*XXX*/
-name|struct
-name|cmsghdr
-modifier|*
-name|cmsg
-decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -13421,11 +13432,21 @@ name|sockaddr_in
 modifier|*
 name|_sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
+name|struct
+name|cmsghdr
+modifier|*
+name|cmsg
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|addrinfo
 name|hints
