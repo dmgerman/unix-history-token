@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.9 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6826,7 +6826,7 @@ argument_list|)
 expr_stmt|;
 name|acct
 index|[
-literal|50
+literal|49
 index|]
 operator|=
 literal|'\0'
