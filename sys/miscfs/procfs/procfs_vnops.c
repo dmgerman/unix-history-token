@@ -1738,7 +1738,7 @@ if|if
 condition|(
 name|procp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|procp
 operator|->
@@ -2737,7 +2737,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 return|return
@@ -2792,7 +2792,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 for|for
@@ -3563,7 +3563,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|doingzomb
 operator|==

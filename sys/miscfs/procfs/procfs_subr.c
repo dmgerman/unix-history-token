@@ -854,7 +854,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
