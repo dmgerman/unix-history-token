@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_subr.c 4.8 81/12/12 */
+comment|/* tcp_subr.c 4.9 81/12/19 */
 end_comment
 
 begin_include
@@ -976,13 +976,20 @@ modifier|*
 name|t
 decl_stmt|;
 name|struct
-name|socket
+name|inpcb
 modifier|*
-name|so
+name|inp
 init|=
 name|tp
 operator|->
 name|t_inpcb
+decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so
+init|=
+name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
@@ -1096,16 +1103,20 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|soisdisconnected
-argument_list|(
-name|so
-argument_list|)
+name|inp
+operator|->
+name|inp_ppcb
+operator|=
+literal|0
 expr_stmt|;
 name|in_pcbdisconnect
 argument_list|(
-name|tp
-operator|->
-name|t_inpcb
+name|inp
+argument_list|)
+expr_stmt|;
+name|soisdisconnected
+argument_list|(
+name|so
 argument_list|)
 expr_stmt|;
 block|}
