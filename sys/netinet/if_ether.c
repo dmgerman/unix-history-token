@@ -2458,6 +2458,7 @@ name|arphdr
 argument_list|)
 operator|&&
 operator|(
+operator|(
 name|m
 operator|=
 name|m_pullup
@@ -2470,6 +2471,7 @@ expr|struct
 name|arphdr
 argument_list|)
 argument_list|)
+operator|)
 operator|==
 name|NULL
 operator|)
