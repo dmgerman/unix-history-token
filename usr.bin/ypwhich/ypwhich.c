@@ -75,8 +75,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpcsvc/yp_prot.h>
+file|<rpcsvc/yp.h>
 end_include
+
+begin_struct
+struct|struct
+name|dom_binding
+block|{}
+struct|;
+end_struct
 
 begin_include
 include|#
@@ -389,6 +396,7 @@ name|YPBINDPROC_DOMAIN
 argument_list|,
 name|xdr_domainname
 argument_list|,
+operator|&
 name|dom
 argument_list|,
 name|xdr_ypbind_resp
@@ -448,7 +456,7 @@ name|ypbinderr_string
 argument_list|(
 name|ypbr
 operator|.
-name|ypbind_respbody
+name|ypbind_resp_u
 operator|.
 name|ypbind_error
 argument_list|)
@@ -471,15 +479,18 @@ argument_list|)
 expr_stmt|;
 name|ss_addr
 operator|=
+operator|*
+operator|(
+name|u_long
+operator|*
+operator|)
 name|ypbr
 operator|.
-name|ypbind_respbody
+name|ypbind_resp_u
 operator|.
 name|ypbind_bindinfo
 operator|.
 name|ypbind_binding_addr
-operator|.
-name|s_addr
 expr_stmt|;
 comment|/*printf("%08x\n", ss_addr);*/
 name|hent
@@ -1094,7 +1105,7 @@ name|domainname
 argument_list|,
 name|ypml
 operator|->
-name|ypml_name
+name|map
 argument_list|,
 operator|&
 name|master
@@ -1114,7 +1125,7 @@ literal|"%s %s\n"
 argument_list|,
 name|ypml
 operator|->
-name|ypml_name
+name|map
 argument_list|,
 name|master
 argument_list|)
@@ -1134,7 +1145,7 @@ literal|"YP: can't find the master of %s: Reason: %s\n"
 argument_list|,
 name|ypml
 operator|->
-name|ypml_name
+name|map
 argument_list|,
 name|yperr_string
 argument_list|(
@@ -1148,7 +1159,7 @@ name|y
 operator|=
 name|ypml
 operator|->
-name|ypml_next
+name|next
 expr_stmt|;
 name|free
 argument_list|(
