@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.23 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -237,18 +237,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|crfree
+name|ffree
 argument_list|(
 name|fp
-operator|->
-name|f_cred
 argument_list|)
-expr_stmt|;
-name|fp
-operator|->
-name|f_count
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -1877,18 +1869,10 @@ operator|)
 return|;
 name|free4
 label|:
-name|crfree
+name|ffree
 argument_list|(
 name|fp2
-operator|->
-name|f_cred
 argument_list|)
-expr_stmt|;
-name|fp2
-operator|->
-name|f_count
-operator|=
-literal|0
 expr_stmt|;
 name|fdp
 operator|->
@@ -1904,18 +1888,10 @@ literal|0
 expr_stmt|;
 name|free3
 label|:
-name|crfree
+name|ffree
 argument_list|(
 name|fp1
-operator|->
-name|f_cred
 argument_list|)
-expr_stmt|;
-name|fp1
-operator|->
-name|f_count
-operator|=
-literal|0
 expr_stmt|;
 name|fdp
 operator|->
@@ -6040,11 +6016,10 @@ operator|)
 return|;
 name|free4
 label|:
+name|ffree
+argument_list|(
 name|wf
-operator|->
-name|f_count
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|fdp
 operator|->
@@ -6060,11 +6035,10 @@ literal|0
 expr_stmt|;
 name|free3
 label|:
+name|ffree
+argument_list|(
 name|rf
-operator|->
-name|f_count
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|fdp
 operator|->
