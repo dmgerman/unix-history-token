@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.13 1994/01/03 07:55:24 davidg Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.14 1994/01/14 16:23:41 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1354,17 +1354,6 @@ name|v
 parameter_list|)
 value|(PTD[((v)>>PD_SHIFT)&1023].pd_v)
 block|{
-name|vm_offset_t
-name|v
-init|=
-name|trunc_page
-argument_list|(
-name|vtopte
-argument_list|(
-name|va
-argument_list|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|map
@@ -1374,6 +1363,17 @@ condition|)
 block|{
 name|vm_offset_t
 name|pa
+decl_stmt|;
+name|vm_offset_t
+name|v
+init|=
+operator|(
+name|vm_offset_t
+operator|)
+name|vtopte
+argument_list|(
+name|va
+argument_list|)
 decl_stmt|;
 comment|/* Fault the pte only if needed: */
 operator|*
@@ -1399,7 +1399,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|/* And wire the page at system vm level: */
+comment|/* And wire the pte page at system vm level: */
 name|vm_page_wire
 argument_list|(
 name|PHYS_TO_VM_PAGE
@@ -1422,7 +1422,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* Unwire the pte page */
+comment|/* Unwire the pte page: */
 name|vm_page_unwire
 argument_list|(
 name|PHYS_TO_VM_PAGE
@@ -1434,6 +1434,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 				 * Since we know that kernel virtual address addresses 				 * always have pte pages mapped, we just have to fault 				 * the page. 				 */
 name|rv
 operator|=
 name|vm_fault
@@ -2239,6 +2240,7 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * wire the pte page 		 */
 if|if
 condition|(
 name|va
@@ -2266,6 +2268,7 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * fault the data page 		 */
 name|rv
 operator|=
 name|vm_fault
@@ -2284,6 +2287,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* 		 * unwire the pte page 		 */
 if|if
 condition|(
 name|va
