@@ -314,26 +314,6 @@ begin_comment
 comment|/*  * Some tlb operations must be atomical, so no interrupt or trap can be allowed  * while they are in progress. Traps should not happen, but interrupts need to  * be explicitely disabled. critical_enter() cannot be used here, since it only  * disables soft interrupts.  * XXX: is something like this needed elsewhere, too?  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TLB_ATOMIC_START
-parameter_list|(
-name|s
-parameter_list|)
-value|do { \ 	(s) = rdpr(pstate); \ 	wrpr(pstate, (s)& ~PSTATE_IE, 0); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TLB_ATOMIC_END
-parameter_list|(
-name|s
-parameter_list|)
-value|wrpr(pstate, (s), 0)
-end_define
-
 begin_function
 specifier|static
 name|__inline
@@ -479,10 +459,10 @@ block|{
 name|u_long
 name|pst
 decl_stmt|;
-name|TLB_ATOMIC_START
-argument_list|(
 name|pst
-argument_list|)
+operator|=
+name|intr_disable
+argument_list|()
 expr_stmt|;
 name|stxa
 argument_list|(
@@ -517,7 +497,7 @@ argument_list|(
 name|Sync
 argument_list|)
 expr_stmt|;
-name|TLB_ATOMIC_END
+name|intr_restore
 argument_list|(
 name|pst
 argument_list|)
@@ -548,10 +528,10 @@ block|{
 name|u_long
 name|pst
 decl_stmt|;
-name|TLB_ATOMIC_START
-argument_list|(
 name|pst
-argument_list|)
+operator|=
+name|intr_disable
+argument_list|()
 expr_stmt|;
 name|stxa
 argument_list|(
@@ -589,7 +569,7 @@ argument_list|(
 name|Sync
 argument_list|)
 expr_stmt|;
-name|TLB_ATOMIC_END
+name|intr_restore
 argument_list|(
 name|pst
 argument_list|)
@@ -743,10 +723,10 @@ block|{
 name|u_long
 name|pst
 decl_stmt|;
-name|TLB_ATOMIC_START
-argument_list|(
 name|pst
-argument_list|)
+operator|=
+name|intr_disable
+argument_list|()
 expr_stmt|;
 name|stxa
 argument_list|(
@@ -796,7 +776,7 @@ name|Sync
 argument_list|)
 expr_stmt|;
 block|}
-name|TLB_ATOMIC_END
+name|intr_restore
 argument_list|(
 name|pst
 argument_list|)
@@ -858,10 +838,10 @@ block|{
 name|u_long
 name|pst
 decl_stmt|;
-name|TLB_ATOMIC_START
-argument_list|(
 name|pst
-argument_list|)
+operator|=
+name|intr_disable
+argument_list|()
 expr_stmt|;
 name|stxa
 argument_list|(
@@ -899,7 +879,7 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|TLB_ATOMIC_END
+name|intr_restore
 argument_list|(
 name|pst
 argument_list|)
