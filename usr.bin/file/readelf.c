@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: readelf.c,v 1.3 1998/01/28 07:36:25 charnier Exp $"
+literal|"$Id: readelf.c,v 1.4 1998/02/20 04:54:00 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +394,9 @@ name|prpsoffsets
 index|[]
 init|=
 block|{
+literal|8
+block|,
+comment|/* FreeBSD */
 literal|100
 block|,
 comment|/* SunOS 5.x */
@@ -412,7 +415,7 @@ value|(sizeof prpsoffsets / sizeof prpsoffsets[0])
 end_define
 
 begin_comment
-comment|/*  * Look through the program headers of an executable image, searching  * for a PT_NOTE section of type NT_PRPSINFO, with a name "CORE"; if one  * is found, try looking in various places in its contents for a 16-character  * string containing only printable characters - if found, that string  * should be the name of the program that dropped core.  * Note: right after that 16-character string is, at least in SunOS 5.x  * (and possibly other SVR4-flavored systems) and Linux, a longer string  * (80 characters, in 5.x, probably other SVR4-flavored systems, and Linux)  * containing the start of the command line for that program.  */
+comment|/*  * Look through the program headers of an executable image, searching  * for a PT_NOTE section of type NT_PRPSINFO, with a name "CORE" or  * "FreeBSD"; if one is found, try looking in various places in its  * contents for a 16-character string containing only printable  * characters - if found, that string should be the name of the program  * that dropped core.  Note: right after that 16-character string is,  * at least in SunOS 5.x (and possibly other SVR4-flavored systems) and  * Linux, a longer string (80 characters, in 5.x, probably other  * SVR4-flavored systems, and Linux) containing the start of the  * command line for that program.  */
 end_comment
 
 begin_function
@@ -687,7 +690,7 @@ literal|4
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * Make sure this note has the name "CORE". 			 */
+comment|/* 			 * Make sure this note has the name "CORE" or 			 * "FreeBSD". 			 */
 if|if
 condition|(
 name|offset
@@ -704,12 +707,20 @@ break|break;
 block|}
 if|if
 condition|(
+name|nbuf
+index|[
+name|offset
+operator|+
 name|nh
 operator|->
 name|n_namesz
+operator|-
+literal|1
+index|]
 operator|!=
-literal|5
+literal|'\0'
 operator|||
+operator|(
 name|strcmp
 argument_list|(
 operator|&
@@ -722,6 +733,20 @@ literal|"CORE"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+operator|&
+name|nbuf
+index|[
+name|offset
+index|]
+argument_list|,
+literal|"FreeBSD"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 continue|continue;
 name|offset
