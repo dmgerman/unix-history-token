@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.39 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.40 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.39 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.40 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2046,9 +2046,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|SOCKADDR
-name|fa
-decl_stmt|;
 name|int
 name|falen
 decl_stmt|;
@@ -2110,7 +2107,7 @@ comment|/* main.c */
 name|falen
 operator|=
 sizeof|sizeof
-name|fa
+name|RealHostAddr
 expr_stmt|;
 if|if
 condition|(
@@ -2119,7 +2116,7 @@ argument_list|(
 name|fd
 argument_list|,
 operator|&
-name|fa
+name|RealHostAddr
 operator|.
 name|sa
 argument_list|,
@@ -2133,7 +2130,7 @@ name|falen
 operator|<=
 literal|0
 operator|||
-name|fa
+name|RealHostAddr
 operator|.
 name|sa
 operator|.
@@ -2174,6 +2171,26 @@ return|return
 name|hbuf
 return|;
 block|}
+if|if
+condition|(
+name|RealHostName
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* translate that to a host name */
+name|RealHostName
+operator|=
+name|newstr
+argument_list|(
+name|hostnamebyanyaddr
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|IDENTPROTO
@@ -2195,7 +2212,7 @@ name|la
 expr_stmt|;
 if|if
 condition|(
-name|fa
+name|RealHostAddr
 operator|.
 name|sa
 operator|.
@@ -2248,7 +2265,7 @@ literal|"%d,%d\r\n"
 argument_list|,
 name|ntohs
 argument_list|(
-name|fa
+name|RealHostAddr
 operator|.
 name|sin
 operator|.
@@ -2290,7 +2307,7 @@ name|sp
 operator|!=
 name|NULL
 condition|)
-name|fa
+name|RealHostAddr
 operator|.
 name|sin
 operator|.
@@ -2301,7 +2318,7 @@ operator|->
 name|s_port
 expr_stmt|;
 else|else
-name|fa
+name|RealHostAddr
 operator|.
 name|sin
 operator|.
@@ -2411,12 +2428,12 @@ argument_list|(
 name|s
 argument_list|,
 operator|&
-name|fa
+name|RealHostAddr
 operator|.
 name|sa
 argument_list|,
 sizeof|sizeof
-name|fa
+name|RealHostAddr
 operator|.
 name|sin
 argument_list|)
