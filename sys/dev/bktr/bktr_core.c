@@ -41,12 +41,6 @@ directive|include
 file|"bktr.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -101,6 +95,24 @@ expr|\
 operator|)
 end_if
 
+begin_comment
+comment|/*******************/
+end_comment
+
+begin_comment
+comment|/* *** FreeBSD *** */
+end_comment
+
+begin_comment
+comment|/*******************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -111,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -160,24 +166,6 @@ include|#
 directive|include
 file|<vm/vm_extern.h>
 end_include
-
-begin_comment
-comment|/*******************/
-end_comment
-
-begin_comment
-comment|/* *** FreeBSD *** */
-end_comment
-
-begin_comment
-comment|/*******************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_if
 if|#
@@ -318,11 +306,30 @@ end_include
 begin_if
 if|#
 directive|if
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
+name|defined
+argument_list|(
+name|BKTR_FREEBSD_MODULE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<dev/bktr/bktr_mem.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BKTR_USE_FREEBSD_SMBUS
+argument_list|)
 end_if
 
 begin_include
@@ -359,6 +366,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|bktr_name
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+block|{
+return|return
+name|bktr
+operator|->
+name|bktr_xname
+return|;
+block|}
+end_function
 
 begin_if
 if|#
@@ -448,6 +473,82 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<uvm/uvm_extern.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/inttypes.h>
 end_include
 
@@ -458,63 +559,44 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_meteor.h>
+file|<dev/ic/bt8xx.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/ic/ioctl_bt848.h>
-end_include
-
-begin_comment
-comment|/* extensions to ioctl_meteor.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<dev/bktr/bktr_reg.h>
+file|<dev/pci/bktr/bktr_reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/bktr/bktr_tuner.h>
+file|<dev/pci/bktr/bktr_tuner.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/bktr/bktr_card.h>
+file|<dev/pci/bktr/bktr_card.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/bktr/bktr_audio.h>
+file|<dev/pci/bktr/bktr_audio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/bktr/bktr_core.h>
+file|<dev/pci/bktr/bktr_core.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/bktr/bktr_os.h>
+file|<dev/pci/bktr/bktr_os.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bootverbose
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -525,6 +607,28 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|bktr_name
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bktr
+operator|->
+name|bktr_dev
+operator|.
+name|dv_xname
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
@@ -1875,21 +1979,11 @@ end_function_decl
 begin_if
 if|#
 directive|if
-operator|(
-operator|(
 operator|!
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|BKTR_USE_FREEBSD_SMBUS
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|NSMBUS
-operator|==
-literal|0
-operator|)
-operator|)
 end_if
 
 begin_comment
@@ -1980,6 +2074,13 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|buf
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|need_to_allocate_memory
+init|=
+literal|1
 decl_stmt|;
 comment|/***************************************/
 comment|/* *** OS Specific memory routines *** */
@@ -2028,7 +2129,7 @@ argument_list|,
 name|DMA_PROG_ALLOC
 argument_list|)
 expr_stmt|;
-comment|/* allocte space for the VBI buffer */
+comment|/* allocate space for the VBI buffer */
 name|bktr
 operator|->
 name|vbidata
@@ -2098,6 +2199,91 @@ name|defined
 argument_list|(
 name|__bsdi__
 argument_list|)
+comment|/* If this is a module, check if there is any currently saved contiguous memory */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BKTR_FREEBSD_MODULE
+argument_list|)
+if|if
+condition|(
+name|bktr_has_stored_addresses
+argument_list|(
+name|unit
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* recover the addresses */
+name|bktr
+operator|->
+name|dma_prog
+operator|=
+name|bktr_retrieve_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_DMA_PROG
+argument_list|)
+expr_stmt|;
+name|bktr
+operator|->
+name|odd_dma_prog
+operator|=
+name|bktr_retrieve_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_ODD_DMA_PROG
+argument_list|)
+expr_stmt|;
+name|bktr
+operator|->
+name|vbidata
+operator|=
+name|bktr_retrieve_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_VBIDATA
+argument_list|)
+expr_stmt|;
+name|bktr
+operator|->
+name|vbibuffer
+operator|=
+name|bktr_retrieve_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_VBIBUFFER
+argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+name|bktr_retrieve_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_BUF
+argument_list|)
+expr_stmt|;
+name|need_to_allocate_memory
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|need_to_allocate_memory
+operator|==
+literal|1
+condition|)
+block|{
 comment|/* allocate space for dma program */
 name|bktr
 operator|->
@@ -2163,6 +2349,70 @@ name|buf
 operator|=
 literal|0
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* FreeBSD or BSDi */
+comment|/* If this is a module, save the current contiguous memory */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BKTR_FREEBSD_MODULE
+argument_list|)
+name|bktr_store_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_DMA_PROG
+argument_list|,
+name|bktr
+operator|->
+name|dma_prog
+argument_list|)
+expr_stmt|;
+name|bktr_store_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_ODD_DMA_PROG
+argument_list|,
+name|bktr
+operator|->
+name|odd_dma_prog
+argument_list|)
+expr_stmt|;
+name|bktr_store_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_VBIDATA
+argument_list|,
+name|bktr
+operator|->
+name|vbidata
+argument_list|)
+expr_stmt|;
+name|bktr_store_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_VBIBUFFER
+argument_list|,
+name|bktr
+operator|->
+name|vbibuffer
+argument_list|)
+expr_stmt|;
+name|bktr_store_address
+argument_list|(
+name|unit
+argument_list|,
+name|BKTR_MEM_BUF
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -2172,9 +2422,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: buffer size %d, addr 0x%x\n"
+literal|"%s: buffer size %d, addr 0x%x\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|BROOKTREE_ALLOC
 argument_list|,
@@ -2800,7 +3053,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* STATUS_SUM */
-comment|/* printf( " STATUS %x %x %x \n", 		dstatus, bktr_status, INL(bktr, BKTR_RISC_COUNT) ); 	*/
+comment|/* printf( "%s: STATUS %x %x %x \n", bktr_name(bktr), 		dstatus, bktr_status, INL(bktr, BKTR_RISC_COUNT) ); 	*/
 comment|/* if risc was disabled re-start process again */
 comment|/* if there was one of the following errors re-start again */
 if|if
@@ -3041,7 +3294,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/** 	printf( "intr status %x %x %x\n", 		bktr_status, dstatus, INL(bktr, BKTR_RISC_COUNT) );  */
+comment|/** 	printf( "%s: intr status %x %x %x\n", bktr_name(bktr), 		bktr_status, dstatus, INL(bktr, BKTR_RISC_COUNT) );  */
 comment|/* 	 * Disable future interrupts if a capture mode is not selected. 	 * This can happen when we are in the process of closing or  	 * changing capture modes, otherwise it shouldn't happen. 	 */
 if|if
 condition|(
@@ -3702,7 +3955,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|BROOKTREE_SYSTEM_DEFAULT
+name|BKTR_SYSTEM_DEFAULT
 operator|==
 name|BROOKTREE_PAL
 name|video_format
@@ -4790,9 +5043,12 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"bktr%d: read: tsleep error %d\n"
+literal|"%s: read: tsleep error %d\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|status
 argument_list|)
@@ -6915,9 +7171,12 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: tsleep error %d %x\n"
+literal|"%s: ioctl: tsleep error %d %x\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|error
 argument_list|,
@@ -7179,9 +7438,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: Geometry odd or even only.\n"
+literal|"%s: ioctl: Geometry odd or even only.\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7246,9 +7508,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: %d: columns must be greater than zero.\n"
+literal|"%s: ioctl: %d: columns must be greater than zero.\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|geo
 operator|->
@@ -7278,9 +7543,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: %d: columns too large or not even.\n"
+literal|"%s: ioctl: %d: columns too large or not even.\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|geo
 operator|->
@@ -7303,9 +7571,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: %d: rows must be greater than zero.\n"
+literal|"%s: ioctl: %d: rows must be greater than zero.\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|geo
 operator|->
@@ -7361,9 +7632,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: %d: rows too large or not even.\n"
+literal|"%s: ioctl: %d: rows too large or not even.\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|geo
 operator|->
@@ -7386,9 +7660,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: too many frames.\n"
+literal|"%s: ioctl: too many frames.\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -7620,9 +7897,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"bktr%d: ioctl: Allocating %d bytes\n"
+literal|"%s: ioctl: Allocating %d bytes\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|temp
 operator|*
@@ -9863,9 +10143,12 @@ directive|ifdef
 name|BKTR_RADIO_DEBUG
 name|printf
 argument_list|(
-literal|"bktr%d: arg=%d temp=%d\n"
+literal|"%s: arg=%d temp=%d\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -9901,9 +10184,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr%d: Radio frequency out of range\n"
+literal|"%s: Radio frequency out of range\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -9948,9 +10234,12 @@ name|temp
 condition|)
 name|printf
 argument_list|(
-literal|"bktr%d: tv_freq returned: %d\n"
+literal|"%s: tv_freq returned: %d\n"
 argument_list|,
-name|unit
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|temp
 argument_list|)
@@ -11118,7 +11407,12 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" Reg:value : \t%x:%x \t%x:%x \t %x:%x \t %x:%x\n"
+literal|"%s: Reg:value : \t%x:%x \t%x:%x \t %x:%x \t %x:%x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|r
 index|[
@@ -11197,7 +11491,12 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" INT STAT %x \n"
+literal|"%s: INT STAT %x \n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|INL
 argument_list|(
@@ -11209,7 +11508,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Reg INT_MASK %x \n"
+literal|"%s: Reg INT_MASK %x \n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|INL
 argument_list|(
@@ -11221,7 +11525,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Reg GPIO_DMA_CTL %x \n"
+literal|"%s: Reg GPIO_DMA_CTL %x \n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
 argument_list|,
 name|INW
 argument_list|(
@@ -12812,6 +13121,9 @@ name|u_long
 operator|)
 name|vtophys
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|bktr
 operator|->
 name|vbidata
@@ -13127,6 +13439,9 @@ name|u_long
 operator|)
 name|vtophys
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|bktr
 operator|->
 name|vbidata
@@ -16670,7 +16985,7 @@ operator|)
 operator|-
 literal|4096
 expr_stmt|;
-comment|/* printf("HSCALE value is %d\n",temp); */
+comment|/* printf("%s: HSCALE value is %d\n", bktr_name(bktr), temp); */
 name|OUTB
 argument_list|(
 name|bktr
@@ -16730,7 +17045,7 @@ name|bktr
 operator|->
 name|cols
 expr_stmt|;
-comment|/* printf("HACTIVE value is %d\n",temp); */
+comment|/* printf("%s: HACTIVE value is %d\n", bktr_name(bktr), temp); */
 name|OUTB
 argument_list|(
 name|bktr
@@ -16901,7 +17216,7 @@ name|temp
 operator|&
 literal|0x3fe
 expr_stmt|;
-comment|/* printf("HDELAY value is %d\n",temp); */
+comment|/* printf("%s: HDELAY value is %d\n", bktr_name(bktr), temp); */
 name|OUTB
 argument_list|(
 name|bktr
@@ -17176,7 +17491,7 @@ name|tmp_int
 operator|&=
 literal|0x1fff
 expr_stmt|;
-comment|/* printf("VSCALE value is %d\n",tmp_int); */
+comment|/* printf("%s: VSCALE value is %d\n", bktr_name(bktr), tmp_int); */
 name|OUTB
 argument_list|(
 name|bktr
@@ -17301,7 +17616,7 @@ name|fp
 operator|->
 name|vactive
 expr_stmt|;
-comment|/* printf("VACTIVE is %d\n",temp); */
+comment|/* printf("%s: VACTIVE is %d\n", bktr_name(bktr), temp); */
 name|OUTB
 argument_list|(
 name|bktr
@@ -17432,7 +17747,7 @@ name|fp
 operator|->
 name|vdelay
 expr_stmt|;
-comment|/* printf("VDELAY is %d\n",temp); */
+comment|/* printf("%s: VDELAY is %d\n", bktr_name(bktr), temp); */
 name|OUTB
 argument_list|(
 name|bktr
@@ -18711,18 +19026,10 @@ value|(I2CBITTIME_878 |			\ 				 BT848_DATA_CTL_I2CSCL |	\ 				 BT848_DATA_CTL_I
 comment|/* Select between old i2c code and new iicbus / smbus code */
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|BKTR_USE_FREEBSD_SMBUS
 argument_list|)
-operator|&&
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
-operator|)
 comment|/*  * The hardware interface is actually SMB commands  */
 name|int
 name|i2cWrite
@@ -19482,7 +19789,7 @@ return|return;
 block|}
 else|#
 directive|else
-comment|/* defined(__FreeBSD__)&& (NSMBUS> 0) */
+comment|/* defined(BKTR_USE_FREEBSD_SMBUS) */
 comment|/*  * Program the i2c bus directly  */
 name|int
 name|i2cWrite
@@ -20860,7 +21167,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* defined(__FreeBSD__)&& (NSMBUS> 0) */
+comment|/* defined(BKTR_USE_FREEBSD_SMBUS) */
 if|#
 directive|if
 name|defined
@@ -21049,53 +21356,161 @@ else|else
 block|{
 name|OUTL
 argument_list|(
-argument|bktr
+name|bktr
 argument_list|,
-argument|BKTR_I2C_DATA_CTL
+name|BKTR_I2C_DATA_CTL
 argument_list|,
 literal|0
-argument|; 			DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* assert LO data */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|2
-argument|); 			DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* strobe clock */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|0
-argument|); 			DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* release clock */
-argument|} 	}
+block|}
+block|}
 comment|/* look for an ACK */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|1
-argument|); DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* float data */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|3
-argument|); DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* strobe clock */
-argument|status = INL(bktr, BKTR_I2C_DATA_CTL)&
+name|status
+operator|=
+name|INL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|)
+operator|&
 literal|1
-argument|;
+expr_stmt|;
 comment|/* read the ACK bit */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|1
-argument|); DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* release clock */
 comment|/* the STOP */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|0
-argument|); DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* lower clock& data */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|2
-argument|); DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* release clock */
-argument|OUTL(bktr, BKTR_I2C_DATA_CTL,
+name|OUTL
+argument_list|(
+name|bktr
+argument_list|,
+name|BKTR_I2C_DATA_CTL
+argument_list|,
 literal|3
-argument|); DELAY( BITD );
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BITD
+argument_list|)
+expr_stmt|;
 comment|/* release data */
-argument|return( status ); }
+return|return
+operator|(
+name|status
+operator|)
+return|;
+block|}
 end_function
 
 begin_undef
