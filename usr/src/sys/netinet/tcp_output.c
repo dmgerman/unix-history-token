@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -757,6 +757,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|u_short
+name|mss
+decl_stmt|;
 name|opt
 operator|=
 name|tcp_initopt
@@ -775,16 +778,7 @@ argument_list|(
 name|tcp_initopt
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
-operator|(
-name|opt
-operator|+
-literal|2
-operator|)
+name|mss
 operator|=
 name|htons
 argument_list|(
@@ -796,6 +790,29 @@ argument_list|(
 name|tp
 argument_list|,
 literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|mss
+argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
+name|opt
+operator|+
+literal|2
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mss
 argument_list|)
 argument_list|)
 expr_stmt|;
