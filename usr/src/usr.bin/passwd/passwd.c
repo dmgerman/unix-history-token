@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.16 (Berkeley) 85/08/09"
+literal|"@(#)passwd.c	4.17 (Berkeley) 85/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -919,6 +919,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Warning: dbm_store failed\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|tf
 argument_list|)
 expr_stmt|;
 if|if
