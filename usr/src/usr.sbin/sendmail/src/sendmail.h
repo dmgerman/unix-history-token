@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.4.1.1		%G%"
+literal|"@(#)sendmail.h	4.5		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,122 +473,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FOPT
-value|'f'
-end_define
-
-begin_comment
-comment|/* mailer takes picky -f flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_ROPT
-value|'r'
-end_define
-
-begin_comment
-comment|/* mailer takes picky -r flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_RESTR
-value|'S'
-end_define
-
-begin_comment
-comment|/* must be daemon to execute */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_NHDR
-value|'n'
-end_define
-
-begin_comment
-comment|/* don't insert From line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_LOCAL
-value|'l'
-end_define
-
-begin_comment
-comment|/* delivery is to this host */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_STRIPQ
-value|'s'
-end_define
-
-begin_comment
-comment|/* strip quote chars from user/host */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_MUSER
-value|'m'
-end_define
-
-begin_comment
-comment|/* can handle multiple users at once */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_CANONICAL
 value|'C'
 end_define
 
 begin_comment
 comment|/* make addresses canonical "u@dom" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_USR_UPPER
-value|'u'
-end_define
-
-begin_comment
-comment|/* preserve user case distinction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_HST_UPPER
-value|'h'
-end_define
-
-begin_comment
-comment|/* preserve host case distinction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_UGLYUUCP
-value|'U'
-end_define
-
-begin_comment
-comment|/* this wants an ugly UUCP from line */
 end_comment
 
 begin_define
@@ -605,12 +495,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LIMITS
-value|'L'
+name|M_ESCFROM
+value|'E'
 end_define
 
 begin_comment
-comment|/* must enforce SMTP line limits */
+comment|/* escape From lines to>From */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FOPT
+value|'f'
+end_define
+
+begin_comment
+comment|/* mailer takes picky -f flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HST_UPPER
+value|'h'
+end_define
+
+begin_comment
+comment|/* preserve host case distinction */
 end_comment
 
 begin_define
@@ -627,12 +539,111 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_LOCAL
+value|'l'
+end_define
+
+begin_comment
+comment|/* delivery is to this host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LIMITS
+value|'L'
+end_define
+
+begin_comment
+comment|/* must enforce SMTP line limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MUSER
+value|'m'
+end_define
+
+begin_comment
+comment|/* can handle multiple users at once */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NHDR
+value|'n'
+end_define
+
+begin_comment
+comment|/* don't insert From line */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_FROMPATH
 value|'p'
 end_define
 
 begin_comment
 comment|/* use reverse-path in MAIL FROM: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ROPT
+value|'r'
+end_define
+
+begin_comment
+comment|/* mailer takes picky -r flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_STRIPQ
+value|'s'
+end_define
+
+begin_comment
+comment|/* strip quote chars from user/host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_RESTR
+value|'S'
+end_define
+
+begin_comment
+comment|/* must be daemon to execute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_USR_UPPER
+value|'u'
+end_define
+
+begin_comment
+comment|/* preserve user case distinction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_UGLYUUCP
+value|'U'
+end_define
+
+begin_comment
+comment|/* this wants an ugly UUCP from line */
 end_comment
 
 begin_define
