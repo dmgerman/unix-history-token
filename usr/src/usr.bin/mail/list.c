@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	5.10 (Berkeley) %G%"
+literal|"@(#)list.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2151,7 +2151,7 @@ name|strcpy
 argument_list|(
 name|lexstring
 argument_list|,
-name|stringstack
+name|string_stack
 index|[
 name|regretp
 index|]
@@ -2511,7 +2511,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|stringstack
+name|string_stack
 index|[
 name|regretp
 index|]
