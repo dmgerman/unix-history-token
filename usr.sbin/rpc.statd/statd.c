@@ -440,7 +440,8 @@ parameter_list|,
 name|int
 name|code
 parameter_list|,
-name|void
+name|struct
+name|sigcontext
 modifier|*
 name|scp
 parameter_list|)
