@@ -1546,7 +1546,7 @@ end_function_decl
 
 begin_function_decl
 name|Static
-name|__inline__
+name|__inline
 name|uhci_soft_qh_t
 modifier|*
 name|uhci_find_prev_qh
@@ -1990,7 +1990,7 @@ end_define
 
 begin_function
 name|Static
-name|__inline__
+name|__inline
 name|uhci_soft_qh_t
 modifier|*
 name|uhci_find_prev_qh
