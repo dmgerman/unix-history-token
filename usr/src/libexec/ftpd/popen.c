@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software written by Ken Arnold and  * published in UNIX Review, Vol. 6, No. 8.  *  * %sccs.include.redist.c%  *  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software written by Ken Arnold and  * published in UNIX Review, Vol. 6, No. 8.  *  * %sccs.include.redist.c%  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.11 (Berkeley) %G%"
+literal|"@(#)popen.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
