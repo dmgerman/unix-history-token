@@ -298,7 +298,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * The old route has gone away; try for a new one. 		 */
-name|rtfree
+name|RTFREE
 argument_list|(
 name|ro
 operator|->
