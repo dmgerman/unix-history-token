@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -618,7 +618,9 @@ expr_stmt|;
 comment|/* 	 * Generate a unique nfs mount id. The problem is that a dev number 	 * is not unique across multiple systems. The techique is as follows: 	 * 1) Set to nblkdev,0 which will never be used otherwise 	 * 2) Generate a first guess as nblkdev,nfs_mntid where nfs_mntid is 	 *	NOT 0 	 * 3) Loop searching the mount list for another one with same id 	 *	If a match, increment val[0] and try again 	 * NB: I increment val[0] { a long } instead of nfs_mntid { a u_char } 	 *	so that nfs is not limited to 255 mount points 	 *     Incrementing the high order bits does no real harm, since it 	 *     simply makes the major dev number tick up. The upper bound is 	 *     set to major dev 127 to avoid any sign extention problems 	 */
 name|mp
 operator|->
-name|m_fsid
+name|m_stat
+operator|.
+name|f_fsid
 operator|.
 name|val
 index|[
@@ -634,7 +636,9 @@ argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|m_fsid
+name|m_stat
+operator|.
+name|f_fsid
 operator|.
 name|val
 index|[
@@ -722,7 +726,9 @@ goto|;
 block|}
 name|mp
 operator|->
-name|m_fsid
+name|m_stat
+operator|.
+name|f_fsid
 operator|.
 name|val
 index|[
@@ -818,28 +824,26 @@ name|bcopy
 argument_list|(
 name|hst
 argument_list|,
-name|nmp
+name|mp
 operator|->
-name|nm_host
+name|m_stat
+operator|.
+name|f_mntfromname
 argument_list|,
-sizeof|sizeof
-name|nmp
-operator|->
-name|nm_host
+name|MNAMELEN
 argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
 name|pth
 argument_list|,
-name|nmp
+name|mp
 operator|->
-name|nm_path
+name|m_stat
+operator|.
+name|f_mntonname
 argument_list|,
-sizeof|sizeof
-name|nmp
-operator|->
-name|nm_path
+name|MNAMELEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -1103,17 +1107,23 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 	 * Set to CLBYTES so that vinifod() doesn't get confused. 	 * Actually any exact multiple of CLBYTES will do 	 */
+if|if
+condition|(
+name|error
+operator|=
+name|nfs_statfs
+argument_list|(
+name|mp
+argument_list|,
+operator|&
 name|mp
 operator|->
-name|m_bsize
-operator|=
-name|mp
-operator|->
-name|m_fsize
-operator|=
-name|CLBYTES
-expr_stmt|;
+name|m_stat
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
 comment|/* 	 * A reference count is needed on the nfsnode representing the 	 * remote root.  If this object is not persistent, then backward 	 * traversals of the mount point (i.e. "..") will not work if 	 * the nfsnode gets flushed out of the cache. Ufs does not have 	 * this problem, because one can identify root inodes by their 	 * number == ROOTINO (2). 	 */
 if|if
 condition|(
