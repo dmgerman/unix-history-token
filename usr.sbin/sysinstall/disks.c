@@ -2076,7 +2076,7 @@ expr_stmt|;
 else|else
 name|partitiontype
 operator|=
-name|unknown
+name|mbr
 expr_stmt|;
 name|Create_Chunk
 argument_list|(
@@ -2319,7 +2319,7 @@ expr_stmt|;
 else|else
 name|partitiontype
 operator|=
-name|unknown
+name|mbr
 expr_stmt|;
 name|chunk_info
 index|[
