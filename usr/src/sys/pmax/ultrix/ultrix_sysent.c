@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -738,7 +738,21 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getdirentries
+name|ogetdirentries
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ultrixgetdomainname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ultrixsetdomainname
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1559,7 +1573,7 @@ block|,
 comment|/* 158 = nfs_svc */
 literal|4
 block|,
-name|getdirentries
+name|ogetdirentries
 block|,
 comment|/* 159 = getdirentries */
 literal|0
@@ -1589,12 +1603,12 @@ block|,
 comment|/* 164 = nfs_getfh */
 literal|0
 block|,
-name|notimp
+name|ultrixgetdomainname
 block|,
 comment|/* 165 = getdomainname */
 literal|0
 block|,
-name|notimp
+name|ultrixsetdomainname
 block|,
 comment|/* 166 = setdomainname */
 literal|0
