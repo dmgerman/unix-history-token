@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.91 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.92 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.91 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.92 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2870,7 +2870,7 @@ name|ipoptlen
 decl_stmt|,
 name|j
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|q
 decl_stmt|;
@@ -2932,7 +2932,6 @@ operator|(
 name|u_char
 operator|*
 operator|)
-operator|&
 name|ipopt
 operator|.
 name|ipopt_list
@@ -3071,8 +3070,6 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|p
-operator|+=
 name|sprintf
 argument_list|(
 name|p
@@ -3089,6 +3086,13 @@ name|inet_ntoa
 argument_list|(
 name|addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|q
