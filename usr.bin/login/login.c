@@ -3873,7 +3873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allow for authentication style and/or kerberos instance  * */
+comment|/*  * Allow for authentication style and/or kerberos instance  */
 end_comment
 
 begin_define
