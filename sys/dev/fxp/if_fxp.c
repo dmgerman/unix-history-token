@@ -3308,6 +3308,14 @@ name|if_capabilities
 operator|=
 name|IFCAP_HWCSUM
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifp
+operator|->
+name|if_capabilities
+expr_stmt|;
 block|}
 comment|/* 	 * Attach the interface. 	 */
 name|ether_ifattach
