@@ -710,9 +710,6 @@ name|clkintr_pending
 operator|=
 literal|1
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ih
@@ -727,6 +724,9 @@ name|IH_FAST
 condition|)
 block|{
 comment|/* 		 * Execute fast interrupt handlers directly. 		 * To support clock handlers, if a handler registers 		 * with a NULL argument, then we pass it a pointer to 		 * a trapframe as its argument. 		 */
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ih
@@ -809,6 +809,9 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -853,9 +856,6 @@ name|cold
 argument_list|)
 expr_stmt|;
 block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|error
