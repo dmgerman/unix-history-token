@@ -1701,7 +1701,7 @@ literal|'\0'
 expr_stmt|;
 name|filesize
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|cp
 argument_list|,
