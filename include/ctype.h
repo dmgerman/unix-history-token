@@ -204,6 +204,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_CTYPE_SWA
+value|0x00000000L
+end_define
+
+begin_comment
+comment|/* autowidth / default */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_CTYPE_SW0
 value|0x20000000L
 end_define
@@ -216,11 +227,11 @@ begin_define
 define|#
 directive|define
 name|_CTYPE_SW1
-value|0x00000000L
+value|0x40000000L
 end_define
 
 begin_comment
-comment|/* 1 width character / default*/
+comment|/* 1 width character */
 end_comment
 
 begin_define
