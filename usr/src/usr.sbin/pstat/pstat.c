@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.13 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3486,7 +3486,7 @@ name|char
 name|hdr
 index|[]
 init|=
-literal|"  LINE RAW CAN OUT  HWT LWT     COL STATE  SESS  PGID DISC\n"
+literal|"  LINE RAW CAN OUT  HWT LWT     COL STATE  SESS      PGID DISC\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3534,9 +3534,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|hp300
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|mips
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -4286,7 +4296,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3d %4d %3d %3d "
+literal|"%3d %4d %3d %7d "
 argument_list|,
 name|tp
 operator|->
@@ -4377,7 +4387,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-4s %6x"
+literal|"%-6s %8x"
 argument_list|,
 name|state
 argument_list|,
@@ -4387,9 +4397,6 @@ operator|)
 name|tp
 operator|->
 name|t_session
-operator|&
-operator|~
-name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|pgid
