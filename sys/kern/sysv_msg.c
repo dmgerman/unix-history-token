@@ -3658,6 +3658,7 @@ expr_stmt|;
 name|user_msgp
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3862,6 +3863,7 @@ expr_stmt|;
 name|user_msgp
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
