@@ -179,7 +179,7 @@ block|{
 name|int
 name|ip_count
 decl_stmt|;
-comment|/* attacked w/ AF_INET */
+comment|/* attached w/ AF_INET */
 name|int
 name|ip6_count
 decl_stmt|;
