@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.9 1994/05/25 06:24:41 jkh Exp $"
+literal|"$Id: perform.c,v 1.10 1994/08/29 16:31:37 adam Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,20 +222,6 @@ name|suffix
 operator|=
 literal|"tgz"
 expr_stmt|;
-if|if
-condition|(
-name|Prefix
-condition|)
-name|add_plist
-argument_list|(
-operator|&
-name|plist
-argument_list|,
-name|PLIST_CWD
-argument_list|,
-name|Prefix
-argument_list|)
-expr_stmt|;
 comment|/* Slurp in the packing list */
 name|read_plist
 argument_list|(
@@ -245,6 +231,35 @@ argument_list|,
 name|pkg_in
 argument_list|)
 expr_stmt|;
+comment|/* Prefix should override the packing list */
+if|if
+condition|(
+name|Prefix
+condition|)
+block|{
+name|delete_plist
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|FALSE
+argument_list|,
+name|PLIST_CWD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|add_plist_top
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_CWD
+argument_list|,
+name|Prefix
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Run down the list and see if we've named it, if not stick in a name      * at the top.      */
 if|if
 condition|(
@@ -274,6 +289,8 @@ operator|=
 name|make_playpen
 argument_list|(
 name|PlayPen
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|signal
