@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.12 (Berkeley) %G%"
+literal|"@(#)devname.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndbm.h>
+file|<db.h>
 end_include
 
 begin_include
