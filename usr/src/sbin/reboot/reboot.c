@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reboot.c	5.10 (Berkeley) %G%"
+literal|"@(#)reboot.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
