@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -56,6 +50,12 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
 
 begin_include
 include|#
@@ -135,18 +135,6 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usbdi_util.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usbdevs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_quirks.h>
 end_include
 
 begin_define
