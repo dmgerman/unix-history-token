@@ -7766,27 +7766,22 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|nflags
+operator|=
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|nvrm_flags
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|ISP_TARGET_MODE
-if|if
-condition|(
-name|tgt
-operator|==
-name|sdp
-operator|->
-name|isp_initiator_id
-condition|)
-block|{
 name|nflags
-operator|=
-name|DPARM_DEFAULT
-expr_stmt|;
-block|}
-else|else
-block|{
-name|nflags
-operator|=
+operator|&=
 name|DPARM_SAFE_DFLT
 expr_stmt|;
 if|if
@@ -7802,7 +7797,6 @@ name|DPARM_NARROW
 operator||
 name|DPARM_ASYNC
 expr_stmt|;
-block|}
 block|}
 else|#
 directive|else
@@ -7821,7 +7815,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 expr_stmt|;
 name|sdp
 operator|->
@@ -7830,7 +7824,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 operator|=
 name|nflags
 expr_stmt|;
@@ -7877,7 +7871,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 operator|=
 name|oflags
 expr_stmt|;
@@ -9882,6 +9876,30 @@ name|ccb
 operator|->
 name|cts
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IS_CURRENT_SETTINGS
+argument_list|(
+name|cts
+argument_list|)
+condition|)
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_INVALID
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|tgt
 operator|=
 name|cts
@@ -9936,7 +9954,7 @@ name|sdp
 operator|+=
 name|bus
 expr_stmt|;
-comment|/* 			 * We always update (internally) from dev_flags 			 * so any request to change settings just gets 			 * vectored to that location. 			 */
+comment|/* 			 * We always update (internally) from goal_flags 			 * so any request to change settings just gets 			 * vectored to that location. 			 */
 name|dptr
 operator|=
 operator|&
@@ -9947,9 +9965,9 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 expr_stmt|;
-comment|/* 			 * Note that these operations affect the 			 * the goal flags (dev_flags)- not 			 * the current state flags. Then we mark 			 * things so that the next operation to 			 * this HBA will cause the update to occur. 			 */
+comment|/* 			 * Note that these operations affect the 			 * the goal flags (goal_flags)- not 			 * the current state flags. Then we mark 			 * things so that the next operation to 			 * this HBA will cause the update to occur. 			 */
 if|if
 condition|(
 name|cts
@@ -10164,7 +10182,7 @@ name|sdp
 operator|+=
 name|bus
 expr_stmt|;
-comment|/* 			 * We always update (internally) from dev_flags 			 * so any request to change settings just gets 			 * vectored to that location. 			 */
+comment|/* 			 * We always update (internally) from goal_flags 			 * so any request to change settings just gets 			 * vectored to that location. 			 */
 name|dptr
 operator|=
 operator|&
@@ -10175,7 +10193,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 expr_stmt|;
 if|if
 condition|(
@@ -10305,35 +10323,8 @@ name|valid
 operator|&
 name|CTS_SPI_VALID_SYNC_RATE
 operator|)
-condition|)
-block|{
-operator|*
-name|dptr
-operator||=
-name|DPARM_SYNC
-expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGDEBUG0
-argument_list|,
-literal|"enabling synchronous mode, but ignoring "
-literal|"setting to period 0x%x offset 0x%x"
-argument_list|,
-name|spi
-operator|->
-name|sync_period
-argument_list|,
-name|spi
-operator|->
-name|sync_offset
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+operator|&&
+operator|(
 name|spi
 operator|->
 name|sync_period
@@ -10341,6 +10332,7 @@ operator|&&
 name|spi
 operator|->
 name|sync_offset
+operator|)
 condition|)
 block|{
 operator|*
@@ -10348,23 +10340,32 @@ name|dptr
 operator||=
 name|DPARM_SYNC
 expr_stmt|;
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGDEBUG0
-argument_list|,
-literal|"enabling synchronous mode (1), but ignoring"
-literal|" setting to period 0x%x offset 0x%x"
-argument_list|,
+comment|/* 				 * XXX: CHECK FOR LEGALITY 				 */
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|goal_period
+operator|=
 name|spi
 operator|->
 name|sync_period
-argument_list|,
+expr_stmt|;
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|goal_offset
+operator|=
 name|spi
 operator|->
 name|sync_offset
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -10384,20 +10385,20 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d set %s period 0x%x offset 0x%x flags 0x%x"
+literal|"SET bus %d targ %d to flags %x off %x per %x"
 argument_list|,
 name|bus
 argument_list|,
 name|tgt
 argument_list|,
-name|IS_CURRENT_SETTINGS
-argument_list|(
-name|cts
-argument_list|)
-condition|?
-literal|"current"
-else|:
-literal|"user"
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|goal_flags
 argument_list|,
 name|sdp
 operator|->
@@ -10406,7 +10407,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_period
+name|goal_offset
 argument_list|,
 name|sdp
 operator|->
@@ -10415,16 +10416,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_offset
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|tgt
-index|]
-operator|.
-name|dev_flags
+name|goal_period
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -10448,10 +10440,6 @@ operator|<<
 name|bus
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * What, if anything, are we supposed to do? 			 */
 block|}
 name|ISPLOCK_2_CAMLOCK
 argument_list|(
@@ -10765,7 +10753,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_dflags
+name|actv_flags
 expr_stmt|;
 name|oval
 operator|=
@@ -10776,7 +10764,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 expr_stmt|;
 name|pval
 operator|=
@@ -10787,7 +10775,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 expr_stmt|;
 block|}
 else|else
@@ -10801,7 +10789,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|nvrm_flags
 expr_stmt|;
 name|oval
 operator|=
@@ -10812,7 +10800,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_offset
+name|nvrm_offset
 expr_stmt|;
 name|pval
 operator|=
@@ -10823,7 +10811,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_period
+name|nvrm_period
 expr_stmt|;
 block|}
 ifndef|#
@@ -11012,8 +11000,8 @@ name|DPARM_SYNC
 operator|)
 operator|&&
 name|oval
-operator|!=
-literal|0
+operator|&&
+name|pval
 condition|)
 block|{
 name|spi
@@ -11111,26 +11099,26 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d get %s period 0x%x offset 0x%x flags 0x%x"
-argument_list|,
-name|bus
-argument_list|,
-name|tgt
+literal|"GET %s bus %d targ %d to flags %x off %x per %x"
 argument_list|,
 name|IS_CURRENT_SETTINGS
 argument_list|(
 name|cts
 argument_list|)
 condition|?
-literal|"current"
+literal|"ACTIVE"
 else|:
-literal|"user"
+literal|"NVRAM"
 argument_list|,
-name|pval
+name|bus
+argument_list|,
+name|tgt
+argument_list|,
+name|dval
 argument_list|,
 name|oval
 argument_list|,
-name|dval
+name|pval
 argument_list|)
 expr_stmt|;
 block|}
@@ -12368,7 +12356,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_dflags
+name|actv_flags
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -12514,7 +12502,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 expr_stmt|;
 name|spi
 operator|->
@@ -12527,7 +12515,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 expr_stmt|;
 block|}
 else|#
@@ -12605,7 +12593,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 expr_stmt|;
 name|cts
 operator|.
@@ -12618,7 +12606,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 expr_stmt|;
 if|if
 condition|(
@@ -12657,7 +12645,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 argument_list|,
 name|sdp
 operator|->
@@ -12666,7 +12654,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 argument_list|,
 name|flags
 argument_list|)
