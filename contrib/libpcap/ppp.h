@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: ppp.h,v 1.7 95/05/04 17:52:46 mccanne Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/libpcap/ppp.h,v 1.8 1999/10/19 15:18:31 itojun Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -157,6 +157,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_IPV6
+value|0x0057
+end_define
+
+begin_comment
+comment|/* Internet Protocol version 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_HELLO
 value|0x0201
 end_define
@@ -273,6 +284,17 @@ end_define
 
 begin_comment
 comment|/* Banyan Vines Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_IPV6CP
+value|0x8057
+end_define
+
+begin_comment
+comment|/* IPv6 Control Protocol */
 end_comment
 
 begin_define

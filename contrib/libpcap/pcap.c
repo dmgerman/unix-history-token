@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: pcap.c,v 1.29 98/07/12 13:15:39 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap.c,v 1.29.1.1 1999/10/07 23:46:40 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
