@@ -2770,10 +2770,14 @@ name|linux_dirent
 operator|.
 name|doff
 operator|=
-operator|(
+call|(
 name|linux_off_t
-operator|)
+call|)
+argument_list|(
 name|off
+operator|+
+name|reclen
+argument_list|)
 expr_stmt|;
 name|linux_dirent
 operator|.
