@@ -181,6 +181,9 @@ comment|/* FORE SBA-200 */
 name|DEV_FORE_PCA200E
 block|,
 comment|/* FORE PCA-200E */
+name|DEV_FORE_ESA200E
+block|,
+comment|/* FORE ESA-200E */
 name|DEV_ENI_155P
 comment|/* ENI-155p */
 block|}
