@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.6 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -815,7 +815,7 @@ expr_stmt|;
 comment|/* s1 = z; */
 name|printf
 argument_list|(
-literal|"\  procs     memory            page        swap         disk  faults          cpu\n\  r b w   avm  fre  re at pi po fr  de  sr i o  %c%d %c%d %c%d %c%d  in  sy  cs us sy id\n\ "
+literal|"\  procs     memory                       page      disk  faults          cpu\n\  r b w   avm  fre  re at  pi  po  fr  de  sr %c%d %c%d %c%d %c%d  in  sy  cs us sy id\n\ "
 argument_list|,
 name|dr_name
 index|[
@@ -1214,7 +1214,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d%3d%3d"
+literal|"%4d%3d%4d"
 argument_list|,
 operator|(
 name|rate
@@ -1248,18 +1248,22 @@ name|nintv
 argument_list|,
 name|rate
 operator|.
-name|v_pgin
+name|v_pgpgin
+operator|/
+literal|2
 operator|/
 name|nintv
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%3d%3d%4d%4.1f%2d%2d"
+literal|"%4d%4d%4d%4d"
 argument_list|,
 name|rate
 operator|.
-name|v_pgout
+name|v_pgpgout
+operator|/
+literal|2
 operator|/
 name|nintv
 argument_list|,
@@ -1267,35 +1271,17 @@ name|rate
 operator|.
 name|v_dfree
 operator|/
+literal|2
+operator|/
 name|nintv
 argument_list|,
 name|deficit
 operator|/
 literal|2
 argument_list|,
-operator|(
-literal|60.0
-operator|*
 name|rate
 operator|.
 name|v_scan
-operator|)
-operator|/
-operator|(
-name|LOOPSIZ
-operator|*
-name|nintv
-operator|)
-argument_list|,
-name|rate
-operator|.
-name|v_swpin
-operator|/
-name|nintv
-argument_list|,
-name|rate
-operator|.
-name|v_swpout
 operator|/
 name|nintv
 argument_list|)
@@ -1303,11 +1289,6 @@ expr_stmt|;
 name|etime
 operator|/=
 literal|60.
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1731,6 +1712,33 @@ argument_list|,
 name|sum
 operator|.
 name|v_pgout
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d pages paged in\n"
+argument_list|,
+name|sum
+operator|.
+name|v_pgpgin
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d pages paged out\n"
+argument_list|,
+name|sum
+operator|.
+name|v_pgpgout
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d sequential process pages freed\n"
+argument_list|,
+name|sum
+operator|.
+name|v_seqfree
 argument_list|)
 expr_stmt|;
 name|printf
