@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ONE2MANY_COOKIE
-value|971111383
+value|1100897444
 end_define
 
 begin_comment
@@ -127,6 +127,17 @@ end_define
 
 begin_comment
 comment|/* use enabledLinks[] array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ONE2MANY_FAIL_NOTIFY
+value|2
+end_define
+
+begin_comment
+comment|/* listen to flow control msgs */
 end_comment
 
 begin_comment
