@@ -3550,6 +3550,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|setrunqueue
+argument_list|(
+name|td1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
