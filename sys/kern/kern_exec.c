@@ -1069,16 +1069,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * mark as execed, wakeup the process that vforked (if any) and tell 	 * it that it now has its own resources back 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
 operator||=
 name|P_EXEC
-expr_stmt|;
-name|PROCTREE_LOCK
-argument_list|(
-name|PT_SHARED
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1113,11 +1113,6 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
-name|PROCTREE_LOCK
-argument_list|(
-name|PT_RELEASE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 */
 if|if
 condition|(
@@ -1188,6 +1183,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Turn off syscall tracing for set-id programs, except for 		 * root. 		 */
 if|if
 condition|(
@@ -1314,6 +1314,11 @@ operator|&=
 operator|~
 name|P_SUGID
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Implement correct POSIX saved-id behavior. 	 */
 name|p
@@ -1371,6 +1376,11 @@ operator|->
 name|ni_vp
 expr_stmt|;
 comment|/* 	 * notify others that we exec'd 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|KNOTE
 argument_list|(
 operator|&
@@ -1382,7 +1392,7 @@ name|NOTE_EXEC
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * 	can be set before the program executes. 	 */
-name|STOPEVENT
+name|_STOPEVENT
 argument_list|(
 name|p
 argument_list|,
@@ -1491,6 +1501,11 @@ name|pargs
 argument_list|)
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|p
@@ -1512,6 +1527,24 @@ argument_list|,
 name|M_PARGS
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_args
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"malloc of p_args failed"
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -1546,6 +1579,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|exec_fail_dealloc
 label|:
 comment|/* 	 * free various allocated resources 	 */
