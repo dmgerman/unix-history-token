@@ -558,7 +558,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"cis mem map %x\n"
+literal|"cis mem map 0x%x (resource: 0x%lx)\n"
 operator|,
 operator|(
 name|unsigned
@@ -567,6 +567,11 @@ operator|)
 name|tuple
 operator|.
 name|memh
+operator|,
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -615,6 +620,39 @@ condition|(
 literal|1
 condition|)
 block|{
+comment|/* 			 * Perform boundary check for insane cards. 			 * If CIS is too long, simulate CIS end. 			 * (This check may not be sufficient for 			 * malicious cards.) 			 */
+if|if
+condition|(
+name|tuple
+operator|.
+name|mult
+operator|*
+name|tuple
+operator|.
+name|ptr
+operator|>=
+name|PCCARD_CIS_SIZE
+operator|-
+literal|1
+operator|-
+literal|32
+comment|/* ad hoc value */
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CIS is too long -- truncating\n"
+argument_list|)
+expr_stmt|;
+name|tuple
+operator|.
+name|code
+operator|=
+name|PCCARD_CISTPL_END
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* get the tuple code */
 name|tuple
 operator|.
@@ -630,6 +668,7 @@ operator|.
 name|ptr
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* two special-case tuples */
 if|if
 condition|(
