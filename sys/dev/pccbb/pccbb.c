@@ -607,7 +607,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6922
 block|,
-literal|"O2Micro OZ6822 PCI-CardBus Bridge"
+literal|"O2Micro OZ6922 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
@@ -615,7 +615,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6933
 block|,
-literal|"O2Micro OZ6833 PCI-CardBus Bridge"
+literal|"O2Micro OZ6933 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
