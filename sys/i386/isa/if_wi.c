@@ -1843,7 +1843,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Read the station address. */
+comment|/* 	 * Read the station address. 	 * And do it twice. I've seen PRISM-based cards that return 	 * an error when trying to read it the first time, which causes 	 * the probe to fail. 	 */
 name|mac
 operator|.
 name|wi_type
@@ -1855,6 +1855,19 @@ operator|.
 name|wi_len
 operator|=
 literal|4
+expr_stmt|;
+name|wi_read_record
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+expr|struct
+name|wi_ltv_gen
+operator|*
+operator|)
+operator|&
+name|mac
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
