@@ -438,11 +438,9 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
@@ -679,7 +677,6 @@ name|int
 name|tnchktc
 parameter_list|()
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -939,7 +936,6 @@ modifier|*
 name|np
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|Np
@@ -1074,7 +1070,6 @@ name|tskip
 parameter_list|(
 name|bp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -1205,16 +1200,13 @@ modifier|*
 name|id
 decl_stmt|;
 block|{
-specifier|register
 name|long
 name|long
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|base
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -1358,7 +1350,6 @@ modifier|*
 name|id
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -1472,7 +1463,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -1578,7 +1568,6 @@ name|str
 parameter_list|,
 name|area
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|str
@@ -1589,16 +1578,13 @@ modifier|*
 name|area
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|dp
