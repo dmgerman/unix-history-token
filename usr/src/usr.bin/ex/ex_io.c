@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	5.1 %G%"
+literal|"@(#)ex_io.c	5.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,6 +1641,37 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|stbuf
+operator|.
+name|st_mode
+operator|&
+literal|0222
+operator|)
+operator|==
+literal|0
+condition|)
+name|value
+argument_list|(
+name|READONLY
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|value
+argument_list|(
+name|READONLY
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" [Read only]"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|c
