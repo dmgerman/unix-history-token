@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.4	86/01/24	*/
+comment|/*	vm_machdep.c	1.5	86/04/03	*/
 end_comment
 
 begin_include
@@ -1263,22 +1263,12 @@ return|return
 operator|(
 name|p
 operator|->
-name|p_p0br
+name|p_addr
 operator|+
 operator|(
-name|p
-operator|->
-name|p_szpt
-operator|*
-name|NPTEPG
-operator|+
 name|v
 operator|-
-operator|(
 name|BTOPUSRSTACK
-operator|+
-name|UPAGES
-operator|)
 operator|)
 operator|)
 return|;
