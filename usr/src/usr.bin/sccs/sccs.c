@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sccs.c	5.11 (Berkeley) %G%"
+literal|"@(#)sccs.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -850,6 +850,12 @@ directive|endif
 endif|V6
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECLARE_SIGLIST
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -858,6 +864,11 @@ name|sys_siglist
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
