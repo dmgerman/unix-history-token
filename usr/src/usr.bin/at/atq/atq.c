@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	5.6 (Berkeley) %G%"
+literal|"@(#)atq.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,6 +652,7 @@ name|int
 name|entryfound
 decl_stmt|;
 comment|/* found file owned by user(s)*/
+specifier|static
 name|int
 name|printrank
 parameter_list|()
@@ -1083,7 +1084,7 @@ modifier|*
 name|loc
 decl_stmt|;
 comment|/* detail of time it is right */
-name|u_long
+name|time_t
 name|lasttime
 decl_stmt|;
 comment|/* last update time in seconds 						   since 1/1/70 */
