@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1383,7 +1383,7 @@ name|fp
 operator|->
 name|f_flag
 operator||=
-name|FNDELAY
+name|FNONBLOCK
 expr_stmt|;
 else|else
 name|fp
@@ -1391,7 +1391,7 @@ operator|->
 name|f_flag
 operator|&=
 operator|~
-name|FNDELAY
+name|FNONBLOCK
 expr_stmt|;
 call|(
 name|void
