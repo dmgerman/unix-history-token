@@ -3023,18 +3023,6 @@ endif|#
 directive|endif
 return|return;
 block|}
-comment|/* Get the length of the reassembled packets header */
-name|hlen
-operator|=
-name|IP_VHL_HL
-argument_list|(
-name|ip
-operator|->
-name|ip_vhl
-argument_list|)
-operator|<<
-literal|2
-expr_stmt|;
 name|ipstat
 operator|.
 name|ips_reassembled
@@ -3050,6 +3038,18 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
+expr_stmt|;
+comment|/* Get the header length of the reassembled packet */
+name|hlen
+operator|=
+name|IP_VHL_HL
+argument_list|(
+name|ip
+operator|->
+name|ip_vhl
+argument_list|)
+operator|<<
+literal|2
 expr_stmt|;
 ifdef|#
 directive|ifdef
