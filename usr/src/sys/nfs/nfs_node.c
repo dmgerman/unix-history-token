@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -673,19 +673,17 @@ operator|&
 name|NFSMNT_NQNFS
 condition|)
 block|{
-name|ZEROQUAD
-argument_list|(
 name|np
 operator|->
 name|n_brev
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
-name|ZEROQUAD
-argument_list|(
 name|np
 operator|->
 name|n_lrev
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|np
 operator|->
@@ -817,10 +815,6 @@ comment|/* 		 * Remove the silly file that was rename'd earlier 		 */
 name|nfs_removeit
 argument_list|(
 name|sp
-argument_list|,
-name|ap
-operator|->
-name|a_p
 argument_list|)
 expr_stmt|;
 name|crfree
