@@ -232,11 +232,7 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
+name|__BSD_VISIBLE
 end_if
 
 begin_comment
@@ -254,11 +250,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_SOURCE
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__BSD_VISIBLE
+end_ifndef
 
 begin_include
 include|#
