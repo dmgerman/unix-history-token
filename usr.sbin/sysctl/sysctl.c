@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.5 1995/05/12 19:10:56 wollman Exp $"
+literal|"$Id: sysctl.c,v 1.6 1995/05/30 03:52:31 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1474,7 +1474,6 @@ name|stderr
 argument_list|,
 literal|"name %s in %s is unknown\n"
 argument_list|,
-operator|*
 name|bufp
 argument_list|,
 name|string
