@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_cb.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_cb.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -99,28 +99,23 @@ begin_comment
 comment|/*  * Allocate a control block and a nominal amount  * of buffer space for the socket.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|raw_attach
-argument_list|(
+parameter_list|(
 name|so
-argument_list|,
+parameter_list|,
 name|proto
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|proto
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -208,26 +203,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Detach the raw connection block and discard  * socket resources.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|raw_detach
-argument_list|(
+parameter_list|(
 name|rp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|rawcb
-operator|*
+modifier|*
 name|rp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|socket
@@ -294,28 +287,23 @@ name|M_PCB
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Disconnect and possibly release resources.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|raw_disconnect
-argument_list|(
-argument|rp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rp
+parameter_list|)
 name|struct
 name|rawcb
 modifier|*
 name|rp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -360,7 +348,7 @@ name|rp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -368,30 +356,25 @@ directive|ifdef
 name|notdef
 end_ifdef
 
-begin_expr_stmt
+begin_function
+name|int
 name|raw_bind
-argument_list|(
+parameter_list|(
 name|so
-argument_list|,
+parameter_list|,
 name|nam
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|nam
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sockaddr
@@ -463,7 +446,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
