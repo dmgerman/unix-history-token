@@ -3072,6 +3072,8 @@ name|new
 decl_stmt|;
 name|properties
 name|dist_attr
+init|=
+name|NULL
 decl_stmt|;
 name|status
 operator|=
