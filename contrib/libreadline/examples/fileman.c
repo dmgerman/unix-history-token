@@ -3,11 +3,32 @@ begin_comment
 comment|/* fileman.c -- A tiny application which demonstrates how to use the    GNU Readline library.  This application interactively allows users    to manipulate files and their modes. */
 end_comment
 
+begin_comment
+comment|/*  * Remove the next line if you're compiling this against an installed  * libreadline.a  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|READLINE_LIBRARY
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -15,11 +36,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_FILE_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -30,8 +62,76 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !HAVE_STRING_H */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_STRING_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|READLINE_LIBRARY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"readline.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"history.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -44,6 +144,11 @@ include|#
 directive|include
 file|<readline/history.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -295,7 +400,8 @@ name|dupstr
 parameter_list|(
 name|s
 parameter_list|)
-name|int
+name|char
+modifier|*
 name|s
 decl_stmt|;
 block|{

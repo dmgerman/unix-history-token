@@ -182,18 +182,18 @@ directive|include
 file|"rldefs.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"tcap.h"
-end_include
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|GWINSZ_IN_SYS_IOCTL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TIOCGWINSZ
 argument_list|)
 end_if
 
@@ -209,8 +209,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GWINSZ_IN_SYS_IOCTL */
+comment|/* GWINSZ_IN_SYS_IOCTL&& !TIOCGWINSZ */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"rltty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tcap.h"
+end_include
 
 begin_comment
 comment|/* Some standard library routines. */
@@ -263,6 +275,39 @@ name|Keymap
 name|_rl_keymap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Functions imported from bind.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|_rl_bind_if_unbound
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Functions imported from shell.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|set_lines_and_columns
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|get_env_value
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* **************************************************************** */
@@ -340,15 +385,25 @@ name|__linux__
 argument_list|)
 end_if
 
-begin_comment
-comment|/* If this causes problems, add back the `extern'. */
-end_comment
-
-begin_comment
-comment|/*extern*/
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__EMX__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NEED_EXTERN_PC
+argument_list|)
+end_if
 
 begin_decl_stmt
+specifier|extern
+endif|#
+directive|endif
+comment|/* __EMX__ || NEED_EXTERN_PC */
 name|char
 name|PC
 decl_stmt|,
@@ -620,203 +675,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Re-initialize the terminal considering that the TERM/TERMCAP variable    has changed. */
-end_comment
-
-begin_function
-name|int
-name|rl_reset_terminal
-parameter_list|(
-name|terminal_name
-parameter_list|)
-name|char
-modifier|*
-name|terminal_name
-decl_stmt|;
-block|{
-name|_rl_init_terminal_io
-argument_list|(
-name|terminal_name
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SHELL
-argument_list|)
-end_if
-
-begin_function
-specifier|static
-name|void
-name|set_lines_and_columns
-parameter_list|(
-name|lines
-parameter_list|,
-name|cols
-parameter_list|)
-name|int
-name|lines
-decl_stmt|,
-name|cols
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|b
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_PUTENV
-argument_list|)
-name|b
-operator|=
-name|xmalloc
-argument_list|(
-literal|24
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|b
-argument_list|,
-literal|"LINES=%d"
-argument_list|,
-name|lines
-argument_list|)
-expr_stmt|;
-name|putenv
-argument_list|(
-name|b
-argument_list|)
-expr_stmt|;
-name|b
-operator|=
-name|xmalloc
-argument_list|(
-literal|24
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|b
-argument_list|,
-literal|"COLUMNS=%d"
-argument_list|,
-name|cols
-argument_list|)
-expr_stmt|;
-name|putenv
-argument_list|(
-name|b
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* !HAVE_PUTENV */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SETENV
-argument_list|)
-name|b
-operator|=
-name|xmalloc
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|b
-argument_list|,
-literal|"%d"
-argument_list|,
-name|lines
-argument_list|)
-expr_stmt|;
-name|setenv
-argument_list|(
-literal|"LINES"
-argument_list|,
-name|b
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|b
-operator|=
-name|xmalloc
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|b
-argument_list|,
-literal|"%d"
-argument_list|,
-name|cols
-argument_list|)
-expr_stmt|;
-name|setenv
-argument_list|(
-literal|"COLUMNS"
-argument_list|,
-name|b
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_SETENV */
-endif|#
-directive|endif
-comment|/* !HAVE_PUTENV */
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SHELL */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_lines_and_columns
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SHELL */
-end_comment
-
-begin_comment
 comment|/* Get readline's idea of the screen size.  TTY is a file descriptor open    to the terminal.  If IGNORE_ENV is true, we do not pay attention to the    values of $LINES and $COLUMNS.  The tests for TERM_STRING_BUFFER being    non-null serve to check whether or not we have initialized termcap. */
 end_comment
 
@@ -851,6 +709,20 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* TIOCGWINSZ */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__EMX__
+argument_list|)
+name|int
+name|sz
+index|[
+literal|2
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -894,6 +766,33 @@ block|}
 endif|#
 directive|endif
 comment|/* TIOCGWINSZ */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__EMX__
+argument_list|)
+name|_scrsize
+argument_list|(
+name|sz
+argument_list|)
+expr_stmt|;
+name|screenwidth
+operator|=
+name|sz
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|screenheight
+operator|=
+name|sz
+index|[
+literal|1
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Environment variable COLUMNS overrides setting of "co" if IGNORE_ENV      is unset. */
 if|if
 condition|(
@@ -911,7 +810,7 @@ operator|&&
 operator|(
 name|ss
 operator|=
-name|getenv
+name|get_env_value
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
@@ -957,7 +856,7 @@ operator|&&
 operator|(
 name|ss
 operator|=
-name|getenv
+name|get_env_value
 argument_list|(
 literal|"LINES"
 argument_list|)
@@ -1445,7 +1344,7 @@ name|terminal_name
 condition|?
 name|terminal_name
 else|:
-name|getenv
+name|get_env_value
 argument_list|(
 literal|"TERM"
 argument_list|)
@@ -1936,6 +1835,32 @@ block|}
 end_function
 
 begin_comment
+comment|/* Re-initialize the terminal considering that the TERM/TERMCAP variable    has changed. */
+end_comment
+
+begin_function
+name|int
+name|rl_reset_terminal
+parameter_list|(
+name|terminal_name
+parameter_list|)
+name|char
+modifier|*
+name|terminal_name
+decl_stmt|;
+block|{
+name|_rl_init_terminal_io
+argument_list|(
+name|terminal_name
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* A function for the use of tputs () */
 end_comment
 
@@ -2263,7 +2188,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|_rl_enable_meta_key
 parameter_list|()
 block|{

@@ -178,6 +178,14 @@ name|_rl_enable_meta
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|_rl_control_keypad
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if

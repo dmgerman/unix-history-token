@@ -52,6 +52,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -75,11 +81,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STDLIB_H
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stdlib.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"ansi_stdlib.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1019,6 +1050,10 @@ expr_stmt|;
 name|rl_clear_message
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|allocated_line
+condition|)
 name|free
 argument_list|(
 name|allocated_line
@@ -1387,6 +1422,10 @@ expr_stmt|;
 name|rl_clear_message
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|allocated_line
+condition|)
 name|free
 argument_list|(
 name|allocated_line

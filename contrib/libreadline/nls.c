@@ -33,6 +33,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -146,6 +152,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Functions imported from shell.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|get_env_value
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+end_if
+
+begin_comment
 comment|/* A list of legal values for the LANG or LC_CTYPE environment variables.    If a locale name in this list is the value for the LC_ALL, LC_CTYPE,    or LANG environment variable (using the first of those with a value),    readline eight-bit mode is enabled. */
 end_comment
 
@@ -202,6 +231,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_SETLOCALE */
+end_comment
+
 begin_comment
 comment|/* Check for LC_ALL, LC_CTYPE, and LANG and use the first with a value    to decide the defaults for 8-bit character input and output.  Returns    1 if we set eight-bit mode. */
 end_comment
@@ -211,6 +249,87 @@ name|int
 name|_rl_init_eightbit
 parameter_list|()
 block|{
+comment|/* If we have setlocale(3), just check the current LC_CTYPE category    value, and go into eight-bit mode if it's not C or POSIX. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|char
+modifier|*
+name|t
+decl_stmt|;
+comment|/* Set the LC_CTYPE locale category from environment variables. */
+name|t
+operator|=
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|&&
+operator|*
+name|t
+operator|&&
+operator|(
+name|t
+index|[
+literal|0
+index|]
+operator|!=
+literal|'C'
+operator|||
+name|t
+index|[
+literal|1
+index|]
+operator|)
+operator|&&
+operator|(
+name|STREQ
+argument_list|(
+name|t
+argument_list|,
+literal|"POSIX"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|_rl_meta_flag
+operator|=
+literal|1
+expr_stmt|;
+name|_rl_convert_meta_chars_to_ascii
+operator|=
+literal|0
+expr_stmt|;
+name|_rl_output_meta_chars
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
+comment|/* !HAVE_SETLOCALE */
 name|char
 modifier|*
 name|lspec
@@ -221,9 +340,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* We don't have setlocale.  Finesse it.  Check the environment for the      appropriate variables and set eight-bit mode if they have the right      values. */
 name|lspec
 operator|=
-name|getenv
+name|get_env_value
 argument_list|(
 literal|"LC_ALL"
 argument_list|)
@@ -236,7 +356,7 @@ literal|0
 condition|)
 name|lspec
 operator|=
-name|getenv
+name|get_env_value
 argument_list|(
 literal|"LC_CTYPE"
 argument_list|)
@@ -249,7 +369,7 @@ literal|0
 condition|)
 name|lspec
 operator|=
-name|getenv
+name|get_env_value
 argument_list|(
 literal|"LANG"
 argument_list|)
@@ -317,21 +437,6 @@ name|_rl_output_meta_chars
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SETLOCALE
-argument_list|)
-name|setlocale
-argument_list|(
-name|LC_CTYPE
-argument_list|,
-name|lspec
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 name|free
@@ -351,8 +456,21 @@ else|:
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* !HAVE_SETLOCALE */
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -808,6 +926,15 @@ name|result
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_SETLOCALE */
+end_comment
 
 end_unit
 

@@ -169,6 +169,12 @@ name|defined
 argument_list|(
 name|STRUCT_DIRENT_HAS_D_INO
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|STRUCT_DIRENT_HAS_D_FILENO
+argument_list|)
 end_if
 
 begin_define
