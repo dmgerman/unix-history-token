@@ -392,6 +392,140 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mca_mem_record
+block|{
+name|uint64_t
+name|mem_flags
+decl_stmt|;
+define|#
+directive|define
+name|MCA_MEM_FLAGS_STATUS
+value|(1ULL<< 0)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_ADDR
+value|(1ULL<< 1)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_ADDRMASK
+value|(1ULL<< 2)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_NODE
+value|(1ULL<< 3)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_CARD
+value|(1ULL<< 4)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_MODULE
+value|(1ULL<< 5)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_BANK
+value|(1ULL<< 6)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_DEVICE
+value|(1ULL<< 7)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_ROW
+value|(1ULL<< 8)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_COLUMN
+value|(1ULL<< 9)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_BITPOS
+value|(1ULL<< 10)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_REQID
+value|(1ULL<< 11)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_RSPID
+value|(1ULL<< 12)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_TGTID
+value|(1ULL<< 13)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_BUSDATA
+value|(1ULL<< 14)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_PLATFORM_ID
+value|(1ULL<< 15)
+define|#
+directive|define
+name|MCA_MEM_FLAGS_OEM_DATA
+value|(1ULL<< 16)
+name|uint64_t
+name|mem_status
+decl_stmt|;
+name|uint64_t
+name|mem_addr
+decl_stmt|;
+name|uint64_t
+name|mem_addrmask
+decl_stmt|;
+name|uint16_t
+name|mem_node
+decl_stmt|;
+name|uint16_t
+name|mem_card
+decl_stmt|;
+name|uint16_t
+name|mem_module
+decl_stmt|;
+name|uint16_t
+name|mem_bank
+decl_stmt|;
+name|uint16_t
+name|mem_device
+decl_stmt|;
+name|uint16_t
+name|mem_row
+decl_stmt|;
+name|uint16_t
+name|mem_column
+decl_stmt|;
+name|uint16_t
+name|mem_bitpos
+decl_stmt|;
+name|uint64_t
+name|mem_reqid
+decl_stmt|;
+name|uint64_t
+name|mem_rspid
+decl_stmt|;
+name|uint64_t
+name|mem_tgtid
+decl_stmt|;
+name|uint64_t
+name|mem_busdata
+decl_stmt|;
+name|struct
+name|mca_guid
+name|mem_platform
+decl_stmt|;
+comment|/* XXX not really a GUID. */
+name|uint16_t
+name|mem_oem_length
+decl_stmt|;
+comment|/* Size of OEM data. */
+comment|/* N bytes of OEM platform data */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
