@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/src/sys.386bsd/i386/isa/RCS/isa.c,v 1.2 92/01/21 14:34:23 william Exp Locker: root $"
+literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/i386/isa/isa.c,v 1.1.1.1 1993/06/12 14:58:01 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -960,17 +960,6 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The attach should really be after all the printf's 			 * but until all the drivers are fixed do it here. 			 * There is a comment below that shows where this 			 * really belongs.  Rod Grimes 04/10/93 			 */
-call|(
-modifier|*
-name|dp
-operator|->
-name|attach
-call|)
-argument_list|(
-name|isdp
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Only print the I/O address range if id_alive != -1 			 * Right now this is a temporary fix just for the new 			 * NPX code so that if it finds a 486 that can use trap 			 * 16 it will not report I/O addresses. 			 * Rod Grimes 04/26/94 			 */
 if|if
 condition|(
@@ -1122,7 +1111,16 @@ argument_list|(
 literal|" on isa\n"
 argument_list|)
 expr_stmt|;
-comment|/* This is the place the attach should be done! */
+call|(
+modifier|*
+name|dp
+operator|->
+name|attach
+call|)
+argument_list|(
+name|isdp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|isdp
