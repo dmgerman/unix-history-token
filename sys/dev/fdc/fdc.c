@@ -6,22 +6,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"fd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_fdc.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NFDC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -1754,22 +1740,6 @@ operator|.
 name|id_unit
 index|]
 decl_stmt|;
-comment|/* validate unit number. */
-if|if
-condition|(
-name|devi
-operator|->
-name|isahd
-operator|.
-name|id_unit
-operator|>=
-name|NFDC
-condition|)
-return|return
-operator|(
-name|ENODEV
-operator|)
-return|;
 name|fdc
 operator|->
 name|baseport
@@ -3903,47 +3873,6 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FIFO_BEFORE_MOTORON
-comment|/* Hmm, this doesn't work here - is set_motor() magic? -Peter */
-if|if
-condition|(
-name|fdc
-operator|->
-name|fdct
-operator|!=
-name|FDC_NE765
-operator|&&
-name|fdc
-operator|->
-name|fdct
-operator|!=
-name|FDC_UNKNOWN
-operator|&&
-name|enable_fifo
-argument_list|(
-name|fdc
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|device_print_prettyname
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"FIFO enabled, %d bytes threshold\n"
-argument_list|,
-name|fifo_threshold
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Probe and attach any children as were configured above. 	 */
 return|return
 operator|(
@@ -4157,17 +4086,12 @@ decl_stmt|;
 name|fdsu_t
 name|fdsu
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|FIFO_BEFORE_MOTORON
 specifier|static
 name|int
 name|fd_fifo
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 name|fdsu
 operator|=
 operator|*
@@ -4341,9 +4265,7 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* 1 sec */
-ifndef|#
-directive|ifndef
-name|FIFO_BEFORE_MOTORON
+comment|/* XXX This doesn't work before the first set_motor() */
 if|if
 condition|(
 name|fd_fifo
@@ -4390,8 +4312,6 @@ name|fd_fifo
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -11035,15 +10955,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFDC> 0 */
-end_comment
 
 begin_comment
 comment|/*  * Hello emacs, these are the  * Local Variables:  *  c-indent-level:               8  *  c-continued-statement-offset: 8  *  c-continued-brace-offset:     0  *  c-brace-offset:              -8  *  c-brace-imaginary-offset:     0  *  c-argdecl-indent:             8  *  c-label-offset:              -8  *  c++-hanging-braces:           1  *  c++-access-specifier-offset: -8  *  c++-empty-arglist-indent:     8  *  c++-friend-offset:            0  * End:  */
