@@ -89,45 +89,6 @@ value|off_t
 end_define
 
 begin_comment
-comment|/* the Linux implementation of EXT2 stores some information about  * an inode in a ext2_inode_info structure which is part of the incore  * inode in Linux  * I decided to use the "spare" fields instead - we'll see how this  * works out  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|i_block_group
-value|i_spare[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_next_alloc_block
-value|i_spare[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_next_alloc_goal
-value|i_spare[2]
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_prealloc_block
-value|i_din.di_spare[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_prealloc_count
-value|i_din.di_spare[1]
-end_define
-
-begin_comment
 comment|/*  * The second extended filesystem constants/structures  */
 end_comment
 
@@ -1152,16 +1113,6 @@ value|_IOW('v', 2, long)
 end_define
 
 begin_comment
-comment|/*  * Only declare `struct ext2_inode' if<ufs/ufs/inode.h> hasn't made things  * difficult by #defining i_mode and other struct members.  The details of  * the struct are only needed in ext2_inode_cnv.c where the ext2fs on-disk  * inode is converted to a ufs in-core inode.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|i_mode
-end_ifndef
-
-begin_comment
 comment|/*  * Structure of an inode on the disk  */
 end_comment
 
@@ -1490,15 +1441,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* i_mode */
-end_comment
 
 begin_comment
 comment|/*  * File system states  */

@@ -319,7 +319,7 @@ name|DEVVP
 parameter_list|(
 name|inode
 parameter_list|)
-value|(VFSTOUFS(ITOV(inode)->v_mount)->um_devvp)
+value|(VFSTOEXT2(ITOV(inode)->v_mount)->um_devvp)
 end_define
 
 begin_define

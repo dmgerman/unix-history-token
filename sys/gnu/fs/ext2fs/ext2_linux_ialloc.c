@@ -50,25 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/extattr.h>
+file|<gnu/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/ufsmount.h>
+file|<gnu/ext2fs/ext2_mount.h>
 end_include
 
 begin_include
@@ -204,7 +192,7 @@ name|ext2_sb_info
 modifier|*
 name|sb
 init|=
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -348,7 +336,7 @@ name|ext2_sb_info
 modifier|*
 name|sb
 init|=
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -386,7 +374,7 @@ name|error
 operator|=
 name|bread
 argument_list|(
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -481,7 +469,7 @@ name|ext2_sb_info
 modifier|*
 name|sb
 init|=
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -1937,7 +1925,7 @@ name|ext2_sb_info
 modifier|*
 name|sb
 init|=
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -1970,7 +1958,7 @@ name|i
 decl_stmt|;
 name|lock_super
 argument_list|(
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -2090,7 +2078,7 @@ argument_list|)
 expr_stmt|;
 name|unlock_super
 argument_list|(
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)
@@ -2104,7 +2092,7 @@ return|;
 else|#
 directive|else
 return|return
-name|VFSTOUFS
+name|VFSTOEXT2
 argument_list|(
 name|mp
 argument_list|)

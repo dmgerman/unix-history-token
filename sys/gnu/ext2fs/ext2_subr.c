@@ -58,13 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/inode.h>
+file|<gnu/ext2fs/inode.h>
 end_include
 
 begin_include
@@ -444,6 +438,10 @@ name|start
 argument_list|,
 name|last
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ep
 operator|->
 name|b_blkno

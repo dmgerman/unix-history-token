@@ -52,19 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/ufs_extern.h>
+file|<gnu/ext2fs/inode.h>
 end_include
 
 begin_include
@@ -633,7 +621,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|ufs_getlbns
+name|ext2_getlbns
 argument_list|(
 name|vp
 argument_list|,
@@ -664,7 +652,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_balloc: ufs_getlbns returned indirect block"
+literal|"ext2_balloc: ext2_getlbns returned indirect block"
 argument_list|)
 expr_stmt|;
 endif|#

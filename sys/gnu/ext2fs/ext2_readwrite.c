@@ -1328,7 +1328,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|UFS_TRUNCATE
+name|ext2_truncate
 argument_list|(
 name|vp
 argument_list|,
@@ -1382,7 +1382,7 @@ operator|)
 condition|)
 name|error
 operator|=
-name|UFS_UPDATE
+name|ext2_update
 argument_list|(
 name|vp
 argument_list|,
