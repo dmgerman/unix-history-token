@@ -1,7 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_tcreg.h 1.10 91/03/25$  *  *	@(#)grf_tcreg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_tcreg.h 1.11 92/01/21$  *  *	@(#)grf_tcreg.h	7.4 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"hp/dev/iotypes.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<hp/dev/iotypes.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -25,20 +61,6 @@ name|planes
 parameter_list|)
 define|\
 value|while (((struct tcboxfb *)(regaddr))->busy& planes) DELAY(100)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vu_char
-value|volatile u_char
-end_define
-
-begin_define
-define|#
-directive|define
-name|vu_short
-value|volatile u_short
 end_define
 
 begin_struct

@@ -1,7 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: dcmreg.h 1.1 90/07/09$  *  *	@(#)dcmreg.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: dcmreg.h 1.7 92/01/21$  *  *	@(#)dcmreg.h	7.5 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"hp/dev/iotypes.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<hp/dev/iotypes.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -11,24 +47,21 @@ comment|/* host address, only odd bytes addressed */
 name|u_char
 name|dcm_pad0
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_rsid
 decl_stmt|;
 comment|/* Reset / ID			0001 */
 name|u_char
 name|dcm_pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_ic
 decl_stmt|;
 comment|/* Interrupt control register	0003 */
 name|u_char
 name|dcm_pad2
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_sem
 decl_stmt|;
 comment|/* Semaphore register		0005 */
@@ -42,16 +75,14 @@ comment|/* Unaddressable	0006-7fff */
 name|u_char
 name|dcm_pad4
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_iir
 decl_stmt|;
 comment|/* Interrupt ident register	8001 */
 name|u_char
 name|dcm_pad5
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_cr
 decl_stmt|;
 comment|/* Command register		8003 */
@@ -68,15 +99,13 @@ block|{
 name|u_char
 name|ptr_pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|data_char
 decl_stmt|;
 name|u_char
 name|ptr_pad2
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|data_stat
 decl_stmt|;
 block|}
@@ -94,8 +123,7 @@ block|{
 name|u_char
 name|ptr_pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|data_data
 decl_stmt|;
 block|}
@@ -110,8 +138,7 @@ block|{
 name|u_char
 name|ptr_pad
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|ptr
 decl_stmt|;
 block|}
@@ -126,8 +153,7 @@ block|{
 name|u_char
 name|ptr_pad
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|ptr
 decl_stmt|;
 block|}
@@ -142,8 +168,7 @@ block|{
 name|u_char
 name|ptr_pad
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|ptr
 decl_stmt|;
 block|}
@@ -158,8 +183,7 @@ block|{
 name|u_char
 name|ptr_pad
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|ptr
 decl_stmt|;
 block|}
@@ -174,15 +198,13 @@ block|{
 name|u_char
 name|pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_conf
 decl_stmt|;
 name|u_char
 name|pad2
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_baud
 decl_stmt|;
 block|}
@@ -198,27 +220,24 @@ block|{
 name|u_char
 name|pad0
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|mdmin
 decl_stmt|;
-comment|/* Modem in		8e31 */
+comment|/* Modem in			8e31 */
 name|u_char
 name|pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|mdmout
 decl_stmt|;
-comment|/* Modem out		8e33 */
+comment|/* Modem out			8e33 */
 name|u_char
 name|pad2
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|mdmmsk
 decl_stmt|;
-comment|/* Modem mask		8e35 */
+comment|/* Modem mask			8e35 */
 block|}
 name|dcm_modem0
 struct|;
@@ -227,8 +246,7 @@ block|{
 name|u_char
 name|pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_data
 decl_stmt|;
 block|}
@@ -243,8 +261,7 @@ block|{
 name|u_char
 name|pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_data
 decl_stmt|;
 block|}
@@ -257,8 +274,7 @@ comment|/* Interrupt data		8e3e */
 name|u_char
 name|dcm_pad10
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_stcon
 decl_stmt|;
 comment|/* Self test condition		8e47 */
@@ -280,16 +296,14 @@ comment|/* 638 Modem port3		8e54 */
 name|u_char
 name|dcm_pad11
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_modemchng
 decl_stmt|;
 comment|/* 638 Modem change mask	8e5b */
 name|u_char
 name|dcm_pad12
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dcm_modemintr
 decl_stmt|;
 comment|/* 638 Modem interrupt mask	8e5d */
@@ -306,8 +320,7 @@ block|{
 name|u_char
 name|ptr_pad1
 decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|data_char
 decl_stmt|;
 block|}
@@ -336,8 +349,7 @@ name|u_char
 name|pad0
 decl_stmt|;
 comment|/* +00 */
-specifier|volatile
-name|u_char
+name|vu_char
 name|r_head
 decl_stmt|;
 comment|/* +01 */
@@ -348,8 +360,7 @@ literal|7
 index|]
 decl_stmt|;
 comment|/* +02 */
-specifier|volatile
-name|u_char
+name|vu_char
 name|r_tail
 decl_stmt|;
 comment|/* +09 */
@@ -360,8 +371,7 @@ literal|7
 index|]
 decl_stmt|;
 comment|/* +0A */
-specifier|volatile
-name|u_char
+name|vu_char
 name|t_head
 decl_stmt|;
 comment|/* +11 */
@@ -372,8 +382,7 @@ literal|7
 index|]
 decl_stmt|;
 comment|/* +12 */
-specifier|volatile
-name|u_char
+name|vu_char
 name|t_tail
 decl_stmt|;
 comment|/* +19 */

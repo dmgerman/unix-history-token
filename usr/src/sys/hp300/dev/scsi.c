@@ -17,7 +17,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: scsi.c,v 1.4 91/01/17 12:50:18 mike Exp $"
+literal|"$Header: /usr/src/sys/hp300/dev/RCS/scsi.c,v 1.2 92/04/10 20:48:29 mike Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|"hp/dev/device.h"
 end_include
 
 begin_include
@@ -1123,6 +1123,11 @@ name|hc
 operator|->
 name|hp_unit
 argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX scale initialization wait according to CPU speed. 	 * Should we do this for all wait?  Should we do this at all? 	 */
+name|scsi_init_wait
+operator|*=
+name|cpuspeed
 expr_stmt|;
 return|return
 operator|(
@@ -4284,6 +4289,12 @@ name|DMA0
 operator||
 name|DMA1
 expr_stmt|;
+name|hs
+operator|->
+name|sc_flags
+operator||=
+name|SCSI_HAVEDMA
+expr_stmt|;
 if|if
 condition|(
 name|dmareq
@@ -4460,6 +4471,22 @@ name|hd
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|hs
+operator|->
+name|sc_flags
+operator|&
+name|SCSI_HAVEDMA
+condition|)
+block|{
+name|hs
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|SCSI_HAVEDMA
+expr_stmt|;
 name|dmafree
 argument_list|(
 operator|&
@@ -4468,6 +4495,7 @@ operator|->
 name|sc_dq
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -4995,6 +5023,13 @@ argument_list|,
 literal|"go"
 argument_list|)
 expr_stmt|;
+name|hs
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|SCSI_HAVEDMA
+expr_stmt|;
 name|dmafree
 argument_list|(
 operator|&
@@ -5246,7 +5281,11 @@ operator|->
 name|sc_flags
 operator|&=
 operator|~
+operator|(
 name|SCSI_IO
+operator||
+name|SCSI_HAVEDMA
+operator|)
 expr_stmt|;
 name|dmafree
 argument_list|(
@@ -5324,7 +5363,11 @@ operator|->
 name|sc_flags
 operator|&=
 operator|~
+operator|(
 name|SCSI_IO
+operator||
+name|SCSI_HAVEDMA
+operator|)
 expr_stmt|;
 name|dmafree
 argument_list|(
@@ -5507,11 +5550,60 @@ decl_stmt|;
 name|int
 name|stat
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|freedma
+operator|&&
+operator|(
+name|hs
+operator|->
+name|sc_flags
+operator|&
+name|SCSI_HAVEDMA
+operator|)
+operator|==
+literal|0
+operator|||
+operator|!
+name|freedma
+operator|&&
+operator|(
+name|hs
+operator|->
+name|sc_flags
+operator|&
+name|SCSI_HAVEDMA
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"oddio: freedma (%d) inconsistency (flags=%x)\n"
+argument_list|,
+name|freedma
+argument_list|,
+name|hs
+operator|->
+name|sc_flags
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * First free any DMA channel that was allocated. 	 * We can't use DMA to do this transfer. 	 */
 if|if
 condition|(
 name|freedma
 condition|)
+block|{
+name|hs
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|SCSI_HAVEDMA
+expr_stmt|;
 name|dmafree
 argument_list|(
 name|hs
@@ -5519,6 +5611,7 @@ operator|->
 name|sc_dq
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Initialize command block 	 */
 name|bzero
 argument_list|(

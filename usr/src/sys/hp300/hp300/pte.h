@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pte.h 1.11 89/09/03$  *  *	@(#)pte.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pte.h 1.13 92/01/20$  *  *	@(#)pte.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,6 +30,46 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* reserved at 1 */
+name|unsigned
+name|int
+name|sg_prot
+range|:
+literal|1
+decl_stmt|;
+comment|/* write protect bit */
+name|unsigned
+name|int
+name|sg_v
+range|:
+literal|2
+decl_stmt|;
+comment|/* valid bits */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ste40
+block|{
+name|unsigned
+name|int
+name|sg_ptaddr
+range|:
+literal|24
+decl_stmt|;
+comment|/* page table page addr */
+name|unsigned
+name|int
+range|:
+literal|4
+decl_stmt|;
+comment|/* reserved at 0 */
+name|unsigned
+name|int
+name|sg_u
+decl_stmt|;
+comment|/* hardware modified (dirty) bit */
 name|unsigned
 name|int
 name|sg_prot
@@ -206,6 +246,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SG_U
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* modified bit (68040) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SG_FRAME
 value|0xfffff000
 end_define
@@ -220,13 +271,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SG_PMASK
-value|0x003ff000
-end_define
-
-begin_define
-define|#
-directive|define
 name|SG_ISHIFT
 value|22
 end_define
@@ -234,8 +278,96 @@ end_define
 begin_define
 define|#
 directive|define
+name|SG_PMASK
+value|0x003ff000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SG_PSHIFT
 value|12
+end_define
+
+begin_comment
+comment|/* 68040 additions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SG4_MASK1
+value|0xfe000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_SHIFT1
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_MASK2
+value|0x01fc0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_SHIFT2
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_MASK3
+value|0x0003f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_SHIFT3
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_ADDR1
+value|0xfffffe00
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_ADDR2
+value|0xffffff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_LEV1SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_LEV2SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG4_LEV3SIZE
+value|64
 end_define
 
 begin_define
@@ -325,22 +457,92 @@ parameter_list|)
 value|(((x)& PG_FRAME)>> PG_SHIFT)
 end_define
 
+begin_comment
+comment|/* 68040 additions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CMASK
+value|0x00000060
+end_define
+
+begin_comment
+comment|/* cache mode mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CWT
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* writethrough caching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CCB
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* copyback caching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CIS
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* cache inhibited serialized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_CIN
+value|0x00000060
+end_define
+
+begin_comment
+comment|/* cache inhibited nonserialized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_SO
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* supervisor only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HP_STSIZE
-value|HP_PAGE_SIZE
+value|(MAXUL2SIZE*SG4_LEV2SIZE*sizeof(st_entry_t))
 end_define
 
 begin_comment
-comment|/* segment table size */
+comment|/* user process segment table size */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HP_MAX_PTSIZE
-value|HP_SEG_SIZE
+value|0x400000
 end_define
 
 begin_comment

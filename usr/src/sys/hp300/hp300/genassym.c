@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -632,6 +632,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tT_FPEMULI %d\n"
+argument_list|,
+name|T_FPEMULI
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tT_FPEMULD %d\n"
+argument_list|,
+name|T_FPEMULD
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tPSL_S %d\n"
 argument_list|,
 name|PSL_S
@@ -1011,16 +1025,6 @@ argument_list|,
 name|pcb
 operator|->
 name|pcb_regs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_CMAP2 %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_cmap2
 argument_list|)
 expr_stmt|;
 name|printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_gb.c 1.18 91/01/21$  *  *	@(#)ite_gb.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_gb.c 1.19 92/01/21$  *  *	@(#)ite_gb.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -56,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"itevar.h"
+file|"hp/dev/itevar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"itereg.h"
+file|"hp/dev/itereg.h"
 end_include
 
 begin_include
@@ -84,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"grfioctl.h"
+file|"hp/dev/grfioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"grfvar.h"
+file|"hp/dev/grfvar.h"
 end_include
 
 begin_define
@@ -104,11 +104,11 @@ begin_define
 define|#
 directive|define
 name|WINDOWMOVER
-value|gatorbox_windowmove
+value|gbox_windowmove
 end_define
 
 begin_expr_stmt
-name|gatorbox_init
+name|gbox_init
 argument_list|(
 name|ip
 argument_list|)
@@ -137,13 +137,9 @@ name|grf_softc
 modifier|*
 name|gp
 init|=
-operator|&
-name|grf_softc
-index|[
 name|ip
-operator|-
-name|ite_softc
-index|]
+operator|->
+name|grf
 decl_stmt|;
 name|ip
 operator|->
@@ -160,6 +156,46 @@ operator|=
 name|gp
 operator|->
 name|g_fbkva
+expr_stmt|;
+name|ip
+operator|->
+name|fbwidth
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_fbwidth
+expr_stmt|;
+name|ip
+operator|->
+name|fbheight
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_fbheight
+expr_stmt|;
+name|ip
+operator|->
+name|dwidth
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_dwidth
+expr_stmt|;
+name|ip
+operator|->
+name|dheight
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_dheight
 expr_stmt|;
 block|}
 name|REGBASE
@@ -194,7 +230,9 @@ literal|0xff
 expr_stmt|;
 name|gb_microcode
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|REGBASE
@@ -236,7 +274,9 @@ literal|0x00
 expr_stmt|;
 name|gbcm_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|REGBASE
@@ -271,7 +311,9 @@ literal|0x01
 expr_stmt|;
 name|gbcm_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|REGBASE
@@ -306,10 +348,12 @@ literal|0x01
 expr_stmt|;
 name|gbcm_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
-name|ite_devinfo
+name|ite_fontinfo
 argument_list|(
 name|ip
 argument_list|)
@@ -320,7 +364,7 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear the display. This used to be before the font unpacking 	 * but it crashes. Figure it out later. 	 */
-name|gatorbox_windowmove
+name|gbox_windowmove
 argument_list|(
 name|ip
 argument_list|,
@@ -345,11 +389,13 @@ argument_list|)
 expr_stmt|;
 name|tile_mover_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stash the inverted cursor. 	 */
-name|gatorbox_windowmove
+name|gbox_windowmove
 argument_list|(
 name|ip
 argument_list|,
@@ -390,7 +436,7 @@ block|}
 end_block
 
 begin_macro
-name|gatorbox_deinit
+name|gbox_deinit
 argument_list|(
 argument|ip
 argument_list|)
@@ -406,7 +452,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|gatorbox_windowmove
+name|gbox_windowmove
 argument_list|(
 name|ip
 argument_list|,
@@ -431,7 +477,9 @@ argument_list|)
 expr_stmt|;
 name|tile_mover_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|ip
@@ -445,7 +493,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|gatorbox_putc
+name|gbox_putc
 argument_list|(
 name|ip
 argument_list|,
@@ -500,7 +548,7 @@ else|:
 name|RR_COPY
 operator|)
 decl_stmt|;
-name|gatorbox_windowmove
+name|gbox_windowmove
 argument_list|(
 name|ip
 argument_list|,
@@ -545,7 +593,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|gatorbox_cursor
+name|gbox_cursor
 argument_list|(
 name|ip
 argument_list|,
@@ -604,7 +652,7 @@ block|}
 end_block
 
 begin_macro
-name|gatorbox_clear
+name|gbox_clear
 argument_list|(
 argument|ip
 argument_list|,
@@ -641,7 +689,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|gatorbox_windowmove
+name|gbox_windowmove
 argument_list|(
 name|ip
 argument_list|,
@@ -690,7 +738,7 @@ end_block
 begin_define
 define|#
 directive|define
-name|gatorbox_blockmove
+name|gbox_blockmove
 parameter_list|(
 name|ip
 parameter_list|,
@@ -707,11 +755,11 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|gatorbox_windowmove((ip), \ 			    (sy) * ip->ftheight, \ 			    (sx) * ip->ftwidth, \ 			    (dy) * ip->ftheight, \ 			    (dx) * ip->ftwidth, \ 			    (h)  * ip->ftheight, \ 			    (w)  * ip->ftwidth, \ 			    RR_COPY)
+value|gbox_windowmove((ip), \ 			(sy) * ip->ftheight, \ 			(sx) * ip->ftwidth, \ 			(dy) * ip->ftheight, \ 			(dx) * ip->ftwidth, \ 			(h)  * ip->ftheight, \ 			(w)  * ip->ftwidth, \ 			RR_COPY)
 end_define
 
 begin_expr_stmt
-name|gatorbox_scroll
+name|gbox_scroll
 argument_list|(
 name|ip
 argument_list|,
@@ -760,7 +808,9 @@ name|i
 decl_stmt|;
 name|tile_mover_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|REGBASE
@@ -769,7 +819,7 @@ name|write_protect
 operator|=
 literal|0x0
 expr_stmt|;
-name|gatorbox_cursor
+name|gbox_cursor
 argument_list|(
 name|ip
 argument_list|,
@@ -810,7 +860,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|gatorbox_blockmove
+name|gbox_blockmove
 argument_list|(
 name|ip
 argument_list|,
@@ -873,7 +923,7 @@ condition|;
 name|i
 operator|--
 control|)
-name|gatorbox_blockmove
+name|gbox_blockmove
 argument_list|(
 name|ip
 argument_list|,
@@ -905,7 +955,7 @@ operator|==
 name|SCROLL_RIGHT
 condition|)
 block|{
-name|gatorbox_blockmove
+name|gbox_blockmove
 argument_list|(
 name|ip
 argument_list|,
@@ -935,7 +985,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|gatorbox_blockmove
+name|gbox_blockmove
 argument_list|(
 name|ip
 argument_list|,
@@ -963,7 +1013,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|gatorbox_windowmove
+name|gbox_windowmove
 argument_list|(
 name|ip
 argument_list|,
@@ -1043,7 +1093,9 @@ name|dx
 expr_stmt|;
 name|tile_mover_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|REGBASE

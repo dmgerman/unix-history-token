@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.12 91/01/18$  *  *	@(#)param.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|NBSEG
-value|(1024*NBPG)
+value|0x400000
 end_define
 
 begin_comment
@@ -427,26 +427,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|hp300_round_seg
-parameter_list|(
-name|x
-parameter_list|)
-value|((((unsigned)(x)) + NBSEG - 1)& ~(NBSEG-1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|hp300_trunc_seg
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned)(x)& ~(NBSEG-1))
-end_define
-
-begin_define
-define|#
-directive|define
 name|hp300_round_page
 parameter_list|(
 name|x
@@ -462,26 +442,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((unsigned)(x)& ~(NBPG-1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|hp300_btos
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned)(x)>> SEGSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|hp300_stob
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned)(x)<< SEGSHIFT)
 end_define
 
 begin_define
@@ -731,7 +691,7 @@ name|HPUXCOMPAT
 end_ifdef
 
 begin_comment
-comment|/*  * Constants/macros for HPUX multiple mapping of user address space.  * Pages in the first 256Mb are mapped in at every 256Mb segment.  */
+comment|/*  * Constants/macros for HPUX multiple mapping of user address space.  * Pages in the first 256Mb are mapped in at every 256Mb segment.  *  * XXX broken in new VM XXX  */
 end_comment
 
 begin_define
@@ -749,7 +709,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|((curproc->p_addr->u_pcb.pcb_flags&PCB_HPUXMMAP)&& ((unsigned)(v)&HPMMMASK) != HPMMMASK)
+value|((curproc->p_addr->u_pcb.pcb_flags& PCB_HPUXMMAP)&& \ 	 ((unsigned)(v)& HPMMMASK) != HPMMMASK)
 end_define
 
 begin_define
@@ -759,6 +719,7 @@ name|HPMMBASEADDR
 parameter_list|(
 name|v
 parameter_list|)
+define|\
 value|((unsigned)(v)& ~HPMMMASK)
 end_define
 

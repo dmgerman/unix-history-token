@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -766,7 +766,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Map an IO request into kernel virtual address space.  Requests fall into  * one of five catagories:  *  *	B_PHYS|B_UAREA:	User u-area swap.  *			Address is relative to start of u-area (p_addr).  *	B_PHYS|B_PAGET:	User page table swap.  *			Address is a kernel VA in usrpt (Usrptmap).  *	B_PHYS|B_DIRTY:	Dirty page push.  *			Address is a VA in proc2's address space.  *	B_PHYS|B_PGIN:	Kernel pagein of user pages.  *			Address is VA in user's address space.  *	B_PHYS:		User "raw" IO request.  *			Address is VA in user's address space.  *  * All requests are (re)mapped into kernel VA space via the useriomap  * (a name with only slightly more meaning than "kernelmap")  */
+comment|/*  * Map an IO request into kernel virtual address space.  *  * XXX we allocate KVA space by using kmem_alloc_wait which we know  * allocates space without backing physical memory.  This implementation  * is a total crock, the multiple mappings of these physical pages should  * be reflected in the higher-level VM structures to avoid problems.  */
 end_comment
 
 begin_expr_stmt
@@ -969,7 +969,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Free the io map PTEs associated with this IO operation.  * We also invalidate the TLB entries and restore the original b_addr.  */
+comment|/*  * Free the io map PTEs associated with this IO operation.  */
 end_comment
 
 begin_expr_stmt

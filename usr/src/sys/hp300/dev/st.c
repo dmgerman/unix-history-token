@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.8 90/10/14$  *  *      @(#)st.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: st.c 1.11 92/01/21$  *  *      @(#)st.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"scsireg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"file.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ioctl.h"
 end_include
 
 begin_include
@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"kernel.h"
 end_include
 
@@ -94,7 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|"hp/dev/device.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scsireg.h"
 end_include
 
 begin_include
@@ -102,12 +102,6 @@ include|#
 directive|include
 file|"stvar.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|ADD_DELAY
-end_define
 
 begin_function_decl
 specifier|extern
@@ -565,7 +559,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Exabyte only:  * From adb can have access to fixed vs. variable length modes.  * Use 0x400 for 1k (best capacity) fixed length records.  * In st_open, if minor bit 4 set then 1k records are used.  * If st_exblken is set to anything other then 0 we are in fixed length mode.  * Minor bit 5 requests 1K fixed-length, overriding any setting of st_exblklen.  *   */
+comment|/*  * Exabyte only:  * From adb can have access to fixed vs. variable length modes.  * Use 0x400 for 1k (best capacity) fixed length records.  * In st_open, if minor bit 4 set then 1k records are used.  * If st_exblken is set to anything other then 0 we are in fixed length mode.  * Minor bit 5 requests 1K fixed-length, overriding any setting of st_exblklen.  */
 end_comment
 
 begin_decl_stmt
@@ -907,17 +901,12 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ADD_DELAY
 specifier|static
 name|int
 name|havest
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 struct|struct
 name|st_inquiry
 block|{
@@ -1818,9 +1807,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ADD_DELAY
 comment|/* XXX if we have a tape, we must up the delays in the HA driver */
 if|if
 condition|(
@@ -1838,8 +1824,6 @@ literal|20000
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|st_inqbuf

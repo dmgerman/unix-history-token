@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  *  *	@(#)cpu.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  *  *	@(#)cpu.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -362,8 +362,30 @@ begin_comment
 comment|/* 50Mhz 68030+32K external cache */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HP_380
+value|7
+end_define
+
+begin_comment
+comment|/* 25Mhz 68040 */
+end_comment
+
 begin_comment
 comment|/* values for mmutype (assigned for quick testing) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMU_68040
+value|-2
+end_define
+
+begin_comment
+comment|/* 68040 on-chip MMU */
 end_comment
 
 begin_define
@@ -887,6 +909,80 @@ value|(PMMU_WP|PMMU_INV)
 end_define
 
 begin_comment
+comment|/*  * 68040 MMU  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MMU4_RES
+value|0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_TTR
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_WP
+value|0x004
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_MOD
+value|0x010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_CMMASK
+value|0x060
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_SUP
+value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_U0
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_U1
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_GLB
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU4_BE
+value|0x800
+end_define
+
+begin_comment
 comment|/* 680X0 function codes */
 end_comment
 
@@ -1118,6 +1214,46 @@ define|#
 directive|define
 name|DC_CLEAR
 value|(DC_WA|DC_BE|DC_CLR|DC_ENABLE|IC_BE|IC_ENABLE)
+end_define
+
+begin_comment
+comment|/* 68040 cache control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IC4_ENABLE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* instruction cache enable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC4_ENABLE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* data cache enable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CACHE4_ON
+value|(IC4_ENABLE|DC4_ENABLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CACHE4_OFF
+value|(0)
 end_define
 
 end_unit

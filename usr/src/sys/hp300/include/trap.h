@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.h 1.1 90/07/09$  *  *	@(#)trap.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.h 1.7 91/03/25$  *  *	@(#)trap.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -110,6 +110,20 @@ define|#
 directive|define
 name|T_TRAP15
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_FPEMULI
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_FPEMULD
+value|17
 end_define
 
 begin_define

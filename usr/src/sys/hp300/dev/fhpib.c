@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fhpib.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fhpib.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|"hp/dev/device.h"
 end_include
 
 begin_include
@@ -167,6 +167,14 @@ comment|/* use ppoll interrupts instead of watchdog */
 end_comment
 
 begin_decl_stmt
+name|int
+name|fhpibppolldelay
+init|=
+literal|50
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|long
 name|fhpibbadint
 index|[
@@ -208,6 +216,19 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|fhpibworddma
+index|[
+name|NHPIB
+index|]
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|fhpibppollfail
 index|[
 name|NHPIB
 index|]
@@ -2339,6 +2360,51 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * XXX give it another shot (68040) 			 */
+name|fhpibppollfail
+index|[
+name|unit
+index|]
+operator|++
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|fhpibppolldelay
+argument_list|)
+expr_stmt|;
+name|stat0
+operator|=
+name|fhpibppoll
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stat0
+operator|&
+operator|(
+literal|0x80
+operator|>>
+name|dq
+operator|->
+name|dq_slave
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|fhpibdebug
+operator|&
+name|FDB_PPOLL
+operator|)
+operator|&&
+name|unit
+operator|==
+name|fhpibdebugunit
+condition|)
 name|printf
 argument_list|(
 literal|"fhpibintr: PPOLL: unit %d slave %d stat %x\n"
@@ -2352,11 +2418,6 @@ argument_list|,
 name|stat0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 endif|#
 directive|endif

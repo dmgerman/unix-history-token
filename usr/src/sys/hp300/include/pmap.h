@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.8 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -22,11 +22,57 @@ name|HP_PAGE_SIZE
 value|NBPG
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HP380
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HP_SEG_SIZE
+value|(mmutype == MMU_68040 ? 0x40000 : NBSEG)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|HP_SEG_SIZE
 value|NBSEG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|hp300_trunc_seg
+parameter_list|(
+name|x
+parameter_list|)
+value|(((unsigned)(x))& ~(HP_SEG_SIZE-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|hp300_round_seg
+parameter_list|(
+name|x
+parameter_list|)
+value|hp300_trunc_seg((unsigned)(x) + HP_SEG_SIZE-1)
 end_define
 
 begin_comment
@@ -53,6 +99,16 @@ name|int
 name|pm_stchanged
 decl_stmt|;
 comment|/* ST changed */
+name|int
+name|pm_stfree
+decl_stmt|;
+comment|/* 040: free lev2 blocks */
+name|struct
+name|ste
+modifier|*
+name|pm_stpa
+decl_stmt|;
+comment|/* 040: ST phys addr */
 name|short
 name|pm_sref
 decl_stmt|;
@@ -103,6 +159,44 @@ value|(&kernel_pmap_store)
 end_define
 
 begin_comment
+comment|/*  * On the 040 we keep track of which level 2 blocks are already in use  * with the pm_stfree mask.  Bits are arranged from LSB (block 0) to MSB  * (block 31).  For convenience, the level 1 table is considered to be  * block 0.  *  * MAX[KU]L2SIZE control how many pages of level 2 descriptors are allowed.  * for the kernel and users.  8 implies only the initial "segment table"  * page is used.  WARNING: don't change MAXUL2SIZE unless you can allocate  * physically contiguous pages for the ST in pmap.c!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXKL2SIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXUL2SIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|l2tobm
+parameter_list|(
+name|n
+parameter_list|)
+value|(1<< (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bmtol2
+parameter_list|(
+name|n
+parameter_list|)
+value|(ffs(n) - 1)
+end_define
+
+begin_comment
 comment|/*  * Macros for speed  */
 end_comment
 
@@ -118,7 +212,7 @@ parameter_list|,
 name|iscurproc
 parameter_list|)
 define|\
-value|if ((pmapp) != NULL&& (pmapp)->pm_stchanged) { \ 		(pcbp)->pcb_ustp = \ 		    hp300_btop(pmap_extract(kernel_pmap, \ 			((vm_offset_t)(pmapp)->pm_stab))); \ 		if (iscurproc) \ 			loadustp((pcbp)->pcb_ustp); \ 		(pmapp)->pm_stchanged = FALSE; \ 	}
+value|if ((pmapp) != NULL&& (pmapp)->pm_stchanged) { \ 		(pcbp)->pcb_ustp = hp300_btop((vm_offset_t)(pmapp)->pm_stpa); \ 		if (iscurproc) \ 			loadustp((pcbp)->pcb_ustp); \ 		(pmapp)->pm_stchanged = FALSE; \ 	}
 end_define
 
 begin_define

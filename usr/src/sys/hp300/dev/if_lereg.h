@@ -1,7 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	7.3 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"hp/dev/iotypes.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<hp/dev/iotypes.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -70,13 +106,6 @@ name|LE_TLEN
 value|(LETBUFLOG2<< 13)
 end_define
 
-begin_define
-define|#
-directive|define
-name|vu_char
-value|volatile u_char
-end_define
-
 begin_comment
 comment|/*  * LANCE registers.  */
 end_comment
@@ -120,7 +149,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Overlayed on 16K dual-port RAM.  * Current size is 13,758 bytes with 8 x 1518 receive buffers and  * 1 x 1518 transmit buffer.  */
+comment|/*  * Overlayed on 16K dual-port RAM.  * Current size is 15,284 bytes with 8 x 1518 receive buffers and  * 2 x 1518 transmit buffers.  */
 end_comment
 
 begin_struct
@@ -218,7 +247,7 @@ index|[
 name|LEMTU
 index|]
 decl_stmt|;
-comment|/* +0x0060 */
+comment|/* +0x0068 */
 name|char
 name|ler2_tbuf
 index|[
@@ -228,7 +257,7 @@ index|[
 name|LEMTU
 index|]
 decl_stmt|;
-comment|/* +0x2FD0 */
+comment|/* +0x2FD8 */
 block|}
 struct|;
 end_struct

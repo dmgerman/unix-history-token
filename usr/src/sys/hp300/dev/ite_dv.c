@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_dv.c 1.7 91/01/21$  *  *	@(#)ite_dv.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_dv.c 1.8 92/01/21$  *  *	@(#)ite_dv.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -56,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"itevar.h"
+file|"hp/dev/itevar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"itereg.h"
+file|"hp/dev/itereg.h"
 end_include
 
 begin_include
@@ -84,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"grfioctl.h"
+file|"hp/dev/grfioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"grfvar.h"
+file|"hp/dev/grfvar.h"
 end_include
 
 begin_define
@@ -107,20 +107,18 @@ name|WINDOWMOVER
 value|dvbox_windowmove
 end_define
 
-begin_macro
+begin_expr_stmt
 name|dvbox_init
 argument_list|(
-argument|ip
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|ite_softc
-modifier|*
 name|ip
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|ite_softc
+operator|*
+name|ip
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -142,13 +140,9 @@ name|grf_softc
 modifier|*
 name|gp
 init|=
-operator|&
-name|grf_softc
-index|[
 name|ip
-operator|-
-name|ite_softc
-index|]
+operator|->
+name|grf
 decl_stmt|;
 name|ip
 operator|->
@@ -166,10 +160,52 @@ name|gp
 operator|->
 name|g_fbkva
 expr_stmt|;
+name|ip
+operator|->
+name|fbwidth
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_fbwidth
+expr_stmt|;
+name|ip
+operator|->
+name|fbheight
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_fbheight
+expr_stmt|;
+name|ip
+operator|->
+name|dwidth
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_dwidth
+expr_stmt|;
+name|ip
+operator|->
+name|dheight
+operator|=
+name|gp
+operator|->
+name|g_display
+operator|.
+name|gd_dheight
+expr_stmt|;
 block|}
 name|dv_reset
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn on frame buffer, turn on overlay planes, set replacement 	 * rule, enable top overlay plane writes for ite, disable all frame 	 * buffer planes, set byte per pixel, and display frame buffer 0. 	 * Lastly, turn on the box. 	 */
@@ -370,10 +406,12 @@ literal|0
 expr_stmt|;
 name|db_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
-name|ite_devinfo
+name|ite_fontinfo
 argument_list|(
 name|ip
 argument_list|)
@@ -409,7 +447,9 @@ argument_list|)
 expr_stmt|;
 name|db_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stash the inverted cursor. 	 */
@@ -453,20 +493,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|dvbox_deinit
 argument_list|(
-argument|ip
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|ite_softc
-modifier|*
 name|ip
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|ite_softc
+operator|*
+name|ip
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -495,7 +533,9 @@ argument_list|)
 expr_stmt|;
 name|db_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|ip
@@ -1033,7 +1073,9 @@ condition|)
 return|return;
 name|db_waitbusy
 argument_list|(
-name|REGADDR
+name|ip
+operator|->
+name|regbase
 argument_list|)
 expr_stmt|;
 name|dp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.13 89/04/23$  *  *	@(#)pcb.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.14 91/03/25$  *  *	@(#)pcb.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,30 +20,26 @@ block|{
 name|short
 name|pcb_flags
 decl_stmt|;
-comment|/* misc. process flags (+0) */
+comment|/* misc. process flags */
 name|short
 name|pcb_ps
 decl_stmt|;
-comment|/* processor status word (+2) */
+comment|/* processor status word */
 name|int
 name|pcb_ustp
 decl_stmt|;
-comment|/* user segment table pointer (+4) */
+comment|/* user segment table pointer */
 name|int
 name|pcb_usp
 decl_stmt|;
-comment|/* user stack pointer (+8) */
+comment|/* user stack pointer */
 name|int
 name|pcb_regs
 index|[
 literal|12
 index|]
 decl_stmt|;
-comment|/* D0-D7, A0-A7 (+C) */
-name|int
-name|pcb_cmap2
-decl_stmt|;
-comment|/* temporary copy PTE */
+comment|/* D2-D7, A2-A7 */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
@@ -103,6 +99,28 @@ end_comment
 
 begin_comment
 comment|/* note: does NOT imply SHPUX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_CCBDATA
+value|0x0100
+end_define
+
+begin_comment
+comment|/* copyback caching of data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_CCBSTACK
+value|0x0200
+end_define
+
+begin_comment
+comment|/* copyback caching of stack */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_tc.c 1.18 91/04/02$  *  *	@(#)grf_tc.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_tc.c 1.19 92/01/21$  *  *	@(#)grf_tc.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Graphics routines for TOPCAT frame buffer  */
+comment|/*  * Graphics routines for TOPCAT and CATSEYE frame buffers  */
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"grfioctl.h"
+file|"hp/dev/grfioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"grfvar.h"
+file|"hp/dev/grfvar.h"
 end_include
 
 begin_include

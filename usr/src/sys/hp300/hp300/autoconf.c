@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.35 92/01/22$  *  *	@(#)autoconf.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,19 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../dev/device.h"
+file|"hp/dev/device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/grfioctl.h"
+file|"hp/dev/grfreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/grfvar.h"
+file|"hp/dev/hilreg.h"
 end_include
 
 begin_comment
@@ -224,8 +224,19 @@ name|int
 name|found
 decl_stmt|;
 comment|/* 	 * XXX: these should be consolidated into some kind of table 	 */
+name|hilsoftinit
+argument_list|(
+literal|0
+argument_list|,
+name|HILADDR
+argument_list|)
+expr_stmt|;
 name|hilinit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|,
+name|HILADDR
+argument_list|)
 expr_stmt|;
 name|isrinit
 argument_list|()
@@ -2905,7 +2916,7 @@ case|case
 literal|2
 case|:
 break|break;
-comment|/* 98720/721 */
+comment|/* 98720/721 renassiance */
 case|case
 literal|4
 case|:
@@ -2941,7 +2952,7 @@ case|case
 literal|9
 case|:
 break|break;
-comment|/* 98730/731 */
+comment|/* 98730/731 davinci */
 case|case
 literal|8
 case|:
@@ -2962,6 +2973,11 @@ name|sc
 operator|++
 expr_stmt|;
 block|}
+break|break;
+comment|/* A1096A hyperion */
+case|case
+literal|14
+case|:
 break|break;
 comment|/* 987xx */
 default|default:
@@ -3308,7 +3324,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../dev/cdvar.h"
+file|"dev/cdvar.h"
 end_include
 
 begin_macro
@@ -3727,6 +3743,8 @@ name|unit
 decl_stmt|,
 name|part
 decl_stmt|,
+name|controller
+decl_stmt|,
 name|adaptor
 decl_stmt|;
 name|dev_t
@@ -3759,18 +3777,15 @@ condition|)
 return|return;
 name|majdev
 operator|=
-operator|(
+name|B_TYPE
+argument_list|(
 name|bootdev
-operator|>>
-name|B_TYPESHIFT
-operator|)
-operator|&
-name|B_TYPEMASK
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|majdev
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|devname
@@ -3787,35 +3802,33 @@ condition|)
 return|return;
 name|adaptor
 operator|=
-operator|(
+name|B_ADAPTOR
+argument_list|(
 name|bootdev
-operator|>>
-name|B_ADAPTORSHIFT
-operator|)
-operator|&
-name|B_ADAPTORMASK
+argument_list|)
+expr_stmt|;
+name|controller
+operator|=
+name|B_CONTROLLER
+argument_list|(
+name|bootdev
+argument_list|)
 expr_stmt|;
 name|part
 operator|=
-operator|(
+name|B_PARTITION
+argument_list|(
 name|bootdev
-operator|>>
-name|B_PARTITIONSHIFT
-operator|)
-operator|&
-name|B_PARTITIONMASK
+argument_list|)
 expr_stmt|;
 name|unit
 operator|=
-operator|(
+name|B_UNIT
+argument_list|(
 name|bootdev
-operator|>>
-name|B_UNITSHIFT
-operator|)
-operator|&
-name|B_UNITMASK
+argument_list|)
 expr_stmt|;
-comment|/* 	 * First, find the controller type which support this device. 	 */
+comment|/* 	 * First, find the controller type which supports this device. 	 */
 for|for
 control|(
 name|hd
@@ -3875,7 +3888,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Next, find the controller of that type corresponding to 	 * the adaptor number. 	 */
+comment|/* 	 * Next, find the "controller" (bus adaptor) of that type 	 * corresponding to the adaptor number. 	 */
 for|for
 control|(
 name|hc
@@ -3919,7 +3932,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Finally, find the device in question attached to that controller. 	 */
+comment|/* 	 * Finally, find the "device" (controller or slave) in question 	 * attached to that "controller". 	 */
 for|for
 control|(
 name|hd
@@ -3943,7 +3956,7 @@ name|hd
 operator|->
 name|hp_slave
 operator|==
-name|unit
+name|controller
 operator|&&
 name|hd
 operator|->
@@ -3971,6 +3984,18 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * XXX note that we are missing one level, the unit, here. 	 * Most HP drives come with one controller per disk.  There 	 * are some older drives (e.g. 7946) which have two units 	 * on the same controller but those are typically a disk as 	 * unit 0 and a tape as unit 1.  This would have to be 	 * rethought if you ever wanted to boot from other than unit 0. 	 */
+if|if
+condition|(
+name|unit
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: using device at unit 0 of controller\n"
+argument_list|)
+expr_stmt|;
 name|mindev
 operator|=
 name|hd

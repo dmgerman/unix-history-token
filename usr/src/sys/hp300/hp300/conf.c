@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -819,9 +819,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* XXX shouldn't this be optional? */
-end_comment
+begin_include
+include|#
+directive|include
+file|"grf.h"
+end_include
 
 begin_expr_stmt
 name|cdev_decl
@@ -1168,7 +1170,7 @@ block|,
 comment|/* 9: hpib disk */
 name|cdev_grf_init
 argument_list|(
-literal|1
+name|NGRF
 argument_list|,
 name|grf
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  *  *	@(#)machdep.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.68 92/01/20$  *  *	@(#)machdep.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../hpux/hpux.h"
+file|"hp/hpux/hpux.h"
 end_include
 
 begin_endif
@@ -396,6 +396,17 @@ operator|=
 name|MHZ_50
 expr_stmt|;
 break|break;
+case|case
+name|HP_380
+case|:
+name|cpuspeed
+operator|=
+name|MHZ_25
+operator|*
+literal|2
+expr_stmt|;
+comment|/* XXX */
+break|break;
 block|}
 comment|/*          * Find what hardware is attached to this machine.          */
 name|find_devs
@@ -434,15 +445,13 @@ name|base
 decl_stmt|,
 name|residual
 decl_stmt|;
-specifier|extern
-name|long
-name|Usrptsize
+name|vm_offset_t
+name|minaddr
+decl_stmt|,
+name|maxaddr
 decl_stmt|;
-specifier|extern
-name|struct
-name|map
-modifier|*
-name|useriomap
+name|vm_size_t
+name|size
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -456,27 +465,13 @@ name|opmapdebug
 init|=
 name|pmapdebug
 decl_stmt|;
-endif|#
-directive|endif
-name|vm_offset_t
-name|minaddr
-decl_stmt|,
-name|maxaddr
-decl_stmt|;
-name|vm_size_t
-name|size
-decl_stmt|;
-comment|/* 	 * Initialize error message buffer (at end of core). 	 */
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|pmapdebug
 operator|=
 literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* avail_end was pre-decremented in pmap_bootstrap to compensate */
+comment|/* 	 * Initialize error message buffer (at end of core). 	 * avail_end was pre-decremented in pmap_bootstrap to compensate. 	 */
 for|for
 control|(
 name|i
@@ -1408,6 +1403,15 @@ literal|"345/375 (50Mhz"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|HP_380
+case|:
+name|printf
+argument_list|(
+literal|"380/425 (25Mhz)"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1428,11 +1432,19 @@ literal|" MC680%s CPU"
 argument_list|,
 name|mmutype
 operator|==
+name|MMU_68040
+condition|?
+literal|"40"
+else|:
+operator|(
+name|mmutype
+operator|==
 name|MMU_68030
 condition|?
 literal|"30"
 else|:
 literal|"20"
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1440,6 +1452,9 @@ condition|(
 name|mmutype
 condition|)
 block|{
+case|case
+name|MMU_68040
+case|:
 case|case
 name|MMU_68030
 case|:
@@ -1481,6 +1496,18 @@ literal|"startup"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mmutype
+operator|==
+name|MMU_68040
+condition|)
+name|printf
+argument_list|(
+literal|"+FPU, 4k on-chip physical I/D caches"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|mmutype
@@ -1636,6 +1663,18 @@ name|HP_360
 case|:
 case|case
 name|HP_370
+case|:
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HP380
+argument_list|)
+case|case
+name|HP_380
 case|:
 endif|#
 directive|endif
@@ -2451,7 +2490,7 @@ if|if
 condition|(
 name|ft
 operator|>=
-name|FMT9
+name|FMT7
 condition|)
 block|{
 ifdef|#
@@ -2470,6 +2509,26 @@ operator|&&
 name|ft
 operator|!=
 name|FMTB
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HP380
+argument_list|)
+operator|&&
+name|mmutype
+operator|!=
+name|MMU_68040
+operator|||
+name|mmutype
+operator|==
+name|MMU_68040
+operator|&&
+name|ft
+operator|!=
+name|FMT7
+endif|#
+directive|endif
 condition|)
 name|panic
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dma.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dma.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|"hp/dev/device.h"
 end_include
 
 begin_include
@@ -796,7 +796,6 @@ argument_list|(
 name|dc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we may not always go thru the flush code in dmastop() 	 */
 if|#
 directive|if
 name|defined
@@ -808,6 +807,12 @@ name|defined
 argument_list|(
 name|HP370
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HP380
+argument_list|)
+comment|/* 	 * XXX we may not always go thru the flush code in dmastop() 	 */
 if|if
 condition|(
 name|dc
@@ -1152,6 +1157,28 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HP380
+argument_list|)
+comment|/* 		 * Push back dirty cache lines 		 */
+if|if
+condition|(
+name|mmutype
+operator|==
+name|MMU_68040
+condition|)
+name|DCFP
+argument_list|(
+name|dcp
+operator|->
+name|dc_addr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|count
@@ -1394,6 +1421,33 @@ name|sc_cmd
 operator||=
 name|DMA_PRI
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HP380
+argument_list|)
+comment|/* 	 * On the 68040 we need to flush (push) the data cache before a 	 * DMA (already done above) and flush again after DMA completes. 	 * In theory we should only need to flush prior to a write DMA 	 * and purge after a read DMA but if the entire page is not 	 * involved in the DMA we might purge some valid data. 	 */
+if|if
+condition|(
+name|mmutype
+operator|==
+name|MMU_68040
+operator|&&
+operator|(
+name|flags
+operator|&
+name|DMAGO_READ
+operator|)
+condition|)
+name|dc
+operator|->
+name|sc_flags
+operator||=
+name|DMAF_PCFLUSH
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -1666,6 +1720,11 @@ operator|||
 name|defined
 argument_list|(
 name|HP370
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HP380
 argument_list|)
 if|if
 condition|(
