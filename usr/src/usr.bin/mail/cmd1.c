@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.19 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,6 +578,10 @@ decl_stmt|;
 name|int
 name|subjlen
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|mp
 operator|=
 operator|&
@@ -732,7 +736,7 @@ name|sprintf
 argument_list|(
 name|wcount
 argument_list|,
-literal|"%3d/%-4ld"
+literal|"%3d/%-5ld"
 argument_list|,
 name|mp
 operator|->
@@ -752,6 +756,32 @@ operator|-
 name|strlen
 argument_list|(
 name|wcount
+argument_list|)
+expr_stmt|;
+name|name
+operator|=
+name|value
+argument_list|(
+literal|"show-rcpt"
+argument_list|)
+operator|!=
+name|NOSTR
+condition|?
+name|skin
+argument_list|(
+name|hfield
+argument_list|(
+literal|"to"
+argument_list|,
+name|mp
+argument_list|)
+argument_list|)
+else|:
+name|nameof
+argument_list|(
+name|mp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -775,12 +805,7 @@ name|dispc
 argument_list|,
 name|mesg
 argument_list|,
-name|nameof
-argument_list|(
-name|mp
-argument_list|,
-literal|0
-argument_list|)
+name|name
 argument_list|,
 name|hl
 operator|.
@@ -800,12 +825,7 @@ name|dispc
 argument_list|,
 name|mesg
 argument_list|,
-name|nameof
-argument_list|(
-name|mp
-argument_list|,
-literal|0
-argument_list|)
+name|name
 argument_list|,
 name|hl
 operator|.
