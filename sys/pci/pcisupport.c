@@ -1349,7 +1349,7 @@ literal|0x00001078
 case|:
 return|return
 operator|(
-literal|"Cyrix Cx5520 PCI-ISA bridge"
+literal|"Cyrix Cx5510 PCI-ISA bridge"
 operator|)
 return|;
 case|case
