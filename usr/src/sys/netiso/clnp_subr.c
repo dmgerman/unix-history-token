@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_subr.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_subr.c	7.8 (Berkeley) %G% */
+comment|/*	@(#)clnp_subr.c	7.9 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -539,32 +539,61 @@ argument_list|(
 literal|"clnp_ours: ia_sis x%x, dst x%x\n"
 argument_list|,
 operator|&
-name|IA_SIS
-argument_list|(
 name|ia
-argument_list|)
 operator|->
-name|siso_addr
+name|ia_addr
 argument_list|,
 name|dst
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/* PHASE 2: uses iso_addrmatch& mask from iso_ifaddr */
+comment|/* 		 * XXX Warning: 		 * We are overloading siso_tlen in the if's address, as an nsel length. 		 */
 if|if
 condition|(
-name|iso_addrmatch1
-argument_list|(
-operator|&
-name|IA_SIS
-argument_list|(
-name|ia
-argument_list|)
-operator|->
-name|siso_addr
-argument_list|,
 name|dst
+operator|->
+name|isoa_len
+operator|==
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_tlen
+operator|+
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_nlen
+operator|&&
+name|bcmp
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_addr
+operator|.
+name|isoa_genaddr
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|dst
+operator|->
+name|isoa_genaddr
+argument_list|,
+name|ia
+operator|->
+name|ia_addr
+operator|.
+name|siso_nlen
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 literal|1
