@@ -389,17 +389,6 @@ begin_comment
 comment|/* tick adjust (ns/s) */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|l_fp
-name|time_phase
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time phase (ns) */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -511,17 +500,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* scaled frequency offset (ns/s) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|pps_lastfreq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last scaled freq offset (ns/s) */
 end_comment
 
 begin_decl_stmt
@@ -764,6 +742,12 @@ name|tai
 operator|=
 name|time_tai
 expr_stmt|;
+name|ntv
+operator|.
+name|time_state
+operator|=
+name|time_state
+expr_stmt|;
 comment|/* 	 * Status word error decode. If any of these conditions occur, 	 * an error is returned, instead of the status word. Most 	 * applications will care only about the fact the system clock 	 * may not be trusted, not about the details. 	 * 	 * Hardware or software error 	 */
 if|if
 condition|(
@@ -934,6 +918,27 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pps_shift
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ntp_pll
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|time_monitor
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|time_monitor
 argument_list|,
 literal|0
 argument_list|,
@@ -2846,7 +2851,7 @@ name|tv_nsec
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Nominal jitter is due to PPS signal noise and  interrupt 	 * latency. If it exceeds the popcorn threshold, the sample is 	 * discarded. otherwise, if so enabled, the time offset is 	 * updated. We can tolerate a modest loss of data here without 	 * much degrading time accuracy. 	 */
+comment|/* 	 * Nominal jitter is due to PPS signal noise and interrupt 	 * latency. If it exceeds the popcorn threshold, the sample is 	 * discarded. otherwise, if so enabled, the time offset is 	 * updated. We can tolerate a modest loss of data here without 	 * much degrading time accuracy. 	 */
 if|if
 condition|(
 name|u_nsec
