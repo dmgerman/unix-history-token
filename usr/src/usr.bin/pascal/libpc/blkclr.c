@@ -9,30 +9,27 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)blkclr.c 1.1 %G%"
+literal|"@(#)blkclr.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|blkclr
 argument_list|(
-argument|siz
+name|at
 argument_list|,
-argument|at
+name|siz
 argument_list|)
-end_macro
+specifier|register
+name|char
+operator|*
+name|at
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|long
 name|siz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
-name|char
-modifier|*
-name|at
 decl_stmt|;
 end_decl_stmt
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FSAV.c 1.3 %G%"
+literal|"@(#)FSAV.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,16 +71,6 @@ name|cbn
 expr_stmt|;
 name|blkcpy
 argument_list|(
-name|frtn
-operator|->
-name|fbn
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|display
-argument_list|)
-argument_list|,
 operator|&
 name|_disply
 index|[
@@ -94,6 +84,16 @@ name|fdisp
 index|[
 literal|0
 index|]
+argument_list|,
+name|frtn
+operator|->
+name|fbn
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|display
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

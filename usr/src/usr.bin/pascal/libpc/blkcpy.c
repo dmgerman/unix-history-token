@@ -9,40 +9,37 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)blkcpy.c 1.2 %G%"
+literal|"@(#)blkcpy.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|blkcpy
 argument_list|(
-argument|siz
+name|from
 argument_list|,
-argument|from
+name|to
 argument_list|,
-argument|to
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|long
 name|siz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+argument_list|)
 specifier|register
 name|char
-modifier|*
+operator|*
 name|from
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|to
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|siz
 decl_stmt|;
 end_decl_stmt
 
