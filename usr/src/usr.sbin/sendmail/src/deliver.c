@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.98 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.99 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2396,6 +2396,36 @@ name|rcode
 operator|=
 name|EX_OK
 expr_stmt|;
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_UDBENVELOPE
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|p
+operator|=
+name|e
+operator|->
+name|e_sender
+expr_stmt|;
+else|else
+name|p
+operator|=
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2405,11 +2435,7 @@ name|rpathbuf
 argument_list|,
 name|remotename
 argument_list|(
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_paddr
+name|p
 argument_list|,
 name|m
 argument_list|,

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.49 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.50 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.49 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.50 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,6 +1151,39 @@ begin_comment
 comment|/* output name of sender */
 end_comment
 
+begin_if
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_UDBENVELOPE
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|p
+operator|=
+name|e
+operator|->
+name|e_sender
+expr_stmt|;
+else|else
+name|p
+operator|=
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+expr_stmt|;
+end_if
+
 begin_expr_stmt
 name|fprintf
 argument_list|(
@@ -1158,11 +1191,7 @@ name|tfp
 argument_list|,
 literal|"S%s\n"
 argument_list|,
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_paddr
+name|p
 argument_list|)
 expr_stmt|;
 end_expr_stmt
