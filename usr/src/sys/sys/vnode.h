@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.63 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.64 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -211,10 +211,30 @@ modifier|*
 name|v_lease
 decl_stmt|;
 comment|/* Soft reference to lease */
+name|daddr_t
+name|v_lastw
+decl_stmt|;
+comment|/* last write (write cluster) */
+name|daddr_t
+name|v_cstart
+decl_stmt|;
+comment|/* start block of cluster */
+name|daddr_t
+name|v_lasta
+decl_stmt|;
+comment|/* last allocation */
+name|int
+name|v_clen
+decl_stmt|;
+comment|/* length of current cluster */
+name|int
+name|v_ralen
+decl_stmt|;
+comment|/* Read-ahead length */
 name|long
 name|v_spare
 index|[
-literal|13
+literal|8
 index|]
 decl_stmt|;
 comment|/* round to 128 bytes */
