@@ -568,6 +568,15 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|->
+name|timeout
+operator|!=
+name|tmp
+condition|)
+block|{
 name|i
 operator|->
 name|timeout
@@ -580,6 +589,7 @@ name|tset
 operator|=
 literal|1
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 for|for
