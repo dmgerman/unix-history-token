@@ -2187,6 +2187,7 @@ name|v_page_count
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * In mb_init(), we set up submaps for mbufs and clusters, in which 	 * case we rounddown() (nmbufs * MSIZE) and (nmbclusters * MCLBYTES), 	 * respectively. Mathematically, this means that what we do here may 	 * amount to slightly more address space than we need for the submaps, 	 * but it never hurts to have an extra page in kmem_map. 	 */
 name|npg
 operator|=
 operator|(
@@ -2202,8 +2203,7 @@ name|nmbcnt
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|union
-name|mext_refcnt
+name|u_int
 argument_list|)
 operator|+
 name|vm_kmem_size

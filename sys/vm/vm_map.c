@@ -2440,10 +2440,6 @@ condition|(
 name|map
 operator|==
 name|kmem_map
-operator|||
-name|map
-operator|==
-name|mb_map
 condition|)
 name|s
 operator|=
@@ -2484,10 +2480,6 @@ condition|(
 name|map
 operator|==
 name|kmem_map
-operator|||
-name|map
-operator|==
-name|mb_map
 condition|)
 name|splx
 argument_list|(
@@ -2539,10 +2531,6 @@ condition|(
 name|map
 operator|==
 name|kmem_map
-operator|||
-name|map
-operator|==
-name|mb_map
 condition|)
 name|splx
 argument_list|(
@@ -6915,10 +6903,6 @@ condition|(
 name|map
 operator|==
 name|kmem_map
-operator|||
-name|map
-operator|==
-name|mb_map
 condition|)
 name|s
 operator|=
@@ -6960,10 +6944,6 @@ condition|(
 name|map
 operator|==
 name|kmem_map
-operator|||
-name|map
-operator|==
-name|mb_map
 condition|)
 name|splx
 argument_list|(

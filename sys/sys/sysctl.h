@@ -1866,28 +1866,6 @@ begin_comment
 comment|/* int: max length of data? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KIPC_MBSTAT
-value|8
-end_define
-
-begin_comment
-comment|/* struct: mbuf usage statistics */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KIPC_NMBCLUSTERS
-value|9
-end_define
-
-begin_comment
-comment|/* int: maximum mbuf clusters */
-end_comment
-
 begin_comment
 comment|/*  * CTL_HW identifiers  */
 end_comment

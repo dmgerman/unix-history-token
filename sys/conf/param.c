@@ -122,7 +122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* maximum # of processes per user */
+comment|/* max # of procs per user */
 end_comment
 
 begin_decl_stmt
@@ -134,7 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* system wide open files limit */
+comment|/* sys. wide open files limit */
 end_comment
 
 begin_decl_stmt
@@ -146,7 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* per-process open files limit */
+comment|/* per-proc open files limit */
 end_comment
 
 begin_decl_stmt
@@ -164,48 +164,6 @@ end_decl_stmt
 begin_comment
 comment|/* maximum # of timer events */
 end_comment
-
-begin_decl_stmt
-name|int
-name|mbuf_wait
-init|=
-literal|32
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mbuf sleep time in ticks */
-end_comment
-
-begin_comment
-comment|/* maximum # of sf_bufs (sendfile(2) zero-copy virtual buffers) */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NSFBUFS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NSFBUFS
-value|(512 + MAXUSERS * 16)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|int
-name|nsfbufs
-init|=
-name|NSFBUFS
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * These may be set to nonzero here or by patching.  * If they are nonzero at bootstrap time then they are  * initialized to values dependent on the memory size.  */

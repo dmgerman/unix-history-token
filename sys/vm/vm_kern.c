@@ -131,22 +131,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|vm_map_t
-name|mb_map
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mb_map_full
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *	kmem_alloc_pageable:  *  *	Allocate pageable memory to the kernel's address map.  *	"map" must be kernel_map or a submap of kernel_map.  */
 end_comment
@@ -933,7 +917,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	Note that this still only works in a uni-processor environment and  * 	when called at splhigh().  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	NOTE:  This routine is not supposed to block if M_NOWAIT is set, but  *	I have not verified that it actually does not block.  */
+comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	Note that this still only works in a uni-processor environment and  * 	when called at splhigh().  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	NOTE:  This routine is not supposed to block if M_NOWAIT is set, but  *	I have not verified that it actually does not block.  *  *	`map' is ONLY allowed to be kmem_map or one of the mbuf submaps to  *	which we never free.  */
 end_comment
 
 begin_function
@@ -973,21 +957,6 @@ decl_stmt|;
 name|int
 name|hadvmlock
 decl_stmt|;
-if|if
-condition|(
-name|map
-operator|!=
-name|kmem_map
-operator|&&
-name|map
-operator|!=
-name|mb_map
-condition|)
-name|panic
-argument_list|(
-literal|"kmem_malloc: map != {kmem,mb}_map"
-argument_list|)
-expr_stmt|;
 name|hadvmlock
 operator|=
 name|mtx_owned
@@ -1053,17 +1022,18 @@ expr_stmt|;
 if|if
 condition|(
 name|map
-operator|==
-name|mb_map
+operator|!=
+name|kmem_map
 condition|)
 block|{
-name|mb_map_full
-operator|=
-name|TRUE
+name|printf
+argument_list|(
+literal|"Out of mbuf address space!\n"
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Out of mbuf clusters - adjust NMBCLUSTERS or increase maxusers!\n"
+literal|"Consider increasing NMBCLUSTERS\n"
 argument_list|)
 expr_stmt|;
 goto|goto
