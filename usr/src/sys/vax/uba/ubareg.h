@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	3.1	%H%	*/
+comment|/*	ubareg.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|UBA0
-value|0x80040000
+value|0x80060000
 end_define
 
 begin_comment

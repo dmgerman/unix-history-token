@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	3.1	%H%	*/
+comment|/*	mbavar.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -38,14 +38,14 @@ begin_define
 define|#
 directive|define
 name|MBA0
-value|0x80044000
+value|0x80064000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBA1
-value|0x80046000
+value|0x80066000
 end_define
 
 begin_define
