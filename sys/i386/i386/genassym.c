@@ -99,12 +99,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bootinfo.h>
 end_include
 
@@ -206,7 +200,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/segments.h>
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -1562,6 +1556,26 @@ name|globaldata
 argument_list|,
 name|gd_astpending
 argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|AST_PENDING
+argument_list|,
+name|AST_PENDING
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|AST_RESCHED
+argument_list|,
+name|AST_RESCHED
 argument_list|)
 expr_stmt|;
 end_expr_stmt

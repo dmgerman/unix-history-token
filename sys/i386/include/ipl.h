@@ -50,24 +50,6 @@ name|NSWI
 value|7
 end_define
 
-begin_comment
-comment|/*  * astpending bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AST_PENDING
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|AST_RESCHED
-value|0x00000002
-end_define
-
 begin_endif
 endif|#
 directive|endif

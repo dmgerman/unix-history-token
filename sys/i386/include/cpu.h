@@ -127,6 +127,24 @@ value|((framep)->cf_eip)
 end_define
 
 begin_comment
+comment|/*  * astpending bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_PENDING
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_RESCHED
+value|0x00000002
+end_define
+
+begin_comment
 comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  *  * XXX: if astpending is later changed to an |= here due to more flags being  * added, we will have an atomicy problem.  The type of atomicy we need is  * a non-locked orl.  */
 end_comment
 
