@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nameser.h	5.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)nameser.h	5.28 (Berkeley) %G%  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_ifndef
@@ -14,220 +14,12 @@ define|#
 directive|define
 name|_NAMESER_H_
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BYTE_ORDER
-end_ifndef
-
-begin_comment
-comment|/*  * BSD gets the byte order definition from<machine/endian.h>.  * If you don't have this include file, define NO_ENDIAN_H  * and check that your machine will be guessed correctly below.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_ENDIAN_H
-end_ifndef
 
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
+file|<sys/types.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LITTLE_ENDIAN
-value|1234
-end_define
-
-begin_comment
-comment|/* least-significant byte first (vax) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BIG_ENDIAN
-value|4321
-end_define
-
-begin_comment
-comment|/* most-significant byte first (IBM, net) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PDP_ENDIAN
-value|3412
-end_define
-
-begin_comment
-comment|/* LSB first in word, MSW first in long (pdp) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ns32000
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sun386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MIPSEL
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|i386
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BIT_ZERO_ON_RIGHT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BYTE_ORDER
-value|LITTLE_ENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sel
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|pyr
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|mc68000
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|is68k
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ibm032
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ibm370
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|MIPSEB
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BIT_ZERO_ON_LEFT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BYTE_ORDER
-value|BIG_ENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_ENDIAN_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BYTE_ORDER */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BYTE_ORDER
-end_ifndef
-
-begin_comment
-comment|/* you must determine what the correct bit order is for your compiler */
-end_comment
-
-begin_expr_stmt
-name|Error
-operator|!
-name|UNDEFINED_BIT_ORDER
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Define constants based on rfc883  */
@@ -347,19 +139,12 @@ begin_comment
 comment|/* nameserver status query */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__NAMESER_RESV
-value|0x3
-end_define
-
 begin_comment
-comment|/* 0x3 reserved */
+comment|/*#define xxx		0x3		/* 0x3 reserved */
 end_comment
 
 begin_comment
-comment|/* non standard */
+comment|/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */
 end_comment
 
 begin_define
@@ -392,7 +177,7 @@ value|0xb
 end_define
 
 begin_comment
-comment|/* delete all nemed resource record */
+comment|/* delete all named resource record */
 end_comment
 
 begin_define
@@ -704,6 +489,17 @@ begin_comment
 comment|/* text strings */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_RP
+value|17
+end_define
+
+begin_comment
+comment|/* responsible person */
+end_comment
+
 begin_comment
 comment|/* non standard */
 end_comment
@@ -823,7 +619,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* for chaos net at MIT */
+comment|/* for chaos net (MIT) */
 end_comment
 
 begin_define
@@ -834,7 +630,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* for Hesiod name server at MIT XXX */
+comment|/* for Hesiod name server (MIT) (XXX) */
 end_comment
 
 begin_comment
@@ -891,6 +687,254 @@ name|CONV_BADBUFLEN
 value|-4
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BYTE_ORDER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LITTLE_ENDIAN
+value|1234
+end_define
+
+begin_comment
+comment|/* least-significant byte first (vax, pc) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIG_ENDIAN
+value|4321
+end_define
+
+begin_comment
+comment|/* most-significant byte first (IBM, net) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDP_ENDIAN
+value|3412
+end_define
+
+begin_comment
+comment|/* LSB first in word, MSW first in long (pdp)*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ns32000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|MIPSEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_MIPSEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BIT_ZERO_ON_RIGHT
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|LITTLE_ENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sel
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|pyr
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mc68000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sparc
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|is68k
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ibm032
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ibm370
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|MIPSEB
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_MIPSEB
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_IBMR2
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|apollo
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp9000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp9000s300
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|BIT_ZERO_ON_LEFT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|BIG_ENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BYTE_ORDER */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BYTE_ORDER
+argument_list|)
+operator|||
+expr|\
+operator|(
+name|BYTE_ORDER
+operator|!=
+name|BIG_ENDIAN
+operator|&&
+name|BYTE_ORDER
+operator|!=
+name|LITTLE_ENDIAN
+operator|&&
+expr|\
+name|BYTE_ORDER
+operator|!=
+name|PDP_ENDIAN
+operator|)
+end_if
+
+begin_comment
+comment|/* you must determine what the correct bit order is for 	 * your compiler - the next line is an intentional error 	 * which will force your compiles to bomb until you fix 	 * the above macros. 	 */
+end_comment
+
+begin_error
+error|#
+directive|error
+literal|"Undefined or invalid BYTE_ORDER"
+error|;
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Structure for query header.  The order of the fields is machine- and  * compiler-dependent, depending on the byte/bit order and the layout  * of bit fields.  We use bit fields only in int variables, as this  * is all ANSI requires.  This requires a somewhat confusing rearrangement.  */
 end_comment
@@ -899,60 +943,66 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|u_int16_t
+name|id
+decl_stmt|;
+comment|/* query identification number */
 if|#
 directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-comment|/* first and second bytes */
-name|u_int
-name|id
-range|:
-literal|16
-decl_stmt|,
-comment|/* query identification number */
 comment|/* fields in third byte */
+name|u_int
 name|qr
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* response flag */
+name|u_int
 name|opcode
 range|:
 literal|4
-decl_stmt|,
+decl_stmt|;
 comment|/* purpose of message */
+name|u_int
 name|aa
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* authoritive answer */
+name|u_int
 name|tc
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* truncated message */
+name|u_int
 name|rd
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* recursion desired */
 comment|/* fields in fourth byte */
+name|u_int
 name|ra
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* recursion available */
+name|u_int
 name|pr
 range|:
 literal|1
-decl_stmt|,
+decl_stmt|;
 comment|/* primary server required (non standard) */
+name|u_int
 name|unused
 range|:
 literal|2
-decl_stmt|,
+decl_stmt|;
 comment|/* unused bits */
+name|u_int
 name|rcode
 range|:
 literal|4
@@ -965,72 +1015,10 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|LITTLE_ENDIAN
-comment|/* first and second bytes */
-name|u_int
-name|id
-range|:
-literal|16
-decl_stmt|,
-comment|/* query identification number */
-comment|/* fields in third byte */
-name|rd
-range|:
-literal|1
-decl_stmt|,
-comment|/* recursion desired */
-name|tc
-range|:
-literal|1
-decl_stmt|,
-comment|/* truncated message */
-name|aa
-range|:
-literal|1
-decl_stmt|,
-comment|/* authoritive answer */
-name|opcode
-range|:
-literal|4
-decl_stmt|,
-comment|/* purpose of message */
-name|qr
-range|:
-literal|1
-decl_stmt|,
-comment|/* response flag */
-comment|/* fields in fourth byte */
-name|rcode
-range|:
-literal|4
-decl_stmt|,
-comment|/* response code */
-name|unused
-range|:
-literal|2
-decl_stmt|,
-comment|/* unused bits */
-name|pr
-range|:
-literal|1
-decl_stmt|,
-comment|/* primary server required (non standard) */
-name|ra
-range|:
-literal|1
-decl_stmt|;
-comment|/* recursion available */
-endif|#
-directive|endif
-if|#
-directive|if
+operator|||
 name|BYTE_ORDER
 operator|==
 name|PDP_ENDIAN
-comment|/* and assume 16-bit ints... */
-name|u_short
-name|id
-decl_stmt|;
-comment|/* query identification number */
 comment|/* fields in third byte */
 name|u_int
 name|rd
@@ -1038,63 +1026,71 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* recursion desired */
+name|u_int
 name|tc
-label|:
+range|:
 literal|1
-operator|,
+decl_stmt|;
 comment|/* truncated message */
+name|u_int
 name|aa
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|;
 comment|/* authoritive answer */
+name|u_int
 name|opcode
-operator|:
+range|:
 literal|4
-operator|,
+decl_stmt|;
 comment|/* purpose of message */
+name|u_int
 name|qr
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|;
 comment|/* response flag */
 comment|/* fields in fourth byte */
+name|u_int
 name|rcode
-operator|:
+range|:
 literal|4
-operator|,
+decl_stmt|;
 comment|/* response code */
+name|u_int
 name|unused
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|;
 comment|/* unused bits */
+name|u_int
 name|pr
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|;
 comment|/* primary server required (non standard) */
+name|u_int
 name|ra
-operator|:
+range|:
 literal|1
-expr_stmt|;
+decl_stmt|;
 comment|/* recursion available */
 endif|#
 directive|endif
 comment|/* remaining bytes */
-name|u_short
+name|u_int16_t
 name|qdcount
 decl_stmt|;
 comment|/* number of question entries */
-name|u_short
+name|u_int16_t
 name|ancount
 decl_stmt|;
 comment|/* number of answer entries */
-name|u_short
+name|u_int16_t
 name|nscount
 decl_stmt|;
 comment|/* number of authority entries */
-name|u_short
+name|u_int16_t
 name|arcount
 decl_stmt|;
 comment|/* number of resource entries */
@@ -1122,19 +1118,19 @@ begin_struct
 struct|struct
 name|rrec
 block|{
-name|short
+name|int16_t
 name|r_zone
 decl_stmt|;
 comment|/* zone number */
-name|short
+name|int16_t
 name|r_class
 decl_stmt|;
 comment|/* class number */
-name|short
+name|int16_t
 name|r_type
 decl_stmt|;
 comment|/* type number */
-name|u_long
+name|u_int32_t
 name|r_ttl
 decl_stmt|;
 comment|/* time to live */
@@ -1153,7 +1149,7 @@ end_struct
 
 begin_function_decl
 specifier|extern
-name|u_short
+name|u_int16_t
 name|_getshort
 parameter_list|()
 function_decl|;
@@ -1161,14 +1157,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|u_long
+name|u_int32_t
 name|_getlong
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Inline versions of get/put short/long.  * Pointer is advanced; we assume that both arguments  * are lvalues and will already be in registers.  * cp MUST be u_char *.  */
+comment|/*  * Inline versions of get/put short/long.  Pointer is advanced.  * We also assume that a "u_int16_t" holds 2 "chars"  * and that a "u_int32_t" holds 4 "chars".  *  * These macros demonstrate the property of C whereby it can be  * portable or it can be elegant but never both.  */
 end_comment
 
 begin_define
@@ -1180,7 +1176,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	(s) = *(cp)++<< 8; \ 	(s) |= *(cp)++; \ }
+value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(s) = ((u_int16_t)t_cp[0]<< 8) | (u_int16_t)t_cp[1]; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -1192,7 +1188,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	(l) = *(cp)++<< 8; \ 	(l) |= *(cp)++; (l)<<= 8; \ 	(l) |= *(cp)++; (l)<<= 8; \ 	(l) |= *(cp)++; \ }
+value|{ \ 	register u_char *t_cp = (u_char *)(cp); \ 	(l) = (((u_int32_t)t_cp[0])<< 24) \ 	    | (((u_int32_t)t_cp[1])<< 16) \ 	    | (((u_int32_t)t_cp[2])<< 8) \ 	    | (((u_int32_t)t_cp[3])); \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -1204,11 +1200,11 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	*(cp)++ = (s)>> 8; \ 	*(cp)++ = (s); \ }
+value|{ \ 	register u_int16_t t_s = (u_int16_t)(s); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
 end_define
 
 begin_comment
-comment|/*  * Warning: PUTLONG destroys its first argument.  */
+comment|/*  * Warning: PUTLONG --no-longer-- destroys its first argument.  if you  * were depending on this "feature", you will lose.  */
 end_comment
 
 begin_define
@@ -1220,7 +1216,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	(cp)[3] = l; \ 	(cp)[2] = (l>>= 8); \ 	(cp)[1] = (l>>= 8); \ 	(cp)[0] = l>> 8; \ 	(cp) += sizeof(u_long); \ }
+value|{ \ 	register u_int32_t t_l = (u_int32_t)(l); \ 	register u_char *t_cp = (u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
 end_define
 
 begin_endif
