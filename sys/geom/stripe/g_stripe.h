@@ -164,7 +164,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* Concat name. */
+comment|/* Stripe name. */
 name|uint32_t
 name|md_id
 decl_stmt|;
