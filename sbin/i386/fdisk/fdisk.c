@@ -4045,7 +4045,7 @@ if|if
 condition|(
 operator|*
 operator|(
-name|int
+name|uint16_t
 operator|*
 operator|)
 operator|&
