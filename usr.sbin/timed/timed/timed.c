@@ -777,6 +777,14 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+name|server
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
 name|sock
 operator|=
 name|socket
