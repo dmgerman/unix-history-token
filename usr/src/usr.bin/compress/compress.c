@@ -1319,7 +1319,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: compress [-dfvcV] [-b maxbits] [file ...]\n"
+literal|"Usage: compress [-fvc] [-b maxbits] [file ...]\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6496,7 +6496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n"
+literal|"%s, Berkeley 5.7 %G%\n"
 argument_list|,
 name|rcs_ident
 argument_list|)
