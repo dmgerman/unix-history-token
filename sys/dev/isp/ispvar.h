@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.8.2.1 1999/05/11 05:54:06 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.8.2.2 1999/06/24 16:40:17 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_5_11_99 */
+comment|/* release_6_2_99 */
 end_comment
 
 begin_comment
-comment|/*  * Soft Definitions for for Qlogic ISP SCSI adapters.  *  *---------------------------------------  * Copyright (c) 1997, 1998 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Soft Definitions for for Qlogic ISP SCSI adapters.  *  *---------------------------------------  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|8
+value|9
 end_define
 
 begin_comment
@@ -302,13 +302,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_LOOPID
-value|113
-end_define
 
 begin_comment
 comment|/* queue length must be a power of two */
@@ -666,11 +659,35 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int8_t
+name|u_int
+name|isp_fwoptions
+range|:
+literal|16
+decl_stmt|,
+range|:
+literal|7
+decl_stmt|,
+name|loop_seen_once
+range|:
+literal|1
+decl_stmt|,
+name|isp_loopstate
+range|:
+literal|3
+decl_stmt|,
+comment|/* Current Loop State */
+name|isp_fwstate
+range|:
+literal|3
+decl_stmt|,
+comment|/* ISP F/W state */
 name|isp_gotdparms
-decl_stmt|;
-name|u_int8_t
-name|isp_reserved
+range|:
+literal|1
+decl_stmt|,
+name|isp_onfabric
+range|:
+literal|1
 decl_stmt|;
 name|u_int8_t
 name|isp_loopid
@@ -680,6 +697,9 @@ name|u_int8_t
 name|isp_alpa
 decl_stmt|;
 comment|/* ALPA */
+name|u_int32_t
+name|isp_portid
+decl_stmt|;
 name|u_int8_t
 name|isp_execthrottle
 decl_stmt|;
@@ -689,30 +709,57 @@ decl_stmt|;
 name|u_int8_t
 name|isp_retry_count
 decl_stmt|;
-name|u_int8_t
-name|isp_fwstate
-decl_stmt|;
-comment|/* ISP F/W state */
-name|u_int64_t
-name|isp_wwn
-decl_stmt|;
-comment|/* WWN of adapter */
 name|u_int16_t
 name|isp_maxalloc
 decl_stmt|;
 name|u_int16_t
 name|isp_maxfrmlen
 decl_stmt|;
-name|u_int16_t
-name|isp_fwoptions
+name|u_int64_t
+name|isp_nodewwn
 decl_stmt|;
-comment|/* 	 * Port Data Base 	 */
-name|isp_pdb_t
-name|isp_pdb
+name|u_int64_t
+name|isp_portwwn
+decl_stmt|;
+comment|/* 	 * Port Data Base. This is indexed by 'target', which is invariate. 	 * However, elements within can move around due to loop changes, 	 * so the actual loop ID passed to the F/W is in this structure. 	 * The first time the loop is seen up, loopid will match the index 	 * (except for fabric nodes which are above mapped above FC_SNS_ID 	 * and are completely virtual), but subsequent LIPs can cause things 	 * to move around. 	 */
+struct|struct
+name|lportdb
+block|{
+name|u_int
+name|loopid
+range|:
+literal|8
+decl_stmt|,
+range|:
+literal|4
+decl_stmt|,
+name|fabdev
+range|:
+literal|1
+decl_stmt|,
+name|roles
+range|:
+literal|2
+decl_stmt|,
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|portid
+decl_stmt|;
+name|u_int64_t
+name|node_wwn
+decl_stmt|;
+name|u_int64_t
+name|port_wwn
+decl_stmt|;
+block|}
+name|portdb
 index|[
 name|MAX_FC_TARG
 index|]
-decl_stmt|;
+struct|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
 name|caddr_t
 name|isp_scratch
@@ -728,65 +775,119 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|ISP2100_SCRLEN
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
 name|FW_CONFIG_WAIT
-value|0x0000
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_WAIT_AL_PA
-value|0x0001
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_WAIT_LOGIN
-value|0x0002
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_READY
-value|0x0003
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_LOSS_OF_SYNC
-value|0x0004
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_ERROR
-value|0x0005
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_REINIT
-value|0x0006
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_NON_PART
-value|0x0007
+value|7
 end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_NIL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_LIP_RCVD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_PDB_RCVD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_READY
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_PORT_ID
+value|0x7e
+end_define
+
+begin_comment
+comment|/* FL_Port Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_PORT_ID
+value|0x7f
+end_define
+
+begin_comment
+comment|/* Fabric Controller Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_SNS_ID
+value|0x80
+end_define
+
+begin_comment
+comment|/* SNS Server Special ID */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1172,6 +1273,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_CFG_FULL_DUPLEX
+value|0x01
+end_define
+
+begin_comment
+comment|/* Fibre Channel Only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISP_FW_REV
 parameter_list|(
 name|maj
@@ -1305,6 +1417,13 @@ define|#
 directive|define
 name|ISP_HA_FC_2100
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_FC_2200
+value|0x20
 end_define
 
 begin_define
@@ -1580,7 +1699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to External to Internal Control Function  *  * For: 	Aborting a running command	- arg is an ISP_SCSI_XFER_T *  *		Resetting a Device		- arg is target to reset  *		Resetting a BUS			- arg is ignored  *		Updating parameters		- arg is ignored  *  * First argument is this instance's softc pointer.  * Second argument is an index into xflist array.  * Assumes all locks must be held already.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  *  */
 end_comment
 
 begin_typedef
@@ -1589,13 +1708,18 @@ enum|enum
 block|{
 name|ISPCTL_RESET_BUS
 block|,
+comment|/* Reset Bus */
 name|ISPCTL_RESET_DEV
 block|,
+comment|/* Reset Device */
 name|ISPCTL_ABORT_CMD
 block|,
+comment|/* Abort Command */
 name|ISPCTL_UPDATE_PARAMS
 block|,
+comment|/* Update Operating Parameters */
 name|ISPCTL_FCLINK_TEST
+comment|/* Test FC Link Status */
 block|}
 name|ispctl_t
 typedef|;
@@ -1621,7 +1745,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * For: 	Announcing Target Paramter Changes (arg is target)  *  * Assumes all locks are held.  */
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes all locks are held and that no reentrancy issues need be dealt with.  *  */
 end_comment
 
 begin_typedef
@@ -1632,18 +1756,22 @@ name|ISPASYNC_NEW_TGT_PARAMS
 block|,
 name|ISPASYNC_BUS_RESET
 block|,
-comment|/* Bus Reset */
+comment|/* Bus Was Reset */
 name|ISPASYNC_LOOP_DOWN
 block|,
-comment|/* Obvious FC only */
+comment|/* FC Loop Down */
 name|ISPASYNC_LOOP_UP
 block|,
-comment|/* "" */
-name|ISPASYNC_PDB_CHANGE_COMPLETE
+comment|/* FC Loop Up */
+name|ISPASYNC_PDB_CHANGED
 block|,
-comment|/* "" */
+comment|/* FC Port Data Base Changed */
 name|ISPASYNC_CHANGE_NOTIFY
-comment|/* "" */
+block|,
+comment|/* FC SNS Change Notification */
+name|ISPASYNC_FABRIC_DEV
+block|,
+comment|/* FC New Fabric Device */
 block|}
 name|ispasync_t
 typedef|;
