@@ -699,6 +699,11 @@ directive|define
 name|SE_SHUTDOWN
 value|0x1
 comment|/* session won't be restarted */
+define|#
+directive|define
+name|SE_PRESENT
+value|0x2
+comment|/* session is in /etc/ttys */
 name|int
 name|se_nspace
 decl_stmt|;
@@ -4124,7 +4129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a new session descriptor.  */
+comment|/*  * Allocate a new session descriptor.  * Mark it SE_PRESENT.  */
 end_comment
 
 begin_function
@@ -4208,6 +4213,12 @@ operator|->
 name|se_index
 operator|=
 name|session_index
+expr_stmt|;
+name|sp
+operator|->
+name|se_flags
+operator||=
+name|SE_PRESENT
 expr_stmt|;
 name|sp
 operator|->
@@ -5725,7 +5736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is an n-squared algorithm.  We hope it isn't run often...  */
+comment|/*  * This is an (n*2)+(n^2) algorithm.  We hope it isn't run often...  */
 end_comment
 
 begin_function
@@ -5778,6 +5789,30 @@ name|state_func_t
 operator|)
 name|multi_user
 return|;
+comment|/*  	 * mark all sessions for death, (!SE_PRESENT)  	 * as we find or create new ones they'll be marked as keepers, 	 * we'll later nuke all the ones not found in /etc/ttys 	 */
+for|for
+control|(
+name|sp
+operator|=
+name|sessions
+init|;
+name|sp
+operator|!=
+name|NULL
+condition|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|se_next
+control|)
+name|sp
+operator|->
+name|se_flags
+operator|&=
+operator|~
+name|SE_PRESENT
+expr_stmt|;
 name|devlen
 operator|=
 sizeof|sizeof
@@ -5847,6 +5882,13 @@ condition|(
 name|sp
 condition|)
 block|{
+comment|/* we want this one to live */
+name|sp
+operator|->
+name|se_flags
+operator||=
+name|SE_PRESENT
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -6154,6 +6196,54 @@ block|}
 name|endttyent
 argument_list|()
 expr_stmt|;
+comment|/* 	 * sweep through and kill all deleted sessions 	 * ones who's /etc/ttys line was deleted (SE_PRESENT unset) 	 */
+for|for
+control|(
+name|sp
+operator|=
+name|sessions
+init|;
+name|sp
+operator|!=
+name|NULL
+condition|;
+name|sp
+operator|=
+name|sp
+operator|->
+name|se_next
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|sp
+operator|->
+name|se_flags
+operator|&
+name|SE_PRESENT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sp
+operator|->
+name|se_flags
+operator||=
+name|SE_SHUTDOWN
+expr_stmt|;
+name|kill
+argument_list|(
+name|sp
+operator|->
+name|se_process
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 name|state_func_t
