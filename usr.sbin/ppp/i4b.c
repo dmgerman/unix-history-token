@@ -75,6 +75,29 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netisdn/i4b_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netisdn/i4b_rbch_ioctl.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -86,6 +109,11 @@ include|#
 directive|include
 file|<i4b/i4b_rbch_ioctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
