@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.8 %G%"
+literal|"@(#)c21.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,42 +80,42 @@ block|{
 comment|/* index by type codes */
 literal|0
 block|,
-comment|/* not allocated */
+comment|/* 0	not allocated */
 literal|8
 block|,
-comment|/* BYTE */
+comment|/* 1	BYTE */
 literal|16
 block|,
-comment|/* WORD */
+comment|/* 2	WORD */
 literal|32
 block|,
-comment|/* LONG */
+comment|/* 3	LONG */
 literal|32
 block|,
-comment|/* FFLOAT / 	64,		/* DFLOAT */
+comment|/* 4	FFLOAT / 	64,		/* 5	DFLOAT */
 literal|64
 block|,
-comment|/* GFLOAT */
-literal|128
+comment|/* 6	QUAD */
+literal|0
 block|,
-comment|/* HFLOAT */
+comment|/* 7	OP2 */
+literal|0
+block|,
+comment|/* 8	OP3 */
+literal|0
+block|,
+comment|/* 9	OPB */
+literal|0
+block|,
+comment|/* 10	OPX */
 literal|64
 block|,
-comment|/* QUAD */
+comment|/* 11	GFLOAT */
 literal|128
 block|,
-comment|/* OCTA */
-literal|0
-block|,
-comment|/* OP2 */
-literal|0
-block|,
-comment|/* OP3 */
-literal|0
-block|,
-comment|/* OPB */
-literal|0
-comment|/* OPX */
+comment|/* 12	HFLOAT */
+literal|128
+comment|/* 13	OCTA */
 block|}
 decl_stmt|;
 end_decl_stmt
