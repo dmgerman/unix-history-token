@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.16 %G%"
+literal|"@(#)wwenviron.c	3.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ name|pgrp
 init|=
 name|getpid
 argument_list|()
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|1024
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -239,14 +245,15 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Two conditions that make destructive setenv ok: 	 * 1. setenv() copies the string, 	 * 2. we've already called tgetent which copies the termcap entry. 	 */
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|wwwintermcap
+name|buf
 argument_list|,
-literal|"TERMCAP=%sco#%d:li#%d:%s%s%s%s%s%s%s"
+literal|"%sco#%d:li#%d:%s%s%s%s%s%s%s"
 argument_list|,
 name|WWT_TERMCAP
 argument_list|,
@@ -311,6 +318,46 @@ else|:
 literal|""
 argument_list|,
 name|wwkeys
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setenv
+argument_list|(
+literal|"TERMCAP"
+argument_list|,
+name|buf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%d"
+argument_list|,
+name|wp
+operator|->
+name|ww_id
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setenv
+argument_list|(
+literal|"WINDOW_ID"
+argument_list|,
+name|buf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
