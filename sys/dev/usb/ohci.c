@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.112 2001/11/21 02:38:35 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.113 2001/11/21 02:39:31 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -8785,6 +8785,28 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|ohci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ctrl head:\n"
+argument_list|)
+expr_stmt|;
+name|ohci_dump_ed
+argument_list|(
+name|sc
+operator|->
+name|sc_ctrl_head
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sed:\n"
+argument_list|)
+expr_stmt|;
 name|ohci_dump_ed
 argument_list|(
 name|sed
@@ -8848,6 +8870,19 @@ modifier|*
 name|head
 parameter_list|)
 block|{
+name|DPRINTFN
+argument_list|(
+literal|8
+argument_list|,
+operator|(
+literal|"ohci_add_ed: sed=%p head=%p\n"
+operator|,
+name|sed
+operator|,
+name|head
+operator|)
+argument_list|)
+expr_stmt|;
 name|SPLUSBCHECK
 expr_stmt|;
 name|sed
