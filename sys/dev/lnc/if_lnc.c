@@ -3642,16 +3642,6 @@ name|arpcom
 operator|.
 name|ac_if
 operator|.
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
 name|if_start
 operator|=
 name|lnc_start

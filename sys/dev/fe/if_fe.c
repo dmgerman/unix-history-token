@@ -2918,14 +2918,6 @@ name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_output
-operator|=
-name|ether_output
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
 name|if_start
 operator|=
 name|fe_start
