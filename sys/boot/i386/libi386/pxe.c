@@ -3,10 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 2000 Alfred Perlstein<alfred@freebsd.org>  * All rights reserved.  * Copyright (c) 2000 Paul Saab<ps@freebsd.org>  * All rights reserved.  * Copyright (c) 2000 John Baldwin<jhb@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  * The typedefs and structures declared in this file  * clearly violate style(9), the reason for this is to conform to the  * typedefs/structure-names used in the Intel literature to avoid confusion.  *  * It's for your own good. :)  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -55,33 +51,11 @@ directive|include
 file|"btxv86.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PXENV_GET_CACHED_INFO
-value|0x0071
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXENV_TFTP_OPEN
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXENV_TFTP_CLOSE
-value|0x0021
-end_define
-
-begin_define
-define|#
-directive|define
-name|PXENV_TFTP_READ
-value|0x0022
-end_define
+begin_include
+include|#
+directive|include
+file|"pxe.h"
+end_include
 
 begin_comment
 comment|/*  * Allocate the PXE buffers statically instead of sticking grimy fingers into  * BTX's private data area.  The scratch buffer is used to send information to  * the PXE BIOS, and the data buffer is used to receive data from the PXE BIOS.  */
@@ -102,6 +76,7 @@ value|512
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|scratch_buffer
 index|[
@@ -111,6 +86,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|data_buffer
 index|[
@@ -118,162 +94,6 @@ name|PXE_BUFFER_SIZE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|S_SIZE
-parameter_list|(
-name|s
-parameter_list|)
-value|s, sizeof(s) - 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_STR
-value|"%d.%d.%d.%d"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_ARGS
-parameter_list|(
-name|ip
-parameter_list|)
-define|\
-value|(int)(ip>> 24)& 0xff, (int)(ip>> 16)& 0xff, \ 	(int)(ip>> 8)& 0xff, (int)ip& 0xff
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAC_STR
-value|"%02x:%02x:%02x:%02x:%02x:%02x"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAC_ARGS
-parameter_list|(
-name|mac
-parameter_list|)
-define|\
-value|mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint16_t
-name|offset
-decl_stmt|;
-name|uint16_t
-name|segment
-decl_stmt|;
-block|}
-name|SEGOFF16_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint16_t
-name|PXENV_STATUS
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|pxenv
-block|{
-name|char
-name|Signature
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* 'PXENV+' */
-name|uint16_t
-name|Version
-decl_stmt|;
-comment|/* MSB = major, LSB = minor */
-name|uint8_t
-name|Length
-decl_stmt|;
-comment|/* structure length */
-name|uint8_t
-name|Checksum
-decl_stmt|;
-comment|/* checksum pad */
-name|SEGOFF16_t
-name|RMEntry
-decl_stmt|;
-comment|/* SEG:OFF to PXE entry point */
-comment|/* don't use PMOffset and PMSelector (from the 2.1 PXE manual) */
-name|uint32_t
-name|PMOffset
-decl_stmt|;
-comment|/* Protected mode entry */
-name|uint16_t
-name|PMSelector
-decl_stmt|;
-comment|/* Protected mode selector */
-name|uint16_t
-name|StackSeg
-decl_stmt|;
-comment|/* Stack segment address */
-name|uint16_t
-name|StackSize
-decl_stmt|;
-comment|/* Stack segment size (bytes) */
-name|uint16_t
-name|BC_CodeSeg
-decl_stmt|;
-comment|/* BC Code segment address */
-name|uint16_t
-name|BC_CodeSize
-decl_stmt|;
-comment|/* BC Code segment size (bytes) */
-name|uint16_t
-name|BC_DataSeg
-decl_stmt|;
-comment|/* BC Data segment address */
-name|uint16_t
-name|BC_DataSize
-decl_stmt|;
-comment|/* BC Data segment size (bytes) */
-name|uint16_t
-name|UNDIDataSeg
-decl_stmt|;
-comment|/* UNDI Data segment address */
-name|uint16_t
-name|UNDIDataSize
-decl_stmt|;
-comment|/* UNDI Data segment size (bytes) */
-name|uint16_t
-name|UNDICodeSeg
-decl_stmt|;
-comment|/* UNDI Code segment address */
-name|uint16_t
-name|UNDICodeSize
-decl_stmt|;
-comment|/* UNDI Code segment size (bytes) */
-name|SEGOFF16_t
-name|PXEPtr
-decl_stmt|;
-comment|/* SEG:OFF to !PXE struct,  						   only present when Version> 2.1 */
-block|}
-modifier|*
-name|pxenv_p
-init|=
-name|NULL
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|static
@@ -350,297 +170,33 @@ name|pxe_open_status
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PACKED
-value|__attribute__ ((packed))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAC_ADDR_LEN
-value|16
-end_define
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-name|MAC_ADDR
-index|[
-name|MAC_ADDR_LEN
-index|]
-typedef|;
-end_typedef
+begin_decl_stmt
+specifier|static
+name|pxenv_t
+modifier|*
+name|pxenv_p
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* PXENV_GET_CACHED_INFO request */
+comment|/* PXENV+ */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|PXENV_STATUS
-name|Status
+begin_decl_stmt
+specifier|static
+name|pxe_t
+modifier|*
+name|pxe_p
+init|=
+name|NULL
 decl_stmt|;
-name|uint16_t
-name|PacketType
-decl_stmt|;
-comment|/* type (defined right here) */
-define|#
-directive|define
-name|PXENV_PACKET_TYPE_DHCP_DISCOVER
-value|1
-define|#
-directive|define
-name|PXENV_PACKET_TYPE_DHCP_ACK
-value|2
-define|#
-directive|define
-name|PXENV_PACKET_TYPE_BINL_REPLY
-value|3
-name|uint16_t
-name|BufferSize
-decl_stmt|;
-comment|/* max to copy, leave at 0 for pointer */
-name|SEGOFF16_t
-name|Buffer
-decl_stmt|;
-comment|/* copy to, leave at 0 for pointer */
-name|uint16_t
-name|BufferLimit
-decl_stmt|;
-comment|/* max size of buffer in BC dataseg ? */
-block|}
-name|PACKED
-name|t_PXENV_GET_CACHED_INFO
-typedef|;
-end_typedef
+end_decl_stmt
 
 begin_comment
-comment|/*  * structure filled in by PXENV_GET_CACHED_INFO   * (how we determine which IP we downloaded the initial bootstrap from)  */
+comment|/* !PXE */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint8_t
-name|opcode
-decl_stmt|;
-define|#
-directive|define
-name|BOOTP_REQ
-value|1
-define|#
-directive|define
-name|BOOTP_REP
-value|2
-name|uint8_t
-name|Hardware
-decl_stmt|;
-comment|/* hardware type */
-name|uint8_t
-name|Hardlen
-decl_stmt|;
-comment|/* hardware addr len */
-name|uint8_t
-name|Gatehops
-decl_stmt|;
-comment|/* zero it */
-name|uint32_t
-name|ident
-decl_stmt|;
-comment|/* random number chosen by client */
-name|uint16_t
-name|seconds
-decl_stmt|;
-comment|/* seconds since did initial bootstrap */
-name|uint16_t
-name|flags
-decl_stmt|;
-comment|/* seconds since did initial bootstrap */
-define|#
-directive|define
-name|BOOTP_BCAST
-value|0x8000
-comment|/* ? */
-name|uint32_t
-name|cip
-decl_stmt|;
-comment|/* Client IP */
-name|uint32_t
-name|yip
-decl_stmt|;
-comment|/* Your IP */
-name|uint32_t
-name|sip
-decl_stmt|;
-comment|/* IP to use for next boot stage */
-name|uint32_t
-name|gip
-decl_stmt|;
-comment|/* Relay IP ? */
-name|MAC_ADDR
-name|CAddr
-decl_stmt|;
-comment|/* Client hardware address */
-name|char
-name|Sname
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* Server's hostname (Optional) */
-name|char
-name|bootfile
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* boot filename */
-union|union
-block|{
-if|#
-directive|if
-literal|1
-define|#
-directive|define
-name|BOOTP_DHCPVEND
-value|1024
-comment|/* DHCP extended vendor field size */
-else|#
-directive|else
-define|#
-directive|define
-name|BOOTP_DHCPVEND
-value|312
-comment|/* DHCP standard vendor field size */
-endif|#
-directive|endif
-name|uint8_t
-name|d
-index|[
-name|BOOTP_DHCPVEND
-index|]
-decl_stmt|;
-comment|/* raw array of vendor/dhcp options */
-struct|struct
-block|{
-name|uint8_t
-name|magic
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* DHCP magic cookie */
-define|#
-directive|define
-name|VM_RFC1048
-value|0x63825363L
-comment|/* ? */
-name|uint32_t
-name|flags
-decl_stmt|;
-comment|/* bootp flags/opcodes */
-name|uint8_t
-name|pad
-index|[
-literal|56
-index|]
-decl_stmt|;
-comment|/* I don't think Intel knows what a 							   union does... */
-block|}
-name|v
-struct|;
-block|}
-name|vendor
-union|;
-block|}
-name|PACKED
-name|BOOTPLAYER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* tftp open */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint16_t
-name|status
-decl_stmt|;
-name|uint32_t
-name|src_ip
-decl_stmt|;
-name|uint32_t
-name|gw_ip
-decl_stmt|;
-name|uint8_t
-name|filename
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|uint16_t
-name|tftpport
-decl_stmt|;
-name|uint16_t
-name|packetsize
-decl_stmt|;
-block|}
-name|PACKED
-name|t_PXENV_TFTP_OPEN
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* tftp close */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint16_t
-name|status
-decl_stmt|;
-block|}
-name|PACKED
-name|t_PXENV_TFTP_CLOSE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* tftp read */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint16_t
-name|status
-decl_stmt|;
-name|uint16_t
-name|packetnumber
-decl_stmt|;
-name|uint16_t
-name|buffer_size
-decl_stmt|;
-name|SEGOFF16_t
-name|buffer
-decl_stmt|;
-block|}
-name|PACKED
-name|t_PXENV_TFTP_READ
-typedef|;
-end_typedef
 
 begin_function_decl
 name|void
@@ -932,8 +488,7 @@ block|{
 name|pxenv_p
 operator|=
 operator|(
-expr|struct
-name|pxenv
+name|pxenv_t
 operator|*
 operator|)
 name|pxeinfo
@@ -1301,15 +856,27 @@ argument_list|)
 expr_stmt|;
 name|tftpo_p
 operator|->
-name|src_ip
+name|ServerIPAddress
 operator|=
 name|srcip
 expr_stmt|;
 name|tftpo_p
 operator|->
-name|gw_ip
+name|GatewayIPAddress
 operator|=
 name|gateip
+expr_stmt|;
+name|tftpo_p
+operator|->
+name|TFTPPort
+operator|=
+name|port
+expr_stmt|;
+name|tftpo_p
+operator|->
+name|PacketSize
+operator|=
+name|pktsize
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -1317,25 +884,13 @@ name|filename
 argument_list|,
 name|tftpo_p
 operator|->
-name|filename
+name|FileName
 argument_list|,
 name|strlen
 argument_list|(
 name|filename
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|tftpo_p
-operator|->
-name|tftpport
-operator|=
-name|port
-expr_stmt|;
-name|tftpo_p
-operator|->
-name|packetsize
-operator|=
-name|pktsize
 expr_stmt|;
 name|pxe_call
 argument_list|(
@@ -1346,13 +901,13 @@ name|pxe_return_status
 operator|=
 name|tftpo_p
 operator|->
-name|status
+name|Status
 expr_stmt|;
 if|if
 condition|(
 name|tftpo_p
 operator|->
-name|status
+name|Status
 operator|!=
 literal|0
 condition|)
@@ -1366,7 +921,7 @@ return|return
 operator|(
 name|tftpo_p
 operator|->
-name|packetsize
+name|PacketSize
 operator|)
 return|;
 block|}
@@ -1411,13 +966,13 @@ name|pxe_return_status
 operator|=
 name|tftpc_p
 operator|->
-name|status
+name|Status
 expr_stmt|;
 if|if
 condition|(
 name|tftpc_p
 operator|->
-name|status
+name|Status
 operator|!=
 literal|0
 condition|)
@@ -1469,7 +1024,7 @@ argument_list|)
 expr_stmt|;
 name|tftpr_p
 operator|->
-name|buffer
+name|Buffer
 operator|.
 name|segment
 operator|=
@@ -1480,7 +1035,7 @@ argument_list|)
 expr_stmt|;
 name|tftpr_p
 operator|->
-name|buffer
+name|Buffer
 operator|.
 name|offset
 operator|=
@@ -1504,13 +1059,13 @@ name|pxe_return_status
 operator|=
 name|tftpr_p
 operator|->
-name|status
+name|Status
 expr_stmt|;
 if|if
 condition|(
 name|tftpr_p
 operator|->
-name|status
+name|Status
 operator|!=
 literal|0
 condition|)
@@ -1528,14 +1083,14 @@ name|buf
 argument_list|,
 name|tftpr_p
 operator|->
-name|buffer_size
+name|BufferSize
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|tftpr_p
 operator|->
-name|buffer_size
+name|BufferSize
 operator|)
 return|;
 block|}
