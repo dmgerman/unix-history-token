@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.4	82/04/19	*/
+comment|/*	ffs_alloc.c	2.5	82/05/07	*/
 end_comment
 
 begin_include
@@ -207,11 +207,32 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, bsize = %d, size = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|size
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"alloc: bad size"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|size
@@ -499,11 +520,34 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, bsize = %d, osize = %d, nsize = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|osize
+argument_list|,
+name|nsize
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"realloccg: bad size"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|u
@@ -547,11 +591,32 @@ name|bprev
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, bsize = %d, bprev = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|bprev
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"realloccg: bad bprev"
 argument_list|)
 expr_stmt|;
+block|}
 name|cg
 operator|=
 name|dtog
@@ -1000,11 +1065,30 @@ name|ip
 operator|->
 name|i_mode
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mode = 0%o, inum = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_mode
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"ialloc: dup alloc"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ip
@@ -2759,11 +2843,26 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pos = %d, i = %d, fs = %s\n"
+argument_list|,
+name|pos
+argument_list|,
+name|i
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"alloccgblk: cyl groups corrupted"
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -2840,6 +2939,19 @@ operator|+=
 name|delta
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"pos = %d, i = %d, fs = %s\n"
+argument_list|,
+name|pos
+argument_list|,
+name|i
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"alloccgblk: can't find blk in cyl"
@@ -3405,11 +3517,32 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, bsize = %d, size = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|fs
+operator|->
+name|fs_bsize
+argument_list|,
+name|size
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"free: bad size"
 argument_list|)
 expr_stmt|;
+block|}
 name|cg
 operator|=
 name|dtog
@@ -3535,7 +3668,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"free block %d, fs %s\n"
+literal|"dev = 0x%x, block = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
 argument_list|,
 name|bno
 argument_list|,
@@ -3704,11 +3841,30 @@ operator|+
 name|i
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, block = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|bno
+operator|+
+name|i
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"free: freeing free frag"
 argument_list|)
 expr_stmt|;
+block|}
 name|setbit
 argument_list|(
 name|cgp
@@ -3984,11 +4140,28 @@ name|fs
 operator|->
 name|fs_ncg
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, ino = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|ino
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"ifree: range"
 argument_list|)
 expr_stmt|;
+block|}
 name|cg
 operator|=
 name|itog
@@ -4070,11 +4243,28 @@ argument_list|,
 name|ino
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, ino = %d, fs = %s\n"
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|ino
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"ifree: freeing free inode"
 argument_list|)
 expr_stmt|;
+block|}
 name|clrbit
 argument_list|(
 name|cgp
@@ -4355,6 +4545,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"start = %d, len = %d, fs = %s\n"
+argument_list|,
+name|start
+argument_list|,
+name|len
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"alloccg: map corrupted"
@@ -4482,6 +4685,17 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"bno = %d, fs = %s\n"
+argument_list|,
+name|bno
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"alloccg: block not in map"
@@ -4845,17 +5059,37 @@ name|fs_magic
 operator|!=
 name|FS_MAGIC
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dev = 0x%x, fs = %s\n"
+argument_list|,
+name|dev
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"getfs: bad magic"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|fs
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"dev = 0x%x\n"
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"getfs: no fs"
@@ -5112,11 +5346,22 @@ name|fs_ronly
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fs = %s\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"update: rofs mod"
 argument_list|)
 expr_stmt|;
+block|}
 name|bp
 operator|=
 name|getblk
@@ -5146,11 +5391,22 @@ name|fs_magic
 operator|!=
 name|FS_MAGIC
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fs = %s\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"update: bad b_fs"
 argument_list|)
 expr_stmt|;
+block|}
 name|fs
 operator|->
 name|fs_fmod
