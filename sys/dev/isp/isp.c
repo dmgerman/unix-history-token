@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.9 1998/12/28 19:22:25 mjacob Exp $ */
+comment|/* $Id: isp.c,v 1.10 1999/01/10 02:55:10 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -4870,7 +4870,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|reqp
 operator|->
@@ -6249,7 +6249,7 @@ operator|&
 name|RQSF_GOT_SENSE
 condition|)
 block|{
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|XS_SNSP
 argument_list|(
@@ -6290,7 +6290,7 @@ argument_list|(
 name|xs
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|XS_SNSP
 argument_list|(
@@ -7992,7 +7992,7 @@ argument_list|(
 name|tgtiqd
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|fcp
 operator|->
@@ -8379,7 +8379,7 @@ name|at2
 operator|->
 name|req_scsi_status
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|ct2
 operator|->
@@ -8631,7 +8631,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|reqp
 argument_list|,
@@ -9322,7 +9322,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|reqp
 argument_list|,
@@ -9462,7 +9462,7 @@ operator|&
 name|TGTSVALID
 condition|)
 block|{
-name|memcpy
+name|MEMCPY
 argument_list|(
 operator|&
 name|cdp
@@ -9603,7 +9603,7 @@ name|aep
 operator|->
 name|at_tag_val
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|cdp
 operator|->
@@ -9857,7 +9857,7 @@ name|aep
 operator|->
 name|at_lun
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|cdp
 operator|->
