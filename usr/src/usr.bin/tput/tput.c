@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tput.c	4.1 (Berkeley) %G%"
+literal|"@(#)tput.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +222,7 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|clear
-operator|!=
+operator|==
 operator|(
 name|char
 operator|*
