@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.40 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.39		%G%"
+literal|"@(#)sendmail.h	6.40		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,6 +215,40 @@ begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETNS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netns/ns.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETX25
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netccitt/x25.h>
 end_include
 
 begin_endif
@@ -2935,6 +2969,26 @@ name|sockaddr_iso
 name|siso
 decl_stmt|;
 comment|/* ISO family */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETNS
+name|struct
+name|sockaddr_ns
+name|sns
+decl_stmt|;
+comment|/* XNS family */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETX25
+name|struct
+name|sockaddr_x25
+name|sx25
+decl_stmt|;
+comment|/* X.25 family */
 endif|#
 directive|endif
 block|}
