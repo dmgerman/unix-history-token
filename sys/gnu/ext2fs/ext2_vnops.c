@@ -7318,7 +7318,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|blkno
 decl_stmt|;
 name|int

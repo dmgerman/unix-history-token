@@ -92,7 +92,7 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|daddr_t
+name|int32_t
 name|blkno
 decl_stmt|;
 name|int
@@ -196,10 +196,10 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|bn
 decl_stmt|;
-name|daddr_t
+name|int32_t
 modifier|*
 name|bnp
 decl_stmt|;
@@ -249,7 +249,7 @@ decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|daddr
 decl_stmt|;
 name|long
@@ -413,7 +413,7 @@ condition|(
 name|runp
 condition|)
 block|{
-name|daddr_t
+name|int32_t
 name|bnb
 init|=
 name|bn
@@ -731,7 +731,7 @@ name|daddr
 operator|=
 operator|(
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -783,7 +783,7 @@ name|ump
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -798,7 +798,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -851,7 +851,7 @@ name|ump
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -864,7 +864,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -986,7 +986,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|bn
 decl_stmt|;
 name|struct

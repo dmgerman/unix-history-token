@@ -63,9 +63,9 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -73,7 +73,7 @@ name|struct
 name|ucred
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -87,7 +87,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -135,7 +135,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
 name|long
 parameter_list|)
@@ -143,21 +143,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|daddr_t
+name|int32_t
 name|ext2_blkpref
 parameter_list|(
 name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
 name|int
 parameter_list|,
-name|daddr_t
+name|int32_t
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -181,9 +181,9 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
-name|daddr_t
+name|int32_t
 modifier|*
 parameter_list|,
 name|int
@@ -237,7 +237,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
 name|struct
 name|indir
@@ -371,7 +371,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl

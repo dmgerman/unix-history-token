@@ -104,7 +104,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|bn
 decl_stmt|;
 name|int
@@ -130,7 +130,7 @@ name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|nb
 decl_stmt|;
 name|struct
@@ -160,7 +160,7 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|newb
 decl_stmt|,
 name|lbn
@@ -681,7 +681,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|pref = ext2_blkpref(ip, lbn, 0, (daddr_t *)0, 0);
+block|pref = ext2_blkpref(ip, lbn, 0, (int32_t *)0, 0);
 else|#
 directive|else
 comment|/* see the comment by ext2_blkpref. What we do here is 		   to pretend that it'd be good for a block holding indirect 		   pointers to be allocated near its predecessor in terms  		   of indirection, or the last direct block.  		   We shamelessly exploit the fact that i_ib immediately 		   follows i_db.  		   Godmar thinks it make sense to allocate i_ib[0] immediately 		   after i_db[11], but it's not utterly clear whether this also 		   applies to i_ib[1] and i_ib[0] 		*/
@@ -901,7 +901,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -990,7 +990,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 literal|0

@@ -106,11 +106,11 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
-name|daddr_t
+name|int32_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -399,7 +399,7 @@ name|ovp
 init|=
 name|vp
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|lastblock
 decl_stmt|;
 name|struct
@@ -407,7 +407,7 @@ name|inode
 modifier|*
 name|oip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|bn
 decl_stmt|,
 name|lbn
@@ -422,7 +422,7 @@ index|[
 name|NIADDR
 index|]
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|oldblks
 index|[
 name|NDADDR
@@ -1678,12 +1678,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|lbn
 decl_stmt|,
 name|lastbn
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|dbn
 decl_stmt|;
 name|int
@@ -1713,7 +1713,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|daddr_t
+name|int32_t
 modifier|*
 name|bap
 decl_stmt|,
@@ -1913,7 +1913,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|bp
@@ -1924,7 +1924,7 @@ name|MALLOC
 argument_list|(
 name|copy
 argument_list|,
-name|daddr_t
+name|int32_t
 operator|*
 argument_list|,
 name|fs
@@ -1987,7 +1987,7 @@ argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2097,7 +2097,7 @@ name|nb
 argument_list|)
 argument_list|,
 operator|(
-name|daddr_t
+name|int32_t
 operator|)
 operator|-
 literal|1

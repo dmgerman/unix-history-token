@@ -188,7 +188,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|lbn
 decl_stmt|,
 name|bpref
@@ -201,7 +201,7 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|daddr_t
+name|int32_t
 modifier|*
 name|bnp
 decl_stmt|;
@@ -211,7 +211,7 @@ name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|bno
 decl_stmt|;
 operator|*
@@ -435,7 +435,7 @@ else|else
 name|bno
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|)
 name|ext2_new_block
 argument_list|(
@@ -459,7 +459,7 @@ directive|else
 name|bno
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|)
 name|ext2_new_block
 argument_list|(
@@ -668,7 +668,7 @@ decl_stmt|,
 modifier|*
 name|ebp
 decl_stmt|;
-name|daddr_t
+name|int32_t
 modifier|*
 name|bap
 decl_stmt|,
@@ -683,7 +683,7 @@ name|cluster_save
 modifier|*
 name|buflist
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|start_lbn
 decl_stmt|,
 name|end_lbn
@@ -986,7 +986,7 @@ block|}
 name|sbap
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|sbp
@@ -1113,7 +1113,7 @@ goto|;
 name|ebap
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|*
 operator|)
 name|ebp
@@ -1128,7 +1128,7 @@ operator|(
 name|newblk
 operator|=
 operator|(
-name|daddr_t
+name|int32_t
 operator|)
 name|ext2_hashalloc
 argument_list|(
@@ -1718,7 +1718,7 @@ comment|/*  * Select the desired position for the next block in a file.    *  * 
 end_comment
 
 begin_function
-name|daddr_t
+name|int32_t
 name|ext2_blkpref
 parameter_list|(
 name|ip
@@ -1736,17 +1736,17 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|lbn
 decl_stmt|;
 name|int
 name|indx
 decl_stmt|;
-name|daddr_t
+name|int32_t
 modifier|*
 name|bap
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|blocknr
 decl_stmt|;
 block|{
@@ -1807,7 +1807,7 @@ condition|?
 name|blocknr
 else|:
 call|(
-name|daddr_t
+name|int32_t
 call|)
 argument_list|(
 name|ip
@@ -1852,7 +1852,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|bno
 decl_stmt|;
 name|long

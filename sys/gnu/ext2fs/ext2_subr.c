@@ -162,7 +162,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|lbn
 decl_stmt|;
 name|int
@@ -310,7 +310,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|daddr_t
+name|int32_t
 name|start
 decl_stmt|,
 name|last
