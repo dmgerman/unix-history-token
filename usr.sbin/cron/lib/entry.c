@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: entry.c,v 2.12 1994/01/17 03:20:37 vixie Exp $"
+literal|"$Id: entry.c,v 1.1.1.1 1994/08/27 13:43:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1205,19 +1205,6 @@ name|envstr
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|env_get
-argument_list|(
-literal|"HOME"
-argument_list|,
-name|e
-operator|->
-name|envp
-argument_list|)
-condition|)
-block|{
 name|sprintf
 argument_list|(
 name|envstr
@@ -1242,7 +1229,6 @@ argument_list|,
 name|envstr
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
