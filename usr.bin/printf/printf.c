@@ -1029,10 +1029,12 @@ name|store
 operator|=
 name|fmt
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|fmt
+operator|)
 condition|;
 operator|++
 name|fmt
