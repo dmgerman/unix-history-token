@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.60 2001/09/17 21:57:56 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.60.4.2 2002/06/01 23:51:11 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,18 +59,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
 
 begin_include
 include|#
@@ -1750,7 +1738,7 @@ name|bp
 parameter_list|)
 block|{
 specifier|register
-name|u_char
+name|u_int16_t
 name|tag
 decl_stmt|;
 specifier|register
@@ -1775,8 +1763,11 @@ decl_stmt|;
 name|u_int32_t
 name|ul
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|us
+decl_stmt|;
+name|u_int8_t
+name|uc
 decl_stmt|;
 name|printf
 argument_list|(
@@ -1856,7 +1847,7 @@ name|tok2str
 argument_list|(
 name|xtag2str
 argument_list|,
-literal|"?xT%d"
+literal|"?xT%u"
 argument_list|,
 name|tag
 argument_list|)
@@ -1869,7 +1860,7 @@ name|tok2str
 argument_list|(
 name|tag2str
 argument_list|,
-literal|"?T%d"
+literal|"?T%u"
 argument_list|,
 name|tag
 argument_list|)
@@ -1941,7 +1932,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|c
+name|uc
 operator|=
 operator|*
 name|bp
@@ -1949,7 +1940,7 @@ operator|++
 expr_stmt|;
 switch|switch
 condition|(
-name|c
+name|uc
 condition|)
 block|{
 case|case
@@ -2029,7 +2020,7 @@ name|printf
 argument_list|(
 literal|"%u"
 argument_list|,
-name|c
+name|uc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2055,7 +2046,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|c
+name|uc
 operator|=
 operator|*
 name|bp
@@ -2067,9 +2058,9 @@ name|tok2str
 argument_list|(
 name|tag2str
 argument_list|,
-literal|"?T%d"
+literal|"?T%u"
 argument_list|,
-name|c
+name|uc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2120,7 +2111,7 @@ name|len
 operator|-=
 literal|2
 expr_stmt|;
-name|c
+name|us
 operator|=
 name|EXTRACT_16BITS
 argument_list|(
@@ -2137,9 +2128,9 @@ name|tok2str
 argument_list|(
 name|xtag2str
 argument_list|,
-literal|"?xT%d"
+literal|"?xT%u"
 argument_list|,
-name|c
+name|us
 argument_list|)
 expr_stmt|;
 if|if
@@ -2511,7 +2502,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|us
 argument_list|)
@@ -2584,7 +2575,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%d?"
+literal|"%u?"
 argument_list|,
 operator|*
 name|bp
@@ -2652,7 +2643,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%u"
 argument_list|,
 operator|*
 name|bp
@@ -2754,7 +2745,7 @@ name|bp
 condition|)
 name|printf
 argument_list|(
-literal|"%d/%d/"
+literal|"%u/%u/"
 argument_list|,
 operator|*
 name|bp
@@ -2909,7 +2900,7 @@ block|}
 default|default:
 name|printf
 argument_list|(
-literal|"[unknown special tag %d, size %d]"
+literal|"[unknown special tag %u, size %u]"
 argument_list|,
 name|tag
 argument_list|,
@@ -2935,7 +2926,7 @@ name|size
 condition|)
 name|printf
 argument_list|(
-literal|"[len %d]"
+literal|"[len %u]"
 argument_list|,
 name|len
 argument_list|)

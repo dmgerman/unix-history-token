@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.100 2001/09/17 21:58:03 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.100.4.1 2002/01/25 05:39:54 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -1082,6 +1088,11 @@ decl_stmt|;
 name|int
 name|advance
 decl_stmt|;
+name|struct
+name|protoent
+modifier|*
+name|proto
+decl_stmt|;
 name|ip
 operator|=
 operator|(
@@ -1095,7 +1106,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LBL_ALIGN
-comment|/* 	 * If the IP header is not aligned, copy into abuf. 	 * This will never happen with BPF.  It does happen raw packet 	 * dumps from -r. 	 */
+comment|/* 	 * If the IP header is not aligned, copy into abuf. 	 */
 if|if
 condition|(
 operator|(
@@ -1914,14 +1925,45 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+operator|(
+name|proto
+operator|=
+name|getprotobynumber
+argument_list|(
+name|nh
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ip-proto-%d %d"
+literal|" %s"
+argument_list|,
+name|proto
+operator|->
+name|p_name
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" ip-proto-%d"
 argument_list|,
 name|nh
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %d"
 argument_list|,
 name|len
 argument_list|)
@@ -1951,13 +1993,14 @@ operator|&
 literal|0x3fff
 condition|)
 block|{
-comment|/* 		 * if this isn't the first frag, we're missing the 		 * next level protocol header.  print the ip addr. 		 */
+comment|/* 		 * if this isn't the first frag, we're missing the 		 * next level protocol header.  print the ip addr 		 * and the protocol. 		 */
 if|if
 condition|(
 name|off
 operator|&
 literal|0x1fff
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1982,6 +2025,47 @@ name|ip_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|proto
+operator|=
+name|getprotobynumber
+argument_list|(
+name|ip
+operator|->
+name|ip_p
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|proto
+operator|->
+name|p_name
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" ip-proto-%d"
+argument_list|,
+name|ip
+operator|->
+name|ip_p
+argument_list|)
+expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|IP_MF

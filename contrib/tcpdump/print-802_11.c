@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.6 2001/09/17 21:57:53 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.6.4.1 2002/05/13 08:34:50 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,14 +117,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|RATEStoBUF
+name|PRINT_RATES
 parameter_list|(
 name|p
-parameter_list|,
-name|buf
 parameter_list|)
 define|\
-value|do { \ 	int z = 0; \ 	for (z = 0 ; z< p.rates.length ; z++) \ 		snprintf(buf, sizeof(buf), "%s %2.1f", buf, (.5 * (p.rates.rate[z]& 0x7f))); \ } while (0)
+value|do { \ 	int z; \ 	char *sep = " ["; \ 	for (z = 0; z< p.rates.length ; z++) { \ 		printf("%s%2.1f", sep, (.5 * (p.rates.rate[z]& 0x7f))); \ 		sep = " "; \ 	} \ 	if (p.rates.length != 0) \ 		printf(" Mbit]"); \ } while (0)
 end_define
 
 begin_decl_stmt
@@ -411,20 +409,8 @@ literal|1
 argument_list|)
 condition|)
 return|return
-literal|0
+literal|1
 return|;
-if|if
-condition|(
-operator|*
-operator|(
-name|p
-operator|+
-name|offset
-operator|)
-operator|==
-literal|0xff
-condition|)
-break|break;
 switch|switch
 condition|(
 operator|*
@@ -1094,24 +1080,6 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|memset
-argument_list|(
-name|buf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1201,16 +1169,9 @@ condition|)
 return|return
 literal|0
 return|;
-name|RATEStoBUF
-argument_list|(
-name|pbody
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%s) [%s Mbit] %s CH: %x %s"
+literal|"%s ("
 argument_list|,
 name|subtype_text
 index|[
@@ -1219,14 +1180,32 @@ argument_list|(
 name|fc
 argument_list|)
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|pbody
 operator|.
 name|ssid
 operator|.
 name|ssid
 argument_list|,
-name|buf
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
+name|PRINT_RATES
+argument_list|(
+name|pbody
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %s CH: %u %s"
 argument_list|,
 name|CAPABILITY_ESS
 argument_list|(
@@ -1292,24 +1271,6 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|memset
-argument_list|(
-name|buf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1381,16 +1342,9 @@ condition|)
 return|return
 literal|0
 return|;
-name|RATEStoBUF
-argument_list|(
-name|pbody
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%s) [%s Mbit] "
+literal|"%s ("
 argument_list|,
 name|subtype_text
 index|[
@@ -1399,14 +1353,27 @@ argument_list|(
 name|fc
 argument_list|)
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|pbody
 operator|.
 name|ssid
 operator|.
 name|ssid
 argument_list|,
-name|buf
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
+name|PRINT_RATES
+argument_list|(
+name|pbody
 argument_list|)
 expr_stmt|;
 return|return
@@ -1532,7 +1499,7 @@ literal|0
 return|;
 name|printf
 argument_list|(
-literal|"%s AID(%x) :%s: %s   "
+literal|"%s AID(%x) :%s: %s"
 argument_list|,
 name|subtype_text
 index|[
@@ -1712,7 +1679,7 @@ literal|0
 return|;
 name|printf
 argument_list|(
-literal|"%s (%s) AP : %s"
+literal|"%s ("
 argument_list|,
 name|subtype_text
 index|[
@@ -1721,12 +1688,22 @@ argument_list|(
 name|fc
 argument_list|)
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|pbody
 operator|.
 name|ssid
 operator|.
 name|ssid
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") AP : %s"
 argument_list|,
 name|etheraddr_string
 argument_list|(
@@ -1805,24 +1782,6 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|memset
-argument_list|(
-name|buf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1852,16 +1811,9 @@ condition|)
 return|return
 literal|0
 return|;
-name|RATEStoBUF
-argument_list|(
-name|pbody
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%s) [%s Mbit] "
+literal|"%s ("
 argument_list|,
 name|subtype_text
 index|[
@@ -1870,14 +1822,27 @@ argument_list|(
 name|fc
 argument_list|)
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|pbody
 operator|.
 name|ssid
 operator|.
 name|ssid
 argument_list|,
-name|buf
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|")"
+argument_list|)
+expr_stmt|;
+name|PRINT_RATES
+argument_list|(
+name|pbody
 argument_list|)
 expr_stmt|;
 return|return
@@ -1915,24 +1880,6 @@ name|offset
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|memset
-argument_list|(
-name|buf
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2024,7 +1971,7 @@ literal|0
 return|;
 name|printf
 argument_list|(
-literal|"%s (%s) CH: %x %s"
+literal|"%s ("
 argument_list|,
 name|subtype_text
 index|[
@@ -2033,12 +1980,32 @@ argument_list|(
 name|fc
 argument_list|)
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|fn_print
+argument_list|(
 name|pbody
 operator|.
 name|ssid
 operator|.
 name|ssid
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") "
+argument_list|)
+expr_stmt|;
+name|PRINT_RATES
+argument_list|(
+name|pbody
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" CH: %u%s"
 argument_list|,
 name|pbody
 operator|.
@@ -2053,7 +2020,7 @@ operator|.
 name|capability_info
 argument_list|)
 condition|?
-literal|",PRIVACY "
+literal|", PRIVACY"
 else|:
 literal|""
 argument_list|)
@@ -2167,7 +2134,7 @@ literal|2
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: %s "
+literal|"%s: %s"
 argument_list|,
 name|subtype_text
 index|[

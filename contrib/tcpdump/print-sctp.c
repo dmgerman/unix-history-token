@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.7 2001/12/12 07:16:40 guy Exp $ (NETLAB/PEL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sctp.c,v 1.7.2.1 2002/07/10 07:20:57 guy Exp $ (NETLAB/PEL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,7 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|endPacketPtr
@@ -208,11 +209,13 @@ decl_stmt|;
 name|int
 name|chunkCount
 decl_stmt|;
+specifier|const
 name|struct
 name|sctpChunkDesc
 modifier|*
 name|chunkDescPtr
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|nextChunk
@@ -220,6 +223,7 @@ decl_stmt|;
 name|sctpPktHdr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpHeader
 operator|*
@@ -229,20 +233,13 @@ expr_stmt|;
 name|endPacketPtr
 operator|=
 operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
 name|sctpPktHdr
 operator|+
 name|sctpPacketLength
-operator|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -259,6 +256,7 @@ condition|)
 name|endPacketPtr
 operator|=
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -288,6 +286,7 @@ condition|)
 name|ip6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*
@@ -305,6 +304,7 @@ comment|/*INET6*/
 name|cp
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -523,12 +523,14 @@ operator|,
 name|chunkDescPtr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpChunkDesc
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -547,11 +549,13 @@ name|NULL
 operator|&&
 operator|(
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -570,6 +574,7 @@ condition|;
 name|chunkDescPtr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpChunkDesc
 operator|*
@@ -583,6 +588,7 @@ block|{
 name|u_short
 name|align
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|chunkEnd
@@ -591,6 +597,7 @@ name|chunkEnd
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -630,6 +637,7 @@ expr_stmt|;
 name|nextChunk
 operator|=
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -659,6 +667,7 @@ case|case
 name|SCTP_DATA
 case|:
 block|{
+specifier|const
 name|struct
 name|sctpDataPart
 modifier|*
@@ -766,6 +775,7 @@ expr_stmt|;
 name|dataHdrPtr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpDataPart
 operator|*
@@ -842,7 +852,8 @@ condition|)
 comment|/* if verbose output is specified */
 block|{
 comment|/* at the command line */
-name|char
+specifier|const
+name|u_char
 modifier|*
 name|payloadPtr
 decl_stmt|;
@@ -863,7 +874,8 @@ block|{
 name|payloadPtr
 operator|=
 operator|(
-name|char
+specifier|const
+name|u_char
 operator|*
 operator|)
 operator|(
@@ -916,6 +928,7 @@ case|case
 name|SCTP_INITIATION
 case|:
 block|{
+specifier|const
 name|struct
 name|sctpInitiation
 modifier|*
@@ -929,6 +942,7 @@ expr_stmt|;
 name|init
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpInitiation
 operator|*
@@ -1039,6 +1053,7 @@ case|case
 name|SCTP_INITIATION_ACK
 case|:
 block|{
+specifier|const
 name|struct
 name|sctpInitiation
 modifier|*
@@ -1052,6 +1067,7 @@ expr_stmt|;
 name|init
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpInitiation
 operator|*
@@ -1162,11 +1178,13 @@ case|case
 name|SCTP_SELECTIVE_ACK
 case|:
 block|{
+specifier|const
 name|struct
 name|sctpSelectiveAck
 modifier|*
 name|sack
 decl_stmt|;
+specifier|const
 name|struct
 name|sctpSelectiveFrag
 modifier|*
@@ -1177,6 +1195,7 @@ name|fragNo
 decl_stmt|,
 name|tsnNo
 decl_stmt|;
+specifier|const
 name|u_long
 modifier|*
 name|dupTSN
@@ -1189,6 +1208,7 @@ expr_stmt|;
 name|sack
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpSelectiveAck
 operator|*
@@ -1260,12 +1280,14 @@ name|frag
 operator|=
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|sctpSelectiveFrag
 operator|*
 operator|)
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|sctpSelectiveAck
 operator|*
@@ -1281,6 +1303,7 @@ operator|=
 literal|0
 init|;
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -1356,6 +1379,7 @@ control|(
 name|dupTSN
 operator|=
 operator|(
+specifier|const
 name|u_long
 operator|*
 operator|)
@@ -1366,6 +1390,7 @@ operator|=
 literal|0
 init|;
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -1412,6 +1437,7 @@ case|case
 name|SCTP_HEARTBEAT_REQUEST
 case|:
 block|{
+specifier|const
 name|struct
 name|sctpHBsender
 modifier|*
@@ -1420,6 +1446,7 @@ decl_stmt|;
 name|hb
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sctpHBsender
 operator|*

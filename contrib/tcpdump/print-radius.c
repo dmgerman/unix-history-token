@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print-radius.c,v 1.10 2001/10/22 06:58:33 itojun Exp $"
+literal|"$Id: print-radius.c,v 1.10.2.2 2002/07/03 16:35:04 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,23 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIME_WITH_SYS_TIME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2670,6 +2687,15 @@ index|]
 operator|.
 name|first_subtype
 operator|)
+operator|&&
+name|data_value
+operator|>=
+name|attr_type
+index|[
+name|attr_code
+index|]
+operator|.
+name|first_subtype
 condition|)
 name|printf
 argument_list|(

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.27 2001/10/18 09:52:17 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.27.2.1 2003/02/26 05:51:56 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,6 +2291,21 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+name|dat
+operator|+
+name|len
+expr_stmt|;
+break|break;
+block|}
 name|printf
 argument_list|(
 literal|" %s"
@@ -2319,6 +2334,21 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+name|dat
+operator|+
+name|len
+expr_stmt|;
+break|break;
+block|}
 name|printf
 argument_list|(
 literal|" %s"
@@ -2448,6 +2478,21 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+name|dat
+operator|+
+name|len
+expr_stmt|;
+break|break;
+block|}
 name|printf
 argument_list|(
 literal|" %s"
@@ -2476,6 +2521,21 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|advance
+operator|<
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+name|dat
+operator|+
+name|len
+expr_stmt|;
+break|break;
+block|}
 name|printf
 argument_list|(
 literal|" %s"
@@ -2873,6 +2933,9 @@ operator|+
 literal|100
 index|]
 decl_stmt|;
+name|int
+name|wpfx
+decl_stmt|;
 name|TCHECK2
 argument_list|(
 name|p
@@ -2901,8 +2964,8 @@ operator|+
 name|len
 condition|)
 block|{
-name|i
-operator|+=
+name|wpfx
+operator|=
 name|decode_prefix4
 argument_list|(
 operator|&
@@ -2918,6 +2981,17 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wpfx
+operator|<
+literal|0
+condition|)
+break|break;
+name|i
+operator|+=
+name|wpfx
 expr_stmt|;
 name|printf
 argument_list|(
@@ -3257,13 +3331,6 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -3271,6 +3338,13 @@ operator|<
 literal|0
 condition|)
 break|break;
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|p
 operator|+=
 name|i

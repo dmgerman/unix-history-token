@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-smb.c,v 1.20 2002/01/17 04:38:29 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-smb.c,v 1.20.2.4 2002/07/11 07:47:01 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -859,7 +865,7 @@ operator|+
 literal|1
 decl_stmt|;
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|f1
 init|=
@@ -1215,11 +1221,7 @@ name|f1
 condition|?
 name|f1
 else|:
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|"Paramaters=\n"
+literal|"Parameters=\n"
 argument_list|,
 name|param
 operator|+
@@ -1234,10 +1236,6 @@ name|f2
 condition|?
 name|f2
 else|:
-operator|(
-name|u_char
-operator|*
-operator|)
 literal|"Data=\n"
 argument_list|,
 name|data
@@ -1581,7 +1579,7 @@ name|maxbuf
 parameter_list|)
 block|{
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|f1
 decl_stmt|,
@@ -1821,15 +1819,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+operator|(
 name|data1
 operator|+
 literal|2
+operator|)
 argument_list|,
 literal|"\\MAILSLOT\\BROWSE"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|print_browse
@@ -1847,15 +1853,23 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+operator|(
 name|data1
 operator|+
 literal|2
+operator|)
 argument_list|,
 literal|"\\PIPE\\LANMAN"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|print_ipc
@@ -1949,7 +1963,8 @@ modifier|*
 name|maxbuf
 parameter_list|)
 block|{
-name|u_char
+specifier|const
+name|char
 modifier|*
 name|f1
 init|=
@@ -2177,7 +2192,8 @@ block|{
 name|int
 name|wcnt
 decl_stmt|;
-name|u_char
+specifier|const
+name|char
 modifier|*
 name|f1
 init|=
@@ -3927,7 +3943,7 @@ condition|;
 control|)
 block|{
 specifier|const
-name|u_char
+name|char
 modifier|*
 name|f1
 decl_stmt|,
@@ -4406,12 +4422,12 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\n>>> "
+literal|"\n>>>"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"NBT Packet"
+literal|" NBT Packet"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4754,7 +4770,7 @@ modifier|*
 name|opcodestr
 decl_stmt|;
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
@@ -5470,11 +5486,6 @@ argument_list|,
 name|length
 operator|-
 operator|(
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
 name|p
 operator|-
 name|data
@@ -5492,10 +5503,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 operator|<
 name|maxbuf

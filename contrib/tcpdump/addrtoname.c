@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.83 2001/09/17 21:57:50 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.83.4.1 2002/06/02 00:08:07 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,24 +60,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -87,8 +69,44 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|USE_ETHER_NTOHOST
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_NETINET_IF_ETHER_H
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* Squelch compiler warnings on some platforms for */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|rtentry
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* declarations in<net/if.h> */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_comment
+comment|/* for "struct ifnet" in "struct arpcom" on Solaris */
+end_comment
 
 begin_include
 include|#
@@ -100,6 +118,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE_NETINET_IF_ETHER_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_ETHER_NTOHOST */
+end_comment
 
 begin_include
 include|#

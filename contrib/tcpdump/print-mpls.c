@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mpls.c,v 1.2 2001/06/26 06:24:57 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-mpls.c,v 1.2.4.1 2002/05/07 18:36:28 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,8 @@ argument_list|(
 literal|"MPLS"
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|TCHECK2
 argument_list|(
 operator|*
@@ -301,27 +303,11 @@ name|v
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|v
-argument_list|,
-name|p
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|v
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|v
 operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-name|v
+name|p
 argument_list|)
 expr_stmt|;
 name|printf
@@ -427,6 +413,16 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+operator|!
+name|MPLS_STACK
+argument_list|(
+name|v
+argument_list|)
+condition|)
+do|;
 switch|switch
 condition|(
 name|MPLS_LABEL

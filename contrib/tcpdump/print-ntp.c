@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.32 2001/08/20 15:36:57 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.32.4.1 2002/07/10 07:13:37 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,7 +546,7 @@ case|:
 name|fn_printn
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&

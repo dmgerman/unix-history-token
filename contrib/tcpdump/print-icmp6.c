@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.56 2001/06/27 02:48:43 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-icmp6.c,v 1.56.4.1 2002/05/31 10:08:31 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2725,7 +2725,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"(unknwon opt_type=%d, opt_len=%d)"
+literal|"(unknown opt_type=%d, opt_len=%d)"
 argument_list|,
 name|op
 operator|->
