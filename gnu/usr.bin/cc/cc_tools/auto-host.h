@@ -269,12 +269,27 @@ begin_comment
 comment|/* Define if you have the atoll function.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTSTRAPPING
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD didn't always have atoll(3). */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HAVE_ATOLL
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if you have the atoq function.  */
