@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ww.h	3.34 %G%	  */
+comment|/*  * @(#)ww.h	3.35 %G%	  */
 end_comment
 
 begin_include
@@ -86,6 +86,15 @@ begin_struct
 struct|struct
 name|ww
 block|{
+comment|/* general flags and states */
+name|char
+name|ww_state
+decl_stmt|;
+comment|/* state of window */
+name|char
+name|ww_oflags
+decl_stmt|;
+comment|/* wwopen flags */
 comment|/* information for overlap */
 name|struct
 name|ww
@@ -98,10 +107,6 @@ name|ww
 modifier|*
 name|ww_back
 decl_stmt|;
-name|char
-name|ww_state
-decl_stmt|;
-comment|/* state of window */
 name|char
 name|ww_index
 decl_stmt|;
@@ -189,10 +194,6 @@ name|char
 name|ww_hascursor
 decl_stmt|;
 comment|/* has fake cursor */
-name|char
-name|ww_hasframe
-decl_stmt|;
-comment|/* frame it */
 comment|/* things for the window process and io */
 name|char
 name|ww_ispty
@@ -243,23 +244,27 @@ decl_stmt|;
 comment|/* current write position in ww_ob */
 comment|/* things for the user, they really don't belong here */
 name|char
+name|ww_id
+decl_stmt|;
+comment|/* the user window id */
+name|char
 name|ww_center
 decl_stmt|;
 comment|/* center the label */
 name|char
-name|ww_id
+name|ww_hasframe
 decl_stmt|;
-comment|/* the user window id */
+comment|/* frame it */
 name|char
 modifier|*
 name|ww_label
 decl_stmt|;
 comment|/* the user supplied label */
 name|struct
-name|ww_pos
-name|ww_altpos
+name|ww_dim
+name|ww_alt
 decl_stmt|;
-comment|/* alternate position */
+comment|/* alternate position and size */
 block|}
 struct|;
 end_struct

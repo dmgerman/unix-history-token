@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd5.c	3.12 %G%"
+literal|"@(#)cmd5.c	3.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,18 @@ name|curcol
 decl_stmt|,
 name|currow
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
+name|wwputs
+argument_list|(
+literal|"New window position: "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
 name|col
 operator|=
 name|w
@@ -312,9 +324,9 @@ name|ww_back
 decl_stmt|;
 name|w
 operator|->
-name|ww_altpos
+name|ww_alt
 operator|.
-name|r
+name|t
 operator|=
 name|w
 operator|->
@@ -324,9 +336,9 @@ name|t
 expr_stmt|;
 name|w
 operator|->
-name|ww_altpos
+name|ww_alt
 operator|.
-name|c
+name|l
 operator|=
 name|w
 operator|->
