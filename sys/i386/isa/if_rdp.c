@@ -2180,17 +2180,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Print additional info when attached 	 */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: RealTek RTL%s pocket ethernet, EEPROM %s, %s mode\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"RealTek RTL%s pocket ethernet, EEPROM %s, %s mode\n"
 argument_list|,
 literal|"8002"
 argument_list|,
@@ -2214,17 +2208,11 @@ else|:
 literal|"fast"
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: address %6D\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"address %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -3849,14 +3837,12 @@ block|{
 if|#
 directive|if
 name|DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"rdp%d: bad packet in buffer, "
-literal|"len %d, status %#x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"bad packet in buffer, "
+literal|"len %d, status %#x\n"
 argument_list|,
 operator|(
 name|int
@@ -3898,14 +3884,12 @@ comment|/* 				 * the chip seems to be stuck, we are 				 * probably seeing the 
 if|#
 directive|if
 name|DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"rdp%d: resetting due to an "
-literal|"excessive number of bad packets\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"resetting due to an "
+literal|"excessive number of bad packets\n"
 argument_list|)
 expr_stmt|;
 endif|#
