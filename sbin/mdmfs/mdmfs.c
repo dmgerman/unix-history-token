@@ -567,17 +567,25 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* If we were started as mount_*, imply -C. */
+comment|/* If we were started as mount_mfs or mfs, imply -C. */
 if|if
 condition|(
-name|strncmp
+name|strcmp
 argument_list|(
 name|getprogname
 argument_list|()
 argument_list|,
-literal|"mount_"
+literal|"mount_mfs"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|getprogname
+argument_list|()
 argument_list|,
-literal|6
+literal|"mfs"
 argument_list|)
 operator|==
 literal|0
