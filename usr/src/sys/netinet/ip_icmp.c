@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.25	82/11/05	*/
+comment|/*	ip_icmp.c	4.25	82/11/13	*/
 end_comment
 
 begin_include
@@ -534,7 +534,8 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
-decl_stmt|,
+decl_stmt|;
+name|int
 name|i
 decl_stmt|,
 argument_list|(
@@ -542,6 +543,8 @@ operator|*
 name|ctlfunc
 argument_list|)
 argument_list|()
+decl_stmt|,
+name|type
 decl_stmt|;
 specifier|extern
 name|u_char
@@ -724,6 +727,18 @@ operator|.
 name|ip_p
 argument_list|)
 expr_stmt|;
+name|type
+operator|=
+name|i
+operator|==
+name|ICMP_PARAMPROB
+condition|?
+literal|0
+else|:
+name|icp
+operator|->
+name|icmp_code
+expr_stmt|;
 if|if
 condition|(
 name|ctlfunc
@@ -752,9 +767,7 @@ index|[
 name|i
 index|]
 operator|+
-name|icp
-operator|->
-name|icmp_code
+name|type
 argument_list|,
 operator|(
 name|caddr_t
@@ -904,6 +917,7 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+return|return;
 name|free
 label|:
 name|m_freem
@@ -970,14 +984,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
-name|int
-name|generateicmpmsgs
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Send an icmp packet back to the ip level,  * after supplying a checksum.  */
 end_comment
@@ -1002,12 +1008,6 @@ block|{
 specifier|register
 name|int
 name|hlen
-init|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
 decl_stmt|;
 specifier|register
 name|struct
@@ -1020,18 +1020,22 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-init|=
+decl_stmt|;
+name|m
+operator|=
 name|dtom
 argument_list|(
 name|ip
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|generateicmpmsgs
-condition|)
-return|return;
+expr_stmt|;
+name|hlen
+operator|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+expr_stmt|;
 name|icp
 operator|=
 name|mtod

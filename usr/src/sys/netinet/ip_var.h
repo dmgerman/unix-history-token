@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.5	81/12/02	*/
+comment|/*	ip_var.h	4.6	82/11/13	*/
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Ip header, when holding a fragment.  */
+comment|/*  * Ip header, when holding a fragment.  *  * Note: ipf_next must be at same offset as ipq_next above  */
 end_comment
 
 begin_struct
