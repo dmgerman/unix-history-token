@@ -2202,6 +2202,26 @@ end_function_decl
 begin_function_decl
 name|Static
 name|void
+name|umass_cbi_dump_cmd
+parameter_list|(
+name|struct
+name|umass_softc
+modifier|*
+name|sc
+parameter_list|,
+name|void
+modifier|*
+name|cmd
+parameter_list|,
+name|int
+name|cmdlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
+name|void
 name|umass_dump_buffer
 parameter_list|(
 name|struct
@@ -6341,7 +6361,7 @@ block|{
 comment|/* Buffer overrun! Don't let this go by unnoticed */
 name|panic
 argument_list|(
-literal|"%s: transferred %d bytes instead of %d bytes\n"
+literal|"%s: transferred %db instead of %db\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -7334,6 +7354,20 @@ name|transfer_state
 operator|=
 name|TSTATE_CBI_COMMAND
 expr_stmt|;
+name|DIF
+argument_list|(
+name|UDMASS_CBI
+argument_list|,
+name|umass_cbi_dump_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Send the Command Block from host to device via control endpoint. */
 if|if
 condition|(
@@ -7480,7 +7514,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Status transport by control pipe (section 2.3.2.1). 			 * The command contained in the command block failed. 			 * 			 * The control pipe has already been unstalled by the 			 * USB stack. 			 * Section 2.4.3.1.1 states that the bulk in endpoints 			 * should not stalled at this point. 			 */
+comment|/* Status transport by control pipe (section 2.3.2.1). 			 * The command contained in the command block failed. 			 * 			 * The control pipe has already been unstalled by the 			 * USB stack. 			 * Section 2.4.3.1.1 states that the bulk in endpoints 			 * should not be stalled at this point. 			 */
 name|sc
 operator|->
 name|transfer_state
@@ -12466,7 +12500,7 @@ argument_list|,
 operator|(
 literal|"%s: CBW %d: cmd = %db "
 literal|"(0x%02x%02x%02x%02x%02x%02x%s), "
-literal|"data = %d bytes, dir = %s\n"
+literal|"data = %db, dir = %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -12651,6 +12685,130 @@ operator|==
 name|CSWSTATUS_PHASE
 condition|?
 literal|"phase"
+else|:
+literal|"<invalid>"
+operator|)
+operator|)
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|Static
+name|void
+name|umass_cbi_dump_cmd
+parameter_list|(
+name|struct
+name|umass_softc
+modifier|*
+name|sc
+parameter_list|,
+name|void
+modifier|*
+name|cmd
+parameter_list|,
+name|int
+name|cmdlen
+parameter_list|)
+block|{
+name|u_int8_t
+modifier|*
+name|c
+init|=
+name|cmd
+decl_stmt|;
+name|int
+name|dir
+init|=
+name|sc
+operator|->
+name|transfer_dir
+decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|UDMASS_BBB
+argument_list|,
+operator|(
+literal|"%s: cmd = %db "
+literal|"(0x%02x%02x%02x%02x%02x%02x%s), "
+literal|"data = %db, dir = %s\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+operator|,
+name|cmdlen
+operator|,
+name|c
+index|[
+literal|0
+index|]
+operator|,
+name|c
+index|[
+literal|1
+index|]
+operator|,
+name|c
+index|[
+literal|2
+index|]
+operator|,
+name|c
+index|[
+literal|3
+index|]
+operator|,
+name|c
+index|[
+literal|4
+index|]
+operator|,
+name|c
+index|[
+literal|5
+index|]
+operator|,
+operator|(
+name|cmdlen
+operator|>
+literal|6
+condition|?
+literal|"..."
+else|:
+literal|""
+operator|)
+operator|,
+name|sc
+operator|->
+name|transfer_datalen
+operator|,
+operator|(
+name|dir
+operator|==
+name|DIR_IN
+condition|?
+literal|"in"
+else|:
+operator|(
+name|dir
+operator|==
+name|DIR_OUT
+condition|?
+literal|"out"
+else|:
+operator|(
+name|dir
+operator|==
+name|DIR_NONE
+condition|?
+literal|"no data phase"
 else|:
 literal|"<invalid>"
 operator|)
