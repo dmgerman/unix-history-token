@@ -45,34 +45,6 @@ name|clock_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Debugging  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASS_IEN
-value|MPASS2(read_eflags()& PSL_I, "fl& PSL_I")
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASS_IDIS
-value|MPASS2((read_eflags()& PSL_I) == 0, "!(fl& PSL_I)")
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASS_SIEN
-parameter_list|(
-name|mpp
-parameter_list|)
-value|MPASS2((mpp)->mtx_saveintr& PSL_I,		\ 			"mpp->mtx_saveintr& PSL_I")
-end_define
-
 begin_define
 define|#
 directive|define

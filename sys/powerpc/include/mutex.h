@@ -27,34 +27,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * Debugging  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASS_IEN
-value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_0, "ps& IPL == IPL_0")
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASS_IDIS
-value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_HIGH, "ps& IPL == IPL_HIGH")
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASS_SIEN
-parameter_list|(
-name|mpp
-parameter_list|)
-value|MPASS2((mpp)->mtx_saveintr \ 			       == ALPHA_PSL_IPL_0, "mpp->mtx_saveintr == IPL_0")
-end_define
-
 begin_define
 define|#
 directive|define
