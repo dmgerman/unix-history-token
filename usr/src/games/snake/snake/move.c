@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.3 (Berkeley) %G%"
+literal|"@(#)move.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*************************************************************************  *  *	MOVE LIBRARY  *  *	This set of subroutines moves a cursor to a predefined  *	location, independent of the terminal type.  If the  *	terminal has an addressable cursor, it uses it.  If  *	not, it optimizes for tabs (currently) even if you don't  *      have them.  *  *	At all times the current address of the cursor must be maintained,  *	and that is available as structure cursor.  *  *	The following calls are allowed:  *		move(sp)	move to point sp.  *		up()		move up one line.  *		down()		move down one line.  *		bs()		move left one space (except column 0).  *		nd()		move right one space(no write).  *		clear()		clear screen.  *		home()		home.  *		ll()		move to lower left corner of screen.  *		cr()		carriage return (no line feed).  *		printf()	just like standard printf, but keeps track  *				of cursor position. (Uses pstring).  *		aprintf()	same as printf, but first argument is&point.  *				(Uses pstring).  *		pstring(s)	output the string of printing characters.  *				However, '\r' is interpreted to mean return  *				to column of origination AND do linefeed.  *				'\n' causes<cr><lf>.  *		putpad(str)	calls tputs to output character with proper  *					padding.  *		outch()		the output routine for a character used by  *					tputs. It just calls putchar.  *		pch(ch)		output character to screen and update  *					cursor address (must be a standard  *					printing character). WILL SCROLL.  *		pchar(ps,ch)	prints one character if it is on the  *					screen at the specified location;  *					otherwise, dumps it.(no wrap-around).  *  *		getcap()	initializes strings for later calls.  *		cap(string)	outputs the string designated in the termcap  *					data base. (Should not move the cursor.)  *		done(int)	returns the terminal to intial state.  If int  *					is not 0, it exits.  *  *		same(&p1,&p2)	returns 1 if p1 and p2 are the same point.  *		point(&p,x,y)	return point set to x,y.  *  *		baudrate(x)	returns the baudrate of the terminal.  *		delay(t)	causes an approximately constant delay  *					independent of baudrate.  *					Duration is ~ t/20 seconds.  *  ******************************************************************************/
