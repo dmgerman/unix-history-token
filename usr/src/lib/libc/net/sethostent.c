@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sethostent.c	1.1 (Berkeley) %G%"
+literal|"@(#)sethostent.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,11 +31,23 @@ end_comment
 
 begin_macro
 name|sethostent
-argument_list|()
+argument_list|(
+argument|stayopen
+argument_list|)
 end_macro
 
 begin_block
-block|{}
+block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|stayopen
+operator|=
+name|stayopen
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_block
 
 begin_macro
@@ -45,6 +57,34 @@ end_macro
 
 begin_block
 block|{}
+end_block
+
+begin_macro
+name|sethostfile
+argument_list|(
+argument|name
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|name
+operator|=
+name|name
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_block
 
 end_unit
