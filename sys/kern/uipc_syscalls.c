@@ -919,7 +919,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|short
+name|u_int
 name|fflag
 decl_stmt|;
 comment|/* type must match fp->f_flag */
