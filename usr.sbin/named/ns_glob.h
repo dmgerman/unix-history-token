@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 1.2 1995/05/30 03:48:50 rgrimes Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 1.3 1995/08/20 21:18:41 peter Exp $  */
 end_comment
 
 begin_comment
@@ -564,17 +564,6 @@ name|DECL
 name|struct
 name|sockaddr_in
 name|from_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Source addr size of last packet */
-end_comment
-
-begin_decl_stmt
-name|DECL
-name|int
-name|from_len
 decl_stmt|;
 end_decl_stmt
 

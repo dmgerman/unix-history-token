@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_init.c,v 1.1.1.2 1995/08/18 21:16:00 peter Exp $"
+literal|"$Id: ns_init.c,v 1.3 1995/08/20 21:18:44 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,12 +88,6 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -173,8 +167,13 @@ name|boot_read
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
+name|filename
+operator|,
+name|int
+name|includefile
 operator|)
 argument_list|)
 decl_stmt|,
@@ -616,6 +615,8 @@ directive|endif
 name|boot_read
 argument_list|(
 name|bootfile
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* erase all old zones that were not found */
@@ -812,11 +813,17 @@ specifier|static
 name|void
 name|boot_read
 parameter_list|(
-name|bootfile
+name|filename
+parameter_list|,
+name|includefile
 parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|bootfile
+name|filename
+decl_stmt|;
+name|int
+name|includefile
 decl_stmt|;
 block|{
 specifier|register
@@ -892,7 +899,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|bootfile
+name|filename
 argument_list|,
 literal|"r"
 argument_list|)
@@ -907,7 +914,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1058,7 +1065,7 @@ name|getnum
 argument_list|(
 name|fp
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|GETNUM_NONE
 argument_list|)
@@ -1101,7 +1108,7 @@ name|getnum
 argument_list|(
 name|fp
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|GETNUM_SCALED
 argument_list|)
@@ -1329,6 +1336,8 @@ condition|)
 name|boot_read
 argument_list|(
 name|buf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1565,7 +1574,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: line %d: unknown directive '%s'\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|,
@@ -1602,7 +1611,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: line %d: missing origin\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|)
@@ -1641,7 +1650,7 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: line %d: zone \"%s\" has trailing dot\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|,
@@ -1716,7 +1725,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: line %d: missing %s\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|,
@@ -2060,7 +2069,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: line %d: bad refresh time '%s', ignored\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|,
@@ -2093,7 +2102,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: line %d: cache refresh ignored\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|)
@@ -2360,7 +2369,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"%s: line %d: bad flag '%s'\n"
 argument_list|,
-name|bootfile
+name|filename
 argument_list|,
 name|lineno
 argument_list|,
@@ -2751,7 +2760,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/%s/NsTmp%ld.%d"
+literal|"%s/NsTmp%ld.%d"
 argument_list|,
 name|_PATH_TMPDIR
 argument_list|,
@@ -4436,6 +4445,9 @@ name|NoRecurse
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QRYLOG
 block|}
 elseif|else
 if|if
@@ -4453,6 +4465,8 @@ name|qrylog
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
