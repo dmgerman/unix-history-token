@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.42 1997/09/14 03:19:13 peter Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.43 1997/10/19 10:44:29 yokota Exp $  */
 end_comment
 
 begin_comment
@@ -1556,9 +1556,6 @@ literal|2
 decl_stmt|;
 comment|/* assume two buttons by default */
 name|int
-name|res
-decl_stmt|;
-name|int
 name|status
 index|[
 literal|3
@@ -1667,27 +1664,16 @@ name|int
 name|id
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|valid_ids
-index|[]
-init|=
-block|{
-name|PSM_MOUSE_ID
-block|,
-comment|/* mouse */
-name|PSM_BALLPOINT_ID
-block|,
-comment|/* ballpoint device */
-operator|-
-literal|1
-comment|/* end of table */
-block|}
-decl_stmt|;
 if|#
 directive|if
 literal|0
-block|int i;      for (i = 0; valid_ids[i]>= 0; ++i)         if (valid_ids[i] == id)             return TRUE;     return FALSE;
+block|static int valid_ids[] = {         PSM_MOUSE_ID,
+comment|/* mouse */
+block|PSM_BALLPOINT_ID,
+comment|/* ballpoint device */
+block|-1
+comment|/* end of table */
+block|};     int i;      for (i = 0; valid_ids[i]>= 0; ++i)         if (valid_ids[i] == id)             return TRUE;     return FALSE;
 else|#
 directive|else
 return|return

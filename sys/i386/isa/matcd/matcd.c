@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.28 1997/07/20 11:14:53 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.29 1997/09/21 21:42:18 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -10547,16 +10547,6 @@ name|struct
 name|matcd_data
 modifier|*
 name|cd
-decl_stmt|;
-name|struct
-name|cd_toc_entry
-modifier|*
-name|from
-decl_stmt|;
-name|struct
-name|cd_toc_entry
-modifier|*
-name|to
 decl_stmt|;
 name|int
 name|trk

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Javier Martín Rueda (jmrueda@diatel.upm.es)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1996, Javier Martín Rueda (jmrueda@diatel.upm.es)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ex.c,v 1.7 1997/09/26 17:17:43 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -1356,16 +1356,6 @@ name|arpcom
 operator|.
 name|ac_if
 decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
-name|sockaddr_dl
-modifier|*
-name|sdl
-decl_stmt|;
 name|DODEBUG
 argument_list|(
 argument|Start_End
@@ -2193,9 +2183,6 @@ name|tmp16
 index|[
 literal|2
 index|]
-decl_stmt|,
-modifier|*
-name|cP
 decl_stmt|;
 name|struct
 name|mbuf
@@ -3097,8 +3084,6 @@ operator|->
 name|iobase
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|int_status
 decl_stmt|,
 name|send_pkts
@@ -4652,18 +4637,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -4718,19 +4691,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|struct
-name|ex_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|ex_sc
-index|[
-name|ifp
-operator|->
-name|if_unit
-index|]
-decl_stmt|;
 name|DODEBUG
 argument_list|(
 argument|Start_End
