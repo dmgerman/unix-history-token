@@ -15,33 +15,6 @@ directive|define
 name|_NETINET_IF_FDDI_H_
 end_define
 
-begin_comment
-comment|/*  * Structure of an 100Mb/s FDDI header.  */
-end_comment
-
-begin_struct
-struct|struct
-name|fddi_header
-block|{
-name|u_char
-name|fddi_fc
-decl_stmt|;
-name|u_char
-name|fddi_dhost
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_char
-name|fddi_shost
-index|[
-literal|6
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -105,6 +78,87 @@ end_define
 
 begin_comment
 comment|/* 0b00001111 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_CLFF
+value|0xF0
+end_define
+
+begin_comment
+comment|/* Class/Length/Format bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_ZZZZ
+value|0x0F
+end_define
+
+begin_comment
+comment|/* Control bits */
+end_comment
+
+begin_comment
+comment|/*  * FDDI Frame Control values. (48-bit addressing only).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_VOID
+value|0x40
+end_define
+
+begin_comment
+comment|/* Void frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_NRT
+value|0x80
+end_define
+
+begin_comment
+comment|/* Nonrestricted token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_RT
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Restricted token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_MAC_BEACON
+value|0xc2
+end_define
+
+begin_comment
+comment|/* MAC Beacon frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_MAC_CLAIM
+value|0xc3
+end_define
+
+begin_comment
+comment|/* MAC Claim frame */
 end_comment
 
 begin_define
@@ -180,9 +234,105 @@ end_define
 begin_define
 define|#
 directive|define
+name|FDDIFC_IMP_ASYNC
+value|0x60
+end_define
+
+begin_comment
+comment|/* Implementor Async. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_IMP_SYNC
+value|0xe0
+end_define
+
+begin_comment
+comment|/* Implementor Synch. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FDDIFC_SMT
 value|0x40
 end_define
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_SMT_INFO
+value|0x41
+end_define
+
+begin_comment
+comment|/* SMT Info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_SMT_NSA
+value|0x4F
+end_define
+
+begin_comment
+comment|/* SMT Next station adrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDIFC_MAC
+value|0xc0
+end_define
+
+begin_comment
+comment|/* MAC frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDDI_ADDR_LEN
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDDI_HDR_LEN
+value|(sizeof(struct fddi_header))
+end_define
+
+begin_comment
+comment|/*  * Structure of an 100Mb/s FDDI header.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fddi_header
+block|{
+name|u_char
+name|fddi_fc
+decl_stmt|;
+name|u_char
+name|fddi_dhost
+index|[
+name|FDDI_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_char
+name|fddi_shost
+index|[
+name|FDDI_ADDR_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_if
 if|#
@@ -293,10 +443,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NET_FDDI_H_ */
+end_comment
 
 end_unit
 
