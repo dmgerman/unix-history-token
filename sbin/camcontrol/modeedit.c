@@ -780,7 +780,7 @@ name|RTRIM
 parameter_list|(
 name|string
 parameter_list|)
-value|do {						\ 	register int _length;						\ 	while (isspace(string[_length = strlen(string) - 1]))		\ 		string[_length] = '\0';					\ } while (0)
+value|do {						\ 	int _length;						\ 	while (isspace(string[_length = strlen(string) - 1]))		\ 		string[_length] = '\0';					\ } while (0)
 end_define
 
 begin_function
@@ -1013,6 +1013,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
@@ -1102,6 +1103,7 @@ operator|)
 return|;
 comment|/* NOTREACHED */
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 return|return
@@ -1590,6 +1592,7 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 return|return
@@ -2287,6 +2290,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 comment|/* Repeat processing loop with next character. */
