@@ -399,7 +399,10 @@ index|[
 literal|2
 index|]
 operator|+=
-literal|5
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
