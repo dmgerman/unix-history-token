@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.24 (Berkeley) %G%"
+literal|"@(#)ls.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1483,9 +1483,6 @@ name|LS
 modifier|*
 name|lp
 decl_stmt|;
-name|u_long
-name|save
-decl_stmt|;
 if|if
 condition|(
 name|num
@@ -1496,7 +1493,12 @@ operator|!
 name|f_specialdir
 condition|)
 block|{
-name|save
+name|u_long
+name|save1
+decl_stmt|,
+name|save2
+decl_stmt|;
+name|save1
 operator|=
 name|stats
 index|[
@@ -1505,7 +1507,18 @@ index|]
 operator|.
 name|lstat
 operator|.
-name|st_flags
+name|st_btotal
+expr_stmt|;
+name|save2
+operator|=
+name|stats
+index|[
+literal|0
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_maxlen
 expr_stmt|;
 name|qsort
 argument_list|(
@@ -1532,9 +1545,20 @@ index|]
 operator|.
 name|lstat
 operator|.
-name|st_flags
+name|st_btotal
 operator|=
-name|save
+name|save1
+expr_stmt|;
+name|stats
+index|[
+literal|0
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_maxlen
+operator|=
+name|save2
 expr_stmt|;
 block|}
 name|printfcn
@@ -2266,6 +2290,8 @@ comment|/* calculate number of blocks if -l format */
 if|if
 condition|(
 name|f_longform
+operator|||
+name|f_size
 condition|)
 name|blocks
 operator|+=
@@ -2279,9 +2305,11 @@ operator|.
 name|st_blocks
 expr_stmt|;
 comment|/* save max length if -C format */
-elseif|else
 if|if
 condition|(
+operator|!
+name|f_longform
+operator|&&
 operator|!
 name|f_singlecol
 operator|&&
@@ -2304,11 +2332,6 @@ operator|++
 name|cnt
 expr_stmt|;
 block|}
-comment|/* 	 * overload -- we probably have to save either blocks or maxlen 	 * with the lstat array, so we stuff it into an unused field in 	 * the first stat structure.  If there's ever a type larger than 	 * u_long, fix this.  This information must be saved if qsort 	 * is called. 	 */
-if|if
-condition|(
-name|f_longform
-condition|)
 name|stats
 index|[
 literal|0
@@ -2316,16 +2339,10 @@ index|]
 operator|.
 name|lstat
 operator|.
-name|st_flags
+name|st_btotal
 operator|=
 name|blocks
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|f_singlecol
-condition|)
 name|stats
 index|[
 literal|0
@@ -2333,7 +2350,7 @@ index|]
 operator|.
 name|lstat
 operator|.
-name|st_flags
+name|st_maxlen
 operator|=
 name|maxlen
 expr_stmt|;
