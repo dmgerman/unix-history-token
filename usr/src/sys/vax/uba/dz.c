@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.15	%G%	*/
+comment|/*	dz.c	3.16	%G%	*/
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|NDZ11
-value|3
+value|4
 end_define
 
 begin_endif
@@ -2714,17 +2714,20 @@ if|if
 condition|(
 name|tp
 operator|->
+name|t_state
+operator|&
+name|ASLEEP
+operator|&&
+name|tp
+operator|->
 name|t_outq
 operator|.
 name|c_cc
 operator|<=
 name|TTLOWAT
-operator|&&
+argument_list|(
 name|tp
-operator|->
-name|t_state
-operator|&
-name|ASLEEP
+argument_list|)
 condition|)
 block|{
 name|tp

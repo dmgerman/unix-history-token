@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	3.8	%G%	*/
+comment|/*	cons.c	3.9	%G%	*/
 end_comment
 
 begin_comment
@@ -736,17 +736,20 @@ if|if
 condition|(
 name|tp
 operator|->
+name|t_state
+operator|&
+name|ASLEEP
+operator|&&
+name|tp
+operator|->
 name|t_outq
 operator|.
 name|c_cc
 operator|<=
 name|TTLOWAT
-operator|&&
+argument_list|(
 name|tp
-operator|->
-name|t_state
-operator|&
-name|ASLEEP
+argument_list|)
 condition|)
 block|{
 name|tp

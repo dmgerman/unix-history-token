@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.15	%G%	*/
+comment|/*	dh.c	3.16	%G%	*/
 end_comment
 
 begin_comment
@@ -1961,6 +1961,9 @@ operator|.
 name|c_cc
 operator|<=
 name|TTLOWAT
+argument_list|(
+name|tp
+argument_list|)
 condition|)
 block|{
 name|tp
