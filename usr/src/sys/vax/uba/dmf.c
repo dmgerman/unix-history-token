@@ -1054,10 +1054,6 @@ name|DMFL_RESET
 expr_stmt|;
 end_if
 
-begin_comment
-comment|/* NEED TO SAVE IT SOMEWHERE FOR OTHER DEVICES */
-end_comment
-
 begin_return
 return|return
 operator|(
@@ -1659,16 +1655,16 @@ name|unit
 operator|&
 literal|0200
 condition|)
-return|return
-operator|(
+block|{
 name|dmflclose
 argument_list|(
 name|dev
 argument_list|,
 name|flag
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
+block|}
 name|tp
 operator|=
 operator|&
@@ -1929,6 +1925,12 @@ name|c
 expr_stmt|;
 specifier|register
 name|struct
+name|tty
+modifier|*
+name|tp
+decl_stmt|;
+specifier|register
+name|struct
 name|dmfdevice
 modifier|*
 name|addr
@@ -1939,9 +1941,6 @@ name|tty
 modifier|*
 name|tp0
 decl_stmt|;
-specifier|register
-name|dev
-expr_stmt|;
 name|int
 name|unit
 decl_stmt|;
@@ -1950,7 +1949,6 @@ name|overrun
 init|=
 literal|0
 decl_stmt|;
-block|{
 specifier|register
 name|struct
 name|uba_device
@@ -1988,7 +1986,6 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-block|}
 name|tp0
 operator|=
 operator|&
@@ -2013,12 +2010,6 @@ operator|<
 literal|0
 condition|)
 block|{
-specifier|register
-name|struct
-name|tty
-modifier|*
-name|tp
-decl_stmt|;
 name|unit
 operator|=
 operator|(
@@ -2034,14 +2025,6 @@ operator|=
 name|tp0
 operator|+
 name|unit
-expr_stmt|;
-name|dev
-operator|=
-name|unit
-operator|+
-name|dmf
-operator|*
-literal|8
 expr_stmt|;
 if|if
 condition|(
@@ -3079,7 +3062,7 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|u
+name|unit0
 init|=
 name|dmf
 operator|*
@@ -3093,7 +3076,7 @@ init|=
 operator|&
 name|dmf_tty
 index|[
-name|u
+name|unit0
 index|]
 decl_stmt|;
 specifier|register
@@ -3213,7 +3196,7 @@ if|if
 condition|(
 name|dmf_dma
 index|[
-name|u
+name|unit0
 operator|+
 name|t
 index|]
@@ -4473,7 +4456,11 @@ block|}
 end_block
 
 begin_comment
-comment|/* dmflopen -- open the line printer port on a dmf32  *  */
+comment|/*  * dmflopen -- open the line printer port on a dmf32  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -4643,10 +4630,16 @@ operator||=
 name|OPEN
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_macro
 name|dmflclose
@@ -4763,7 +4756,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
@@ -4904,22 +4899,22 @@ argument_list|,
 name|n
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/* dmflout -- start io operation to dmf line printer  *		cp is addr of buf of n chars to be sent.  *  *	-- dmf will be put in formatted output mode, this will  *		be selectable from an ioctl if the  *		need ever arises.  */
+comment|/*  * dmflout -- start io operation to dmf line printer  *		cp is addr of buf of n chars to be sent.  *  *	-- dmf will be put in formatted output mode, this will  *		be selectable from an ioctl if the  *		need ever arises.  */
 end_comment
 
 begin_macro
@@ -5019,7 +5014,7 @@ index|[
 name|dmf
 index|]
 expr_stmt|;
-comment|/* allocate unibus resources, will be released when io 	 * operation is done 	 */
+comment|/* 	 * allocate unibus resources, will be released when io 	 * operation is done. 	 */
 name|sc
 operator|->
 name|dmfl_info
@@ -5254,7 +5249,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*if(sc->dmfl_state&ERROR) return (EIO);*/
+comment|/*if (sc->dmfl_state&ERROR) return (EIO);*/
 block|}
 name|splx
 argument_list|(
@@ -5270,7 +5265,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* dmflint -- handle an interrupt from the line printer part of the dmf32  *  */
+comment|/*  * dmflint -- handle an interrupt from the line printer part of the dmf32  */
 end_comment
 
 begin_macro
@@ -5399,13 +5394,11 @@ index|]
 operator|&
 name|DMFL_DMAERR
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"dmf:NXM\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|d
