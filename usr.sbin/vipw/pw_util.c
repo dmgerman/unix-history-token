@@ -529,11 +529,6 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-name|warnx
-argument_list|(
-literal|"rebuilding the database..."
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -559,6 +554,11 @@ operator|!
 name|username
 condition|)
 block|{
+name|warnx
+argument_list|(
+literal|"rebuilding the database..."
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 name|_PATH_PWD_MKDB
@@ -575,6 +575,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|warnx
+argument_list|(
+literal|"updating the database..."
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 name|_PATH_PWD_MKDB
