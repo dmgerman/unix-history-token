@@ -1211,8 +1211,8 @@ name|len
 operator|=
 name|psl
 init|;
-operator|--
 name|len
+operator|--
 condition|;
 operator|++
 name|p
