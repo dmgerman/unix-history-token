@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ww.h	1.4 83/07/19		*/
+comment|/*	@(#)ww.h	1.5 83/07/22		*/
 end_comment
 
 begin_include
@@ -20,6 +20,26 @@ include|#
 directive|include
 file|"window.h"
 end_include
+
+begin_struct
+struct|struct
+name|ww_dim
+block|{
+name|short
+name|col
+decl_stmt|;
+name|short
+name|row
+decl_stmt|;
+name|short
+name|ncol
+decl_stmt|;
+name|short
+name|nrow
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -56,32 +76,21 @@ name|Win
 modifier|*
 name|ww_win
 decl_stmt|;
-name|int
-name|ww_row
+name|struct
+name|ww_dim
+name|ww_o
 decl_stmt|;
-comment|/* outside dimensions */
-name|int
-name|ww_col
+comment|/* outside dimemsions */
+name|struct
+name|ww_dim
+name|ww_i
 decl_stmt|;
-name|int
-name|ww_nrow
+comment|/* inside dimemsions */
+name|struct
+name|ww_dim
+name|ww_w
 decl_stmt|;
-name|int
-name|ww_ncol
-decl_stmt|;
-name|int
-name|ww_irow
-decl_stmt|;
-comment|/* inside dimensions */
-name|int
-name|ww_icol
-decl_stmt|;
-name|int
-name|ww_inrow
-decl_stmt|;
-name|int
-name|ww_incol
-decl_stmt|;
+comment|/* window dimemsions */
 name|int
 name|ww_pty
 decl_stmt|;
@@ -96,6 +105,12 @@ name|struct
 name|ww
 modifier|*
 name|ww_next
+decl_stmt|;
+name|char
+name|ww_ttyname
+index|[
+literal|11
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -248,6 +263,19 @@ name|int
 name|wwnwrite
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|wwnrow
+decl_stmt|,
+name|wwncol
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the screen size */
+end_comment
 
 begin_define
 define|#

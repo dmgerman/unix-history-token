@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	1.4 83/07/19"
+literal|"@(#)wwspawn.c	1.5 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +242,36 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	i = open("/dev/tty"); 	ioctl(i, TIOCNOTTY, 0); 	close(i); 	*/
+name|i
+operator|=
+name|open
+argument_list|(
+literal|"/dev/tty"
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|i
+argument_list|,
+name|TIOCNOTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|open
+argument_list|(
+name|wp
+operator|->
+name|ww_ttyname
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -336,11 +365,15 @@ name|TERMCAP
 argument_list|,
 name|wp
 operator|->
-name|ww_incol
+name|ww_i
+operator|.
+name|ncol
 argument_list|,
 name|wp
 operator|->
-name|ww_inrow
+name|ww_i
+operator|.
+name|nrow
 argument_list|)
 expr_stmt|;
 name|environ

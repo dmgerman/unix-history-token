@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	1.1 83/07/20"
+literal|"@(#)startup.c	1.2 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ decl_stmt|;
 specifier|register
 name|r
 operator|=
-name|WRows
+name|wwnrow
 operator|/
 literal|2
 expr_stmt|;
@@ -132,7 +132,7 @@ name|r
 operator|+
 literal|1
 argument_list|,
-name|WCols
+name|wwncol
 argument_list|,
 literal|0
 argument_list|,
@@ -152,11 +152,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-name|WRows
+name|wwnrow
 operator|-
 name|r
 argument_list|,
-name|WCols
+name|wwncol
 argument_list|,
 name|r
 argument_list|,

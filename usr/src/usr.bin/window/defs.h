@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	1.2 83/07/19		*/
+comment|/*	@(#)defs.h	1.3 83/07/22		*/
 end_comment
 
 begin_include
@@ -123,6 +123,31 @@ name|char
 name|quit
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* flags to doclose() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOSE_ONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOSE_ALL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOSE_DEAD
+value|2
+end_define
 
 end_unit
 

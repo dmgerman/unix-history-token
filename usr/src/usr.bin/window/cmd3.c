@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	1.2 83/07/19"
+literal|"@(#)cmd3.c	1.3 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,37 +52,39 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|doclose
 argument_list|(
-argument|c
+name|flag
+argument_list|,
+name|w
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|ww
+operator|*
+name|w
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|ww
-modifier|*
-name|w
+name|char
+name|didit
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
-name|c
+name|flag
 condition|)
 block|{
 case|case
-literal|'c'
+name|CLOSE_ONE
 case|:
 if|if
 condition|(
-operator|(
 name|w
-operator|=
-name|getwin
-argument_list|()
-operator|)
 operator|==
 literal|0
 condition|)
@@ -103,12 +105,15 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+name|didit
+operator|++
+expr_stmt|;
 break|break;
 case|case
-literal|'C'
+name|CLOSE_DEAD
 case|:
 case|case
-literal|'Z'
+name|CLOSE_ALL
 case|:
 for|for
 control|(
@@ -133,9 +138,9 @@ name|ww_state
 operator|==
 name|WW_DEAD
 operator|||
-name|c
+name|flag
 operator|==
-literal|'Z'
+name|CLOSE_ALL
 operator|)
 condition|)
 block|{
@@ -193,11 +198,16 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|wwclose
 argument_list|(
 name|w1
 argument_list|)
 expr_stmt|;
+name|didit
+operator|++
+expr_stmt|;
+block|}
 block|}
 else|else
 name|w
@@ -241,6 +251,13 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|didit
+condition|)
+name|reframe
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 

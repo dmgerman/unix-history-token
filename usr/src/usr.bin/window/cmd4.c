@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	1.2 83/07/20"
+literal|"@(#)cmd4.c	1.3 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,11 +115,15 @@ name|wwsetcursor
 argument_list|(
 name|w
 operator|->
-name|ww_row
+name|ww_o
+operator|.
+name|row
 argument_list|,
 name|w
 operator|->
-name|ww_col
+name|ww_o
+operator|.
+name|col
 operator|+
 literal|1
 argument_list|)

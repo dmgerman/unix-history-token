@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	1.4 83/07/19"
+literal|"@(#)wwinit.c	1.5 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|_wwdtablesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wwncol
+decl_stmt|,
+name|wwnrow
 decl_stmt|;
 end_decl_stmt
 
@@ -285,6 +293,15 @@ return|;
 name|WSetRealCursor
 operator|=
 literal|1
+expr_stmt|;
+name|Wscreensize
+argument_list|(
+operator|&
+name|wwnrow
+argument_list|,
+operator|&
+name|wwncol
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwsuspend.c	1.3 83/07/19"
+literal|"@(#)wwsuspend.c	1.4 83/07/22"
 decl_stmt|;
 end_decl_stmt
 

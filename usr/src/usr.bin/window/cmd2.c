@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.3 83/07/20"
+literal|"@(#)cmd2.c	1.4 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ name|openwin
 argument_list|(
 literal|8
 argument_list|,
-literal|"Time"
+literal|"Timing and Resource Usage"
 argument_list|)
 operator|)
 operator|==
@@ -626,6 +626,66 @@ block|}
 end_function
 
 begin_macro
+name|dostat
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|ww
+modifier|*
+name|w
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|w
+operator|=
+name|openwin
+argument_list|(
+literal|22
+argument_list|,
+literal|"IO Statics"
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|wwputs
+argument_list|(
+literal|"Can't open statistics window.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"nread: %d\r\n"
+argument_list|,
+name|nread
+argument_list|)
+expr_stmt|;
+name|waitnl
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|closewin
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|doquit
 argument_list|()
 end_macro
@@ -730,7 +790,7 @@ literal|0
 argument_list|,
 name|nrow
 argument_list|,
-name|WCols
+name|wwncol
 argument_list|,
 literal|1
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	1.2 83/07/19"
+literal|"@(#)wwlabel.c	1.3 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,11 +84,15 @@ name|framed
 operator|=
 name|w
 operator|->
-name|ww_inrow
+name|ww_i
+operator|.
+name|nrow
 operator|<
 name|w
 operator|->
-name|ww_nrow
+name|ww_o
+operator|.
+name|nrow
 operator|)
 condition|)
 block|{
@@ -121,12 +125,16 @@ argument_list|)
 expr_stmt|;
 name|w
 operator|->
-name|ww_inrow
+name|ww_i
+operator|.
+name|nrow
 operator|--
 expr_stmt|;
 name|w
 operator|->
-name|ww_irow
+name|ww_i
+operator|.
+name|row
 operator|++
 expr_stmt|;
 block|}
@@ -147,7 +155,9 @@ name|i
 operator|=
 name|w
 operator|->
-name|ww_ncol
+name|ww_o
+operator|.
+name|ncol
 operator|-
 literal|2
 init|;

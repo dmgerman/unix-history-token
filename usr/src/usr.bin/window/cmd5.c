@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd5.c	1.1 83/07/20"
+literal|"@(#)cmd5.c	1.2 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,7 +345,7 @@ literal|'*'
 condition|)
 name|nrow
 operator|=
-name|WRows
+name|wwnrow
 operator|-
 name|row
 expr_stmt|;
@@ -369,7 +369,7 @@ literal|'*'
 condition|)
 name|ncol
 operator|=
-name|WCols
+name|wwncol
 operator|-
 name|col
 expr_stmt|;
