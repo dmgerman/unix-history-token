@@ -1,14 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_comment
-comment|/* "@(#)hpboot.c	6.3 (Berkeley) %G%" */
+comment|/* "@(#)hpboot.c	6.4 (Berkeley) %G%" */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PARTITION
+end_define
+
 begin_comment
-comment|/*  * RP??/RM?? 1st level boot program: loads next 7.5Kbytes from  * boot sector of file system and sets it up to run.  * Always reads from drive 0.  */
+comment|/* Partition is in bits 12 to 15 of R5  /*  * RP??/RM?? 1st level boot program: loads next 7.5Kbytes from  * boot sectors of file system and sets it up to run.  * Reads from the controller and drive passed in from the boot  * rom.  *   R1:  address of the boot device's adapter  *   R2:  controller number of the boot device  *   R3:  unit number of the boot device  *   R5:  software boot control flags  *   R6:  address of driver subroutine from ROM  *   SP:  base address of usable memory + 0x200  */
 end_comment
 
 begin_expr_stmt
@@ -30,6 +36,12 @@ name|M_cr
 operator|,
 literal|4
 comment|/* MBA control reg */
+operator|.
+name|set
+name|M_sr
+operator|,
+literal|8
+comment|/* MBA status reg */
 operator|.
 name|set
 name|M_var
@@ -54,6 +66,18 @@ name|MBAinit
 operator|,
 literal|1
 comment|/* MBA init bit in MBA control reg */
+operator|.
+name|set
+name|MBABUSY
+operator|,
+literal|0x80000000
+comment|/* MBA SR: data transfer busy */
+operator|.
+name|set
+name|pMBABUSY
+operator|,
+literal|31
+comment|/* bit position of  MBABUSY */
 comment|/* Drive information */
 operator|.
 name|set
@@ -63,50 +87,44 @@ literal|0x400
 comment|/* start of drive registers */
 operator|.
 name|set
+name|RPDR
+operator|,
+literal|0x80
+comment|/* offset per drive unit */
+operator|.
+name|set
 name|RP_cr
 operator|,
-name|RP
-operator|+
 literal|0
 comment|/* control status register */
 operator|.
 name|set
 name|RP_sr
 operator|,
-name|RP
-operator|+
 literal|4
 comment|/* drive status reg */
 operator|.
 name|set
 name|RP_stk
 operator|,
-name|RP
-operator|+
 literal|0x14
 comment|/* desired track/sector reg */
 operator|.
 name|set
 name|RP_dt
 operator|,
-name|RP
-operator|+
 literal|0x18
 comment|/* drive type reg */
 operator|.
 name|set
 name|RP_off
 operator|,
-name|RP
-operator|+
 literal|0x24
 comment|/* RP offset reg */
 operator|.
 name|set
 name|RP_cyl
 operator|,
-name|RP
-operator|+
 literal|0x28
 comment|/* desired cyl reg */
 operator|.
@@ -234,10 +252,78 @@ label|:
 end_label
 
 begin_decl_stmt
+name|clrl
+name|r10
+comment|/* major("/dev/hp0a") */
+name|extzv
+name|$13
+decl_stmt|,
+name|$2
+decl_stmt|,
+name|r1
+decl_stmt|,
+name|r4
+comment|/* get MBA number from R1 */
+name|insv
+name|r4
+decl_stmt|,
+name|$24
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* set MBA number */
+name|insv
+name|r3
+decl_stmt|,
+name|$16
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|r10
+comment|/* drive number */
+ifdef|#
+directive|ifdef
+name|PARTITION
+name|extzv
+name|$12
+decl_stmt|,
+name|$4
+decl_stmt|,
+name|r5
+decl_stmt|,
+name|r4
+comment|/* get partition from r5 */
+name|bicw2
+name|$0xf000
+decl_stmt|,
+name|r5
+comment|/* remove from r5 */
+name|insv
+name|r4
+decl_stmt|,
+name|$8
+decl_stmt|,
+name|$4
+decl_stmt|,
+name|r10
+comment|/* set partition */
+endif|#
+directive|endif
 name|movl
 name|r5
 decl_stmt|,
 name|r11
+name|movl
+name|r1
+decl_stmt|,
+name|r9
+comment|/* save adaptor address */
+name|movl
+name|r3
+decl_stmt|,
+name|r8
+comment|/* and unit number */
 name|movl
 name|$RELOC
 decl_stmt|,
@@ -264,46 +350,6 @@ name|start1
 comment|/* running relocated */
 name|start1
 range|:
-comment|/* get cpu type */
-operator|.
-name|set
-name|SID
-decl_stmt|,0x3e
-name|mfpr
-name|$SID
-decl_stmt|,
-name|r0
-name|extzv
-name|$24
-decl_stmt|,
-name|$8
-decl_stmt|,
-name|r0
-decl_stmt|,
-name|r0
-name|ashl
-name|$2
-decl_stmt|,
-name|r0
-decl_stmt|,
-name|r1
-comment|/* get mba location and init it */
-name|moval
-name|physMBA
-decl_stmt|,
-name|r2
-name|addl3
-name|r1
-decl_stmt|,
-name|r2
-decl_stmt|,
-name|r3
-name|movl
-argument_list|(
-name|r3
-argument_list|)
-decl_stmt|,
-name|r9
 name|movl
 name|$MBAinit
 decl_stmt|,
@@ -312,6 +358,20 @@ argument_list|(
 name|r9
 argument_list|)
 comment|/* read-in-preset the drive and set format */
+name|mull2
+name|$RPDR
+decl_stmt|,
+name|r8
+name|movab
+name|RP
+argument_list|(
+name|r9
+argument_list|)
+decl|[
+name|r8
+decl|]
+decl_stmt|,
+name|r8
 name|movl
 name|$RP_RIP
 decl|+
@@ -319,14 +379,14 @@ name|RP_GO
 decl_stmt|,
 name|RP_cr
 argument_list|(
-name|r9
+name|r8
 argument_list|)
 name|movl
 name|$RP_FMT
 decl_stmt|,
 name|RP_off
 argument_list|(
-name|r9
+name|r8
 argument_list|)
 decl|.
 name|set
@@ -344,14 +404,14 @@ name|$0
 decl_stmt|,
 name|RP_cyl
 argument_list|(
-name|r9
+name|r8
 argument_list|)
 name|movl
 name|$1
 decl_stmt|,
 name|RP_stk
 argument_list|(
-name|r9
+name|r8
 argument_list|)
 name|movl
 name|$
@@ -396,14 +456,14 @@ name|RP_GO
 decl_stmt|,
 name|RP_cr
 argument_list|(
-name|r9
+name|r8
 argument_list|)
 name|rprdy
 range|:
 name|movl
 name|RP_sr
 argument_list|(
-name|r9
+name|r8
 argument_list|)
 decl_stmt|,
 name|r0
@@ -419,9 +479,21 @@ decl_stmt|,
 name|r0
 decl_stmt|,
 name|rperr
+name|rprdy2
+range|:
+name|bbs
+name|$pMBABUSY
+decl_stmt|,
+name|M_sr
+argument_list|(
+name|r9
+argument_list|)
+decl_stmt|,
+name|rprdy2
+comment|/* Eagles are too fast for the controller. Slow the thing down. */
+comment|/* (May not be needed with wait for mba above.) */
 name|clrl
 name|r3
-comment|/* Eagle's are too fast for the controller. Slow the thing down. */
 name|buzz
 range|:
 name|acbl
@@ -461,9 +533,6 @@ name|r3
 decl_stmt|,
 name|clrcor
 comment|/* run loaded program */
-name|clrl
-name|r10
-comment|/* major("/dev/hp0a") */
 name|calls
 name|$0
 decl_stmt|,
@@ -471,22 +540,8 @@ modifier|*
 name|$0
 name|brw
 name|start2
-operator|.
-name|align
-decl|2
-name|physMBA
-range|:
-operator|.
-name|long
-literal|0
-operator|.
-name|long
-literal|0x20010000
-operator|.
-name|long
-literal|0xf28000
 name|end
-operator|:
+range|:
 end_decl_stmt
 
 end_unit
