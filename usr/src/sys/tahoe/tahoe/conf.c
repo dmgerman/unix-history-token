@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	1.3	86/01/26	*/
+comment|/*	conf.c	1.4	86/01/26	*/
 end_comment
 
 begin_include
@@ -339,7 +339,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"cy.h"
+file|"yc.h"
 end_include
 
 begin_if
