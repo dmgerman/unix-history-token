@@ -1367,8 +1367,6 @@ name|u_int32_t
 name|bar
 decl_stmt|;
 name|u_int32_t
-name|start
-decl_stmt|,
 name|len
 decl_stmt|;
 name|struct
@@ -2007,6 +2005,10 @@ return|return
 literal|0
 return|;
 block|}
+name|image
+operator|+=
+name|imagesize
+expr_stmt|;
 name|romnum
 operator|++
 expr_stmt|;
