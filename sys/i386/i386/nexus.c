@@ -1970,10 +1970,6 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
-name|driver_t
-modifier|*
-name|driver
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2009,13 +2005,6 @@ condition|)
 name|flags
 operator||=
 name|INTR_EXCL
-expr_stmt|;
-name|driver
-operator|=
-name|device_get_driver
-argument_list|(
-name|child
-argument_list|)
 expr_stmt|;
 comment|/* 	 * We depend here on rman_activate_resource() being idempotent. 	 */
 name|error
