@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stkrval.c 1.6 %G%"
+literal|"@(#)stkrval.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -625,7 +625,7 @@ control|)
 continue|continue;
 name|w
 operator|=
-literal|0
+name|c
 expr_stmt|;
 if|if
 condition|(
@@ -674,8 +674,6 @@ name|width
 argument_list|(
 name|contype
 argument_list|)
-operator|-
-name|c
 expr_stmt|;
 block|}
 ifdef|#
@@ -692,6 +690,8 @@ argument_list|(
 name|cp1
 argument_list|,
 name|w
+operator|-
+name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -700,6 +700,8 @@ argument_list|(
 name|cp1
 argument_list|,
 name|w
+operator|-
+name|c
 argument_list|)
 expr_stmt|;
 endif|#
@@ -712,8 +714,6 @@ name|putCONG
 argument_list|(
 name|cp1
 argument_list|,
-name|c
-operator|+
 name|w
 argument_list|,
 name|LREQ
@@ -733,7 +733,7 @@ name|STR
 argument_list|,
 literal|0
 argument_list|,
-name|c
+name|w
 argument_list|)
 expr_stmt|;
 name|q
