@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.56 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.57 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.56		%G%"
+literal|"@(#)sendmail.h	6.57		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1978,6 +1978,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|ALIASCLASS
+value|struct _aliasclass
+end_define
+
 begin_escape
 end_escape
 
@@ -2552,6 +2559,11 @@ name|NAMECANON
 name|sv_namecanon
 decl_stmt|;
 comment|/* canonical name cache */
+name|ALIASCLASS
+modifier|*
+name|sv_aliasclass
+decl_stmt|;
+comment|/* alias class (type) */
 block|}
 name|s_value
 union|;
@@ -2668,6 +2680,17 @@ end_define
 
 begin_comment
 comment|/* cached canonical name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_ALIASCLASS
+value|9
+end_define
+
+begin_comment
+comment|/* alias class */
 end_comment
 
 begin_define
@@ -3330,17 +3353,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|NoAlias
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if set, don't do any aliasing */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|MeToo
 decl_stmt|;
 end_decl_stmt
@@ -3724,18 +3736,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* intervals between running the queue */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|AliasFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location of alias file */
 end_comment
 
 begin_decl_stmt
