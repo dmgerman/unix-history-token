@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_mkdb.c,v 1.8 1997/10/27 12:29:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ literal|"usage: yp_mkdb -c"
 argument_list|,
 literal|"       yp_mkdb -u dbname"
 argument_list|,
-literal|"       yp_mkdb [-c] [-b] [-s] [-i inputfile] [-o outputfile]"
+literal|"       yp_mkdb [-c] [-b] [-s] [-f] [-i inputfile] [-o outputfile]"
 argument_list|,
 literal|"               [-d domainname ] [-m mastername] inputfile dbname"
 argument_list|)
@@ -363,6 +363,11 @@ name|clear
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|filter_plusminus
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|infile
@@ -454,7 +459,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"uhcbsd:i:o:m:"
+literal|"uhcbsdf:i:o:m:"
 argument_list|)
 operator|)
 operator|!=
@@ -467,6 +472,13 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|filter_plusminus
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'u'
 case|:
@@ -1271,6 +1283,11 @@ expr_stmt|;
 comment|/* Check for silliness. */
 if|if
 condition|(
+name|filter_plusminus
+condition|)
+block|{
+if|if
+condition|(
 operator|*
 name|keybuf
 operator|==
@@ -1294,12 +1311,14 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad character at start of line: %s"
+literal|"bad character at "
+literal|"start of line: %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
