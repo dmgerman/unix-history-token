@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c	5.1 (Berkeley) %G%"
+literal|"@(#)asmain.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 5.1"
+value|"VAX/UNIX Assembler V%G% 5.2"
 end_define
 
 begin_comment
@@ -1695,7 +1695,7 @@ operator|)
 condition|?
 literal|"/"
 else|:
-literal|0
+literal|""
 argument_list|,
 name|part
 argument_list|,
