@@ -876,9 +876,9 @@ block|,
 block|{
 name|NOSTR
 block|,
-name|NULL
+literal|0
 block|,
-name|NULL
+literal|0
 block|,
 name|NOSTR
 block|,
