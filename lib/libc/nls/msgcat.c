@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$NetBSD: msgcat.c,v 1.11 1995/02/27 13:06:51 cgd Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,24 +42,8 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/* Edit History  03/06/91   4 schulert	remove working directory from nlspath 01/18/91   2 hamilton	#if not rescanned 01/12/91   3 schulert	conditionally use prototypes 11/03/90   1 hamilton	Alphalpha->Alfalfa& OmegaMail->Poste 10/15/90   2 schulert> #include<unistd.h> if MIPS 08/13/90   1 schulert	move from ua to omu */
-end_comment
-
-begin_comment
 comment|/*  * We need a better way of handling errors than printing text.  I need  * to add an error handling routine.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"nl_types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"msgcat.h"
-end_include
 
 begin_include
 include|#
@@ -71,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslimits.h>
 end_include
 
 begin_include
@@ -89,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nl_types.h>
 end_include
 
 begin_include
@@ -115,6 +111,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"msgcat.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -133,46 +135,6 @@ define|#
 directive|define
 name|False
 value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* take care of sysv diffs */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPATHLEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXPATHLEN
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FD_CLOEXEC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FD_CLOEXEC
-value|1
 end_define
 
 begin_endif
@@ -223,7 +185,7 @@ block|{
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|__const
