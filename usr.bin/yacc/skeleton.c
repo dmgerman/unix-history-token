@@ -304,29 +304,27 @@ literal|""
 block|,
 literal|"#ifndef YYPARSE_PARAM"
 block|,
-literal|"#define YYPARSE_PARAM"
-block|,
 literal|"#if defined(__cplusplus) || __STDC__"
 block|,
-literal|"#define YYPARSE_PARAM_TYPE void"
+literal|"#define YYPARSE_PARAM_ARG void"
+block|,
+literal|"#define YYPARSE_PARAM_DECL"
 block|,
 literal|"#else	/* ! ANSI-C/C++ */"
 block|,
-literal|"#define YYPARSE_PARAM_TYPE"
+literal|"#define YYPARSE_PARAM_ARG"
+block|,
+literal|"#define YYPARSE_PARAM_DECL"
 block|,
 literal|"#endif	/* ANSI-C/C++ */"
 block|,
-literal|"#else	/* ! YYPARSE_PARAM */"
+literal|"#else	/* YYPARSE_PARAM */"
 block|,
 literal|"#ifndef YYPARSE_PARAM_TYPE"
 block|,
 literal|"#define YYPARSE_PARAM_TYPE void *"
 block|,
 literal|"#endif"
-block|,
-literal|"#endif	/* ! YYPARSE_PARAM */"
-block|,
-literal|""
 block|,
 literal|"#if defined(__cplusplus) || __STDC__"
 block|,
@@ -336,11 +334,13 @@ literal|"#define YYPARSE_PARAM_DECL"
 block|,
 literal|"#else	/* ! ANSI-C/C++ */"
 block|,
-literal|"#define YYPARSE_PARAM_ARG YYPARSE_PARAM;"
+literal|"#define YYPARSE_PARAM_ARG YYPARSE_PARAM"
 block|,
 literal|"#define YYPARSE_PARAM_DECL YYPARSE_PARAM_TYPE YYPARSE_PARAM;"
 block|,
 literal|"#endif	/* ANSI-C/C++ */"
+block|,
+literal|"#endif	/* ! YYPARSE_PARAM */"
 block|,
 literal|""
 block|,
