@@ -7574,6 +7574,14 @@ literal|"Mach64-GX"
 expr_stmt|;
 break|break;
 case|case
+literal|0x4c42
+case|:
+name|chip
+operator|=
+literal|"Mach64-LB"
+expr_stmt|;
+break|break;
+case|case
 literal|0x4c4d
 case|:
 name|chip
