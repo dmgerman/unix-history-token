@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.1 1998/11/08 18:43:03 dfr Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.2 1998/11/15 18:25:17 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/kbdio.h>
+file|<dev/kbd/atkbdcreg.h>
 end_include
 
 begin_comment
@@ -3025,6 +3025,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|u_long
+name|port
+decl_stmt|;
+name|u_long
+name|flags
+decl_stmt|;
 name|int
 name|stat
 index|[
@@ -3046,14 +3052,41 @@ literal|0
 block|kbdc_debug(TRUE);
 endif|#
 directive|endif
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|KBDC_IVAR_PORT
+argument_list|,
+operator|&
+name|port
+argument_list|)
+expr_stmt|;
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|KBDC_IVAR_FLAGS
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|addr
 operator|=
-name|isa_get_port
-argument_list|(
-name|dev
-argument_list|)
+name|port
 expr_stmt|;
 name|sc
 operator|->
@@ -3070,10 +3103,7 @@ name|sc
 operator|->
 name|config
 operator|=
-name|isa_get_flags
-argument_list|(
-name|dev
-argument_list|)
+name|flags
 operator|&
 name|PSM_CONFIG_FLAGS
 expr_stmt|;
@@ -3089,6 +3119,13 @@ name|bootverbose
 condition|)
 operator|++
 name|verbose
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"PS/2 Mouse"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4120,6 +4157,9 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
+name|u_long
+name|irq
+decl_stmt|;
 name|int
 name|zero
 init|=
@@ -4385,6 +4425,21 @@ condition|)
 operator|--
 name|verbose
 expr_stmt|;
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|KBDC_IVAR_IRQ
+argument_list|,
+operator|&
+name|irq
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|bus_alloc_resource
@@ -4396,10 +4451,9 @@ argument_list|,
 operator|&
 name|zero
 argument_list|,
-literal|0ul
+name|irq
 argument_list|,
-operator|~
-literal|0ul
+name|irq
 argument_list|,
 literal|1
 argument_list|,
@@ -10490,7 +10544,7 @@ name|CDEV_DRIVER_MODULE
 argument_list|(
 name|psm
 argument_list|,
-name|isa
+name|atkbdc
 argument_list|,
 name|psm_driver
 argument_list|,
