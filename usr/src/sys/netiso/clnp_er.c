@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_er.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_er.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp_er.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -301,7 +301,7 @@ name|GEN_SEGNEEDED
 case|:
 name|cmd
 operator|=
-name|PRC_UNREACH_NEEDFRAG
+name|PRC_MSGSIZE
 expr_stmt|;
 break|break;
 case|case
@@ -1261,6 +1261,10 @@ argument_list|,
 name|m0
 argument_list|,
 name|first_hop
+argument_list|,
+name|route
+operator|.
+name|ro_rt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
