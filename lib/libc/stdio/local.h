@@ -432,5 +432,15 @@ parameter_list|)
 value|{ \ 	free((char *)(fp)->_lb._base); \ 	(fp)->_lb._base = NULL; \ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|INITEXTRA
+parameter_list|(
+name|fp
+parameter_list|)
+value|{ \ 	(fp)->_extra->_up = NULL; \ 	(fp)->_extra->fl_mutex = PTHREAD_MUTEX_INITIALIZER; \ 	(fp)->_extra->fl_owner = NULL; \ 	(fp)->_extra->fl_count = 0; \ }
+end_define
+
 end_unit
 
