@@ -108,7 +108,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|G77_vxtidate_0
+name|G77_vxtidate_y2kbug_0
 argument_list|(
 name|m
 argument_list|,
@@ -135,7 +135,7 @@ end_else
 
 begin_function
 name|int
-name|G77_vxtidate_0
+name|G77_vxtidate_y2kbug_0
 parameter_list|(
 name|integer
 modifier|*

@@ -23,7 +23,7 @@ begin_decl_stmt
 name|VOID
 name|c_div
 argument_list|(
-name|resx
+name|c
 argument_list|,
 name|a
 argument_list|,
@@ -37,7 +37,7 @@ modifier|*
 name|b
 decl_stmt|,
 modifier|*
-name|resx
+name|c
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ name|c_div
 parameter_list|(
 name|complex
 modifier|*
-name|resx
+name|c
 parameter_list|,
 name|complex
 modifier|*
@@ -87,9 +87,8 @@ name|double
 name|abr
 decl_stmt|,
 name|abi
-decl_stmt|;
-name|complex
-name|res
+decl_stmt|,
+name|cr
 decl_stmt|;
 if|if
 condition|(
@@ -172,9 +171,7 @@ operator|*
 name|ratio
 operator|)
 expr_stmt|;
-name|res
-operator|.
-name|r
+name|cr
 operator|=
 operator|(
 name|a
@@ -190,8 +187,8 @@ operator|)
 operator|/
 name|den
 expr_stmt|;
-name|res
-operator|.
+name|c
+operator|->
 name|i
 operator|=
 operator|(
@@ -238,9 +235,7 @@ operator|*
 name|ratio
 operator|)
 expr_stmt|;
-name|res
-operator|.
-name|r
+name|cr
 operator|=
 operator|(
 name|a
@@ -256,8 +251,8 @@ operator|)
 operator|/
 name|den
 expr_stmt|;
-name|res
-operator|.
+name|c
+operator|->
 name|i
 operator|=
 operator|(
@@ -275,21 +270,11 @@ operator|/
 name|den
 expr_stmt|;
 block|}
-name|resx
+name|c
 operator|->
 name|r
 operator|=
-name|res
-operator|.
-name|r
-expr_stmt|;
-name|resx
-operator|->
-name|i
-operator|=
-name|res
-operator|.
-name|i
+name|cr
 expr_stmt|;
 block|}
 end_function

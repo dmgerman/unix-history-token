@@ -59,14 +59,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__cplusplus
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
+comment|/* not reached */
 block|}
 end_function
 

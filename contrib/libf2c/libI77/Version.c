@@ -5,7 +5,7 @@ name|char
 name|junk
 index|[]
 init|=
-literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19980617\n"
+literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19990503\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ name|char
 name|__G77_LIBI77_VERSION__
 index|[]
 init|=
-literal|"0.5.24-19981021"
+literal|"0.5.25 19990816 (release)"
 decl_stmt|;
 end_decl_stmt
 
@@ -380,6 +380,18 @@ end_comment
 
 begin_comment
 comment|/* 17 June 1998: lread.c: unless compiled with 		 ALLOW_FLOAT_IN_INTEGER_LIST_INPUT #defined, treat 		 floating-point numbers (containing either a decimal point 		 or an exponent field) as errors when they appear as list 		 input for integer data. */
+end_comment
+
+begin_comment
+comment|/* 7 Sept. 1998: move e_wdfe from sfe.c to dfe.c, where it was originally. 		 Why did it ever move to sfe.c? */
+end_comment
+
+begin_comment
+comment|/* 2 May 1999:	 open.c: set f__external (to get "external" versus "internal" 		 right in the error message if we cannot open the file). 		 err.c: cast a pointer difference to (int) for %d. 		 rdfmt.c: omit fixed-length buffer that could be overwritten 		 by formats Inn or Lnn with nn> 83. */
+end_comment
+
+begin_comment
+comment|/* 3 May 1999:	open.c: insert two casts for machines with 64-bit longs. */
 end_comment
 
 begin_comment

@@ -12,13 +12,13 @@ directive|ifdef
 name|KR_headers
 name|d_cnjg
 parameter_list|(
-name|resx
+name|r
 parameter_list|,
 name|z
 parameter_list|)
 name|doublecomplex
 modifier|*
-name|resx
+name|r
 decl_stmt|,
 decl|*
 name|z
@@ -33,7 +33,7 @@ end_else
 begin_macro
 name|d_cnjg
 argument_list|(
-argument|doublecomplex *resx
+argument|doublecomplex *r
 argument_list|,
 argument|doublecomplex *z
 argument_list|)
@@ -46,41 +46,27 @@ end_endif
 
 begin_block
 block|{
-name|doublecomplex
-name|res
+name|doublereal
+name|zi
+init|=
+name|z
+operator|->
+name|i
 decl_stmt|;
-name|res
-operator|.
+name|r
+operator|->
 name|r
 operator|=
 name|z
 operator|->
 name|r
 expr_stmt|;
-name|res
-operator|.
+name|r
+operator|->
 name|i
 operator|=
 operator|-
-name|z
-operator|->
-name|i
-expr_stmt|;
-name|resx
-operator|->
-name|r
-operator|=
-name|res
-operator|.
-name|r
-expr_stmt|;
-name|resx
-operator|->
-name|i
-operator|=
-name|res
-operator|.
-name|i
+name|zi
 expr_stmt|;
 block|}
 end_block

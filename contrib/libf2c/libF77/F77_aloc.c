@@ -93,7 +93,18 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 specifier|extern
 name|void
 name|G77_exit_0
@@ -102,7 +113,16 @@ name|integer
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|char
