@@ -10191,6 +10191,22 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|->
+name|interface
+operator|==
+literal|1
+condition|)
+comment|/* OK, it was an implicit instantiation.  */
+name|TREE_PUBLIC
+argument_list|(
+name|t
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 comment|/* If it's a method, let the class type decide it. 	 @@ What if the method template is in a separate file? 	 Maybe both file contexts should be taken into account? 	 Maybe only do this if i->interface == 1 (unknown)?  */
 name|context
 operator|=
