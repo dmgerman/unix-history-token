@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.11	82/04/11	*/
+comment|/*	if_dmc.c	4.12	82/04/16	*/
 end_comment
 
 begin_include
@@ -709,6 +709,8 @@ operator|.
 name|ifuba_flags
 operator|=
 name|UBA_NEEDBDP
+operator||
+name|UBA_CANTWAIT
 expr_stmt|;
 name|if_attach
 argument_list|(

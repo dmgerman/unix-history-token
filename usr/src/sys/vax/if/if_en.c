@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.56	82/04/11	*/
+comment|/*	if_en.c	4.57	82/04/16	*/
 end_comment
 
 begin_include
@@ -660,6 +660,8 @@ operator|=
 name|UBA_NEEDBDP
 operator||
 name|UBA_NEED16
+operator||
+name|UBA_CANTWAIT
 expr_stmt|;
 name|if_attach
 argument_list|(

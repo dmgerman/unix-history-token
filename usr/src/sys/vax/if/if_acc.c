@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.13	82/04/11	*/
+comment|/*	if_acc.c	4.14	82/04/16	*/
 end_comment
 
 begin_include
@@ -543,6 +543,8 @@ operator|.
 name|ifu_flags
 operator|=
 name|UBA_NEEDBDP
+operator||
+name|UBA_CANTWAIT
 expr_stmt|;
 endif|#
 directive|endif
