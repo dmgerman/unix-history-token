@@ -684,6 +684,7 @@ name|irqc_in
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -700,6 +701,7 @@ name|irqc_out
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|,
 name|unsigned
 name|char
@@ -726,6 +728,7 @@ name|imr_in
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -741,6 +744,7 @@ name|imr_out
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|,
 name|unsigned
 name|char

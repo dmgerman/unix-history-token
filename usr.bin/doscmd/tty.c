@@ -594,6 +594,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -611,6 +617,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -636,6 +647,12 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -695,6 +712,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1719,6 +1741,7 @@ name|video_setborder
 parameter_list|(
 name|int
 name|color
+name|__unused
 parameter_list|)
 block|{
 ifndef|#
@@ -1758,6 +1781,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1767,9 +1796,6 @@ name|u_short
 name|attr
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NO_X
 name|XGCValues
 name|v
 decl_stmt|;
@@ -1852,10 +1878,13 @@ operator|&
 name|v
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -2876,11 +2905,6 @@ return|return;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|u_short
@@ -3146,6 +3170,11 @@ literal|0xffff
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -4150,12 +4179,19 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
+
 begin_function
 name|void
 name|debug_event
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|int
 name|cond
@@ -4163,6 +4199,7 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|regcontext_t
 modifier|*
@@ -5058,6 +5095,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|unsigned
 name|char
@@ -5089,6 +5131,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
+
 begin_function
 name|void
 name|kbd_event
@@ -5102,10 +5150,12 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -5153,6 +5203,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|int09
@@ -5199,6 +5254,12 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
 
 begin_function
 name|u_short
@@ -5894,6 +5955,17 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_X
+end_ifndef
+
 begin_function
 name|void
 name|video_async_event
@@ -5907,15 +5979,14 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NO_X
 name|int
 name|int9
 init|=
@@ -6092,10 +6163,13 @@ block|}
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

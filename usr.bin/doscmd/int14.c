@@ -1115,6 +1115,7 @@ name|com_async
 parameter_list|(
 name|int
 name|fd
+name|__unused
 parameter_list|,
 name|int
 name|cond
@@ -1126,6 +1127,7 @@ parameter_list|,
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|struct
