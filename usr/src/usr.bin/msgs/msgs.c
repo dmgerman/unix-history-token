@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.6 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -435,14 +441,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
-name|tstpflag
-init|=
-name|NO
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|uid
 decl_stmt|;
@@ -510,20 +508,36 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|mktemp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
 name|nxtfld
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|onintr
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|onsusp
 parameter_list|()
 function_decl|;
@@ -549,6 +563,13 @@ name|struct
 name|passwd
 modifier|*
 name|getpwuid
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|time_t
+name|time
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -590,7 +611,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|send
+name|send_msg
 init|=
 name|NO
 decl_stmt|;
@@ -606,7 +627,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|pause
+name|use_pager
 init|=
 name|NO
 decl_stmt|;
@@ -916,7 +937,7 @@ case|case
 literal|'p'
 case|:
 comment|/* pipe thru 'more' during long msgs */
-name|pause
+name|use_pager
 operator|=
 name|YES
 expr_stmt|;
@@ -934,7 +955,7 @@ case|case
 literal|'s'
 case|:
 comment|/* sending TO msgs */
-name|send
+name|send_msg
 operator|=
 name|YES
 expr_stmt|;
@@ -1296,7 +1317,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|send
+name|send_msg
 condition|)
 block|{
 name|bounds
@@ -1353,7 +1374,7 @@ block|}
 block|}
 if|if
 condition|(
-name|send
+name|send_msg
 condition|)
 block|{
 comment|/* 		 * Send mode - place msgs in _PATH_MSGS 		 */
@@ -1698,9 +1719,9 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-name|pause
+name|use_pager
 operator|=
-name|pause
+name|use_pager
 operator|&&
 name|totty
 expr_stmt|;
@@ -1773,6 +1794,9 @@ name|truncate
 argument_list|(
 name|fname
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2100,8 +2124,6 @@ operator|=
 name|YES
 expr_stmt|;
 comment|/* 		 * Print header 		 */
-name|again
-label|:
 if|if
 condition|(
 name|totty
@@ -2366,7 +2388,7 @@ case|:
 case|case
 literal|'P'
 case|:
-name|pause
+name|use_pager
 operator|=
 operator|(
 operator|*
@@ -2633,16 +2655,10 @@ block|{
 name|FILE
 modifier|*
 name|outf
-decl_stmt|,
-modifier|*
-name|inf
-decl_stmt|;
-name|int
-name|c
 decl_stmt|;
 if|if
 condition|(
-name|pause
+name|use_pager
 operator|&&
 name|length
 operator|>
@@ -2695,6 +2711,10 @@ name|setbuf
 argument_list|(
 name|outf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2801,12 +2821,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -2887,18 +2905,16 @@ name|YES
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * We have just gotten a susp.  Suspend and prepare to resume.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onsusp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -2934,10 +2950,12 @@ condition|)
 name|longjmp
 argument_list|(
 name|tstpbuf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|linecnt
