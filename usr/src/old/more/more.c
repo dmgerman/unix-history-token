@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.6 (Berkeley) 82/05/11"
+literal|"@(#)more.c	4.7 (Berkeley) 82/12/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -3379,6 +3379,10 @@ condition|(
 name|c
 operator|==
 literal|'\b'
+operator|&&
+name|column
+operator|>
+literal|0
 condition|)
 name|column
 operator|--
