@@ -1162,6 +1162,9 @@ modifier|*
 name|n
 decl_stmt|,
 modifier|*
+name|m
+decl_stmt|,
+modifier|*
 name|next
 decl_stmt|;
 specifier|register
@@ -1340,6 +1343,27 @@ name|NF_ACYCLIC
 operator|)
 condition|)
 block|{
+for|for
+control|(
+name|m
+operator|=
+name|graph
+init|;
+name|m
+condition|;
+name|m
+operator|=
+name|m
+operator|->
+name|n_next
+control|)
+name|m
+operator|->
+name|n_flags
+operator|&=
+operator|~
+name|NF_MARK
+expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -1545,7 +1569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* look for the longest cycle from node from to node to. */
+comment|/* look for a path from node from to node to. */
 end_comment
 
 begin_macro
@@ -1723,19 +1747,15 @@ name|len
 operator|>
 name|longest_len
 condition|)
+block|{
 name|longest_len
 operator|=
 name|len
 expr_stmt|;
+break|break;
 block|}
 block|}
-name|from
-operator|->
-name|n_flags
-operator|&=
-operator|~
-name|NF_MARK
-expr_stmt|;
+block|}
 return|return
 operator|(
 name|longest_len
