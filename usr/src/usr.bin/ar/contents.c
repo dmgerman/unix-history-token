@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)contents.c	5.1 (Berkeley) %G%"
+literal|"@(#)contents.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ comment|/* archive name */
 end_comment
 
 begin_comment
-comment|/*  * contents --  *	Handles t[v] option - opens the archive and then reads headers,  *	skipping member contents.  If verbose option set, calls verbose  *	to do ls -l style display.  */
+comment|/*  * contents --  *	Handles t[v] option - opens the archive and then reads headers,  *	skipping member contents.  */
 end_comment
 
 begin_expr_stmt
@@ -303,6 +303,10 @@ name|archive
 argument_list|)
 expr_stmt|;
 block|}
+name|eval
+operator|=
+literal|0
+expr_stmt|;
 name|ORPHANS
 expr_stmt|;
 name|close_archive

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.1 (Berkeley) %G%"
+literal|"@(#)move.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,6 +430,10 @@ name|SARMAG
 argument_list|,
 name|SEEK_SET
 argument_list|)
+expr_stmt|;
+name|eval
+operator|=
+literal|0
 expr_stmt|;
 name|ORPHANS
 expr_stmt|;

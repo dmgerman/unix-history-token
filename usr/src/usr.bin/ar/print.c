@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,10 @@ name|argv
 condition|)
 break|break;
 block|}
+name|eval
+operator|=
+literal|0
+expr_stmt|;
 name|ORPHANS
 expr_stmt|;
 name|close_archive

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delete.c	5.1 (Berkeley) %G%"
+literal|"@(#)delete.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +250,10 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+name|eval
+operator|=
+literal|0
+expr_stmt|;
 name|ORPHANS
 expr_stmt|;
 name|size
