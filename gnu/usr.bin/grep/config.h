@@ -969,7 +969,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.5.1"
+value|"2.5.1-FreeBSD"
 end_define
 
 begin_comment
