@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.10	81/11/18	*/
+comment|/*	vp.c	4.11	82/04/01	*/
 end_comment
 
 begin_include
@@ -1936,6 +1936,21 @@ name|b_dev
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|vpselect
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
