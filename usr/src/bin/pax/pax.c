@@ -10,6 +10,7 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|copyright
 index|[]
@@ -39,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pax.c	1.2 (Berkeley) %G%"
+literal|"@(#)pax.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
