@@ -93,19 +93,9 @@ begin_comment
 comment|/* On 4.3bsd-net2, make sure ansi.h is included, so we have    one less case to deal with in the following.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__BSD_NET2__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|____386BSD____
-argument_list|)
-end_if
+begin_comment
+comment|/* #if defined (__BSD_NET2__) || defined (____386BSD____)*/
+end_comment
 
 begin_include
 include|#
@@ -113,10 +103,9 @@ directive|include
 file|<machine/ansi.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif*/
+end_comment
 
 begin_comment
 comment|/* In 4.3bsd-net2, machine/ansi.h defines these symbols, which are     defined if the corresponding type is *not* defined.  */
