@@ -457,6 +457,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSIFNAME
+value|_IOW('i', 40, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set IF name */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCADDMULTI
 value|_IOW('i', 49, struct ifreq)
 end_define
