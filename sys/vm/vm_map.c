@@ -4142,7 +4142,7 @@ operator|<<
 name|PAGE_SHIFT
 operator|)
 argument_list|,
-literal|0
+name|MAP_PREFAULT_MADVISE
 argument_list|)
 expr_stmt|;
 block|}
