@@ -901,7 +901,7 @@ name|v
 parameter_list|,
 name|p
 parameter_list|)
-value|((struct uscan_info *)usb_lookup(uscanner_devs, v, p))
+value|((const struct uscan_info *)usb_lookup(uscanner_devs, v, p))
 end_define
 
 begin_define
