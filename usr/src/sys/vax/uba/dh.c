@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.33	81/05/09	*/
+comment|/*	dh.c	4.34	81/05/18	*/
 end_comment
 
 begin_include
@@ -783,7 +783,7 @@ begin_define
 define|#
 directive|define
 name|DML_ON
-value|(DML_DTR|DML_LE)
+value|(DML_DTR|DML_RTS|DML_LE)
 end_define
 
 begin_define
@@ -3626,6 +3626,9 @@ specifier|register
 name|int
 name|dm
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|unit
 operator|=
 name|minor
@@ -3707,9 +3710,8 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -3759,7 +3761,7 @@ name|addr
 operator|->
 name|dmcsr
 operator|=
-name|DH_IE
+name|DM_IE
 operator||
 name|DM_SE
 expr_stmt|;
@@ -3788,11 +3790,10 @@ argument_list|,
 name|TTIPRI
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -3963,7 +3964,7 @@ name|addr
 operator|->
 name|dmcsr
 operator|=
-name|DH_IE
+name|DM_IE
 operator||
 name|DM_SE
 expr_stmt|;
@@ -4239,15 +4240,15 @@ name|t_state
 operator||=
 name|CARR_ON
 expr_stmt|;
+block|}
 name|addr
 operator|->
 name|dmcsr
 operator|=
-name|DH_IE
+name|DM_IE
 operator||
 name|DM_SE
 expr_stmt|;
-block|}
 block|}
 end_block
 
