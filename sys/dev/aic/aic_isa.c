@@ -140,7 +140,6 @@ name|__P
 argument_list|(
 operator|(
 name|device_t
-name|dev
 operator|)
 argument_list|)
 decl_stmt|;
@@ -154,7 +153,6 @@ name|__P
 argument_list|(
 operator|(
 name|device_t
-name|dev
 operator|)
 argument_list|)
 decl_stmt|;
@@ -749,6 +747,13 @@ name|porta
 argument_list|)
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Adaptec 6260/6360 SCSI controller"
 argument_list|)
 expr_stmt|;
 return|return
