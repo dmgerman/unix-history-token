@@ -135,12 +135,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -150,11 +144,6 @@ end_include
 begin_comment
 comment|/* smp_active, cpuid */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

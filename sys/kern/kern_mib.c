@@ -39,25 +39,11 @@ directive|include
 file|<sys/jail.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<machine/smp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_NODE

@@ -1327,14 +1327,45 @@ begin_comment
 comment|/* !LOCORE */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SMP&& !APIC_IO */
+end_comment
+
+begin_comment
+comment|/*  * Create dummy MP lock empties  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|get_mplock
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|rel_mplock
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* SMP || APIC_IO */
-end_comment
 
 begin_endif
 endif|#

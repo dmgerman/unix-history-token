@@ -117,6 +117,12 @@ directive|include
 file|<machine/limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -127,31 +133,6 @@ begin_include
 include|#
 directive|include
 file|<sys/gmon.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|BETTER_CLOCK
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_endif

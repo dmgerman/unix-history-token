@@ -1417,6 +1417,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|astpending
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* software interrupt pending */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|switchticks
 decl_stmt|;

@@ -31,22 +31,11 @@ directive|include
 file|<sys/proc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/smp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Kernel signal definitions and data structures,  * not exported to user programs.  */
