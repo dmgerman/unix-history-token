@@ -3370,6 +3370,13 @@ block|}
 block|,
 comment|/* OZO8039 - Zoom 56k flex */
 block|{
+literal|0x00914f3f
+block|,
+name|NULL
+block|}
+block|,
+comment|/* OZO9100 - Zoom 2919 (K56 Faxmodem) */
+block|{
 literal|0x3024a341
 block|,
 name|NULL
