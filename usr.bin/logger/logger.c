@@ -1102,9 +1102,24 @@ name|lsent
 operator|!=
 name|len
 condition|)
+if|if
+condition|(
+name|lsent
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"sendto"
+argument_list|)
+expr_stmt|;
+else|else
 name|warnx
 argument_list|(
-literal|"sendmsg"
+literal|"sendto: short send - %d bytes"
+argument_list|,
+name|lsent
 argument_list|)
 expr_stmt|;
 name|free
