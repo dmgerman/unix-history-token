@@ -2130,13 +2130,7 @@ name|Lpp
 operator|=
 name|tgetnum
 argument_list|(
-name|__DECONST
-argument_list|(
-name|char
-operator|*
-argument_list|,
 literal|"li"
-argument_list|)
 argument_list|)
 operator|)
 operator|<=
