@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.25 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3211,6 +3211,17 @@ operator|,
 operator|*
 name|ip
 expr_stmt|;
+specifier|register
+name|struct
+name|nameidata
+modifier|*
+name|nd
+init|=
+operator|&
+name|U
+operator|.
+name|u_nd
+decl_stmt|;
 comment|/* This wins only if PAGSIZ> sizeof (struct user) */
 name|lseek
 argument_list|(
@@ -3460,9 +3471,9 @@ name|printf
 argument_list|(
 literal|"segflg\t%d\nerror %d\n"
 argument_list|,
-name|U
-operator|.
-name|u_segflg
+name|nd
+operator|->
+name|ni_segflg
 argument_list|,
 name|U
 operator|.
@@ -3529,17 +3540,17 @@ name|printf
 argument_list|(
 literal|"base, count, offset %.1x %.1x %ld\n"
 argument_list|,
-name|U
-operator|.
-name|u_base
+name|nd
+operator|->
+name|ni_base
 argument_list|,
-name|U
-operator|.
-name|u_count
+name|nd
+operator|->
+name|ni_count
 argument_list|,
-name|U
-operator|.
-name|u_offset
+name|nd
+operator|->
+name|ni_offset
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3559,24 +3570,24 @@ name|printf
 argument_list|(
 literal|"dirp %.1x\n"
 argument_list|,
-name|U
-operator|.
-name|u_dirp
+name|nd
+operator|->
+name|ni_dirp
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"dent %d %.14s\n"
 argument_list|,
-name|U
-operator|.
-name|u_dent
+name|nd
+operator|->
+name|ni_dent
 operator|.
 name|d_ino
 argument_list|,
-name|U
-operator|.
-name|u_dent
+name|nd
+operator|->
+name|ni_dent
 operator|.
 name|d_name
 argument_list|)
@@ -3585,9 +3596,9 @@ name|printf
 argument_list|(
 literal|"pdir %.1o\n"
 argument_list|,
-name|U
-operator|.
-name|u_pdir
+name|nd
+operator|->
+name|ni_pdir
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3916,49 +3927,6 @@ name|U
 operator|.
 name|u_ttyd
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"exdata\t"
-argument_list|)
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|U
-operator|.
-name|u_exdata
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%.1D "
-argument_list|,
-operator|*
-name|ip
-operator|++
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
