@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.113 1999/06/11 11:27:35 ru Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.114 1999/06/19 18:43:28 green Exp $  */
 end_comment
 
 begin_comment
@@ -1060,7 +1060,7 @@ argument_list|(
 name|unsigned
 argument_list|)
 operator|*
-literal|8
+name|NBBY
 operator|)
 index|]
 operator|&
@@ -1071,12 +1071,12 @@ operator|(
 name|type
 operator|%
 operator|(
-literal|8
-operator|*
 sizeof|sizeof
 argument_list|(
 name|unsigned
 argument_list|)
+operator|*
+name|NBBY
 operator|)
 operator|)
 operator|)
