@@ -894,6 +894,18 @@ literal|"Speed"
 block|}
 block|,
 block|{
+literal|0xEE
+block|,
+literal|"EFI GPT"
+block|}
+block|,
+block|{
+literal|0xEF
+block|,
+literal|"EFI System Parition"
+block|}
+block|,
+block|{
 literal|0xF1
 block|,
 literal|"Speed"
