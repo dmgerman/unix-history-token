@@ -554,7 +554,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-literal|0
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
