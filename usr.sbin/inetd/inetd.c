@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.46.2.5 1999/07/21 19:28:27 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.46.2.6 1999/07/22 14:49:38 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,10 +492,18 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nsock
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|maxsock
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* highest-numbered descriptor */
+end_comment
 
 begin_decl_stmt
 name|fd_set
@@ -2333,6 +2341,22 @@ operator|=
 name|signalpipe
 index|[
 literal|0
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|signalpipe
+index|[
+literal|1
+index|]
+operator|>
+name|maxsock
+condition|)
+name|maxsock
+operator|=
+name|signalpipe
+index|[
+literal|1
 index|]
 expr_stmt|;
 for|for
