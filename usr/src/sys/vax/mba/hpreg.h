@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.6	81/03/09	*/
+comment|/*	hpreg.h	4.7	81/03/17	*/
 end_comment
 
 begin_struct
@@ -55,14 +55,16 @@ name|int
 name|hpcc
 decl_stmt|;
 comment|/* current cylinder */
+comment|/* on an rp drive, mr2 is called er2 and er2 is called er3 */
+comment|/* we use rm terminology here */
+name|int
+name|hpmr2
+decl_stmt|;
+comment|/* maintenance register 2 */
 name|int
 name|hper2
 decl_stmt|;
 comment|/* error register 2 */
-name|int
-name|hper3
-decl_stmt|;
-comment|/* error register 3 */
 name|int
 name|hpec1
 decl_stmt|;
