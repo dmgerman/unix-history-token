@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.41 1997/02/22 15:46:20 peter Exp $  */
+comment|/*  *	$Id: ld.c,v 1.42 1997/03/22 02:59:40 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -15236,6 +15236,22 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Print the name even if the file doesn't exist except in 		 * the -lfoo case.  This allows `ld -f' to work as well as 		 * possible when it is used to generate dependencies before 		 * the libraries exist. 		 */
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+operator|||
+operator|!
+operator|(
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SEARCH_DIRS
+operator|)
+condition|)
 name|printf
 argument_list|(
 literal|"%s\n"
