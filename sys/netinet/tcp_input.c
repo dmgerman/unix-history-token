@@ -4456,6 +4456,23 @@ argument_list|)
 expr_stmt|;
 comment|/* some progress has been done */
 comment|/* 			 * Add data to socket buffer. 			 */
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTRCVMORE
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|m_adj
 argument_list|(
 name|m
@@ -4474,6 +4491,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|sorwakeup
 argument_list|(
 name|so
@@ -7756,6 +7774,20 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTRCVMORE
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|else
 name|sbappend
 argument_list|(
 operator|&
