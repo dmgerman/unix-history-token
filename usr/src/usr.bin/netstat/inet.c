@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.12 83/05/30"
+literal|"@(#)inet.c	4.13 83/09/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,6 +1348,13 @@ argument_list|,
 name|icmpstat
 operator|.
 name|icps_checksum
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_checksum
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
