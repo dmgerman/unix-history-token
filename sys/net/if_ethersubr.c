@@ -709,7 +709,7 @@ decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
-comment|/* link layer header lenght */
+comment|/* link layer header length */
 name|struct
 name|arpcom
 modifier|*
