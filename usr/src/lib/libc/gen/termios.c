@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.7 (Berkeley) %G%"
+literal|"@(#)termios.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,7 @@ name|localterm
 expr_stmt|;
 name|opt
 operator|&=
+operator|~
 name|TCSASOFT
 expr_stmt|;
 block|}
