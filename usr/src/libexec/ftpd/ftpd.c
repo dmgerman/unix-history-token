@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.40 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2443,6 +2443,11 @@ argument_list|,
 name|passwd
 argument_list|)
 expr_stmt|;
+name|home
+operator|=
+literal|"/"
+expr_stmt|;
+comment|/* guest home dir for globbing */
 block|}
 else|else
 block|{
@@ -2498,7 +2503,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-block|}
 name|home
 operator|=
 name|pw
@@ -2506,6 +2510,7 @@ operator|->
 name|pw_dir
 expr_stmt|;
 comment|/* home dir for globbing */
+block|}
 operator|(
 name|void
 operator|)
@@ -5704,18 +5709,6 @@ argument_list|,
 name|AF_INET
 argument_list|)
 decl_stmt|;
-name|time_t
-name|t
-decl_stmt|,
-name|time
-argument_list|()
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|hp
@@ -5782,34 +5775,15 @@ if|if
 condition|(
 name|logging
 condition|)
-block|{
-name|t
-operator|=
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"connection from %s at %s"
+literal|"connection from %s"
 argument_list|,
 name|remotehost
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|t
-argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -6008,7 +5982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: a response of 425 is not mentioned as a possible response to  * 	the PASV command in RFC959. However, it has been blessed as  * 	a legitimate response by Jon Postel in a telephone conversation  *	with Rick Adams on 25 Jan 89.  */
+comment|/*  * Note: a response of 425 is not mentioned as a possible response to  *	the PASV command in RFC959. However, it has been blessed as  *	a legitimate response by Jon Postel in a telephone conversation  *	with Rick Adams on 25 Jan 89.  */
 end_comment
 
 begin_macro
