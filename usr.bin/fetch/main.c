@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.45 1998/05/09 08:41:23 des Exp $ */
+comment|/* $Id: main.c,v 1.46 1998/05/09 08:56:07 des Exp $ */
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: fetch [-DHILMNPRTValmnpqrv] [-o outputfile]"
+literal|"usage: fetch [-DHILMNPRTValmnpqrv] [-o outputfile] [-S bytes]"
 argument_list|,
 literal|"             [-f file -h host [-c dir] | URL]"
 argument_list|)
@@ -215,6 +215,13 @@ name|fs_verbose
 operator|=
 literal|1
 expr_stmt|;
+name|fs
+operator|.
+name|fs_expectedsize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|change_to_dir
 operator|=
 name|file_to_get
@@ -234,7 +241,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abc:D:f:h:HilLmMnNo:pPqRrtT:vV:"
+literal|"abc:D:f:h:HilLmMnNo:pPqRrS:tT:vV:"
 argument_list|)
 operator|)
 operator|!=
@@ -405,6 +412,61 @@ operator|.
 name|fs_use_connect
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* strtol sets errno to ERANGE in the case of overflow */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|l
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|optarg
+index|[
+literal|0
+index|]
+operator|||
+operator|*
+name|ep
+operator|||
+name|errno
+operator|!=
+literal|0
+operator|||
+name|l
+operator|>
+name|INT_MAX
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid size value: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|fs
+operator|.
+name|fs_expectedsize
+operator|=
+name|l
 expr_stmt|;
 break|break;
 case|case
