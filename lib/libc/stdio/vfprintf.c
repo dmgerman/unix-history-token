@@ -3120,12 +3120,6 @@ expr_stmt|;
 if|if
 condition|(
 name|_double
-operator|||
-name|flags
-operator|&
-name|ALT
-operator|==
-literal|0
 condition|)
 block|{
 name|PRINT
