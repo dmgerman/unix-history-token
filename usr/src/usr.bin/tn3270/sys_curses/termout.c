@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	4.4 (Berkeley) %G%"
+literal|"@(#)termout.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2188,7 +2188,7 @@ init|=
 name|KSEbuffer
 decl_stmt|;
 specifier|extern
-name|int
+name|void
 name|abort
 parameter_list|()
 function_decl|;
@@ -3164,6 +3164,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+specifier|static
 name|void
 name|aborttc
 parameter_list|()
@@ -3436,13 +3437,6 @@ name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|aborttc
 argument_list|)
 expr_stmt|;
@@ -3533,7 +3527,12 @@ begin_function
 specifier|static
 name|void
 name|aborttc
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|setcommandmode
 argument_list|()
