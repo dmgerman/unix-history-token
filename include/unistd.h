@@ -1568,6 +1568,27 @@ begin_comment
 comment|/* user */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_SC_IPV6
+value|118
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SC_RAW_SOCKETS
+value|119
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SC_SYMLOOP_MAX
+value|120
+end_define
+
 begin_endif
 endif|#
 directive|endif

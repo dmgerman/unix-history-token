@@ -70,6 +70,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_POSIX_IPV6
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|_POSIX_JOB_CONTROL
 value|1
 end_define
@@ -543,6 +550,13 @@ define|#
 directive|define
 name|_PC_REC_XFER_ALIGN
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PC_SYMLINK_MAX
+value|18
 end_define
 
 begin_endif

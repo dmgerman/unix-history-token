@@ -15,6 +15,43 @@ directive|define
 name|_SYS_SYSLIMITS_H_
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LIMITS_H_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_SYS_PARAM_H_
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"No user-serviceable parts inside."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Do not add any new variables here.  (See the comment at the end of  * the file for why.)  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -159,99 +196,7 @@ comment|/* max elements in i/o vector */
 end_comment
 
 begin_comment
-comment|/* XXX - these don't belong here */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BC_BASE_MAX
-value|99
-end_define
-
-begin_comment
-comment|/* max ibase/obase values in bc(1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BC_DIM_MAX
-value|2048
-end_define
-
-begin_comment
-comment|/* max array elements in bc(1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BC_SCALE_MAX
-value|99
-end_define
-
-begin_comment
-comment|/* max scale value in bc(1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BC_STRING_MAX
-value|1000
-end_define
-
-begin_comment
-comment|/* max const string length in bc(1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COLL_WEIGHTS_MAX
-value|0
-end_define
-
-begin_comment
-comment|/* max weights for order keyword */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXPR_NEST_MAX
-value|32
-end_define
-
-begin_comment
-comment|/* max expressions nested in expr(1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINE_MAX
-value|2048
-end_define
-
-begin_comment
-comment|/* max bytes in an input line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RE_DUP_MAX
-value|255
-end_define
-
-begin_comment
-comment|/* max RE's in interval notation */
-end_comment
-
-begin_comment
-comment|/*  * We leave the following values undefined to force applications to either  * assume conservative values or call sysconf() to get the current value.  *  * HOST_NAME_MAX  */
+comment|/*  * We leave the following values undefined to force applications to either  * assume conservative values or call sysconf() to get the current value.  *  * HOST_NAME_MAX  * LOGIN_NAME_MAX  *  * (We should do this for most of the values currently defined here,  * but many programs are not prepared to deal with this yet.)  */
 end_comment
 
 begin_endif
