@@ -957,7 +957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispose the U area for a process that has exited.  * This routine directly impacts the exit perf of a process.  * XXX proc_zone is marked UMA_ZONE_NOFREE, so this should never be called.  */
+comment|/*  * Dispose the U area for a process that has exited.  * This routine directly impacts the exit perf of a process.  *  * XXX UNUSED  * U areas of free proc structures are no longer freed and are never  * swapped out.  Ideally we would free U areas lazily, when low on memory.  */
 end_comment
 
 begin_function

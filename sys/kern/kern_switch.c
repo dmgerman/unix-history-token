@@ -2894,54 +2894,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Called by the uma process fini routine..  * undo anything we may have done in the uma_init method.  * Panic if it's not all 1:1:1:1  * Called from:  *  proc_fini() (UMA method)  */
-end_comment
-
-begin_function
-name|void
-name|sched_destroyproc
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-comment|/* this function slated for destruction */
-name|KASSERT
-argument_list|(
-operator|(
-name|p
-operator|->
-name|p_numthreads
-operator|==
-literal|1
-operator|)
-argument_list|,
-operator|(
-literal|"Cached proc with> 1 thread "
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|p
-operator|->
-name|p_numksegrps
-operator|==
-literal|1
-operator|)
-argument_list|,
-operator|(
-literal|"Cached proc with> 1 ksegrp "
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define

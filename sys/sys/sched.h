@@ -449,18 +449,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sched_destroyproc
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sched_init_concurrency
 parameter_list|(
 name|struct
