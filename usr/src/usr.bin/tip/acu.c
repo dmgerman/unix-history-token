@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	5.1 (Berkeley) %G%"
+literal|"@(#)acu.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ name|pwrite
 argument_list|(
 name|FD
 argument_list|,
-name|cp
+name|CM
 argument_list|,
 name|size
 argument_list|(
@@ -279,13 +279,13 @@ name|phnum
 operator|=
 name|cp
 init|;
-name|any
-argument_list|(
 operator|*
 name|cp
-argument_list|,
-literal|"0123456789-*=K"
-argument_list|)
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|','
 condition|;
 name|cp
 operator|++
