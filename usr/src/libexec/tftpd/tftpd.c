@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	5.14 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tftpsubs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -170,17 +182,6 @@ directive|define
 name|TIMEOUT
 value|5
 end_define
-
-begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|sin
-init|=
-block|{
-name|AF_INET
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -244,8 +245,24 @@ name|fromlen
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|tftp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tftphdr
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Null-terminated directory prefix list for absolute pathname requests and   * search list for relative pathname requests.  *  * MAXDIRS should be at least as large as the number of arguments that  * inetd allows (currently 20).  */
+comment|/*  * Null-terminated directory prefix list for absolute pathname requests and  * search list for relative pathname requests.  *  * MAXDIRS should be at least as large as the number of arguments that  * inetd allows (currently 20).  */
 end_comment
 
 begin_define
@@ -291,25 +308,51 @@ name|logging
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|errtomsg
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|nak
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|verifyhost
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -339,6 +382,10 @@ name|int
 name|ch
 decl_stmt|,
 name|on
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|sin
 decl_stmt|;
 name|openlog
 argument_list|(
@@ -743,6 +790,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|sin
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sin
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -864,20 +930,53 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|int
-name|validate_access
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_struct_decl
+struct_decl|struct
+name|formats
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|int
+name|validate_access
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|sendfile
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|formats
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|recvfile
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|formats
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -890,26 +989,46 @@ modifier|*
 name|f_mode
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|f_validate
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*f_validate
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|f_send
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|f_recv
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*f_send
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|formats
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*f_recv
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|formats
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 name|f_convert
 decl_stmt|;
@@ -970,30 +1089,22 @@ begin_comment
 comment|/*  * Handle initial connection protocol.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tftp
-argument_list|(
-argument|tp
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|size
+parameter_list|)
 name|struct
 name|tftphdr
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1287,7 +1398,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|FILE
@@ -1300,30 +1411,22 @@ begin_comment
 comment|/*  * Validate file access.  Since we  * have no uid or gid, for now require  * file to exist and be publicly  * readable/writable.  * If we were invoked with arguments  * from inetd then the file must also be  * in one of the given directory prefixes.  * Note also, full path name must be  * given as we have no login directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|validate_access
-argument_list|(
-argument|filep
-argument_list|,
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|filep
+parameter_list|,
+name|mode
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|filep
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|stat
@@ -1374,7 +1477,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-comment|/* 		 * Allow the request if it's in one of the approved locations. 		 * Special case: check the null prefix ("/") by looking  		 * for length = 1 and relying on the arg. processing that 		 * it's a /. 		 */
+comment|/* 		 * Allow the request if it's in one of the approved locations. 		 * Special case: check the null prefix ("/") by looking 		 * for length = 1 and relying on the arg. processing that 		 * it's a /. 		 */
 for|for
 control|(
 name|dirp
@@ -1535,7 +1638,7 @@ block|{
 name|int
 name|err
 decl_stmt|;
-comment|/*  		 * Relative file name: search the approved locations for it. 		 * Don't allow write requests or ones that avoid directory 		 * restrictions. 		 */
+comment|/* 		 * Relative file name: search the approved locations for it. 		 * Don't allow write requests or ones that avoid directory 		 * restrictions. 		 */
 if|if
 condition|(
 name|mode
@@ -1557,7 +1660,7 @@ operator|(
 name|EACCESS
 operator|)
 return|;
-comment|/* 		 * If the file exists in one of the directories and isn't 		 * readable, continue looking. However, change the error code  		 * to give an indication that the file exists. 		 */
+comment|/* 		 * If the file exists in one of the directories and isn't 		 * readable, continue looking. However, change the error code 		 * to give an indication that the file exists. 		 */
 name|err
 operator|=
 name|ENOTFOUND
@@ -1720,7 +1823,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -1768,22 +1871,17 @@ begin_comment
 comment|/*  * Send the requested file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sendfile
-argument_list|(
-argument|pf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pf
+parameter_list|)
 name|struct
 name|formats
 modifier|*
 name|pf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|tftphdr
@@ -1803,13 +1901,13 @@ decl_stmt|;
 comment|/* ack packet */
 specifier|register
 name|int
-name|block
-init|=
-literal|1
-decl_stmt|,
 name|size
 decl_stmt|,
 name|n
+decl_stmt|;
+specifier|volatile
+name|int
+name|block
 decl_stmt|;
 name|signal
 argument_list|(
@@ -1831,6 +1929,10 @@ name|tftphdr
 operator|*
 operator|)
 name|ackbuf
+expr_stmt|;
+name|block
+operator|=
+literal|1
 expr_stmt|;
 do|do
 block|{
@@ -2051,9 +2153,7 @@ name|th_block
 operator|==
 name|block
 condition|)
-block|{
 break|break;
-block|}
 comment|/* Re-synchronize with the other side */
 operator|(
 name|void
@@ -2075,11 +2175,9 @@ operator|-
 literal|1
 operator|)
 condition|)
-block|{
 goto|goto
 name|send_data
 goto|;
-block|}
 block|}
 block|}
 name|block
@@ -2104,7 +2202,7 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -2123,22 +2221,17 @@ begin_comment
 comment|/*  * Receive a file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|recvfile
-argument_list|(
-argument|pf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pf
+parameter_list|)
 name|struct
 name|formats
 modifier|*
 name|pf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|tftphdr
@@ -2158,13 +2251,13 @@ decl_stmt|;
 comment|/* ack buffer */
 specifier|register
 name|int
-name|block
-init|=
-literal|0
-decl_stmt|,
 name|n
 decl_stmt|,
 name|size
+decl_stmt|;
+specifier|volatile
+name|int
+name|block
 decl_stmt|;
 name|signal
 argument_list|(
@@ -2186,6 +2279,10 @@ name|tftphdr
 operator|*
 operator|)
 name|ackbuf
+expr_stmt|;
+name|block
+operator|=
+literal|0
 expr_stmt|;
 do|do
 block|{
@@ -2599,7 +2696,7 @@ name|abort
 label|:
 return|return;
 block|}
-end_block
+end_function
 
 begin_struct
 struct|struct
@@ -2756,20 +2853,16 @@ begin_comment
 comment|/*  * Send a nak packet (error message).  * Error code passed in is one of the  * standard TFTP codes, or a UNIX errno  * offset by 100.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|nak
-argument_list|(
-argument|error
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|error
+parameter_list|)
 name|int
 name|error
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2927,7 +3020,7 @@ literal|"nak: %m\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
