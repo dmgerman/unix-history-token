@@ -1,11 +1,37 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rwhod.h	4.5	83/05/05	*/
+comment|/*	rwhod.h	4.6	83/05/22	*/
 end_comment
 
 begin_comment
 comment|/*  * rwho protocol packet format.  */
 end_comment
+
+begin_struct
+struct|struct
+name|outmp
+block|{
+name|char
+name|out_line
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* tty name */
+name|char
+name|out_name
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* user id */
+name|long
+name|out_time
+decl_stmt|;
+comment|/* time on */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -55,7 +81,7 @@ struct|struct
 name|whoent
 block|{
 name|struct
-name|utmp
+name|outmp
 name|we_utmp
 decl_stmt|;
 comment|/* active tty info */
