@@ -1524,9 +1524,6 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|char
 modifier|*
 name|bindname
