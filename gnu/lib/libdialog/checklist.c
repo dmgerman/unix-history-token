@@ -1374,7 +1374,10 @@ block|{
 if|if
 condition|(
 name|ditems
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|result
 operator|&&
 name|ditems
@@ -1438,6 +1441,7 @@ argument_list|(
 name|save
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -3198,13 +3202,11 @@ case|:
 if|if
 condition|(
 name|ditems
-operator|&&
-name|result
 condition|)
 block|{
 if|if
 condition|(
-name|ditems
+name|result
 operator|&&
 name|ditems
 index|[

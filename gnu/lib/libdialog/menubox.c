@@ -1288,7 +1288,10 @@ block|{
 if|if
 condition|(
 name|ditems
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|result
 operator|&&
 name|ditems
@@ -1352,6 +1355,7 @@ argument_list|(
 name|save
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2570,7 +2574,10 @@ comment|/* A fire routine can do just about anything to the screen, so be prepar
 if|if
 condition|(
 name|ditems
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ditems
 index|[
 name|scroll
@@ -2676,6 +2683,7 @@ expr_stmt|;
 goto|goto
 name|draw
 goto|;
+block|}
 block|}
 block|}
 elseif|else
