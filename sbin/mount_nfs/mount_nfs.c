@@ -3937,6 +3937,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|retrycnt
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|auth_destroy
 argument_list|(
 name|clp
@@ -3949,11 +3954,10 @@ argument_list|(
 name|clp
 argument_list|)
 expr_stmt|;
-name|retrycnt
+name|so
 operator|=
-literal|0
+name|RPC_ANYSOCK
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
