@@ -1474,6 +1474,17 @@ begin_comment
 comment|/* Linksys (Dlink) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ED_VENDOR_SIC
+value|0x06
+end_define
+
+begin_comment
+comment|/* Allied-Telesis SIC */
+end_comment
+
 begin_comment
 comment|/*  * Compile-time config flags  */
 end_comment
@@ -3718,6 +3729,39 @@ directive|define
 name|ED_TYPE_HP_PCLANPLUS
 value|0x00
 end_define
+
+begin_comment
+comment|/*  *			Definitions for Allied-Telesis SIC  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_SIC_NIC_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_SIC_ASIC_OFFSET
+value|0x10
+end_define
+
+begin_comment
+comment|/* offset to nic i/o regs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_SIC_IO_PORTS
+value|17
+end_define
+
+begin_comment
+comment|/* # of i/o addresses used */
+end_comment
 
 begin_comment
 comment|/*  * Chip types.  */

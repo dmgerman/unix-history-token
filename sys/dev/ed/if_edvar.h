@@ -668,6 +668,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ed_probe_SIC
+name|__P
+argument_list|(
+operator|(
+name|device_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ed_probe_Novell
 name|__P
 argument_list|(
