@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1983 Regents of the University of California */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1993 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -15,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lam.c	4.5	(Berkeley)	%G%"
+literal|"@(#)lam.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  *	lam - laminate files  *	Author:  John Kunze, UCB  */
@@ -33,6 +60,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -111,15 +150,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|line
 index|[
 name|BIGBUFSIZ
@@ -134,7 +164,68 @@ name|linep
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|error
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gatherline
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|openfile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|getargs
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|pad
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|openfile
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -146,8 +237,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -156,18 +247,6 @@ name|openfile
 modifier|*
 name|ip
 decl_stmt|;
-name|char
-modifier|*
-name|gatherline
-parameter_list|()
-function_decl|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|getargs
 argument_list|(
 name|argv
@@ -257,22 +336,17 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|getargs
-argument_list|(
-argument|av
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|av
+parameter_list|)
 name|char
 modifier|*
-modifier|*
 name|av
+index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -327,11 +401,15 @@ expr_stmt|;
 comment|/* capitalized options */
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 operator|++
 name|av
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -725,7 +803,7 @@ operator|=
 literal|""
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -988,44 +1066,25 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|msg
-argument_list|,
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|,
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
+decl_stmt|,
+decl|*
 name|s
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stderr
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
