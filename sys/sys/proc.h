@@ -331,7 +331,7 @@ name|pcred
 modifier|*
 name|p_cred
 decl_stmt|;
-comment|/* (b) Process owner's identity. */
+comment|/* (c) Process owner's identity. */
 name|struct
 name|filedesc
 modifier|*
