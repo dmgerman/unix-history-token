@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -224,7 +224,7 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|M_WAIT
+name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -971,6 +971,13 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|snd_ssthresh
+operator|=
+literal|65535
+expr_stmt|;
+comment|/* XXX */
 name|inp
 operator|->
 name|inp_ppcb
