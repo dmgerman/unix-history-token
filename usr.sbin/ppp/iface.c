@@ -3408,6 +3408,9 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|new_flags
 operator|=
 operator|(
@@ -3426,6 +3429,18 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|new_flags
+operator|=
+name|ifrq
+operator|.
+name|ifr_flags
+operator|&
+literal|0xffff
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|how
@@ -3450,6 +3465,9 @@ name|new_flags
 operator|&
 literal|0xffff
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|ifrq
 operator|.
 name|ifr_flagshigh
@@ -3458,6 +3476,8 @@ name|new_flags
 operator|>>
 literal|16
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ID0ioctl
