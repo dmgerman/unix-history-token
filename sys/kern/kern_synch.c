@@ -1445,11 +1445,11 @@ name|priority
 operator|&
 name|PRIMASK
 expr_stmt|;
-name|CTR3
+name|CTR5
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"msleep: proc %p (pid %d, %s)"
+literal|"msleep: proc %p (pid %d, %s) on %s (%p)"
 argument_list|,
 name|p
 argument_list|,
@@ -1460,6 +1460,10 @@ argument_list|,
 name|p
 operator|->
 name|p_comm
+argument_list|,
+name|wmesg
+argument_list|,
+name|ident
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
