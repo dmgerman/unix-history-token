@@ -4944,6 +4944,15 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|curpcb
+argument_list|,
+name|thread0
+operator|.
+name|td_pcb
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
 name|tssp
 argument_list|,
 operator|&
