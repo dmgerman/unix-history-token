@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.50 1999/06/17 09:16:08 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.51 1999/06/21 11:17:34 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<tcpd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -225,18 +231,6 @@ begin_include
 include|#
 directive|include
 file|<sysexits.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LIBWRAP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<tcpd.h>
 end_include
 
 begin_ifndef
@@ -305,23 +299,6 @@ directive|define
 name|LIBWRAP_DENY_SEVERITY
 value|LOG_WARNING
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|int
-name|allow_severity
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|deny_severity
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -456,6 +433,34 @@ directive|define
 name|SIGBLOCK
 value|(sigmask(SIGCHLD)|sigmask(SIGHUP)|sigmask(SIGALRM))
 end_define
+
+begin_decl_stmt
+name|int
+name|allow_severity
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|deny_severity
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wrap
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wrap_bi
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1691,9 +1696,6 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LIBWRAP
 name|struct
 name|request_info
 name|req
@@ -1707,8 +1709,6 @@ name|service
 init|=
 name|NULL
 decl_stmt|;
-else|#
-directive|else
 name|struct
 name|sockaddr_in
 name|peer
@@ -1716,8 +1716,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|OLD_SETPROCTITLE
@@ -1798,7 +1796,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dlR:a:c:C:p:"
+literal|"dlwR:a:c:C:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1912,6 +1910,18 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'w'
+case|:
+if|if
+condition|(
+name|wrap
+operator|++
+condition|)
+name|wrap_bi
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -1919,7 +1929,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: inetd [-dl] [-a address] [-R rate]"
+literal|"usage: inetd [-dlw] [-a address] [-R rate]"
 literal|" [-c maximum] [-C rate]"
 literal|" [-p pidfile] [conf-file]"
 argument_list|)
@@ -2678,11 +2688,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-ifndef|#
-directive|ifndef
-name|LIBWRAP
 if|if
 condition|(
+operator|!
+name|wrap
+operator|||
 name|log
 condition|)
 block|{
@@ -2747,8 +2757,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 name|ctrl
@@ -2769,16 +2777,16 @@ name|pid
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LIBWRAP_INTERNAL
 comment|/* 		     * When builtins are wrapped, avoid a minor optimization 		     * that breaks hosts_options(5) twist. 		     */
+if|if
+condition|(
+name|wrap_bi
+condition|)
 name|dofork
 operator|=
 literal|1
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|dofork
 operator|=
 operator|(
@@ -2795,8 +2803,6 @@ operator|->
 name|bi_fork
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|dofork
@@ -3098,24 +3104,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|LIBWRAP
-ifndef|#
-directive|ifndef
-name|LIBWRAP_INTERNAL
 if|if
 condition|(
+operator|(
+name|wrap
+operator|&&
+operator|(
+operator|!
 name|sep
 operator|->
 name|se_bi
-operator|==
-literal|0
-condition|)
-endif|#
-directive|endif
-if|if
-condition|(
+operator|||
+name|wrap_bi
+operator|)
+operator|)
+operator|&&
 name|sep
 operator|->
 name|se_accept
@@ -3238,9 +3241,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* LIBWRAP */
 if|if
 condition|(
 name|sep
@@ -3748,13 +3748,8 @@ operator|->
 name|se_server
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LIBWRAP
 name|reject
 label|:
-endif|#
-directive|endif
 if|if
 condition|(
 name|sep
