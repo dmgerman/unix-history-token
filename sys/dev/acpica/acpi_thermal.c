@@ -146,14 +146,25 @@ value|0x82
 end_define
 
 begin_comment
-comment|/* Check for temperature changes every 30 seconds by default */
+comment|/* Check for temperature changes every 10 seconds by default */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TZ_POLLRATE
-value|30
+value|10
+end_define
+
+begin_comment
+comment|/* Make sure the reported temperature is valid for this number of polls. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TZ_VALIDCHECKS
+value|3
 end_define
 
 begin_comment
@@ -292,6 +303,9 @@ decl_stmt|;
 comment|/*Thermal zone parameters*/
 name|int
 name|tz_tmp_updating
+decl_stmt|;
+name|int
+name|tz_validchecks
 decl_stmt|;
 block|}
 struct|;
@@ -2360,7 +2374,7 @@ name|newactive
 expr_stmt|;
 block|}
 comment|/* XXX (de)activate any passive cooling that may be required. */
-comment|/*      * If we have just become _HOT or _CRT, warn the user.      *      * We should actually shut down at this point, but it's not clear      * that some systems don't actually map _CRT to the same value as _AC0.      */
+comment|/*      * If the temperature is at _HOT or _CRT, increment our event count.      * If it has occurred enough times, shutdown the system.  This is      * needed because some systems will report an invalid high temperature      * for one poll cycle.  It is suspected this is due to the embedded      * controller timing out.  A typical value is 138C for one cycle on      * a system that is otherwise 65C.      */
 if|if
 condition|(
 operator|(
@@ -2374,20 +2388,16 @@ operator|)
 operator|)
 operator|!=
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
+operator|++
 name|sc
 operator|->
-name|tz_thflags
-operator|&
-operator|(
-name|TZ_THFLAG_HOT
-operator||
-name|TZ_THFLAG_CRT
-operator|)
-operator|)
+name|tz_validchecks
 operator|==
-literal|0
+name|TZ_VALIDCHECKS
 condition|)
 block|{
 name|device_printf
@@ -2396,7 +2406,7 @@ name|sc
 operator|->
 name|tz_dev
 argument_list|,
-literal|"WARNING - current temperature (%d.%dC) exceeds system limits\n"
+literal|"WARNING - current temperature (%d.%dC) exceeds safe limits\n"
 argument_list|,
 name|TZ_KELVTOC
 argument_list|(
@@ -2410,6 +2420,16 @@ name|shutdown_nice
 argument_list|(
 name|RB_POWEROFF
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|tz_validchecks
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|sc
