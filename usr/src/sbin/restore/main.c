@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.8 %G%"
+literal|"@(#)main.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2840,6 +2840,25 @@ condition|)
 block|{
 name|readbits
 argument_list|(
+name|clrimap
+argument_list|)
+expr_stmt|;
+comment|/* 			 * if throwing away the root inode, must also 			 * discard the predefined lost+found directory. 			 */
+if|if
+condition|(
+name|BIT
+argument_list|(
+name|ROOTINO
+argument_list|,
+name|clrimap
+argument_list|)
+condition|)
+name|BIS
+argument_list|(
+name|LOSTFOUNDINO
+operator|+
+literal|1
+argument_list|,
 name|clrimap
 argument_list|)
 expr_stmt|;
