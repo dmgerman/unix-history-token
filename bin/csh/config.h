@@ -354,12 +354,6 @@ directive|define
 name|DSPMBYTE
 end_define
 
-begin_define
-define|#
-directive|define
-name|MBYTEDEBUG
-end_define
-
 begin_endif
 endif|#
 directive|endif
