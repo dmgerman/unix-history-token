@@ -19,16 +19,6 @@ begin_comment
 comment|/* **************************************************************** */
 end_comment
 
-begin_comment
-comment|/*  * Remove the next line if you're compiling this against an installed  * libreadline.a  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|READLINE_LIBRARY
-end_define
-
 begin_if
 if|#
 directive|if
@@ -61,6 +51,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|READLINE_LIBRARY
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -72,6 +68,28 @@ include|#
 directive|include
 file|"history.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<readline/readline.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<readline/history.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern

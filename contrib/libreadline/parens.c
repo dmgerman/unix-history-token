@@ -4,7 +4,7 @@ comment|/* parens.c -- Implementation of matching parentheses feature. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -18,60 +18,6 @@ include|#
 directive|include
 file|"rlconf.h"
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PAREN_MATCHING
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|int
-name|rl_insert
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function
-name|int
-name|rl_insert_close
-parameter_list|(
-name|count
-parameter_list|,
-name|invoking_key
-parameter_list|)
-name|int
-name|count
-decl_stmt|,
-name|invoking_key
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|rl_insert
-argument_list|(
-name|count
-argument_list|,
-name|invoking_key
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* PAREN_MATCHING */
-end_comment
 
 begin_if
 if|#
@@ -258,10 +204,27 @@ directive|include
 file|"readline.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rlprivate.h"
+end_include
+
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
-name|rl_explicit_arg
+name|find_matching_open
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -312,13 +275,87 @@ begin_comment
 comment|/* !HAVE_SELECT */
 end_comment
 
-begin_function_decl
-specifier|static
+begin_comment
+comment|/* Change emacs_standard_keymap to have bindings for paren matching when    ON_OR_OFF is 1, change them back to self_insert when ON_OR_OFF == 0. */
+end_comment
+
+begin_function
+name|void
+name|_rl_enable_paren_matching
+parameter_list|(
+name|on_or_off
+parameter_list|)
 name|int
-name|find_matching_open
-parameter_list|()
-function_decl|;
-end_function_decl
+name|on_or_off
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|on_or_off
+condition|)
+block|{
+comment|/* ([{ */
+name|rl_bind_key_in_map
+argument_list|(
+literal|')'
+argument_list|,
+name|rl_insert_close
+argument_list|,
+name|emacs_standard_keymap
+argument_list|)
+expr_stmt|;
+name|rl_bind_key_in_map
+argument_list|(
+literal|']'
+argument_list|,
+name|rl_insert_close
+argument_list|,
+name|emacs_standard_keymap
+argument_list|)
+expr_stmt|;
+name|rl_bind_key_in_map
+argument_list|(
+literal|'}'
+argument_list|,
+name|rl_insert_close
+argument_list|,
+name|emacs_standard_keymap
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* ([{ */
+name|rl_bind_key_in_map
+argument_list|(
+literal|')'
+argument_list|,
+name|rl_insert
+argument_list|,
+name|emacs_standard_keymap
+argument_list|)
+expr_stmt|;
+name|rl_bind_key_in_map
+argument_list|(
+literal|']'
+argument_list|,
+name|rl_insert
+argument_list|,
+name|emacs_standard_keymap
+argument_list|)
+expr_stmt|;
+name|rl_bind_key_in_map
+argument_list|(
+literal|'}'
+argument_list|,
+name|rl_insert
+argument_list|,
+name|emacs_standard_keymap
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_function
 name|int
@@ -682,15 +719,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PAREN_MATCHING */
-end_comment
 
 end_unit
 

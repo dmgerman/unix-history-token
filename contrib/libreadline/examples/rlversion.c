@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * rlversion -- print out readline's version number  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|READLINE_LIBRARY
-end_define
-
 begin_if
 if|#
 directive|if
@@ -47,11 +41,33 @@ directive|include
 file|"posixstat.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|READLINE_LIBRARY
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"readline.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<readline/readline.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|main
