@@ -1332,6 +1332,10 @@ name|hot
 decl_stmt|,
 name|speed
 decl_stmt|;
+comment|/*    * Don't use the netgraph line discipline for now.  Using it works, but    * carrier cannot be detected via TIOCMGET and the device doesn't become    * selectable with 0 bytes to read when carrier is lost :(    */
+return|return
+literal|0
+return|;
 name|reply
 operator|=
 operator|(
