@@ -593,8 +593,6 @@ operator|)
 operator|&
 name|EXCA_SYSMEM_ADDRX_START_MSB_ADDR_MASK
 operator|)
-operator||
-literal|0x80
 argument_list|)
 expr_stmt|;
 name|exca_putb
@@ -655,8 +653,6 @@ operator|)
 operator|&
 name|EXCA_SYSMEM_ADDRX_STOP_MSB_ADDR_MASK
 operator|)
-operator||
-name|EXCA_SYSMEM_ADDRX_STOP_MSB_WAIT2
 argument_list|)
 expr_stmt|;
 name|exca_putb
@@ -689,7 +685,7 @@ argument_list|,
 operator|(
 name|mem
 operator|->
-name|offset
+name|cardaddr
 operator|>>
 name|EXCA_CARDMEM_ADDRX_SHIFT
 operator|)
@@ -709,7 +705,7 @@ operator|(
 operator|(
 name|mem
 operator|->
-name|offset
+name|cardaddr
 operator|>>
 operator|(
 name|EXCA_CARDMEM_ADDRX_SHIFT
@@ -742,11 +738,42 @@ name|sc
 argument_list|,
 name|EXCA_ADDRWIN_ENABLE
 argument_list|,
-name|EXCA_ADDRWIN_ENABLE_MEMCS16
-operator||
 name|map
 operator|->
 name|memenable
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EXCA_DEBUG
+if|if
+condition|(
+name|mem
+operator|->
+name|kind
+operator|==
+name|PCCARD_MEM_ATTR
+condition|)
+name|printf
+argument_list|(
+literal|"attribtue memory\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"common memory\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exca_setb
+argument_list|(
+name|sc
+argument_list|,
+name|EXCA_ADDRWIN_ENABLE
+argument_list|,
+name|EXCA_ADDRWIN_ENABLE_MEMCS16
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -853,7 +880,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"exca_do_mem_map window %d: %02x%02x %02x%02x "
-literal|"%02x%02x %02x (%08x+%08x.%08x*%08lx)\n"
+literal|"%02x%02x %02x (%08x+%08x.%08x*%08x)\n"
 argument_list|,
 name|win
 argument_list|,
@@ -885,7 +912,7 @@ name|realsize
 argument_list|,
 name|mem
 operator|->
-name|offset
+name|cardaddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1155,36 +1182,13 @@ index|[
 name|win
 index|]
 operator|.
-name|offset
-operator|=
-call|(
-name|long
-call|)
-argument_list|(
-name|sc
-operator|->
-name|mem
-index|[
-name|win
-index|]
-operator|.
-name|addr
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|mem
-index|[
-name|win
-index|]
-operator|.
 name|kind
 operator|=
 name|kind
 expr_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"exca_mem_map window %d bus %x+%x+%lx card addr %x\n"
+literal|"exca_mem_map window %d bus %x+%x card addr %x\n"
 argument_list|,
 name|win
 argument_list|,
@@ -1205,15 +1209,6 @@ name|win
 index|]
 operator|.
 name|size
-argument_list|,
-name|sc
-operator|->
-name|mem
-index|[
-name|win
-index|]
-operator|.
-name|offset
 argument_list|,
 name|sc
 operator|->
@@ -1537,7 +1532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the offset of the memory.  We use this for reading the CIS and  * frobbing the pccard's pccard registers (POR, etc).  Some drivers  * need to access this functionality as well, since they have receive  * buffers defined in the attribute memory.  Thankfully, these cards  * are few and fare between.  Some cards also have common memory that  * is large and only map a small portion of it at a time (but these cards  * are rare, the more common case being to have just a small amount  * of common memory that the driver needs to bcopy data from in order to  * get at it.  */
+comment|/*  * Set the offset of the memory.  We use this for reading the CIS and  * frobbing the pccard's pccard registers (POR, etc).  Some drivers  * need to access this functionality as well, since they have receive  * buffers defined in the attribute memory.  */
 end_comment
 
 begin_function
@@ -1609,6 +1604,13 @@ operator|.
 name|cardaddr
 operator|=
 name|cardaddr
+operator|&
+operator|~
+operator|(
+name|EXCA_MEM_PAGESIZE
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|delta
 operator|=
@@ -1623,10 +1625,6 @@ condition|)
 operator|*
 name|deltap
 operator|=
-name|delta
-expr_stmt|;
-name|cardaddr
-operator|-=
 name|delta
 expr_stmt|;
 name|sc
@@ -1683,26 +1681,6 @@ name|realsize
 operator|%
 name|EXCA_MEM_PAGESIZE
 operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|mem
-index|[
-name|win
-index|]
-operator|.
-name|offset
-operator|=
-name|cardaddr
-operator|-
-name|sc
-operator|->
-name|mem
-index|[
-name|win
-index|]
-operator|.
-name|addr
 expr_stmt|;
 name|exca_do_mem_map
 argument_list|(
