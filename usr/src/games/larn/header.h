@@ -2470,10 +2470,6 @@ name|fortune
 argument_list|()
 decl_stmt|,
 modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
 name|getenv
 argument_list|()
 decl_stmt|,
@@ -2531,6 +2527,14 @@ begin_function_decl
 name|unsigned
 name|long
 name|readnum
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
