@@ -284,7 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  * PCI ID list for ASUSCOM card got from Asuscom in March 2000:  *  * Vendor ID: 0675 Device ID: 1702  * Vendor ID: 0675 Device ID: 1703  * Vendor ID: 0675 Device ID: 1707  * Vendor ID: 10CF Device ID: 105E  * Vendor ID: 1043 Device ID: 0675 SubVendor: 144F SubDevice ID: 2000  * Vendor ID: 1043 Device ID: 0675 SubVendor: 144F SubDevice ID: 1702  * Vendor ID: 1043 Device ID: 0675 SubVendor: 144F SubDevice ID: 1707  * Vendor ID: 1043 Device ID: 0675 SubVendor: 1043 SubDevice ID: 1702  * Vendor ID: 1043 Device ID: 0675 SubVendor: 1043 SubDevice ID: 1707  * Vendor ID: 1050 Device ID: 6692 SubVendor: 0675 SubDevice ID: 1702  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  * PCI ID list for ASUSCOM card got from Asuscom in March 2000:  *  * Vendor ID: 0675 Device ID: 1702  * Vendor ID: 0675 Device ID: 1703  * Vendor ID: 0675 Device ID: 1707  * Vendor ID: 10CF Device ID: 105E  * Vendor ID: 1043 Device ID: 0675 SubVendor: 144F SubDevice ID: 2000  * Vendor ID: 1043 Device ID: 0675 SubVendor: 144F SubDevice ID: 1702  * Vendor ID: 1043 Device ID: 0675 SubVendor: 144F SubDevice ID: 1707  * Vendor ID: 1043 Device ID: 0675 SubVendor: 1043 SubDevice ID: 1702  * Vendor ID: 1043 Device ID: 0675 SubVendor: 1043 SubDevice ID: 1707  * Vendor ID: 1050 Device ID: 6692 SubVendor: 0675 SubDevice ID: 1702  * Vendor ID: 1043 Device ID: 0675 SubVendor: 0675 SubDevice ID: 1704  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_struct
@@ -321,6 +321,16 @@ operator|-
 literal|1
 block|,
 literal|"Generic Winbond W6692 ISDN PCI (0x66921050)"
+block|}
+block|,
+block|{
+literal|0x06751043
+block|,
+literal|0x0675
+block|,
+literal|0x1704
+block|,
+literal|"Planet PCI ISDN Adapter (IA128P-STD) ASUS-HCF675"
 block|}
 block|,
 block|{
