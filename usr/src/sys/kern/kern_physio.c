@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.11	%G%	*/
+comment|/*	kern_physio.c	4.12	%G%	*/
 end_comment
 
 begin_include
@@ -1081,27 +1081,36 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_ERROR
-operator|)
-operator|&&
+condition|)
+if|if
+condition|(
 name|bp
 operator|->
-name|b_dev
-operator|!=
-name|NODEV
+name|b_flags
+operator|&
+name|B_LOCKED
 condition|)
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_ERROR
+expr_stmt|;
+comment|/* try again later */
+else|else
 name|bp
 operator|->
 name|b_dev
 operator|=
 name|NODEV
 expr_stmt|;
-comment|/* no assoc. on error */
+comment|/* no assoc */
 name|s
 operator|=
 name|spl6
