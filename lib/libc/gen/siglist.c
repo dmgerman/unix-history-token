@@ -268,5 +268,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|int
+name|sys_nsig
+init|=
+sizeof|sizeof
+argument_list|(
+name|sys_siglist
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|sys_siglist
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

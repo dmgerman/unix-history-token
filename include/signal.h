@@ -81,6 +81,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|__const
+name|int
+name|sys_nsig
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
