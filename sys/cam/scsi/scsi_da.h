@@ -437,7 +437,6 @@ comment|/* READ_FORMAT_CAPACITIES */
 name|uint8_t
 name|byte2
 decl_stmt|;
-comment|/* top 3 bits contain LUN */
 define|#
 directive|define
 name|SRFC_LUN_MASK
@@ -473,9 +472,12 @@ name|opcode
 decl_stmt|;
 comment|/* VERIFY */
 name|uint8_t
-name|lun
+name|byte2
 decl_stmt|;
-comment|/* All other bits should be zero */
+define|#
+directive|define
+name|SVFY_LUN_MASK
+value|0xE0
 define|#
 directive|define
 name|SVFY_RELADR
@@ -488,11 +490,6 @@ define|#
 directive|define
 name|SVFY_DPO
 value|0x10
-define|#
-directive|define
-name|SVFY_LUN_MASK
-value|0xE0
-comment|/* Top 3 MSBs are LUN */
 name|uint8_t
 name|addr
 index|[
@@ -534,7 +531,6 @@ comment|/* WRITE_AND_VERIFY */
 name|uint8_t
 name|byte2
 decl_stmt|;
-comment|/* top 3 bits are the LUN */
 define|#
 directive|define
 name|SWVY_LUN_MASK
