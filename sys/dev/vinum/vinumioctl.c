@@ -2216,6 +2216,45 @@ condition|(
 name|plex
 condition|)
 block|{
+comment|/* 	     * We should be more intelligent about this. 	     * We should be able to reattach a dead 	     * subdisk, but if we want to increase the total 	     * number of subdisks, we have a lot of reshuffling 	     * to do. XXX 	     */
+if|if
+condition|(
+operator|(
+name|plex
+operator|->
+name|organization
+operator|!=
+name|plex_concat
+operator|)
+comment|/* can't attach to striped and raid-5 */
+operator|&&
+operator|(
+operator|!
+name|msg
+operator|->
+name|force
+operator|)
+condition|)
+block|{
+comment|/* without using force */
+name|reply
+operator|->
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* no message, the user should check */
+name|strcpy
+argument_list|(
+name|reply
+operator|->
+name|msg
+argument_list|,
+literal|"Can't attach to this plex organization"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|sd
@@ -2341,34 +2380,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
-condition|(
-name|plex
-operator|->
-name|organization
-operator|!=
-name|plex_concat
-condition|)
-block|{
-comment|/* can't attach to striped and raid-5 */
-name|reply
-operator|->
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* no message, the user should check */
-name|reply
-operator|->
-name|msg
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return;
-block|}
 name|vol
 operator|=
 name|validvol
