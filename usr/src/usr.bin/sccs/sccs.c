@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.50 %G%"
+literal|"@(#)sccs.c	1.51 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3265,18 +3265,15 @@ name|pfp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|gotpfent
-condition|)
-continue|continue;
 comment|/* the s. file exists and no p. file exists -- unlink the g-file */
 if|if
 condition|(
 name|mode
 operator|==
 name|CLEANC
+operator|&&
+operator|!
+name|gotpfent
 condition|)
 block|{
 name|strncpy
