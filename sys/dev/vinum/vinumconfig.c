@@ -1648,12 +1648,12 @@ if|if
 condition|(
 name|sd
 operator|->
-name|driveoffset
+name|sectors
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* find your own */
+comment|/* take the largest chunk */
 name|sfe
 operator|=
 literal|0
@@ -1726,6 +1726,33 @@ expr_stmt|;
 comment|/* and note the index for later */
 block|}
 block|}
+if|if
+condition|(
+name|sd
+operator|->
+name|sectors
+operator|==
+literal|0
+condition|)
+comment|/* no luck, */
+name|throw_rude_remark
+argument_list|(
+name|ENOSPC
+argument_list|,
+comment|/* give up */
+literal|"No space for %s on %s"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sfe
@@ -1964,22 +1991,13 @@ block|}
 block|}
 if|if
 condition|(
-name|fe
-operator|==
-name|drive
-operator|->
-name|freelist_entries
-condition|)
-comment|/* 	     * Didn't find anything.  Although the drive has 	     * enough space, it's too fragmented  	     */
-block|{
 name|sd
 operator|->
 name|driveoffset
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* don't be confusing */
+operator|<
+literal|0
+condition|)
+comment|/* 	     * Didn't find anything.  Although the drive has 	     * enough space, it's too fragmented  	     */
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1997,7 +2015,6 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2081,7 +2098,7 @@ name|throw_rude_remark
 argument_list|(
 name|ENOSPC
 argument_list|,
-literal|"No space for subdisk %s on drive %s at offset %qd"
+literal|"No space for subdisk %s on drive %s at offset %lld"
 argument_list|,
 name|sd
 operator|->
@@ -2477,6 +2494,13 @@ operator|=
 name|driveno
 expr_stmt|;
 comment|/* put number in structure */
+name|drive
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born drive */
 name|strcpy
 argument_list|(
 literal|"unknown"
@@ -2660,13 +2684,6 @@ operator|=
 name|drive_referenced
 expr_stmt|;
 comment|/* in use, nothing worthwhile there */
-name|drive
-operator|->
-name|flags
-operator||=
-name|VF_NEWBORN
-expr_stmt|;
-comment|/* newly born drive */
 return|return
 name|driveno
 return|;
@@ -2816,13 +2833,6 @@ operator|=
 name|drive_referenced
 expr_stmt|;
 comment|/* in use, nothing worthwhile there */
-name|drive
-operator|->
-name|flags
-operator||=
-name|VF_NEWBORN
-expr_stmt|;
-comment|/* newly born drive */
 return|return
 name|driveno
 return|;
@@ -2942,6 +2952,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* initialize */
+name|sd
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born subdisk */
 name|sd
 operator|->
 name|plexno
@@ -3165,13 +3182,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* put in its name */
-name|sd
-operator|->
-name|flags
-operator||=
-name|VF_NEWBORN
-expr_stmt|;
-comment|/* newly born subdisk */
 return|return
 name|sdno
 return|;
@@ -3866,6 +3876,13 @@ expr_stmt|;
 comment|/* do we need this? */
 name|plex
 operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born plex */
+name|plex
+operator|->
 name|subdisks
 operator|=
 literal|0
@@ -4015,13 +4032,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* put in its name */
-name|plex
-operator|->
-name|flags
-operator||=
-name|VF_NEWBORN
-expr_stmt|;
-comment|/* newly born plex */
 return|return
 name|plexno
 return|;
@@ -4219,6 +4229,13 @@ argument_list|)
 expr_stmt|;
 name|vol
 operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born volume */
+name|vol
+operator|->
 name|preferred_plex
 operator|=
 operator|-
@@ -4360,13 +4377,6 @@ operator|=
 name|DEV_BSIZE
 expr_stmt|;
 comment|/* block size of this volume */
-name|vol
-operator|->
-name|flags
-operator||=
-name|VF_NEWBORN
-expr_stmt|;
-comment|/* newly born volume */
 return|return
 name|volno
 return|;
@@ -4712,6 +4722,14 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
+comment|/* 		 * There's a potential race condition here: 		 * the rude remark refers to a field in an 		 * unallocated drive, which potentially could 		 * be reused.  This works because we're the only 		 * thread accessing the config at the moment. 		 */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_unallocated
+expr_stmt|;
+comment|/* throw it away completely */
 name|throw_rude_remark
 argument_list|(
 name|drive
@@ -5027,7 +5045,7 @@ name|throw_rude_remark
 argument_list|(
 name|EINVAL
 argument_list|,
-literal|"sd %s, bad plex offset alignment: %qd"
+literal|"sd %s, bad plex offset alignment: %lld"
 argument_list|,
 name|sd
 operator|->
@@ -5095,7 +5113,7 @@ name|throw_rude_remark
 argument_list|(
 name|EINVAL
 argument_list|,
-literal|"sd %s, bad drive offset alignment: %qd"
+literal|"sd %s, bad drive offset alignment: %lld"
 argument_list|,
 name|sd
 operator|->
@@ -6283,14 +6301,6 @@ condition|)
 comment|/* this volume exists already */
 return|return;
 comment|/* don't do anything */
-name|vol
-operator|->
-name|flags
-operator|&=
-operator|~
-name|VF_NEWBORN
-expr_stmt|;
-comment|/* no longer newly born */
 for|for
 control|(
 name|parameter
@@ -8180,6 +8190,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Currently called only from ioctl */
+end_comment
+
 begin_function
 name|void
 name|update_sd_config
@@ -8205,6 +8219,16 @@ argument_list|,
 name|setstate_configuring
 argument_list|)
 expr_stmt|;
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
+expr_stmt|;
 block|}
 end_function
 
@@ -8219,11 +8243,6 @@ name|int
 name|diskconfig
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|u_int64_t
 name|size
 decl_stmt|;
@@ -8252,66 +8271,165 @@ name|int
 name|remainder
 decl_stmt|;
 comment|/* size of fractional stripe at end */
-comment|/* XXX Insert checks here for sparse plexes and volumes */
-comment|/*      * Check that our subdisks make sense.  For      * striped and RAID5 plexes, we need at least      * two subdisks, and they must all be the same      * size       */
+name|int
+name|added_plex
+decl_stmt|;
+comment|/* set if we add a plex to a volume */
+name|int
+name|required_sds
+decl_stmt|;
+comment|/* number of subdisks we need */
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|struct
+name|volume
+modifier|*
+name|vol
+decl_stmt|;
+name|added_plex
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|plex
+operator|->
+name|volno
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* we have a volume */
+name|vol
+operator|=
+operator|&
+name|VOL
+index|[
+name|plex
+operator|->
+name|volno
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|plex
 operator|->
+name|flags
+operator|&
+name|VF_NEWBORN
+operator|)
+comment|/* we're newly born */
+operator|&&
+operator|(
+operator|(
+name|vol
+operator|->
+name|flags
+operator|&
+name|VF_NEWBORN
+operator|)
+operator|==
+literal|0
+operator|)
+comment|/* and the volume isn't */
+operator|&&
+operator|(
+name|vol
+operator|->
+name|plexes
+operator|>
+literal|0
+operator|)
+comment|/* and it has other plexes, */
+operator|&&
+operator|(
+name|diskconfig
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* and we didn't read this mess from disk */
+name|added_plex
+operator|=
+literal|1
+expr_stmt|;
+comment|/* we were added later */
+name|state
+operator|=
+name|plex_down
+expr_stmt|;
+comment|/* so take ourselves down */
+block|}
+block|}
+comment|/*      * Check that our subdisks make sense.  For      * striped and RAID5 plexes, we need at least      * two subdisks, and they must all be the same      * size       */
+if|if
+condition|(
+name|plex
+operator|->
 name|organization
 operator|==
 name|plex_striped
-operator|)
-operator|||
-operator|(
+condition|)
+name|required_sds
+operator|=
+literal|2
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|plex
 operator|->
 name|organization
 operator|==
 name|plex_raid5
-operator|)
+condition|)
+name|required_sds
+operator|=
+literal|3
+expr_stmt|;
+else|else
+name|required_sds
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|required_sds
+operator|>
+literal|0
 condition|)
 block|{
+comment|/* striped or RAID-5 */
 if|if
 condition|(
 name|plex
 operator|->
 name|subdisks
 operator|<
-literal|2
+name|required_sds
 condition|)
 block|{
-name|error
-operator|=
-literal|1
-expr_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"vinum: plex %s does not have at least 2 subdisks\n"
+literal|"vinum: plex %s does not have at least %d subdisks\n"
 argument_list|,
 name|plex
 operator|->
 name|name
+argument_list|,
+name|required_sds
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|diskconfig
-condition|)
-name|set_plex_state
-argument_list|(
-name|plexno
-argument_list|,
-name|plex_down
-argument_list|,
-name|setstate_force
-operator||
-name|setstate_configuring
-argument_list|)
+name|state
+operator|=
+name|plex_faulty
 expr_stmt|;
 block|}
 comment|/* 	 * Now see if the plex size is a multiple of 	 * the stripe size.  If not, trim off the end 	 * of each subdisk and return it to the drive. 	 */
@@ -8340,11 +8458,6 @@ name|remainder
 condition|)
 block|{
 comment|/* no */
-name|struct
-name|sd
-modifier|*
-name|sd
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_INFO
@@ -8430,24 +8543,6 @@ name|remainder
 expr_stmt|;
 comment|/* and shorten it */
 block|}
-if|if
-condition|(
-name|plex
-operator|->
-name|volno
-operator|>=
-literal|0
-condition|)
-comment|/* we're associated with a volume, */
-name|update_volume_config
-argument_list|(
-name|plex
-operator|->
-name|volno
-argument_list|,
-name|diskconfig
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|size
@@ -8470,6 +8565,19 @@ name|sdno
 operator|++
 control|)
 block|{
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8497,16 +8605,8 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|SD
-index|[
-name|plex
+name|sd
 operator|->
-name|sdnos
-index|[
-name|sdno
-index|]
-index|]
-operator|.
 name|sectors
 operator|!=
 name|SD
@@ -8525,10 +8625,6 @@ name|sectors
 operator|)
 condition|)
 block|{
-name|error
-operator|=
-literal|1
-expr_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
@@ -8540,32 +8636,29 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|set_plex_state
-argument_list|(
-name|plexno
-argument_list|,
+name|state
+operator|=
 name|plex_down
-argument_list|,
-name|setstate_force
-operator||
-name|setstate_configuring
-argument_list|)
 expr_stmt|;
 block|}
 name|size
 operator|+=
-name|SD
-index|[
-name|plex
+name|sd
 operator|->
-name|sdnos
-index|[
-name|sdno
-index|]
-index|]
-operator|.
 name|sectors
 expr_stmt|;
+if|if
+condition|(
+name|added_plex
+condition|)
+comment|/* we were added later */
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_stale
+expr_stmt|;
+comment|/* stale until proven otherwise */
 block|}
 if|if
 condition|(
@@ -8584,40 +8677,6 @@ name|organization
 operator|==
 name|plex_raid5
 condition|)
-block|{
-if|if
-condition|(
-name|plex
-operator|->
-name|subdisks
-operator|<
-literal|3
-condition|)
-block|{
-comment|/* nonsense */
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vinum: %s must have at least 3 subdisks\n"
-argument_list|,
-name|plex
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|set_plex_state
-argument_list|(
-name|plexno
-argument_list|,
-name|plex_faulty
-argument_list|,
-name|setstate_force
-operator||
-name|setstate_configuring
-argument_list|)
-expr_stmt|;
-block|}
 name|size
 operator|=
 name|size
@@ -8635,7 +8694,6 @@ literal|1
 operator|)
 expr_stmt|;
 comment|/* less space for RAID-5 */
-block|}
 if|if
 condition|(
 name|plex
@@ -8648,7 +8706,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Correcting length of %s: was %qd, is %qd\n"
+literal|"Correcting length of %s: was %lld, is %lld\n"
 argument_list|,
 name|plex
 operator|->
@@ -8687,11 +8745,7 @@ block|}
 if|if
 condition|(
 operator|!
-operator|(
 name|diskconfig
-operator|||
-name|error
-operator|)
 condition|)
 name|set_plex_state
 argument_list|(
@@ -8703,6 +8757,13 @@ name|setstate_none
 operator||
 name|setstate_configuring
 argument_list|)
+expr_stmt|;
+name|plex
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
 expr_stmt|;
 block|}
 end_function
@@ -8807,6 +8868,14 @@ expr_stmt|;
 comment|/* note it in the plex */
 block|}
 block|}
+name|vol
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* no longer newly born */
 block|}
 end_function
 
@@ -8880,6 +8949,13 @@ comment|/* no more setupstate */
 name|update_volume_state
 argument_list|(
 name|volno
+argument_list|)
+expr_stmt|;
+name|update_volume_config
+argument_list|(
+name|volno
+argument_list|,
+name|diskconfig
 argument_list|)
 expr_stmt|;
 block|}
