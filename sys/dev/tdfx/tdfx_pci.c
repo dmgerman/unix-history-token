@@ -179,6 +179,16 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_comment
+comment|/* This must come first */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_tdfx.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -212,12 +222,6 @@ begin_include
 include|#
 directive|include
 file|<dev/tdfx/tdfx_pci.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_tdfx.h"
 end_include
 
 begin_decl_stmt

@@ -37,8 +37,30 @@ parameter_list|,
 name|high
 parameter_list|)
 define|\
-value|static linux_ioctl_function_t linux_ioctl_##n; \ static struct linux_ioctl_handler n##_handler = {linux_ioctl_##n,low, high}; \ SYSINIT(n##register, SI_SUB_KLD, SI_ORDER_MIDDLE, \ linux_ioctl_register_handler,&n##_handler); \ SYSUNINIT(n##unregister, SI_SUB_KLD, SI_ORDER_MIDDLE, \ linux_ioctl_unregister_handler,&n##_handler);
+value|static linux_ioctl_function_t linux_ioctl_##n; \ static struct linux_ioctl_handler n##_handler = {linux_ioctl_##n, low, high}; \ SYSINIT(n##register, SI_SUB_KLD, SI_ORDER_MIDDLE,\ linux_ioctl_register_handler,&n##_handler); \ SYSUNINIT(n##unregister, SI_SUB_KLD, SI_ORDER_MIDDLE,\ linux_ioctl_unregister_handler,&n##_handler);
 end_define
+
+begin_comment
+comment|/* Prototype for ioctl wrapper */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|linux_ioctl_tdfx
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|linux_ioctl_args
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Values for /dev/3dfx */
