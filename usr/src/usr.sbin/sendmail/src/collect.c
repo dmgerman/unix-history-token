@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.8 (Berkeley) %G%"
+literal|"@(#)collect.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1032,29 +1032,43 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
+if|if
+condition|(
 name|feof
 argument_list|(
 name|InChannel
 argument_list|)
-condition|?
+condition|)
 name|usrerr
-else|:
-name|syserr
-operator|)
-operator|(
+argument_list|(
 literal|"451 collect: %s on connection from %s, from=%s"
-operator|,
+argument_list|,
 name|problem
-operator|,
+argument_list|,
 name|host
-operator|,
+argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_paddr
-operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|syserr
+argument_list|(
+literal|"451 collect: %s on connection from %s, from=%s"
+argument_list|,
+name|problem
+argument_list|,
+name|host
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+argument_list|)
 expr_stmt|;
 comment|/* don't return an error indication */
 name|e
