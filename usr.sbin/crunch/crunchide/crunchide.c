@@ -730,17 +730,6 @@ name|exec_formats
 index|[]
 init|=
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|arch_i386
-argument_list|)
 ifdef|#
 directive|ifdef
 name|NLIST_AOUT
@@ -752,8 +741,6 @@ block|,
 name|hide_aout
 block|,	}
 block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
