@@ -294,7 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|tsb_kernel_phys
 decl_stmt|;
 end_decl_stmt

@@ -19,10 +19,10 @@ begin_struct
 struct|struct
 name|ofw_mem_region
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|mr_start
 decl_stmt|;
-name|vm_offset_t
+name|vm_size_t
 name|mr_size
 decl_stmt|;
 block|}
@@ -36,7 +36,7 @@ block|{
 name|vm_offset_t
 name|om_start
 decl_stmt|;
-name|vm_offset_t
+name|vm_size_t
 name|om_size
 decl_stmt|;
 name|u_long

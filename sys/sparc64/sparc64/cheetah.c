@@ -95,11 +95,11 @@ begin_function
 name|void
 name|cheetah_dcache_page_inval
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|spa
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|void
@@ -173,7 +173,7 @@ begin_function
 name|void
 name|cheetah_icache_page_inval
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{ }

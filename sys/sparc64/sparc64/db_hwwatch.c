@@ -122,7 +122,7 @@ begin_function
 name|int
 name|watch_phys_set_mask
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|u_long
@@ -204,7 +204,7 @@ begin_function
 name|int
 name|watch_phys_set
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|int
@@ -262,7 +262,7 @@ block|}
 end_function
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|watch_phys_get
 parameter_list|(
 name|int
@@ -270,7 +270,7 @@ modifier|*
 name|bm
 parameter_list|)
 block|{
-name|u_long
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|u_long
@@ -318,9 +318,6 @@ name|LSU_PM_SHIFT
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|vm_offset_t
-operator|)
 name|pa
 operator|)
 return|;
@@ -781,7 +778,10 @@ name|void
 parameter_list|)
 block|{
 name|vm_offset_t
-name|wp
+name|va
+decl_stmt|;
+name|vm_paddr_t
+name|pa
 decl_stmt|;
 name|int
 name|bm
@@ -797,7 +797,7 @@ name|watch_phys_active
 argument_list|()
 condition|)
 block|{
-name|wp
+name|pa
 operator|=
 name|watch_phys_get
 argument_list|(
@@ -807,7 +807,7 @@ argument_list|)
 expr_stmt|;
 name|db_watch_print
 argument_list|(
-name|wp
+name|pa
 argument_list|,
 name|bm
 argument_list|)
@@ -830,7 +830,7 @@ name|watch_virt_active
 argument_list|()
 condition|)
 block|{
-name|wp
+name|va
 operator|=
 name|watch_virt_get
 argument_list|(
@@ -840,7 +840,7 @@ argument_list|)
 expr_stmt|;
 name|db_watch_print
 argument_list|(
-name|wp
+name|va
 argument_list|,
 name|bm
 argument_list|)

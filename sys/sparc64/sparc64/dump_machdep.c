@@ -525,7 +525,7 @@ name|dumperinfo
 modifier|*
 name|di
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -591,7 +591,7 @@ name|dumperinfo
 modifier|*
 name|di
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t

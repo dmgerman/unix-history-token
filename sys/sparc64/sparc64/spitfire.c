@@ -127,7 +127,7 @@ begin_function
 name|void
 name|spitfire_dcache_page_inval
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -271,7 +271,7 @@ begin_function
 name|void
 name|spitfire_icache_page_inval
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{

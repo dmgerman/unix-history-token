@@ -213,7 +213,7 @@ typedef|typedef
 name|void
 name|dcache_page_inval_t
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
@@ -224,7 +224,7 @@ typedef|typedef
 name|void
 name|icache_page_inval_t
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
@@ -240,45 +240,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|dcache_page_inval_t
 name|cheetah_dcache_page_inval
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|icache_page_inval_t
 name|cheetah_icache_page_inval
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|dcache_page_inval_t
 name|spitfire_dcache_page_inval
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|icache_page_inval_t
 name|spitfire_icache_page_inval
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -1330,7 +1330,7 @@ begin_function
 name|int
 name|is_physical_memory
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 parameter_list|)
 block|{
@@ -1421,7 +1421,7 @@ specifier|static
 name|vm_pindex_t
 name|color
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|vm_page_t

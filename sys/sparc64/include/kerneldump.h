@@ -19,7 +19,7 @@ begin_struct
 struct|struct
 name|sparc64_dump_reg
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|dr_pa
 decl_stmt|;
 name|vm_offset_t
@@ -43,7 +43,7 @@ block|{
 name|vm_offset_t
 name|dh_hdr_size
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|dh_tsb_pa
 decl_stmt|;
 name|vm_size_t

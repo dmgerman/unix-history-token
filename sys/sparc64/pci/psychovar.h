@@ -27,7 +27,7 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* 	 * PSYCHO register.  we record the base physical address of these 	 * also as it is the base of the entire PSYCHO 	 */
-name|vm_offset_t
+name|vm_paddr_t
 name|sc_basepaddr
 decl_stmt|;
 comment|/* Interrupt Group Number for this device */

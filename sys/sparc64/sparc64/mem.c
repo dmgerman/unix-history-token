@@ -362,13 +362,13 @@ name|vm_offset_t
 name|ova
 decl_stmt|;
 name|vm_offset_t
-name|pa
-decl_stmt|;
-name|vm_offset_t
 name|va
 decl_stmt|;
 name|vm_prot_t
 name|prot
+decl_stmt|;
+name|vm_paddr_t
+name|pa
 decl_stmt|;
 name|vm_size_t
 name|cnt

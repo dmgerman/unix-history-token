@@ -1597,6 +1597,9 @@ name|psycho_desc
 modifier|*
 name|desc
 decl_stmt|;
+name|vm_paddr_t
+name|pcictl_offs
+decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
@@ -1604,8 +1607,6 @@ name|u_int64_t
 name|csr
 decl_stmt|;
 name|u_long
-name|pcictl_offs
-decl_stmt|,
 name|mlen
 decl_stmt|;
 name|int
@@ -1752,7 +1753,7 @@ operator|->
 name|sc_basepaddr
 operator|=
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 name|UPA_REG_PHYS
 argument_list|(
@@ -1806,7 +1807,7 @@ operator|->
 name|sc_basepaddr
 operator|=
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 name|UPA_REG_PHYS
 argument_list|(

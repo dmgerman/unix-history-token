@@ -1019,7 +1019,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|vm_offset_t
+name|bus_addr_t
 modifier|*
 name|lastaddrp
 parameter_list|,
@@ -1412,7 +1412,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 decl_stmt|;
 name|int
@@ -1598,7 +1598,7 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 init|=
 literal|0
@@ -1778,7 +1778,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 decl_stmt|;
 ifdef|#
@@ -2641,7 +2641,7 @@ decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|vm_size_t

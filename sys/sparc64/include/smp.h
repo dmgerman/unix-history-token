@@ -136,7 +136,7 @@ block|{
 name|u_int
 name|ica_mask
 decl_stmt|;
-name|u_long
+name|vm_paddr_t
 name|ica_pa
 decl_stmt|;
 block|}
@@ -436,7 +436,7 @@ name|void
 modifier|*
 name|func
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -521,7 +521,7 @@ name|void
 modifier|*
 name|func
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -1038,7 +1038,7 @@ name|void
 modifier|*
 name|func
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -1061,7 +1061,7 @@ name|void
 modifier|*
 name|func
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{

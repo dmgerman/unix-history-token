@@ -19,7 +19,7 @@ begin_function_decl
 name|int
 name|watch_phys_set_mask
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|u_long
@@ -32,7 +32,7 @@ begin_function_decl
 name|int
 name|watch_phys_set
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|int
@@ -42,7 +42,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|watch_phys_get
 parameter_list|(
 name|int

@@ -150,7 +150,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
@@ -166,8 +166,8 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
-name|pa
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -188,7 +188,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|u_long
@@ -314,14 +314,14 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_start
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
@@ -343,7 +343,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[]
 decl_stmt|;
@@ -365,7 +365,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|msgbuf_phys
 decl_stmt|;
 end_decl_stmt

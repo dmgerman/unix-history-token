@@ -1175,10 +1175,10 @@ modifier|*
 name|pc
 decl_stmt|;
 name|vm_offset_t
-name|pa
-decl_stmt|;
-name|vm_offset_t
 name|va
+decl_stmt|;
+name|vm_paddr_t
+name|pa
 decl_stmt|;
 name|u_int
 name|ctx_min

@@ -75,7 +75,7 @@ name|int64_t
 name|is_cr
 decl_stmt|;
 comment|/* IOMMU control register value */
-name|vm_offset_t
+name|vm_paddr_t
 name|is_flushpa
 index|[
 literal|2
@@ -195,7 +195,7 @@ modifier|*
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|int
 parameter_list|)
