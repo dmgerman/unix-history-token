@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_eiface.c  *  * Copyright (c) 1999-2000, Vitaly V Belekhov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 	$Id: ng_eiface.c,v 1.14 2000/03/15 12:28:44 vitaly Exp $  * $FreeBSD$  */
+comment|/*-  *  * Copyright (c) 1999-2001, Vitaly V Belekhov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -369,30 +369,59 @@ name|ng_type
 name|typestruct
 init|=
 block|{
-name|NG_VERSION
+operator|.
+name|version
+operator|=
+name|NG_ABI_VERSION
 block|,
+operator|.
+name|name
+operator|=
 name|NG_EIFACE_NODE_TYPE
 block|,
-name|NULL
-block|,
+operator|.
+name|constructor
+operator|=
 name|ng_eiface_constructor
 block|,
+operator|.
+name|rcvmsg
+operator|=
 name|ng_eiface_rcvmsg
 block|,
+operator|.
+name|shutdown
+operator|=
 name|ng_eiface_rmnode
 block|,
+operator|.
+name|newhook
+operator|=
 name|ng_eiface_newhook
 block|,
-name|NULL
-block|,
+operator|.
+name|connect
+operator|=
 name|ng_eiface_connect
 block|,
+operator|.
+name|rcvdata
+operator|=
 name|ng_eiface_rcvdata
 block|,
+operator|.
+name|rcvdataq
+operator|=
 name|ng_eiface_rcvdata
 block|,
+operator|.
+name|disconnect
+operator|=
 name|ng_eiface_disconnect
 block|,
+operator|.
+name|cmdlist
+operator|=
 name|ng_eiface_cmdlist
 block|}
 decl_stmt|;
@@ -640,9 +669,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
 name|splx
 argument_list|(
 name|s
@@ -818,8 +844,7 @@ name|IFF_OACTIVE
 expr_stmt|;
 return|return;
 block|}
-comment|/* Berkeley packet filter */
-comment|/* 	 * Pass packet to bpf if there is a listener. 	 */
+comment|/* 	 * Berkeley packet filter. 	 * Pass packet to bpf if there is a listener. 	 */
 if|if
 condition|(
 name|ifp
@@ -842,7 +867,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* Send packet; if hook is not connected, mbuf will get freed. */
+comment|/* 	 * Send packet; if hook is not connected, mbuf will get 	 * freed. 	 */
 name|NG_SEND_DATA
 argument_list|(
 name|error
@@ -1139,11 +1164,12 @@ operator|*
 name|nodep
 expr_stmt|;
 comment|/* Link together node and private info */
+name|NG_NODE_SET_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
-operator|=
+argument_list|,
 name|priv
+argument_list|)
 expr_stmt|;
 name|priv
 operator|->
@@ -1223,7 +1249,13 @@ operator|->
 name|if_addrhead
 argument_list|)
 expr_stmt|;
-comment|/* Give this node name * 	bzero(ifname, sizeof(ifname)); 	sprintf(ifname, "if%s%d", ifp->if_name, ifp->if_unit); 	(void) ng_name_node(node, ifname); 	*/
+if|#
+directive|if
+literal|0
+comment|/* Give this node name */
+block|bzero(ifname, sizeof(ifname)); 	sprintf(ifname, "if%s%d", ifp->if_name, ifp->if_unit); 	(void)ng_name_node(node, ifname);
+endif|#
+directive|endif
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(
@@ -1265,9 +1297,10 @@ block|{
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1302,14 +1335,15 @@ name|ether
 operator|=
 name|hook
 expr_stmt|;
+name|NG_HOOK_SET_PRIVATE
+argument_list|(
 name|hook
-operator|->
-name|private
-operator|=
+argument_list|,
 operator|&
 name|priv
 operator|->
 name|ether
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1352,9 +1386,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -1740,6 +1775,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+comment|/* end of inner switch() */
 break|break;
 default|default:
 name|error
@@ -1748,32 +1784,22 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|rptr
-condition|)
-operator|*
-name|rptr
-operator|=
-name|resp
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|resp
-condition|)
-name|FREE
+name|NG_RESPOND_MSG
 argument_list|(
+name|error
+argument_list|,
+name|node
+argument_list|,
+name|retaddr
+argument_list|,
 name|resp
 argument_list|,
-name|M_NETGRAPH
+name|rptr
 argument_list|)
 expr_stmt|;
-name|FREE
+name|NG_FREE_MSG
 argument_list|(
 name|msg
-argument_list|,
-name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 return|return
@@ -1785,7 +1811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Recive data from a hook. Pass the packet to the ether_input routine.  */
+comment|/*  * Receive data from a hook. Pass the packet to the ether_input routine.  */
 end_comment
 
 begin_function
@@ -1809,11 +1835,13 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|NG_HOOK_NODE
+argument_list|(
 name|hook
-operator|->
-name|node
-operator|->
-name|private
+argument_list|)
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -1827,10 +1855,6 @@ name|ifp
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|error
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|ether_header
@@ -1840,7 +1864,6 @@ decl_stmt|;
 name|u_short
 name|ether_type
 decl_stmt|;
-comment|/* Meta-data is end its life here... */
 name|NG_FREE_META
 argument_list|(
 name|meta
@@ -1875,13 +1898,11 @@ operator|&
 name|IFF_UP
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENETDOWN
 operator|)
 return|;
-block|}
 comment|/* Note receiving interface */
 name|m
 operator|->
@@ -1950,7 +1971,6 @@ name|m
 operator|->
 name|m_len
 condition|)
-block|{
 name|m
 operator|->
 name|m_data
@@ -1961,9 +1981,7 @@ operator|*
 name|eh
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|ether_type
@@ -1992,7 +2010,6 @@ operator|->
 name|m_data
 expr_stmt|;
 block|}
-block|}
 name|splx
 argument_list|(
 name|s
@@ -2010,7 +2027,7 @@ expr_stmt|;
 comment|/* Done */
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -2033,9 +2050,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -2119,11 +2137,13 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|NG_HOOK_NODE
+argument_list|(
 name|hook
-operator|->
-name|node
-operator|->
-name|private
+argument_list|)
+argument_list|)
 decl_stmt|;
 name|priv
 operator|->
