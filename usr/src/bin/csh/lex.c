@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.17 (Berkeley) %G%"
+literal|"@(#)lex.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2271,6 +2271,8 @@ name|gmodflag
 init|=
 literal|0
 decl_stmt|;
+do|do
+block|{
 operator|*
 name|np
 operator|++
@@ -2356,6 +2358,26 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+do|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getC
+argument_list|(
+name|DOEXCL
+argument_list|)
+operator|)
+operator|==
+literal|':'
+condition|)
+do|;
+name|ungetD
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|ungetD
@@ -3044,6 +3066,8 @@ name|Char
 argument_list|)
 index|]
 decl_stmt|;
+do|do
+block|{
 name|exclnxt
 operator|=
 literal|0
@@ -3603,6 +3627,26 @@ argument_list|,
 name|en
 argument_list|,
 name|global
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getC
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|':'
+condition|)
+do|;
+name|unreadc
+argument_list|(
+name|c
 argument_list|)
 expr_stmt|;
 return|return
