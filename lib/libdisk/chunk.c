@@ -1346,6 +1346,9 @@ block|{
 case|case
 name|p_i386
 case|:
+case|case
+name|p_amd64
+case|:
 switch|switch
 condition|(
 name|type
@@ -1707,6 +1710,10 @@ operator|||
 name|platform
 operator|==
 name|p_pc98
+operator|||
+name|platform
+operator|==
+name|p_amd64
 condition|)
 block|{
 if|if

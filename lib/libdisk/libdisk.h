@@ -69,6 +69,8 @@ block|,
 name|p_ia64
 block|,
 name|p_ppc
+block|,
+name|p_amd64
 block|}
 enum|;
 end_enum
@@ -192,6 +194,11 @@ directive|if
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
 argument_list|)
 comment|/* the i386 needs extra help... */
 name|u_char

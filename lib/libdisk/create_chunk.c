@@ -772,6 +772,11 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|struct
 name|chunk
 modifier|*
@@ -836,6 +841,11 @@ operator|||
 name|defined
 argument_list|(
 name|__ia64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
 argument_list|)
 name|c2
 operator|->

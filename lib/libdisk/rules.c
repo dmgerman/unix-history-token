@@ -1092,6 +1092,9 @@ block|{
 case|case
 name|p_i386
 case|:
+case|case
+name|p_amd64
+case|:
 name|Rule_000
 argument_list|(
 name|d

@@ -252,6 +252,13 @@ argument_list|(
 name|__ppc__
 argument_list|)
 name|p_ppc
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+name|p_amd64
 else|#
 directive|else
 name|IHAVENOIDEA
@@ -2374,6 +2381,11 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|printf
 argument_list|(
 literal|"  boot1=%p, boot2=%p, bootmgr=%p\n"
@@ -2554,6 +2566,11 @@ directive|if
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
 argument_list|)
 if|if
 condition|(
@@ -3211,6 +3228,11 @@ directive|if
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
 argument_list|)
 if|if
 condition|(
