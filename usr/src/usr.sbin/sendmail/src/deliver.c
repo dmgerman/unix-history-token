@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.156 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.157 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4963,7 +4963,7 @@ name|FileMailer
 operator|||
 name|stat
 argument_list|(
-name|to
+name|tochain
 operator|->
 name|q_user
 argument_list|,
