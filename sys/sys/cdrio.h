@@ -121,6 +121,61 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|cdr_cue_entry
+block|{
+name|u_int8_t
+name|adr
+range|:
+literal|4
+decl_stmt|;
+name|u_int8_t
+name|ctl
+range|:
+literal|4
+decl_stmt|;
+name|u_int8_t
+name|track
+decl_stmt|;
+name|u_int8_t
+name|index
+decl_stmt|;
+name|u_int8_t
+name|dataform
+decl_stmt|;
+name|u_int8_t
+name|scms
+decl_stmt|;
+name|u_int8_t
+name|min
+decl_stmt|;
+name|u_int8_t
+name|sec
+decl_stmt|;
+name|u_int8_t
+name|frame
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cdr_cuesheet
+block|{
+name|int32_t
+name|len
+decl_stmt|;
+name|struct
+name|cdr_cue_entry
+modifier|*
+name|entries
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -159,57 +214,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|CDRIOCOPENDISK
-value|_IO('c', 102)
+name|CDRIOCINITWRITER
+value|_IOW('c', 102, int)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCCLOSEDISK
-value|_IOW('c', 103, int)
+name|CDRIOCINITTRACK
+value|_IOW('c', 103, struct cdr_track)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCOPENTRACK
-value|_IOW('c', 104, struct cdr_track)
+name|CDRIOCSENDCUE
+value|_IOW('c', 104, struct cdr_cuesheet)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCCLOSETRACK
+name|CDRIOCFLUSH
 value|_IO('c', 105)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCWRITESPEED
+name|CDRIOCFIXATE
 value|_IOW('c', 106, int)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCGETBLOCKSIZE
-value|_IOR('c', 107, int)
+name|CDRIOCREADSPEED
+value|_IOW('c', 107, int)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCSETBLOCKSIZE
+name|CDRIOCWRITESPEED
 value|_IOW('c', 108, int)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CDRIOCGETPROGRESS
+name|CDRIOCGETBLOCKSIZE
 value|_IOR('c', 109, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDRIOCSETBLOCKSIZE
+value|_IOW('c', 110, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDRIOCGETPROGRESS
+value|_IOR('c', 111, int)
 end_define
 
 begin_endif
