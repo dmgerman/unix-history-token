@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1989 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.14 (Berkeley) %G%"
+literal|"@(#)mount.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -212,7 +218,6 @@ value|(!strcmp(type, FSTAB_RW) || !strcmp(type, FSTAB_RQ))
 end_define
 
 begin_decl_stmt
-specifier|static
 name|int
 name|fake
 decl_stmt|,
@@ -224,6 +229,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
+name|mntname
+decl_stmt|,
 modifier|*
 modifier|*
 name|envp
@@ -427,6 +435,10 @@ name|mnttype
 operator|=
 name|MOUNT_UFS
 expr_stmt|;
+name|mntname
+operator|=
+literal|"ufs"
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -503,17 +515,14 @@ break|break;
 case|case
 literal|'t'
 case|:
-if|if
-condition|(
 name|mnttype
 operator|=
 name|getmnttype
 argument_list|(
 name|optarg
 argument_list|)
-condition|)
+expr_stmt|;
 break|break;
-comment|/* fall through */
 case|case
 literal|'?'
 case|:
@@ -979,6 +988,19 @@ index|[
 literal|50
 index|]
 decl_stmt|;
+name|char
+name|execname
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
+decl_stmt|,
+name|flagval
+index|[
+literal|12
+index|]
+decl_stmt|;
 name|flags
 operator|=
 literal|0
@@ -1020,6 +1042,10 @@ argument_list|,
 operator|&
 name|flags
 argument_list|)
+expr_stmt|;
+name|argc
+operator|=
+literal|1
 expr_stmt|;
 switch|switch
 condition|(
@@ -1138,51 +1164,87 @@ name|MFS
 case|case
 name|MOUNT_MFS
 case|:
+name|mntname
+operator|=
+literal|"memfs"
+expr_stmt|;
+if|if
+condition|(
+name|options
+condition|)
+name|argc
+operator|+=
+name|getmfsopts
+argument_list|(
+name|options
+argument_list|,
+operator|&
+name|argv
+index|[
+name|argc
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mntopts
+condition|)
+name|argc
+operator|+=
+name|getmfsopts
+argument_list|(
+name|mntopts
+argument_list|,
+operator|&
+name|argv
+index|[
+name|argc
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* fall through to */
+endif|#
+directive|endif
+comment|/* MFS */
+default|default:
 name|argv
 index|[
 literal|0
 index|]
 operator|=
-literal|"memfs"
+name|mntname
 expr_stmt|;
+if|if
+condition|(
+name|flags
+condition|)
+block|{
+name|argv
+index|[
 name|argc
+operator|++
+index|]
 operator|=
-literal|1
+literal|"-F"
 expr_stmt|;
-if|if
-condition|(
-name|options
-condition|)
-name|argc
-operator|+=
-name|getmfsopts
+name|sprintf
 argument_list|(
-name|options
+name|flagval
 argument_list|,
-operator|&
+literal|"%d"
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 name|argv
 index|[
 name|argc
+operator|++
 index|]
-argument_list|)
+operator|=
+name|flagval
 expr_stmt|;
-if|if
-condition|(
-name|mntopts
-condition|)
-name|argc
-operator|+=
-name|getmfsopts
-argument_list|(
-name|mntopts
-argument_list|,
-operator|&
-name|argv
-index|[
-name|argc
-index|]
-argument_list|)
-expr_stmt|;
+block|}
 name|argv
 index|[
 name|argc
@@ -1199,6 +1261,17 @@ index|]
 operator|=
 name|name
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|execname
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|_PATH_EXECDIR
+argument_list|,
+name|mntname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|verbose
@@ -1206,14 +1279,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"exec:"
+literal|"exec: %s"
+argument_list|,
+name|execname
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -1261,7 +1336,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"mount: vfork for memfs"
+literal|"mount: vfork starting file system"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1307,7 +1382,7 @@ operator|)
 return|;
 name|spec
 operator|=
-literal|"memfs"
+name|mntname
 expr_stmt|;
 goto|goto
 name|out
@@ -1315,7 +1390,7 @@ goto|;
 block|}
 name|execve
 argument_list|(
-name|_PATH_MEMFS
+name|execname
 argument_list|,
 name|argv
 argument_list|,
@@ -1324,36 +1399,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|_PATH_MEMFS
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MFS */
-default|default:
-if|if
-condition|(
-name|opflags
-operator|&
-name|ISBGRND
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: unknown mount type\n"
-argument_list|,
-name|mnttype
+name|execname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1651,6 +1697,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|mntname
+operator|=
+name|fstype
+expr_stmt|;
 if|if
 condition|(
 operator|!
