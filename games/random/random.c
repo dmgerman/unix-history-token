@@ -298,11 +298,12 @@ expr_stmt|;
 name|srandom
 argument_list|(
 call|(
-name|u_int
+name|unsigned
+name|long
 call|)
 argument_list|(
 name|now
-operator|+
+operator|^
 name|getpid
 argument_list|()
 argument_list|)
