@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.41 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.42 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.41 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.42 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1746,9 +1746,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getcanonname(%s)\n"
+literal|"dns_getcanonname(%s, trymx=%d)\n"
 argument_list|,
 name|host
+argument_list|,
+name|trymx
 argument_list|)
 expr_stmt|;
 if|if
@@ -2019,7 +2021,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getcanonname: trying %s.%s (%s)\n"
+literal|"dns_getcanonname: trying %s.%s (%s)\n"
 argument_list|,
 name|host
 argument_list|,
