@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.44	82/12/19	*/
+comment|/*	vfs_syscalls.c	4.45	82/12/24	*/
 end_comment
 
 begin_include
@@ -2274,6 +2274,12 @@ name|i_atime
 expr_stmt|;
 name|ds
 operator|.
+name|st_spare1
+operator|=
+literal|0
+expr_stmt|;
+name|ds
+operator|.
 name|st_mtime
 operator|=
 name|ip
@@ -2282,11 +2288,23 @@ name|i_mtime
 expr_stmt|;
 name|ds
 operator|.
+name|st_spare2
+operator|=
+literal|0
+expr_stmt|;
+name|ds
+operator|.
 name|st_ctime
 operator|=
 name|ip
 operator|->
 name|i_ctime
+expr_stmt|;
+name|ds
+operator|.
+name|st_spare3
+operator|=
+literal|0
 expr_stmt|;
 comment|/* this doesn't belong here */
 if|if
@@ -2336,6 +2354,29 @@ operator|->
 name|i_fs
 operator|->
 name|fs_bsize
+expr_stmt|;
+name|ds
+operator|.
+name|st_spare4
+index|[
+literal|0
+index|]
+operator|=
+name|ds
+operator|.
+name|st_spare4
+index|[
+literal|1
+index|]
+operator|=
+name|ds
+operator|.
+name|st_spare4
+index|[
+literal|2
+index|]
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
