@@ -1,34 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.7 1997/06/09 03:27:25 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.4.6.2 1997/08/25 00:34:29 brian Exp $  *  *	TODO:  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LCP_H_
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LPC_H_
+name|REJECTED
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+value|((p)->his_reject& (1<<(x)))
 end_define
 
 begin_struct
 struct|struct
 name|lcpstate
 block|{
-name|u_long
+name|u_int16_t
 name|his_mru
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|his_accmap
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|his_magic
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|his_lqrperiod
 decl_stmt|;
 name|u_char
@@ -40,16 +40,16 @@ decl_stmt|;
 name|u_short
 name|his_auth
 decl_stmt|;
-name|u_long
+name|u_short
 name|want_mru
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|want_accmap
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|want_magic
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|want_lqrperiod
 decl_stmt|;
 name|u_char
@@ -61,11 +61,11 @@ decl_stmt|;
 name|u_short
 name|want_auth
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|his_reject
 decl_stmt|;
 comment|/* Request codes rejected by peer */
-name|u_long
+name|u_int32_t
 name|my_reject
 decl_stmt|;
 comment|/* Request codes I have rejected */
@@ -193,74 +193,34 @@ value|10
 end_define
 
 begin_comment
-comment|/* Self-Dscribing-Padding */
+comment|/* Self-Describing-Padding */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TY_NUMMODE
-value|11
+name|MAX_LCP_OPT_LEN
+value|10
 end_define
-
-begin_comment
-comment|/* Numbered-Mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TY_XXXXXX
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|TY_CALLBACK
-value|13
-end_define
-
-begin_comment
-comment|/* Callback */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TY_YYYYYY
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|TY_COMPFRAME
-value|15
-end_define
-
-begin_comment
-comment|/* Compound-Frames */
-end_comment
 
 begin_struct
 struct|struct
-name|lqrreq
+name|lcp_opt
 block|{
 name|u_char
-name|type
+name|id
 decl_stmt|;
 name|u_char
-name|length
+name|len
 decl_stmt|;
-name|u_short
-name|proto
+name|u_char
+name|data
+index|[
+name|MAX_LCP_OPT_LEN
+operator|-
+literal|2
+index|]
 decl_stmt|;
-comment|/* Quality protocol */
-name|u_long
-name|period
-decl_stmt|;
-comment|/* Reporting interval */
 block|}
 struct|;
 end_struct
@@ -270,6 +230,14 @@ specifier|extern
 name|struct
 name|lcpstate
 name|LcpInfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fsm
+name|LcpFsm
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +280,6 @@ name|void
 name|LcpOpen
 parameter_list|(
 name|int
-name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -337,10 +304,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|int
+name|LcpPutConf
+parameter_list|(
+name|int
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|lcp_opt
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ReportLcpStatus
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|LcpInput
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

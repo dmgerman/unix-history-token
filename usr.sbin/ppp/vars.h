@@ -1,30 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.7.2.14 1997/09/23 00:01:28 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.7.2.15 1997/09/26 00:25:14 brian Exp $  *  *	TODO:  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_VARS_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_VARS_H_
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_struct
 struct|struct
 name|confdesc
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -76,42 +59,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|ConfVjcomp
+name|ConfAcfcomp
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfLqr
+name|ConfChap
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfChap
+name|ConfDeflate
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfPap
+name|ConfLqr
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfAcfcomp
+name|ConfPap
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfProtocomp
+name|ConfPppdDeflate
 value|5
 end_define
 
@@ -125,36 +108,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|ConfProxy
+name|ConfProtocomp
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfMSExt
+name|ConfVjcomp
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfPasswdAuth
+name|ConfMSExt
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|ConfUtmp
+name|ConfPasswdAuth
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXCONFS
+name|ConfProxy
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|ConfThroughput
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ConfUtmp
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCONFS
+value|14
 end_define
 
 begin_define
@@ -194,11 +198,11 @@ begin_struct
 struct|struct
 name|pppvars
 block|{
-name|u_long
+name|u_short
 name|var_mru
 decl_stmt|;
 comment|/* Initial MRU value */
-name|u_long
+name|u_short
 name|pref_mtu
 decl_stmt|;
 comment|/* Preferred MTU value */
@@ -255,12 +259,20 @@ name|loopback
 decl_stmt|;
 comment|/* Turn around packets addressed to me */
 name|char
+name|modem_devlist
+index|[
+name|LINE_LEN
+index|]
+decl_stmt|;
+comment|/* Comma-separated list of devices */
+name|char
 name|modem_dev
 index|[
 literal|40
 index|]
 decl_stmt|;
 comment|/* Name of device / host:port */
+specifier|const
 name|char
 modifier|*
 name|base_modem_dev
@@ -269,7 +281,7 @@ comment|/* Pointer to base of modem_dev */
 name|int
 name|open_mode
 decl_stmt|;
-comment|/* LCP open mode */
+comment|/* Delay before first LCP REQ (-1 = passive) */
 define|#
 directive|define
 name|LOCAL_AUTH
@@ -302,14 +314,14 @@ value|0x02
 name|char
 name|dial_script
 index|[
-literal|200
+name|SCRIPT_LEN
 index|]
 decl_stmt|;
 comment|/* Dial script */
 name|char
 name|login_script
 index|[
-literal|200
+name|SCRIPT_LEN
 index|]
 decl_stmt|;
 comment|/* Login script */
@@ -327,6 +339,26 @@ literal|50
 index|]
 decl_stmt|;
 comment|/* PAP/CHAP system name */
+name|char
+name|local_auth_key
+index|[
+literal|50
+index|]
+decl_stmt|;
+comment|/* Local auth passwd */
+name|int
+name|have_local_auth_key
+decl_stmt|;
+comment|/* Local auth passwd specified ? */
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+name|int
+name|use_MSChap
+decl_stmt|;
+comment|/* Use MSCHAP encryption */
+endif|#
+directive|endif
 name|char
 name|phone_numbers
 index|[
@@ -361,7 +393,7 @@ comment|/* Local short Host Name */
 name|char
 name|hangup_script
 index|[
-literal|200
+name|SCRIPT_LEN
 index|]
 decl_stmt|;
 comment|/* Hangup script before modem is closed */
@@ -400,6 +432,13 @@ define|#
 directive|define
 name|VarDevice
 value|pppVars.modem_dev
+end_define
+
+begin_define
+define|#
+directive|define
+name|VarDeviceList
+value|pppVars.modem_devlist
 end_define
 
 begin_define
@@ -499,6 +538,38 @@ directive|define
 name|VarAuthName
 value|pppVars.auth_name
 end_define
+
+begin_define
+define|#
+directive|define
+name|VarLocalAuthKey
+value|pppVars.local_auth_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|VarHaveLocalAuthKey
+value|pppVars.have_local_auth_key
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VarMSChap
+value|pppVars.use_MSChap
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -684,6 +755,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|char
+name|VarVersion
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|VarLocalVersion
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|Utmp
 decl_stmt|;
@@ -694,20 +782,23 @@ comment|/* Are we in /etc/utmp ? */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|ipInOctets
-decl_stmt|,
-name|ipOutOctets
-decl_stmt|,
 name|ipKeepAlive
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|ipConnectSecs
-decl_stmt|,
-name|ipIdleSecs
+name|reconnectState
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|reconnectCount
 decl_stmt|;
 end_decl_stmt
 
@@ -747,25 +838,90 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do                                          \     if (reconnectState == RECON_UNKNOWN) { \       reconnectState = x;                  \       if (x == RECON_FALSE)                   \         reconnectCount = 0;                   \     }                                         \   while(0)
+value|do                                          \     if (reconnectState == RECON_UNKNOWN) {    \       reconnectState = x;                     \       if (x == RECON_FALSE)                   \         reconnectCount = 0;                   \     }                                         \   while(0)
 end_define
-
-begin_decl_stmt
-name|int
-name|reconnectState
-decl_stmt|,
-name|reconnectCount
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * This is the logic behind the reconnect variables:  * We have four reconnect "states".  We start off not requiring anything  * from the reconnect code (reconnectState == RECON_UNKNOWN).  If the  * line is brought down (via LcpClose() or LcpDown()), we have to decide  * whether to set to RECON_TRUE or RECON_FALSE.  It's only here that we  * know the correct action.  Once we've decided, we don't want that  * decision to be overridden (hence the above reconnect() macro) - If we  * call LcpClose, the ModemTimeout() still gets to "notice" that the line  * is down.  When it "notice"s, it should only set RECON_TRUE if a decision  * hasn't already been made.  *  * In main.c, when we notice we have RECON_TRUE, we must only action  * it once.  The fourth "state" is where we're bringing the line up,  * but if we call LcpClose for any reason (failed PAP/CHAP etc) we  * don't want to set to RECON_{TRUE,FALSE}.  *  * If we get a connection or give up dialing, we go back to RECON_UNKNOWN.  * If we get give up dialing or reconnecting or if we chose to down the  * connection, we set reconnectCount back to zero.  *  */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|int
+name|EnableCommand
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DisableCommand
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|AcceptCommand
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DenyCommand
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|LocalAuthCommand
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|DisplayCommand
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

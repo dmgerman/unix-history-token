@@ -1,18 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.h,v 1.6 1997/06/09 03:27:16 brian Exp $  *  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.h,v 1.1.4.4 1997/08/25 00:34:22 brian Exp $  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_CHAT_H_
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CHAT_H_
+name|VECSIZE
+parameter_list|(
+name|v
+parameter_list|)
+value|(sizeof(v) / sizeof(v[0]))
 end_define
 
 begin_function_decl
@@ -21,6 +19,7 @@ name|char
 modifier|*
 name|ExpandString
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -51,20 +50,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|VECSIZE
-parameter_list|(
-name|v
-parameter_list|)
-value|(sizeof(v) / sizeof(v[0]))
-end_define
+begin_comment
+comment|/* Mangles the first arg ! */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|int
+name|DoChat
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* passes arg to MakeArgs() */
+end_comment
 
 end_unit
 

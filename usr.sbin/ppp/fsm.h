@@ -1,37 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.9 1997/08/20 23:47:43 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.5.2.3 1997/08/25 00:34:26 brian Exp $  *  *	TODO:  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_FSM_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_FSM_H_
-end_define
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"timeout.h"
-end_include
 
 begin_comment
 comment|/*  *  State of machine  */
@@ -152,21 +122,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPEN_ACTIVE
-value|0
+name|MODE_ACK
+value|4
 end_define
+
+begin_comment
+comment|/* pseudo mode for ccp negotiations */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|OPEN_PASSIVE
-value|1
+value|-1
 end_define
 
 begin_struct
 struct|struct
 name|fsm
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -186,7 +161,7 @@ name|int
 name|state
 decl_stmt|;
 comment|/* State of the machine */
-name|int
+name|u_char
 name|reqid
 decl_stmt|;
 comment|/* Next request id */
@@ -197,15 +172,16 @@ comment|/* Restart counter value */
 name|int
 name|maxconfig
 decl_stmt|;
-name|int
-name|reqcode
-decl_stmt|;
-comment|/* Request code sent */
 name|struct
 name|pppTimer
 name|FsmTimer
 decl_stmt|;
 comment|/* Restart Timer */
+name|struct
+name|pppTimer
+name|OpenTimer
+decl_stmt|;
+comment|/* Delay before opening */
 comment|/*    * This timer times the ST_STOPPED state out after the given value    * (specified via "set stopped ...").  Although this isn't specified in the    * rfc, the rfc *does* say that "the application may use higher level    * timers to avoid deadlock". The StoppedTimer takes effect when the other    * side ABENDs rather than going into ST_ACKSENT (and sending the ACK),    * causing ppp to time out and drop into ST_STOPPED.  At this point,    * nothing will change this state :-(    */
 name|struct
 name|pppTimer
@@ -492,6 +468,7 @@ name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -515,6 +492,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|AckBuff
 index|[
@@ -524,6 +502,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|NakBuff
 index|[
@@ -533,6 +512,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|RejBuff
 index|[
@@ -542,6 +522,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 name|ReqBuff
 index|[
@@ -551,13 +532,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_char
 modifier|*
 name|ackp
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
 modifier|*
 name|nakp
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
 modifier|*
 name|rejp
 decl_stmt|;
@@ -581,20 +573,6 @@ parameter_list|(
 name|struct
 name|fsm
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|NewState
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -675,136 +653,14 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|FsmRecvConfigReq
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-parameter_list|,
-name|struct
-name|fsmheader
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|FsmRecvConfigAck
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-parameter_list|,
-name|struct
-name|fsmheader
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|FsmRecvConfigNak
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-parameter_list|,
-name|struct
-name|fsmheader
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|FsmRecvTermReq
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-parameter_list|,
-name|struct
-name|fsmheader
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|FsmRecvTermAck
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-parameter_list|,
-name|struct
-name|fsmheader
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|FsmClose
 parameter_list|(
 name|struct
 name|fsm
 modifier|*
-name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|fsm
-name|LcpFsm
-decl_stmt|,
-name|IpcpFsm
-decl_stmt|,
-name|CcpFsm
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FSM_H_ */
-end_comment
 
 end_unit
 
