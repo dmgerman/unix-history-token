@@ -255,6 +255,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
