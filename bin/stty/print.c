@@ -143,6 +143,8 @@ name|wp
 parameter_list|,
 name|ldisc
 parameter_list|,
+name|timeout
+parameter_list|,
 name|fmt
 parameter_list|)
 name|struct
@@ -157,6 +159,9 @@ name|wp
 decl_stmt|;
 name|int
 name|ldisc
+decl_stmt|;
+name|int
+name|timeout
 decl_stmt|;
 name|enum
 name|FMT
@@ -308,7 +313,7 @@ name|cnt
 operator|+=
 name|printf
 argument_list|(
-literal|" %d rows; %d columns;"
+literal|" %d rows; %d columns; drainwait %d seconds;"
 argument_list|,
 name|wp
 operator|->
@@ -317,6 +322,8 @@ argument_list|,
 name|wp
 operator|->
 name|ws_col
+argument_list|,
+name|timeout
 argument_list|)
 expr_stmt|;
 if|if

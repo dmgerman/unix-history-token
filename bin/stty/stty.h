@@ -39,6 +39,10 @@ name|int
 name|wset
 decl_stmt|;
 comment|/* need window set */
+name|int
+name|tset
+decl_stmt|;
+comment|/* need timeout set */
 name|char
 modifier|*
 name|arg
@@ -54,6 +58,10 @@ name|winsize
 name|win
 decl_stmt|;
 comment|/* window info */
+name|int
+name|timeout
+decl_stmt|;
+comment|/* drain wait time */
 block|}
 struct|;
 end_struct
