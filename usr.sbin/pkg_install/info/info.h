@@ -166,6 +166,13 @@ name|SHOW_CKSUM
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHOW_FMTREV
+value|0x8000
+end_define
+
 begin_struct
 struct|struct
 name|which_entry
@@ -359,6 +366,21 @@ begin_function_decl
 specifier|extern
 name|void
 name|show_origin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Package
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|show_fmtrev
 parameter_list|(
 specifier|const
 name|char
