@@ -182,6 +182,8 @@ block|,
 name|zf_seek
 block|,
 name|zf_stat
+block|,
+name|null_readdir
 block|}
 decl_stmt|;
 end_decl_stmt

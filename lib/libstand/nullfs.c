@@ -180,5 +180,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|null_readdir
+parameter_list|(
+name|struct
+name|open_file
+modifier|*
+name|f
+parameter_list|,
+name|struct
+name|dirent
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|errno
+operator|=
+name|EIO
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
 end_unit
 

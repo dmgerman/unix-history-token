@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: nfs.c,v 1.2 1998/01/24 12:43:09 drochner Exp $	*/
 end_comment
 
@@ -403,6 +407,8 @@ block|,
 name|nfs_seek
 block|,
 name|nfs_stat
+block|,
+name|null_readdir
 block|}
 decl_stmt|;
 end_decl_stmt
