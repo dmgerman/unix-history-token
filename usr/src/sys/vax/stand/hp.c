@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.16	83/02/20	*/
+comment|/*	hp.c	4.17	83/03/01	*/
 end_comment
 
 begin_comment
@@ -159,26 +159,27 @@ name|MBDT_ML11B
 block|,
 operator|-
 literal|1
-comment|/*9755*/
 block|,
+comment|/* 9755 */
 operator|-
 literal|1
-comment|/*9730*/
 block|,
+comment|/* 9730 */
 operator|-
 literal|1
-comment|/*Cap*/
 block|,
+comment|/* Capricorn */
 operator|-
 literal|1
+block|,
 comment|/* Eagle */
-block|,
-operator|-
-literal|1
-comment|/* Eagle */
-block|,
 name|MBDT_RM02
 block|,
+comment|/* actually something else */
+operator|-
+literal|1
+block|,
+comment|/* 9300 */
 literal|0
 block|}
 decl_stmt|;
@@ -262,12 +263,60 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ssect
+index|[
+name|MAXNMBA
+operator|*
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 when on track w/skip sector */
+end_comment
+
+begin_decl_stmt
+name|int
+name|hpdebug
+index|[
+name|MAXNMBA
+operator|*
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|HPF_BSEDEBUG
+value|01
+end_define
+
+begin_comment
+comment|/* debugging bad sector forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPF_ECCDEBUG
+value|02
+end_define
+
+begin_comment
+comment|/* debugging ecc correction */
+end_comment
+
+begin_decl_stmt
+name|int
 name|sectsiz
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When awaiting command completion, don't  * hang on to the status register since  * this ties up the controller.  */
+comment|/*  * When awaiting command completion, don't  * hang on to the status register since  * this ties up some controllers.  */
 end_comment
 
 begin_define
@@ -277,6 +326,7 @@ name|HPWAIT
 parameter_list|(
 name|addr
 parameter_list|)
+define|\
 value|while ((((addr)->hpds)&HPDS_DRY)==0) DELAY(500);
 end_define
 
@@ -342,6 +392,8 @@ literal|0
 condition|)
 block|{
 specifier|register
+name|i
+operator|,
 name|type
 operator|=
 name|hpaddr
@@ -350,10 +402,6 @@ name|hpdt
 operator|&
 name|MBDT_TYPE
 expr_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|iob
 name|tio
@@ -433,7 +481,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Read in the bad sector table: 		 *	copy the contents of the io structure 		 *	to tio for use during the bb pointer 		 *	read operation. 		 */
+comment|/* 		 * Read in the bad sector table. 		 */
 name|st
 operator|=
 operator|&
@@ -644,16 +692,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
-name|int
-name|ssect
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to 1 if we are on a track with skip sectors */
-end_comment
-
 begin_expr_stmt
 name|hpstrategy
 argument_list|(
@@ -690,6 +728,8 @@ argument_list|)
 decl_stmt|;
 name|daddr_t
 name|bn
+decl_stmt|,
+name|startblock
 decl_stmt|;
 name|struct
 name|hpdevice
@@ -730,9 +770,6 @@ decl_stmt|,
 name|bytecnt
 decl_stmt|,
 name|bytesleft
-decl_stmt|;
-name|daddr_t
-name|startblock
 decl_stmt|;
 name|char
 modifier|*
@@ -817,6 +854,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|ssect
+index|[
+name|unit
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -883,6 +923,9 @@ operator|->
 name|nsect
 operator|+
 name|ssect
+index|[
+name|unit
+index|]
 expr_stmt|;
 name|HPWAIT
 argument_list|(
@@ -950,6 +993,7 @@ argument_list|(
 name|hpaddr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Successful data transfer, return. 	 */
 if|if
 condition|(
 operator|(
@@ -977,9 +1021,7 @@ operator|(
 name|bytecnt
 operator|)
 return|;
-comment|/* ------- error handling ------- */
-if|if
-condition|(
+comment|/* 	 * Error handling.  Calculate location of error. 	 */
 name|bytesleft
 operator|=
 name|MASKREG
@@ -987,15 +1029,17 @@ argument_list|(
 name|mba
 operator|->
 name|mba_bcr
-operator|>>
-literal|16
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bytesleft
 condition|)
 name|bytesleft
 operator||=
 literal|0xffff0000
 expr_stmt|;
-comment|/* sign ext */
+comment|/* sxt */
 name|bn
 operator|=
 name|io
@@ -1062,12 +1106,23 @@ operator|->
 name|hper2
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPDEBUG
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+operator|(
+name|HPF_ECCDEBUG
+operator||
+name|HPF_BSEDEBUG
+operator|)
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"hp error: (cyl,trk,sec)=(%d,%d,%d) ds=%b \n"
+literal|"hp error: (cyl,trk,sec)=(%d,%d,%d) ds=%b\n"
 argument_list|,
 name|cn
 argument_list|,
@@ -1087,7 +1142,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"er1=%b er2=%b"
+literal|"er1=%b er2=%b\n"
 argument_list|,
 name|er1
 argument_list|,
@@ -1100,7 +1155,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nbytes left: %d, of 0x%x, da 0x%x"
+literal|"bytes left: %d, of 0x%x, da 0x%x\n"
 argument_list|,
 operator|-
 name|bytesleft
@@ -1114,13 +1169,7 @@ operator|->
 name|hpda
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+block|}
 if|if
 condition|(
 name|er1
@@ -1165,7 +1214,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * No bad sector handling on RP06's yet. 	 */
+comment|/* 	 * Interpret format error bit as a bad block on RP06's. 	 */
 if|if
 condition|(
 name|MASKREG
@@ -1267,6 +1316,9 @@ operator|=
 name|bn
 operator|+
 name|ssect
+index|[
+name|unit
+index|]
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1337,12 +1389,22 @@ name|hpmr2
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPDEBUG
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+operator|(
+name|HPF_BSEDEBUG
+operator||
+name|HPF_ECCDEBUG
+operator|)
+condition|)
 name|printf
 argument_list|(
-literal|"dc: %d, da: 0x%x"
+literal|" dc=%d, da=0x%x"
 argument_list|,
 name|MASKREG
 argument_list|(
@@ -1359,8 +1421,6 @@ name|hpda
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|hpaddr
 operator|->
 name|hpcs1
@@ -1400,6 +1460,9 @@ if|if
 condition|(
 operator|!
 name|ssect
+index|[
+name|unit
+index|]
 operator|&&
 operator|(
 name|er2
@@ -1458,9 +1521,11 @@ if|if
 condition|(
 name|RM80
 operator|&&
+operator|(
 name|er2
 operator|&
 name|HPER2_SSE
+operator|)
 condition|)
 block|{
 name|skipsect
@@ -1476,6 +1541,9 @@ name|SSE
 argument_list|)
 expr_stmt|;
 name|ssect
+index|[
+name|unit
+index|]
 operator|=
 literal|1
 expr_stmt|;
@@ -1483,7 +1551,7 @@ goto|goto
 name|success
 goto|;
 block|}
-comment|/* 	 * ECC correction. 	 */
+comment|/* 	 * ECC correction? 	 */
 if|if
 condition|(
 operator|(
@@ -1773,12 +1841,22 @@ operator|)
 operator|*
 name|sectsiz
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPDEBUG
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+operator|(
+name|HPF_ECCDEBUG
+operator||
+name|HPF_BSEDEBUG
+operator|)
+condition|)
 name|printf
 argument_list|(
-literal|"restart: bl %d, byte %d, mem 0x%x hprecal %d\n"
+literal|"restart: bn=%d, cc=%d, ma=0x%x hprecal=%d\n"
 argument_list|,
 name|io
 operator|->
@@ -1795,8 +1873,6 @@ argument_list|,
 name|hprecal
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|restart
 goto|;
@@ -1894,8 +1970,6 @@ name|sn
 decl_stmt|,
 name|bcr
 decl_stmt|;
-if|if
-condition|(
 name|bcr
 operator|=
 name|MASKREG
@@ -1903,15 +1977,17 @@ argument_list|(
 name|mbp
 operator|->
 name|mba_bcr
-operator|>>
-literal|16
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bcr
 condition|)
 name|bcr
 operator||=
 literal|0xffff0000
 expr_stmt|;
-comment|/* sign extend */
+comment|/* sxt */
 name|npf
 operator|=
 operator|(
@@ -1934,20 +2010,32 @@ operator|+
 name|npf
 operator|+
 name|ssect
+index|[
+name|unit
+index|]
 expr_stmt|;
 comment|/* physical block #*/
-ifdef|#
-directive|ifdef
-name|HPECCDEBUG
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+name|HPF_ECCDEBUG
+condition|)
 name|printf
 argument_list|(
-literal|"bcr %d npf %d ssect %d sectsiz %d i_cc %d\n"
+literal|"bcr=%d npf=%d ssect=%d sectsiz=%d i_cc=%d\n"
 argument_list|,
 name|bcr
 argument_list|,
 name|npf
 argument_list|,
 name|ssect
+index|[
+name|unit
+index|]
 argument_list|,
 name|sectsiz
 argument_list|,
@@ -1956,8 +2044,6 @@ operator|->
 name|i_cc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * ECC correction logic. 	 */
 if|if
 condition|(
@@ -2075,25 +2161,6 @@ operator|)
 operator|+
 name|o
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPECCDEBUG
-name|printf
-argument_list|(
-literal|"addr %x old:%x "
-argument_list|,
-name|addr
-argument_list|,
-operator|(
-operator|*
-name|addr
-operator|&
-literal|0xff
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * No data transfer occurs with a write check, 			 * so don't correct the resident copy of data. 			 */
 if|if
 condition|(
@@ -2111,21 +2178,21 @@ operator|)
 operator|==
 literal|0
 condition|)
-operator|*
-name|addr
-operator|^=
-operator|(
-name|mask
-operator|<<
-name|bit
-operator|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPECCDEBUG
+block|{
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+name|HPF_ECCDEBUG
+condition|)
 name|printf
 argument_list|(
-literal|"new:%x\n"
+literal|"addr=%x old=%x "
+argument_list|,
+name|addr
 argument_list|,
 operator|(
 operator|*
@@ -2135,8 +2202,37 @@ literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+operator|*
+name|addr
+operator|^=
+operator|(
+name|mask
+operator|<<
+name|bit
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+name|HPF_ECCDEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"new=%x\n"
+argument_list|,
+operator|(
+operator|*
+name|addr
+operator|&
+literal|0xff
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|o
 operator|++
 operator|,
@@ -2223,9 +2319,15 @@ name|HP_DCLR
 operator||
 name|HP_GO
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPDEBUG
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+name|HPF_BSEDEBUG
+condition|)
 name|printf
 argument_list|(
 literal|"hpecc: BSE @ bn %d\n"
@@ -2233,8 +2335,6 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|cn
 operator|=
 name|bn
@@ -2363,26 +2463,26 @@ name|npf
 operator|*
 name|sectsiz
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HPDEBUG
+if|if
+condition|(
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&
+name|HPF_BSEDEBUG
+condition|)
 name|printf
 argument_list|(
-literal|"revector to cn %d tn %d sn %d mem: 0x%x\n"
+literal|"revector to cn %d tn %d sn %d\n"
 argument_list|,
 name|cn
 argument_list|,
 name|tn
 argument_list|,
 name|sn
-argument_list|,
-name|io
-operator|->
-name|i_ma
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|rp
 operator|->
 name|hpof
@@ -2390,7 +2490,6 @@ operator|&=
 operator|~
 name|HPOF_SSEI
 expr_stmt|;
-comment|/* clear skip sector inhibit if set */
 name|mbp
 operator|->
 name|mba_sr
@@ -2431,7 +2530,6 @@ name|i_errcnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* error has been corrected */
 name|HPWAIT
 argument_list|(
 name|rp
@@ -2533,11 +2631,51 @@ argument_list|(
 name|unit
 argument_list|)
 decl_stmt|;
+name|int
+name|flag
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
 condition|)
 block|{
+case|case
+name|SAIODEBUG
+case|:
+name|flag
+operator|=
+operator|(
+name|int
+operator|)
+name|arg
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|>
+literal|0
+condition|)
+name|hpdebug
+index|[
+name|unit
+index|]
+operator||=
+name|flag
+expr_stmt|;
+else|else
+name|hpdebug
+index|[
+name|unit
+index|]
+operator|&=
+operator|~
+name|flag
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SAIODEVDATA
 case|:
