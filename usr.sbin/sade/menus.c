@@ -4780,8 +4780,7 @@ literal|"Service Provider using the ppp utility we provide for that purpose.\n"
 literal|"If you're using SLIP over a serial device then the expectation is\n"
 literal|"that you have a HARDWIRED connection.\n\n"
 literal|"You can also install over a parallel port using a special \"laplink\"\n"
-literal|"cable to another machine running a fairly recent (2.0R or later)\n"
-literal|"version of FreeBSD."
+literal|"cable to another machine running FreeBSD."
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
