@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -698,14 +704,6 @@ begin_function_decl
 name|char
 modifier|*
 name|exptilde
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
