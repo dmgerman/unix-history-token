@@ -11809,11 +11809,9 @@ argument_list|(
 name|tfhp
 argument_list|)
 expr_stmt|;
-name|nfsm_strsiz
+name|nfsm_srvnamesiz
 argument_list|(
 name|len2
-argument_list|,
-name|NFS_MAXNAMLEN
 argument_list|)
 expr_stmt|;
 name|cred
@@ -13638,11 +13636,9 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-name|nfsm_strsiz
+name|nfsm_srvpathsiz
 argument_list|(
 name|len2
-argument_list|,
-name|NFS_MAXPATHLEN
 argument_list|)
 expr_stmt|;
 name|MALLOC

@@ -4919,6 +4919,9 @@ name|int
 modifier|*
 name|s
 parameter_list|,
+name|int
+name|m
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -4970,7 +4973,7 @@ condition|(
 operator|*
 name|s
 operator|>
-name|NFS_MAXNAMLEN
+name|m
 condition|)
 return|return
 name|NFSERR_NAMETOL

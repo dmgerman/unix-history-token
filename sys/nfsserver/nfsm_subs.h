@@ -103,6 +103,9 @@ name|int
 modifier|*
 name|s
 parameter_list|,
+name|int
+name|m
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -185,7 +188,18 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz_xx(&(s),&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz_xx(&(s), NFS_MAXNAMLEN,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_srvpathsiz
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|do { \ 	int t1; \ 	t1 = nfsm_srvnamesiz_xx(&(s), NFS_MAXPATHLEN,&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		nfsm_reply(0); \ 	} \ } while (0)
 end_define
 
 begin_define
