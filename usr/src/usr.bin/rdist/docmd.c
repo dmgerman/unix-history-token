@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.17 (Berkeley) 84/03/14"
+literal|"@(#)docmd.c	4.18 (Berkeley) 84/03/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -726,10 +726,6 @@ return|;
 name|closeconn
 argument_list|()
 expr_stmt|;
-name|cur_host
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 name|ruser
 operator|=
@@ -826,6 +822,10 @@ name|fflush
 argument_list|(
 name|stdout
 argument_list|)
+expr_stmt|;
+name|cur_host
+operator|=
+name|rhost
 expr_stmt|;
 name|rem
 operator|=
@@ -973,22 +973,19 @@ name|n
 operator|==
 name|VERSION
 condition|)
-block|{
-name|cur_host
-operator|=
-name|rhost
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
-block|}
 name|error
 argument_list|(
 literal|"connection failed: version numbers don't match\n"
 argument_list|)
+expr_stmt|;
+name|closeconn
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
