@@ -226,12 +226,6 @@ name|u_int64_t
 name|x
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386
-asm|__asm(	" 		addl %%eax,4(%%ecx) 		adcl %%edx,8(%%ecx) 		adcl $0,0(%%ecx) 		" : : "A" (x), "c" (bt));
-else|#
-directive|else
 name|u_int64_t
 name|u
 decl_stmt|;
@@ -260,8 +254,6 @@ operator|->
 name|sec
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -282,12 +274,6 @@ modifier|*
 name|bt2
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386
-asm|__asm(	" 		movl 4(%%edx),%%eax 		addl %%eax,4(%%ecx) 		movl 8(%%edx),%%eax 		adcl %%eax,8(%%ecx) 		movl 0(%%edx),%%eax 		adcl %%eax,0(%%ecx) 		" : : "c" (bt), "d" (bt2));
-else|#
-directive|else
 name|u_int64_t
 name|u
 decl_stmt|;
@@ -326,8 +312,6 @@ name|bt2
 operator|->
 name|sec
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -348,12 +332,6 @@ modifier|*
 name|bt2
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__i386
-asm|__asm(	" 		movl 4(%%edx),%%eax 		subl %%eax,4(%%ecx) 		movl 8(%%edx),%%eax 		sbbl %%eax,8(%%ecx) 		movl 0(%%edx),%%eax 		sbbl %%eax,0(%%ecx) 		" : : "c" (bt), "d" (bt2));
-else|#
-directive|else
 name|u_int64_t
 name|u
 decl_stmt|;
@@ -392,8 +370,6 @@ name|bt2
 operator|->
 name|sec
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
