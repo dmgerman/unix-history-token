@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -252,37 +258,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|cached_socket
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
+name|conn_t
 modifier|*
-name|last_reply
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|lr_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|lr_length
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|last_code
+name|cached_connection
 decl_stmt|;
 end_decl_stmt
 
@@ -437,24 +415,16 @@ specifier|static
 name|int
 name|_ftp_chkerr
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|)
 block|{
 if|if
 condition|(
 name|_fetch_getln
 argument_list|(
-name|cd
-argument_list|,
-operator|&
-name|last_reply
-argument_list|,
-operator|&
-name|lr_size
-argument_list|,
-operator|&
-name|lr_length
+name|conn
 argument_list|)
 operator|==
 operator|-
@@ -475,18 +445,24 @@ if|if
 condition|(
 name|isftpinfo
 argument_list|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 argument_list|)
 condition|)
 block|{
 while|while
 condition|(
-name|lr_length
+name|conn
+operator|->
+name|buflen
 operator|&&
 operator|!
 name|isftpreply
 argument_list|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 argument_list|)
 condition|)
 block|{
@@ -494,16 +470,7 @@ if|if
 condition|(
 name|_fetch_getln
 argument_list|(
-name|cd
-argument_list|,
-operator|&
-name|last_reply
-argument_list|,
-operator|&
-name|lr_size
-argument_list|,
-operator|&
-name|lr_length
+name|conn
 argument_list|)
 operator|==
 operator|-
@@ -524,34 +491,48 @@ block|}
 block|}
 while|while
 condition|(
-name|lr_length
+name|conn
+operator|->
+name|buflen
 operator|&&
 name|isspace
 argument_list|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 index|[
-name|lr_length
+name|conn
+operator|->
+name|buflen
 operator|-
 literal|1
 index|]
 argument_list|)
 condition|)
-name|lr_length
+name|conn
+operator|->
+name|buflen
 operator|--
 expr_stmt|;
-name|last_reply
+name|conn
+operator|->
+name|buf
 index|[
-name|lr_length
+name|conn
+operator|->
+name|buflen
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|isftpreply
 argument_list|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 argument_list|)
 condition|)
 block|{
@@ -567,10 +548,14 @@ literal|1
 operator|)
 return|;
 block|}
-name|last_code
+name|conn
+operator|->
+name|err
 operator|=
 operator|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 index|[
 literal|0
 index|]
@@ -581,7 +566,9 @@ operator|*
 literal|100
 operator|+
 operator|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 index|[
 literal|1
 index|]
@@ -592,7 +579,9 @@ operator|*
 literal|10
 operator|+
 operator|(
-name|last_reply
+name|conn
+operator|->
+name|buf
 index|[
 literal|2
 index|]
@@ -602,7 +591,9 @@ operator|)
 expr_stmt|;
 return|return
 operator|(
-name|last_code
+name|conn
+operator|->
+name|err
 operator|)
 return|;
 block|}
@@ -617,8 +608,9 @@ specifier|static
 name|int
 name|_ftp_cmd
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -690,7 +682,7 @@ name|r
 operator|=
 name|_fetch_putln
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 name|msg
 argument_list|,
@@ -724,7 +716,7 @@ return|return
 operator|(
 name|_ftp_chkerr
 argument_list|(
-name|cd
+name|conn
 argument_list|)
 operator|)
 return|;
@@ -792,8 +784,9 @@ specifier|static
 name|int
 name|_ftp_cwd
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -832,7 +825,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"CWD /"
 argument_list|)
@@ -844,7 +837,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"CWD %.*s"
 argument_list|,
@@ -892,8 +885,9 @@ specifier|static
 name|int
 name|_ftp_stat
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -972,7 +966,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"SIZE %s"
 argument_list|,
@@ -999,7 +993,9 @@ for|for
 control|(
 name|ln
 operator|=
-name|last_reply
+name|conn
+operator|->
+name|buf
 operator|+
 literal|4
 init|;
@@ -1124,7 +1120,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"MDTM %s"
 argument_list|,
@@ -1151,7 +1147,9 @@ for|for
 control|(
 name|ln
 operator|=
-name|last_reply
+name|conn
+operator|->
+name|buf
 operator|+
 literal|4
 init|;
@@ -1380,10 +1378,11 @@ begin_struct
 struct|struct
 name|ftpio
 block|{
-name|int
-name|csd
+name|conn_t
+modifier|*
+name|conn
 decl_stmt|;
-comment|/* Control socket descriptor */
+comment|/* Control connection */
 name|int
 name|dsd
 decl_stmt|;
@@ -1519,10 +1518,9 @@ if|if
 condition|(
 name|io
 operator|->
-name|csd
+name|conn
 operator|==
-operator|-
-literal|1
+name|NULL
 operator|||
 name|io
 operator|->
@@ -1701,10 +1699,9 @@ if|if
 condition|(
 name|io
 operator|->
-name|csd
+name|conn
 operator|==
-operator|-
-literal|1
+name|NULL
 operator|||
 name|io
 operator|->
@@ -1922,10 +1919,9 @@ if|if
 condition|(
 name|io
 operator|->
-name|csd
+name|conn
 operator|==
-operator|-
-literal|1
+name|NULL
 operator|||
 name|io
 operator|->
@@ -1983,14 +1979,14 @@ name|_ftp_chkerr
 argument_list|(
 name|io
 operator|->
-name|csd
+name|conn
 argument_list|)
 expr_stmt|;
-name|close
+name|_fetch_close
 argument_list|(
 name|io
 operator|->
-name|csd
+name|conn
 argument_list|)
 expr_stmt|;
 name|free
@@ -2019,8 +2015,9 @@ name|FILE
 modifier|*
 name|_ftp_setup
 parameter_list|(
-name|int
-name|csd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|,
 name|int
 name|dsd
@@ -2060,12 +2057,9 @@ operator|)
 return|;
 name|io
 operator|->
-name|csd
+name|conn
 operator|=
-name|dup
-argument_list|(
-name|csd
-argument_list|)
+name|conn
 expr_stmt|;
 name|io
 operator|->
@@ -2133,8 +2127,9 @@ name|FILE
 modifier|*
 name|_ftp_transfer
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -2262,7 +2257,9 @@ if|if
 condition|(
 name|getsockname
 argument_list|(
-name|cd
+name|conn
+operator|->
+name|sd
 argument_list|,
 operator|(
 expr|struct
@@ -2384,7 +2381,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"PASV"
 argument_list|)
@@ -2406,7 +2403,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"EPSV"
 argument_list|)
@@ -2432,7 +2429,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"LPSV"
 argument_list|)
@@ -2458,7 +2455,9 @@ block|}
 comment|/* 		 * Find address and port number. The reply to the PASV command 		 * is IMHO the one and only weak point in the FTP protocol. 		 */
 name|ln
 operator|=
-name|last_reply
+name|conn
+operator|->
+name|buf
 expr_stmt|;
 switch|switch
 condition|(
@@ -2701,7 +2700,7 @@ if|if
 condition|(
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"REST %lu"
 argument_list|,
@@ -2726,7 +2725,9 @@ if|if
 condition|(
 name|getpeername
 argument_list|(
-name|cd
+name|conn
+operator|->
+name|sd
 argument_list|,
 operator|(
 expr|struct
@@ -2963,7 +2964,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"%s %s"
 argument_list|,
@@ -3251,7 +3252,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"PORT %d,%d,%d,%d,%d,%d"
 argument_list|,
@@ -3359,7 +3360,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"EPRT |%d|%s|%d|"
 argument_list|,
@@ -3408,7 +3409,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"LPRT %d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d"
 argument_list|,
@@ -3599,12 +3600,12 @@ if|if
 condition|(
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
-literal|"REST %lu"
+literal|"REST %ju"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|offset
 argument_list|)
@@ -3628,7 +3629,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"%s %s"
 argument_list|,
@@ -3688,7 +3689,7 @@ name|df
 operator|=
 name|_ftp_setup
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 name|sd
 argument_list|,
@@ -3769,8 +3770,9 @@ specifier|static
 name|int
 name|_ftp_authenticate
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|,
 name|struct
 name|url
@@ -3865,7 +3867,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"USER %s@%s"
 argument_list|,
@@ -3885,7 +3887,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"USER %s@%s@%d"
 argument_list|,
@@ -3905,7 +3907,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"USER %s"
 argument_list|,
@@ -4024,7 +4026,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"PASS %s"
 argument_list|,
@@ -4046,7 +4048,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|conn_t
+modifier|*
 name|_ftp_connect
 parameter_list|(
 name|struct
@@ -4065,9 +4068,11 @@ modifier|*
 name|flags
 parameter_list|)
 block|{
+name|conn_t
+modifier|*
+name|conn
+decl_stmt|;
 name|int
-name|cd
-decl_stmt|,
 name|e
 decl_stmt|,
 name|direct
@@ -4143,7 +4148,7 @@ name|purl
 condition|)
 block|{
 comment|/* XXX proxy authentication! */
-name|cd
+name|conn
 operator|=
 name|_fetch_connect
 argument_list|(
@@ -4164,7 +4169,7 @@ block|}
 else|else
 block|{
 comment|/* no proxy, go straight to target */
-name|cd
+name|conn
 operator|=
 name|_fetch_connect
 argument_list|(
@@ -4189,10 +4194,9 @@ block|}
 comment|/* check connection */
 if|if
 condition|(
-name|cd
+name|conn
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 block|{
 name|_fetch_syserr
@@ -4212,7 +4216,7 @@ name|e
 operator|=
 name|_ftp_chkerr
 argument_list|(
-name|cd
+name|conn
 argument_list|)
 operator|)
 operator|!=
@@ -4229,7 +4233,7 @@ name|e
 operator|=
 name|_ftp_authenticate
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 name|url
 argument_list|,
@@ -4253,7 +4257,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"MODE S"
 argument_list|)
@@ -4274,7 +4278,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"TYPE I"
 argument_list|)
@@ -4289,7 +4293,7 @@ goto|;
 comment|/* done */
 return|return
 operator|(
-name|cd
+name|conn
 operator|)
 return|;
 name|fouch
@@ -4306,9 +4310,9 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-name|close
+name|_fetch_close
 argument_list|(
-name|cd
+name|conn
 argument_list|)
 expr_stmt|;
 return|return
@@ -4328,8 +4332,9 @@ specifier|static
 name|void
 name|_ftp_disconnect
 parameter_list|(
-name|int
-name|cd
+name|conn_t
+modifier|*
+name|conn
 parameter_list|)
 block|{
 operator|(
@@ -4337,14 +4342,14 @@ name|void
 operator|)
 name|_ftp_cmd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 literal|"QUIT"
 argument_list|)
 expr_stmt|;
-name|close
+name|_fetch_close
 argument_list|(
-name|cd
+name|conn
 argument_list|)
 expr_stmt|;
 block|}
@@ -4367,7 +4372,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|cached_socket
+name|cached_connection
 operator|&&
 operator|(
 name|strcmp
@@ -4434,7 +4439,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|conn_t
+modifier|*
 name|_ftp_cached_connect
 parameter_list|(
 name|struct
@@ -4453,16 +4459,13 @@ modifier|*
 name|flags
 parameter_list|)
 block|{
+name|conn_t
+modifier|*
+name|conn
+decl_stmt|;
 name|int
 name|e
-decl_stmt|,
-name|cd
 decl_stmt|;
-name|cd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 comment|/* set default port */
 if|if
 condition|(
@@ -4495,7 +4498,7 @@ name|e
 operator|=
 name|_ftp_cmd
 argument_list|(
-name|cached_socket
+name|cached_connection
 argument_list|,
 literal|"NOOP"
 argument_list|)
@@ -4512,7 +4515,7 @@ name|FTP_SYNTAX_ERROR
 condition|)
 return|return
 operator|(
-name|cached_socket
+name|cached_connection
 operator|)
 return|;
 block|}
@@ -4520,7 +4523,7 @@ comment|/* connect to server */
 if|if
 condition|(
 operator|(
-name|cd
+name|conn
 operator|=
 name|_ftp_connect
 argument_list|(
@@ -4532,27 +4535,25 @@ name|flags
 argument_list|)
 operator|)
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|NULL
 operator|)
 return|;
 if|if
 condition|(
-name|cached_socket
+name|cached_connection
 condition|)
 name|_ftp_disconnect
 argument_list|(
-name|cached_socket
+name|cached_connection
 argument_list|)
 expr_stmt|;
-name|cached_socket
+name|cached_connection
 operator|=
-name|cd
+name|conn
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -4568,7 +4569,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cd
+name|conn
 operator|)
 return|;
 block|}
@@ -4789,9 +4790,11 @@ modifier|*
 name|flags
 parameter_list|)
 block|{
+name|conn_t
+modifier|*
+name|conn
+decl_stmt|;
 name|int
-name|cd
-decl_stmt|,
 name|oflag
 decl_stmt|;
 comment|/* check if we should use HTTP instead */
@@ -4869,7 +4872,7 @@ return|;
 comment|/* 		 * Our HTTP code doesn't support PUT requests yet, so try 		 * a direct connection. 		 */
 block|}
 comment|/* connect to server */
-name|cd
+name|conn
 operator|=
 name|_ftp_cached_connect
 argument_list|(
@@ -4891,7 +4894,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cd
+name|conn
 operator|==
 name|NULL
 condition|)
@@ -4905,7 +4908,7 @@ if|if
 condition|(
 name|_ftp_cwd
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 name|url
 operator|->
@@ -4927,7 +4930,7 @@ name|us
 operator|&&
 name|_ftp_stat
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 name|url
 operator|->
@@ -5006,7 +5009,7 @@ return|return
 operator|(
 name|_ftp_transfer
 argument_list|(
-name|cd
+name|conn
 argument_list|,
 name|op
 argument_list|,

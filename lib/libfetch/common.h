@@ -43,6 +43,105 @@ name|HTTP_DEFAULT_PROXY_PORT
 value|3128
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/x509.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/pem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/ssl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
+
+begin_comment
+comment|/* Connection */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fetchconn
+name|conn_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|fetchconn
+block|{
+name|char
+modifier|*
+name|host
+decl_stmt|;
+comment|/* host name */
+name|int
+name|port
+decl_stmt|;
+comment|/* port */
+name|int
+name|af
+decl_stmt|;
+comment|/* address family */
+name|int
+name|sd
+decl_stmt|;
+comment|/* socket descriptor */
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* buffer */
+name|size_t
+name|bufsize
+decl_stmt|;
+comment|/* buffer size */
+name|size_t
+name|buflen
+decl_stmt|;
+comment|/* length of buffer contents */
+name|int
+name|err
+decl_stmt|;
+comment|/* last protocol reply code */
+name|SSL
+modifier|*
+name|ssl_ctx
+decl_stmt|;
+comment|/* SSL context if needed */
+name|X509
+modifier|*
+name|ssl_cert
+decl_stmt|;
+comment|/* server certificate */
+name|SSL_METHOD
+modifier|*
+name|ssl_meth
+decl_stmt|;
+comment|/* SSL method */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Structure used for error message lists */
 end_comment
@@ -126,7 +225,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|conn_t
+modifier|*
 name|_fetch_connect
 parameter_list|(
 specifier|const
@@ -146,16 +246,7 @@ begin_function_decl
 name|int
 name|_fetch_getln
 parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
-parameter_list|,
-name|size_t
+name|conn_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -165,13 +256,24 @@ begin_function_decl
 name|int
 name|_fetch_putln
 parameter_list|(
-name|int
+name|conn_t
+modifier|*
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_fetch_close
+parameter_list|(
+name|conn_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
