@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|ICDA_SET_MASK
-value|(1UL<< 13)
+value|(1UL<< ICDA_SET_SHIFT)
 end_define
 
 begin_define
@@ -376,6 +376,9 @@ name|int
 name|ic_size
 decl_stmt|;
 comment|/* instruction cache */
+name|int
+name|ic_set
+decl_stmt|;
 name|int
 name|ic_l2set
 decl_stmt|;

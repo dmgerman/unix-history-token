@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ver.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -97,18 +103,12 @@ name|cache
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDIAG_CLR
-parameter_list|(
-name|asi
-parameter_list|,
-name|addr
-parameter_list|)
-define|\
-value|__asm __volatile("stxa %%g0, [%0] %1" : : "r" (addr), "I" (asi))
-end_define
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|cache_tmp_va
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Read to %g0, needed for E$ access. */
@@ -127,21 +127,6 @@ define|\
 value|__asm __volatile("ldxa [%0] %1, %%g0" : : "r" (addr), "I" (asi))
 end_define
 
-begin_define
-define|#
-directive|define
-name|CDIAG_RD
-parameter_list|(
-name|asi
-parameter_list|,
-name|addr
-parameter_list|,
-name|r
-parameter_list|)
-define|\
-value|__asm __volatile("ldxa [%1] %2, %0" : "=r" (r) : "r" (addr), "I" (asi))
-end_define
-
 begin_comment
 comment|/* Sigh. I$ diagnostic registers want ldda. */
 end_comment
@@ -158,7 +143,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|__asm __volatile("ldda [%1] %2, %%o4; mov %%o5, %0" : "=r" (r) : \ 	    "r" (addr), "I" (asi) : "%o4", "%o5");
+value|__asm __volatile("ldda [%1] %2, %%o4; mov %%o5, %0" : "=r" (r) :\ 	"r" (addr), "I" (asi) :	"%o4", "%o5");
 end_define
 
 begin_define
@@ -323,7 +308,9 @@ argument_list|(
 literal|"cache_init: could not retrieve cache parameters"
 argument_list|)
 expr_stmt|;
-name|set
+name|cache
+operator|.
+name|ic_set
 operator|=
 name|cache
 operator|.
@@ -339,7 +326,9 @@ name|ic_l2set
 operator|=
 name|ffs
 argument_list|(
-name|set
+name|cache
+operator|.
+name|ic_set
 argument_list|)
 operator|-
 literal|1
@@ -347,7 +336,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|set
+name|cache
+operator|.
+name|ic_set
 operator|&
 operator|~
 operator|(
@@ -633,7 +624,7 @@ operator|&
 operator|(
 name|cache
 operator|.
-name|ic_size
+name|ic_set
 operator|-
 literal|1
 operator|)
@@ -655,6 +646,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|tag
+operator|&
+name|ICDT_VALID
+operator|)
+operator|==
+literal|0
+operator|||
 name|ICDT_TAG
 argument_list|(
 name|tag
@@ -667,11 +666,13 @@ operator|.
 name|ic_l2set
 condition|)
 continue|continue;
-name|CDIAG_CLR
+name|stxa_sync
 argument_list|(
+name|ica
+argument_list|,
 name|ASI_ICACHE_TAG
 argument_list|,
-name|ica
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -917,13 +918,13 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|CDIAG_RD
+name|tag
+operator|=
+name|ldxa
 argument_list|(
-name|ASI_DCACHE_TAG
-argument_list|,
 name|dca
 argument_list|,
-name|tag
+name|ASI_DCACHE_TAG
 argument_list|)
 expr_stmt|;
 if|if
@@ -942,11 +943,13 @@ operator|>>
 name|PAGE_SHIFT_MIN
 condition|)
 continue|continue;
-name|CDIAG_CLR
+name|stxa_sync
 argument_list|(
+name|dca
+argument_list|,
 name|ASI_DCACHE_TAG
 argument_list|,
-name|dca
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1055,13 +1058,13 @@ operator|&
 name|PAGE_MASK_MIN
 operator|)
 expr_stmt|;
-name|CDIAG_RD
+name|tag
+operator|=
+name|ldxa
 argument_list|(
-name|ASI_DCACHE_TAG
-argument_list|,
 name|dca
 argument_list|,
-name|tag
+name|ASI_DCACHE_TAG
 argument_list|)
 expr_stmt|;
 if|if
@@ -1076,11 +1079,13 @@ operator|>>
 name|PAGE_SHIFT_MIN
 condition|)
 block|{
-name|CDIAG_CLR
+name|stxa_sync
 argument_list|(
+name|dca
+argument_list|,
 name|ASI_DCACHE_TAG
 argument_list|,
-name|dca
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1128,11 +1133,13 @@ name|cache
 operator|.
 name|dc_linesize
 control|)
-name|CDIAG_CLR
+name|stxa_sync
 argument_list|(
+name|dca
+argument_list|,
 name|ASI_DCACHE_TAG
 argument_list|,
-name|dca
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1276,12 +1283,12 @@ comment|/* 			 * Retrieve the tag: 			 * A read from the appropriate VA in ASI_E
 end_comment
 
 begin_comment
-unit|CDIAG_RDG0(ASI_ECACHE_R, ECDA_TAG | eca); 			CDIAG_RD(ASI_ECACHE_TAG_DATA, 0, tag); 			if ((addr& ~cache.ec_size)>> cache.ec_l2set == 			    (tag& ECDT_TAG_MASK)) {
+unit|CDIAG_RDG0(ASI_ECACHE_R, ECDA_TAG | eca); 			tag = ldxa(0, ASI_ECACHE_TAG_DATA); 			if ((addr& ~cache.ec_size)>> cache.ec_l2set == 			    (tag& ECDT_TAG_MASK)) {
 comment|/* 				 * Clear. Works like retrieving the tag, but 				 * the other way round. 				 */
 end_comment
 
 begin_endif
-unit|CDIAG_CLR(ASI_ECACHE_TAG_DATA, 0); 				CDIAG_CLR(ASI_ECACHE_W, ECDA_TAG | eca); 			} 		} 	} }
+unit|stxa_sync(0, ASI_ECACHE_TAG_DATA, 0); 				stxa_sync(ECDA_TAG | eca, ASI_ECACHE_W, 0); 			} 		} 	} }
 endif|#
 directive|endif
 end_endif
