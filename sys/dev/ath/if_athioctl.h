@@ -213,6 +213,80 @@ name|SIOCGATHSTATS
 value|_IOWR('i', 137, struct ifreq)
 end_define
 
+begin_comment
+comment|/*  * Radio capture format.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RX_RADIOTAP_PRESENT
+value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	(1<< IEEE80211_RADIOTAP_DB_ANTSIGNAL)	| \ 	(1<< IEEE80211_RADIOTAP_ANTENNA)	| \ 	0)
+end_define
+
+begin_struct
+struct|struct
+name|ath_rx_radiotap_header
+block|{
+name|struct
+name|ieee80211_radiotap_header
+name|wr_ihdr
+decl_stmt|;
+name|u_int8_t
+name|wr_flags
+decl_stmt|;
+comment|/* XXX for padding */
+name|u_int8_t
+name|wr_rate
+decl_stmt|;
+name|u_int16_t
+name|wr_chan_freq
+decl_stmt|;
+name|u_int16_t
+name|wr_chan_flags
+decl_stmt|;
+name|u_int8_t
+name|wr_antsignal
+decl_stmt|;
+name|u_int8_t
+name|wr_antenna
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_TX_RADIOTAP_PRESENT
+value|(		\ 	(1<< IEEE80211_RADIOTAP_FLAGS)		| \ 	(1<< IEEE80211_RADIOTAP_RATE)		| \ 	(1<< IEEE80211_RADIOTAP_CHANNEL)	| \ 	0)
+end_define
+
+begin_struct
+struct|struct
+name|ath_tx_radiotap_header
+block|{
+name|struct
+name|ieee80211_radiotap_header
+name|wt_ihdr
+decl_stmt|;
+name|u_int8_t
+name|wt_flags
+decl_stmt|;
+comment|/* XXX for padding */
+name|u_int8_t
+name|wt_rate
+decl_stmt|;
+name|u_int16_t
+name|wt_chan_freq
+decl_stmt|;
+name|u_int16_t
+name|wt_chan_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
