@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.20	82/10/17	*/
+comment|/*	Locore.c	4.21	82/10/17	*/
 end_comment
 
 begin_include
@@ -997,6 +997,7 @@ end_macro
 
 begin_decl_stmt
 name|label_t
+modifier|*
 name|lp
 decl_stmt|;
 end_decl_stmt
@@ -1024,6 +1025,7 @@ end_macro
 
 begin_decl_stmt
 name|label_t
+modifier|*
 name|lp
 decl_stmt|;
 end_decl_stmt
@@ -1675,6 +1677,58 @@ block|{
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|ntohs
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|u_short
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|s
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|htons
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|u_short
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|s
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.6	82/10/17	*/
+comment|/*	mem.c	4.7	82/10/17	*/
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ name|int
 name|o
 decl_stmt|;
 specifier|register
-name|unsigned
+name|u_int
 name|c
 decl_stmt|,
 name|v
@@ -684,7 +684,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|int
+name|u_int
 name|n
 decl_stmt|;
 end_decl_stmt

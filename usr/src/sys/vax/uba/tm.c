@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.57	82/10/17	*/
+comment|/*	tm.c	4.58	82/10/17	*/
 end_comment
 
 begin_include
@@ -4047,20 +4047,14 @@ name|TMER_BOT
 condition|)
 break|break;
 block|}
+return|return
+operator|(
 name|geterror
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-comment|/* XXX */
-return|return
-operator|(
-name|u
-operator|.
-name|u_error
 operator|)
 return|;
-comment|/* XXX */
 case|case
 name|MTIOCGET
 case|:

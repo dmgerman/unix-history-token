@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.52	82/10/17	*/
+comment|/*	ip_input.c	1.53	82/10/17	*/
 end_comment
 
 begin_include
@@ -2839,6 +2839,11 @@ argument_list|(
 operator|&
 name|tcb
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 name|inetctlerrmap
@@ -2854,6 +2859,11 @@ argument_list|(
 operator|&
 name|udb
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 name|inetctlerrmap
@@ -3054,6 +3064,11 @@ argument_list|)
 argument_list|,
 name|mopt
 argument_list|,
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0

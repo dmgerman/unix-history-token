@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.12	82/10/17	*/
+comment|/*	mt.c	4.13	82/10/17	*/
 end_comment
 
 begin_include
@@ -374,36 +374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|mtread
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|mtwrite
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|mtioctl
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
+block|{  }
 end_block
 
 begin_macro

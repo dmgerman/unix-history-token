@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.35	82/10/17	*/
+comment|/*	udp_usrreq.c	4.36	82/10/17	*/
 end_comment
 
 begin_include
@@ -764,6 +764,9 @@ name|udb
 argument_list|,
 name|sin
 argument_list|,
+operator|(
+name|int
+operator|)
 name|inetctlerrmap
 index|[
 name|cmd

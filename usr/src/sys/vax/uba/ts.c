@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.32	82/10/17	*/
+comment|/*	ts.c	4.34	82/10/17	*/
 end_comment
 
 begin_include
@@ -3842,20 +3842,14 @@ name|TS_BOT
 condition|)
 break|break;
 block|}
+return|return
+operator|(
 name|geterror
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-comment|/* XXX */
-return|return
-operator|(
-name|u
-operator|.
-name|u_error
 operator|)
 return|;
-comment|/* XXX */
 case|case
 name|MTIOCGET
 case|:
@@ -4016,7 +4010,9 @@ name|uh_physuba
 expr_stmt|;
 name|ubainit
 argument_list|(
-name|up
+name|ui
+operator|->
+name|ui_hd
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -4142,6 +4138,7 @@ argument_list|,
 name|up
 argument_list|)
 specifier|register
+name|int
 name|dbuf
 operator|,
 name|num

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.66	82/10/17	*/
+comment|/*	tcp_usrreq.c	1.67	82/10/17	*/
 end_comment
 
 begin_include
@@ -330,8 +330,6 @@ operator|=
 name|tcp_attach
 argument_list|(
 name|so
-argument_list|,
-name|nam
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.12	82/10/09	*/
+comment|/*	route.c	4.13	82/10/17	*/
 end_comment
 
 begin_include
@@ -460,13 +460,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-decl_stmt|;
 if|if
 condition|(
 name|rt
@@ -475,7 +468,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"freeroute"
+literal|"rtfree"
 argument_list|)
 expr_stmt|;
 name|rt
@@ -1107,10 +1100,6 @@ name|struct
 name|rtentry
 name|route
 decl_stmt|;
-name|struct
-name|route
-name|ro
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -1150,6 +1139,9 @@ name|void
 operator|)
 name|rtrequest
 argument_list|(
+operator|(
+name|int
+operator|)
 name|SIOCADDRT
 argument_list|,
 operator|&

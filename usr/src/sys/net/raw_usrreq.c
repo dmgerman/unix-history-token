@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.19	82/10/09	*/
+comment|/*	raw_usrreq.c	4.20	82/10/17	*/
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
@@ -609,6 +609,10 @@ goto|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|raw_ctlinput
 argument_list|(
@@ -643,6 +647,7 @@ operator|>
 name|PRC_NCMDS
 condition|)
 return|return;
+comment|/* INCOMPLETE */
 block|}
 end_block
 

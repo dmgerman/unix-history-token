@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.20	82/10/17	*/
+comment|/*	ip_icmp.c	4.21	82/10/17	*/
 end_comment
 
 begin_include
@@ -693,6 +693,9 @@ name|ip_len
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|icp
 operator|->
 name|icmp_ip
@@ -1109,8 +1112,18 @@ name|ip_output
 argument_list|(
 name|m
 argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0

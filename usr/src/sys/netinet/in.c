@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	4.5	82/10/17	*/
+comment|/*	in.c	4.6	82/10/17	*/
 end_comment
 
 begin_include
@@ -525,6 +525,11 @@ argument_list|)
 expr_stmt|;
 name|rtinit
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,

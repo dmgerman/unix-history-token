@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.10	82/10/17	*/
+comment|/*	dn.c	4.11	82/10/17	*/
 end_comment
 
 begin_include
@@ -457,6 +457,12 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -772,9 +778,6 @@ name|uiomove
 argument_list|(
 name|cp
 argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|cc
 argument_list|,
 name|UIO_WRITE

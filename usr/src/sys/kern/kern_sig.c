@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.8	82/10/10	*/
+comment|/*	kern_sig.c	5.9	82/10/17	*/
 end_comment
 
 begin_include
@@ -2643,6 +2643,10 @@ name|u_error
 operator|==
 literal|0
 condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 name|rdwri
 argument_list|(
 name|UIO_WRITE
@@ -2691,6 +2695,10 @@ name|u_error
 operator|==
 literal|0
 condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 name|rdwri
 argument_list|(
 name|UIO_WRITE
