@@ -253,7 +253,7 @@ operator|==
 literal|0x905110b7ul
 condition|)
 return|return
-literal|"3COM 3C595 Fast Etherlink XL PCI"
+literal|"3COM 3C905 Fast Etherlink XL PCI"
 return|;
 return|return
 name|NULL
