@@ -75,9 +75,9 @@ comment|/* Protect the scheduling queues: */
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
-comment|/* Check if we need to kick it back into the run queue: */
 if|if
 condition|(
+operator|(
 operator|(
 name|pthread
 operator|->
@@ -85,9 +85,46 @@ name|cancelflags
 operator|&
 name|PTHREAD_CANCEL_DISABLE
 operator|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+operator|(
+name|pthread
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_CANCEL_ASYNCHRONOUS
+operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|pthread
+operator|->
+name|cancelflags
+operator|&
+name|PTHREAD_AT_CANCEL_POINT
+operator|)
+operator|==
+literal|0
+operator|)
+operator|)
 condition|)
+comment|/* Just mark it for cancellation: */
+name|pthread
+operator|->
+name|cancelflags
+operator||=
+name|PTHREAD_CANCELLING
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * Check if we need to kick it back into the 			 * run queue: 			 */
 switch|switch
 condition|(
 name|pthread
@@ -230,6 +267,7 @@ case|:
 comment|/* Ignore - only here to silence -Wall: */
 break|break;
 block|}
+block|}
 comment|/* Unprotect the scheduling queues: */
 name|_thread_kern_sig_undefer
 argument_list|()
@@ -296,7 +334,8 @@ name|_thread_run
 operator|->
 name|cancelflags
 operator|&=
-name|PTHREAD_CANCEL_ENABLE
+operator|~
+name|PTHREAD_CANCEL_DISABLE
 expr_stmt|;
 if|if
 condition|(

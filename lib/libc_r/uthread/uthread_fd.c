@@ -981,6 +981,13 @@ block|}
 comment|/* Check the file descriptor and lock types: */
 if|if
 condition|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|&&
+operator|(
 name|lock_type
 operator|==
 name|FD_WRITE
@@ -988,10 +995,11 @@ operator|||
 name|lock_type
 operator|==
 name|FD_RDWR
+operator|)
 condition|)
 block|{
-comment|/* 			 * Enter a loop to wait for the file descriptor to be 			 * locked for write for the current thread:  			 */
-while|while
+comment|/* 			 * Wait for the file descriptor to be locked 			 * for write for the current thread:  			 */
+if|if
 condition|(
 name|_thread_fd_table
 index|[
@@ -1196,6 +1204,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&=
+operator|~
+name|PTHREAD_CANCEL_NEEDED
+expr_stmt|;
 name|_thread_exit_cleanup
 argument_list|()
 expr_stmt|;
@@ -1600,8 +1615,8 @@ operator|==
 name|FD_RDWR
 condition|)
 block|{
-comment|/* 			 * Enter a loop to wait for the file descriptor to be 			 * locked    for read for the current thread:  			 */
-while|while
+comment|/* 			 * Wait for the file descriptor to be locked 			 * for read for the current thread:  			 */
+if|if
 condition|(
 name|_thread_fd_table
 index|[
@@ -1711,6 +1726,29 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|!=
+literal|0
+condition|)
+block|{
+name|FDQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_queue
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1755,6 +1793,17 @@ name|lineno
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|r_owner
+operator|==
+name|_thread_run
+condition|)
 comment|/* Increment the read lock count: */
 name|_thread_fd_table
 index|[
@@ -1768,6 +1817,13 @@ block|}
 comment|/* Check the file descriptor and lock types: */
 if|if
 condition|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|==
+literal|0
+operator|&&
+operator|(
 name|lock_type
 operator|==
 name|FD_WRITE
@@ -1775,10 +1831,11 @@ operator|||
 name|lock_type
 operator|==
 name|FD_RDWR
+operator|)
 condition|)
 block|{
-comment|/* 			 * Enter a loop to wait for the file descriptor to be 			 * locked for write for the current thread:  			 */
-while|while
+comment|/* 			 * Wait for the file descriptor to be locked 			 * for write for the current thread:  			 */
+if|if
 condition|(
 name|_thread_fd_table
 index|[
@@ -1888,6 +1945,29 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|interrupted
+operator|!=
+literal|0
+condition|)
+block|{
+name|FDQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_queue
+argument_list|,
+name|_thread_run
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1932,6 +2012,17 @@ name|lineno
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|w_owner
+operator|==
+name|_thread_run
+condition|)
 comment|/* Increment the write lock count: */
 name|_thread_fd_table
 index|[
@@ -1988,6 +2079,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&=
+operator|~
+name|PTHREAD_CANCEL_NEEDED
+expr_stmt|;
 name|_thread_exit_cleanup
 argument_list|()
 expr_stmt|;

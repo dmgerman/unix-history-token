@@ -290,7 +290,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/*  			 * Cancelations override signals. 			 * 			 * Stick a cancellation point at the start of 			 * each async-cancellable thread's resumption. 			 * 			 * We allow threads woken at cancel points to do their 			 * own checks. 			 */
+comment|/*  			 * Cancellations override signals. 			 * 			 * Stick a cancellation point at the start of 			 * each async-cancellable thread's resumption. 			 * 			 * We allow threads woken at cancel points to do their 			 * own checks. 			 */
 name|pthread_testcancel
 argument_list|()
 expr_stmt|;

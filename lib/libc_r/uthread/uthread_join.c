@@ -233,6 +233,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|_thread_run
+operator|->
+name|cancelflags
+operator|&=
+operator|~
+name|PTHREAD_CANCEL_NEEDED
+expr_stmt|;
 name|_thread_exit_cleanup
 argument_list|()
 expr_stmt|;
