@@ -481,7 +481,16 @@ decl_stmt|;
 comment|/* The interesting part of the repository is the part relative 	   to CVSROOT.  */
 name|assert
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|current_parsed_root
+operator|->
+name|directory
 operator|!=
 name|NULL
 argument_list|)
@@ -492,11 +501,15 @@ name|strncmp
 argument_list|(
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 argument_list|)
 operator|==
@@ -509,7 +522,9 @@ name|repository
 operator|+
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 literal|1
@@ -520,7 +535,9 @@ name|strcmp
 argument_list|(
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|==
 literal|0
@@ -2223,7 +2240,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|readdir
+name|CVS_READDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -2342,7 +2359,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -2425,7 +2442,7 @@ argument_list|,
 name|repository
 argument_list|)
 expr_stmt|;
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -3256,6 +3273,8 @@ name|argv
 parameter_list|,
 name|local
 parameter_list|,
+name|which
+parameter_list|,
 name|aflag
 parameter_list|)
 name|int
@@ -3268,6 +3287,9 @@ name|argv
 decl_stmt|;
 name|int
 name|local
+decl_stmt|;
+name|int
+name|which
 decl_stmt|;
 name|int
 name|aflag
@@ -3311,7 +3333,7 @@ name|argv
 argument_list|,
 name|local
 argument_list|,
-name|W_LOCAL
+name|which
 argument_list|,
 name|aflag
 argument_list|,

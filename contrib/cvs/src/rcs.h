@@ -411,6 +411,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* What RCS_deltas is supposed to do.  */
+end_comment
+
+begin_enum
+enum|enum
+name|rcs_delta_op
+block|{
+name|RCS_ANNOTATE
+block|,
+name|RCS_FETCH
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * exported interfaces  */
 end_comment
 
@@ -1095,7 +1110,6 @@ operator|(
 name|RCSNode
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|,
@@ -1114,7 +1128,6 @@ operator|(
 name|RCSNode
 operator|*
 operator|,
-specifier|const
 name|char
 operator|*
 operator|,
@@ -1255,6 +1268,46 @@ name|char
 operator|*
 operator|,
 name|size_t
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|size_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_deltas
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+expr|struct
+name|rcsbuffer
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+expr|enum
+name|rcs_delta_op
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|size_t
+operator|*
 operator|,
 name|char
 operator|*

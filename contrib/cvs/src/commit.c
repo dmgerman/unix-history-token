@@ -652,19 +652,19 @@ init|=
 block|{
 literal|"Usage: %s %s [-nRlf] [-m msg | -F logfile] [-r rev] files...\n"
 block|,
-literal|"\t-n\tDo not run the module program (if any).\n"
+literal|"    -n          Do not run the module program (if any).\n"
 block|,
-literal|"\t-R\tProcess directories recursively.\n"
+literal|"    -R          Process directories recursively.\n"
 block|,
-literal|"\t-l\tLocal directory only (not recursive).\n"
+literal|"    -l          Local directory only (not recursive).\n"
 block|,
-literal|"\t-f\tForce the file to be committed; disables recursion.\n"
+literal|"    -f          Force the file to be committed; disables recursion.\n"
 block|,
-literal|"\t-F file\tRead the log message from file.\n"
+literal|"    -F logfile  Read the log message from file.\n"
 block|,
-literal|"\t-m msg\tLog message.\n"
+literal|"    -m msg      Log message.\n"
 block|,
-literal|"\t-r rev\tCommit to this branch or trunk revision.\n"
+literal|"    -r rev      Commit to this branch or trunk revision.\n"
 block|,
 literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
@@ -1696,7 +1696,9 @@ name|CLIENT_SUPPORT
 comment|/* Who we are on the client side doesn't affect logging.  */
 operator|&&
 operator|!
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 endif|#
 directive|endif
 condition|)
@@ -2025,7 +2027,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|struct
@@ -2571,18 +2575,12 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|fname
-operator|=
-name|cvs_temp_name
-argument_list|()
-expr_stmt|;
 name|fp
 operator|=
-name|CVS_FOPEN
+name|cvs_temp_file
 argument_list|(
+operator|&
 name|fname
-argument_list|,
-literal|"w+"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2665,6 +2663,11 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|err
@@ -2714,6 +2717,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|local
+argument_list|,
+name|W_LOCAL
 argument_list|,
 name|aflag
 argument_list|)
@@ -2859,28 +2864,27 @@ operator|&
 name|mulist
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
+return|return
+name|err
+return|;
+endif|#
+directive|endif
 comment|/* see if we need to sleep before returning to avoid time-stamp races */
 if|if
 condition|(
 name|last_register_time
 condition|)
 block|{
-while|while
-condition|(
-name|time
+name|sleep_past
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-name|NULL
-argument_list|)
-operator|==
 name|last_register_time
-condition|)
-name|sleep
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3389,7 +3393,9 @@ name|cvsroot_len
 init|=
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 decl_stmt|;
 if|if
@@ -3427,7 +3433,9 @@ name|finfo
 operator|->
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|cvsroot_len
 argument_list|)
@@ -3545,14 +3553,9 @@ block|{
 case|case
 name|T_CHECKOUT
 case|:
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 case|case
 name|T_PATCH
 case|:
-endif|#
-directive|endif
 case|case
 name|T_NEEDS_MERGE
 case|:
@@ -3595,7 +3598,7 @@ case|:
 case|case
 name|T_REMOVED
 case|:
-comment|/* 	     * some quick sanity checks; if no numeric -r option specified: 	     *	- can't have a sticky date 	     *	- can't have a sticky tag that is not a branch 	     * Also, 	     *	- if status is T_REMOVED, can't have a numeric tag 	     *	- if status is T_ADDED, rcs file must not exist unless on 	     *    a branch 	     *	- if status is T_ADDED, can't have a non-trunk numeric rev 	     *	- if status is T_MODIFIED and a Conflict marker exists, don't 	     *    allow the commit if timestamp is identical or if we find 	     *    an RCS_MERGE_PAT in the file. 	     */
+comment|/* 	     * some quick sanity checks; if no numeric -r option specified: 	     *	- can't have a sticky date 	     *	- can't have a sticky tag that is not a branch 	     * Also, 	     *	- if status is T_REMOVED, can't have a numeric tag 	     *	- if status is T_ADDED, rcs file must not exist unless on 	     *    a branch or head is dead 	     *	- if status is T_ADDED, can't have a non-trunk numeric rev 	     *	- if status is T_MODIFIED and a Conflict marker exists, don't 	     *    allow the commit if timestamp is identical or if we find 	     *    an RCS_MERGE_PAT in the file. 	     */
 if|if
 condition|(
 operator|!
@@ -3920,57 +3923,26 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|rcs
-decl_stmt|;
-name|rcs
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|finfo
-operator|->
-name|repository
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|finfo
-operator|->
-name|file
-argument_list|)
-operator|+
-sizeof|sizeof
-name|RCSEXT
-operator|+
-literal|5
-argument_list|)
-expr_stmt|;
-comment|/* Don't look in the attic; if it exists there we 		       will move it back out in checkaddfile.  */
-name|sprintf
-argument_list|(
-name|rcs
-argument_list|,
-literal|"%s/%s%s"
-argument_list|,
-name|finfo
-operator|->
-name|repository
-argument_list|,
-name|finfo
-operator|->
-name|file
-argument_list|,
-name|RCSEXT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|isreadable
-argument_list|(
+name|finfo
+operator|->
 name|rcs
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|RCS_isdead
+argument_list|(
+name|finfo
+operator|->
+name|rcs
+argument_list|,
+name|finfo
+operator|->
+name|rcs
+operator|->
+name|head
 argument_list|)
 condition|)
 block|{
@@ -3986,7 +3958,11 @@ name|finfo
 operator|->
 name|fullname
 argument_list|,
+name|finfo
+operator|->
 name|rcs
+operator|->
+name|path
 argument_list|)
 expr_stmt|;
 name|freevers_ts
@@ -3995,29 +3971,16 @@ operator|&
 name|vers
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
-name|free
-argument_list|(
-name|rcs
-argument_list|)
-expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
-name|vers
-operator|->
-name|tag
-operator|&&
 name|isdigit
 argument_list|(
 operator|(
@@ -5710,6 +5673,39 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|finfo
+operator|->
+name|rcs
+operator|->
+name|head
+condition|)
+block|{
+comment|/* resurrecting: include dead revision */
+name|int
+name|thisrev
+init|=
+name|atoi
+argument_list|(
+name|finfo
+operator|->
+name|rcs
+operator|->
+name|head
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|thisrev
+operator|>
+name|maxrev
+condition|)
+name|maxrev
+operator|=
+name|thisrev
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|maxrev
 operator|==
 literal|0
@@ -6177,13 +6173,17 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|repository
 argument_list|,
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 argument_list|)
 operator|!=
@@ -6199,7 +6199,9 @@ literal|"internal error: repository (%s) doesn't begin with root (%s)"
 argument_list|,
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 name|p
@@ -6208,7 +6210,9 @@ name|repository
 operator|+
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 if|if
@@ -6904,10 +6908,6 @@ modifier|*
 name|closure
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|int
 name|thisrev
 decl_stmt|;
@@ -6938,28 +6938,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|cp
-operator|=
-name|strchr
-argument_list|(
-name|entdata
-operator|->
-name|version
-argument_list|,
-literal|'.'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
 name|thisrev
 operator|=
 name|atoi
@@ -6968,17 +6946,6 @@ name|entdata
 operator|->
 name|version
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|cp
-operator|=
-literal|'.'
 expr_stmt|;
 if|if
 condition|(
@@ -8594,20 +8561,13 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"internal error: confused about attic for %s"
+literal|"warning: expected %s to be in Attic"
 argument_list|,
 name|rcsfile
 operator|->
 name|path
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 name|sprintf
 argument_list|(
