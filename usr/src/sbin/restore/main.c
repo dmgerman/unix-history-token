@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,16 +231,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|int
-argument_list|(
-operator|*
-name|signal
-argument_list|()
-argument_list|)
-argument_list|()
-expr_stmt|;
-specifier|extern
-name|int
+name|void
 name|onintr
 parameter_list|()
 function_decl|;
