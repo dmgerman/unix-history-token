@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -139,20 +139,6 @@ end_struct
 begin_comment
 comment|/*  * Super block for a file system.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FS_MAGIC
-value|0x011954
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSOKAY
-value|0x7c269d38
-end_define
 
 begin_struct
 struct|struct
@@ -436,14 +422,18 @@ comment|/* old rotation block list head */
 name|long
 name|fs_sparecon
 index|[
-literal|55
+literal|52
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
 name|long
-name|fs_state
+name|fs_inodefmt
 decl_stmt|;
-comment|/* validate fs_clean field */
+comment|/* format of on-disk inodes */
+name|u_quad_t
+name|fs_maxfilesize
+decl_stmt|;
+comment|/* maximum representable file size */
 name|quad_t
 name|fs_qbmask
 decl_stmt|;
@@ -452,6 +442,10 @@ name|quad_t
 name|fs_qfmask
 decl_stmt|;
 comment|/* ~fs_fmask - for use with quad size */
+name|long
+name|fs_state
+decl_stmt|;
+comment|/* validate fs_clean field */
 name|long
 name|fs_postblformat
 decl_stmt|;
@@ -483,6 +477,54 @@ comment|/* actually longer */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Filesystem idetification  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_MAGIC
+value|0x011954
+end_define
+
+begin_comment
+comment|/* the fast filesystem magic number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_OKAY
+value|0x7c269d38
+end_define
+
+begin_comment
+comment|/* superblock checksum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_42INODEFMT
+value|-1
+end_define
+
+begin_comment
+comment|/* 4.2BSD inode format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_44INODEFMT
+value|2
+end_define
+
+begin_comment
+comment|/* 4.4BSD inode format */
+end_comment
 
 begin_comment
 comment|/*  * Preference for optimization.  */
@@ -1106,7 +1148,7 @@ name|loc
 parameter_list|)
 comment|/* calculates (loc % fs->fs_bsize) */
 define|\
-value|((loc)& ~(fs)->fs_bmask)
+value|((loc)& (fs)->fs_qbmask)
 end_define
 
 begin_define
@@ -1120,7 +1162,7 @@ name|loc
 parameter_list|)
 comment|/* calculates (loc % fs->fs_fsize) */
 define|\
-value|((loc)& ~(fs)->fs_fmask)
+value|((loc)& (fs)->fs_qfmask)
 end_define
 
 begin_define
@@ -1176,7 +1218,7 @@ name|size
 parameter_list|)
 comment|/* calculates roundup(size, fs->fs_bsize) */
 define|\
-value|(((size) + (fs)->fs_bsize - 1)& (fs)->fs_bmask)
+value|(((size) + (fs)->fs_qbmask)& (fs)->fs_bmask)
 end_define
 
 begin_define
@@ -1190,7 +1232,7 @@ name|size
 parameter_list|)
 comment|/* calculates roundup(size, fs->fs_fsize) */
 define|\
-value|(((size) + (fs)->fs_fsize - 1)& (fs)->fs_fmask)
+value|(((size) + (fs)->fs_qfmask)& (fs)->fs_fmask)
 end_define
 
 begin_define
