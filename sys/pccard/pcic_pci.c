@@ -33,6 +33,31 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pci/pcivar.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -44,6 +69,11 @@ include|#
 directive|include
 file|<dev/pci/pcivar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1737,6 +1767,11 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500000
 comment|/* 	 * Take us out of power down mode. 	 */
 if|if
 condition|(
@@ -1770,6 +1805,8 @@ name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 * This so we get the interrupt number in the probe message. 	 */
 name|rid
 operator|=
