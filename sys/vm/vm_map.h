@@ -499,7 +499,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		KASSERT(lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) == 0, \ 			("vm_map_lock: failed to get lock")); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) != 0) \ 			panic("vm_map_lock: failed to get lock"); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_define
