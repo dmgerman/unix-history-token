@@ -4538,13 +4538,17 @@ case|:
 case|case
 name|KERN_PROC_PROC
 case|:
-comment|/* 		 * XXX Temporarily disabled for compat with old userland 		 * that passes an extra unused argument to KERN_PROC_PROC. 		 */
-if|#
-directive|if
+if|if
+condition|(
+name|namelen
+operator|!=
 literal|0
-block|if (namelen != 0) 			return (EINVAL);
-endif|#
-directive|endif
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 break|break;
 default|default:
 if|if
