@@ -3532,6 +3532,17 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|>=
+literal|0
+condition|)
+block|{
 name|KSE_GET_TOD
 argument_list|(
 name|curkse
@@ -3566,6 +3577,7 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Remove the frame reference. */
@@ -7356,14 +7368,6 @@ decl_stmt|;
 name|int
 name|saved_flags
 decl_stmt|;
-name|KSE_GET_TOD
-argument_list|(
-name|kse
-argument_list|,
-operator|&
-name|ts
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7399,6 +7403,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|KSE_GET_TOD
+argument_list|(
+name|kse
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
 name|TIMESPEC_SUB
 argument_list|(
 operator|&
