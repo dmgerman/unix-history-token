@@ -303,6 +303,42 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * Strings for KTR_LOCK tracing.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|STR_mtx_lock_slp
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|STR_mtx_lock_spn
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|STR_mtx_unlock_slp
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|STR_mtx_unlock_spn
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp __FILE__  *	 and __LINE__. These functions should not be called directly by any  *	 code using the IPI. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
 end_comment
 
@@ -665,7 +701,7 @@ name|mtx_lock
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(CURPROC != NULL);						\ 	_get_sleep_lock((m), CURTHD, 0);				\ 	WITNESS_ENTER((m), (m)->mtx_flags, __FILE__, __LINE__);		\ } while (0)
+value|do {						\ 	MPASS(CURPROC != NULL);						\ 	_get_sleep_lock((m), CURTHD, 0);				\ 	CTR5(KTR_LOCK, STR_mtx_lock_slp, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ 	WITNESS_ENTER((m), (m)->mtx_flags, __FILE__, __LINE__);		\ } while (0)
 end_define
 
 begin_define
@@ -675,7 +711,7 @@ name|mtx_lock_spin
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(CURPROC != NULL);						\ 	_get_spin_lock((m), CURTHD, 0);					\ 	WITNESS_ENTER((m), (m)->mtx_flags, __FILE__, __LINE__);		\ } while (0)
+value|do {						\ 	MPASS(CURPROC != NULL);						\ 	_get_spin_lock((m), CURTHD, 0);					\ 	CTR5(KTR_LOCK, STR_mtx_lock_spn, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ 	WITNESS_ENTER((m), (m)->mtx_flags, __FILE__, __LINE__);		\ } while (0)
 end_define
 
 begin_define
@@ -685,7 +721,7 @@ name|mtx_unlock
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), (m)->mtx_flags, __FILE__, __LINE__);		\ 	_rel_sleep_lock((m), CURTHD, 0);				\ } while (0)
+value|do {						\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), (m)->mtx_flags, __FILE__, __LINE__);		\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_sleep_lock((m), CURTHD, 0);				\ 	CTR5(KTR_LOCK, STR_mtx_unlock_slp, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ } while (0)
 end_define
 
 begin_define
@@ -695,7 +731,7 @@ name|mtx_unlock_spin
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), (m)->mtx_flags, __FILE__, __LINE__);		\ 	_rel_spin_lock((m));						\ } while (0)
+value|do {						\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), (m)->mtx_flags, __FILE__, __LINE__);		\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_spin_lock((m));						\ 	CTR5(KTR_LOCK, STR_mtx_unlock_spn, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ } while (0)
 end_define
 
 begin_define
@@ -707,7 +743,7 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {					\ 	MPASS(CURPROC != NULL);						\ 	_get_sleep_lock((m), CURTHD, (opts));				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
+value|do {					\ 	MPASS(CURPROC != NULL);						\ 	_get_sleep_lock((m), CURTHD, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
 end_define
 
 begin_define
@@ -719,7 +755,7 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {				\ 	MPASS(CURPROC != NULL);						\ 	_get_spin_lock((m), CURTHD, (opts));				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
+value|do {				\ 	MPASS(CURPROC != NULL);						\ 	_get_spin_lock((m), CURTHD, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
 end_define
 
 begin_define
@@ -731,7 +767,7 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {					\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	_rel_sleep_lock((m), CURTHD, (opts));				\ } while (0)
+value|do {					\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_sleep_lock((m), CURTHD, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
 end_define
 
 begin_comment
@@ -747,7 +783,7 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {				\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, "REL %s [%p] r=%d at %s:%d",		\ 		    (m)->mtx_description, (m), (m)->mtx_recurse,	\ 		    __FILE__, __LINE__);				\ 	_rel_spin_lock((m));						\ } while (0)
+value|do {				\ 	MPASS(CURPROC != NULL);						\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_spin_lock((m));						\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
 end_define
 
 begin_define

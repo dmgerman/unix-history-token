@@ -489,6 +489,46 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Couple of strings for KTR_LOCK tracing in order to avoid duplicates.  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|STR_mtx_lock_slp
+index|[]
+init|=
+literal|"GOT (sleep) %s [%p] r=%d at %s:%d"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|STR_mtx_unlock_slp
+index|[]
+init|=
+literal|"REL (sleep) %s [%p] r=%d at %s:%d"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|STR_mtx_lock_spn
+index|[]
+init|=
+literal|"GOT (spin) %s [%p] r=%d at %s:%d"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|STR_mtx_unlock_spn
+index|[]
+init|=
+literal|"REL (spin) %s [%p] r=%d at %s:%d"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Prototypes for non-exported routines.  *  * NOTE: Prototypes for witness routines are placed at the bottom of the file.   */
 end_comment
 
@@ -932,19 +972,15 @@ block|{
 name|int
 name|rval
 decl_stmt|;
-name|KASSERT
+name|MPASS
 argument_list|(
 name|CURPROC
 operator|!=
 name|NULL
-argument_list|,
-operator|(
-literal|"curproc is NULL in _mtx_trylock"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * _mtx_trylock does not accept MTX_NOSWITCH option. 	 */
-name|MPASS
+name|KASSERT
 argument_list|(
 operator|(
 name|opts
@@ -953,6 +989,12 @@ name|MTX_NOSWITCH
 operator|)
 operator|==
 literal|0
+argument_list|,
+operator|(
+literal|"mtx_trylock() called with invalid option flag(s) %d"
+operator|,
+name|opts
+operator|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -979,13 +1021,17 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * We do not handle recursion in _mtx_trylock; see the 		 * note at the top of the routine. 		 */
-name|MPASS
+name|KASSERT
 argument_list|(
 operator|!
 name|mtx_recursed
 argument_list|(
 name|m
 argument_list|)
+argument_list|,
+operator|(
+literal|"mtx_trylock() called on a recursed mutex"
+operator|)
 argument_list|)
 expr_stmt|;
 name|witness_try_enter
@@ -1121,7 +1167,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"_mtx_lock_sleep: %p recurse"
+literal|"_mtx_lock_sleep: %p recursing"
 argument_list|,
 name|m
 argument_list|)
@@ -1142,7 +1188,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_lock: %p contested (lock=%p) [%p]"
+literal|"_mtx_lock_sleep: %p contested (lock=%p) [%p]"
 argument_list|,
 name|m
 argument_list|,
@@ -1238,15 +1284,11 @@ operator|->
 name|mtx_blocked
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|MPASS
 argument_list|(
 name|p1
 operator|!=
 name|NULL
-argument_list|,
-operator|(
-literal|"contested mutex has no contesters"
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1388,7 +1430,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_lock: 0x%x interrupted 0x%x"
+literal|"_mtx_lock_sleep: 0x%x interrupted 0x%x"
 argument_list|,
 name|it
 argument_list|,
@@ -1644,7 +1686,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_lock_spin: %p spinning"
+literal|"_mtx_lock_spin: %p spinning"
 argument_list|,
 name|m
 argument_list|)
@@ -1809,37 +1851,6 @@ name|m
 argument_list|)
 argument_list|,
 literal|"mtx_owned(mpp)"
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|opts
-operator|&
-name|MTX_QUIET
-operator|)
-operator|==
-literal|0
-condition|)
-name|CTR5
-argument_list|(
-name|KTR_LOCK
-argument_list|,
-literal|"REL %s [%p] r=%d at %s:%d"
-argument_list|,
-name|m
-operator|->
-name|mtx_description
-argument_list|,
-name|m
-argument_list|,
-name|m
-operator|->
-name|mtx_recurse
 argument_list|,
 name|file
 argument_list|,
