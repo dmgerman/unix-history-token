@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fsck.h	3.5 (Berkeley) %G% */
+comment|/* @(#)fsck.h	3.6 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -23,17 +23,6 @@ end_define
 
 begin_comment
 comment|/* limit on bad blks (per inode) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXLNCNT
-value|500
-end_define
-
-begin_comment
-comment|/* num zero link cnts to remember */
 end_comment
 
 begin_typedef
@@ -499,7 +488,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Linked list of duplicate blocks  */
+comment|/*  * Linked list of duplicate blocks.  *   * The list is composed of two parts. The first part of the  * list (from duplist through the node pointed to by muldup)  * contains a single copy of each duplicate block that has been   * found. The second part of the list (from muldup to the end)  * contains duplicate blocks that have been found more than once.  * To check if a block has been found as a duplicate it is only  * necessary to search from duplist through muldup. To find the   * total number of times that a block has been found as a duplicate  * the entire list must be searched for occurences of the block  * in question. The following diagram shows a sample list where  * w (found twice), x (found once), y (found three times), and z  * (found once) are duplicate block numbers:  *  *    w -> y -> x -> z -> y -> w -> y  *    ^		     ^  *    |		     |  * duplist	  muldup  */
 end_comment
 
 begin_struct
@@ -542,28 +531,36 @@ begin_comment
 comment|/* end of unique duplicate dup block numbers */
 end_comment
 
-begin_decl_stmt
-name|ino_t
-name|badlncnt
-index|[
-name|MAXLNCNT
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* table of inos with zero link cnts */
+comment|/*  * Linked list of inodes with zero link counts.  */
 end_comment
 
-begin_decl_stmt
-name|ino_t
+begin_struct
+struct|struct
+name|zlncnt
+block|{
+name|struct
+name|zlncnt
 modifier|*
-name|badlnp
+name|next
+decl_stmt|;
+name|ino_t
+name|zlncnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|zlncnt
+modifier|*
+name|zlnhead
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* next entry in table */
+comment|/* head of zero link count list */
 end_comment
 
 begin_decl_stmt

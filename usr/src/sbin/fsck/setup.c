@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)setup.c	3.5 (Berkeley) %G%"
+literal|"@(#)setup.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,14 +317,6 @@ operator|.
 name|mod
 operator|=
 literal|0
-expr_stmt|;
-name|badlnp
-operator|=
-operator|&
-name|badlncnt
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|lfdir
 operator|=

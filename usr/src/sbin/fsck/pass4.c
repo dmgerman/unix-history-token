@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass4.c	3.3 (Berkeley) %G%"
+literal|"@(#)pass4.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,16 +61,19 @@ block|{
 specifier|register
 name|ino_t
 name|inumber
-decl_stmt|,
-modifier|*
-name|blp
 decl_stmt|;
-name|int
-name|n
+specifier|register
+name|struct
+name|zlncnt
+modifier|*
+name|zlnp
 decl_stmt|;
 name|struct
 name|inodesc
 name|idesc
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -160,21 +163,23 @@ else|else
 block|{
 for|for
 control|(
-name|blp
+name|zlnp
 operator|=
-name|badlncnt
+name|zlnhead
 init|;
-name|blp
-operator|<
-name|badlnp
+name|zlnp
 condition|;
-name|blp
-operator|++
+name|zlnp
+operator|=
+name|zlnp
+operator|->
+name|next
 control|)
 if|if
 condition|(
-operator|*
-name|blp
+name|zlnp
+operator|->
+name|zlncnt
 operator|==
 name|inumber
 condition|)
@@ -349,11 +354,7 @@ name|duplist
 operator|->
 name|next
 expr_stmt|;
-name|free
-argument_list|(
-name|dlp
-argument_list|)
-expr_stmt|;
+comment|/* free(dlp); */
 break|break;
 block|}
 if|if
