@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.9 1995/05/04 07:00:53 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.10 1995/05/06 03:28:28 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -292,6 +292,19 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|c
+operator|->
+name|name
+argument_list|,
+literal|"X"
+argument_list|)
+condition|)
+continue|continue;
 for|for
 control|(
 name|c3
