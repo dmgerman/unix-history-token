@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.34 (Berkeley) 4/14/94"
+literal|"@(#)envelope.c	8.34.1.1 (Berkeley) 2/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -2020,7 +2020,7 @@ name|fdopen
 argument_list|(
 name|fd
 argument_list|,
-literal|"w"
+literal|"a"
 argument_list|)
 expr_stmt|;
 if|if

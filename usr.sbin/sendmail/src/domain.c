@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.19 (Berkeley) 3/11/94 (with name server)"
+literal|"@(#)domain.c	8.19.1.1 (Berkeley) 3/6/95 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.19 (Berkeley) 3/11/94 (without name server)"
+literal|"@(#)domain.c	8.19.1.1 (Berkeley) 3/6/95 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2686,6 +2686,13 @@ condition|)
 return|return
 name|NULL
 return|;
+name|setbuf
+argument_list|(
+name|fp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
