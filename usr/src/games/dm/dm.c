@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.15 (Berkeley) %G%"
+literal|"@(#)dm.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,18 +273,20 @@ begin_comment
 comment|/*  * play --  *	play the game  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|play
 argument_list|(
 argument|args
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|args
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -391,46 +393,48 @@ begin_comment
 comment|/*  * read_config --  *	read through config file, looking for key words.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|read_config
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|FILE
-operator|*
+modifier|*
 name|cfp
-block|;
+decl_stmt|;
 name|char
 name|lbuf
 index|[
 name|BUFSIZ
 index|]
-block|,
+decl_stmt|,
 name|f1
 index|[
 literal|40
 index|]
-block|,
+decl_stmt|,
 name|f2
 index|[
 literal|40
 index|]
-block|,
+decl_stmt|,
 name|f3
 index|[
 literal|40
 index|]
-block|,
+decl_stmt|,
 name|f4
 index|[
 literal|40
 index|]
-block|,
+decl_stmt|,
 name|f5
 index|[
 literal|40
 index|]
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -446,9 +450,6 @@ argument_list|)
 operator|)
 condition|)
 return|return;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|fgets
@@ -588,9 +589,6 @@ name|f4
 argument_list|)
 expr_stmt|;
 block|}
-end_while
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -599,15 +597,14 @@ argument_list|(
 name|cfp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * c_day --  *	if day is today, see if okay to play  */
 end_comment
 
 begin_macro
-unit|static
 name|c_day
 argument_list|(
 argument|s_day
@@ -784,17 +781,19 @@ begin_comment
 comment|/*  * c_tty --  *	decide if this tty can be used for games.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|c_tty
 argument_list|(
 argument|tty
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|tty
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -876,8 +875,7 @@ begin_comment
 comment|/*  * c_game --  *	see if game can be played now.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|c_game
 argument_list|(
 argument|s_game
@@ -888,20 +886,23 @@ argument|s_users
 argument_list|,
 argument|s_priority
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|s_game
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|s_load
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|s_users
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|s_priority
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1021,7 +1022,6 @@ comment|/*  * load --  *	return 15 minute load average  */
 end_comment
 
 begin_function
-specifier|static
 name|double
 name|load
 parameter_list|()
@@ -1083,20 +1083,23 @@ begin_comment
 comment|/*  * users --  *	return current number of users  *	todo: check idle time; if idle more than X minutes, don't  *	count them.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|users
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
 name|nusers
-block|,
+decl_stmt|,
 name|utmp
-block|; 	struct
+decl_stmt|;
+name|struct
 name|utmp
 name|buf
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1138,9 +1141,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|nusers
@@ -1182,18 +1182,15 @@ condition|)
 operator|++
 name|nusers
 expr_stmt|;
-end_for
-
-begin_return
 return|return
 operator|(
 name|nusers
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_macro
-unit|}  static
 name|nogamefile
 argument_list|()
 end_macro
@@ -1296,16 +1293,18 @@ begin_comment
 comment|/*  * hour --  *	print out the hour in human form  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|hour
 argument_list|(
 argument|h
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|h
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1378,34 +1377,37 @@ begin_comment
 comment|/*  * logfile --  *	log play of game  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|logfile
 argument_list|()
-block|{ 	struct
+end_macro
+
+begin_block
+block|{
+name|struct
 name|passwd
-operator|*
+modifier|*
 name|pw
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|getpwuid
 argument_list|()
-block|;
+decl_stmt|;
 name|FILE
-operator|*
+modifier|*
 name|lp
-block|;
+decl_stmt|;
 name|uid_t
 name|uid
-block|;
+decl_stmt|;
 name|int
 name|lock_cnt
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|ctime
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|lp
@@ -1473,11 +1475,9 @@ operator|)
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|} 		if
-operator|(
+block|}
+if|if
+condition|(
 name|pw
 operator|=
 name|getpwuid
@@ -1487,7 +1487,7 @@ operator|=
 name|getuid
 argument_list|()
 argument_list|)
-operator|)
+condition|)
 name|fputs
 argument_list|(
 name|pw
@@ -1497,9 +1497,6 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|else
 name|fprintf
 argument_list|(
@@ -1510,9 +1507,6 @@ argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
-end_else
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|lp
@@ -1530,9 +1524,6 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1541,9 +1532,6 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1557,10 +1545,11 @@ argument_list|,
 name|LOCK_UN
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+block|}
+end_block
 
 begin_endif
-unit|} }
 endif|#
 directive|endif
 end_endif
