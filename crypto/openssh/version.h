@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: version.h,v 1.13 2000/10/16 09:38:45 djm Exp $ */
+comment|/* $OpenBSD: version.h,v 1.23 2001/04/24 16:43:16 markus Exp $ */
 end_comment
 
 begin_ifndef
@@ -24,14 +24,14 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_BASE
-value|"OpenSSH_2.3.0"
+value|"OpenSSH_2.9"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSH_VERSION_ADDENDUM
-value|"green@FreeBSD.org 20010319"
+value|"green@FreeBSD.org 20010503"
 end_define
 
 begin_function_decl

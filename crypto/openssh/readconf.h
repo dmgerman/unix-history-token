@@ -4,11 +4,11 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: readconf.h,v 1.22 2000/10/11 20:14:39 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: readconf.h,v 1.30 2001/04/17 10:53:25 markus Exp $"); */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* RCSID("$FreeBSD$"); */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,12 @@ define|#
 directive|define
 name|READCONF_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
 
 begin_comment
 comment|/* Data structure for representing a forwarding request. */
@@ -91,13 +97,17 @@ name|rsa_authentication
 decl_stmt|;
 comment|/* Try RSA authentication. */
 name|int
-name|dsa_authentication
+name|pubkey_authentication
 decl_stmt|;
-comment|/* Try DSA authentication. */
+comment|/* Try ssh2 pubkey authentication. */
 name|int
-name|skey_authentication
+name|hostbased_authentication
 decl_stmt|;
-comment|/* Try S/Key or TIS authentication. */
+comment|/* ssh2's rhosts_rsa */
+name|int
+name|challenge_reponse_authentication
+decl_stmt|;
+comment|/* Try S/Key or TIS, authentication. */
 if|#
 directive|if
 name|defined
@@ -112,7 +122,7 @@ argument_list|)
 name|int
 name|kerberos_authentication
 decl_stmt|;
-comment|/* Try Kerberos authentication. */
+comment|/* Try Kerberos 						 * authentication. */
 endif|#
 directive|endif
 ifdef|#
@@ -207,6 +217,16 @@ modifier|*
 name|ciphers
 decl_stmt|;
 comment|/* SSH2 ciphers in order of preference. */
+name|char
+modifier|*
+name|macs
+decl_stmt|;
+comment|/* SSH2 macs in order of preference. */
+name|char
+modifier|*
+name|hostkeyalgorithms
+decl_stmt|;
+comment|/* SSH2 server key types in order of preference. */
 name|int
 name|protocol
 decl_stmt|;
@@ -216,6 +236,11 @@ modifier|*
 name|hostname
 decl_stmt|;
 comment|/* Real host to connect. */
+name|char
+modifier|*
+name|host_key_alias
+decl_stmt|;
+comment|/* hostname alias for .ssh/known_hosts */
 name|char
 modifier|*
 name|proxy_command
@@ -248,14 +273,14 @@ name|char
 modifier|*
 name|user_hostfile2
 decl_stmt|;
+name|char
+modifier|*
+name|preferred_authentications
+decl_stmt|;
 name|int
 name|num_identity_files
 decl_stmt|;
-comment|/* Number of files for RSA identities. */
-name|int
-name|num_identity_files2
-decl_stmt|;
-comment|/* DSA identities. */
+comment|/* Number of files for RSA/DSA identities. */
 name|char
 modifier|*
 name|identity_files
@@ -263,9 +288,9 @@ index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]
 decl_stmt|;
-name|char
+name|Key
 modifier|*
-name|identity_files2
+name|identity_keys
 index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]

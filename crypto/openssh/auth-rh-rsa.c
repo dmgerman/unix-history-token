@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rh-rsa.c,v 1.17 2000/10/03 18:03:03 markus Exp $"
+literal|"$OpenBSD: auth-rh-rsa.c,v 1.23 2001/04/06 21:00:04 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xmalloc.h"
 end_include
 
@@ -52,19 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/dsa.h>
 end_include
 
 begin_include
@@ -77,6 +65,30 @@ begin_include
 include|#
 directive|include
 file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tildexpand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
 end_include
 
 begin_comment
@@ -158,7 +170,11 @@ return|;
 name|canonical_hostname
 operator|=
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+name|options
+operator|.
+name|reverse_mapping_check
+argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
@@ -172,7 +188,7 @@ name|client_key
 operator|=
 name|key_new
 argument_list|(
-name|KEY_RSA
+name|KEY_RSA1
 argument_list|)
 expr_stmt|;
 name|BN_copy
@@ -205,7 +221,7 @@ name|found
 operator|=
 name|key_new
 argument_list|(
-name|KEY_RSA
+name|KEY_RSA1
 argument_list|)
 expr_stmt|;
 comment|/* Check if we know the host and its host key. */
@@ -213,13 +229,15 @@ name|host_status
 operator|=
 name|check_host_in_hostfile
 argument_list|(
-name|SSH_SYSTEM_HOSTFILE
+name|_PATH_SSH_SYSTEM_HOSTFILE
 argument_list|,
 name|canonical_hostname
 argument_list|,
 name|client_key
 argument_list|,
 name|found
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Check user host file unless ignored. */
@@ -245,14 +263,14 @@ name|user_hostfile
 init|=
 name|tilde_expand_filename
 argument_list|(
-name|SSH_USER_HOSTFILE
+name|_PATH_SSH_USER_HOSTFILE
 argument_list|,
 name|pw
 operator|->
 name|pw_uid
 argument_list|)
 decl_stmt|;
-comment|/* 		 * Check file permissions of SSH_USER_HOSTFILE, auth_rsa() 		 * did already check pw->pw_dir, but there is a race XXX 		 */
+comment|/* 		 * Check file permissions of _PATH_SSH_USER_HOSTFILE, auth_rsa() 		 * did already check pw->pw_dir, but there is a race XXX 		 */
 if|if
 condition|(
 name|options
@@ -318,8 +336,6 @@ comment|/* XXX race between stat and the following open() */
 name|temporarily_use_uid
 argument_list|(
 name|pw
-operator|->
-name|pw_uid
 argument_list|)
 expr_stmt|;
 name|host_status
@@ -333,6 +349,8 @@ argument_list|,
 name|client_key
 argument_list|,
 name|found
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|restore_uid

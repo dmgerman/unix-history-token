@@ -4,11 +4,11 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: rsa.h,v 1.8 2000/09/07 20:27:53 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: rsa.h,v 1.11 2001/03/26 23:23:24 markus Exp $"); */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* RCSID("$FreeBSD$"); */
 end_comment
 
 begin_ifndef
@@ -34,58 +34,6 @@ include|#
 directive|include
 file|<openssl/rsa.h>
 end_include
-
-begin_comment
-comment|/* Calls SSL RSA_generate_key, only copies to prv and pub */
-end_comment
-
-begin_function_decl
-name|void
-name|rsa_generate_key
-parameter_list|(
-name|RSA
-modifier|*
-name|prv
-parameter_list|,
-name|RSA
-modifier|*
-name|pub
-parameter_list|,
-name|unsigned
-name|int
-name|bits
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Indicates whether the rsa module is permitted to show messages on the  * terminal.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|rsa_set_verbose
-name|__P
-argument_list|(
-operator|(
-name|int
-name|verbose
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rsa_alive
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -126,6 +74,20 @@ operator|,
 name|RSA
 operator|*
 name|prv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|generate_additional_parameters
+name|__P
+argument_list|(
+operator|(
+name|RSA
+operator|*
+name|rsa
 operator|)
 argument_list|)
 decl_stmt|;
