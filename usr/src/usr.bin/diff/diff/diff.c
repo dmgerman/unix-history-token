@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c	4.9 (Berkeley) %G%"
+literal|"@(#)diff.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,7 +414,7 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
-name|start
+name|Start
 operator|=
 name|argp
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffdir.c	4.13 (Berkeley) %G%"
+literal|"@(#)diffdir.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2417,11 +2417,11 @@ comment|/* directory ".." */
 block|}
 if|if
 condition|(
-name|start
+name|Start
 operator|&&
 name|strcmp
 argument_list|(
-name|start
+name|Start
 argument_list|,
 name|cp
 argument_list|)
