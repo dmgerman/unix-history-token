@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.13 89/10/08$  *  *	@(#)mem.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.13 89/10/08$  *  *	@(#)mem.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,49 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/cmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/malloc.h"
+file|"malloc.h"
 end_include
 
 begin_include
@@ -65,6 +47,18 @@ begin_include
 include|#
 directive|include
 file|"vm/vm_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/lock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm_statistics.h"
 end_include
 
 begin_include
@@ -432,20 +426,19 @@ name|uio
 operator|->
 name|uio_rw
 operator|==
-name|UIO_READ
+name|UIO_WRITE
 condition|)
+name|uio
+operator|->
+name|uio_resid
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|c
-operator|=
-name|iov
-operator|->
-name|iov_len
-expr_stmt|;
-break|break;
 comment|/* minor device 12 (/dev/zero) is source of nulls on read, rathole on write */
 case|case
 literal|12
