@@ -1099,7 +1099,7 @@ block|,
 block|{
 literal|"aic"
 block|,
-literal|"Adaptec 152x SCSI and compatible sound cards"
+literal|"Adaptec 152x SCSI and compatible SCSI cards"
 block|,
 literal|0
 block|,
