@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -326,13 +326,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Although process entries are dynamically entries, 	 * we still keep a global limit on the maximum number 	 * we will create.  Don't allow a nonprivileged user 	 * to exceed its current limit or to bring us within one 	 * of the global limit; don't let root exceed the limit. 	 * nprocs is the current number of processes, 	 * maxproc is the limit. 	 */
-name|retval
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|nprocs
@@ -665,7 +658,7 @@ name|p_startcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 */
+comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_fork. 	 */
 name|MALLOC
 argument_list|(
 name|p2
@@ -722,15 +715,6 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-name|p2
-operator|->
-name|p_stats
-operator|=
-name|p1
-operator|->
-name|p_stats
-expr_stmt|;
-comment|/* XXX move; in u. */
 comment|/* 	 * If p_limit is still copy-on-write, bump refcnt, 	 * otherwise get a copy that won't be modified. 	 * (If PL_SHAREMOD is clear, the structure is shared 	 * copy-on-write.) 	 */
 if|if
 condition|(
@@ -773,15 +757,6 @@ expr_stmt|;
 block|}
 name|p2
 operator|->
-name|p_sigacts
-operator|=
-name|p1
-operator|->
-name|p_sigacts
-expr_stmt|;
-comment|/* XXX move; in u. */
-name|p2
-operator|->
 name|p_flag
 operator|=
 name|SLOAD
@@ -791,11 +766,7 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-operator|(
-name|SPAGV
-operator||
 name|SHPUX
-operator|)
 operator|)
 expr_stmt|;
 if|if
@@ -1003,6 +974,23 @@ name|p_flag
 operator||=
 name|SKEEP
 expr_stmt|;
+comment|/* 	 * Set return values for child before vm_fork, 	 * so they can be copied to child stack. 	 * We return parent pid, and mark as child in retval[1]. 	 */
+name|retval
+index|[
+literal|0
+index|]
+operator|=
+name|p1
+operator|->
+name|p_pid
+expr_stmt|;
+name|retval
+index|[
+literal|1
+index|]
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|vm_fork
@@ -1015,7 +1003,7 @@ name|isvfork
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Child process.  Set start time, return parent pid, 		 * and mark as child in retval[1]. 		 */
+comment|/* 		 * Child process.  Set start time and get to work. 		 */
 operator|(
 name|void
 operator|)
@@ -1035,22 +1023,6 @@ name|void
 operator|)
 name|spl0
 argument_list|()
-expr_stmt|;
-name|retval
-index|[
-literal|0
-index|]
-operator|=
-name|p1
-operator|->
-name|p_pid
-expr_stmt|;
-name|retval
-index|[
-literal|1
-index|]
-operator|=
-literal|1
 expr_stmt|;
 name|p2
 operator|->
@@ -1109,19 +1081,21 @@ name|p_flag
 operator|&
 name|SPPWAIT
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 name|p1
 argument_list|,
-name|PZERO
-operator|-
-literal|1
+name|PWAIT
+argument_list|,
+literal|"ppwait"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return child pid to parent process. 	 * retval[1] was set above. 	 */
+comment|/* 	 * Return child pid to parent process, 	 * marking us as parent via retval[1]. 	 */
 name|retval
 index|[
 literal|0
@@ -1130,6 +1104,13 @@ operator|=
 name|p2
 operator|->
 name|p_pid
+expr_stmt|;
+name|retval
+index|[
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
