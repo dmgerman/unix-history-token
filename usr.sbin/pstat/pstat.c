@@ -101,23 +101,11 @@ directive|include
 file|<ufs/ufs/inode.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NFS
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/mount.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|NFS
-end_undef
 
 begin_include
 include|#
@@ -161,23 +149,11 @@ directive|include
 file|<nfs/nfsproto.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<nfs/nfs.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_include
 include|#
