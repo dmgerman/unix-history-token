@@ -1439,6 +1439,24 @@ operator|&
 name|isisize
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|trapcode
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_SC
+argument_list|,
+operator|(
+name|size_t
+operator|)
+operator|&
+name|trapsize
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Start initializing proc0 and thread0. 	 */
 name|proc_linkup
 argument_list|(
