@@ -277,7 +277,7 @@ name|lun
 parameter_list|,
 name|disc
 parameter_list|)
-value|((disc) ? 0xc0 : MSG_IDENTIFYFLAG) | (lun))
+value|(((disc) ? 0xc0 : MSG_IDENTIFYFLAG) | (lun))
 end_define
 
 begin_define
