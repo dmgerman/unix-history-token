@@ -2479,7 +2479,6 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|ata
 argument_list|)
 expr_stmt|;
