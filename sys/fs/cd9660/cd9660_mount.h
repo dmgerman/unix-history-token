@@ -25,6 +25,10 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* mounting flags, see below */
+name|int
+name|ssector
+decl_stmt|;
+comment|/* starting sector, 0 for 1st session */
 block|}
 struct|;
 end_struct
