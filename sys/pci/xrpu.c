@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.4 1998/11/08 12:39:06 dfr Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.5 1998/12/14 06:32:58 dillon Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
 
 begin_include
@@ -1446,25 +1446,8 @@ name|pcidi_t
 name|typea
 parameter_list|)
 block|{
-name|int
-name|data
-init|=
-name|pci_conf_read
-argument_list|(
-name|tag
-argument_list|,
-name|PCI_CLASS_REG
-argument_list|)
-decl_stmt|;
 name|u_int
 name|id
-init|=
-name|pci_conf_read
-argument_list|(
-name|tag
-argument_list|,
-name|PCI_ID_REG
-argument_list|)
 decl_stmt|;
 specifier|const
 name|char
@@ -1477,6 +1460,25 @@ decl_stmt|,
 modifier|*
 name|type
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_ID_REG
+argument_list|)
+expr_stmt|;
 name|vendor
 operator|=
 name|chip
