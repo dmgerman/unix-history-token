@@ -1167,6 +1167,10 @@ name|pam_context
 argument_list|,
 name|ccache
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|service
 argument_list|,
 name|pam_test_option
@@ -3283,6 +3287,10 @@ argument_list|,
 operator|&
 name|creds
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|pass
 argument_list|,
 operator|&
