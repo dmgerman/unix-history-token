@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.1 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.2 */
 end_comment
 
 begin_include
@@ -22,20 +22,12 @@ name|bool
 value|char
 end_define
 
-begin_comment
-comment|/* boolean variable		*/
-end_comment
-
 begin_define
 define|#
 directive|define
 name|reg
 value|register
 end_define
-
-begin_comment
-comment|/* register varaible abbr.	*/
-end_comment
 
 begin_define
 define|#
@@ -58,20 +50,12 @@ name|ERR
 value|(0)
 end_define
 
-begin_comment
-comment|/* default return on error	*/
-end_comment
-
 begin_define
 define|#
 directive|define
 name|OK
 value|(1)
 end_define
-
-begin_comment
-comment|/* default return on good run	*/
-end_comment
 
 begin_define
 define|#
@@ -80,20 +64,12 @@ name|_SUBWIN
 value|01
 end_define
 
-begin_comment
-comment|/* window is a subindow		*/
-end_comment
-
 begin_define
 define|#
 directive|define
 name|_ENDLINE
 value|02
 end_define
-
-begin_comment
-comment|/* lines go to end of screen	*/
-end_comment
 
 begin_define
 define|#
@@ -102,20 +78,12 @@ name|_FULLWIN
 value|04
 end_define
 
-begin_comment
-comment|/* window is entire screen	*/
-end_comment
-
 begin_define
 define|#
 directive|define
 name|_SCROLLWIN
 value|010
 end_define
-
-begin_comment
-comment|/* window could cause scroll	*/
-end_comment
 
 begin_define
 define|#
@@ -124,10 +92,6 @@ name|_FLUSH
 value|020
 end_define
 
-begin_comment
-comment|/* flush after refresh		*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -135,20 +99,12 @@ name|_STANDOUT
 value|0200
 end_define
 
-begin_comment
-comment|/* standout mode in effect	*/
-end_comment
-
 begin_define
 define|#
 directive|define
 name|_NOCHANGE
 value|-1
 end_define
-
-begin_comment
-comment|/* no change on this line	*/
-end_comment
 
 begin_define
 define|#
@@ -175,554 +131,150 @@ name|WINDOW
 end_ifndef
 
 begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
-end_comment
-
-begin_comment
 comment|/*  * Capabilities from termcap  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|AL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P* Add new blank line		*/
 end_comment
 
 begin_decl_stmt
 name|bool
 name|AM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Automatic margins			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|BC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Back cursor			*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|BS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Backspace works			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|BT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Back tab				*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|CA
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Cursor addressible		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|CD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P* Clear to end of display		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|CE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Clear to end of line		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|CL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P* Clear screen			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|CM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Cursor motion			*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|DA
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Display may be retained above	*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|DB
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Display may be retained below	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|DC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P* Delete character			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|DL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P* Delete line sequence		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|DM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Delete mode (enter)		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|DO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Down line sequence		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ED
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    End delete mode			*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|EO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Can erase overstrikes with ' '	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|EI
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    End insert mode			*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|GT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Gtty indicates tabs		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|HO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Home cursor			*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|HZ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Hazeltine ~ braindamage		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|IC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Insert character			*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|IN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Insert-null blessing		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|IM
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Insrt mode (as ':im=:' if 'ic')	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|IP
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P* pad after char ins'd using IM+IE	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|LL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Quick to last line, column 0	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|MA
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Ctrl character map for cmd mode	*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|MI
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    can Move in Insert mode		*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|MS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    can Move in Standout mode		*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|NC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    No Cr: \r sends \r\n then eats \n	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ND
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Non-destructive space		*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|OS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Overstrike works			*/
-end_comment
-
-begin_decl_stmt
-name|char
-name|PC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Pad character			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|SE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Standout end (may leave space)	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|SF
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Scroll forwards			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|SO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Stand out begin (may leave space)	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|SR
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Scroll backwards			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|TA
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* P  Tab (not ^I or with padding)	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|TE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    End sequence after TI		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|TI
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Terminal Initialize		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|UC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Underline a single Character	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|UE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Underline End sequence		*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|UL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Underlining works even though !os	*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|UP
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Upline				*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|US
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Underline Start sequence		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|VB
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Visible bell			*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|VE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Visual end sequence		*/
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|VS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    Visual start sequence		*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|XN
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*    A newline gets eaten after wrap	*/
-end_comment
-
-begin_comment
-comment|/* X? is reserved for severely nauseous glitches		*/
-end_comment
-
-begin_comment
-comment|/* If there are enough of these we may need bit masks!		*/
-end_comment
+begin_decl_stmt
+name|char
+modifier|*
+name|AL
+decl_stmt|,
+modifier|*
+name|BC
+decl_stmt|,
+modifier|*
+name|BT
+decl_stmt|,
+modifier|*
+name|CD
+decl_stmt|,
+modifier|*
+name|CE
+decl_stmt|,
+modifier|*
+name|CL
+decl_stmt|,
+modifier|*
+name|CM
+decl_stmt|,
+modifier|*
+name|DC
+decl_stmt|,
+modifier|*
+name|DL
+decl_stmt|,
+modifier|*
+name|DM
+decl_stmt|,
+modifier|*
+name|DO
+decl_stmt|,
+modifier|*
+name|ED
+decl_stmt|,
+modifier|*
+name|EI
+decl_stmt|,
+modifier|*
+name|HO
+decl_stmt|,
+modifier|*
+name|IC
+decl_stmt|,
+modifier|*
+name|IM
+decl_stmt|,
+modifier|*
+name|IP
+decl_stmt|,
+modifier|*
+name|LL
+decl_stmt|,
+modifier|*
+name|MA
+decl_stmt|,
+modifier|*
+name|ND
+decl_stmt|,
+modifier|*
+name|SE
+decl_stmt|,
+modifier|*
+name|SF
+decl_stmt|,
+modifier|*
+name|SO
+decl_stmt|,
+modifier|*
+name|SR
+decl_stmt|,
+modifier|*
+name|TA
+decl_stmt|,
+modifier|*
+name|TE
+decl_stmt|,
+modifier|*
+name|TI
+decl_stmt|,
+modifier|*
+name|UC
+decl_stmt|,
+modifier|*
+name|UE
+decl_stmt|,
+modifier|*
+name|UP
+decl_stmt|,
+modifier|*
+name|US
+decl_stmt|,
+modifier|*
+name|VB
+decl_stmt|,
+modifier|*
+name|VE
+decl_stmt|,
+modifier|*
+name|VS
+decl_stmt|,
+name|PC
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * From the tty modes...  */
@@ -731,42 +283,66 @@ end_comment
 begin_decl_stmt
 name|bool
 name|NONL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Term can't hack linefeeds doing a CR	*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|UPPERCASE
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Ick!					*/
-end_comment
-
 begin_decl_stmt
 name|bool
 name|normtty
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if must normal mode from normf	*/
-end_comment
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|_pfast
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Have stty -nl'ed to go faster	*/
-end_comment
+begin_struct
+struct|struct
+name|_win_st
+block|{
+name|short
+name|_cury
+decl_stmt|,
+name|_curx
+decl_stmt|;
+name|short
+name|_maxy
+decl_stmt|,
+name|_maxx
+decl_stmt|;
+name|short
+name|_begy
+decl_stmt|,
+name|_begx
+decl_stmt|;
+name|short
+name|_flags
+decl_stmt|;
+name|bool
+name|_clear
+decl_stmt|;
+name|bool
+name|_leave
+decl_stmt|;
+name|bool
+name|_scroll
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|_y
+decl_stmt|;
+name|short
+modifier|*
+name|_firstch
+decl_stmt|;
+name|short
+modifier|*
+name|_lastch
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -775,84 +351,18 @@ name|WINDOW
 value|struct _win_st
 end_define
 
-begin_struct
-struct|struct
-name|_win_st
-block|{
-comment|/* window description structure		*/
-name|short
-name|_cury
-decl_stmt|,
-name|_curx
-decl_stmt|;
-comment|/* current y,x positions	*/
-name|short
-name|_maxy
-decl_stmt|,
-name|_maxx
-decl_stmt|;
-comment|/* maximum y,x positions	*/
-name|short
-name|_begy
-decl_stmt|,
-name|_begx
-decl_stmt|;
-comment|/* start y,x positions		*/
-name|short
-name|_flags
-decl_stmt|;
-comment|/* various window flags		*/
-name|bool
-name|_clear
-decl_stmt|;
-comment|/* need to clear		*/
-name|bool
-name|_leave
-decl_stmt|;
-comment|/* leave curx,y at last update	*/
-name|bool
-name|_scroll
-decl_stmt|;
-comment|/* scrolls allowed		*/
-name|char
-modifier|*
-modifier|*
-name|_y
-decl_stmt|;
-comment|/* actual window		*/
-name|short
-modifier|*
-name|_firstch
-decl_stmt|;
-comment|/* first change on line		*/
-name|short
-modifier|*
-name|_lastch
-decl_stmt|;
-comment|/* last change on line		*/
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|bool
 name|My_term
 decl_stmt|,
-comment|/* set if user species terminal		*/
 name|_echoit
 decl_stmt|,
-comment|/* set if echoing characters		*/
 name|_rawmode
 decl_stmt|,
-comment|/* set if terminal in raw mode		*/
 name|_endwin
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* endwin has been called		*/
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -860,15 +370,10 @@ name|char
 modifier|*
 name|Def_term
 decl_stmt|,
-comment|/* default terminal type		*/
 name|ttytype
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* long name of current terminal	*/
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -877,39 +382,11 @@ name|LINES
 decl_stmt|,
 name|COLS
 decl_stmt|,
-comment|/* number of lines and columns		*/
 name|_tty_ch
 decl_stmt|,
-comment|/* channel with tty on it		*/
 name|_res_flg
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* sgtty flags stored for reset		*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|outf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* error outfile			*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|SGTTY
@@ -917,24 +394,15 @@ name|_tty
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* tty structure			*/
-end_comment
-
 begin_decl_stmt
 name|WINDOW
 modifier|*
 name|stdscr
 decl_stmt|,
-comment|/* standard screen			*/
 modifier|*
 name|curscr
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* current screen			*/
-end_comment
 
 begin_comment
 comment|/*  *	Define VOID to stop lint from generating "null effect"  * comments.  */
@@ -951,10 +419,6 @@ name|int
 name|__void__
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* place to assign to			*/
-end_comment
 
 begin_define
 define|#
@@ -1438,6 +902,14 @@ name|subwin
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|longname
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 
