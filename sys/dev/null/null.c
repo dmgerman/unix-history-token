@@ -63,18 +63,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
 begin_comment
 comment|/* For use with destroy_dev(9). */
 end_comment
@@ -267,6 +255,10 @@ name|zbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -274,6 +266,7 @@ name|null_write
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|struct
 name|uio
@@ -282,6 +275,7 @@ name|uio
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|uio
@@ -371,6 +365,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -378,6 +376,7 @@ name|zero_read
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|struct
 name|uio
@@ -386,9 +385,10 @@ name|uio
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|)
 block|{
-name|u_int
+name|int
 name|c
 decl_stmt|;
 name|int
@@ -411,14 +411,17 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
-argument_list|(
 name|uio
 operator|->
 name|uio_resid
-argument_list|,
+operator|<
 name|PAGE_SIZE
-argument_list|)
+condition|?
+name|uio
+operator|->
+name|uio_resid
+else|:
+name|PAGE_SIZE
 expr_stmt|;
 name|error
 operator|=
@@ -438,6 +441,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -445,6 +452,7 @@ name|null_modevent
 parameter_list|(
 name|module_t
 name|mod
+name|__unused
 parameter_list|,
 name|int
 name|type
@@ -452,6 +460,7 @@ parameter_list|,
 name|void
 modifier|*
 name|data
+name|__unused
 parameter_list|)
 block|{
 switch|switch
