@@ -1,10 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtio.h	4.4	81/02/25	*/
+comment|/*	mtio.h	4.5	81/04/02	*/
 end_comment
 
 begin_comment
 comment|/*  * Structures and definitions for mag tape io control commands  */
+end_comment
+
+begin_comment
+comment|/* mag tape io control commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCTOP
+value|(('m'<<8)|1)
+end_define
+
+begin_comment
+comment|/* do a mag tape op */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCGET
+value|(('m'<<8)|2)
+end_define
+
+begin_comment
+comment|/* get mag tape status */
 end_comment
 
 begin_comment
@@ -19,7 +45,7 @@ name|short
 name|mt_op
 decl_stmt|;
 comment|/* operations defined below */
-name|short
+name|daddr_t
 name|mt_count
 decl_stmt|;
 comment|/* how many of them */
@@ -28,7 +54,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* operations: */
+comment|/* operations */
 end_comment
 
 begin_define
@@ -128,63 +154,61 @@ struct|struct
 name|mtget
 block|{
 name|short
+name|mt_type
+decl_stmt|;
+comment|/* type of magtape device */
+comment|/* the following two registers are grossly device dependent */
+name|short
 name|mt_dsreg
 decl_stmt|;
-comment|/* drive status register */
+comment|/* ``drive status'' register */
 name|short
 name|mt_erreg
 decl_stmt|;
-comment|/* error register */
+comment|/* ``error'' register */
+comment|/* end device-dependent registers */
 name|short
 name|mt_resid
 decl_stmt|;
 comment|/* residual count */
 comment|/* the following two are not yet implemented */
-name|short
+name|daddr_t
 name|mt_fileno
 decl_stmt|;
 comment|/* file number of current position */
-name|short
+name|daddr_t
 name|mt_blkno
 decl_stmt|;
 comment|/* block number of current position */
+comment|/* end not yet implemented */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* unfortunately the bits in these registers are grossly device dependent */
-end_comment
-
-begin_comment
-comment|/* should be defined here but aren't */
-end_comment
-
-begin_comment
-comment|/* mag tape io control commands */
+comment|/*  * Constants for mt_type byte  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MTIOCTOP
-value|(('m'<<8)|1)
+name|MT_ISTS
+value|01
 end_define
-
-begin_comment
-comment|/* do a mag tape op (see<mtio.h>) */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MTIOCGET
-value|(('m'<<8)|2)
+name|MT_ISHT
+value|02
 end_define
 
-begin_comment
-comment|/* get mag tape status (see<mtio.h>*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MT_ISTM
+value|03
+end_define
 
 end_unit
 
