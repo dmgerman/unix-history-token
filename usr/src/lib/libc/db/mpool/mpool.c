@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mpool.c	5.2 (Berkeley) %G%"
+literal|"@(#)mpool.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1204,16 +1204,14 @@ expr_stmt|;
 name|free
 argument_list|(
 name|b
-operator|->
-name|page
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|b
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|RET_SUCCESS
