@@ -887,6 +887,20 @@ name|KBDC
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|KBDC_RID_KBD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDC_RID_AUX
+value|1
+end_define
+
 begin_comment
 comment|/* function prototypes */
 end_comment
