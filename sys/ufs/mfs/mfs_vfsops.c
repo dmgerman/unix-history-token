@@ -683,7 +683,7 @@ name|devvp
 operator|->
 name|v_type
 operator|=
-name|VBLK
+name|VCHR
 expr_stmt|;
 name|dev
 operator|=

@@ -512,16 +512,13 @@ name|a_vp
 operator|->
 name|v_type
 operator|!=
-name|VBLK
+name|VCHR
 condition|)
-block|{
 name|panic
 argument_list|(
-literal|"mfs_open not VBLK"
+literal|"mfs_open not VCHR"
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
 return|return
 operator|(
 literal|0
@@ -600,7 +597,7 @@ name|a_vp
 operator|->
 name|v_rdev
 argument_list|,
-name|VBLK
+name|VCHR
 argument_list|,
 operator|&
 name|vp
@@ -759,7 +756,7 @@ name|bp
 operator|->
 name|b_dev
 argument_list|,
-name|VBLK
+name|VCHR
 argument_list|,
 operator|&
 name|vp
