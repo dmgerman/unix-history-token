@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.9 (Berkeley) %G%"
+literal|"@(#)trees.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2342,9 +2342,16 @@ argument|return( tsize( DECREF(p->in.type), p->fn.cdim, p->fn.csiz ) ); 	}  NODE
 comment|/*  convert an operand of p 	    f is either CVTL or CVTR 	    operand has type int, and is converted by the size of the other side 	    */
 argument|register NODE *q, *r;  	q = (f==CVTL)?p->in.left:p->in.right;  	r = block( PMCONV, 		q, bpsize(f==CVTL?p->in.right:p->in.left), INT,
 literal|0
-argument|, INT ); 	r = clocal(r); 	if( f == CVTL ) 		p->in.left = r; 	else 		p->in.right = r; 	return(p);  	}  econvert( p ) register NODE *p; {
+argument|, INT ); 	r = clocal(r); 	if( f == CVTL ) 		p->in.left = r; 	else 		p->in.right = r; 	return(p);  	}
+ifndef|#
+directive|ifndef
+name|econvert
+argument|econvert( p ) register NODE *p; {
 comment|/* change enums to ints, or appropriate types */
-argument|register TWORD ty;  	if( (ty=BTYPE(p->in.type)) == ENUMTY || ty == MOETY ) { 		if( dimtab[ p->fn.csiz ] == SZCHAR ) ty = CHAR; 		else if( dimtab[ p->fn.csiz ] == SZINT ) ty = INT; 		else if( dimtab[ p->fn.csiz ] == SZSHORT ) ty = SHORT; 		else ty = LONG; 		ty = ctype( ty ); 		p->fn.csiz = ty; 		MODTYPE(p->in.type,ty); 		if( p->in.op == ICON&& ty != LONG ) p->in.type = p->fn.csiz = INT; 		} 	}  NODE * pconvert( p ) register NODE *p; {
+argument|register TWORD ty;  	if( (ty=BTYPE(p->in.type)) == ENUMTY || ty == MOETY ) { 		if( dimtab[ p->fn.csiz ] == SZCHAR ) ty = CHAR; 		else if( dimtab[ p->fn.csiz ] == SZINT ) ty = INT; 		else if( dimtab[ p->fn.csiz ] == SZSHORT ) ty = SHORT; 		else ty = LONG; 		ty = ctype( ty ); 		p->fn.csiz = ty; 		MODTYPE(p->in.type,ty); 		if( p->in.op == ICON&& ty != LONG ) p->in.type = p->fn.csiz = INT; 		} 	}
+endif|#
+directive|endif
+argument|NODE * pconvert( p ) register NODE *p; {
 comment|/* if p should be changed into a pointer, do so */
 argument|if( ISARY( p->in.type) ){ 		p->in.type = DECREF( p->in.type ); 		++p->fn.cdim; 		return( buildtree( UNARY AND, p, NIL ) ); 		} 	if( ISFTN( p->in.type) ) 		return( buildtree( UNARY AND, p, NIL ) );  	return( p ); 	}  NODE * oconvert(p) register NODE *p; {
 comment|/* convert the result itself: used for pointer and unsigned */
@@ -2368,7 +2375,7 @@ argument|if( talign(t2,s2)< talign(t,s) ){ 			t = t2; 			s = s2; 			} 		break; 	
 literal|0
 argument|;  NODE * tymatch(p)  register NODE *p; {
 comment|/* satisfy the types of various arithmetic binary ops */
-comment|/* rules are: 		if assignment, op, type of LHS 		if any float or doubles, make double 		if any longs, make long 		otherwise, make int 		if either operand is unsigned, the result is... 	*/
+comment|/* rules are: 		if assignment, type of LHS 		if any float or doubles, make double 		if any longs, make long 		otherwise, make int 		if either operand is unsigned, the result is... 	*/
 argument|register TWORD t1, t2, t, tu; 	register o, u;  	o = p->in.op;  	t1 = p->in.left->in.type; 	t2 = p->in.right->in.type; 	if( (t1==UNDEF || t2==UNDEF)&& o!=CAST ) 		uerror(
 literal|"void type illegal in expression"
 argument|);  	u =
@@ -2387,11 +2394,11 @@ directive|else
 argument|if (t1 == DOUBLE || t1 == FLOAT || t2 == DOUBLE || t2 == FLOAT) 		t = DOUBLE;
 endif|#
 directive|endif
-argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( asgop(o) ){ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
+argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( o == ASSIGN || o == CAST || o == RETURN ){ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
-argument|if( t != t1 ) p->in.left = makety( p->in.left, tu,
+argument|if( t != t1&& ! asgop(o) ) 		p->in.left = makety( p->in.left, tu,
 literal|0
-argument|, (int)tu );  	if( t != t2 || o==CAST ) p->in.right = makety( p->in.right, tu,
+argument|, (int)tu );  	if( t != t2 || o==CAST ) 		p->in.right = makety( p->in.right, tu,
 literal|0
 argument|, (int)tu );  	if( asgop(o) ){ 		p->in.type = p->in.left->in.type; 		p->fn.cdim = p->in.left->fn.cdim; 		p->fn.csiz = p->in.left->fn.csiz; 		} 	else if( !logop(o) ){ 		p->in.type = tu; 		p->fn.cdim =
 literal|0
