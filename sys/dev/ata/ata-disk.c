@@ -818,7 +818,14 @@ if|if
 condition|(
 name|ata_wc
 operator|||
+operator|(
 name|ata_tags
+operator|&&
+name|ad_tagsupported
+argument_list|(
+name|adp
+argument_list|)
+operator|)
 condition|)
 block|{
 if|if
