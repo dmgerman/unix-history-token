@@ -1886,7 +1886,7 @@ begin_define
 define|#
 directive|define
 name|USB_PRODUCT_KODAK_DC290
-value|0x0111
+value|0x0112
 end_define
 
 begin_comment
