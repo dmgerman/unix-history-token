@@ -1312,6 +1312,12 @@ index|[
 name|MAXMODE
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1531,7 +1537,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * If the /set record is the same as the last one we do not need to output 	 * a new one.  So first we check to see if anything changed. 	 */
+comment|/* 	 * If the /set record is the same as the last one we do not need to output 	 * a new one.  So first we check to see if anything changed.  Note that we 	 * always output a /set record for the first directory. 	 */
 if|if
 condition|(
 operator|(
@@ -1594,8 +1600,16 @@ operator|!=
 name|savemode
 operator|)
 operator|)
+operator|||
+operator|(
+name|first
+operator|)
 condition|)
 block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|dflag
