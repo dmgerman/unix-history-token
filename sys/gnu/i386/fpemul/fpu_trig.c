@@ -235,7 +235,6 @@ expr_stmt|;
 return|return
 name|rv
 return|;
-empty_stmt|;
 block|}
 end_function
 
