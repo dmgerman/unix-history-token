@@ -273,7 +273,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|S_ISBLK
+name|S_ISCHR
 argument_list|(
 name|stab
 operator|.

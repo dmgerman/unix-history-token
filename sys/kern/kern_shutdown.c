@@ -1550,7 +1550,7 @@ name|ndumpdev
 decl_stmt|;
 name|ndumpdev
 operator|=
-name|dev2budev
+name|dev2udev
 argument_list|(
 name|dumpdev
 argument_list|)
@@ -1590,7 +1590,7 @@ name|udev2dev
 argument_list|(
 name|ndumpdev
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
