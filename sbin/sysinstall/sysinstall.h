@@ -13,6 +13,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCRATCHSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
 name|BOOT_MAGIC
 value|0xAA55
 end_define
