@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.25.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -196,6 +196,9 @@ index|[
 name|type
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -212,6 +215,20 @@ name|panic
 argument_list|(
 literal|"malloc - bogus type"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|M_NAMEI
+condition|)
+name|curproc
+operator|->
+name|p_spare
+index|[
+literal|0
+index|]
+operator|++
 expr_stmt|;
 name|indx
 operator|=
@@ -1059,6 +1076,20 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+if|if
+condition|(
+name|type
+operator|==
+name|M_NAMEI
+condition|)
+name|curproc
+operator|->
+name|p_spare
+index|[
+literal|0
+index|]
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|size
