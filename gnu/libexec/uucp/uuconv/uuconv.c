@@ -3218,6 +3218,8 @@ name|fprintf
 argument_list|(
 name|e
 argument_list|,
+literal|"%s"
+argument_list|,
 operator|*
 name|pz
 argument_list|)
