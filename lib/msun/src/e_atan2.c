@@ -91,7 +91,7 @@ end_comment
 
 begin_function
 name|double
-name|__generic___ieee754_atan2
+name|__ieee754_atan2
 parameter_list|(
 name|double
 name|y

@@ -46,7 +46,7 @@ end_include
 
 begin_function
 name|double
-name|__generic_cos
+name|cos
 parameter_list|(
 name|double
 name|x

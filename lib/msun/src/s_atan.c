@@ -158,7 +158,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic_atan
+name|atan
 parameter_list|(
 name|double
 name|x

@@ -151,7 +151,7 @@ end_comment
 
 begin_function
 name|double
-name|__generic___ieee754_exp
+name|__ieee754_exp
 parameter_list|(
 name|double
 name|x

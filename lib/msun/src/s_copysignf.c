@@ -46,7 +46,7 @@ end_include
 
 begin_function
 name|float
-name|__generic_copysignf
+name|copysignf
 parameter_list|(
 name|float
 name|x

@@ -129,7 +129,7 @@ end_comment
 
 begin_function
 name|double
-name|__generic___ieee754_acos
+name|__ieee754_acos
 parameter_list|(
 name|double
 name|x

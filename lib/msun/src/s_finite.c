@@ -46,7 +46,7 @@ end_include
 
 begin_function
 name|int
-name|__generic_finite
+name|finite
 parameter_list|(
 name|double
 name|x

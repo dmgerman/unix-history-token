@@ -134,7 +134,7 @@ end_comment
 
 begin_function
 name|double
-name|__generic___ieee754_asin
+name|__ieee754_asin
 parameter_list|(
 name|double
 name|x

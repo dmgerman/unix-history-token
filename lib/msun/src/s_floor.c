@@ -56,7 +56,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic_floor
+name|floor
 parameter_list|(
 name|double
 name|x

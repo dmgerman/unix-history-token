@@ -66,7 +66,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic___ieee754_fmod
+name|__ieee754_fmod
 parameter_list|(
 name|double
 name|x

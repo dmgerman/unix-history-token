@@ -115,7 +115,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic___ieee754_log
+name|__ieee754_log
 parameter_list|(
 name|double
 name|x

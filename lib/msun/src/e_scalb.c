@@ -52,7 +52,7 @@ end_ifdef
 
 begin_decl_stmt
 name|double
-name|__generic___ieee754_scalb
+name|__ieee754_scalb
 argument_list|(
 name|double
 name|x
@@ -63,7 +63,7 @@ argument_list|)
 else|#
 directive|else
 name|double
-name|__generic___ieee754_scalb
+name|__ieee754_scalb
 argument_list|(
 name|double
 name|x

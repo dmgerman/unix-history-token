@@ -60,7 +60,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic___ieee754_sqrt
+name|__ieee754_sqrt
 parameter_list|(
 name|double
 name|x

@@ -56,7 +56,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic___ieee754_remainder
+name|__ieee754_remainder
 parameter_list|(
 name|double
 name|x

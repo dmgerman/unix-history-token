@@ -85,7 +85,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__generic___ieee754_log10
+name|__ieee754_log10
 parameter_list|(
 name|double
 name|x
