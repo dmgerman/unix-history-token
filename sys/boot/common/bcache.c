@@ -100,6 +100,9 @@ decl_stmt|;
 name|time_t
 name|bc_stamp
 decl_stmt|;
+name|int
+name|bc_count
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -152,6 +155,13 @@ decl_stmt|,
 name|bcache_ops
 decl_stmt|,
 name|bcache_bypasses
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bcache_bcount
 decl_stmt|;
 end_decl_stmt
 
@@ -350,9 +360,10 @@ index|[
 name|i
 index|]
 operator|.
-name|bc_stamp
+name|bc_count
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -806,7 +817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert a block into the cache.  Retire the oldest block to do so, if required.  */
+comment|/*  * Insert a block into the cache.  Retire the oldest block to do so, if required.  *  * XXX the LRU algorithm will fail after 2^31 blocks have been transferred.  */
 end_comment
 
 begin_function
@@ -828,6 +839,8 @@ name|int
 name|i
 decl_stmt|,
 name|cand
+decl_stmt|,
+name|ocount
 decl_stmt|;
 name|time
 argument_list|(
@@ -835,13 +848,23 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-comment|/* find the oldest block */
-for|for
-control|(
 name|cand
 operator|=
 literal|0
-operator|,
+expr_stmt|;
+comment|/* assume the first block */
+name|ocount
+operator|=
+name|bcache_ctl
+index|[
+literal|0
+index|]
+operator|.
+name|bc_count
+expr_stmt|;
+comment|/* find the oldest block */
+for|for
+control|(
 name|i
 operator|=
 literal|1
@@ -880,24 +903,37 @@ index|[
 name|i
 index|]
 operator|.
-name|bc_stamp
+name|bc_count
 operator|<
-name|now
+name|ocount
 condition|)
+block|{
+name|ocount
+operator|=
+name|bcache_ctl
+index|[
+name|i
+index|]
+operator|.
+name|bc_count
+expr_stmt|;
 name|cand
 operator|=
 name|i
 expr_stmt|;
 block|}
+block|}
 name|DEBUG
 argument_list|(
-literal|"insert blk %d -> %d @ %d"
+literal|"insert blk %d -> %d @ %d # %d"
 argument_list|,
 name|blkno
 argument_list|,
 name|cand
 argument_list|,
 name|now
+argument_list|,
+name|bcache_bcount
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -933,11 +969,21 @@ name|bc_stamp
 operator|=
 name|now
 expr_stmt|;
+name|bcache_ctl
+index|[
+name|cand
+index|]
+operator|.
+name|bc_count
+operator|=
+name|bcache_bcount
+operator|++
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Look for a block in the cache.  Blocks more than BCACHE_TIMEOUT seconds old  *  may be stale (removable media) and thus are discarded.  Copy the block out   * if successful and return zero, or return nonzero on failure.  */
+comment|/*  * Look for a block in the cache.  Blocks more than BCACHE_TIMEOUT seconds old  * may be stale (removable media) and thus are discarded.  Copy the block out   * if successful and return zero, or return nonzero on failure.  */
 end_comment
 
 begin_function
@@ -1101,9 +1147,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %02x: %08x %04x"
-argument_list|,
-name|i
+literal|"%08x %04x %04x|"
 argument_list|,
 name|bcache_ctl
 index|[
@@ -1118,6 +1162,15 @@ name|i
 index|]
 operator|.
 name|bc_stamp
+operator|&
+literal|0xffff
+argument_list|,
+name|bcache_ctl
+index|[
+name|i
+index|]
+operator|.
+name|bc_count
 operator|&
 literal|0xffff
 argument_list|)
