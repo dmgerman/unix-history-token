@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rmjob.c,v 1.4.2.3 1997/09/25 06:32:22 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,19 @@ end_decl_stmt
 begin_comment
 comment|/* real and effective user id's */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|alarmhandler
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -343,6 +356,24 @@ condition|)
 name|LO
 operator|=
 name|DEFLOCK
+expr_stmt|;
+if|if
+condition|(
+name|cgetnum
+argument_list|(
+name|bp
+argument_list|,
+literal|"ct"
+argument_list|,
+operator|&
+name|CT
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|CT
+operator|=
+name|DEFTIMEOUT
 expr_stmt|;
 name|cgetstr
 argument_list|(
@@ -1447,6 +1478,15 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|savealrm
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -1601,6 +1641,20 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|savealrm
+operator|=
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|alarmhandler
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|CT
+argument_list|)
+expr_stmt|;
 name|rem
 operator|=
 name|getport
@@ -1608,6 +1662,16 @@ argument_list|(
 name|RM
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|savealrm
 argument_list|)
 expr_stmt|;
 if|if
@@ -1748,6 +1812,17 @@ operator|==
 literal|'f'
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|alarmhandler
+parameter_list|(
+name|signo
+parameter_list|)
+block|{
+comment|/* ignored */
 block|}
 end_function
 
