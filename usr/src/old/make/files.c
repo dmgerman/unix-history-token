@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.7 (Berkeley) 83/05/18"
+literal|"@(#)files.c	4.8 (Berkeley) 83/06/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ literal|".SUFFIXES : .L .out .o .c .f .e .r .y .yr .ye .l .s .z .x .t .h .cl"
 block|,
 else|#
 directive|else
-literal|".SUFFIXES : .out .o .c .f .F .e .r .y .yr .ye .l .s .cl .p"
+literal|".SUFFIXES : .out .o .c .F .f .e .r .y .yr .ye .l .s .cl .p"
 block|,
 endif|#
 directive|endif
