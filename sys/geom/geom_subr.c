@@ -2345,6 +2345,10 @@ name|printf
 argument_list|(
 literal|"bio_length %lld len %d -> EFAULT\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|bio_length

@@ -858,6 +858,11 @@ literal|"%s<length>%llu</length>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|gsp
 operator|->
 name|slices
@@ -878,6 +883,11 @@ literal|"%s<seclength>%llu</seclength>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|gsp
 operator|->
 name|slices
@@ -900,6 +910,11 @@ literal|"%s<offset>%llu</offset>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|gsp
 operator|->
 name|slices
@@ -920,6 +935,11 @@ literal|"%s<secoffset>%llu</secoffset>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|gsp
 operator|->
 name|slices

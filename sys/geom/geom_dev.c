@@ -579,6 +579,10 @@ literal|"g_error %d Mediasize is %lld bytes\n"
 argument_list|,
 name|error
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|mediasize
 argument_list|)
 expr_stmt|;
@@ -633,8 +637,16 @@ name|pp
 operator|->
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|mediasize
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|mediasize
 operator|/
 name|secsize

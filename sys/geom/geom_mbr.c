@@ -787,6 +787,9 @@ name|printf
 argument_list|(
 literal|"WARNING: struct dos_partition compiles to %d bytes, should be 16.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct

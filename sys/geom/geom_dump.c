@@ -569,8 +569,6 @@ argument_list|(
 name|sb
 argument_list|,
 literal|"\t<provider>\n"
-argument_list|,
-name|pp
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
