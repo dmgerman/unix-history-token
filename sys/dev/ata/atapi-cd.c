@@ -1620,6 +1620,8 @@ parameter_list|)
 block|{
 name|int32_t
 name|comma
+init|=
+literal|0
 decl_stmt|;
 name|int8_t
 modifier|*
@@ -1679,7 +1681,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d:<%s/%s> CDROM drive at ata%d as %s\n"
+literal|"acd%d:<%s/%s> %s drive at ata%d as %s\n"
 argument_list|,
 name|cdp
 operator|->
@@ -1688,6 +1690,58 @@ argument_list|,
 name|model_buf
 argument_list|,
 name|revision_buf
+argument_list|,
+operator|(
+name|cdp
+operator|->
+name|cap
+operator|.
+name|write_dvdr
+operator|)
+condition|?
+literal|"DVD-R"
+else|:
+operator|(
+name|cdp
+operator|->
+name|cap
+operator|.
+name|write_dvdram
+operator|)
+condition|?
+literal|"DVD-RAM"
+else|:
+operator|(
+name|cdp
+operator|->
+name|cap
+operator|.
+name|write_cdrw
+operator|)
+condition|?
+literal|"CD-RW"
+else|:
+operator|(
+name|cdp
+operator|->
+name|cap
+operator|.
+name|write_cdr
+operator|)
+condition|?
+literal|"CD-R"
+else|:
+operator|(
+name|cdp
+operator|->
+name|cap
+operator|.
+name|read_dvdrom
+operator|)
+condition|?
+literal|"DVD-ROM"
+else|:
+literal|"CDROM"
 argument_list|,
 name|cdp
 operator|->
@@ -1712,6 +1766,15 @@ else|:
 literal|"slave "
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"acd%d:"
+argument_list|,
+name|cdp
+operator|->
+name|lun
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cdp
@@ -1723,16 +1786,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd%d: "
-argument_list|,
-name|cdp
-operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"read %dKB/s"
+literal|" read %dKB/s"
 argument_list|,
 name|cdp
 operator|->
@@ -1844,6 +1898,10 @@ literal|1024
 argument_list|)
 expr_stmt|;
 block|}
+name|comma
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1853,9 +1911,16 @@ name|cap
 operator|.
 name|buf_size
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|", %dKB buffer"
+literal|"%s %dKB buffer"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
 argument_list|,
 name|cdp
 operator|->
@@ -1864,9 +1929,20 @@ operator|.
 name|buf_size
 argument_list|)
 expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-literal|", %s\n"
+literal|"%s %s\n"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
 argument_list|,
 name|ata_mode2str
 argument_list|(
@@ -1897,7 +1973,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d: supported read types:"
+literal|"acd%d: Reads:"
 argument_list|,
 name|cdp
 operator|->
@@ -2120,7 +2196,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nacd%d: supported write types:"
+literal|"\nacd%d: Writes:"
 argument_list|,
 name|cdp
 operator|->
