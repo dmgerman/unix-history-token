@@ -89,7 +89,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|do_header
 parameter_list|(
 name|char
@@ -242,6 +242,8 @@ name|f_flags
 operator|&
 name|NEED_COUNT
 condition|)
+name|errors
+operator|+=
 name|do_header
 argument_list|(
 name|fl
@@ -406,7 +408,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|do_header
 parameter_list|(
 name|char
@@ -460,7 +462,14 @@ name|count
 decl_stmt|,
 name|hicount
 decl_stmt|;
+name|int
+name|errors
+decl_stmt|;
 comment|/* 	 * After this loop, "count" will be the actual number of units, 	 * and "hicount" will be the highest unit declared.  do_header() 	 * must use this higher of these values. 	 */
+name|errors
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|hicount
@@ -496,19 +505,31 @@ name|dev
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|d_count
+operator|==
+name|UNKNOWN
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Device \"%s\" requires a count"
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|count
 operator|=
 name|dp
 operator|->
 name|d_count
-operator|!=
-name|UNKNOWN
-condition|?
-name|dp
-operator|->
-name|d_count
-else|:
-literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -611,7 +632,9 @@ argument_list|(
 name|outf
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|fl_head
 operator|=
@@ -842,7 +865,9 @@ name|fl
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -988,6 +1013,9 @@ argument_list|(
 name|outf
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
