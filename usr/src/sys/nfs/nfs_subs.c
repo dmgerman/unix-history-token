@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -265,6 +265,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Maximum number of groups passed through to NFS server.  * For release 3.X systems, the maximum value is 8.  * For release 4.X systems, the maximum value is 10.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|numgrps
+init|=
+literal|8
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Create the header for an rpc request packet  * The function nfs_unixauth() creates a unix style authorization string  * and returns a ptr to it.  * The hsiz is the size of the rest of the nfs request header.  * (just used to decide if a cluster is a good idea)  * nb: Note that the prog, vers and proc args are already in xdr byte order  */
 end_comment
 
@@ -364,10 +376,10 @@ name|cred
 operator|->
 name|cr_ngroups
 operator|>
-literal|10
+name|numgrps
 operator|)
 condition|?
-literal|10
+name|numgrps
 else|:
 name|cred
 operator|->
@@ -2876,10 +2888,10 @@ name|cr
 operator|->
 name|cr_ngroups
 operator|>
-literal|10
+name|numgrps
 operator|)
 condition|?
-literal|10
+name|numgrps
 else|:
 name|cr
 operator|->
