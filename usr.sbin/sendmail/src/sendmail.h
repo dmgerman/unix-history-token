@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.3 (Berkeley) 7/13/93  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.24 (Berkeley) 10/15/93  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.3		7/13/93"
+literal|"@(#)sendmail.h	8.24		10/15/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,6 +578,13 @@ begin_comment
 comment|/* report this address in return message */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NULLADDR
+value|((ADDRESS *) NULL)
+end_define
+
 begin_escape
 end_escape
 
@@ -770,8 +777,15 @@ begin_comment
 comment|/* preserve host case distinction */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_PREHEAD
+value|'H'
+end_define
+
 begin_comment
-comment|/*	'H'	/* UIUC: MAIL11V3: preview headers */
+comment|/* MAIL11V3: preview headers */
 end_comment
 
 begin_define
@@ -833,8 +847,15 @@ begin_comment
 comment|/* don't insert From line */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_MANYSTATUS
+value|'N'
+end_define
+
 begin_comment
-comment|/*	'N'	/* UIUC: MAIL11V3: DATA returns multi-status */
+comment|/* MAIL11V3: DATA returns multi-status */
 end_comment
 
 begin_define
@@ -1422,6 +1443,11 @@ decl_stmt|;
 comment|/* MIME-style message part boundary */
 name|char
 modifier|*
+name|e_origrcpt
+decl_stmt|;
+comment|/* original recipient (one only) */
+name|char
+modifier|*
 name|e_macro
 index|[
 literal|128
@@ -1459,17 +1485,6 @@ end_define
 
 begin_comment
 comment|/* this message is fully queued */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EF_TIMEOUT
-value|000004
-end_define
-
-begin_comment
-comment|/* this message is too old */
 end_comment
 
 begin_define
@@ -1569,6 +1584,39 @@ end_define
 
 begin_comment
 comment|/* this envelope is from queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_GLOBALERRS
+value|010000
+end_define
+
+begin_comment
+comment|/* treat errors as global */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_PM_NOTIFY
+value|020000
+end_define
+
+begin_comment
+comment|/* send return mail to postmaster */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_METOO
+value|040000
+end_define
+
+begin_comment
+comment|/* send to me too */
 end_comment
 
 begin_decl_stmt
@@ -1934,7 +1982,7 @@ name|char
 name|metaname
 decl_stmt|;
 comment|/* external code (after $) */
-name|char
+name|u_char
 name|metaval
 decl_stmt|;
 comment|/* internal code (as above) */
@@ -2106,6 +2154,17 @@ end_define
 
 begin_comment
 comment|/* BODY=8BITMIME supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_MULTSTAT
+value|000200
+end_define
+
+begin_comment
+comment|/* MAIL11V3: handles MULT status */
 end_comment
 
 begin_comment
@@ -2302,13 +2361,11 @@ modifier|*
 name|map_file
 decl_stmt|;
 comment|/* the (nominal) filename */
-name|void
-modifier|*
+name|ARBPTR_T
 name|map_db1
 decl_stmt|;
 comment|/* the open database ptr */
-name|void
-modifier|*
+name|ARBPTR_T
 name|map_db2
 decl_stmt|;
 comment|/* an "extra" database pointer */
@@ -2327,6 +2384,10 @@ modifier|*
 name|map_rebuild
 decl_stmt|;
 comment|/* program to run to do auto-rebuild */
+name|time_t
+name|map_mtime
+decl_stmt|;
+comment|/* last database modification time */
 block|}
 end_block
 
@@ -2446,6 +2507,28 @@ end_define
 
 begin_comment
 comment|/* try with the null byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_LOCKED
+value|0x0400
+end_define
+
+begin_comment
+comment|/* this map is currently locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_ALIASWAIT
+value|0x0800
+end_define
+
+begin_comment
+comment|/* alias map in aliaswait state */
 end_comment
 
 begin_define
@@ -3267,17 +3350,6 @@ comment|/* **  Additional definitions */
 end_comment
 
 begin_comment
-comment|/* Offset used to ensure that name server error * codes are unique */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_ERRNO
-value|100
-end_define
-
-begin_comment
 comment|/* **  Privacy flags **	These are bit values for the PrivacyFlags word. */
 end_comment
 
@@ -3361,12 +3433,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_RESTRMAILQ
+name|PRIV_RESTRICTMAILQ
 value|01000
 end_define
 
 begin_comment
 comment|/* restrict mailq command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_RESTRICTQRUN
+value|02000
+end_define
+
+begin_comment
+comment|/* restrict queue run */
 end_comment
 
 begin_define
@@ -3402,7 +3485,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* **  Flags passed to remotename */
+comment|/* **  Flags passed to remotename, parseaddr, allocaddr, and buildaddr. */
 end_comment
 
 begin_define
@@ -3448,6 +3531,42 @@ end_define
 begin_comment
 comment|/* OK to do domain extension */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_COPYPARSE
+value|0020
+end_define
+
+begin_comment
+comment|/* copy parsed user& host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_COPYPADDR
+value|0040
+end_define
+
+begin_comment
+comment|/* copy print address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_COPYALL
+value|(RF_COPYPARSE|RF_COPYPADDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RF_COPYNONE
+value|0
+end_define
 
 begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
@@ -4117,6 +4236,39 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|TryNullMXList
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if we are the best MX, try host directly */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|CheckLoopBack
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* check for loopback on HELO packet */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|InChild
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if running in an SMTP subprocess */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|char
 name|SpaceSub
 decl_stmt|;
@@ -4138,7 +4290,7 @@ comment|/* privacy flags */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|char
 modifier|*
 name|ConfFile
@@ -4147,18 +4299,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of configuration file [conf.c] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|FreezeFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location of frozen memory image [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -4345,6 +4485,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|BrokenSmtpPeers
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* peers can't handle 2-line greeting */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|int
 name|MaxMciCache
 decl_stmt|;
@@ -4424,6 +4575,7 @@ end_macro
 begin_struct
 struct|struct
 block|{
+comment|/* RFC 1123-specified timeouts [minimum value] */
 name|time_t
 name|to_initial
 decl_stmt|;
@@ -4469,6 +4621,10 @@ name|time_t
 name|to_miscshort
 decl_stmt|;
 comment|/* misc short commands (NOOP, VERB, etc) */
+name|time_t
+name|to_ident
+decl_stmt|;
+comment|/* IDENT protocol requests */
 comment|/* following are per message */
 name|time_t
 name|to_q_return
@@ -5089,6 +5245,9 @@ operator|,
 name|char
 operator|*
 operator|,
+name|char
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -5139,6 +5298,21 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|sigfunc_t
+name|setsignal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|sigfunc_t
 operator|)
 argument_list|)
 decl_stmt|;

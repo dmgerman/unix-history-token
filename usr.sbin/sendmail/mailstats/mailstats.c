@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	8.1 (Berkeley) 6/7/93"
+literal|"@(#)mailstats.c	8.2 (Berkeley) 7/27/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
 
 begin_include
 include|#

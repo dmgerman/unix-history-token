@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.2 (Berkeley) 7/13/93"
+literal|"@(#)clock.c	8.7 (Berkeley) 10/21/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_ifndef
@@ -142,6 +136,16 @@ name|NULL
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -332,7 +336,7 @@ comment|/* find the parent event */
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -432,6 +436,11 @@ init|=
 name|getpid
 argument_list|()
 decl_stmt|;
+name|int
+name|olderrno
+init|=
+name|errno
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SIG_UNBLOCK
@@ -443,7 +452,7 @@ directive|endif
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -557,73 +566,6 @@ name|ev_pid
 argument_list|)
 expr_stmt|;
 comment|/* we must be careful in here because ev_func may not return */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIG_UNBLOCK
-comment|/* unblock SIGALRM signal */
-name|sigemptyset
-argument_list|(
-operator|&
-name|ss
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|ss
-argument_list|,
-name|SIGALRM
-argument_list|)
-expr_stmt|;
-name|sigprocmask
-argument_list|(
-name|SIG_UNBLOCK
-argument_list|,
-operator|&
-name|ss
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|SIGVTALRM
-comment|/* reset 4.2bsd signal mask to allow future alarms */
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|sigblock
-argument_list|(
-literal|0
-argument_list|)
-operator|&
-operator|~
-name|sigmask
-argument_list|(
-name|SIGALRM
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SIGVTALRM */
-endif|#
-directive|endif
-comment|/* SIG_UNBLOCK */
 name|f
 operator|=
 name|ev
@@ -701,6 +643,79 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* restore signals so that we can take ticks while in ev_func */
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|tick
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIG_UNBLOCK
+comment|/* unblock SIGALRM signal */
+name|sigemptyset
+argument_list|(
+operator|&
+name|ss
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|ss
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|ss
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|SIGVTALRM
+comment|/* reset 4.2bsd signal mask to allow future alarms */
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|sigblock
+argument_list|(
+literal|0
+argument_list|)
+operator|&
+operator|~
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIGVTALRM */
+endif|#
+directive|endif
+comment|/* SIG_UNBLOCK */
+comment|/* call ev_func */
+name|errno
+operator|=
+name|olderrno
+expr_stmt|;
 call|(
 modifier|*
 name|f
@@ -726,7 +741,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -756,6 +771,10 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|olderrno
+expr_stmt|;
 block|}
 end_function
 
@@ -773,9 +792,34 @@ name|SleepDone
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|unsigned
+begin_function_decl
+specifier|static
 name|int
+name|endsleep
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SLEEP_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SLEEP_T
+value|unsigned int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|SLEEP_T
 name|sleep
 parameter_list|(
 name|intvl
@@ -785,11 +829,6 @@ name|int
 name|intvl
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|endsleep
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|intvl

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.2 (Berkeley) 7/11/93"
+literal|"@(#)err.c	8.12 (Berkeley) 10/21/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,32 +50,6 @@ begin_comment
 comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|lint
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|lint
-end_endif
-
 begin_decl_stmt
 name|char
 name|MsgBuf
@@ -98,6 +72,33 @@ name|fmtmsg
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NAMED_BIND
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_DATA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_DATA
+value|NO_ADDRESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -271,6 +272,24 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+if|if
+condition|(
+name|olderrno
+operator|==
+name|EMFILE
+condition|)
+block|{
+name|printopenfds
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|mci_dump_all
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|panic
@@ -641,6 +660,29 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* display for debugging */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|54
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"--- %s%s\n"
+argument_list|,
+name|msg
+argument_list|,
+name|holdmsg
+condition|?
+literal|" (held)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* output to transcript if serious */
 if|if
 condition|(
@@ -650,21 +692,17 @@ name|e_xfp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|strchr
+argument_list|(
+literal|"456"
+argument_list|,
 name|msg
 index|[
 literal|0
 index|]
-operator|==
-literal|'4'
-operator|||
-name|msg
-index|[
-literal|0
-index|]
-operator|==
-literal|'5'
-operator|)
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -695,6 +733,23 @@ literal|'0'
 operator|)
 condition|)
 return|return;
+comment|/* map warnings to something SMTP can handle */
+if|if
+condition|(
+name|msg
+index|[
+literal|0
+index|]
+operator|==
+literal|'6'
+condition|)
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'5'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -786,7 +841,7 @@ name|OutChannel
 argument_list|)
 condition|)
 return|return;
-comment|/* error on output -- if reporting lost channel, just ignore it */
+comment|/* 	**  Error on output -- if reporting lost channel, just ignore it. 	**  Also, ignore errors from QUIT response (221 message) -- some 	**	rude servers don't read result. 	*/
 if|if
 condition|(
 name|feof
@@ -798,6 +853,17 @@ name|ferror
 argument_list|(
 name|InChannel
 argument_list|)
+operator|||
+name|strncmp
+argument_list|(
+name|msg
+argument_list|,
+literal|"221"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return;
 comment|/* can't call syserr, 'cause we are using MsgBuf */
@@ -818,7 +884,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\""
+literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %m"
 argument_list|,
 name|CurEnv
 operator|->
@@ -832,6 +898,12 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
+name|CurHostName
+operator|==
+name|NULL
+condition|?
+literal|"NO-HOST"
+else|:
 name|CurHostName
 argument_list|,
 name|msg
@@ -865,6 +937,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+name|msgcode
+init|=
+name|msg
+index|[
+literal|0
+index|]
+decl_stmt|;
 comment|/* output the message as usual */
 name|putoutmsg
 argument_list|(
@@ -874,17 +954,40 @@ name|HoldErrs
 argument_list|)
 expr_stmt|;
 comment|/* signal the error */
+if|if
+condition|(
+name|msgcode
+operator|==
+literal|'6'
+condition|)
+block|{
+comment|/* notify the postmaster */
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_PM_NOTIFY
+expr_stmt|;
+block|}
+else|else
+block|{
 name|Errors
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|msg
-index|[
-literal|0
-index|]
+name|msgcode
 operator|==
 literal|'5'
+operator|&&
+name|bitset
+argument_list|(
+name|EF_GLOBALERRS
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 name|CurEnv
 operator|->
@@ -892,6 +995,7 @@ name|e_flags
 operator||=
 name|EF_FATALERRS
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1157,24 +1261,44 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|num
+index|[
+literal|0
+index|]
+operator|==
+literal|'5'
+operator|||
+operator|(
 name|CurEnv
 operator|->
 name|e_message
 operator|==
 name|NULL
 operator|&&
-name|strchr
-argument_list|(
-literal|"45"
-argument_list|,
 name|num
 index|[
 literal|0
 index|]
-argument_list|)
+operator|==
+literal|'4'
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
 operator|!=
 name|NULL
 condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
 name|CurEnv
 operator|->
 name|e_message
@@ -1184,6 +1308,7 @@ argument_list|(
 name|meb
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1206,18 +1331,6 @@ name|int
 name|errno
 decl_stmt|;
 block|{
-specifier|extern
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -1225,6 +1338,21 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ERRLIST_PREDEFINED
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMTP
@@ -1382,13 +1510,19 @@ operator|(
 name|buf
 operator|)
 return|;
+case|case
+name|EOPENTIMEOUT
+case|:
+return|return
+literal|"Timeout on file open"
+return|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
 case|case
 name|HOST_NOT_FOUND
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(
@@ -1398,7 +1532,7 @@ return|;
 case|case
 name|TRY_AGAIN
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(
@@ -1408,7 +1542,7 @@ return|;
 case|case
 name|NO_RECOVERY
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(
@@ -1418,7 +1552,7 @@ return|;
 case|case
 name|NO_DATA
 operator|+
-name|MAX_ERRNO
+name|E_DNSBASE
 case|:
 return|return
 operator|(

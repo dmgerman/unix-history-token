@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stats.c	8.2 (Berkeley) 7/11/93"
+literal|"@(#)stats.c	8.3 (Berkeley) 8/28/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,7 +275,7 @@ name|open
 argument_list|(
 name|sfile
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -291,6 +291,20 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|lockfile
+argument_list|(
+name|fd
+argument_list|,
+name|sfile
+argument_list|,
+name|NULL
+argument_list|,
+name|LOCK_EX
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|read

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.4 (Berkeley) 7/13/93 (with SMTP)"
+literal|"@(#)usersmtp.c	8.13 (Berkeley) 10/24/93 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.4 (Berkeley) 7/13/93 (without SMTP)"
+literal|"@(#)usersmtp.c	8.13 (Berkeley) 10/24/93 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,16 @@ begin_comment
 comment|/* pid of mailer */
 end_comment
 
+begin_decl_stmt
+name|bool
+name|SmtpNeedIntro
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* need "while talking" in transcript */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -278,6 +288,8 @@ expr_stmt|;
 name|mci_dump
 argument_list|(
 name|mci
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -296,6 +308,10 @@ operator|->
 name|mci_host
 expr_stmt|;
 comment|/* XXX UGLY XXX */
+name|SmtpNeedIntro
+operator|=
+name|TRUE
+expr_stmt|;
 switch|switch
 condition|(
 name|mci
@@ -409,11 +425,23 @@ name|REPLYTYPE
 argument_list|(
 name|r
 argument_list|)
+operator|==
+literal|4
+condition|)
+goto|goto
+name|tempfail1
+goto|;
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
 operator|!=
 literal|2
 condition|)
 goto|goto
-name|tempfail1
+name|unavailable
 goto|;
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
 if|if
@@ -582,7 +610,7 @@ condition|)
 goto|goto
 name|tempfail1
 goto|;
-comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	*/
+comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	** 	**	If this code remains at all, "CheckLoopBack" should be 	**	a mailer flag.  This is a MAYBENEXTRELEASE feature. 	*/
 name|p
 operator|=
 name|strchr
@@ -609,6 +637,8 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+name|CheckLoopBack
+operator|&&
 name|strcasecmp
 argument_list|(
 operator|&
@@ -1086,6 +1116,12 @@ name|mci
 operator|->
 name|mci_flags
 argument_list|)
+operator|&&
+name|e
+operator|->
+name|e_msgsize
+operator|>
+literal|0
 condition|)
 name|sprintf
 argument_list|(
@@ -1625,6 +1661,14 @@ name|CtxDataTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|datatimeout
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|smtpdata
 argument_list|(
@@ -1674,11 +1718,6 @@ decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
-specifier|static
-name|int
-name|datatimeout
-parameter_list|()
-function_decl|;
 comment|/* 	**  Send the data. 	**	First send the command and check that it is ok. 	**	Then send the data. 	**	Follow it up with a dot to terminate. 	**	Finally get the results of the transaction. 	*/
 comment|/* send the command and check ok to proceed */
 name|smtpmessage
@@ -1976,6 +2015,48 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+condition|)
+block|{
+comment|/* error during processing -- don't send the dot */
+name|mci
+operator|->
+name|mci_errno
+operator|=
+name|EIO
+expr_stmt|;
+name|mci
+operator|->
+name|mci_exitstat
+operator|=
+name|EX_IOERR
+expr_stmt|;
+name|mci
+operator|->
+name|mci_state
+operator|=
+name|MCIS_ERROR
+expr_stmt|;
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_IOERR
+return|;
+block|}
 comment|/* terminate the message */
 name|fprintf
 argument_list|(
@@ -2854,15 +2935,45 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|wbuf
+decl_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_to
+operator|!=
+name|NULL
+condition|)
+block|{
 name|sprintf
 argument_list|(
-name|wbuf
+name|p
 argument_list|,
-literal|"%s... reply(%s) during %s"
+literal|"%s... "
 argument_list|,
 name|e
 operator|->
 name|e_to
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"reply(%s) during %s"
 argument_list|,
 name|mci
 operator|->
@@ -2937,6 +3048,28 @@ operator|)
 condition|)
 block|{
 comment|/* serious error -- log the previous command */
+if|if
+condition|(
+name|SmtpNeedIntro
+condition|)
+block|{
+comment|/* inform user who we are chatting with */
+name|fprintf
+argument_list|(
+name|CurEnv
+operator|->
+name|e_xfp
+argument_list|,
+literal|"... while talking to %s:\n"
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
+name|SmtpNeedIntro
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SmtpMsgBuffer

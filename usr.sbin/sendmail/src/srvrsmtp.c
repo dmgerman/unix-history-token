@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.3 (Berkeley) 7/13/93 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.17 (Berkeley) 10/15/93 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.3 (Berkeley) 7/13/93 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.17 (Berkeley) 10/15/93 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_ifdef
@@ -262,6 +256,21 @@ comment|/* verb -- go into verbose mode */
 end_comment
 
 begin_comment
+comment|/* use this to catch and log "door handle" attempts on your system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDLOGBOGUS
+value|23
+end_define
+
+begin_comment
+comment|/* bogus command that should be logged */
+end_comment
+
+begin_comment
 comment|/* debugging-only commands, only enabled if SMTPDEBUG is defined */
 end_comment
 
@@ -356,24 +365,16 @@ literal|"debug"
 block|,
 name|CMDDBGDEBUG
 block|,
+literal|"wiz"
+block|,
+name|CMDLOGBOGUS
+block|,
 name|NULL
 block|,
 name|CMDERROR
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|InChild
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* true if running in a subprocess */
-end_comment
 
 begin_decl_stmt
 name|bool
@@ -387,16 +388,14 @@ begin_comment
 comment|/* one xaction only this run */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EX_QUIT
-value|22
-end_define
-
-begin_comment
-comment|/* special code for QUIT command */
-end_comment
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|skipword
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|smtp
@@ -427,12 +426,6 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|skipword
-parameter_list|()
-function_decl|;
 specifier|auto
 name|ADDRESS
 modifier|*
@@ -568,6 +561,21 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BrokenSmtpPeers
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"220 %s"
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|message
 argument_list|(
 literal|"220-%s"
@@ -580,6 +588,7 @@ argument_list|(
 literal|"220 ESMTP spoken here"
 argument_list|)
 expr_stmt|;
+block|}
 name|protocol
 operator|=
 name|NULL
@@ -649,7 +658,11 @@ operator|->
 name|e_flags
 operator|&=
 operator|~
+operator|(
 name|EF_VRFYONLY
+operator||
+name|EF_GLOBALERRS
+operator|)
 expr_stmt|;
 comment|/* setup for the read */
 name|e
@@ -725,7 +738,13 @@ if|if
 condition|(
 name|LogLevel
 operator|>
+operator|(
+name|gotmail
+condition|?
 literal|1
+else|:
+literal|19
+operator|)
 condition|)
 name|syslog
 argument_list|(
@@ -998,6 +1017,26 @@ name|RealHostName
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|strcasecmp
+argument_list|(
+name|RealHostName
+argument_list|,
+literal|"localhost"
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|strcasecmp
+argument_list|(
+name|p
+argument_list|,
+name|MyHostName
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|auth_warning
@@ -1159,6 +1198,13 @@ name|message
 argument_list|(
 literal|"503 Sender already specified"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|InChild
+condition|)
+name|finis
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -1797,13 +1843,9 @@ name|parseaddr
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
-literal|1
+name|RF_COPYALL
 argument_list|,
 literal|' '
 argument_list|,
@@ -1868,7 +1910,20 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"250 Recipient ok"
+literal|"250 Recipient ok%s"
+argument_list|,
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|?
+literal|" (will queue)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|nrcpts
@@ -1915,9 +1970,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|e
-operator|->
-name|e_nrcpts
+name|nrcpts
 operator|<=
 literal|0
 condition|)
@@ -2005,6 +2058,10 @@ name|SmtpPhase
 operator|=
 literal|"collect"
 expr_stmt|;
+name|HoldErrs
+operator|=
+name|TRUE
+expr_stmt|;
 name|collect
 argument_list|(
 name|TRUE
@@ -2014,22 +2071,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|e
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
-expr_stmt|;
-if|if
-condition|(
-name|Errors
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|abortmessage
-goto|;
 comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
 name|SmtpPhase
 operator|=
@@ -2099,18 +2140,6 @@ operator|->
 name|e_to
 operator|=
 name|NULL
-expr_stmt|;
-comment|/* save statistics */
-name|markstats
-argument_list|(
-name|e
-argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
-argument_list|)
 expr_stmt|;
 comment|/* issue success if appropriate and reset */
 if|if
@@ -2183,11 +2212,19 @@ operator|!=
 name|SM_QUEUE
 condition|)
 block|{
+specifier|extern
+name|pid_t
+name|dowork
+parameter_list|()
+function_decl|;
 name|unlockqueue
 argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dowork
 argument_list|(
 name|id
@@ -2198,12 +2235,6 @@ name|TRUE
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|e
-operator|->
-name|e_id
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -2255,6 +2286,12 @@ name|message
 argument_list|(
 literal|"250 Reset state"
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
 expr_stmt|;
 if|if
 condition|(
@@ -2462,11 +2499,7 @@ name|sendtolist
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|vrfyqueue
@@ -2517,18 +2550,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
-name|ADDRESS
-modifier|*
 name|a
-init|=
+operator|=
 name|vrfyqueue
-operator|->
-name|q_next
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
+operator|(
 name|a
+operator|=
+name|a
+operator|->
+name|q_next
+operator|)
 operator|!=
 name|NULL
 operator|&&
@@ -2543,12 +2577,7 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|a
-operator|=
-name|a
-operator|->
-name|q_next
-expr_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -2572,21 +2601,11 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|a
-operator|==
-name|NULL
-condition|)
-name|message
-argument_list|(
-literal|"554 Self destructive alias loop"
-argument_list|)
-expr_stmt|;
 name|vrfyqueue
 operator|=
-name|a
+name|vrfyqueue
+operator|->
+name|q_next
 expr_stmt|;
 block|}
 if|if
@@ -2613,7 +2632,7 @@ case|:
 comment|/* noop -- do nothing */
 name|message
 argument_list|(
-literal|"200 OK"
+literal|"250 OK"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2754,6 +2773,13 @@ case|case
 name|CMDDBGDEBUG
 case|:
 comment|/* set debug mode */
+endif|#
+directive|endif
+comment|/* SMTPDEBUG */
+case|case
+name|CMDLOGBOGUS
+case|:
+comment|/* bogus command */
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2765,7 +2791,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_CRIT
 argument_list|,
 literal|"\"%s\" command from %s (%s)"
 argument_list|,
@@ -2785,9 +2811,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* FALL THROUGH */
-endif|#
-directive|endif
-comment|/* SMTPDEBUG */
 case|case
 name|CMDERROR
 case|:
