@@ -4,7 +4,7 @@ comment|/* This may look like C code, but it is really -*- C++ -*- */
 end_comment
 
 begin_comment
-comment|/* Handles parsing the Options provided to the user.     Copyright (C) 1989-1998 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111, USA.  */
+comment|/* Handles parsing the Options provided to the user.     Copyright (C) 1989-1998, 2000 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111, USA.  */
 end_comment
 
 begin_comment
@@ -341,6 +341,15 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|get_initializer_suffix
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|get_class_name
 parameter_list|(
 name|void
@@ -441,6 +450,13 @@ modifier|*
 name|key_name
 decl_stmt|;
 comment|/* Name used for keyword key. */
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|initializer_suffix
+decl_stmt|;
+comment|/* Suffix for empty struct initializers. */
 specifier|static
 specifier|const
 name|char

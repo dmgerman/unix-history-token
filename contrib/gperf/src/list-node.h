@@ -4,7 +4,7 @@ comment|/* This may look like C code, but it is really -*- C++ -*- */
 end_comment
 
 begin_comment
-comment|/* Data and function members for defining values and operations of a list node.     Copyright (C) 1989-1998 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111, USA.  */
+comment|/* Data and function members for defining values and operations of a list node.     Copyright (C) 1989-1998, 2000 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111, USA.  */
 end_comment
 
 begin_ifndef
@@ -49,6 +49,10 @@ operator|*
 name|key
 block|;
 comment|/* Each keyword string stored here. */
+name|int
+name|key_length
+block|;
+comment|/* Length of the key. */
 specifier|const
 name|char
 operator|*
@@ -62,9 +66,9 @@ name|char_set
 block|;
 comment|/* Set of characters to hash, specified by user. */
 name|int
-name|length
+name|char_set_length
 block|;
-comment|/* Length of the key. */
+comment|/* Length of char_set. */
 name|int
 name|hash_value
 block|;
@@ -79,9 +83,11 @@ block|;
 comment|/* Position of this node relative to other nodes. */
 name|List_Node
 argument_list|(
-argument|char *key
+argument|const char *key
 argument_list|,
 argument|int len
+argument_list|,
+argument|const char *rest
 argument_list|)
 block|;
 specifier|static
