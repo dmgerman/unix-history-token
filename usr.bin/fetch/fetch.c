@@ -1982,18 +1982,20 @@ if|if
 condition|(
 name|sigint
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"transfer interrupted"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 if|if
 condition|(
 operator|!
 name|sigalrm
-operator|&&
-operator|!
-name|sigint
 condition|)
 block|{
 comment|/* check the status of our files */
