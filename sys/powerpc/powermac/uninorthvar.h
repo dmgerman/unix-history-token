@@ -70,6 +70,9 @@ decl_stmt|;
 name|int
 name|sc_nrange
 decl_stmt|;
+name|int
+name|sc_iostart
+decl_stmt|;
 name|struct
 name|rman
 name|sc_io_rman
