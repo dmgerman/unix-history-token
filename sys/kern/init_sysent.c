@@ -1847,9 +1847,18 @@ name|nosys
 block|}
 block|,
 comment|/* 160 = nosys */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NFS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NFS_NOSERVER
+argument_list|)
 block|{
 literal|2
 block|,

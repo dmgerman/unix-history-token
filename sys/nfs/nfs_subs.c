@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_subs.c,v 1.25 1995/12/07 12:47:26 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_subs.c,v 1.26 1995/12/17 21:12:30 phk Exp $  */
 end_comment
 
 begin_comment
@@ -390,6 +390,12 @@ name|nqfhhash
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
+end_ifndef
+
 begin_comment
 comment|/*  * Mapping of old NFS Version 2 RPC numbers to generic numbers.  */
 end_comment
@@ -457,6 +463,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_NOSERVER */
+end_comment
+
 begin_comment
 comment|/*  * and the reverse mapping from generic to Version 2 procedure numbers  */
 end_comment
@@ -523,6 +538,12 @@ name|NFSV2PROC_NOOP
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
+end_ifndef
 
 begin_comment
 comment|/*  * Maps errno values to nfs error numbers.  * Use NFSERR_IO as the catch all for ones not specifically defined in  * RFC 1094.  */
@@ -1440,6 +1461,15 @@ name|nfsv3err_commit
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_NOSERVER */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -4705,6 +4735,9 @@ name|nfs_nhinit
 argument_list|()
 expr_stmt|;
 comment|/* Init the nfsnode table */
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
 name|nfsrv_init
 argument_list|(
 literal|0
@@ -4715,6 +4748,8 @@ name|nfsrv_initcache
 argument_list|()
 expr_stmt|;
 comment|/* Init the server request cache */
+endif|#
+directive|endif
 comment|/* 	 * Initialize the nqnfs server stuff. 	 */
 if|if
 condition|(
@@ -4766,19 +4801,29 @@ operator|&
 name|nfs_reqq
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
 name|nfs_timer
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
 comment|/* 	 * Set up lease_check and lease_updatetime so that other parts 	 * of the system can call us, if we are loadable. 	 */
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
 name|lease_check
 operator|=
 name|nfs_lease_check
 expr_stmt|;
+endif|#
+directive|endif
 name|lease_updatetime
 operator|=
 name|nfs_lease_updatetime
@@ -4813,6 +4858,9 @@ name|sy_call
 operator|=
 name|nfssvc
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
 name|sysent
 index|[
 name|SYS_getfh
@@ -4831,6 +4879,8 @@ name|sy_call
 operator|=
 name|getfh
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
@@ -6119,6 +6169,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
+end_ifndef
 
 begin_comment
 comment|/*  * Set up nameidata for a lookup() call and do it  */
@@ -8006,6 +8062,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_NOSERVER */
+end_comment
+
 begin_comment
 comment|/*  * This function compares two net addresses by family and returns TRUE  * if they are the same host.  * If there is any doubt, return FALSE.  * The AF_INET family is handled as a special case so that address mbufs  * don't need to be saved to store "struct in_addr", which is only 4 bytes.  */
 end_comment
@@ -8730,6 +8795,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_NOSERVER
+end_ifndef
+
 begin_comment
 comment|/*  * Map errnos to NFS error numbers. For Version 3 also filter out error  * numbers not specified for the associated procedure.  */
 end_comment
@@ -9129,6 +9200,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_NOSERVER */
+end_comment
 
 end_unit
 

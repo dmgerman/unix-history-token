@@ -1034,11 +1034,20 @@ argument|fstatfs
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|NFS
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NFS_NOSERVER
+argument_list|)
+end_if
 
 begin_macro
 name|HIDE_BSD
