@@ -2153,6 +2153,37 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* or if this is a blackhole/reject route */
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+operator|&&
+name|ro
+operator|.
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+operator|(
+name|RTF_REJECT
+operator||
+name|RTF_BLACKHOLE
+operator|)
+condition|)
+block|{
+name|RTFREE
+argument_list|(
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* found valid route */
 name|RTFREE
 argument_list|(
