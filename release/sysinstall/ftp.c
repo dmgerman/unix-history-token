@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp.c,v 1.18.2.6 1997/01/19 09:59:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp.c,v 1.18.2.7 1997/01/29 21:46:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -73,6 +73,92 @@ name|FtpPort
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Brings up attached network device, if any - takes FTP device as arg */
+end_comment
+
+begin_function
+specifier|static
+name|Boolean
+name|netup
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+name|Device
+modifier|*
+name|netdev
+init|=
+operator|(
+name|Device
+operator|*
+operator|)
+name|dev
+operator|->
+name|private
+decl_stmt|;
+if|if
+condition|(
+name|netdev
+condition|)
+return|return
+name|netdev
+operator|->
+name|init
+argument_list|(
+name|netdev
+argument_list|)
+return|;
+else|else
+return|return
+name|TRUE
+return|;
+comment|/* No net == happy net */
+block|}
+end_function
+
+begin_comment
+comment|/* Brings down attached network device, if any - takes FTP device as arg */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|netDown
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+name|Device
+modifier|*
+name|netdev
+init|=
+operator|(
+name|Device
+operator|*
+operator|)
+name|dev
+operator|->
+name|private
+decl_stmt|;
+if|if
+condition|(
+name|netdev
+condition|)
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|Boolean
 name|mediaInitFTP
@@ -112,18 +198,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|Device
-modifier|*
-name|netdev
-init|=
-operator|(
-name|Device
-operator|*
-operator|)
-name|dev
-operator|->
-name|private
-decl_stmt|;
 if|if
 condition|(
 name|ftpInitted
@@ -159,14 +233,10 @@ block|}
 comment|/* If we can't initialize the network, bag it! */
 if|if
 condition|(
-name|netdev
-operator|&&
 operator|!
-name|netdev
-operator|->
-name|init
+name|netUp
 argument_list|(
-name|netdev
+name|dev
 argument_list|)
 condition|)
 return|return
@@ -216,15 +286,9 @@ argument_list|(
 literal|"Unable to get proper FTP path.  FTP media not initialized."
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|netdev
-condition|)
-name|netdev
-operator|->
-name|shutdown
+name|netDown
 argument_list|(
-name|netdev
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
@@ -260,15 +324,9 @@ argument_list|(
 literal|"Missing FTP host or directory specification.  FTP media not initialized,"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|netdev
-condition|)
-name|netdev
-operator|->
-name|shutdown
+name|netDown
 argument_list|(
-name|netdev
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
@@ -571,6 +629,10 @@ name|TRUE
 return|;
 name|punt
 label|:
+name|ftpInitted
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|OpenConn
@@ -588,15 +650,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|netdev
-condition|)
-name|netdev
-operator|->
-name|shutdown
+name|netDown
 argument_list|(
-name|netdev
+name|dev
 argument_list|)
 expr_stmt|;
 name|variable_unset
@@ -728,6 +784,11 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|netDown
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|OpenConn
@@ -854,7 +915,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-comment|/* Device *netdev = (Device *)dev->private; */
 if|if
 condition|(
 operator|!
@@ -885,7 +945,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* if (netdev) netdev->shutdown(netdev); */
 name|ftpInitted
 operator|=
 name|FALSE
