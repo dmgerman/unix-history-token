@@ -3489,7 +3489,11 @@ name|RL_HWREV_8169
 operator|||
 name|hwrev
 operator|==
-name|RL_HWREV_8110
+name|RL_HWREV_8169S
+operator|||
+name|hwrev
+operator|==
+name|RL_HWREV_8110S
 condition|)
 block|{
 name|t
