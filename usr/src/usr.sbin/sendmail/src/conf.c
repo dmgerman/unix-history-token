@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.57 (Berkeley) %G%"
+literal|"@(#)conf.c	8.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5060,7 +5060,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  usershellok -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		shell -- the user's shell from /etc/passwd ** **	Returns: **		TRUE -- if it is ok to use this for unrestricted access. **		FALSE -- if the shell is restricted. */
+comment|/* **  USERSHELLOK -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		shell -- the user's shell from /etc/passwd ** **	Returns: **		TRUE -- if it is ok to use this for unrestricted access. **		FALSE -- if the shell is restricted. */
 end_comment
 
 begin_ifndef
