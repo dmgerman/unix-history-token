@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	1.1 %G%"
+literal|"@(#)cmd2.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,7 @@ index|]
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 		 * Find the first message in the supplied 		 * message list which follows dot. 		 */
 for|for
 control|(
 name|ip
@@ -131,27 +132,6 @@ name|ip
 expr_stmt|;
 do|do
 block|{
-if|if
-condition|(
-operator|*
-name|ip2
-operator|!=
-name|NULL
-condition|)
-name|ip2
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|ip2
-operator|==
-name|NULL
-condition|)
-name|ip2
-operator|=
-name|msgvec
-expr_stmt|;
 name|mp
 operator|=
 operator|&
@@ -184,6 +164,27 @@ goto|goto
 name|hitit
 goto|;
 block|}
+if|if
+condition|(
+operator|*
+name|ip2
+operator|!=
+name|NULL
+condition|)
+name|ip2
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ip2
+operator|==
+name|NULL
+condition|)
+name|ip2
+operator|=
+name|msgvec
+expr_stmt|;
 block|}
 do|while
 condition|(
