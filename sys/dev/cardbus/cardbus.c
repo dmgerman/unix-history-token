@@ -1309,7 +1309,7 @@ name|cardbus_detach_card
 argument_list|(
 name|cbdev
 argument_list|,
-name|DETACH_NOWARN
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* detach existing cards */
@@ -1636,14 +1636,8 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|DETACH_NOWARN
-operator|)
+name|bootverbose
 condition|)
-block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
@@ -1663,7 +1657,6 @@ argument_list|,
 name|cbdev
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|devlist
