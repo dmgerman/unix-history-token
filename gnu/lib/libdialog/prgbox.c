@@ -104,6 +104,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|width
+operator|=
+name|MAX
+argument_list|(
+name|width
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|width
