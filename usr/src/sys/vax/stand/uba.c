@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.4 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -336,6 +336,11 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+if|#
+directive|if
+name|VAX780
+operator|||
+name|VAX8600
 case|case
 name|VAX_8600
 case|:
@@ -357,6 +362,11 @@ operator||=
 name|UBADPR_BNE
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX750
 case|case
 name|VAX_750
 case|:
@@ -379,6 +389,8 @@ operator||
 name|UBADPR_UCE
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}

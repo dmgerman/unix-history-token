@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -83,6 +83,13 @@ begin_comment
 comment|/* all addresses must be specified */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXUNIT
+value|8
+end_define
+
 begin_decl_stmt
 name|u_short
 name|rkstd
@@ -107,7 +114,7 @@ index|[
 name|MAXCTLR
 index|]
 index|[
-literal|8
+name|MAXUNIT
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -159,6 +166,22 @@ name|u_int
 operator|)
 name|io
 operator|->
+name|i_adapt
+operator|>=
+name|nuba
+condition|)
+return|return
+operator|(
+name|EADAPT
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
 name|i_ctlr
 operator|>=
 name|MAXCTLR
@@ -166,6 +189,22 @@ condition|)
 return|return
 operator|(
 name|ECTLR
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_unit
+operator|>=
+name|MAXUNIT
+condition|)
+return|return
+operator|(
+name|EUNIT
 operator|)
 return|;
 name|rkaddr

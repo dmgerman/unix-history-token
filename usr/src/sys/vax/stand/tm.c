@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * TM11/TE??  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -29,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -98,6 +98,22 @@ specifier|register
 name|int
 name|skip
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+name|io
+operator|->
+name|i_adapt
+operator|>=
+name|nuba
+condition|)
+return|return
+operator|(
+name|EADAPT
+operator|)
+return|;
 if|if
 condition|(
 operator|(
