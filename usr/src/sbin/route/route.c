@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.44 (Berkeley) %G%"
+literal|"@(#)route.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -695,7 +695,13 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|()
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|argc
@@ -3094,6 +3100,10 @@ expr_stmt|;
 else|else
 name|usage
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
