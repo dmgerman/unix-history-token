@@ -239,7 +239,7 @@ argument_list|)
 expr_stmt|;
 name|exp
 operator|=
-name|fusword
+name|fuword16
 argument_list|(
 literal|4
 operator|+
@@ -1437,7 +1437,7 @@ operator|=
 operator|(
 name|short
 operator|)
-name|fusword
+name|fuword16
 argument_list|(
 operator|(
 name|unsigned
@@ -2163,7 +2163,7 @@ argument_list|,
 name|ms
 argument_list|)
 expr_stmt|;
-name|susword
+name|suword16
 argument_list|(
 literal|4
 operator|+
@@ -4132,7 +4132,7 @@ name|OFF
 argument_list|)
 expr_stmt|;
 comment|/*			    verify_area(VERIFY_WRITE, d, 2);*/
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|unsigned
@@ -4254,7 +4254,7 @@ name|OFF
 argument_list|)
 expr_stmt|;
 comment|/*	    verify_area(VERIFY_WRITE, d, 2); */
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|short
@@ -4933,7 +4933,7 @@ argument_list|)
 expr_stmt|;
 name|control_word
 operator|=
-name|fusword
+name|fuword16
 argument_list|(
 operator|(
 name|unsigned
@@ -4945,7 +4945,7 @@ argument_list|)
 expr_stmt|;
 name|status_word
 operator|=
-name|fusword
+name|fuword16
 argument_list|(
 operator|(
 name|unsigned
@@ -4961,7 +4961,7 @@ argument_list|)
 expr_stmt|;
 name|tag_word
 operator|=
-name|fusword
+name|fuword16
 argument_list|(
 operator|(
 name|unsigned
@@ -5490,7 +5490,7 @@ argument_list|(
 name|OFF
 argument_list|)
 expr_stmt|;
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|unsigned
@@ -5502,7 +5502,7 @@ argument_list|,
 name|control_word
 argument_list|)
 expr_stmt|;
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|unsigned
@@ -5533,7 +5533,7 @@ name|SW_Top_Shift
 operator|)
 argument_list|)
 expr_stmt|;
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|unsigned
@@ -6246,7 +6246,7 @@ argument_list|(
 name|OFF
 argument_list|)
 expr_stmt|;
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|unsigned

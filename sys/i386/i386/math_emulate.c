@@ -220,7 +220,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|fuword
+name|fuword16
 argument_list|(
 name|adr
 argument_list|)
@@ -294,7 +294,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|susword
+name|suword16
 argument_list|(
 name|adr
 argument_list|,

@@ -377,7 +377,7 @@ name|vmf_sp
 operator|-=
 literal|2
 expr_stmt|;
-name|susword
+name|suword16
 argument_list|(
 name|MAKE_ADDR
 argument_list|(
@@ -451,7 +451,7 @@ block|{
 name|u_short
 name|x
 init|=
-name|fusword
+name|fuword16
 argument_list|(
 name|MAKE_ADDR
 argument_list|(

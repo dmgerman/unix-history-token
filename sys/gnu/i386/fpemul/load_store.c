@@ -521,7 +521,7 @@ argument_list|)
 expr_stmt|;
 name|control_word
 operator|=
-name|fusword
+name|fuword16
 argument_list|(
 operator|(
 name|unsigned
@@ -692,7 +692,7 @@ name|OFF
 argument_list|)
 expr_stmt|;
 comment|/*		    verify_area(VERIFY_WRITE, FPU_data_address, 2);*/
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|short
@@ -765,7 +765,7 @@ name|OFF
 argument_list|)
 expr_stmt|;
 comment|/*		    verify_area(VERIFY_WRITE, FPU_data_address, 2);*/
-name|susword
+name|suword16
 argument_list|(
 operator|(
 name|short
