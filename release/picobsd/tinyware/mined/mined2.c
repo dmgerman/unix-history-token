@@ -119,6 +119,9 @@ argument_list|(
 name|help_string
 argument_list|)
 expr_stmt|;
+name|flush
+argument_list|()
+expr_stmt|;
 name|c
 operator|=
 name|getchar
