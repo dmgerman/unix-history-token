@@ -654,11 +654,6 @@ argument_list|(
 name|mdp
 argument_list|)
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|mdp
 argument_list|)
@@ -700,11 +695,6 @@ argument_list|(
 name|mdv
 argument_list|)
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|mdv
 argument_list|)
@@ -1065,7 +1055,6 @@ name|entries
 argument_list|,
 operator|(
 name|void
-operator|*
 operator|*
 operator|)
 operator|&
