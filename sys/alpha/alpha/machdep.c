@@ -3546,17 +3546,6 @@ continue|continue;
 block|}
 comment|/* 		 * We have a memory cluster available for system 		 * software use.  We must determine if this cluster 		 * holds the kernel. 		 */
 comment|/* 		 * XXX If the kernel uses the PROM console, we only use the 		 * XXX memory after the kernel in the first system segment, 		 * XXX to avoid clobbering prom mapping, data, etc. 		 */
-if|if
-condition|(
-operator|!
-name|pmap_uses_prom_console
-argument_list|()
-operator|||
-name|physmem
-operator|==
-literal|0
-condition|)
-block|{
 name|physmem
 operator|+=
 name|memc
@@ -3590,7 +3579,7 @@ operator|<=
 name|pfn1
 condition|)
 block|{
-comment|/* 				 * Must compute the location of the kernel 				 * within the segment. 				 */
+comment|/* 			 * Must compute the location of the kernel 			 * within the segment. 			 */
 ifdef|#
 directive|ifdef
 name|DEBUG_CLUSTER
@@ -3617,7 +3606,7 @@ operator|<
 name|kernstartpfn
 condition|)
 block|{
-comment|/* 				 * There is a chunk before the kernel. 				 */
+comment|/* 					 * There is a chunk before the kernel. 					 */
 ifdef|#
 directive|ifdef
 name|DEBUG_CLUSTER
@@ -3714,7 +3703,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 				 * Just load this cluster as one chunk. 				 */
+comment|/* 			 * Just load this cluster as one chunk. 			 */
 ifdef|#
 directive|ifdef
 name|DEBUG_CLUSTER
@@ -3757,7 +3746,6 @@ name|phys_avail_cnt
 operator|+=
 literal|2
 expr_stmt|;
-block|}
 block|}
 block|}
 name|phys_avail
@@ -3993,7 +3981,7 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|sz
 argument_list|)
 expr_stmt|;
 comment|/* Remove the last segment if it now has no pages. */
@@ -4025,7 +4013,7 @@ name|sz
 operator|!=
 name|round_page
 argument_list|(
-name|MSGBUFSIZE
+name|MSGBUF_SIZE
 argument_list|)
 condition|)
 name|printf
@@ -4034,7 +4022,7 @@ literal|"WARNING: %ld bytes not available for msgbuf in last cluster (%ld used)\
 argument_list|,
 name|round_page
 argument_list|(
-name|MSGBUFSIZE
+name|MSGBUF_SIZE
 argument_list|)
 argument_list|,
 name|sz

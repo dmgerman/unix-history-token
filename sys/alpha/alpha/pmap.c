@@ -125,6 +125,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1935,27 +1941,32 @@ name|int
 name|pmap_uses_prom_console
 parameter_list|()
 block|{
-if|#
-directive|if
-literal|0
-block|extern int cputype;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NEW_SCC_DRIVER
-argument_list|)
-block|return (cputype == ST_DEC_21000);
-else|#
-directive|else
-block|return (cputype == ST_DEC_21000 	     || cputype == ST_DEC_3000_300 	     || cputype == ST_DEC_3000_500);
-endif|#
-directive|endif
-comment|/* NEW_SCC_DRIVER */
-endif|#
-directive|endif
+name|int
+name|cputype
+decl_stmt|;
+name|cputype
+operator|=
+name|hwrpb
+operator|->
+name|rpb_type
+expr_stmt|;
 return|return
-literal|1
+operator|(
+name|cputype
+operator|==
+name|ST_DEC_21000
+operator|||
+name|cputype
+operator|==
+name|ST_DEC_3000_300
+operator|||
+name|cputype
+operator|==
+name|ST_DEC_3000_500
+operator|)
+return|;
+return|return
+literal|0
 return|;
 block|}
 end_function
