@@ -196,7 +196,7 @@ name|off_t
 name|size
 decl_stmt|;
 comment|/* size of the object in bytes */
-name|long
+name|time_t
 name|date
 decl_stmt|;
 comment|/* date */
