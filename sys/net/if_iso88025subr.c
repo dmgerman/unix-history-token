@@ -1393,9 +1393,7 @@ argument_list|)
 expr_stmt|;
 name|l
 operator|->
-name|llc_snap
-operator|.
-name|control
+name|llc_control
 operator|=
 name|LLC_UI
 expr_stmt|;
