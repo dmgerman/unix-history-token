@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.3	%G%	*/
+comment|/*	Locore.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -236,6 +236,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dumptrc
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
@@ -370,33 +373,6 @@ return|;
 block|}
 end_block
 
-begin_decl_stmt
-name|int
-name|whichqs
-decl_stmt|;
-end_decl_stmt
-
-begin_struct
-struct|struct
-block|{
-name|struct
-name|proc
-modifier|*
-name|q_forw
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|q_rev
-decl_stmt|;
-block|}
-name|qs
-index|[
-literal|32
-index|]
-struct|;
-end_struct
-
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -416,7 +392,11 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/*NOTREACHED*/
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -495,12 +475,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{
-name|whichqs
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{  }
 end_block
 
 begin_comment
@@ -1064,6 +1039,21 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pte
+name|MBA0map
+index|[
+literal|16
+index|]
+decl_stmt|,
+name|MBA1map
+index|[
+literal|16
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
 name|mmap
 index|[
 literal|1
@@ -1262,7 +1252,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+name|mcrmap
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 end_block
 
 end_unit
