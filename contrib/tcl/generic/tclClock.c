@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclClock.c --  *  *	Contains the time and date related commands.  This code  *	is derived from the time and date facilities of TclX,  *	by Mark Diekhans and Karl Lehenbauer.  *  * Copyright 1991-1995 Karl Lehenbauer and Mark Diekhans.  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclClock.c 1.36 97/06/02 10:14:17  */
+comment|/*   * tclClock.c --  *  *	Contains the time and date related commands.  This code  *	is derived from the time and date facilities of TclX,  *	by Mark Diekhans and Karl Lehenbauer.  *  * Copyright 1991-1995 Karl Lehenbauer and Mark Diekhans.  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclClock.c 1.37 97/07/29 10:29:58  */
 end_comment
 
 begin_include
@@ -272,11 +272,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"clicks"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -322,11 +322,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"format clockval ?-format string? ?-gmt boolean?"
+literal|"clockval ?-format string? ?-gmt boolean?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -516,11 +516,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"scan dateString ?-base clockValue? ?-gmt boolean?"
+literal|"dateString ?-base clockValue? ?-gmt boolean?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -790,11 +790,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"seconds"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tclInt.h --  *  *	Declarations of things used internally by the Tcl interpreter.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  * Copyright (c) 1993-1997 Lucent Technologies.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInt.h 1.277 97/06/20 15:19:00  */
+comment|/*  * tclInt.h --  *  *	Declarations of things used internally by the Tcl interpreter.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  * Copyright (c) 1993-1997 Lucent Technologies.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  *SCCS: @(#) tclInt.h 1.293 97/08/12 17:07:02  */
 end_comment
 
 begin_ifndef
@@ -463,7 +463,7 @@ comment|/* If variable is in a hashtable, either the 				 * hash table entry tha
 name|int
 name|refCount
 decl_stmt|;
-comment|/* Counts number of active uses of this 				 * variable, not including its entry in the 				 * call frame or the hash table: 1 for each 				 * additional variable whose linkPtr points 				 * here, 1 for each nested trace active on 				 * variable. This record can't be deleted 				 * until refCount becomes 0. */
+comment|/* Counts number of active uses of this 				 * variable, not including its entry in the 				 * call frame or the hash table: 1 for each 				 * additional variable whose linkPtr points 				 * here, 1 for each nested trace active on 				 * variable, and 1 if the variable is a  				 * namespace variable. This record can't be 				 * deleted until refCount becomes 0. */
 name|VarTrace
 modifier|*
 name|tracePtr
@@ -484,7 +484,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Flag bits for variables. The first three (VAR_SCALAR, VAR_ARRAY, and  * VAR_LINK) are mutually exclusive and give the "type" of the variable.  * VAR_UNDEFINED is independent of the variable's type.   *  * VAR_SCALAR -			1 means this is a scalar variable and not  *				an array or link. The "objPtr" field points  *				to the variable's value, a Tcl object.  * VAR_ARRAY -			1 means this is an array variable rather  *				than a scalar variable or link. The  *				"tablePtr" field points to the array's  *				hashtable for its elements.  * VAR_LINK - 			1 means this Var structure contains a  *				pointer to another Var structure that  *				either has the real value or is itself  *				another VAR_LINK pointer. Variables like  *				this come about through "upvar" and "global"  *				commands, or through references to variables  *				in enclosing namespaces.  * VAR_UNDEFINED -		1 means that the variable is in the process  *				of being deleted. An undefined variable  *				logically does not exist and survives only  *				while it has a trace, or if it is a global  *				variable currently being used by some  *				procedure.  * VAR_IN_HASHTABLE -		1 means this variable is in a hashtable and  *				the Var structure is malloced. 0 if it is  *				a local variable that was assigned a slot  *				in a procedure frame by	the compiler so the  *				Var storage is part of the call frame.  * VAR_TRACE_ACTIVE -		1 means that trace processing is currently  *				underway for a read or write access, so  *				new read or write accesses should not cause  *				trace procedures to be called and the  *				variable can't be deleted.  * VAR_ARRAY_ELEMENT -		1 means that this variable is an array  *				element, so it is not legal for it to be  *				an array itself (the VAR_ARRAY flag had  *				better not be set).  */
+comment|/*  * Flag bits for variables. The first three (VAR_SCALAR, VAR_ARRAY, and  * VAR_LINK) are mutually exclusive and give the "type" of the variable.  * VAR_UNDEFINED is independent of the variable's type.   *  * VAR_SCALAR -			1 means this is a scalar variable and not  *				an array or link. The "objPtr" field points  *				to the variable's value, a Tcl object.  * VAR_ARRAY -			1 means this is an array variable rather  *				than a scalar variable or link. The  *				"tablePtr" field points to the array's  *				hashtable for its elements.  * VAR_LINK - 			1 means this Var structure contains a  *				pointer to another Var structure that  *				either has the real value or is itself  *				another VAR_LINK pointer. Variables like  *				this come about through "upvar" and "global"  *				commands, or through references to variables  *				in enclosing namespaces.  * VAR_UNDEFINED -		1 means that the variable is in the process  *				of being deleted. An undefined variable  *				logically does not exist and survives only  *				while it has a trace, or if it is a global  *				variable currently being used by some  *				procedure.  * VAR_IN_HASHTABLE -		1 means this variable is in a hashtable and  *				the Var structure is malloced. 0 if it is  *				a local variable that was assigned a slot  *				in a procedure frame by	the compiler so the  *				Var storage is part of the call frame.  * VAR_TRACE_ACTIVE -		1 means that trace processing is currently  *				underway for a read or write access, so  *				new read or write accesses should not cause  *				trace procedures to be called and the  *				variable can't be deleted.  * VAR_ARRAY_ELEMENT -		1 means that this variable is an array  *				element, so it is not legal for it to be  *				an array itself (the VAR_ARRAY flag had  *				better not be set).  * VAR_NAMESPACE_VAR -		1 means that this variable was declared  *				as a namespace variable. This flag ensures  *				it persists until its namespace is  *				destroyed or until the variable is unset;  *				it will persist even if it has not been  *				initialized and is marked undefined.  *				The variable's refCount is incremented to  *				reflect the "reference" from its namespace.  */
 end_comment
 
 begin_define
@@ -534,6 +534,13 @@ define|#
 directive|define
 name|VAR_ARRAY_ELEMENT
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_NAMESPACE_VAR
+value|0x80
 end_define
 
 begin_comment
@@ -670,6 +677,16 @@ comment|/*  *----------------------------------------------------------------  *
 end_comment
 
 begin_comment
+comment|/*  * Forward declaration to prevent an error when the forward reference to  * Command is encountered in the Proc and ImportRef types declared below.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|Command
+struct_decl|;
+end_struct_decl
+
+begin_comment
 comment|/*  * The variable-length structure below describes a local variable of a  * procedure that was recognized by the compiler. These variables have a  * name, an element in the array of compiler-assigned local variables in the  * procedure's call frame, and various other items of information. If the  * local variable is a formal argument, it may also have a default value.  * The compiler can't recognize local variables whose names are  * expressions (these names are only known at runtime when the expressions  * are evaluated) or local variables that are created as a result of an  * "upvar" or "uplevel" command. These other local variables are kept  * separately in a hash table in the call frame.  */
 end_comment
 
@@ -740,11 +757,12 @@ name|int
 name|refCount
 decl_stmt|;
 comment|/* Reference count: 1 if still present 				   * in command table plus 1 for each call 				   * to the procedure that is currently 				   * active. This structure can be freed 				   * when refCount becomes zero. */
-name|Namespace
+name|struct
+name|Command
 modifier|*
-name|nsPtr
+name|cmdPtr
 decl_stmt|;
-comment|/* Points to the namespace that contains 				   * this procedure. */
+comment|/* Points to the Command structure for 				   * this procedure. This is used to get 				   * the namespace in which to execute 				   * the procedure. */
 name|Tcl_Obj
 modifier|*
 name|bodyPtr
@@ -1124,16 +1142,6 @@ comment|/*  *----------------------------------------------------------------  *
 end_comment
 
 begin_comment
-comment|/*  * Forward declaration to prevent an error when the forward reference to  * Command is encountered in the ImportRef type declared below.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|Command
-struct_decl|;
-end_struct_decl
-
-begin_comment
 comment|/*  * An imported command is created in an namespace when it imports a "real"  * command from another namespace. An imported command has a Command  * structure that points (via its ClientData value) to the "real" Command  * structure in the source namespace's command table. The real command  * records all the imported commands that refer to it in a list of ImportRef  * structures so that they can be deleted when the real command is deleted.  */
 end_comment
 
@@ -1308,48 +1316,6 @@ modifier|*
 name|errorCode
 decl_stmt|;
 comment|/* Value to store in errorCode if returnCode 				 * is TCL_ERROR.  Malloc'ed, may be NULL */
-comment|/*      * Information related to history:      */
-name|int
-name|numEvents
-decl_stmt|;
-comment|/* Number of previously-executed commands 				 * to retain. */
-name|HistoryEvent
-modifier|*
-name|events
-decl_stmt|;
-comment|/* Array containing numEvents entries 				 * (dynamically allocated). */
-name|int
-name|curEvent
-decl_stmt|;
-comment|/* Index into events of place where current 				 * (or most recent) command is recorded. */
-name|int
-name|curEventNum
-decl_stmt|;
-comment|/* Event number associated with the slot 				 * given by curEvent. */
-name|HistoryRev
-modifier|*
-name|revPtr
-decl_stmt|;
-comment|/* First in list of pending revisions. */
-name|char
-modifier|*
-name|historyFirst
-decl_stmt|;
-comment|/* First char. of current command executed 				 * from history module or NULL if none. */
-name|int
-name|revDisables
-decl_stmt|;
-comment|/* 0 means history revision OK;> 0 gives 				 * a count of number of times revision has 				 * been disabled. */
-name|char
-modifier|*
-name|evalFirst
-decl_stmt|;
-comment|/* If TCL_RECORD_BOUNDS Tcl_Eval and 				 * Tcl_EvalObj set this field to point to 				 * the first char. of text from which the 				 * current command came. Otherwise set to 				 * NULL. */
-name|char
-modifier|*
-name|evalLast
-decl_stmt|;
-comment|/* Similar to evalFirst, except points to 				 * last character of current command. */
 comment|/*      * Information used by Tcl_AppendResult to keep track of partial      * results.  See Tcl_AppendResult code for details.      */
 name|char
 modifier|*
@@ -1473,7 +1439,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * EvalFlag bits for Interp structures:  *  * TCL_BRACKET_TERM	1 means that the current script is terminated by  *			a close bracket rather than the end of the string.  * TCL_RECORD_BOUNDS	Tells Tcl_Eval to record information in the  *			evalFirst and evalLast fields for each command  *			executed directly from the string (top-level  *			commands and those from command substitution).  * TCL_ALLOW_EXCEPTIONS	1 means it's OK for the script to terminate with  *			a code other than TCL_OK or TCL_ERROR;  0 means  *			codes other than these should be turned into errors.  */
+comment|/*  * EvalFlag bits for Interp structures:  *  * TCL_BRACKET_TERM	1 means that the current script is terminated by  *			a close bracket rather than the end of the string.  * TCL_ALLOW_EXCEPTIONS	1 means it's OK for the script to terminate with  *			a code other than TCL_OK or TCL_ERROR;  0 means  *			codes other than these should be turned into errors.  */
 end_comment
 
 begin_define
@@ -1486,19 +1452,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|TCL_RECORD_BOUNDS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|TCL_ALLOW_EXCEPTIONS
 value|4
 end_define
 
 begin_comment
-comment|/*  * Flag bits for Interp structures:  *  * DELETED:		Non-zero means the interpreter has been deleted:  *			don't process any more commands for it, and destroy  *			the structure as soon as all nested invocations of  *			Tcl_Eval are done.  * ERR_IN_PROGRESS:	Non-zero means an error unwind is already in  *			progress. Zero means a command proc has been  *			invoked since last error occured.  * ERR_ALREADY_LOGGED:	Non-zero means information has already been logged  *			in $errorInfo for the current Tcl_Eval instance,  *			so Tcl_Eval needn't log it (used to implement the  *			"error message log" command).  * ERROR_CODE_SET:	Non-zero means that Tcl_SetErrorCode has been  *			called to record information for the current  *			error.  Zero means Tcl_Eval must clear the  *			errorCode variable if an error is returned.  * EXPR_INITIALIZED:	Non-zero means initialization specific to  *			expressions has	been carried out.  * DONT_COMPILE_CMDS_INLINE: Non-zero means that the bytecode compiler  *			should not compile any commands into an inline  *			sequence of instructions. This is set 1, for  *			example, when command traces are requested.  * RAND_SEED_INITIALIZED: Non-zero means that the randSeed value of the  *			interp has not be initialized.  This is set 1  *			when we first use the rand() or srand() functions.  */
+comment|/*  * Flag bits for Interp structures:  *  * DELETED:		Non-zero means the interpreter has been deleted:  *			don't process any more commands for it, and destroy  *			the structure as soon as all nested invocations of  *			Tcl_Eval are done.  * ERR_IN_PROGRESS:	Non-zero means an error unwind is already in  *			progress. Zero means a command proc has been  *			invoked since last error occured.  * ERR_ALREADY_LOGGED:	Non-zero means information has already been logged  *			in $errorInfo for the current Tcl_Eval instance,  *			so Tcl_Eval needn't log it (used to implement the  *			"error message log" command).  * ERROR_CODE_SET:	Non-zero means that Tcl_SetErrorCode has been  *			called to record information for the current  *			error.  Zero means Tcl_Eval must clear the  *			errorCode variable if an error is returned.  * EXPR_INITIALIZED:	Non-zero means initialization specific to  *			expressions has	been carried out.  * DONT_COMPILE_CMDS_INLINE: Non-zero means that the bytecode compiler  *			should not compile any commands into an inline  *			sequence of instructions. This is set 1, for  *			example, when command traces are requested.  * RAND_SEED_INITIALIZED: Non-zero means that the randSeed value of the  *			interp has not be initialized.  This is set 1  *			when we first use the rand() or srand() functions.  * SAFE_INTERP:         Non zero means that the current interp is a  *                      safe interp (ie it has only the safe commands  *                      installed, less priviledge than a regular interp).  */
 end_comment
 
 begin_define
@@ -1548,6 +1507,13 @@ define|#
 directive|define
 name|RAND_SEED_INITIALIZED
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAFE_INTERP
+value|0x80
 end_define
 
 begin_comment
@@ -2582,6 +2548,19 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|void
+name|TclFinalizeEnvironment
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|void
 name|TclFinalizeExecEnv
 name|_ANSI_ARGS_
 argument_list|(
@@ -2794,6 +2773,7 @@ name|TclGetEnv
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|name
@@ -3528,6 +3508,21 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
+name|TclObjCommandComplete
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|cmdPtr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|TclObjInterpProc
 name|_ANSI_ARGS_
 argument_list|(
@@ -3621,6 +3616,47 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * On a Mac, we can exit gracefully if the stack gets too small.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAC_TCL
+end_ifdef
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|TclpCheckStackSpace
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TclpCheckStackSpace
+parameter_list|()
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|EXTERN
@@ -3898,6 +3934,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|TclpListVolumes
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Interp
+operator|*
+name|interp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|TclFile
 name|TclpMakeFile
 name|_ANSI_ARGS_
@@ -3926,21 +3977,6 @@ name|fname
 operator|,
 name|int
 name|mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|TclpListVolumes
-name|_ANSI_ARGS_
-argument_list|(
-operator|(
-name|Tcl_Interp
-operator|*
-name|interp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4006,6 +4042,114 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|TclpSetEnv
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|CONST
+name|char
+operator|*
+name|name
+operator|,
+name|CONST
+name|char
+operator|*
+name|value
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TclpSysAlloc
+end_ifndef
+
+begin_decl_stmt
+name|EXTERN
+name|VOID
+modifier|*
+name|TclpSysAlloc
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|long
+name|size
+operator|,
+name|int
+name|isBin
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TclpSysFree
+end_ifndef
+
+begin_decl_stmt
+name|EXTERN
+name|void
+name|TclpSysFree
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|VOID
+operator|*
+name|ptr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TclpSysRealloc
+end_ifndef
+
+begin_decl_stmt
+name|EXTERN
+name|VOID
+modifier|*
+name|TclpSysRealloc
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|VOID
+operator|*
+name|cp
+operator|,
+name|unsigned
+name|int
+name|size
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|EXTERN
@@ -4124,6 +4268,36 @@ operator|(
 name|Tcl_Interp
 operator|*
 name|interp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|TclPrecTraceProc
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|ClientData
+name|clientData
+operator|,
+name|Tcl_Interp
+operator|*
+name|interp
+operator|,
+name|char
+operator|*
+name|name1
+operator|,
+name|char
+operator|*
+name|name2
+operator|,
+name|int
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4456,7 +4630,7 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_AfterCmd
+name|Tcl_AfterObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
@@ -4468,12 +4642,13 @@ operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4643,7 +4818,7 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_CdCmd
+name|Tcl_CdObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
@@ -4655,12 +4830,13 @@ operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4696,7 +4872,7 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_CloseCmd
+name|Tcl_CloseObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
@@ -4708,12 +4884,13 @@ operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4775,7 +4952,7 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_EofCmd
+name|Tcl_EofObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
@@ -4787,12 +4964,13 @@ operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4935,7 +5113,7 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_FblockedCmd
+name|Tcl_FblockedObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
@@ -4947,12 +5125,13 @@ operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5147,24 +5326,25 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_FormatCmd
+name|Tcl_FormatObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
 name|ClientData
-name|clientData
+name|dummy
 operator|,
 name|Tcl_Interp
 operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6078,7 +6258,7 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Tcl_SplitCmd
+name|Tcl_SplitObjCmd
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
@@ -6090,12 +6270,13 @@ operator|*
 name|interp
 operator|,
 name|int
-name|argc
+name|objc
 operator|,
-name|char
+name|Tcl_Obj
 operator|*
-operator|*
-name|argv
+name|CONST
+name|objv
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUtil.c --  *  *	This file contains utility procedures that are used by many Tcl  *	commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUtil.c 1.154 97/06/26 13:49:14  */
+comment|/*   * tclUtil.c --  *  *	This file contains utility procedures that are used by many Tcl  *	commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUtil.c 1.161 97/08/12 17:07:18  */
 end_comment
 
 begin_include
@@ -32,6 +32,42 @@ directive|define
 name|BRACES_UNMATCHED
 value|4
 end_define
+
+begin_comment
+comment|/*  * The following values determine the precision used when converting  * floating-point values to strings.  This information is linked to all  * of the tcl_precision variables in all interpreters via the procedure  * TclPrecTraceProc.  *  * NOTE: these variables are not thread-safe.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|precisionString
+index|[
+literal|10
+index|]
+init|=
+literal|"12"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The string value of all the tcl_precision 				 * variables. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|precisionFormat
+index|[
+literal|10
+index|]
+init|=
+literal|"%.12g"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The format string actually used in calls 				 * to sprintf. */
+end_comment
 
 begin_comment
 comment|/*  * Function prototypes for local procedures in this file:  */
@@ -117,7 +153,6 @@ name|bracePtr
 decl_stmt|;
 comment|/* If non-zero, fill in with non-zero/zero 				 * to indicate that arg was/wasn't 				 * in braces. */
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -778,20 +813,17 @@ name|int
 name|count
 decl_stmt|;
 comment|/* Number of characters to copy from src. */
-specifier|register
 name|char
 modifier|*
 name|src
 decl_stmt|;
 comment|/* Copy from here... */
-specifier|register
 name|char
 modifier|*
 name|dst
 decl_stmt|;
 comment|/* ... to here. */
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -936,7 +968,6 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1188,13 +1219,18 @@ condition|(
 name|brace
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strncpy
+name|memcpy
 argument_list|(
+operator|(
+name|VOID
+operator|*
+operator|)
 name|p
 argument_list|,
+operator|(
+name|VOID
+operator|*
+operator|)
 name|element
 argument_list|,
 operator|(
@@ -1273,6 +1309,7 @@ name|string
 parameter_list|,
 name|flagPtr
 parameter_list|)
+name|CONST
 name|char
 modifier|*
 name|string
@@ -1315,6 +1352,7 @@ name|length
 parameter_list|,
 name|flagPtr
 parameter_list|)
+name|CONST
 name|char
 modifier|*
 name|string
@@ -1335,12 +1373,11 @@ name|flags
 decl_stmt|,
 name|nestingLevel
 decl_stmt|;
-specifier|register
+name|CONST
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|lastChar
 decl_stmt|;
@@ -1607,7 +1644,7 @@ name|dst
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
+name|CONST
 name|char
 modifier|*
 name|src
@@ -1658,7 +1695,7 @@ name|dst
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
+name|CONST
 name|char
 modifier|*
 name|src
@@ -1678,13 +1715,13 @@ name|flags
 decl_stmt|;
 comment|/* Flags produced by Tcl_ScanElement. */
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 init|=
 name|dst
 decl_stmt|;
+name|CONST
 name|char
 modifier|*
 name|lastChar
@@ -2088,7 +2125,6 @@ name|char
 modifier|*
 name|result
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|dst
@@ -2310,7 +2346,6 @@ name|totalSize
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2458,6 +2493,25 @@ index|]
 argument_list|)
 argument_list|)
 operator|)
+operator|&&
+operator|(
+operator|(
+name|length
+operator|<
+literal|2
+operator|)
+operator|||
+operator|(
+name|element
+index|[
+name|length
+operator|-
+literal|2
+index|]
+operator|!=
+literal|'\\'
+operator|)
+operator|)
 condition|;
 name|length
 operator|--
@@ -2474,13 +2528,18 @@ condition|)
 block|{
 continue|continue;
 block|}
-operator|(
-name|void
-operator|)
-name|strncpy
+name|memcpy
 argument_list|(
+operator|(
+name|VOID
+operator|*
+operator|)
 name|p
 argument_list|,
+operator|(
+name|VOID
+operator|*
+operator|)
 name|element
 argument_list|,
 operator|(
@@ -2571,12 +2630,10 @@ name|elemLength
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|element
@@ -2585,7 +2642,6 @@ name|char
 modifier|*
 name|concatStr
 decl_stmt|;
-specifier|register
 name|Tcl_Obj
 modifier|*
 name|objPtr
@@ -2760,6 +2816,7 @@ name|elemLength
 operator|--
 expr_stmt|;
 block|}
+comment|/* 	     * Trim trailing white space.  But, be careful not to trim 	     * a space character if it is preceded by a backslash: in 	     * this case it could be significant. 	     */
 while|while
 condition|(
 operator|(
@@ -2780,6 +2837,25 @@ literal|1
 index|]
 argument_list|)
 argument_list|)
+operator|&&
+operator|(
+operator|(
+name|elemLength
+operator|<
+literal|2
+operator|)
+operator|||
+operator|(
+name|element
+index|[
+name|elemLength
+operator|-
+literal|2
+index|]
+operator|!=
+literal|'\\'
+operator|)
+operator|)
 condition|)
 block|{
 name|elemLength
@@ -2905,18 +2981,16 @@ name|string
 parameter_list|,
 name|pattern
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|string
 decl_stmt|;
 comment|/* String. */
-specifier|register
 name|char
 modifier|*
 name|pattern
 decl_stmt|;
-comment|/* Pattern, which may contain 				 * special characters. */
+comment|/* Pattern, which may contain special 				 * characters. */
 block|{
 name|char
 name|c2
@@ -3284,19 +3358,17 @@ modifier|*
 name|interp
 decl_stmt|;
 comment|/* Interpreter with which to associate the 				 * return value. */
-specifier|register
 name|char
 modifier|*
 name|string
 decl_stmt|;
-comment|/* Value to be returned.  If NULL, 				 * the result is set to an empty string. */
+comment|/* Value to be returned.  If NULL, the 				 * result is set to an empty string. */
 name|Tcl_FreeProc
 modifier|*
 name|freeProc
 decl_stmt|;
 comment|/* Gives information about the string: 				 * TCL_STATIC, TCL_VOLATILE, or the address 				 * of a Tcl_FreeProc such as free. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -3514,7 +3586,6 @@ name|Tcl_GetStringResult
 parameter_list|(
 name|interp
 parameter_list|)
-specifier|register
 name|Tcl_Interp
 modifier|*
 name|interp
@@ -3584,14 +3655,12 @@ modifier|*
 name|interp
 decl_stmt|;
 comment|/* Interpreter with which to associate the 				 * return object value. */
-specifier|register
 name|Tcl_Obj
 modifier|*
 name|objPtr
 decl_stmt|;
 comment|/* Tcl object to be returned. If NULL, the 				 * obj result is made an empty string 				 * object. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -3602,7 +3671,6 @@ operator|*
 operator|)
 name|interp
 decl_stmt|;
-specifier|register
 name|Tcl_Obj
 modifier|*
 name|oldObjResult
@@ -3732,7 +3800,6 @@ name|interp
 decl_stmt|;
 comment|/* Interpreter whose result to return. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -3743,12 +3810,10 @@ operator|*
 operator|)
 name|interp
 decl_stmt|;
-specifier|register
 name|Tcl_Obj
 modifier|*
 name|objResultPtr
 decl_stmt|;
-specifier|register
 name|int
 name|length
 decl_stmt|;
@@ -3905,12 +3970,10 @@ block|{
 name|va_list
 name|argList
 decl_stmt|;
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|string
@@ -4160,7 +4223,6 @@ name|string
 decl_stmt|;
 comment|/* String to convert to list element and 				 * add to result. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -4175,7 +4237,6 @@ name|char
 modifier|*
 name|dst
 decl_stmt|;
-specifier|register
 name|int
 name|size
 decl_stmt|;
@@ -4351,7 +4412,6 @@ name|iPtr
 parameter_list|,
 name|newSpace
 parameter_list|)
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -4597,14 +4657,12 @@ name|Tcl_FreeResult
 parameter_list|(
 name|interp
 parameter_list|)
-specifier|register
 name|Tcl_Interp
 modifier|*
 name|interp
 decl_stmt|;
 comment|/* Interpreter for which to free result. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -4704,7 +4762,6 @@ name|interp
 decl_stmt|;
 comment|/* Interpreter for which to clear result. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -4991,7 +5048,6 @@ name|string
 decl_stmt|;
 comment|/* String for which to produce 					 * compiled regular expression. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -5705,12 +5761,11 @@ name|Tcl_DStringInit
 parameter_list|(
 name|dsPtr
 parameter_list|)
-specifier|register
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Pointer to structure for 					 * dynamic string. */
+comment|/* Pointer to structure for dynamic string. */
 block|{
 name|dsPtr
 operator|->
@@ -5762,21 +5817,21 @@ name|string
 parameter_list|,
 name|length
 parameter_list|)
-specifier|register
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Structure describing dynamic 					 * string. */
+comment|/* Structure describing dynamic string. */
+name|CONST
 name|char
 modifier|*
 name|string
 decl_stmt|;
-comment|/* String to append.  If length is 					 * -1 then this must be 					 * null-terminated. */
+comment|/* String to append.  If length is -1 then 				 * this must be null-terminated. */
 name|int
 name|length
 decl_stmt|;
-comment|/* Number of characters from string 					 * to append.  If< 0, then append all 					 * of string, up to null at end. */
+comment|/* Number of characters from string to 				 * append.  If< 0, then append all of string, 				 * up to null at end. */
 block|{
 name|int
 name|newSize
@@ -5787,7 +5842,9 @@ name|newString
 decl_stmt|,
 modifier|*
 name|dst
-decl_stmt|,
+decl_stmt|;
+name|CONST
+name|char
 modifier|*
 name|end
 decl_stmt|;
@@ -5938,7 +5995,7 @@ block|}
 operator|*
 name|dst
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|dsPtr
 operator|->
@@ -5970,17 +6027,17 @@ name|dsPtr
 parameter_list|,
 name|string
 parameter_list|)
-specifier|register
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Structure describing dynamic 					 * string. */
+comment|/* Structure describing dynamic string. */
+name|CONST
 name|char
 modifier|*
 name|string
 decl_stmt|;
-comment|/* String to append.  Must be 					 * null-terminated. */
+comment|/* String to append.  Must be 				 * null-terminated. */
 block|{
 name|int
 name|newSize
@@ -6167,12 +6224,11 @@ name|dsPtr
 parameter_list|,
 name|length
 parameter_list|)
-specifier|register
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Structure describing dynamic 					 * string. */
+comment|/* Structure describing dynamic string. */
 name|int
 name|length
 decl_stmt|;
@@ -6309,12 +6365,11 @@ name|Tcl_DStringFree
 parameter_list|(
 name|dsPtr
 parameter_list|)
-specifier|register
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Structure describing dynamic 					 * string. */
+comment|/* Structure describing dynamic string. */
 block|{
 if|if
 condition|(
@@ -6386,13 +6441,12 @@ name|Tcl_Interp
 modifier|*
 name|interp
 decl_stmt|;
-comment|/* Interpreter whose result is to be 				  * reset. */
-specifier|register
+comment|/* Interpreter whose result is to be reset. */
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Dynamic string that is to become 				  * the result of interp. */
+comment|/* Dynamic string that is to become the 				 * result of interp. */
 block|{
 name|Tcl_ResetResult
 argument_list|(
@@ -6526,15 +6580,13 @@ name|Tcl_Interp
 modifier|*
 name|interp
 decl_stmt|;
-comment|/* Interpreter whose result is to be 				  * reset. */
-specifier|register
+comment|/* Interpreter whose result is to be reset. */
 name|Tcl_DString
 modifier|*
 name|dsPtr
 decl_stmt|;
-comment|/* Dynamic string that is to become the 				  * result of interp. */
+comment|/* Dynamic string that is to become the 				 * result of interp. */
 block|{
-specifier|register
 name|Interp
 modifier|*
 name|iPtr
@@ -6947,7 +6999,6 @@ name|dst
 decl_stmt|;
 comment|/* Where to store converted value; 					 * must have at least TCL_DOUBLE_SPACE 					 * characters. */
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -6956,7 +7007,7 @@ name|sprintf
 argument_list|(
 name|dst
 argument_list|,
-literal|"%.17g"
+name|precisionFormat
 argument_list|,
 name|value
 argument_list|)
@@ -7022,6 +7073,297 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  *----------------------------------------------------------------------  *  * TclPrecTraceProc --  *  *	This procedure is invoked whenever the variable "tcl_precision"  *	is written.  *  * Results:  *	Returns NULL if all went well, or an error message if the  *	new value for the variable doesn't make sense.  *  * Side effects:  *	If the new value doesn't make sense then this procedure  *	undoes the effect of the variable modification.  Otherwise  *	it modifies the format string that's used by Tcl_PrintDouble.  *  *----------------------------------------------------------------------  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|TclPrecTraceProc
+parameter_list|(
+name|clientData
+parameter_list|,
+name|interp
+parameter_list|,
+name|name1
+parameter_list|,
+name|name2
+parameter_list|,
+name|flags
+parameter_list|)
+name|ClientData
+name|clientData
+decl_stmt|;
+comment|/* Not used. */
+name|Tcl_Interp
+modifier|*
+name|interp
+decl_stmt|;
+comment|/* Interpreter containing variable. */
+name|char
+modifier|*
+name|name1
+decl_stmt|;
+comment|/* Name of variable. */
+name|char
+modifier|*
+name|name2
+decl_stmt|;
+comment|/* Second part of variable name. */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Information about what happened. */
+block|{
+name|char
+modifier|*
+name|value
+decl_stmt|,
+modifier|*
+name|end
+decl_stmt|;
+name|int
+name|prec
+decl_stmt|;
+comment|/*      * If the variable is unset, then recreate the trace.      */
+if|if
+condition|(
+name|flags
+operator|&
+name|TCL_TRACE_UNSETS
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|TCL_TRACE_DESTROYED
+operator|)
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|TCL_INTERP_DESTROYED
+operator|)
+condition|)
+block|{
+name|Tcl_TraceVar2
+argument_list|(
+name|interp
+argument_list|,
+name|name1
+argument_list|,
+name|name2
+argument_list|,
+name|TCL_GLOBAL_ONLY
+operator||
+name|TCL_TRACE_READS
+operator||
+name|TCL_TRACE_WRITES
+operator||
+name|TCL_TRACE_UNSETS
+argument_list|,
+name|TclPrecTraceProc
+argument_list|,
+name|clientData
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+return|;
+block|}
+comment|/*      * When the variable is read, reset its value from our shared      * value.  This is needed in case the variable was modified in      * some other interpreter so that this interpreter's value is      * out of date.      */
+if|if
+condition|(
+name|flags
+operator|&
+name|TCL_TRACE_READS
+condition|)
+block|{
+name|Tcl_SetVar2
+argument_list|(
+name|interp
+argument_list|,
+name|name1
+argument_list|,
+name|name2
+argument_list|,
+name|precisionString
+argument_list|,
+name|flags
+operator|&
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+return|;
+block|}
+comment|/*      * The variable is being written.  Check the new value and disallow      * it if it isn't reasonable or if this is a safe interpreter (we      * don't want safe interpreters messing up the precision of other      * interpreters).      */
+if|if
+condition|(
+name|Tcl_IsSafe
+argument_list|(
+name|interp
+argument_list|)
+condition|)
+block|{
+name|Tcl_SetVar2
+argument_list|(
+name|interp
+argument_list|,
+name|name1
+argument_list|,
+name|name2
+argument_list|,
+name|precisionString
+argument_list|,
+name|flags
+operator|&
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+return|return
+literal|"can't modify precision from a safe interpreter"
+return|;
+block|}
+name|value
+operator|=
+name|Tcl_GetVar2
+argument_list|(
+name|interp
+argument_list|,
+name|name1
+argument_list|,
+name|name2
+argument_list|,
+name|flags
+operator|&
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+name|NULL
+condition|)
+block|{
+name|value
+operator|=
+literal|""
+expr_stmt|;
+block|}
+name|prec
+operator|=
+name|strtoul
+argument_list|(
+name|value
+argument_list|,
+operator|&
+name|end
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|prec
+operator|<=
+literal|0
+operator|)
+operator|||
+operator|(
+name|prec
+operator|>
+name|TCL_MAX_PREC
+operator|)
+operator|||
+operator|(
+name|prec
+operator|>
+literal|100
+operator|)
+operator|||
+operator|(
+name|end
+operator|==
+name|value
+operator|)
+operator|||
+operator|(
+operator|*
+name|end
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|Tcl_SetVar2
+argument_list|(
+name|interp
+argument_list|,
+name|name1
+argument_list|,
+name|name2
+argument_list|,
+name|precisionString
+argument_list|,
+name|flags
+operator|&
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+return|return
+literal|"improper value for precision"
+return|;
+block|}
+name|TclFormatInt
+argument_list|(
+name|precisionString
+argument_list|,
+name|prec
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|precisionFormat
+argument_list|,
+literal|"%%.%dg"
+argument_list|,
+name|prec
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+return|;
 block|}
 end_function
 
@@ -7174,7 +7516,6 @@ name|buffer
 parameter_list|,
 name|n
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|buffer
@@ -7185,11 +7526,9 @@ name|n
 decl_stmt|;
 comment|/* The integer to format. */
 block|{
-specifier|register
 name|long
 name|intVal
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -7370,7 +7709,6 @@ name|TclLooksLikeInt
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
@@ -7488,131 +7826,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_WrongNumArgs --  *  *	This procedure generates a "wrong # args" error message in an  *	interpreter.  It is used as a utility function by many command  *	procedures.  *  * Results:  *	None.  *  * Side effects:  *	An error message is generated in interp's result object to  *	indicate that a command was invoked with the wrong number of  *	arguments.  The message has the form  *		wrong # args: should be "foo bar additional stuff"  *	where "foo" and "bar" are the initial objects in objv (objc  *	determines how many of these are printed) and "additional stuff"  *	is the contents of the message argument.  *  *----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|void
-name|Tcl_WrongNumArgs
-parameter_list|(
-name|interp
-parameter_list|,
-name|objc
-parameter_list|,
-name|objv
-parameter_list|,
-name|message
-parameter_list|)
-name|Tcl_Interp
-modifier|*
-name|interp
-decl_stmt|;
-comment|/* Current interpreter. */
-name|int
-name|objc
-decl_stmt|;
-comment|/* Number of arguments to print 					 * from objv. */
-name|Tcl_Obj
-modifier|*
-name|CONST
-name|objv
-index|[]
-decl_stmt|;
-comment|/* Initial argument objects, which 					 * should be included in the error 					 * message. */
-name|char
-modifier|*
-name|message
-decl_stmt|;
-comment|/* Error message to print after the 					 * leading objects in objv. */
-block|{
-name|Tcl_Obj
-modifier|*
-name|objPtr
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|objPtr
-operator|=
-name|Tcl_GetObjResult
-argument_list|(
-name|interp
-argument_list|)
-expr_stmt|;
-name|Tcl_AppendToObj
-argument_list|(
-name|objPtr
-argument_list|,
-literal|"wrong # args: should be \""
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|objc
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|Tcl_AppendStringsToObj
-argument_list|(
-name|objPtr
-argument_list|,
-name|Tcl_GetStringFromObj
-argument_list|(
-name|objv
-index|[
-name|i
-index|]
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|,
-literal|" "
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-name|Tcl_AppendStringsToObj
-argument_list|(
-name|objPtr
-argument_list|,
-name|message
-argument_list|,
-literal|"\""
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/*  *----------------------------------------------------------------------  *  * TclGetIntForIndex --  *  *	This procedure returns an integer corresponding to the list index  *	held in a Tcl object. The Tcl object's value is expected to be  *	either an integer or the string "end".   *  * Results:  *	The return value is normally TCL_OK, which means that the index was  *	successfully stored into the location referenced by "indexPtr".  If  *	the Tcl object referenced by "objPtr" has the value "end", the  *	value stored is "endValue". If "objPtr"s values is not "end" and  *	can not be converted to an integer, TCL_ERROR is returned and, if  *	"interp" is non-NULL, an error message is left in the interpreter's  *	result object.  *  * Side effects:  *	The object referenced by "objPtr" might be converted to an  *	integer object.  *  *----------------------------------------------------------------------  */
 end_comment
 
@@ -7633,7 +7846,6 @@ modifier|*
 name|interp
 decl_stmt|;
 comment|/* Interpreter to use for error reporting.  				 * If NULL, then no error message is left 				 * after errors. */
-specifier|register
 name|Tcl_Obj
 modifier|*
 name|objPtr
@@ -7643,7 +7855,6 @@ name|int
 name|endValue
 decl_stmt|;
 comment|/* The value to be stored at "indexPtr" if 				 * "objPtr" holds "end". */
-specifier|register
 name|int
 modifier|*
 name|indexPtr
@@ -7660,7 +7871,6 @@ operator|*
 operator|)
 name|interp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|bytes

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclIO.c --  *  *	This file provides the generic portions (those that are the same on  *	all platforms and for all channel types) of Tcl's IO facilities.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIO.c 1.265 97/06/20 13:24:48  */
+comment|/*   * tclIO.c --  *  *	This file provides the generic portions (those that are the same on  *	all platforms and for all channel types) of Tcl's IO facilities.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIO.c 1.268 97/07/28 14:20:36  */
 end_comment
 
 begin_include
@@ -4874,6 +4874,26 @@ argument_list|(
 name|errorCode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|interp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|Tcl_SetResult
+argument_list|(
+name|interp
+argument_list|,
+name|Tcl_PosixError
+argument_list|(
+name|interp
+argument_list|)
+argument_list|,
+name|TCL_VOLATILE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*              * When we get an error we throw away all the output              * currently queued.              */
 name|DiscardOutputQueued
@@ -15459,6 +15479,15 @@ operator|!=
 name|TCL_OK
 condition|)
 block|{
+if|if
+condition|(
+name|chanPtr
+operator|->
+name|typePtr
+operator|!=
+name|NULL
+condition|)
+block|{
 name|DeleteScriptRecord
 argument_list|(
 name|interp
@@ -15468,6 +15497,7 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
+block|}
 name|Tcl_BackgroundError
 argument_list|(
 name|interp
@@ -19083,23 +19113,6 @@ condition|(
 name|cmdPtr
 condition|)
 block|{
-comment|/* 	 * We save this command object and mutate it later with 	 * extra arguments, so we need a private copy. 	 */
-if|if
-condition|(
-name|Tcl_IsShared
-argument_list|(
-name|cmdPtr
-argument_list|)
-condition|)
-block|{
-name|cmdPtr
-operator|=
-name|Tcl_DuplicateObj
-argument_list|(
-name|cmdPtr
-argument_list|)
-expr_stmt|;
-block|}
 name|Tcl_IncrRefCount
 argument_list|(
 name|cmdPtr
@@ -19636,7 +19649,7 @@ name|TCL_OK
 return|;
 block|}
 block|}
-comment|/*      * Make the callback or return the number of bytes transferred.      * The local total is used because StopCopoy frees csPtr.      */
+comment|/*      * Make the callback or return the number of bytes transferred.      * The local total is used because StopCopy frees csPtr.      */
 name|total
 operator|=
 name|csPtr
@@ -19648,6 +19661,14 @@ condition|(
 name|cmdPtr
 condition|)
 block|{
+comment|/* 	 * Get a private copy of the command so we can mutate it 	 * by adding arguments.  Note that StopCopy frees our saved 	 * reference to the original command obj. 	 */
+name|cmdPtr
+operator|=
+name|Tcl_DuplicateObj
+argument_list|(
+name|cmdPtr
+argument_list|)
+expr_stmt|;
 name|Tcl_IncrRefCount
 argument_list|(
 name|cmdPtr
@@ -19666,7 +19687,6 @@ operator|)
 name|interp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is already a private object, so we mutate it to add args. 	 */
 name|Tcl_ListObjAppendElement
 argument_list|(
 name|interp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tcl.h --  *  *	This header file describes the externally-visible facilities  *	of the Tcl interpreter.  *  * Copyright (c) 1987-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  * Copyright (c) 1993-1996 Lucent Technologies.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tcl.h 1.318 97/06/26 13:43:02  */
+comment|/*  * tcl.h --  *  *	This header file describes the externally-visible facilities  *	of the Tcl interpreter.  *  * Copyright (c) 1987-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  * Copyright (c) 1993-1996 Lucent Technologies.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tcl.h 1.324 97/08/07 10:26:49  */
 end_comment
 
 begin_ifndef
@@ -37,14 +37,14 @@ begin_define
 define|#
 directive|define
 name|TCL_RELEASE_LEVEL
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|TCL_RELEASE_SERIAL
-value|2
+value|0
 end_define
 
 begin_define
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|TCL_PATCH_LEVEL
-value|"8.0b2"
+value|"8.0"
 end_define
 
 begin_comment
@@ -1716,6 +1716,95 @@ begin_comment
 comment|/*  * Macros to increment and decrement a Tcl_Obj's reference count, and to  * test whether an object is shared (i.e. has reference count> 1).  * Note: clients should use Tcl_DecrRefCount() when they are finished using  * an object, and should never call TclFreeObj() directly. TclFreeObj() is  * only defined and made public in tcl.h to support Tcl_DecrRefCount's macro  * definition. Note also that Tcl_DecrRefCount() refers to the parameter  * "obj" twice. This means that you should avoid calling it with an  * expression that is expensive to compute or has side effects.  */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|void
+name|Tcl_IncrRefCount
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|objPtr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|void
+name|Tcl_DecrRefCount
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|objPtr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|Tcl_IsShared
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|objPtr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCL_MEM_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Tcl_IncrRefCount
+parameter_list|(
+name|objPtr
+parameter_list|)
+define|\
+value|Tcl_DbIncrRefCount(objPtr, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Tcl_DecrRefCount
+parameter_list|(
+name|objPtr
+parameter_list|)
+define|\
+value|Tcl_DbDecrRefCount(objPtr, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Tcl_IsShared
+parameter_list|(
+name|objPtr
+parameter_list|)
+define|\
+value|Tcl_DbIsShared(objPtr, __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1748,6 +1837,11 @@ parameter_list|)
 define|\
 value|((objPtr)->refCount> 1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Macros and definitions that help to debug the use of Tcl objects.  * When TCL_MEM_DEBUG is defined, the Tcl_New* declarations are   * overridden to call debugging versions of the object creation procedures.  */
@@ -2055,7 +2149,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Information about commands that is returned by Tcl_GetCmdInfo and passed  * to Tcl_SetCmdInfo. objProc is an objc/objv object-based command procedure  * while proc is a traditional Tcl argc/argv string-based procedure.  * Tcl_CreateObjCommand and Tcl_CreateCommand ensure that both objProc and  * proc are non-NULL and can be called to execute the command. However,  * it may be faster to call one instead of the other. The member  * isNativeObjectProc is set to 1 if an object-based procedure was  * registered by Tcl_CreateObjCommand, and to 0 if a string-based procedure  * was registered by Tcl_CreateCommand. The other procedure is typically set  * to a compatibility wrapper that does string-to-object or object-to-string  * argument conversions then calls the other procedure.  */
+comment|/*  * Information about commands that is returned by Tcl_GetCommandInfo and  * passed to Tcl_SetCommandInfo. objProc is an objc/objv object-based  * command procedure while proc is a traditional Tcl argc/argv  * string-based procedure. Tcl_CreateObjCommand and Tcl_CreateCommand  * ensure that both objProc and proc are non-NULL and can be called to  * execute the command. However, it may be faster to call one instead of  * the other. The member isNativeObjectProc is set to 1 if an  * object-based procedure was registered by Tcl_CreateObjCommand, and to  * 0 if a string-based procedure was registered by Tcl_CreateCommand.  * The other procedure is typically set to a compatibility wrapper that  * does string-to-object or object-to-string argument conversions then  * calls the other procedure.  */
 end_comment
 
 begin_typedef
@@ -3764,6 +3858,7 @@ name|Tcl_Backslash
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|src
@@ -3941,6 +4036,7 @@ name|Tcl_ConvertCountedElement
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|src
@@ -3966,6 +4062,7 @@ name|Tcl_ConvertElement
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|src
@@ -4459,6 +4556,72 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
+name|void
+name|Tcl_DbDecrRefCount
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|objPtr
+operator|,
+name|char
+operator|*
+name|file
+operator|,
+name|int
+name|line
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|void
+name|Tcl_DbIncrRefCount
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|objPtr
+operator|,
+name|char
+operator|*
+name|file
+operator|,
+name|int
+name|line
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|Tcl_DbIsShared
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Obj
+operator|*
+name|objPtr
+operator|,
+name|char
+operator|*
+name|file
+operator|,
+name|int
+name|line
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|Tcl_Obj
 modifier|*
 name|Tcl_DbNewBooleanObj
@@ -4927,6 +5090,7 @@ name|Tcl_DString
 operator|*
 name|dsPtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|string
@@ -4950,6 +5114,7 @@ name|Tcl_DString
 operator|*
 name|dsPtr
 operator|,
+name|CONST
 name|char
 operator|*
 name|string
@@ -5235,7 +5400,7 @@ name|interp
 operator|,
 name|char
 operator|*
-name|hiddenCmdName
+name|hiddenCmdToken
 operator|,
 name|char
 operator|*
@@ -6426,7 +6591,7 @@ name|cmdName
 operator|,
 name|char
 operator|*
-name|hiddenCmdName
+name|hiddenCmdToken
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7274,6 +7439,28 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|Tcl_RecordAndEvalObj
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Interp
+operator|*
+name|interp
+operator|,
+name|Tcl_Obj
+operator|*
+name|cmdPtr
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|Tcl_RegExp
 name|Tcl_RegExpCompile
 name|_ANSI_ARGS_
@@ -7456,6 +7643,7 @@ name|Tcl_ScanCountedElement
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|string
@@ -7478,6 +7666,7 @@ name|Tcl_ScanElement
 name|_ANSI_ARGS_
 argument_list|(
 operator|(
+name|CONST
 name|char
 operator|*
 name|string

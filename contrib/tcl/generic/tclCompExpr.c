@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCompExpr.c --  *  *	This file contains the code to compile Tcl expressions.  *  * Copyright (c) 1996-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCompExpr.c 1.30 97/06/13 18:17:20  */
+comment|/*   * tclCompExpr.c --  *  *	This file contains the code to compile Tcl expressions.  *  * Copyright (c) 1996-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCompExpr.c 1.31 97/08/07 10:14:07  */
 end_comment
 
 begin_include
@@ -148,7 +148,11 @@ comment|/* Set 1 if the expr has operators; 0 if 				 * expr is only a primary. 
 name|int
 name|exprIsJustVarRef
 decl_stmt|;
-comment|/* Set 1 if the expr consists of just a 				 * variable reference as in the expression 				 * of "if $b then...". Otherwise 0. Used 				 * to implement expr's 2 level substitution 				 * semantics properly. */
+comment|/* Set 1 if the expr consists of just a 				 * variable reference as in the expression 				 * of "if $b then...". Otherwise 0. If 1 the 				 * expr is compiled out-of-line in order to 				 * implement expr's 2 level substitution 				 * semantics properly. */
+name|int
+name|exprIsComparison
+decl_stmt|;
+comment|/* Set 1 if the top-level operator in the 				 * expr is a comparison. Otherwise 0. If 1, 				 * because the operands might be strings, 				 * the expr is compiled out-of-line in order 				 * to implement expr's 2 level substitution 				 * semantics properly. */
 block|}
 name|ExprInfo
 typedef|;
@@ -936,7 +940,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * TclCompileExpr --  *  *	This procedure compiles a string containing a Tcl expression into  *	Tcl bytecodes. This procedure is the top-level interface to the  *	the expression compilation module, and is used by such public  *	procedures as Tcl_ExprString, Tcl_ExprStringObj, Tcl_ExprLong,  *	Tcl_ExprDouble, Tcl_ExprBoolean, and Tcl_ExprBooleanObj.  *  *	Note that the topmost recursive-descent parsing routine used by  *	TclCompileExpr to compile expressions is called "CompileCondExpr"  *	and not, e.g., "CompileExpr". This is done to avoid an extra  *	procedure call since such a procedure would only return the result  *	of calling CompileCondExpr. Other recursive-descent procedures  *	that need to parse expressions also call CompileCondExpr.  *  * Results:  *	The return value is TCL_OK on a successful compilation and TCL_ERROR  *	on failure. If TCL_ERROR is returned, then the interpreter's result  *	contains an error message.  *  *	envPtr->termOffset is filled in with the offset of the character in  *	"string" just after the last one successfully processed; this might  *	be the offset of the ']' (if flags& TCL_BRACKET_TERM), or the  *	offset of the '\0' at the end of the string.  *  *	envPtr->maxStackDepth is updated with the maximum number of stack  *	elements needed to execute the expression.  *  *	envPtr->exprIsJustVarRef is set 1 if the expression consisted of  *	a single variable reference as in the expression of "if $b then...".  *	Otherwise it is set 0. This is used to implement Tcl's two level  *	expression substitution semantics properly.  *  * Side effects:  *	Adds instructions to envPtr to evaluate the expression at runtime.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * TclCompileExpr --  *  *	This procedure compiles a string containing a Tcl expression into  *	Tcl bytecodes. This procedure is the top-level interface to the  *	the expression compilation module, and is used by such public  *	procedures as Tcl_ExprString, Tcl_ExprStringObj, Tcl_ExprLong,  *	Tcl_ExprDouble, Tcl_ExprBoolean, and Tcl_ExprBooleanObj.  *  *	Note that the topmost recursive-descent parsing routine used by  *	TclCompileExpr to compile expressions is called "CompileCondExpr"  *	and not, e.g., "CompileExpr". This is done to avoid an extra  *	procedure call since such a procedure would only return the result  *	of calling CompileCondExpr. Other recursive-descent procedures  *	that need to parse expressions also call CompileCondExpr.  *  * Results:  *	The return value is TCL_OK on a successful compilation and TCL_ERROR  *	on failure. If TCL_ERROR is returned, then the interpreter's result  *	contains an error message.  *  *	envPtr->termOffset is filled in with the offset of the character in  *	"string" just after the last one successfully processed; this might  *	be the offset of the ']' (if flags& TCL_BRACKET_TERM), or the  *	offset of the '\0' at the end of the string.  *  *	envPtr->maxStackDepth is updated with the maximum number of stack  *	elements needed to execute the expression.  *  *	envPtr->exprIsJustVarRef is set 1 if the expression consisted of  *	a single variable reference as in the expression of "if $b then...".  *	Otherwise it is set 0. This is used to implement Tcl's two level  *	expression substitution semantics properly.  *  *	envPtr->exprIsComparison is set 1 if the top-level operator in the  *	expr is a comparison. Otherwise it is set 0. If 1, because the  *	operands might be strings, the expr is compiled out-of-line in order  *	to implement expr's 2 level substitution semantics properly.  *  * Side effects:  *	Adds instructions to envPtr to evaluate the expression at runtime.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1209,6 +1213,13 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* will be set 0 if anything else is seen */
+name|info
+operator|.
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
+comment|/* set 1 if topmost operator is<,==,etc. */
 comment|/*      * Get the first token then compile an expression.      */
 name|result
 operator|=
@@ -1345,6 +1356,14 @@ operator|=
 name|info
 operator|.
 name|exprIsJustVarRef
+expr_stmt|;
+name|envPtr
+operator|->
+name|exprIsComparison
+operator|=
+name|info
+operator|.
+name|exprIsComparison
 expr_stmt|;
 return|return
 name|result
@@ -1503,6 +1522,12 @@ expr_stmt|;
 name|infoPtr
 operator|->
 name|exprIsJustVarRef
+operator|=
+literal|0
+expr_stmt|;
+name|infoPtr
+operator|->
+name|exprIsComparison
 operator|=
 literal|0
 expr_stmt|;
@@ -1758,6 +1783,13 @@ operator|->
 name|hasOperators
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|done
@@ -2318,8 +2350,15 @@ literal|127
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * We get here only if one or more ||'s appear as top-level operators.      */
 name|done
 label|:
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 name|TclFreeJumpFixupArray
 argument_list|(
 operator|&
@@ -2882,8 +2921,15 @@ literal|127
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * We get here only if one or more&&'s appear as top-level operators.      */
 name|done
 label|:
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 name|TclFreeJumpFixupArray
 argument_list|(
 operator|&
@@ -3078,6 +3124,13 @@ argument_list|,
 name|envPtr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -3269,6 +3322,13 @@ argument_list|,
 name|envPtr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -3459,6 +3519,13 @@ name|INST_BITAND
 argument_list|,
 name|envPtr
 argument_list|)
+expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|done
@@ -3688,6 +3755,13 @@ operator|=
 name|infoPtr
 operator|->
 name|token
+expr_stmt|;
+comment|/* 	 * A comparison _is_ the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|done
@@ -3955,6 +4029,13 @@ name|infoPtr
 operator|->
 name|token
 expr_stmt|;
+comment|/* 	 * A comparison _is_ the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -4184,6 +4265,13 @@ name|infoPtr
 operator|->
 name|token
 expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -4412,6 +4500,13 @@ operator|=
 name|infoPtr
 operator|->
 name|token
+expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|done
@@ -4664,6 +4759,13 @@ name|infoPtr
 operator|->
 name|token
 expr_stmt|;
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|done
 label|:
@@ -4885,6 +4987,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * A comparison is not the top-level operator in this expression. 	 */
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -5377,6 +5486,12 @@ goto|goto
 name|done
 goto|;
 block|}
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 name|result
 operator|=
 name|CompileCondExpr
@@ -5820,6 +5935,12 @@ name|i
 operator|++
 control|)
 block|{
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 name|result
 operator|=
 name|CompileCondExpr
@@ -6069,8 +6190,15 @@ name|envPtr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * A comparison is not the top-level operator in this expression.      */
 name|done
 label|:
+name|infoPtr
+operator|->
+name|exprIsComparison
+operator|=
+literal|0
+expr_stmt|;
 name|envPtr
 operator|->
 name|maxStackDepth

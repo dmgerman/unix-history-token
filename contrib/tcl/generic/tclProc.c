@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclProc.c --  *  *	This file contains routines that implement Tcl procedures,  *	including the "proc" and "uplevel" commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclProc.c 1.113 97/06/23 15:51:52  */
+comment|/*   * tclProc.c --  *  *	This file contains routines that implement Tcl procedures,  *	including the "proc" and "uplevel" commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclProc.c 1.115 97/08/12 13:36:11  */
 end_comment
 
 begin_include
@@ -173,6 +173,9 @@ name|defPtr
 decl_stmt|,
 modifier|*
 name|bodyPtr
+decl_stmt|;
+name|Tcl_Command
+name|cmd
 decl_stmt|;
 name|Tcl_DString
 name|ds
@@ -418,7 +421,7 @@ name|length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * We increment the ref count of the procedure's body object since      * there will be a reference to it in the Proc structure.      */
+comment|/*      * Create and initialize a Proc structure for the procedure. Note that      * we initialize its cmdPtr field below after we've created the command      * for the procedure. We increment the ref count of the procedure's      * body object since there will be a reference to it in the Proc      * structure.      */
 name|Tcl_IncrRefCount
 argument_list|(
 name|bodyPtr
@@ -449,12 +452,6 @@ operator|->
 name|refCount
 operator|=
 literal|1
-expr_stmt|;
-name|procPtr
-operator|->
-name|nsPtr
-operator|=
-name|nsPtr
 expr_stmt|;
 name|procPtr
 operator|->
@@ -990,7 +987,7 @@ name|fieldValues
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now create a command for the procedure. This will be in the current      * namespace unless the procedure's name included namespace qualifiers.      * To create the new command in the right namespace, we generate a      * fully qualified name for it.      */
+comment|/*      * Now create a command for the procedure. This will initially be in      * the current namespace unless the procedure's name included namespace      * qualifiers. To create the new command in the right namespace, we      * generate a fully qualified name for it.      */
 name|Tcl_DStringInit
 argument_list|(
 operator|&
@@ -1061,6 +1058,8 @@ argument_list|,
 name|ProcDeleteProc
 argument_list|)
 expr_stmt|;
+name|cmd
+operator|=
 name|Tcl_CreateObjCommand
 argument_list|(
 name|interp
@@ -1080,6 +1079,17 @@ name|procPtr
 argument_list|,
 name|ProcDeleteProc
 argument_list|)
+expr_stmt|;
+comment|/*      * Now initialize the new procedure's cmdPtr field. This will be used      * later when the procedure is called to determine what namespace the      * procedure will run in. This will be different than the current      * namespace if the proc was renamed into a different namespace.      */
+name|procPtr
+operator|->
+name|cmdPtr
+operator|=
+operator|(
+name|Command
+operator|*
+operator|)
+name|cmd
 expr_stmt|;
 name|ckfree
 argument_list|(
@@ -2533,7 +2543,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Set up and push a new call frame for the new procedure invocation.      * This call frame will execute in the proc's namespace, which might      * be different than the current namespace.      */
+comment|/*      * Set up and push a new call frame for the new procedure invocation.      * This call frame will execute in the proc's namespace, which might      * be different than the current namespace. The proc's namespace is      * that of its command, which can change if the command is renamed      * from one namespace to another.      */
 name|result
 operator|=
 name|Tcl_PushCallFrame
@@ -2551,6 +2561,8 @@ name|Tcl_Namespace
 operator|*
 operator|)
 name|procPtr
+operator|->
+name|cmdPtr
 operator|->
 name|nsPtr
 argument_list|,
@@ -2648,6 +2660,8 @@ operator|->
 name|nsPtr
 operator|=
 name|procPtr
+operator|->
+name|cmdPtr
 operator|->
 name|nsPtr
 expr_stmt|;
@@ -2936,6 +2950,11 @@ comment|/* since the local variable now has 					* another reference to object. 
 block|}
 else|else
 block|{
+name|Tcl_ResetResult
+argument_list|(
+name|interp
+argument_list|)
+expr_stmt|;
 name|Tcl_AppendStringsToObj
 argument_list|(
 name|Tcl_GetObjResult

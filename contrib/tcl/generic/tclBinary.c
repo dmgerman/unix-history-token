@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclBinary.c --  *  *	This file contains the implementation of the "binary" Tcl built-in  *	command .  *  * Copyright (c) 1997 by Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclBinary.c 1.16 97/05/19 10:29:18  */
+comment|/*   * tclBinary.c --  *  *	This file contains the implementation of the "binary" Tcl built-in  *	command .  *  * Copyright (c) 1997 by Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclBinary.c 1.20 97/08/11 18:43:09  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
 
 begin_include
 include|#
@@ -1049,8 +1055,16 @@ condition|)
 block|{
 name|memcpy
 argument_list|(
+operator|(
+name|VOID
+operator|*
+operator|)
 name|cursor
 argument_list|,
+operator|(
+name|VOID
+operator|*
+operator|)
 name|str
 argument_list|,
 operator|(
@@ -1064,8 +1078,16 @@ else|else
 block|{
 name|memcpy
 argument_list|(
+operator|(
+name|VOID
+operator|*
+operator|)
 name|cursor
 argument_list|,
+operator|(
+name|VOID
+operator|*
+operator|)
 name|str
 argument_list|,
 operator|(
@@ -3717,8 +3739,14 @@ block|{
 comment|/* 	     * Because some compilers will generate floating point exceptions 	     * on an overflow cast (e.g. Borland), we restrict the values 	     * to the valid range for float. 	     */
 if|if
 condition|(
+name|fabs
+argument_list|(
 name|dvalue
+argument_list|)
 operator|>
+operator|(
+name|double
+operator|)
 name|FLT_MAX
 condition|)
 block|{
@@ -3734,14 +3762,29 @@ name|cursorPtr
 operator|)
 operator|)
 operator|=
+operator|(
+name|dvalue
+operator|>=
+literal|0.0
+operator|)
+condition|?
+name|FLT_MAX
+else|:
+operator|-
 name|FLT_MAX
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
+name|fabs
+argument_list|(
 name|dvalue
+argument_list|)
 operator|<
+operator|(
+name|double
+operator|)
 name|FLT_MIN
 condition|)
 block|{
@@ -3757,7 +3800,10 @@ name|cursorPtr
 operator|)
 operator|)
 operator|=
-name|FLT_MIN
+operator|(
+name|float
+operator|)
+literal|0.0
 expr_stmt|;
 block|}
 else|else

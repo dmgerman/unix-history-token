@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tclNamesp.c --  *  *      Contains support for namespaces, which provide a separate context of  *      commands and global variables. The global :: namespace is the  *      traditional Tcl "global" scope. Other namespaces are created as  *      children of the global namespace. These other namespaces contain  *      special-purpose commands and variables for packages.  *  * Copyright (c) 1993-1997 Lucent Technologies.  * Copyright (c) 1997 Sun Microsystems, Inc.  *  * Originally implemented by  *   Michael J. McLennan  *   Bell Labs Innovations for Lucent Technologies  *   mmclennan@lucent.com  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclNamesp.c 1.21 97/06/20 15:21:04  */
+comment|/*  * tclNamesp.c --  *  *      Contains support for namespaces, which provide a separate context of  *      commands and global variables. The global :: namespace is the  *      traditional Tcl "global" scope. Other namespaces are created as  *      children of the global namespace. These other namespaces contain  *      special-purpose commands and variables for packages.  *  * Copyright (c) 1993-1997 Lucent Technologies.  * Copyright (c) 1997 Sun Microsystems, Inc.  *  * Originally implemented by  *   Michael J. McLennan  *   Bell Labs Innovations for Lucent Technologies  *   mmclennan@lucent.com  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclNamesp.c 1.29 97/08/04 09:32:38  */
 end_comment
 
 begin_include
@@ -1292,7 +1292,7 @@ name|Tcl_NamespaceDeleteProc
 modifier|*
 name|deleteProc
 decl_stmt|;
-comment|/* Procedure called to delete client 				     * data when the namespace is deleted. 				     * NULL if no procedure should be 				     * called.*/
+comment|/* Procedure called to delete client 				     * data when the namespace is deleted. 				     * NULL if no procedure should be 				     * called. */
 block|{
 name|Interp
 modifier|*
@@ -1330,6 +1330,10 @@ name|iPtr
 operator|->
 name|globalNsPtr
 decl_stmt|;
+name|char
+modifier|*
+name|simpleName
+decl_stmt|;
 name|Tcl_HashEntry
 modifier|*
 name|entryPtr
@@ -1344,7 +1348,7 @@ name|newEntry
 decl_stmt|,
 name|result
 decl_stmt|;
-comment|/*      * Check first if there is no active namespace. If so, we assume      * the interpreter is being initialized.       */
+comment|/*      * If there is no active namespace, the interpreter is being      * initialized.       */
 if|if
 condition|(
 operator|(
@@ -1367,14 +1371,43 @@ name|parentPtr
 operator|=
 name|NULL
 expr_stmt|;
-name|name
+name|simpleName
 operator|=
 literal|""
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|Tcl_AppendStringsToObj
+argument_list|(
+name|Tcl_GetObjResult
+argument_list|(
+name|interp
+argument_list|)
+argument_list|,
+literal|"can't create namespace \"\": only global namespace can have empty name"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 else|else
 block|{
-comment|/* 	 * There is no active namespace. Find the parent namespace that will 	 * contain the new namespace. 	 */
+comment|/* 	 * Find the parent for the new namespace. 	 */
 name|result
 operator|=
 name|TclGetNamespaceForQualName
@@ -1406,7 +1439,7 @@ operator|&
 name|dummy2Ptr
 argument_list|,
 operator|&
-name|name
+name|simpleName
 argument_list|)
 expr_stmt|;
 if|if
@@ -1420,47 +1453,24 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/*          * Check for a bad namespace name and make sure that the name 	 * does not already exist in the parent namespace. 	 */
+comment|/* 	 * If the unqualified name at the end is empty, there were trailing 	 * "::"s after the namespace's name which we ignore. The new 	 * namespace was already (recursively) created and is pointed to 	 * by parentPtr. 	 */
 if|if
 condition|(
-operator|(
-name|name
-operator|==
-name|NULL
-operator|)
-operator|||
-operator|(
 operator|*
-name|name
+name|simpleName
 operator|==
 literal|'\0'
-operator|)
 condition|)
 block|{
-name|Tcl_AppendStringsToObj
-argument_list|(
-name|Tcl_GetObjResult
-argument_list|(
-name|interp
-argument_list|)
-argument_list|,
-literal|"can't create namespace \""
-argument_list|,
-name|name
-argument_list|,
-literal|"\": invalid name"
-argument_list|,
+return|return
 operator|(
-name|char
+name|Tcl_Namespace
 operator|*
 operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
+name|parentPtr
 return|;
 block|}
+comment|/*          * Check for a bad namespace name and make sure that the name 	 * does not already exist in the parent namespace. 	 */
 if|if
 condition|(
 name|Tcl_FindHashEntry
@@ -1470,7 +1480,7 @@ name|parentPtr
 operator|->
 name|childTable
 argument_list|,
-name|name
+name|simpleName
 argument_list|)
 operator|!=
 name|NULL
@@ -1535,7 +1545,7 @@ call|)
 argument_list|(
 name|strlen
 argument_list|(
-name|name
+name|simpleName
 argument_list|)
 operator|+
 literal|1
@@ -1548,7 +1558,7 @@ name|nsPtr
 operator|->
 name|name
 argument_list|,
-name|name
+name|simpleName
 argument_list|)
 expr_stmt|;
 name|nsPtr
@@ -1676,7 +1686,7 @@ name|parentPtr
 operator|->
 name|childTable
 argument_list|,
-name|name
+name|simpleName
 argument_list|,
 operator|&
 name|newEntry
@@ -2114,10 +2124,6 @@ name|Tcl_HashEntry
 modifier|*
 name|entryPtr
 decl_stmt|;
-name|Tcl_HashEntry
-modifier|*
-name|hPtr
-decl_stmt|;
 name|Tcl_HashSearch
 name|search
 decl_stmt|;
@@ -2473,32 +2479,7 @@ name|childNsPtr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Delete all commands in this namespace. Be careful when traversing the      * hash table: when each command is deleted, it removes itself from the      * command table. There's a special hack here because "tkerror" is just      * a synonym for "bgerror" (they share a Command structure). Just      * delete the hash table entry for "tkerror" without invoking its      * callback or cleaning up its Command structure.      */
-name|hPtr
-operator|=
-name|Tcl_FindHashEntry
-argument_list|(
-operator|&
-name|nsPtr
-operator|->
-name|cmdTable
-argument_list|,
-literal|"tkerror"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hPtr
-operator|!=
-name|NULL
-condition|)
-block|{
-name|Tcl_DeleteHashEntry
-argument_list|(
-name|hPtr
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*      * Delete all commands in this namespace. Be careful when traversing the      * hash table: when each command is deleted, it removes itself from the      * command table.      */
 for|for
 control|(
 name|entryPtr
@@ -2736,7 +2717,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_Export --  *  *	Makes all the commands matching a pattern available to later ber  *	imported from the namespace specified by contextNsPtr (or the  *	current namespace if contextNsPtr is NULL). The specified pattern is  *	appended onto the namespace's export pattern list, which is  *	optionally cleared beforehand.  *  * Results:  *	Returns TCL_OK if successful, or TCL_ERROR (along with an error  *	message in the interpreter's result) if something goes wrong.  *  * Side effects:  *	Appends the export pattern onto the namespace's export list.  *	Optionally reset the namespace's export pattern list.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_Export --  *  *	Makes all the commands matching a pattern available to later be  *	imported from the namespace specified by contextNsPtr (or the  *	current namespace if contextNsPtr is NULL). The specified pattern is  *	appended onto the namespace's export pattern list, which is  *	optionally cleared beforehand.  *  * Results:  *	Returns TCL_OK if successful, or TCL_ERROR (along with an error  *	message in the interpreter's result) if something goes wrong.  *  * Side effects:  *	Appends the export pattern onto the namespace's export list.  *	Optionally reset the namespace's export pattern list.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2781,9 +2762,6 @@ name|nsPtr
 decl_stmt|,
 modifier|*
 name|exportNsPtr
-decl_stmt|,
-modifier|*
-name|altNsPtr
 decl_stmt|,
 modifier|*
 name|dummyPtr
@@ -2936,7 +2914,7 @@ operator|&
 name|exportNsPtr
 argument_list|,
 operator|&
-name|altNsPtr
+name|dummyPtr
 argument_list|,
 operator|&
 name|dummyPtr
@@ -2958,22 +2936,10 @@ return|;
 block|}
 if|if
 condition|(
-name|exportNsPtr
-operator|==
-name|NULL
-condition|)
-block|{
-name|exportNsPtr
-operator|=
-name|altNsPtr
-expr_stmt|;
-block|}
-if|if
-condition|(
 operator|(
 name|exportNsPtr
 operator|!=
-name|currNsPtr
+name|nsPtr
 operator|)
 operator|||
 operator|(
@@ -3015,7 +2981,7 @@ block|}
 comment|/*      * Make sure there is room in the namespace's pattern array for the      * new pattern.      */
 name|neededElems
 operator|=
-name|currNsPtr
+name|nsPtr
 operator|->
 name|numExportPatterns
 operator|+
@@ -3023,14 +2989,14 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|currNsPtr
+name|nsPtr
 operator|->
 name|exportArrayPtr
 operator|==
 name|NULL
 condition|)
 block|{
-name|currNsPtr
+name|nsPtr
 operator|->
 name|exportArrayPtr
 operator|=
@@ -3055,13 +3021,13 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|currNsPtr
+name|nsPtr
 operator|->
 name|numExportPatterns
 operator|=
 literal|0
 expr_stmt|;
-name|currNsPtr
+name|nsPtr
 operator|->
 name|maxExportPatterns
 operator|=
@@ -3073,7 +3039,7 @@ if|if
 condition|(
 name|neededElems
 operator|>
-name|currNsPtr
+name|nsPtr
 operator|->
 name|maxExportPatterns
 condition|)
@@ -3083,14 +3049,14 @@ name|numNewElems
 init|=
 literal|2
 operator|*
-name|currNsPtr
+name|nsPtr
 operator|->
 name|maxExportPatterns
 decl_stmt|;
 name|size_t
 name|currBytes
 init|=
-name|currNsPtr
+name|nsPtr
 operator|->
 name|numExportPatterns
 operator|*
@@ -3141,7 +3107,7 @@ operator|(
 name|VOID
 operator|*
 operator|)
-name|currNsPtr
+name|nsPtr
 operator|->
 name|exportArrayPtr
 argument_list|,
@@ -3154,12 +3120,12 @@ operator|(
 name|char
 operator|*
 operator|)
-name|currNsPtr
+name|nsPtr
 operator|->
 name|exportArrayPtr
 argument_list|)
 expr_stmt|;
-name|currNsPtr
+name|nsPtr
 operator|->
 name|exportArrayPtr
 operator|=
@@ -3170,7 +3136,7 @@ operator|*
 operator|)
 name|newPtr
 expr_stmt|;
-name|currNsPtr
+name|nsPtr
 operator|->
 name|maxExportPatterns
 operator|=
@@ -3210,18 +3176,18 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-name|currNsPtr
+name|nsPtr
 operator|->
 name|exportArrayPtr
 index|[
-name|currNsPtr
+name|nsPtr
 operator|->
 name|numExportPatterns
 index|]
 operator|=
 name|patternCpy
 expr_stmt|;
-name|currNsPtr
+name|nsPtr
 operator|->
 name|numExportPatterns
 operator|++
@@ -3427,9 +3393,6 @@ name|importNsPtr
 decl_stmt|,
 modifier|*
 name|dummyPtr
-decl_stmt|,
-modifier|*
-name|actualCtxPtr
 decl_stmt|;
 name|Namespace
 modifier|*
@@ -3557,7 +3520,7 @@ operator|&
 name|dummyPtr
 argument_list|,
 operator|&
-name|actualCtxPtr
+name|dummyPtr
 argument_list|,
 operator|&
 name|simplePattern
@@ -4752,17 +4715,33 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|iPtr
+operator|->
+name|varFramePtr
+operator|!=
+name|NULL
+condition|)
+block|{
 name|nsPtr
 operator|=
-operator|(
-name|Namespace
-operator|*
-operator|)
-name|Tcl_GetCurrentNamespace
-argument_list|(
-name|interp
-argument_list|)
+name|iPtr
+operator|->
+name|varFramePtr
+operator|->
+name|nsPtr
 expr_stmt|;
+block|}
+else|else
+block|{
+name|nsPtr
+operator|=
+name|iPtr
+operator|->
+name|globalNsPtr
+expr_stmt|;
+block|}
 block|}
 name|start
 operator|=
@@ -4980,7 +4959,9 @@ operator|&&
 operator|!
 operator|(
 operator|(
-name|len
+name|end
+operator|-
+name|start
 operator|>=
 literal|2
 operator|)
@@ -6883,7 +6864,7 @@ operator|(
 name|Tcl_Interp
 operator|*
 operator|)
-name|NULL
+name|interp
 argument_list|,
 name|objv
 index|[
@@ -6892,7 +6873,7 @@ index|]
 argument_list|,
 name|subCmds
 argument_list|,
-literal|"subcommand"
+literal|"option"
 argument_list|,
 comment|/*flags*/
 literal|0
@@ -6912,43 +6893,6 @@ operator|!=
 name|TCL_OK
 condition|)
 block|{
-name|Tcl_ResetResult
-argument_list|(
-name|interp
-argument_list|)
-expr_stmt|;
-name|Tcl_AppendStringsToObj
-argument_list|(
-name|Tcl_GetObjResult
-argument_list|(
-name|interp
-argument_list|)
-argument_list|,
-literal|"bad namespace subcommand \""
-argument_list|,
-name|Tcl_GetStringFromObj
-argument_list|(
-name|objv
-index|[
-literal|1
-index|]
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|,
-literal|"\": should be children, code, current, delete, eval, export, forget, import, inscope, origin, parent, qualifiers, tail, or which"
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
 return|return
 name|result
 return|;
@@ -7408,11 +7352,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"children ?name? ?pattern?"
+literal|"?name? ?pattern?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7719,11 +7663,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"code arg"
+literal|"arg"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8035,11 +7979,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"current"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -8174,11 +8118,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"delete ?name name...?"
+literal|"?name name...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8421,11 +8365,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"eval name arg ?arg...?"
+literal|"name arg ?arg...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8727,11 +8671,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"export ?-clear? ?pattern pattern...?"
+literal|"?-clear? ?pattern pattern...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9009,11 +8953,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"forget ?pattern pattern...?"
+literal|"?pattern pattern...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9156,11 +9100,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"import ?-force? ?pattern pattern...?"
+literal|"?-force? ?pattern pattern...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9355,11 +9299,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"inscope name arg ?arg...?"
+literal|"name arg ?arg...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9717,11 +9661,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"origin name"
+literal|"name"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9985,11 +9929,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"parent ?name?"
+literal|"?name?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10093,11 +10037,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"qualifiers string"
+literal|"string"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10181,16 +10125,16 @@ comment|/* back up over the :: */
 while|while
 condition|(
 operator|(
+name|p
+operator|>=
+name|name
+operator|)
+operator|&&
+operator|(
 operator|*
 name|p
 operator|==
 literal|':'
-operator|)
-operator|&&
-operator|(
-name|p
-operator|>=
-name|name
 operator|)
 condition|)
 block|{
@@ -10296,11 +10240,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"tail string"
+literal|"string"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10356,12 +10300,6 @@ operator|*
 name|p
 operator|==
 literal|':'
-operator|)
-operator|&&
-operator|(
-name|p
-operator|>
-name|name
 operator|)
 operator|&&
 operator|(
@@ -10480,11 +10418,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"which ?-command? ?-variable? name"
+literal|"?-command? ?-variable? name"
 argument_list|)
 expr_stmt|;
 return|return

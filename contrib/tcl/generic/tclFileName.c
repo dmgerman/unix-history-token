@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclFileName.c --  *  *	This file contains routines for converting file names betwen  *	native and network form.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFileName.c 1.28 97/05/14 13:23:48  */
+comment|/*   * tclFileName.c --  *  *	This file contains routines for converting file names betwen  *	native and network form.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFileName.c 1.31 97/08/05 15:23:04  */
 end_comment
 
 begin_include
@@ -3668,6 +3668,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* lint, TclGetuserHome() always NULL under windows. */
 if|if
 condition|(
 name|TclGetUserHome
