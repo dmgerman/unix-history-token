@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.5 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1676,12 +1676,18 @@ name|oldverbose
 init|=
 name|Verbose
 decl_stmt|;
-comment|/* 	**  Run through the list and send everything. 	*/
+comment|/* 	**  Run through the list and send everything. 	** 	**	Set EF_GLOBALERRS so that error messages during delivery 	**	result in returned mail. 	*/
 name|e
 operator|->
 name|e_nsent
 operator|=
 literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_GLOBALERRS
 expr_stmt|;
 for|for
 control|(

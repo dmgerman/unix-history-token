@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.8 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1897,8 +1897,6 @@ operator|&&
 name|bitset
 argument_list|(
 name|QDONTSEND
-operator||
-name|QBADADDR
 argument_list|,
 name|q
 operator|->

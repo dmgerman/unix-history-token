@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.6 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.7 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.6 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.7 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1912,7 +1912,7 @@ name|SmtpPhase
 operator|=
 literal|"collect"
 expr_stmt|;
-name|SuprErrs
+name|HoldErrs
 operator|=
 name|TRUE
 expr_stmt|;
@@ -2003,10 +2003,6 @@ operator|->
 name|e_to
 operator|=
 name|NULL
-expr_stmt|;
-name|SuprErrs
-operator|=
-name|FALSE
 expr_stmt|;
 comment|/* save statistics */
 name|markstats

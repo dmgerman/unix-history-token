@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -428,7 +428,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Silicon Graphics IRIX ** **	I haven't tested this yet myself. */
+comment|/* **  Silicon Graphics IRIX ** **	Compiles on 4.0.1. */
 end_comment
 
 begin_ifdef
@@ -436,6 +436,17 @@ ifdef|#
 directive|ifdef
 name|IRIX
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* have setreuid(2) call */
+end_comment
 
 begin_define
 define|#
@@ -454,17 +465,6 @@ directive|define
 name|setpgrp
 value|BSDsetpgrp
 end_define
-
-begin_define
-define|#
-directive|define
-name|HASSETREUID
-value|1
-end_define
-
-begin_comment
-comment|/* have setreuid(2) call */
-end_comment
 
 begin_define
 define|#
@@ -944,20 +944,11 @@ begin_comment
 comment|/* **  RISC/os 4.51 ** **	Untested... */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|mips
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RISCOS
+end_ifdef
 
 begin_define
 define|#
