@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_TLB_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/ktr.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -756,19 +750,6 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_CT1
-argument_list|,
-literal|"tlb_page_demap: tlb=%#x ctx=%#lx va=%#lx"
-argument_list|,
-name|tlb
-argument_list|,
-name|ctx
-argument_list|,
-name|va
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tlb
@@ -818,23 +799,6 @@ name|tte
 name|tte
 parameter_list|)
 block|{
-name|CTR4
-argument_list|(
-name|KTR_CT1
-argument_list|,
-literal|"tlb_store: tlb=%#x va=%#lx ctx=%#lx data=%#lx"
-argument_list|,
-name|tlb
-argument_list|,
-name|va
-argument_list|,
-name|ctx
-argument_list|,
-name|tte
-operator|.
-name|tte_data
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tlb
@@ -891,25 +855,6 @@ name|int
 name|slot
 parameter_list|)
 block|{
-name|CTR5
-argument_list|(
-name|KTR_CT1
-argument_list|,
-literal|"tlb_store_slot: tlb=%d va=%#lx ctx=%#lx data=%#lx slot=%d"
-argument_list|,
-name|tlb
-argument_list|,
-name|va
-argument_list|,
-name|ctx
-argument_list|,
-name|tte
-operator|.
-name|tte_data
-argument_list|,
-name|slot
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tlb
