@@ -109,6 +109,11 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* Miscellaneous state information */
+specifier|const
+name|char
+modifier|*
+name|progname
+decl_stmt|;
 name|int
 name|argc
 decl_stmt|;
@@ -176,20 +181,13 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|bsdtar_progname
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|bsdtar_errc
 parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
 name|int
 name|_eval
 parameter_list|,
@@ -226,6 +224,10 @@ begin_function_decl
 name|void
 name|bsdtar_warnc
 parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
 name|int
 name|_code
 parameter_list|,
@@ -391,7 +393,9 @@ begin_function_decl
 name|void
 name|usage
 parameter_list|(
-name|void
+name|struct
+name|bsdtar
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

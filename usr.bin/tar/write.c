@@ -683,6 +683,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -746,7 +748,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|()
+argument_list|(
+name|bsdtar
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -807,12 +811,11 @@ name|ARCHIVE_OK
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
-name|archive_errno
-argument_list|(
-name|a
-argument_list|)
+literal|0
 argument_list|,
 name|archive_error_string
 argument_list|(
@@ -898,6 +901,8 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -977,6 +982,8 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1181,6 +1188,8 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -1263,6 +1272,8 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1517,6 +1528,8 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -1725,6 +1738,8 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1923,6 +1938,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -1967,6 +1984,8 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -2216,6 +2235,8 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|archive_errno
 argument_list|(
 name|a
@@ -2273,6 +2294,8 @@ argument_list|)
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"Error reading archive %s: %s"
@@ -2428,6 +2451,8 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"%s: Cannot open"
@@ -2461,6 +2486,8 @@ name|FTS_NS
 case|:
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|ftsent
 operator|->
 name|fts_errno
@@ -2478,6 +2505,8 @@ name|FTS_ERR
 case|:
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|ftsent
 operator|->
 name|fts_errno
@@ -2495,6 +2524,8 @@ name|FTS_DNR
 case|:
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|ftsent
 operator|->
 name|fts_errno
@@ -2946,6 +2977,8 @@ break|break;
 default|default:
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"%s: Heirarchy traversal error %d\n"
@@ -2968,6 +3001,8 @@ name|errno
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"%s"
@@ -2984,6 +3019,8 @@ argument_list|)
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"fts_close failed"
@@ -3254,6 +3291,8 @@ name|verbose
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"%s: Couldn't read symbolic link"
@@ -3482,6 +3521,8 @@ name|verbose
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"%s"
@@ -3532,6 +3573,8 @@ name|verbose
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"%s: %s"
@@ -3837,6 +3880,8 @@ name|option_warn_links
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"Missing links to %s"
@@ -4029,6 +4074,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|ENOMEM
@@ -4093,6 +4140,8 @@ condition|)
 block|{
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|ENOMEM
@@ -4333,11 +4382,20 @@ literal|1
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|ENOMEM
 argument_list|,
-literal|"No more memory for recording "
-literal|"hard links; Remaining hard links will be "
-literal|"dumped as full files."
+literal|"No more memory for recording hard links"
+argument_list|)
+expr_stmt|;
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Remaining links will be dumped as full files"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4541,11 +4599,20 @@ literal|1
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|ENOMEM
 argument_list|,
-literal|"No more memory for recording "
-literal|"hard links; Remaining hard links will be dumped "
-literal|"as full files."
+literal|"No more memory for recording hard links"
+argument_list|)
+expr_stmt|;
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Remaining hard links will be dumped as full files"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5634,6 +5701,8 @@ literal|0
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"getpwuid(%d) failed"
@@ -5767,6 +5836,8 @@ literal|0
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 name|errno
 argument_list|,
 literal|"getgrgid(%d) failed"
@@ -6161,6 +6232,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -6178,6 +6251,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -6195,6 +6270,8 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -6222,6 +6299,8 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -6245,6 +6324,8 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0

@@ -102,6 +102,10 @@ name|void
 name|add_pattern
 parameter_list|(
 name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+name|struct
 name|match
 modifier|*
 modifier|*
@@ -210,6 +214,8 @@ name|matching
 expr_stmt|;
 name|add_pattern
 argument_list|(
+name|bsdtar
+argument_list|,
 operator|&
 operator|(
 name|matching
@@ -269,6 +275,8 @@ name|matching
 expr_stmt|;
 name|add_pattern
 argument_list|(
+name|bsdtar
+argument_list|,
 operator|&
 operator|(
 name|matching
@@ -297,6 +305,11 @@ specifier|static
 name|void
 name|add_pattern
 parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+name|bsdtar
+parameter_list|,
 name|struct
 name|match
 modifier|*
@@ -340,6 +353,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -867,6 +882,8 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno

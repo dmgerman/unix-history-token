@@ -301,6 +301,8 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -350,6 +352,8 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -407,6 +411,8 @@ name|ARCHIVE_WARN
 condition|)
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -426,6 +432,8 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -448,6 +456,8 @@ block|{
 comment|/* Retryable error: try again */
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -460,6 +470,8 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"Retrying..."
@@ -583,6 +595,8 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -606,6 +620,8 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_errc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1442,6 +1458,8 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"Skipping pathname containing .."
@@ -1727,6 +1745,8 @@ else|else
 block|{
 name|bsdtar_warnc
 argument_list|(
+name|bsdtar
+argument_list|,
 literal|0
 argument_list|,
 literal|"Cannot extract %s through symlink %s"
