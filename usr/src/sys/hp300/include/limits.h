@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|ULONG_MAX
-value|0xffffffff
+value|0xffffffffL
 end_define
 
 begin_comment
@@ -176,23 +176,23 @@ begin_define
 define|#
 directive|define
 name|LONG_MAX
-value|2147483647
+value|2147483647L
 end_define
 
 begin_comment
 comment|/* max value for a long */
 end_comment
 
+begin_comment
+comment|/* min value for a long */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LONG_MIN
-value|(-2147483647-1)
+value|(-2147483647L-1L)
 end_define
-
-begin_comment
-comment|/* min value for a long */
-end_comment
 
 begin_if
 if|#
