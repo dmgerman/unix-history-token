@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)map.c	8.1 (Berkeley) 6/9/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)map.c	8.1 (Berkeley) 6/9/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -56,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -241,14 +254,11 @@ name|mapp
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|mapp
@@ -569,8 +579,10 @@ name|porttype
 condition|)
 name|badmopt
 label|:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -m option format: %s"
 argument_list|,
 name|copy
@@ -991,8 +1003,10 @@ name|speed
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unknown baud rate %s"
 argument_list|,
 name|rate
