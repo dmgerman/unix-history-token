@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.9 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4160,6 +4160,7 @@ name|set
 decl_stmt|,
 name|oset
 decl_stmt|;
+specifier|static
 name|char
 name|namestr
 index|[]
