@@ -1931,14 +1931,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 comment|/* Create the core file. */
 operator|(
 name|void
@@ -2303,14 +2295,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
