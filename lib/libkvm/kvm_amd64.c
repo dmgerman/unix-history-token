@@ -408,7 +408,7 @@ name|_kvm_malloc
 argument_list|(
 name|kd
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 comment|/*sizeof(struct pde)*/
 argument_list|)
 operator|)

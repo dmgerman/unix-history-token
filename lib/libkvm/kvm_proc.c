@@ -2132,7 +2132,7 @@ name|_kvm_malloc
 argument_list|(
 name|kd
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2152,7 +2152,7 @@ name|kd
 operator|->
 name|arglen
 operator|=
-name|NBPG
+name|PAGE_SIZE
 expr_stmt|;
 block|}
 comment|/* 	 * kd->argbuf : used to pull in pages from the target process. 	 *              the strings are copied out of here. 	 */
@@ -2177,7 +2177,7 @@ name|_kvm_malloc
 argument_list|(
 name|kd
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2280,7 +2280,7 @@ name|argv
 operator|&
 operator|~
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|-
 literal|1
 operator|)
@@ -2307,10 +2307,10 @@ name|kd
 operator|->
 name|argbuf
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 operator|!=
-name|NBPG
+name|PAGE_SIZE
 condition|)
 return|return
 operator|(
@@ -2332,7 +2332,7 @@ operator|*
 name|argv
 operator|&
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|-
 literal|1
 operator|)
@@ -2348,7 +2348,7 @@ name|addr
 expr_stmt|;
 name|cc
 operator|=
-name|NBPG
+name|PAGE_SIZE
 operator|-
 name|addr
 expr_stmt|;
