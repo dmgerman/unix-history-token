@@ -1556,6 +1556,7 @@ argument_list|,
 name|vp
 argument_list|)
 operator|)
+condition|)
 goto|goto
 name|out
 goto|;
