@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: unidialer.c,v 1.5 1997/08/18 07:15:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1848,7 +1848,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 literal|0

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfontedpr.c,v 1.8 1997/08/25 06:36:03 charnier Exp $"
+literal|"$Id: vfontedpr.c,v 1.9 1997/08/26 11:08:24 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1294,7 +1294,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -1617,7 +1617,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|plstack
 index|[
@@ -3524,7 +3524,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(

@@ -3109,7 +3109,7 @@ name|ep
 operator|->
 name|e_flags
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|badentry
 argument_list|(

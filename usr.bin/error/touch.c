@@ -2688,7 +2688,7 @@ name|o_touchedfile
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -2944,7 +2944,7 @@ name|tmpfile
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if

@@ -936,7 +936,7 @@ while|while
 condition|(
 name|pos_t
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if

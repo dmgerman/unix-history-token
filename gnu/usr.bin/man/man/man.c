@@ -1876,7 +1876,7 @@ argument_list|,
 name|name
 argument_list|)
 operator|==
-name|NULL
+literal|0
 operator|)
 operator|||
 operator|(
@@ -2258,7 +2258,7 @@ block|{
 operator|*
 name|t1
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|t2
 operator|=

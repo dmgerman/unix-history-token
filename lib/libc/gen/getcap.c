@@ -2888,7 +2888,7 @@ init|;
 operator|*
 name|cp
 operator|!=
-name|NULL
+literal|'\0'
 condition|;
 name|cp
 operator|++

@@ -173,7 +173,7 @@ begin_decl_stmt
 name|long
 name|tvtime
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 end_decl_stmt
 

@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.9 1997/04/23 22:40:19 ache Exp $"
+literal|"$Id: vacation.c,v 1.10 1997/08/28 04:40:51 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1421,7 +1421,7 @@ block|,
 block|{
 name|NULL
 block|,
-name|NULL
+literal|0
 block|}
 block|, 	}
 struct|;

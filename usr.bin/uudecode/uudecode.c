@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: uudecode.c,v 1.9 1997/08/22 06:51:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,7 +559,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: atof-ieee.c,v 1.7 1997/02/22 15:44:21 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,7 @@ name|generic_floating_point_number
 operator|.
 name|exponent
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|generic_floating_point_number
 operator|.

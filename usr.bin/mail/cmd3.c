@@ -1278,7 +1278,7 @@ init|;
 operator|*
 name|ip
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|ip
 operator|++
@@ -1354,7 +1354,7 @@ init|;
 operator|*
 name|ip
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|ip
 operator|++
@@ -1434,7 +1434,7 @@ init|;
 operator|*
 name|ip
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|ip
 operator|++

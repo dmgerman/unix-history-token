@@ -2147,7 +2147,7 @@ condition|(
 operator|*
 name|msgvec
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -2166,7 +2166,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 if|if
