@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)VWRITEF.c 1.1 %G%"
+literal|"@(#)VWRITEF.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,35 +19,11 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|va_list
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|VWRITEF
