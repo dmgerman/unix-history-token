@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.9 (Berkeley) %G%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15,10 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	8.1 (Berkeley) %G%  */
-end_comment
 
 begin_comment
 comment|/*  * HP9000/3xx 98658 SCSI host adaptor driver.  */
