@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crib.c	5.6 (Berkeley) %G%"
+literal|"@(#)crib.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -753,12 +753,6 @@ decl_stmt|;
 name|BOOLEAN
 name|compcrib
 decl_stmt|;
-name|makeboard
-argument_list|()
-expr_stmt|;
-name|refresh
-argument_list|()
-expr_stmt|;
 name|makedeck
 argument_list|(
 name|deck
@@ -944,6 +938,15 @@ condition|(
 name|flag
 condition|)
 do|;
+name|clear
+argument_list|()
+expr_stmt|;
+name|makeboard
+argument_list|()
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
