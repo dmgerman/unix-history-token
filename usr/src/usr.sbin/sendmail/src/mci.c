@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.10 (Berkeley) %G%"
+literal|"@(#)mci.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -943,6 +943,41 @@ operator|->
 name|mci_state
 operator|=
 name|MCIS_CLOSED
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* get peer host address for logging reasons only */
+comment|/* (this should really be in the mci struct) */
+name|int
+name|socksize
+init|=
+sizeof|sizeof
+name|CurHostAddr
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|getpeername
+argument_list|(
+name|fileno
+argument_list|(
+name|mci
+operator|->
+name|mci_in
+argument_list|)
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|CurHostAddr
+argument_list|,
+operator|&
+name|socksize
+argument_list|)
 expr_stmt|;
 block|}
 block|}
