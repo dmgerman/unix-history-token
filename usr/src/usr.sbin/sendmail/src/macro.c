@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.7 (Berkeley) %G%"
+literal|"@(#)macro.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1157,7 +1157,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|char
+name|int
 name|cl
 decl_stmt|;
 block|{
@@ -1185,6 +1185,8 @@ operator|&&
 name|bitnset
 argument_list|(
 name|cl
+operator|&
+literal|0xff
 argument_list|,
 name|s
 operator|->
