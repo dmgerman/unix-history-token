@@ -1997,14 +1997,14 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|NDIS_80211_NET_INFRA_BSS
+name|NDIS_80211_NET_INFRA_IBSS
 value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NDIS_80211_NET_INFRA_IBSS
+name|NDIS_80211_NET_INFRA_BSS
 value|0x00000001
 end_define
 
