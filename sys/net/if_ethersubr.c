@@ -1169,7 +1169,7 @@ name|m
 argument_list|,
 name|LLC_SNAPFRAMELEN
 argument_list|,
-name|M_TRYWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
