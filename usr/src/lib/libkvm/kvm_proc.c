@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_proc.c	5.11 (Berkeley) %G%"
+literal|"@(#)kvm_proc.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmac.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -70,31 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/text.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmac.h>
 end_include
 
 begin_include
@@ -106,7 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -118,31 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vis.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -167,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -1174,8 +1150,6 @@ name|char
 name|symbuf
 index|[
 name|MAXSYMSIZE
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -1228,13 +1202,6 @@ name|dptr
 operator|=
 name|symbuf
 expr_stmt|;
-name|symbuf
-index|[
-literal|0
-index|]
-operator|=
-name|KVMDB_NLIST
-expr_stmt|;
 if|if
 condition|(
 name|db
@@ -1286,8 +1253,6 @@ argument_list|(
 literal|"VERSION"
 argument_list|,
 name|symbuf
-operator|+
-literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1357,8 +1322,6 @@ argument_list|(
 literal|"_version"
 argument_list|,
 name|symbuf
-operator|+
-literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1568,11 +1531,12 @@ literal|1
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|symbuf
-operator|+
-literal|1
 argument_list|,
 name|n
 operator|->
