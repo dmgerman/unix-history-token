@@ -763,6 +763,8 @@ operator||
 name|CHN_F_RUNNING
 operator||
 name|CHN_F_MAPPED
+operator||
+name|CHN_F_DEAD
 operator|)
 expr_stmt|;
 name|chn_reset
@@ -794,6 +796,8 @@ operator||
 name|CHN_F_RUNNING
 operator||
 name|CHN_F_MAPPED
+operator||
+name|CHN_F_DEAD
 operator|)
 expr_stmt|;
 name|chn_reset
