@@ -510,6 +510,12 @@ name|mc_special
 operator|.
 name|pfs
 operator|=
+operator|(
+literal|3
+operator|<<
+literal|7
+operator|)
+operator||
 literal|3
 expr_stmt|;
 name|ucp
@@ -547,7 +553,7 @@ name|uc_mcontext
 operator|.
 name|mc_special
 operator|.
-name|rp
+name|gp
 operator|=
 operator|(
 operator|(
