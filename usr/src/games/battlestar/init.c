@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	8.2 (Berkeley) %G%"
+literal|"@(#)init.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,10 @@ argument_list|(
 literal|"Admiral D.W. Riggle\n"
 argument_list|)
 expr_stmt|;
+name|location
+operator|=
+name|dayfile
+expr_stmt|;
 name|srand
 argument_list|(
 name|getpid
@@ -94,14 +98,14 @@ argument_list|)
 expr_stmt|;
 name|getutmp
 argument_list|(
-name|uname
+name|usrname
 argument_list|)
 expr_stmt|;
 name|wiz
 operator|=
 name|wizard
 argument_list|(
-name|uname
+name|usrname
 argument_list|)
 expr_stmt|;
 name|wordinit
@@ -112,10 +116,6 @@ condition|(
 name|startup
 condition|)
 block|{
-name|location
-operator|=
-name|dayfile
-expr_stmt|;
 name|direction
 operator|=
 name|NORTH
