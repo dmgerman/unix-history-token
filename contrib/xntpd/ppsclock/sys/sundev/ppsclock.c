@@ -419,6 +419,22 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/* pps signal processor */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timeval
+name|time
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the real kernel time */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -888,6 +904,27 @@ specifier|register
 name|u_char
 name|s0
 decl_stmt|;
+specifier|register
+name|struct
+name|timeval
+modifier|*
+name|tvp
+init|=
+operator|&
+name|ppsclockev
+operator|.
+name|tv
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+name|long
+name|usec
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* PPS_SYNC */
+comment|/* 	 * This code captures a timestamp at the designated transition of 	 * the PPS signal. If the PPS_SYNC option has been configured in 	 * the kernel, the code provides a pointer to the timestamp, as 	 * well as the hardware counter value at the capture. 	 */
 name|s0
 operator|=
 name|zsaddr
@@ -920,23 +957,24 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
+name|PPS_SYNC
+name|usec
+operator|=
+name|time
+operator|.
+name|tv_usec
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PPS_SYNC */
+ifdef|#
+directive|ifdef
 name|PPSCLOCKLED
 if|if
 condition|(
 name|ppsclockled
 condition|)
 block|{
-specifier|register
-name|struct
-name|timeval
-modifier|*
-name|tvp
-init|=
-operator|&
-name|ppsclockev
-operator|.
-name|tv
-decl_stmt|;
 name|LED_OFF
 expr_stmt|;
 name|uniqtime
@@ -950,12 +988,10 @@ block|}
 else|else
 endif|#
 directive|endif
+comment|/* PPSCLOCKLED */
 name|uniqtime
 argument_list|(
-operator|&
-name|ppsclockev
-operator|.
-name|tv
+name|tvp
 argument_list|)
 expr_stmt|;
 operator|++
@@ -966,9 +1002,30 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PPS_SYNC
-comment|/* 			 * If the 1-pps cpu oscillator discipline has been 			 * configured in the kernel, give it something to 			 * chew on. 			 */
+name|usec
+operator|=
+name|tvp
+operator|->
+name|tv_usec
+operator|-
+name|usec
+expr_stmt|;
+if|if
+condition|(
+name|usec
+operator|<
+literal|0
+condition|)
+name|usec
+operator|+=
+literal|1000000
+expr_stmt|;
 name|hardpps
-argument_list|()
+argument_list|(
+name|tvp
+argument_list|,
+name|usec
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_dcf7000.c,v 3.10 1994/01/25 19:05:07 kardel Exp  *    * clk_dcf7000.c,v 3.10 1994/01/25 19:05:07 kardel Exp  *  * ELV DCF7000 module  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_dcf7000.c,v 3.11 1994/02/02 17:45:14 kardel Exp  *    * clk_dcf7000.c,v 3.11 1994/02/02 17:45:14 kardel Exp  *  * ELV DCF7000 module  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -593,7 +593,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_DCF7000) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_dcf7000.c,v  * Revision 3.6  1993/10/09  15:01:27  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:41  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:02  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:20  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:15  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:14  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * clk_dcf7000.c,v  * Revision 3.11  1994/02/02  17:45:14  kardel  * rcs ids fixed  *  * Revision 3.6  1993/10/09  15:01:27  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:41  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:02  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:20  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:15  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:14  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

@@ -1447,12 +1447,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REFCLK_WWV_HEATH
+name|REFCLK_GPS_TRAK
 value|2
 end_define
 
 begin_comment
-comment|/* Heath GC-1000 WWV/H */
+comment|/* TRAK 8810 GPS Receiver */
 end_comment
 
 begin_define
@@ -2509,6 +2509,22 @@ modifier|*
 name|mru_prev
 decl_stmt|;
 comment|/* previous structure in MRU list */
+name|struct
+name|mon_data
+modifier|*
+name|fifo_next
+decl_stmt|;
+comment|/* next structure in FIFO list */
+name|struct
+name|mon_data
+modifier|*
+name|fifo_prev
+decl_stmt|;
+comment|/* previous structure in FIFO list */
+name|U_LONG
+name|lastdrop
+decl_stmt|;
+comment|/* last time dropped due to RES_LIMIT*/
 name|U_LONG
 name|lasttime
 decl_stmt|;
@@ -2540,6 +2556,43 @@ comment|/* version of incoming packet */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Values used with mon_enabled to indicate reason for enabling monitoring  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MON_OFF
+value|0x00
+end_define
+
+begin_comment
+comment|/* no monitoring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MON_ON
+value|0x01
+end_define
+
+begin_comment
+comment|/* monitoring explicitly enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MON_RES
+value|0x02
+end_define
+
+begin_comment
+comment|/* implicit monitoring for RES_LIMITED */
+end_comment
 
 begin_comment
 comment|/*  * Structure used for restrictlist entries  */
@@ -2674,9 +2727,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RES_LIMITED
+value|0x100
+end_define
+
+begin_comment
+comment|/* limit per net number of clients */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RES_ALLFLAGS
 define|\
-value|(RES_IGNORE|RES_DONTSERVE|RES_DONTTRUST|RES_NOQUERY\     |RES_NOMODIFY|RES_NOPEER|RES_NOTRAP|RES_LPTRAP)
+value|(RES_IGNORE|RES_DONTSERVE|RES_DONTTRUST|RES_NOQUERY\     |RES_NOMODIFY|RES_NOPEER|RES_NOTRAP|RES_LPTRAP|RES_LIMITED)
 end_define
 
 begin_comment

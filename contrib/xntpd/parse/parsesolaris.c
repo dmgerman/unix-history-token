@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsesolaris.c,v 3.9 1994/01/25 19:05:26 kardel Exp  *    * parsesolaris.c,v 3.9 1994/01/25 19:05:26 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS5.x - not fully tested - buyer beware ! - OS KILLERS may still be  *  lurking in the code!)  *  * Copyright (c) 1993,1994  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsesolaris.c,v 3.15 1994/02/15 22:20:51 kardel Exp  *    * parsesolaris.c,v 3.15 1994/02/15 22:20:51 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS5.x - not fully tested - buyer beware ! - OS KILLERS may still be  *  lurking in the code!)  *  * Copyright (c) 1993,1994  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsesolaris.c,v 3.9 1994/01/25 19:05:26 kardel Exp"
+literal|"parsesolaris.c,v 3.15 1994/02/15 22:20:51 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,9 +202,13 @@ operator|&
 name|parseinfo
 block|,
 comment|/* module information */
-literal|0
+name|D_NEW
+operator||
+name|D_MP
+operator||
+name|D_MTQPAIR
 block|,
-comment|/* not clean yet */
+comment|/* exclusive for q pair */
 comment|/* lock ptr */
 block|}
 decl_stmt|;
@@ -453,7 +457,7 @@ name|char
 name|revision
 index|[]
 init|=
-literal|"3.9"
+literal|"3.15"
 decl_stmt|;
 name|char
 modifier|*
@@ -1641,6 +1645,11 @@ name|serial
 operator|=
 literal|0
 expr_stmt|;
+name|qprocson
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 name|parseprintf
 argument_list|(
 name|DD_OPEN
@@ -1665,6 +1674,11 @@ argument_list|)
 condition|)
 block|{
 comment|/*        * ok guys - beat it        */
+name|qprocsoff
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 operator|(
@@ -1736,7 +1750,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Copyright (c) 1991-1993, Frank Kardel\n"
+literal|"%s: Copyright (c) 1991-1994, Frank Kardel\n"
 argument_list|,
 name|modlstrmod
 operator|.
@@ -1754,6 +1768,24 @@ return|;
 block|}
 else|else
 block|{
+name|qprocsoff
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+name|kmem_free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|parse
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|parsestream_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|parsebusy
 operator|--
 expr_stmt|;
@@ -1806,6 +1838,11 @@ argument_list|,
 operator|(
 literal|"parse: CLOSE\n"
 operator|)
+argument_list|)
+expr_stmt|;
+name|qprocsoff
+argument_list|(
+name|q
 argument_list|)
 expr_stmt|;
 name|s
@@ -4724,7 +4761,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsesolaris.c,v  * Revision 3.9  1994/01/25  19:05:26  kardel  * 94/01/23 reconcilation  *  * Revision 3.8  1994/01/23  17:22:04  kardel  * 1994 reconcilation  *  * Revision 3.7  1993/12/15  18:24:41  kardel  * Now also ignoring state changes on ZSRR0_{SYNC,CTS} to avoid zs driver bugs (Solaris 2.3)  *  * Revision 3.6  1993/12/15  12:48:53  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.5  1993/12/14  21:05:12  kardel  * PPS working now for SunOS 5.x zs external status hook  *  * Revision 3.4  1993/11/13  11:13:17  kardel  * Solaris 2.3 additional includes  *  * Revision 3.3  1993/11/11  11:20:33  kardel  * declaration fixes  *  * Revision 3.2  1993/11/05  15:40:25  kardel  * shut up nice feature detection  *  * Revision 3.1  1993/11/01  20:00:29  kardel  * parse Solaris support (initial version)  *  */
+comment|/*  * History:  *  * parsesolaris.c,v  * Revision 3.15  1994/02/15  22:20:51  kardel  * rcsid fixed  *  * Revision 3.14  1994/02/15  22:06:04  kardel  * added qprocsx& flags for MT capability  *  * Revision 3.13  1994/02/13  19:16:47  kardel  * updated verbose Copyright message  *  * Revision 3.12  1994/02/02  17:45:35  kardel  * rcs ids fixed  *  * Revision 3.9  1994/01/25  19:05:26  kardel  * 94/01/23 reconcilation  *  * Revision 3.8  1994/01/23  17:22:04  kardel  * 1994 reconcilation  *  * Revision 3.7  1993/12/15  18:24:41  kardel  * Now also ignoring state changes on ZSRR0_{SYNC,CTS} to avoid zs driver bugs (Solaris 2.3)  *  * Revision 3.6  1993/12/15  12:48:53  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.5  1993/12/14  21:05:12  kardel  * PPS working now for SunOS 5.x zs external status hook  *  * Revision 3.4  1993/11/13  11:13:17  kardel  * Solaris 2.3 additional includes  *  * Revision 3.3  1993/11/11  11:20:33  kardel  * declaration fixes  *  * Revision 3.2  1993/11/05  15:40:25  kardel  * shut up nice feature detection  *  * Revision 3.1  1993/11/01  20:00:29  kardel  * parse Solaris support (initial version)  *  */
 end_comment
 
 end_unit

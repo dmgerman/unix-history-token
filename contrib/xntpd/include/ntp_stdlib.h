@@ -950,6 +950,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|U_LONG
+name|netof
+name|P
+argument_list|(
+operator|(
+name|U_LONG
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|numtoa

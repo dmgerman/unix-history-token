@@ -787,7 +787,7 @@ name|mon_start
 name|P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -800,7 +800,7 @@ name|mon_stop
 name|P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

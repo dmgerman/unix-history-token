@@ -1484,6 +1484,61 @@ comment|/* packets dropped because of authorization */
 name|U_LONG
 name|wanderhold
 decl_stmt|;
+name|U_LONG
+name|limitrejected
+decl_stmt|;
+comment|/* rejected because of client limitation */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * System stats - old version  */
+end_comment
+
+begin_struct
+struct|struct
+name|old_info_sys_stats
+block|{
+name|U_LONG
+name|timeup
+decl_stmt|;
+comment|/* time we have been up and running */
+name|U_LONG
+name|timereset
+decl_stmt|;
+comment|/* time since these were last cleared */
+name|U_LONG
+name|badstratum
+decl_stmt|;
+comment|/* packets claiming an invalid stratum */
+name|U_LONG
+name|oldversionpkt
+decl_stmt|;
+comment|/* old version packets received */
+name|U_LONG
+name|newversionpkt
+decl_stmt|;
+comment|/* new version packets received */
+name|U_LONG
+name|unknownversion
+decl_stmt|;
+comment|/* don't know version packets */
+name|U_LONG
+name|badlength
+decl_stmt|;
+comment|/* packets with bad length */
+name|U_LONG
+name|processed
+decl_stmt|;
+comment|/* packets processed */
+name|U_LONG
+name|badauth
+decl_stmt|;
+comment|/* packets dropped because of authorization */
+name|U_LONG
+name|wanderhold
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1793,6 +1848,50 @@ end_comment
 begin_struct
 struct|struct
 name|info_monitor
+block|{
+name|U_LONG
+name|lasttime
+decl_stmt|;
+comment|/* last packet from this host */
+name|U_LONG
+name|firsttime
+decl_stmt|;
+comment|/* first time we received a packet */
+name|U_LONG
+name|lastdrop
+decl_stmt|;
+comment|/* last time we rejected a packet due to client limitation policy */
+name|U_LONG
+name|count
+decl_stmt|;
+comment|/* count of packets received */
+name|U_LONG
+name|addr
+decl_stmt|;
+comment|/* host address */
+name|u_short
+name|port
+decl_stmt|;
+comment|/* port number of last reception */
+name|u_char
+name|mode
+decl_stmt|;
+comment|/* mode of last packet */
+name|u_char
+name|version
+decl_stmt|;
+comment|/* version number of last packet */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used for returning monitor data (old format  */
+end_comment
+
+begin_struct
+struct|struct
+name|old_info_monitor
 block|{
 name|U_LONG
 name|lasttime
