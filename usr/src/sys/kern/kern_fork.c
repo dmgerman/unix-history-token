@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -323,7 +323,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Although process entries are dynamically entries, 	 * we still keep a global limit on the maximum number 	 * we will create.  Don't allow a nonprivileged user 	 * to exceed its current limit or to bring us within one 	 * of the global limit; don't let root exceed the limit. 	 * nprocs is the current number of processes, 	 * maxproc is the limit. 	 */
+comment|/* 	 * Although process entries are dynamically created, 	 * we still keep a global limit on the maximum number 	 * we will create.  Don't allow a nonprivileged user 	 * to exceed its current limit or to bring us within one 	 * of the global limit; don't let root exceed the limit. 	 * nprocs is the current number of processes, 	 * maxproc is the limit. 	 */
 if|if
 condition|(
 name|nprocs
