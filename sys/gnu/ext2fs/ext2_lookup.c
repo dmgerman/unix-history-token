@@ -603,7 +603,7 @@ name|edp
 condition|;
 control|)
 block|{
-comment|/*- 			 * "New" ext2fs directory entries differ in 3 ways 			 * from ufs on-disk ones: 			 * - the name is not necessarily NUL-terminated. 			 * - the file type field always exists and always 			 * follows the name length field. 			 * - the file type is encoded in a different way. 			 * 			 * "Old" ext2fs directory entries need no special 			 * conversions, since they binary compatible with 			 * "new" entries having a file type of 0 (i.e., 			 * EXT2_FT_UNKNOWN).  Splitting the old name length 			 * field didn't make a mess like it did in ufs, 			 * because ext2fs uses a machine-dependent disk 			 * layout. 			 */
+comment|/*- 			 * "New" ext2fs directory entries differ in 3 ways 			 * from ufs on-disk ones: 			 * - the name is not necessarily NUL-terminated. 			 * - the file type field always exists and always 			 *   follows the name length field. 			 * - the file type is encoded in a different way. 			 * 			 * "Old" ext2fs directory entries need no special 			 * conversions, since they are binary compatible 			 * with "new" entries having a file type of 0 (i.e., 			 * EXT2_FT_UNKNOWN).  Splitting the old name length 			 * field didn't make a mess like it did in ufs, 			 * because ext2fs uses a machine-independent disk 			 * layout. 			 */
 name|dstdp
 operator|.
 name|d_fileno
@@ -813,7 +813,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"ext2fs_readdir: unexpected uio from NFS server"
+literal|"ext2_readdir: unexpected uio from NFS server"
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -955,7 +955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and vput  * instead of two vputs.  *  * Overall outline of ufs_lookup:  *  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  */
+comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and vput  * instead of two vputs.  *  * Overall outline of ext2_lookup:  *  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  */
 end_comment
 
 begin_function
