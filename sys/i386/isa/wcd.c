@@ -1941,6 +1941,17 @@ name|wcdopen
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2422,6 +2433,17 @@ name|wcdclose
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
@@ -2492,7 +2514,7 @@ comment|/*  * Actually translate the requested transfer into one the physical dr
 end_comment
 
 begin_function
-name|int
+name|void
 name|wcdstrategy
 parameter_list|(
 name|struct
@@ -2551,11 +2573,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 comment|/* Can't ever write to a CD. */
 if|if
@@ -2587,11 +2605,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 comment|/* If it's a null transfer, return immediatly. */
 if|if
@@ -2614,11 +2628,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 comment|/* Process transfer request. */
 name|bp
@@ -2664,11 +2674,6 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -3330,7 +3335,12 @@ name|caddr_t
 name|addr
 parameter_list|,
 name|int
-name|flag
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|int
