@@ -1,0 +1,75 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Landon Curt Noll.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)primes.h	5.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  */
+end_comment
+
+begin_comment
+comment|/* ubig is the type that holds a large unsigned value */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|ubig
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* must be>=32 bit unsigned value */
+end_comment
+
+begin_comment
+comment|/*  * sieve parameters  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIG
+value|((ubig)0xffffffff)
+end_define
+
+begin_comment
+comment|/* highest value we will sieve */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEMIBIG
+value|((ubig)0x7fffffff)
+end_define
+
+begin_comment
+comment|/* highest signed value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEG_SEMIBIG
+value|((ubig)0x80000000)
+end_define
+
+begin_comment
+comment|/* lowest signed value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TABSIZE
+value|256*1024
+end_define
+
+begin_comment
+comment|/* bytes in sieve table (must be> 3*5*7*11) */
+end_comment
+
+end_unit
+
