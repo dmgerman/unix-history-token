@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.6	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -705,7 +705,9 @@ operator|.
 name|fn
 operator|=
 name|getstr
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -739,10 +741,25 @@ operator|.
 name|name
 operator|=
 name|getstr
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !FLEXNAMES */
+name|portify
+argument_list|(
+name|r
+operator|.
+name|l
+operator|.
+name|name
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* !FLEXNAMES */
 name|n
 operator|=
 name|r
@@ -2003,7 +2020,7 @@ argument|); 		} 	}
 ifdef|#
 directive|ifdef
 name|FLEXNAMES
-argument|char * getstr() { 	char buf[BUFSIZ]; 	register char *cp = buf; 	register int c;  	if (feof(stdin) || ferror(stdin)) 		return(
+argument|char * getstr(doport) { 	char buf[BUFSIZ]; 	register char *cp = buf; 	register int c;  	if (feof(stdin) || ferror(stdin)) 		return(
 literal|""
 argument|); 	while ((c = getchar())>
 literal|0
@@ -2015,7 +2032,7 @@ argument|); 		exit(
 literal|1
 argument|); 	} 	*cp++ =
 literal|0
-argument|; 	return (hash(buf)); }
+argument|; 	if (doport) 		portify(buf); 	return (hash(buf)); }
 define|#
 directive|define
 name|NSAVETAB
@@ -2069,12 +2086,21 @@ literal|1
 argument|); } char	*tstrbuf[
 literal|1
 argument|];
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+include|#
+directive|include
+file|"ctype.h"
+argument|portify(cp) register char *	cp; { 	register int	i;  	if (!pflag) 		return; 	for (i =
+literal|0
+argument|; i<
+literal|6
+argument|; ++i) 		if (cp[i] ==
+literal|'\0'
+argument|) 			return; 		else if (isascii(cp[i])&& isupper(cp[i])) 			cp[i] = tolower(cp[i]); 	cp[i] =
+literal|'\0'
+argument|; }
+end_block
 
 end_unit
 
