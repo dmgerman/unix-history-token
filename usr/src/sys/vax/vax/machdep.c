@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.50	82/01/17	*/
+comment|/*	machdep.c	4.51	82/02/08	*/
 end_comment
 
 begin_include
@@ -3306,6 +3306,9 @@ block|}
 endif|#
 directive|endif
 block|}
+name|memerr
+argument_list|()
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"mchk"
