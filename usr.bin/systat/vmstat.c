@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.26 1998/07/06 22:08:00 bde Exp $"
+literal|"$Id: vmstat.c,v 1.27 1998/09/15 08:16:40 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5096,7 +5096,7 @@ name|then
 operator|->
 name|busy_time
 else|:
-name|then
+name|now
 operator|->
 name|dinfo
 operator|->
