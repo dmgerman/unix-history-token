@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1989 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.7 (Berkeley) %G%"
+literal|"@(#)stty.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,10 @@ define|#
 directive|define
 name|STATIC
 end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
 
 begin_endif
 endif|#
@@ -454,12 +458,14 @@ name|OXTABS
 block|,
 literal|0
 block|,
+comment|/* ??? */
 literal|"-xtabs"
 block|,
 literal|0
 block|,
 name|OXTABS
 block|,
+comment|/* ??? */
 literal|"oxtabs"
 block|,
 name|OXTABS
@@ -588,6 +594,16 @@ block|,
 name|CSIZE
 block|,
 literal|"-parity"
+block|,
+name|CS8
+block|,
+name|PARODD
+operator||
+name|PARENB
+operator||
+name|CSIZE
+block|,
+literal|"pass8"
 block|,
 name|CS8
 block|,
@@ -1003,6 +1019,10 @@ name|MAXNAMES
 value|5
 end_define
 
+begin_comment
+comment|/* ??? */
+end_comment
+
 begin_macro
 name|STATIC
 end_macro
@@ -1019,6 +1039,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+comment|/* ??? */
 name|int
 name|sub
 decl_stmt|;
@@ -1189,6 +1210,16 @@ block|,
 name|VREPRINT
 block|,
 name|CREPRINT
+block|,
+block|{
+literal|"info"
+block|,
+literal|"info"
+block|}
+block|,
+name|VINFO
+block|,
+name|CINFO
 block|,
 literal|0
 block|}
@@ -1916,6 +1947,137 @@ operator|&=
 operator|~
 name|IXANY
 expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
+name|eq
+argument_list|(
+literal|"raw"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+condition|)
+block|{
+name|cfmakeraw
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+name|t
+operator|.
+name|c_cflag
+operator|&=
+operator|~
+operator|(
+name|CSIZE
+operator||
+name|PARENB
+operator|)
+expr_stmt|;
+name|t
+operator|.
+name|c_cflag
+operator||=
+name|CS8
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
+name|eq
+argument_list|(
+literal|"cooked"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+operator|||
+name|eq
+argument_list|(
+literal|"-raw"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+operator|||
+name|eq
+argument_list|(
+literal|"sane"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+condition|)
+block|{
+name|t
+operator|.
+name|c_cflag
+operator|=
+name|TTYDEF_CFLAG
+operator||
+operator|(
+name|t
+operator|.
+name|c_cflag
+operator|&
+name|CLOCAL
+operator|)
+expr_stmt|;
+name|t
+operator|.
+name|c_iflag
+operator|=
+name|TTYDEF_IFLAG
+expr_stmt|;
+name|t
+operator|.
+name|c_iflag
+operator||=
+name|ICRNL
+expr_stmt|;
+comment|/* preserve user-preference flags in lflag */
+define|#
+directive|define
+name|LKEEP
+value|(ECHOKE|ECHOE|ECHOK|ECHOPRT|ECHOCTL|ALTWERASE|TOSTOP|NOFLSH)
+name|t
+operator|.
+name|c_lflag
+operator|=
+name|TTYDEF_LFLAG
+operator||
+operator|(
+name|t
+operator|.
+name|c_lflag
+operator|&
+name|LKEEP
+operator|)
+expr_stmt|;
+name|t
+operator|.
+name|c_oflag
+operator|=
+name|TTYDEF_OFLAG
+expr_stmt|;
+name|t
+operator|.
+name|c_oflag
+operator||=
+operator|(
+name|OPOST
+operator||
+name|ONLCR
+operator|)
+expr_stmt|;
+comment|/* XXX */
 goto|goto
 name|next
 goto|;
@@ -3947,6 +4109,7 @@ name|f
 parameter_list|,
 name|a
 parameter_list|)
+comment|/* ??? */
 name|char
 modifier|*
 name|f
@@ -3995,6 +4158,7 @@ argument_list|,
 name|ERR
 argument_list|)
 expr_stmt|;
+comment|/* ??? */
 name|fprintf
 argument_list|(
 name|ERR
@@ -4035,6 +4199,7 @@ argument_list|,
 name|ERR
 argument_list|)
 expr_stmt|;
+comment|/* ??? */
 name|fprintf
 argument_list|(
 name|ERR
@@ -4058,6 +4223,7 @@ name|s
 parameter_list|,
 name|a
 parameter_list|)
+comment|/* ??? */
 name|char
 modifier|*
 name|s
