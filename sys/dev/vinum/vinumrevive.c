@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.10 2000/01/03 03:40:54 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.14 2000/12/21 01:55:11 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -178,41 +178,13 @@ literal|1
 operator|)
 operator|)
 condition|)
-block|{
 comment|/* or invalid block size */
-if|if
-condition|(
-name|plex
-operator|->
-name|stripesize
-operator|!=
-literal|0
-condition|)
-comment|/* we're striped, don't revive more than */
-name|sd
-operator|->
-name|revive_blocksize
-operator|=
-name|min
-argument_list|(
-name|DEFAULT_REVIVE_BLOCKSIZE
-argument_list|,
-comment|/* one block at a time */
-name|plex
-operator|->
-name|stripesize
-operator|<<
-name|DEV_BSHIFT
-argument_list|)
-expr_stmt|;
-else|else
 name|sd
 operator|->
 name|revive_blocksize
 operator|=
 name|DEFAULT_REVIVE_BLOCKSIZE
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -624,7 +596,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* 	     * First, read the data from the volume.  We 	     * don't care which plex, that's bre's job. 	     */
+comment|/* 	       * First, read the data from the volume.  We 	       * don't care which plex, that's bre's job. 	     */
 name|bp
 operator|->
 name|b_dev
@@ -713,20 +685,6 @@ operator||
 name|B_WRITE
 expr_stmt|;
 comment|/* and make this an ordered write */
-name|BUF_LOCKINIT
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|bp
 operator|->
 name|b_resid
@@ -1280,20 +1238,6 @@ name|pbp
 operator|->
 name|b_bcount
 expr_stmt|;
-name|BUF_LOCKINIT
-argument_list|(
-name|pbp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|pbp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|sdio
 argument_list|(
 name|pbp
@@ -1969,26 +1913,6 @@ name|rebuildparity
 operator|)
 condition|)
 block|{
-name|BUF_LOCKINIT
-argument_list|(
-name|bpp
-index|[
-name|sdno
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bpp
-index|[
-name|sdno
-index|]
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|sdio
 argument_list|(
 name|bpp
@@ -2549,20 +2473,6 @@ name|sdno
 argument_list|)
 expr_stmt|;
 comment|/* create the device number */
-name|BUF_LOCKINIT
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|bp
 operator|->
 name|b_flags
@@ -2714,20 +2624,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|BUF_LOCKINIT
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|sdio
 argument_list|(
 name|bp

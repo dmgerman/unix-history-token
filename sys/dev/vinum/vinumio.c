@@ -93,6 +93,12 @@ name|char
 modifier|*
 name|dname
 decl_stmt|;
+name|struct
+name|cdevsw
+modifier|*
+name|dsw
+decl_stmt|;
+comment|/* pointer to cdevsw entry */
 if|if
 condition|(
 name|bcmp
@@ -234,6 +240,54 @@ name|devmajor
 operator|=
 literal|95
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|dname
+argument_list|,
+literal|"amrd"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|devmajor
+operator|=
+literal|133
+expr_stmt|;
+name|dname
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|dname
+argument_list|,
+literal|"idad"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|devmajor
+operator|=
+literal|109
+expr_stmt|;
+name|dname
+operator|+=
+literal|2
+expr_stmt|;
+block|}
 else|else
 return|return
 name|ENODEV
@@ -340,7 +394,11 @@ return|;
 name|devminor
 operator|=
 operator|(
+operator|(
 name|unit
+operator|&
+literal|31
+operator|)
 operator|<<
 literal|3
 operator|)
@@ -370,8 +428,20 @@ operator|)
 operator|<<
 literal|16
 operator|)
-expr_stmt|;
 comment|/* slice */
+operator|+
+operator|(
+operator|(
+name|unit
+operator|&
+operator|~
+literal|31
+operator|)
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+comment|/* high-order unit bits */
 block|}
 else|else
 block|{
@@ -407,13 +477,44 @@ operator|)
 comment|/* partition */
 operator|+
 operator|(
+operator|(
 name|unit
+operator|&
+literal|31
+operator|)
 operator|<<
 literal|3
 operator|)
-expr_stmt|;
 comment|/* unit */
+operator|+
+operator|(
+operator|(
+name|unit
+operator|&
+operator|~
+literal|31
+operator|)
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+comment|/* high-order unit bits */
 block|}
+if|if
+condition|(
+operator|(
+name|devminor
+operator|&
+literal|7
+operator|)
+operator|==
+literal|2
+condition|)
+comment|/* partition c */
+return|return
+name|ENOTTY
+return|;
+comment|/* not buying that */
 name|drive
 operator|->
 name|dev
@@ -446,32 +547,48 @@ name|si_iosize_max
 operator|=
 name|DFLTPHYS
 expr_stmt|;
-name|drive
-operator|->
-name|lasterror
+name|dsw
 operator|=
-operator|(
-operator|*
 name|devsw
 argument_list|(
 name|drive
 operator|->
 name|dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dsw
+operator|==
+name|NULL
+condition|)
+name|drive
+operator|->
+name|lasterror
+operator|=
+name|ENOENT
+expr_stmt|;
+else|else
+name|drive
+operator|->
+name|lasterror
+operator|=
+call|(
+name|dsw
 operator|->
 name|d_open
-operator|)
-operator|(
+call|)
+argument_list|(
 name|drive
 operator|->
 name|dev
-operator|,
+argument_list|,
 name|FWRITE
-operator|,
+argument_list|,
 literal|0
-operator|,
+argument_list|,
 name|NULL
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -829,9 +946,6 @@ name|int
 name|verbose
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|drive
@@ -861,7 +975,9 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|error
+name|drive
+operator|->
+name|lasterror
 operator|=
 name|open_drive
 argument_list|(
@@ -875,12 +991,18 @@ expr_stmt|;
 comment|/* open the drive */
 if|if
 condition|(
-name|error
+name|drive
+operator|->
+name|lasterror
 condition|)
 return|return
-name|error
+name|drive
+operator|->
+name|lasterror
 return|;
-name|error
+name|drive
+operator|->
+name|lasterror
 operator|=
 operator|(
 operator|*
@@ -915,7 +1037,9 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|drive
+operator|->
+name|lasterror
 condition|)
 block|{
 if|if
@@ -926,13 +1050,15 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"vinum open_drive %s: Can't get partition information, error %d\n"
+literal|"vinum open_drive %s: Can't get partition information, drive->lasterror %d\n"
 argument_list|,
 name|drive
 operator|->
 name|devicename
 argument_list|,
-name|error
+name|drive
+operator|->
+name|lasterror
 argument_list|)
 expr_stmt|;
 name|close_drive
@@ -940,14 +1066,10 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
+return|return
 name|drive
 operator|->
 name|lasterror
-operator|=
-name|error
-expr_stmt|;
-return|return
-name|error
 return|;
 block|}
 if|if
@@ -1513,6 +1635,13 @@ argument_list|,
 literal|"Can't allocate memory"
 argument_list|)
 expr_stmt|;
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_up
+expr_stmt|;
+comment|/* be optimistic */
 name|error
 operator|=
 name|read_drive
@@ -1582,21 +1711,19 @@ operator|=
 name|DL_WRONG_DRIVE
 expr_stmt|;
 comment|/* it's the wrong drive */
-block|}
-else|else
-block|{
 name|drive
 operator|->
 name|state
 operator|=
-name|drive_up
+name|drive_unallocated
 expr_stmt|;
-comment|/* it's OK by us */
+comment|/* put it back, it's not ours */
+block|}
+else|else
 name|result
 operator|=
 name|DL_OURS
 expr_stmt|;
-block|}
 comment|/* 	 * We copy the drive anyway so that we have 	 * the correct name in the drive info.  This 	 * may not be the name specified 	 */
 name|drive
 operator|->
@@ -2379,6 +2506,10 @@ name|sd
 modifier|*
 name|sd
 decl_stmt|;
+name|char
+modifier|*
+name|drivename
+decl_stmt|;
 name|sd
 operator|=
 operator|&
@@ -2418,6 +2549,35 @@ operator|)
 condition|)
 block|{
 comment|/* paranoia */
+name|drivename
+operator|=
+name|vinum_conf
+operator|.
+name|drive
+index|[
+name|sd
+operator|->
+name|driveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+expr_stmt|;
+comment|/* 	     * XXX We've seen cases of dead subdisks 	     * which don't have a drive.  If we let them 	     * through here, the drive name is null, so 	     * they get the drive named 'plex'. 	     * 	     * This is a breakage limiter, not a fix. 	     */
+if|if
+condition|(
+name|drivename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|drivename
+operator|=
+literal|"*invalid*"
+expr_stmt|;
 if|if
 condition|(
 name|sd
@@ -2434,24 +2594,14 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s plex %s state %s len %llus driveoffset %llus plexoffset %llds\n"
+literal|"sd name %s drive %s plex %s state %s "
+literal|"len %llus driveoffset %llus plexoffset %llds\n"
 argument_list|,
 name|sd
 operator|->
 name|name
 argument_list|,
-name|vinum_conf
-operator|.
-name|drive
-index|[
-name|sd
-operator|->
-name|driveno
-index|]
-operator|.
-name|label
-operator|.
-name|name
+name|drivename
 argument_list|,
 name|vinum_conf
 operator|.
@@ -2507,24 +2657,14 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s state %s len %llus driveoffset %llus detached\n"
+literal|"sd name %s drive %s state %s "
+literal|"len %llus driveoffset %llus detached\n"
 argument_list|,
 name|sd
 operator|->
 name|name
 argument_list|,
-name|vinum_conf
-operator|.
-name|drive
-index|[
-name|sd
-operator|->
-name|driveno
-index|]
-operator|.
-name|label
-operator|.
-name|name
+name|drivename
 argument_list|,
 name|sd_state
 argument_list|(
@@ -4002,13 +4142,23 @@ expr_stmt|;
 comment|/* try to open it */
 if|if
 condition|(
+operator|(
 name|drive
 operator|->
 name|lasterror
 operator|!=
 literal|0
-condition|)
+operator|)
 comment|/* didn't work, */
+operator|||
+operator|(
+name|drive
+operator|->
+name|state
+operator|!=
+name|drive_up
+operator|)
+condition|)
 name|free_drive
 argument_list|(
 name|drive
@@ -4206,11 +4356,23 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|firsttime
+condition|)
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"vinum: no drives found\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"vinum: no additional drives found\n"
 argument_list|)
 expr_stmt|;
 return|return
