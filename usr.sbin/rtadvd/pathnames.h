@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_RTADVDCONF
-value|"/usr/local/v6/etc/rtadvd.conf"
+value|"/etc/rtadvd.conf"
 end_define
 
 end_unit
