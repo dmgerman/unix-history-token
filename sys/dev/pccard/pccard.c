@@ -5412,6 +5412,7 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
+comment|/* XXX need to make sure that we've quoted the " in strings! */
 name|snprintf
 argument_list|(
 name|buf
