@@ -6466,7 +6466,6 @@ name|bpf_if
 modifier|*
 name|bp
 decl_stmt|;
-specifier|const
 name|void
 modifier|*
 name|d
