@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pppstats.c,v 1.4 1994/06/08 00:38:49 paulus Exp $"
+literal|"$Id: pppstats.c,v 1.1.1.1 1994/11/12 06:07:15 lars Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,7 +287,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|BSD4_4
 argument_list|)
 end_if
 
@@ -941,9 +941,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* BSD4.3+ */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|BSD4_4
+argument_list|)
+comment|/* BSD4.4+ */
 if|if
 condition|(
 operator|(
@@ -973,6 +977,44 @@ argument_list|,
 literal|"kvm_openfiles: %s"
 argument_list|,
 name|errbuf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* BSD4.3+ */
+if|if
+condition|(
+name|kvm_openfiles
+argument_list|(
+name|system
+argument_list|,
+name|kmemf
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"kvm_openfiles: %s"
+argument_list|,
+name|kvm_geterr
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
