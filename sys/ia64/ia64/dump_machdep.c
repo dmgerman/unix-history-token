@@ -89,6 +89,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Don't touch the first SIZEOF_METADATA bytes on the dump device. This  * is to protect us from metadata and to protect metadata from us.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_METADATA
+value|(64*1024)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1314,6 +1325,32 @@ name|hdrsz
 argument_list|)
 expr_stmt|;
 comment|/* Determine dump offset on device. */
+if|if
+condition|(
+name|di
+operator|->
+name|mediasize
+operator|<
+name|SIZEOF_METADATA
+operator|+
+name|dumpsize
+operator|+
+sizeof|sizeof
+argument_list|(
+name|kdh
+argument_list|)
+operator|*
+literal|2
+condition|)
+block|{
+name|error
+operator|=
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|dumplo
 operator|=
 name|di
