@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_bigkey.c	5.3 (Berkeley) %G%"
+literal|"@(#)hash_bigkey.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +307,10 @@ name|off
 decl_stmt|;
 name|key_data
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 operator|->
 name|data
@@ -319,6 +323,10 @@ name|size
 expr_stmt|;
 name|val_data
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|val
 operator|->
 name|data
@@ -1810,6 +1818,10 @@ name|val
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|tp
 operator|+
 name|off
@@ -2013,6 +2025,10 @@ name|val
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|hashp
 operator|->
 name|tmp_buf
@@ -2451,6 +2467,10 @@ name|key
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|hashp
 operator|->
 name|tmp_key

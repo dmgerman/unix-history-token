@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.4 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,8 @@ operator|*
 operator|)
 operator|&
 name|retval
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -459,6 +461,8 @@ operator|*
 operator|)
 operator|&
 name|key
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

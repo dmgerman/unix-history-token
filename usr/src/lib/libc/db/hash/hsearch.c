@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hsearch.c	5.3 (Berkeley) %G%"
+literal|"@(#)hsearch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,10 @@ name|key
 operator|.
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|item
 operator|.
 name|key
@@ -233,6 +237,10 @@ name|val
 operator|.
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|item
 operator|.
 name|data
@@ -299,6 +307,8 @@ name|key
 argument_list|,
 operator|&
 name|val
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -318,6 +328,10 @@ name|item
 operator|.
 name|data
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|val
 operator|.
 name|data
