@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.31 1998/04/02 01:12:55 eivind Exp $"
+literal|"$Id: ping.c,v 1.32 1998/04/02 04:33:18 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2881,9 +2881,9 @@ literal|"%s: partial write: %d of %d bytes"
 argument_list|,
 name|hostname
 argument_list|,
-name|cc
-argument_list|,
 name|i
+argument_list|,
+name|cc
 argument_list|)
 expr_stmt|;
 block|}
