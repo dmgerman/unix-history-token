@@ -351,7 +351,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Service registration  *  * svc_register(xprt, prog, vers, dispatch, protocol)  *	SVCXPRT *xprt;  *	u_long prog;  *	u_long vers;  *	void (*dispatch)();  *	int protocol;  /* like TCP or UDP, zero means do not register   */
+comment|/*  * Service registration  *  * svc_register(xprt, prog, vers, dispatch, protocol)  *	SVCXPRT *xprt;  *	u_long prog;  *	u_long vers;  *	void (*dispatch)();  *	int protocol;  (like TCP or UDP, zero means do not register)  */
 end_comment
 
 begin_function_decl

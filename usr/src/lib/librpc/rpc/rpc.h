@@ -110,7 +110,7 @@ comment|/*  *  Uncomment-out the next line if you are building the rpc library w
 end_comment
 
 begin_comment
-comment|/*#include<rpc/auth_des.h>	/* protocol for des style cred */
+comment|/*#include<rpc/auth_des.h>	 * protocol for des style cred */
 end_comment
 
 begin_comment
