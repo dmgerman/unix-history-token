@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)rtsock.c	8.5 (Berkeley) 11/2/94  *	$Id: rtsock.c,v 1.20.2.3 1997/07/16 14:58:03 julian Exp $  */
+comment|/*  * Copyright (c) 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)rtsock.c	8.5 (Berkeley) 11/2/94  *	$Id: rtsock.c,v 1.20.2.4 1997/07/17 09:24:29 msmith Exp $  */
 end_comment
 
 begin_include
@@ -118,6 +118,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
+name|sockaddr
+name|sa_zero
+init|=
+block|{
+sizeof|sizeof
+argument_list|(
+name|sa_zero
+argument_list|)
+block|,
+name|AF_INET
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|sockproto
 name|route_proto
 init|=
@@ -195,7 +212,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|rt_xaddrs
 name|__P
 argument_list|(
@@ -978,6 +995,8 @@ name|rtm
 operator|->
 name|rtm_addrs
 expr_stmt|;
+if|if
+condition|(
 name|rt_xaddrs
 argument_list|(
 call|(
@@ -999,7 +1018,18 @@ argument_list|,
 operator|&
 name|info
 argument_list|)
+condition|)
+block|{
+name|dst
+operator|=
+literal|0
 expr_stmt|;
+name|senderr
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dst
@@ -2121,12 +2151,12 @@ value|(x += ROUNDUP((n)->sa_len))
 end_define
 
 begin_comment
-comment|/*  * extract the addresses of the passed sockaddrs.  * Do a little sanity checking so as to avoid bad memory references later  * as we have not checked this user-land derived data yet.  */
+comment|/*  * Extract the addresses of the passed sockaddrs.  * Do a little sanity checking so as to avoid bad memory references.  * This data is derived straight from userland.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rt_xaddrs
 parameter_list|(
 name|cp
@@ -2178,9 +2208,17 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|i
 operator|<
 name|RTAX_MAX
+operator|)
+operator|&&
+operator|(
+name|cp
+operator|<
+name|cplim
+operator|)
 condition|;
 name|i
 operator|++
@@ -2212,7 +2250,7 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
-comment|/* 		 * It won't fit. Pretend it doesn't exist. 		 * Would return EINVAL if not void 		 */
+comment|/* 		 * It won't fit. 		 */
 if|if
 condition|(
 operator|(
@@ -2225,7 +2263,40 @@ operator|)
 operator|>
 name|cplim
 condition|)
-return|return;
+block|{
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+comment|/* 		 * there are no more.. quit now 		 * If there are more bits, they are in error. 		 * I've seen this. route(1) can evidently generate these.  		 * This causes kernel to core dump. 		 * for compatibility, If we see this, point to a safe address. 		 */
+if|if
+condition|(
+name|sa
+operator|->
+name|sa_len
+operator|==
+literal|0
+condition|)
+block|{
+name|rtinfo
+operator|->
+name|rti_info
+index|[
+name|i
+index|]
+operator|=
+operator|&
+name|sa_zero
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* should be EINVAL but for compat */
+block|}
 comment|/* accept it */
 name|rtinfo
 operator|->
@@ -2243,17 +2314,12 @@ argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-comment|/* 		 * there are no more.. quit now 		 * If there are more bits, they are in error. 		 * I've seen this. route(1) can evidently generate these.  		 * This causes kernel to core dump. 		 */
-if|if
-condition|(
-name|sa
-operator|->
-name|sa_len
-operator|==
-literal|0
-condition|)
-return|return;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
