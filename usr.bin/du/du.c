@@ -127,6 +127,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -900,7 +901,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|""
+literal|"can't allocate memory"
 argument_list|)
 expr_stmt|;
 name|files
@@ -933,6 +934,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
