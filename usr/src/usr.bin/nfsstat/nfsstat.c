@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.4.1.1 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
