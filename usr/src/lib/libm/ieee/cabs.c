@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,62 @@ begin_comment
 comment|/* VAX D format */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|A
+comment|/**/
+value|B
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* VAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|B
+comment|/**/
+value|A
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VAX */
+end_comment
+
 begin_comment
 comment|/* static double */
 end_comment
@@ -120,9 +176,19 @@ name|r2p1hix
 index|[]
 init|=
 block|{
-literal|0x8279411a
+name|_0x
+argument_list|(
+literal|8279
+argument_list|,
+literal|411a
+argument_list|)
 block|,
-literal|0xef3299fc
+name|_0x
+argument_list|(
+argument|ef32
+argument_list|,
+literal|99fc
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -134,9 +200,19 @@ name|r2p1lox
 index|[]
 init|=
 block|{
-literal|0x597d2484
+name|_0x
+argument_list|(
+literal|597d
+argument_list|,
+literal|2484
+argument_list|)
 block|,
-literal|0x754b89b3
+name|_0x
+argument_list|(
+literal|754b
+argument_list|,
+literal|89b3
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -148,9 +224,19 @@ name|sqrt2x
 index|[]
 init|=
 block|{
-literal|0x04f340b5
+name|_0x
+argument_list|(
+literal|04f3
+argument_list|,
+literal|40b5
+argument_list|)
 block|,
-literal|0xde6533f9
+name|_0x
+argument_list|(
+argument|de65
+argument_list|,
+literal|33f9
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
