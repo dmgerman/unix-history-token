@@ -4949,7 +4949,7 @@ expr_stmt|;
 else|else
 name|hstp
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|retval
 operator|=
