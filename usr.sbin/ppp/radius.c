@@ -1170,7 +1170,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We've either timed out or select()ed on the read fdescriptor  */
+comment|/*  * We've either timed out or select()ed on the read descriptor  */
 end_comment
 
 begin_function
@@ -1351,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct fdescriptor (fdescriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (descriptor.h)  */
 end_comment
 
 begin_function
@@ -1464,7 +1464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct fdescriptor (fdescriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (descriptor.h)  */
 end_comment
 
 begin_function
@@ -1520,7 +1520,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct fdescriptor (fdescriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (descriptor.h)  */
 end_comment
 
 begin_function

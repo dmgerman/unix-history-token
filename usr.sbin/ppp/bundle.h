@@ -236,7 +236,7 @@ comment|/* The /dev/XXXX name */
 name|int
 name|fd
 decl_stmt|;
-comment|/* The /dev/XXXX fdescriptor */
+comment|/* The /dev/XXXX descriptor */
 name|unsigned
 name|header
 range|:

@@ -2296,7 +2296,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/*    * This *MUST* be called after the datalink UpdateSet()s as it    * might be ``holding'' one of the datalinks (death-row) and    * wants to be able to de-select() it from the fdescriptor set.    */
+comment|/*    * This *MUST* be called after the datalink UpdateSet()s as it    * might be ``holding'' one of the datalinks (death-row) and    * wants to be able to de-select() it from the descriptor set.    */
 name|result
 operator|+=
 name|descriptor_UpdateSet
@@ -4525,7 +4525,7 @@ name|datalink
 modifier|*
 name|dl
 decl_stmt|;
-comment|/*    * Clean up the interface.  We don't need to timer_Stop()s, mp_Down(),    * ipcp_CleanInterface() and bundle_DownInterface() unless we're getting    * out under exceptional conditions such as a fdescriptor exception.    */
+comment|/*    * Clean up the interface.  We don't need to timer_Stop()s, mp_Down(),    * ipcp_CleanInterface() and bundle_DownInterface() unless we're getting    * out under exceptional conditions such as a descriptor exception.    */
 name|timer_Stop
 argument_list|(
 operator|&
@@ -8149,7 +8149,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Recvmsg: %d fdescriptor%s received (too few) !\n"
+literal|"Recvmsg: %d descriptor%s received (too few) !\n"
 argument_list|,
 name|nfd
 argument_list|,
@@ -8476,7 +8476,7 @@ name|nfd
 operator|-=
 literal|2
 expr_stmt|;
-comment|/* Don't include p->fd and our reply fdescriptor */
+comment|/* Don't include p->fd and our reply descriptor */
 name|niov
 operator|=
 literal|1
@@ -9120,7 +9120,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Sending %d fdescriptor%s and %d bytes in scatter"
+literal|"Sending %d descriptor%s and %d bytes in scatter"
 literal|"/gather array\n"
 argument_list|,
 name|nfd
@@ -9210,7 +9210,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* We must get the ACK before closing the fdescriptor ! */
+comment|/* We must get the ACK before closing the descriptor ! */
 name|int
 name|res
 decl_stmt|;
@@ -10255,7 +10255,7 @@ name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/*          * Hang around for a HUP.  This should happen as soon as the          * ppp that we passed our ctty fdescriptor to closes it.          * NOTE: If this process dies, the passed fdescriptor becomes          *       invalid and will give a select() error by setting one          *       of the error fds, aborting the other ppp.  We don't          *       want that to happen !          */
+comment|/*          * Hang around for a HUP.  This should happen as soon as the          * ppp that we passed our ctty descriptor to closes it.          * NOTE: If this process dies, the passed descriptor becomes          *       invalid and will give a select() error by setting one          *       of the error fds, aborting the other ppp.  We don't          *       want that to happen !          */
 name|pause
 argument_list|()
 expr_stmt|;

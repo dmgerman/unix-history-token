@@ -384,7 +384,7 @@ comment|/* Our hdlc state */
 name|int
 name|fd
 decl_stmt|;
-comment|/* File fdescriptor for this device */
+comment|/* File descriptor for this device */
 name|struct
 name|mbuf
 modifier|*

@@ -1014,7 +1014,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"%s: Raw: fdescriptor = %d, mbits = %x\n"
+literal|"%s: Raw: descriptor = %d, mbits = %x\n"
 argument_list|,
 name|p
 operator|->
