@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.5 (Berkeley) %G%"
+literal|"@(#)dm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|GAMEHIDE
-value|"/usr/games/hide"
+value|"/usr/games/hide/"
 end_define
 
 begin_define
@@ -310,25 +310,43 @@ end_expr_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|chdir
+name|char
+name|pbuf
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|pbuf
+argument_list|,
+name|GAMEHIDE
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|pbuf
+operator|+
+sizeof|sizeof
 argument_list|(
 name|GAMEHIDE
 argument_list|)
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"dm: chdir"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+operator|-
 literal|1
+argument_list|,
+name|game
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|priority
@@ -357,7 +375,7 @@ expr_stmt|;
 comment|/* we run setgid kmem; lose it */
 name|execv
 argument_list|(
-name|game
+name|pbuf
 argument_list|,
 name|args
 argument_list|)
