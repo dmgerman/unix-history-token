@@ -82,21 +82,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|bi_load
-parameter_list|(
-name|struct
-name|bootinfo
-modifier|*
-parameter_list|,
-name|struct
-name|preloaded_file
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|file_format
