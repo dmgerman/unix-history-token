@@ -27,27 +27,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ktr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL_ */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -821,11 +800,30 @@ parameter_list|)
 value|mtx_unlock_spin_flags((m), 0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|LOCK_DEBUG
-end_ifdef
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|LOCK_DEBUG not defined, include<sys/lock.h> before<sys/mutex.h>
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|LOCK_DEBUG
+operator|>
+literal|0
+end_if
 
 begin_define
 define|#
