@@ -1763,7 +1763,7 @@ name|u_int8_t
 operator|*
 operator|)
 operator|(
-name|rman_get_bushandle
+name|rman_get_start
 argument_list|(
 name|sc
 operator|->
