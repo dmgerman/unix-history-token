@@ -238,18 +238,33 @@ decl_stmt|;
 name|int
 name|sc_ss
 decl_stmt|;
-comment|/* 	 * XXX FPU state is 27 * 4 bytes h/w, 1 * 4 bytes s/w (probably not 	 * needed here), or that + 16 * 4 bytes for emulators (probably all 	 * needed here).  The "spare" bytes are mostly not spare. 	 */
+name|int
+name|sc_len
+decl_stmt|;
+comment|/* sizeof(struct mcontext_t) */
+comment|/* 	 * XXX - See<machine/ucontext.h> and<machine/npx.h> for 	 *       the following fields. 	 */
+name|int
+name|sc_fpformat
+decl_stmt|;
+name|int
+name|sc_ownedfp
+decl_stmt|;
+name|int
+name|sc_spare1
+index|[
+literal|1
+index|]
+decl_stmt|;
 name|int
 name|sc_fpregs
 index|[
-literal|28
+literal|128
 index|]
 decl_stmt|;
-comment|/* machine state (FPU): */
 name|int
-name|sc_spare
+name|sc_spare2
 index|[
-literal|17
+literal|8
 index|]
 decl_stmt|;
 block|}

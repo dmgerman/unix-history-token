@@ -130,10 +130,13 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* accumulator contents, 0-7 */
-name|u_long
-name|sv_ex_sw
+name|u_char
+name|sv_pad0
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* status word for last exception */
+comment|/* padding for (now unused) saved status word */
 comment|/* 	 * Bogus padding for emulators.  Emulators should use their own 	 * struct and arrange to store into this struct (ending here) 	 * before it is inspected for ptracing or for core dumps.  Some 	 * emulators overwrite the whole struct.  We have no good way of 	 * knowing how much padding to leave.  Leave just enough for the 	 * GPL emulator's i387_union (176 bytes total). 	 */
 name|u_char
 name|sv_pad
@@ -254,14 +257,10 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_long
-name|sv_ex_sw
-decl_stmt|;
-comment|/* status word for last exception */
 name|u_char
 name|sv_pad
 index|[
-literal|220
+literal|224
 index|]
 decl_stmt|;
 block|}
@@ -321,6 +320,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|npxdrop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|npxexit
 parameter_list|(
 name|struct
@@ -332,10 +340,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|npxformat
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|npxgetregs
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|union
+name|savefpu
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|npxinit
 parameter_list|(
-name|int
+name|u_short
 name|control
 parameter_list|)
 function_decl|;
@@ -345,6 +379,23 @@ begin_function_decl
 name|void
 name|npxsave
 parameter_list|(
+name|union
+name|savefpu
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|npxsetregs
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
 name|union
 name|savefpu
 modifier|*

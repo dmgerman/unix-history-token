@@ -90,6 +90,11 @@ directive|define
 name|PCB_NPXTRAP
 value|0x04
 comment|/* npx trap pending */
+define|#
+directive|define
+name|PCB_NPXINITDONE
+value|0x08
+comment|/* fpu state is initialized */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
