@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	3.2	%H%	*/
+comment|/*	buf.h	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -322,7 +322,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* Physical IO potentially using UNIBUS map */
+comment|/* physical IO */
 end_comment
 
 begin_define
@@ -333,7 +333,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* This block has the UNIBUS map allocated */
+comment|/* UNIBUS map allocated */
 end_comment
 
 begin_define
@@ -377,7 +377,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* don't write till block leaves available list */
+comment|/* write at exit of avail list */
 end_comment
 
 begin_define
@@ -432,7 +432,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* page in flag to swap(), for counting */
+comment|/* pagein op, so swap() can count it */
 end_comment
 
 begin_define
@@ -443,7 +443,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* did bread find this block in the cache? */
+comment|/* did bread find us in the cache ? */
 end_comment
 
 begin_comment

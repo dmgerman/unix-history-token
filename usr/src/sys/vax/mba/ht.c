@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	3.2	%H%	*/
+comment|/*	ht.c	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -630,8 +630,6 @@ name|SREV
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	(void) hcommand(dev, REW);	*/
-comment|/* for 'mtm' file positioning */
 if|if
 condition|(
 operator|(
@@ -1842,6 +1840,10 @@ case|:
 case|case
 name|SSREV
 case|:
+define|#
+directive|define
+name|blk
+value|dbtofsb(bp->b_blkno)
 if|if
 condition|(
 name|HTADDR
@@ -1863,12 +1865,7 @@ index|[
 name|unit
 index|]
 operator|=
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
+name|blk
 operator|-
 operator|(
 name|HTADDR
@@ -1896,12 +1893,7 @@ index|[
 name|unit
 index|]
 operator|=
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
+name|blk
 operator|+
 operator|(
 name|HTADDR
@@ -1918,12 +1910,7 @@ index|[
 name|unit
 index|]
 operator|=
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
+name|blk
 operator|+
 operator|(
 name|HTADDR
@@ -1941,12 +1928,7 @@ index|[
 name|unit
 index|]
 operator|=
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
+name|blk
 expr_stmt|;
 break|break;
 default|default:
