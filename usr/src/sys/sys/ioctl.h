@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.8	85/03/07	*/
+comment|/*	ioctl.h	6.9	85/03/13	*/
 end_comment
 
 begin_comment
@@ -1484,7 +1484,7 @@ begin_define
 define|#
 directive|define
 name|TIOCREMOTE
-value|_IO(t, 105)
+value|_IOW(t, 105, int)
 end_define
 
 begin_comment
