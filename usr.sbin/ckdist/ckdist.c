@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -103,11 +109,11 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|u_long
+name|uint32_t
 modifier|*
 name|cval
 parameter_list|,
-name|u_long
+name|off_t
 modifier|*
 name|clen
 parameter_list|)
@@ -1573,11 +1579,16 @@ name|char
 modifier|*
 name|dname
 decl_stmt|;
+name|off_t
+name|len
+decl_stmt|;
 name|u_long
 name|sum
-decl_stmt|,
-name|len
-decl_stmt|,
+decl_stmt|;
+name|intmax_t
+name|sumlen
+decl_stmt|;
+name|uint32_t
 name|chk
 decl_stmt|;
 name|int
@@ -1689,7 +1700,7 @@ name|sscanf
 argument_list|(
 name|buf
 argument_list|,
-literal|"cksum.%2s = %lu %lu%c"
+literal|"cksum.%2s = %lu %jd%c"
 argument_list|,
 name|ext
 argument_list|,
@@ -1697,7 +1708,7 @@ operator|&
 name|sum
 argument_list|,
 operator|&
-name|len
+name|sumlen
 argument_list|,
 operator|&
 name|ch
@@ -1829,7 +1840,7 @@ operator|!=
 operator|(
 name|off_t
 operator|)
-name|len
+name|sumlen
 condition|)
 name|error
 operator|=
