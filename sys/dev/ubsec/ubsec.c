@@ -868,6 +868,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ubsec
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Broadcom driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -923,11 +941,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_hw_ubsec
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ubsec
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -936,7 +954,7 @@ name|ubsec_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"UBSEC driver debugging printfs"
+literal|"control debugging msgs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1004,11 +1022,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_STRUCT
 argument_list|(
-name|_kern
+name|_hw_ubsec
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ubsec_stats
+name|stats
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -1017,7 +1035,7 @@ name|ubsecstats
 argument_list|,
 name|ubsec_stats
 argument_list|,
-literal|"Broadcom driver statistics"
+literal|"driver statistics"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
