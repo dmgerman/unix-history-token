@@ -3716,12 +3716,6 @@ operator|->
 name|v_cache_dst
 argument_list|)
 expr_stmt|;
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-comment|/* Sets up v_id. */
 comment|/* 	 * Finalize various vnode identity bits. 	 */
 name|vp
 operator|->
@@ -11146,6 +11140,16 @@ name|xv_vnode
 operator|=
 name|vp
 expr_stmt|;
+name|xvn
+index|[
+name|n
+index|]
+operator|.
+name|xv_id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX compat */
 define|#
 directive|define
 name|XV_COPY
@@ -11166,11 +11170,6 @@ expr_stmt|;
 name|XV_COPY
 argument_list|(
 name|holdcnt
-argument_list|)
-expr_stmt|;
-name|XV_COPY
-argument_list|(
-name|id
 argument_list|)
 expr_stmt|;
 name|XV_COPY
