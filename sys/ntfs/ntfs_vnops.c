@@ -628,6 +628,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * This is a noop, simply returning what one has been given.  */
 end_comment
@@ -712,30 +721,6 @@ name|a_runp
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-if|if
-condition|(
-name|ap
-operator|->
-name|a_runb
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|ap
-operator|->
-name|a_runb
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -743,6 +728,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -4296,17 +4286,6 @@ name|vop_t
 operator|*
 operator|)
 name|ntfs_fsync
-block|}
-block|,
-block|{
-operator|&
-name|vop_bmap_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|ntfs_bmap
 block|}
 block|,
 block|{

@@ -2250,17 +2250,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_bmap_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|portal_badop
-block|}
-block|,
-block|{
-operator|&
 name|vop_getattr_desc
 block|,
 operator|(

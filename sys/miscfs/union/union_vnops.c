@@ -212,22 +212,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|union_bmap
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_bmap_args
-operator|*
-name|ap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|union_close
 name|__P
 argument_list|(
@@ -6723,32 +6707,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *	union_bmap:  *  *	There isn't much we can do.  We cannot push through to the real vnode  *	to get to the underlying device because this will bypass data  *	cached by the real vnode.  *  *	For some reason we cannot return the 'real' vnode either, it seems  *	to blow up memory maps.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|union_bmap
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -7138,7 +7096,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|union_bmap
+name|vop_eopnotsupp
 block|}
 block|,
 block|{

@@ -3233,6 +3233,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|vop_stdbmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vop_stdgetwritemount
 name|__P
 argument_list|(
