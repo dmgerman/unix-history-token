@@ -661,7 +661,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.7 1996/07/19 00:44:55 jdp Exp $"
+literal|"$Id: parsetime.c,v 1.7.2.1 1997/06/24 06:38:51 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1689,6 +1689,65 @@ name|panic
 argument_list|(
 literal|"garbled time"
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|struct
+name|tm
+modifier|*
+name|lt
+decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|lt
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+comment|/* 	 * check if the specified year is in the next century. 	 * allow for one year of user error as many people will 	 * enter n - 1 at the start of year n. 	 */
+if|if
+condition|(
+name|year
+operator|<
+operator|(
+name|lt
+operator|->
+name|tm_year
+operator|%
+literal|100
+operator|)
+operator|-
+literal|1
+condition|)
+name|year
+operator|+=
+literal|100
+expr_stmt|;
+comment|/* adjust for the year 2000 and beyond */
+name|year
+operator|+=
+name|lt
+operator|->
+name|tm_year
+operator|-
+operator|(
+name|lt
+operator|->
+name|tm_year
+operator|%
+literal|100
+operator|)
 expr_stmt|;
 block|}
 if|if
