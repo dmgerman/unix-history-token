@@ -1849,6 +1849,9 @@ name|time_state
 operator|=
 name|TIME_OOP
 expr_stmt|;
+name|time_tai
+operator|++
+expr_stmt|;
 block|}
 break|break;
 comment|/* 		 * Delete second 23:59:59. 		 */
@@ -1904,9 +1907,6 @@ comment|/* 		 * Insert second in progress. 		 */
 case|case
 name|TIME_OOP
 case|:
-name|time_tai
-operator|++
-expr_stmt|;
 name|time_state
 operator|=
 name|TIME_WAIT
