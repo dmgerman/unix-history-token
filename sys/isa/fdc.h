@@ -45,14 +45,6 @@ name|FDC_ATTACHED
 value|0x01
 define|#
 directive|define
-name|FDC_HASFTAPE
-value|0x02
-define|#
-directive|define
-name|FDC_TAPE_BUSY
-value|0x04
-define|#
-directive|define
 name|FDC_STAT_VALID
 value|0x08
 define|#
@@ -67,10 +59,6 @@ define|#
 directive|define
 name|FDC_NODMA
 value|0x40
-define|#
-directive|define
-name|FDC_UNLOADED
-value|0x80
 name|struct
 name|fd_data
 modifier|*
@@ -228,7 +216,7 @@ name|FDUNIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(((s)>>6)&03)
+value|(((s)>> 6)& 3)
 end_define
 
 begin_define
@@ -238,7 +226,7 @@ name|FDTYPE
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)&077)
+value|((s)& 0x3f)
 end_define
 
 begin_comment
