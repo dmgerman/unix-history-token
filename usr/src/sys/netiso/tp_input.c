@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3286,34 +3286,6 @@ argument_list|(
 name|ts_xtd_fmt
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Get the maximum transmission unit from the lower layer(s) 			 * so we can negotiate a reasonable max TPDU size. 			 */
-call|(
-name|tpcb
-operator|->
-name|tp_nlproto
-operator|->
-name|nlp_mtu
-call|)
-argument_list|(
-name|so
-argument_list|,
-name|tpcb
-operator|->
-name|tp_npcb
-argument_list|,
-operator|&
-name|tpcb
-operator|->
-name|tp_l_tpdusize
-argument_list|,
-operator|&
-name|tpcb
-operator|->
-name|tp_tpdusize
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|tpcb
 operator|->
 name|tp_peer_acktime
@@ -4607,36 +4579,6 @@ name|tpdu_CCclass
 argument_list|)
 expr_stmt|;
 name|ENDTRACE
-comment|/*  			 * Get the maximum transmission unit from the lower layer(s) 			 * so we can decide how large a TPDU size to negotiate. 			 * It would be nice if the arguments to this 			 * were more reasonable. 			 */
-argument_list|(
-name|tpcb
-operator|->
-name|tp_nlproto
-operator|->
-name|nlp_mtu
-argument_list|)
-argument_list|(
-name|tpcb
-operator|->
-name|tp_sock
-argument_list|,
-name|tpcb
-operator|->
-name|tp_npcb
-argument_list|,
-operator|&
-name|tpcb
-operator|->
-name|tp_l_tpdusize
-argument_list|,
-operator|&
-name|tpcb
-operator|->
-name|tp_tpdusize
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* if called or calling suffices appeared on the CC,  			 * they'd better jive with what's in the pcb 			 */
 if|if
 condition|(
