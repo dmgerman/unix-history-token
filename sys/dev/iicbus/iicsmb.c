@@ -431,7 +431,7 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_dettach
+name|device_detach
 argument_list|,
 name|bus_generic_detach
 argument_list|)
