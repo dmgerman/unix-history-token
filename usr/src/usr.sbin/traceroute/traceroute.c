@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traceroute.c	5.6 (Berkeley) %G%"
+literal|"@(#)traceroute.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2204,6 +2204,23 @@ operator|->
 name|ip_ttl
 operator|=
 name|ttl
+expr_stmt|;
+name|ip
+operator|->
+name|ip_v
+operator|=
+name|IPVERSION
+expr_stmt|;
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|htons
+argument_list|(
+name|ident
+operator|+
+name|seq
+argument_list|)
 expr_stmt|;
 name|up
 operator|->
