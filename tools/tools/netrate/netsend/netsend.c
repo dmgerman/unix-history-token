@@ -737,7 +737,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"approx error rate: %ld\n"
+literal|"approx error rate: %d\n"
 argument_list|,
 operator|(
 name|send_errors
