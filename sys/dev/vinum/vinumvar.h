@@ -1009,10 +1009,28 @@ name|partinfo
 name|partinfo
 decl_stmt|;
 comment|/* partition information */
+comment|/* XXX kludge until we get this struct cleaned up */
+if|#
+directive|if
+name|_KERNEL
 name|dev_t
 name|dev
 decl_stmt|;
 comment|/* device information */
+else|#
+directive|else
+name|char
+name|dev
+index|[
+sizeof|sizeof
+argument_list|(
+name|int
+operator|*
+argument_list|)
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
