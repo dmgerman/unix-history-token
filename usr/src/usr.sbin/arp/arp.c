@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.13 (Berkeley) %G%"
+literal|"@(#)arp.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1054,10 +1054,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|flags
-operator|=
-name|RTF_PROTO1
+block|{
+name|printf
+argument_list|(
+literal|"%s: Sending trailers is no longer supported\n"
+argument_list|,
+name|host
+argument_list|)
 expr_stmt|;
+block|}
 name|argv
 operator|++
 expr_stmt|;
@@ -2053,19 +2058,6 @@ if|if
 condition|(
 name|rtm
 operator|->
-name|rtm_flags
-operator|&
-name|RTF_PROTO1
-condition|)
-name|printf
-argument_list|(
-literal|" trailers"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rtm
-operator|->
 name|rtm_addrs
 operator|&
 name|RTA_NETMASK
@@ -2336,7 +2328,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       arp -s hostname ether_addr [temp] [pub] [trail]\n"
+literal|"       arp -s hostname ether_addr [temp] [pub]\n"
 argument_list|)
 expr_stmt|;
 name|printf
