@@ -2648,7 +2648,12 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"}\n"
+literal|"}"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
