@@ -610,23 +610,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|quiet
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%sing CD, please wait..\r"
-argument_list|,
-name|argv
-index|[
-name|arg
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|argv
@@ -645,6 +628,26 @@ else|else
 name|blank
 operator|=
 name|CDR_B_MIN
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%sing CD, please wait..\r"
+argument_list|,
+name|blank
+operator|==
+name|CDR_B_ALL
+condition|?
+literal|"eras"
+else|:
+literal|"blank"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -702,13 +705,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%sing CD - %d %% done"
-literal|"     \r"
+literal|"%sing CD - %d %% done     \r"
 argument_list|,
-name|argv
-index|[
-name|arg
-index|]
+name|blank
+operator|==
+name|CDR_B_ALL
+condition|?
+literal|"eras"
+else|:
+literal|"blank"
 argument_list|,
 name|percent
 argument_list|)
