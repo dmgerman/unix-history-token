@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.20	82/04/24	*/
+comment|/*	uipc_proto.c	4.21	82/04/25	*/
 end_comment
 
 begin_include
@@ -153,7 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IMP protocol family: raw interface  */
+comment|/*  * IMP protocol family: raw interface.  * Using the raw interface entry to get the timer routine  * in is a kludge.  */
 end_comment
 
 begin_include
@@ -170,12 +170,15 @@ operator|>
 literal|0
 end_if
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|rimp_output
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|hostslowtimo
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -561,7 +564,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|hostslowtimo
 block|,
 literal|0
 block|, }
