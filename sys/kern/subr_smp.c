@@ -132,7 +132,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_DEFAULT_CONFIG */
+comment|/** TEST_DEFAULT_CONFIG, TEST_CPUSTOP */
 end_comment
 
 begin_include
@@ -645,6 +645,100 @@ comment|/* CHECK_POINTS */
 end_comment
 
 begin_comment
+comment|/*  * Values to send to the POST hardware.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|POSTCODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|POSTCODE
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MP_BOOTADDRESS_POST
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MP_PROBE_POST
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|MP_START_POST
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MP_ANNOUNCE_POST
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPTABLE_PASS1_POST
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPTABLE_PASS2_POST
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|MP_ENABLE_POST
+value|0x16
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_ALL_APS_POST
+value|0x17
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSTALL_AP_TRAMP_POST
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_AP_POST
+value|0x19
+end_define
+
+begin_comment
 comment|/** FIXME: what system files declare these??? */
 end_comment
 
@@ -773,6 +867,16 @@ name|apic_id_to_logical
 index|[
 name|NAPICID
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Bitmap of all available CPUs */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|all_cpus
 decl_stmt|;
 end_decl_stmt
 
@@ -957,6 +1061,11 @@ name|u_int
 name|basemem
 parameter_list|)
 block|{
+name|POSTCODE
+argument_list|(
+name|MP_BOOTADDRESS_POST
+argument_list|)
+expr_stmt|;
 name|base_memory
 operator|=
 name|basemem
@@ -1009,6 +1118,11 @@ decl_stmt|;
 name|u_int32_t
 name|target
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|MP_PROBE_POST
+argument_list|)
+expr_stmt|;
 comment|/* see if EBDA exists */
 if|if
 condition|(
@@ -1181,6 +1295,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|POSTCODE
+argument_list|(
+name|MP_START_POST
+argument_list|)
+expr_stmt|;
 comment|/* look for MP capable motherboard */
 if|if
 condition|(
@@ -1214,6 +1333,11 @@ block|{
 name|int
 name|x
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|MP_ANNOUNCE_POST
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"FreeBSD/SMP: Multiprocessor motherboard\n"
@@ -1576,7 +1700,7 @@ comment|/* setup lint1 to handle NMI */
 if|#
 directive|if
 literal|1
-comment|/** XXX FIXME:          *	should we arrange for ALL CPUs to catch NMI???          *	it would probably crash, so for now only the BSP          *	will catch it          */
+comment|/** XXX FIXME:           *      should we arrange for ALL CPUs to catch NMI???          *      it would probably crash, so for now only the BSP          *      will catch it          */
 if|if
 condition|(
 name|cpuid
@@ -1667,6 +1791,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
+name|POSTCODE
+argument_list|(
+name|MP_ENABLE_POST
+argument_list|)
+expr_stmt|;
 comment|/* Turn on 4MB of V == P addressing so we can get to MP table */
 operator|*
 operator|(
@@ -1788,8 +1917,6 @@ expr_stmt|;
 comment|/* install an inter-CPU IPI for TLB invalidation */
 name|setidt
 argument_list|(
-name|ICU_OFFSET
-operator|+
 name|XINVLTLB_OFFSET
 argument_list|,
 name|Xinvltlb
@@ -1806,6 +1933,34 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+comment|/* install an inter-CPU IPI for CPU stop/restart */
+name|setidt
+argument_list|(
+name|XCPUSTOP_OFFSET
+argument_list|,
+name|Xcpustop
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TEST_CPUSTOP */
 endif|#
 directive|endif
 comment|/* APIC_IO */
@@ -2442,6 +2597,11 @@ decl_stmt|;
 name|int
 name|mustpanic
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|MPTABLE_PASS1_POST
+argument_list|)
+expr_stmt|;
 name|mustpanic
 operator|=
 literal|0
@@ -2872,6 +3032,11 @@ name|cpu
 decl_stmt|,
 name|intr
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|MPTABLE_PASS2_POST
+argument_list|)
+expr_stmt|;
 comment|/* clear various tables */
 for|for
 control|(
@@ -5405,6 +5570,11 @@ name|int
 modifier|*
 name|newpp
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|START_ALL_APS_POST
+argument_list|)
+expr_stmt|;
 comment|/**          * NOTE: this needs further thought:          *        where does it get released?          *        should it be set to empy?          *          * get the initial mp_lock with a count of 1 for the BSP          */
 name|mp_lock
 operator|=
@@ -5448,6 +5618,11 @@ name|inb
 argument_list|(
 name|CMOS_DATA
 argument_list|)
+expr_stmt|;
+comment|/* record BSP in CPU map */
+name|all_cpus
+operator|=
+literal|1
 expr_stmt|;
 comment|/* start each AP */
 for|for
@@ -5822,7 +5997,28 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|all_cpus
+operator||=
+operator|(
+literal|1
+operator|<<
+name|x
+operator|)
+expr_stmt|;
+comment|/* record AP in CPU map */
 block|}
+comment|/* build our map of 'other' CPUs */
+name|other_cpus
+operator|=
+name|all_cpus
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|cpuid
+operator|)
+expr_stmt|;
 comment|/* fill in our (BSP) APIC version */
 name|cpu_apic_versions
 index|[
@@ -5976,6 +6172,11 @@ name|u_int32_t
 modifier|*
 name|dst32
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|INSTALL_AP_TRAMP_POST
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|x
@@ -6218,6 +6419,11 @@ name|icr_lo
 decl_stmt|,
 name|icr_hi
 decl_stmt|;
+name|POSTCODE
+argument_list|(
+name|START_AP_POST
+argument_list|)
+expr_stmt|;
 comment|/* get the PHYSICAL APIC ID# */
 name|physical_cpu
 operator|=
@@ -6424,8 +6630,6 @@ name|invltlb_ok
 condition|)
 name|all_but_self_ipi
 argument_list|(
-name|ICU_OFFSET
-operator|+
 name|XINVLTLB_OFFSET
 argument_list|)
 expr_stmt|;
@@ -6462,7 +6666,200 @@ name|smp_invltlb
 argument_list|()
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+comment|/*  * When called the executing CPU will send an IPI to all other CPUs  *  requesting that they halt execution.  *  * Usually (but not necessarily) called with 'other_cpus' as its arg.  *  *  - Signals all CPUs in map to stop.  *  - Waits for each to stop.  *  * Returns:  *  -1: error  *   0: NA  *   1: ok  *  * XXX FIXME: this is not MP-safe, needs a lock to prevent multiple CPUs  *            from executing at same time.   */
+name|int
+name|stop_cpus
+parameter_list|(
+name|u_int
+name|map
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|smp_active
+condition|)
+return|return
+literal|0
+return|;
+name|stopped_cpus
+operator|=
+literal|0
+expr_stmt|;
+comment|/* send IPI to all CPUs in map */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_CPUSTOP
+argument_list|)
+name|db_printf
+argument_list|(
+literal|"\nCPU%d stopping CPUs: 0x%08x\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG_CPUSTOP */
+if|#
+directive|if
+literal|0
+block|selected_apic_ipi(map, XCPUSTOP_OFFSET, APIC_DELMODE_FIXED);
+else|#
+directive|else
+name|all_but_self_ipi
+argument_list|(
+name|XCPUSTOP_OFFSET
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_CPUSTOP
+argument_list|)
+name|db_printf
+argument_list|(
+literal|" stopped_cpus: 0x%08x, map: 0x%08x, spin\n"
+argument_list|,
+name|stopped_cpus
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG_CPUSTOP */
+while|while
+condition|(
+name|stopped_cpus
+operator|!=
+name|map
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+comment|/* spin */
+block|;
+else|#
+directive|else
+name|POSTCODE
+argument_list|(
+name|stopped_cpus
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_CPUSTOP
+argument_list|)
+name|db_printf
+argument_list|(
+literal|"  spun\nstopped\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG_CPUSTOP */
+return|return
+literal|1
+return|;
+block|}
+comment|/*  * Called by a CPU to restart stopped CPUs.   *  * Usually (but not necessarily) called with 'stopped_cpus' as its arg.  *  *  - Signals all CPUs in map to restart.  *  - Waits for each to restart.  *  * Returns:  *  -1: error  *   0: NA  *   1: ok  */
+name|int
+name|restart_cpus
+parameter_list|(
+name|u_int
+name|map
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|smp_active
+condition|)
+return|return
+literal|0
+return|;
+name|started_cpus
+operator|=
+name|map
+expr_stmt|;
+comment|/* signal other cpus to restart */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_CPUSTOP
+argument_list|)
+name|db_printf
+argument_list|(
+literal|"\nCPU%d restarting CPUs: 0x%08x (0x%08x)\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|started_cpus
+argument_list|,
+name|stopped_cpus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG_CPUSTOP */
+while|while
+condition|(
+name|started_cpus
+condition|)
+comment|/* wait for each to clear its bit */
+comment|/* spin */
+empty_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_CPUSTOP
+argument_list|)
+name|db_printf
+argument_list|(
+literal|" restarted\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG_CPUSTOP */
+return|return
+literal|1
+return|;
+block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEST_CPUSTOP */
+end_comment
 
 end_unit
 
