@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -827,6 +833,125 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * vcnt() -	accumulate statistics from all cpus and the global cnt  *		structure.  *  *	The vmmeter structure is now per-cpu as well as global.  Those  *	statistics which can be kept on a per-cpu basis (to avoid cache  *	stalls between cpus) can be moved to the per-cpu vmmeter.  Remaining  *	statistics, such as v_free_reserved, are left in the global  *	structure.  *  * (sysctl_oid *oidp, void *arg1, int arg2, struct sysctl_req *req)  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vcnt
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|count
+init|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|int
+name|i
+decl_stmt|;
+name|int
+name|offset
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|arg1
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|cnt
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|mp_ncpus
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+init|=
+name|pcpu_find
+argument_list|(
+name|i
+argument_list|)
+decl_stmt|;
+name|count
+operator|+=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pcpu
+operator|->
+name|pc_cnt
+operator|+
+name|offset
+operator|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+operator|&
+name|count
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -930,7 +1055,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_sys
 argument_list|,
@@ -938,6 +1063,8 @@ name|OID_AUTO
 argument_list|,
 name|v_swtch
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -946,6 +1073,10 @@ operator|.
 name|v_swtch
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Context switches"
 argument_list|)
@@ -953,7 +1084,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_sys
 argument_list|,
@@ -961,6 +1092,8 @@ name|OID_AUTO
 argument_list|,
 name|v_trap
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -969,6 +1102,10 @@ operator|.
 name|v_trap
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Traps"
 argument_list|)
@@ -976,7 +1113,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_sys
 argument_list|,
@@ -984,6 +1121,8 @@ name|OID_AUTO
 argument_list|,
 name|v_syscall
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -992,6 +1131,10 @@ operator|.
 name|v_syscall
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Syscalls"
 argument_list|)
@@ -999,7 +1142,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_sys
 argument_list|,
@@ -1007,6 +1150,8 @@ name|OID_AUTO
 argument_list|,
 name|v_intr
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1015,6 +1160,10 @@ operator|.
 name|v_intr
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Hardware interrupts"
 argument_list|)
@@ -1022,7 +1171,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_sys
 argument_list|,
@@ -1030,6 +1179,8 @@ name|OID_AUTO
 argument_list|,
 name|v_soft
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1039,13 +1190,17 @@ name|v_soft
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|"Software interrupts"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1053,6 +1208,8 @@ name|OID_AUTO
 argument_list|,
 name|v_vm_faults
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1061,6 +1218,10 @@ operator|.
 name|v_vm_faults
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"VM faults"
 argument_list|)
@@ -1068,7 +1229,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1076,6 +1237,8 @@ name|OID_AUTO
 argument_list|,
 name|v_cow_faults
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1084,6 +1247,10 @@ operator|.
 name|v_cow_faults
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"COW faults"
 argument_list|)
@@ -1091,7 +1258,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1099,6 +1266,8 @@ name|OID_AUTO
 argument_list|,
 name|v_cow_optim
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1107,6 +1276,10 @@ operator|.
 name|v_cow_optim
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Optimized COW faults"
 argument_list|)
@@ -1114,7 +1287,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1122,6 +1295,8 @@ name|OID_AUTO
 argument_list|,
 name|v_zfod
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1130,6 +1305,10 @@ operator|.
 name|v_zfod
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Zero fill"
 argument_list|)
@@ -1137,7 +1316,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1145,6 +1324,8 @@ name|OID_AUTO
 argument_list|,
 name|v_ozfod
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1153,6 +1334,10 @@ operator|.
 name|v_ozfod
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Optimized zero fill"
 argument_list|)
@@ -1160,7 +1345,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1168,6 +1353,8 @@ name|OID_AUTO
 argument_list|,
 name|v_swapin
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1176,6 +1363,10 @@ operator|.
 name|v_swapin
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Swapin operations"
 argument_list|)
@@ -1183,7 +1374,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1191,6 +1382,8 @@ name|OID_AUTO
 argument_list|,
 name|v_swapout
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1199,6 +1392,10 @@ operator|.
 name|v_swapout
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Swapout operations"
 argument_list|)
@@ -1206,7 +1403,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1214,6 +1411,8 @@ name|OID_AUTO
 argument_list|,
 name|v_swappgsin
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1222,6 +1421,10 @@ operator|.
 name|v_swappgsin
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Swapin pages"
 argument_list|)
@@ -1229,7 +1432,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1237,6 +1440,8 @@ name|OID_AUTO
 argument_list|,
 name|v_swappgsout
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1245,6 +1450,10 @@ operator|.
 name|v_swappgsout
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Swapout pages"
 argument_list|)
@@ -1252,7 +1461,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1260,6 +1469,8 @@ name|OID_AUTO
 argument_list|,
 name|v_vnodein
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1268,6 +1479,10 @@ operator|.
 name|v_vnodein
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Vnodein operations"
 argument_list|)
@@ -1275,7 +1490,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1283,6 +1498,8 @@ name|OID_AUTO
 argument_list|,
 name|v_vnodeout
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1291,6 +1508,10 @@ operator|.
 name|v_vnodeout
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Vnodeout operations"
 argument_list|)
@@ -1298,7 +1519,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1306,6 +1527,8 @@ name|OID_AUTO
 argument_list|,
 name|v_vnodepgsin
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1314,6 +1537,10 @@ operator|.
 name|v_vnodepgsin
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Vnodein pages"
 argument_list|)
@@ -1321,7 +1548,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1329,6 +1556,8 @@ name|OID_AUTO
 argument_list|,
 name|v_vnodepgsout
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1337,6 +1566,10 @@ operator|.
 name|v_vnodepgsout
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Vnodeout pages"
 argument_list|)
@@ -1344,7 +1577,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1352,6 +1585,8 @@ name|OID_AUTO
 argument_list|,
 name|v_intrans
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1360,6 +1595,10 @@ operator|.
 name|v_intrans
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"In transit page blocking"
 argument_list|)
@@ -1367,7 +1606,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1375,6 +1614,8 @@ name|OID_AUTO
 argument_list|,
 name|v_reactivated
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1383,6 +1624,10 @@ operator|.
 name|v_reactivated
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Reactivated pages"
 argument_list|)
@@ -1390,7 +1635,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1398,6 +1643,8 @@ name|OID_AUTO
 argument_list|,
 name|v_pdwakeups
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1406,6 +1653,10 @@ operator|.
 name|v_pdwakeups
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Pagedaemon wakeups"
 argument_list|)
@@ -1413,7 +1664,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1421,6 +1672,8 @@ name|OID_AUTO
 argument_list|,
 name|v_pdpages
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1429,6 +1682,10 @@ operator|.
 name|v_pdpages
 argument_list|,
 literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
 argument_list|,
 literal|"Pagedaemon page scans"
 argument_list|)
@@ -1436,7 +1693,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1444,6 +1701,8 @@ name|OID_AUTO
 argument_list|,
 name|v_dfree
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1453,13 +1712,17 @@ name|v_dfree
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1467,6 +1730,8 @@ name|OID_AUTO
 argument_list|,
 name|v_pfree
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1476,13 +1741,17 @@ name|v_pfree
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1490,6 +1759,8 @@ name|OID_AUTO
 argument_list|,
 name|v_tfree
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1499,13 +1770,17 @@ name|v_tfree
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1513,6 +1788,8 @@ name|OID_AUTO
 argument_list|,
 name|v_page_size
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1522,13 +1799,17 @@ name|v_page_size
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1536,6 +1817,8 @@ name|OID_AUTO
 argument_list|,
 name|v_page_count
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1545,13 +1828,17 @@ name|v_page_count
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1559,6 +1846,8 @@ name|OID_AUTO
 argument_list|,
 name|v_free_reserved
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1568,13 +1857,17 @@ name|v_free_reserved
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1582,6 +1875,8 @@ name|OID_AUTO
 argument_list|,
 name|v_free_target
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1591,13 +1886,17 @@ name|v_free_target
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1605,6 +1904,8 @@ name|OID_AUTO
 argument_list|,
 name|v_free_min
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1614,13 +1915,17 @@ name|v_free_min
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1628,6 +1933,8 @@ name|OID_AUTO
 argument_list|,
 name|v_free_count
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1637,13 +1944,17 @@ name|v_free_count
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1651,6 +1962,8 @@ name|OID_AUTO
 argument_list|,
 name|v_wire_count
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1660,13 +1973,17 @@ name|v_wire_count
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1674,6 +1991,8 @@ name|OID_AUTO
 argument_list|,
 name|v_active_count
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1683,13 +2002,17 @@ name|v_active_count
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1697,6 +2020,8 @@ name|OID_AUTO
 argument_list|,
 name|v_inactive_target
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1706,13 +2031,17 @@ name|v_inactive_target
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1720,6 +2049,8 @@ name|OID_AUTO
 argument_list|,
 name|v_inactive_count
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1729,13 +2060,17 @@ name|v_inactive_count
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1743,6 +2078,8 @@ name|OID_AUTO
 argument_list|,
 name|v_cache_count
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1752,13 +2089,17 @@ name|v_cache_count
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1766,6 +2107,8 @@ name|OID_AUTO
 argument_list|,
 name|v_cache_min
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1775,13 +2118,17 @@ name|v_cache_min
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1789,6 +2136,8 @@ name|OID_AUTO
 argument_list|,
 name|v_cache_max
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1798,13 +2147,17 @@ name|v_cache_max
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1812,6 +2165,8 @@ name|OID_AUTO
 argument_list|,
 name|v_pageout_free_min
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1821,13 +2176,17 @@ name|v_pageout_free_min
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_PROC
 argument_list|(
 name|_vm_stats_vm
 argument_list|,
@@ -1835,6 +2194,8 @@ name|OID_AUTO
 argument_list|,
 name|v_interrupt_free_min
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1844,7 +2205,243 @@ name|v_interrupt_free_min
 argument_list|,
 literal|0
 argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_forks
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_forks
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"Number of fork() calls"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_vforks
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_vforks
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"Number of vfork() calls"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_rforks
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_rforks
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"Number of rfork() calls"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_kthreads
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_kthreads
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"Number of fork() calls by kernel"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_forkpages
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_forkpages
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"VM pages affected by fork()"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_vforkpages
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_vforkpages
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"VM pages affected by vfork()"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_rforkpages
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_rforkpages
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"VM pages affected by rfork()"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_vm_stats_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|v_kthreadpages
+argument_list|,
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cnt
+operator|.
+name|v_kthreadpages
+argument_list|,
+literal|0
+argument_list|,
+name|vcnt
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"VM pages affected by fork() by kernel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1866,190 +2463,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_forks
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_forks
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of fork() calls"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_vforks
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_vforks
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of vfork() calls"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_rforks
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_rforks
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of rfork() calls"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_kthreads
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_kthreads
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of fork() calls by kernel"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_forkpages
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_forkpages
-argument_list|,
-literal|0
-argument_list|,
-literal|"VM pages affected by fork()"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_vforkpages
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_vforkpages
-argument_list|,
-literal|0
-argument_list|,
-literal|"VM pages affected by vfork()"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_rforkpages
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_rforkpages
-argument_list|,
-literal|0
-argument_list|,
-literal|"VM pages affected by rfork()"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_vm_stats_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|v_kthreadpages
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cnt
-operator|.
-name|v_kthreadpages
-argument_list|,
-literal|0
-argument_list|,
-literal|"VM pages affected by fork() by kernel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcpu.h>
 end_include
 
@@ -128,6 +134,11 @@ endif|#
 directive|endif
 name|PCPU_MD_FIELDS
 expr_stmt|;
+name|struct
+name|vmmeter
+name|pc_cnt
+decl_stmt|;
+comment|/* VM stats counters */
 block|}
 struct|;
 end_struct
@@ -183,6 +194,20 @@ define|#
 directive|define
 name|curkse
 value|(curthread->td_kse)
+end_define
+
+begin_comment
+comment|/*  * MI PCPU support functions  *  * PCPU_LAZY_INC() -	Lazily increment a per-cpu stats counter, without  *			guarenteeing atomicy or even necessarily consistency.  *  *			XXX we need to create MD primitives to support  *			this to guarentee at least some level of consistency,  *			i.e. to prevent us from totally corrupting the   *			counters due to preemption in a multi-instruction  *			increment sequence for architectures that do not  *			support single-instruction memory increments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCPU_LAZY_INC
+parameter_list|(
+name|var
+parameter_list|)
+value|(++*PCPU_PTR(var))
 end_define
 
 begin_comment

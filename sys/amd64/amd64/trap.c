@@ -3387,14 +3387,12 @@ decl_stmt|;
 name|u_int
 name|code
 decl_stmt|;
-name|atomic_add_int
+comment|/* 	 * note: PCPU_LAZY_INC() can only be used if we can afford 	 * occassional inaccuracy in the count. 	 */
+name|PCPU_LAZY_INC
 argument_list|(
-operator|&
 name|cnt
 operator|.
 name|v_syscall
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#
