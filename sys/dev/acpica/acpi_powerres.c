@@ -574,11 +574,11 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"no power resource object\n"
 operator|)
 argument_list|)
@@ -602,11 +602,11 @@ operator|!=
 name|ACPI_TYPE_POWER
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"questionable power resource object %s\n"
 operator|,
 name|acpi_name
@@ -734,11 +734,11 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"registered power resource %s\n"
 operator|,
 name|acpi_name
@@ -872,11 +872,11 @@ argument_list|,
 name|M_ACPIPWR
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"deregistered power resource %s\n"
 operator|,
 name|acpi_name
@@ -994,11 +994,11 @@ operator|=
 name|ACPI_STATE_UNKNOWN
 expr_stmt|;
 comment|/* XXX we should try to find its current state */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"registered power consumer %s\n"
 operator|,
 name|acpi_name
@@ -1087,11 +1087,11 @@ argument_list|,
 name|ac_link
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"deregistered power consumer %s\n"
 operator|,
 name|acpi_name
@@ -1305,11 +1305,11 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"setup to switch %s D%d -> D%d\n"
 operator|,
 name|acpi_name
@@ -1526,11 +1526,11 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"can't evaluate resource list %s\n"
 operator|,
 name|acpi_name
@@ -1565,11 +1565,11 @@ operator|!=
 name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"resource list is not ACPI_TYPE_PACKAGE (%d)\n"
 operator|,
 name|reslist_object
@@ -1618,11 +1618,11 @@ name|res_changed
 operator|=
 literal|1
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"removing reference to %s\n"
 operator|,
 name|acpi_name
@@ -1678,11 +1678,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"referencing %d new resources\n"
 operator|,
 name|reslist_object
@@ -1720,11 +1720,11 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"failed to correctly switch resources to move %s to D%d\n"
 operator|,
 name|acpi_name
@@ -1751,11 +1751,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"invoking state transition method %s\n"
 operator|,
 name|acpi_name
@@ -1811,11 +1811,11 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"attempt to set unsupported state D%d\n"
 operator|,
 name|state
@@ -1900,11 +1900,11 @@ operator|!=
 name|ACPI_TYPE_STRING
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"don't know how to create a power reference to object type %d\n"
 operator|,
 name|obj
@@ -1916,11 +1916,11 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"building reference from %s to %s\n"
 operator|,
 name|acpi_name
@@ -1961,11 +1961,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"couldn't find power resource %s\n"
 operator|,
 name|obj
@@ -1993,11 +1993,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"couldn't register power resource %s - %s\n"
 operator|,
 name|obj
@@ -2030,11 +2030,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"power resource list corrupted\n"
 operator|)
 argument_list|)
@@ -2042,11 +2042,11 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"found power resource %s\n"
 operator|,
 name|acpi_name
@@ -2083,11 +2083,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"couldn't allocate memory for a power consumer reference\n"
 operator|)
 argument_list|)
@@ -2187,11 +2187,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"%s has no references, not turning on\n"
 operator|,
 name|acpi_name
@@ -2227,11 +2227,11 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"can't get status of %s - %d\n"
 operator|,
 name|acpi_name
@@ -2277,11 +2277,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"failed to switch %s on - %s\n"
 operator|,
 name|acpi_name
@@ -2301,11 +2301,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"switched %s on\n"
 operator|,
 name|acpi_name
@@ -2321,11 +2321,11 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"%s is already on\n"
 operator|,
 name|acpi_name
@@ -2364,11 +2364,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"%s has references, not turning off\n"
 operator|,
 name|acpi_name
@@ -2404,11 +2404,11 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"can't get status of %s - %d\n"
 operator|,
 name|acpi_name
@@ -2454,11 +2454,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"failed to switch %s off - %s\n"
 operator|,
 name|acpi_name
@@ -2478,11 +2478,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"switched %s off\n"
 operator|,
 name|acpi_name
@@ -2498,11 +2498,11 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"%s is already off\n"
 operator|,
 name|acpi_name

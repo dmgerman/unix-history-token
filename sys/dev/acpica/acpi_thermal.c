@@ -1612,11 +1612,11 @@ comment|/* XXX disable zone? go to max cooling? */
 name|return_VOID
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_VALUES
-argument_list|,
 operator|(
+name|ACPI_DB_VALUES
+operator|,
 literal|"got %d.%dC\n"
 operator|,
 name|TZ_KELVTOC
@@ -2102,11 +2102,11 @@ block|{
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"called to turn %s off\n"
 operator|,
 name|obj
@@ -2145,11 +2145,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"called to handle unsupported object type %d\n"
 operator|,
 name|obj
@@ -2218,11 +2218,11 @@ block|{
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"called to turn %s on\n"
 operator|,
 name|obj
@@ -2310,11 +2310,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"called to handle unsupported object type %d\n"
 operator|,
 name|obj
@@ -2385,11 +2385,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_VALUES
-argument_list|,
 operator|(
+name|ACPI_DB_VALUES
+operator|,
 literal|"%s.%s = %d\n"
 operator|,
 name|acpi_name

@@ -852,11 +852,11 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/*      * Evaluate resources      */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"parsing EC resources\n"
 operator|)
 argument_list|)
@@ -1027,11 +1027,11 @@ name|ec_csr_res
 argument_list|)
 expr_stmt|;
 comment|/*      * Install GPE handler      *      * Evaluate the _GPE method to find the GPE bit used by the EC to signal      * status (SCI).      */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"attaching GPE\n"
 operator|)
 argument_list|)
@@ -1128,11 +1128,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*       * Install address space handler      */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"attaching address space handler\n"
 operator|)
 argument_list|)
@@ -1191,11 +1191,11 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"attach complete\n"
 operator|)
 argument_list|)

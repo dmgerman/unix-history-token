@@ -176,11 +176,11 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"got %d bytes of resources\n"
 operator|,
 name|buf
@@ -252,11 +252,11 @@ block|{
 case|case
 name|ACPI_RSTYPE_END_TAG
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"EndTag\n"
 operator|)
 argument_list|)
@@ -269,11 +269,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_FIXED_IO
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"FixedIo 0x%x/%d\n"
 operator|,
 name|res
@@ -342,11 +342,11 @@ operator|.
 name|MaxBaseAddress
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Io 0x%x/%d\n"
 operator|,
 name|res
@@ -395,11 +395,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Io 0x%x-0x%x/%d\n"
 operator|,
 name|res
@@ -474,11 +474,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_FIXED_MEM32
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"FixedMemory32 0x%x/%d\n"
 operator|,
 name|res
@@ -547,11 +547,11 @@ operator|.
 name|MaxBaseAddress
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Memory32 0x%x/%d\n"
 operator|,
 name|res
@@ -600,11 +600,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Memory32 0x%x-0x%x/%d\n"
 operator|,
 name|res
@@ -698,11 +698,11 @@ operator|.
 name|MaxBaseAddress
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Memory24 0x%x/%d\n"
 operator|,
 name|res
@@ -751,11 +751,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Memory24 0x%x-0x%x/%d\n"
 operator|,
 name|res
@@ -850,11 +850,11 @@ name|i
 operator|++
 control|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Irq %d\n"
 operator|,
 name|res
@@ -915,11 +915,11 @@ name|i
 operator|++
 control|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"Drq %d\n"
 operator|,
 name|res
@@ -960,11 +960,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_START_DPF
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"start dependant functions"
 operator|)
 argument_list|)
@@ -990,11 +990,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_END_DPF
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"end dependant functions"
 operator|)
 argument_list|)
@@ -1012,11 +1012,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_ADDRESS32
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"unimplemented Address32 resource\n"
 operator|)
 argument_list|)
@@ -1025,11 +1025,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_ADDRESS16
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"unimplemented Address16 resource\n"
 operator|)
 argument_list|)
@@ -1038,11 +1038,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_EXT_IRQ
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"unimplemented ExtendedIrq resource\n"
 operator|)
 argument_list|)
@@ -1051,11 +1051,11 @@ break|break;
 case|case
 name|ACPI_RSTYPE_VENDOR
 case|:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"unimplemented VendorSpecific resource\n"
 operator|)
 argument_list|)

@@ -1088,6 +1088,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
 name|crsbuf
 operator|.
 name|Pointer
@@ -1576,11 +1581,11 @@ argument_list|)
 expr_stmt|;
 comment|/* this is not fatal, since it may be hardwired */
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"got %d bytes for %s._CRS\n"
 operator|,
 name|crsbuf
@@ -1594,11 +1599,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_RESOURCES
-argument_list|,
 operator|(
+name|ACPI_DB_RESOURCES
+operator|,
 literal|"got %d bytes for %s._PRS\n"
 operator|,
 name|prsbuf
@@ -2205,11 +2210,11 @@ name|Pointer
 argument_list|)
 expr_stmt|;
 comment|/* XXX APIC_IO interrupt mapping? */
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|interrupt
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -938,11 +938,11 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"acpi_cpu%d: throttling with P_BLK at 0x%x/%d%s\n"
 operator|,
 name|device_get_unit

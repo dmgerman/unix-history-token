@@ -115,14 +115,14 @@ directive|include
 file|<dev/acpica/acpiio.h>
 end_include
 
-begin_comment
-comment|/* XXX should use our own malloc class */
-end_comment
-
 begin_expr_stmt
-name|MALLOC_DECLARE
+name|MALLOC_DEFINE
 argument_list|(
-name|M_ACPIDEV
+name|M_ACPIBATT
+argument_list|,
+literal|"acpibatt"
+argument_list|,
+literal|"ACPI generic battery data"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -947,7 +947,7 @@ operator|*
 name|bp
 argument_list|)
 argument_list|,
-name|M_ACPIDEV
+name|M_ACPIBATT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1001,7 +1001,7 @@ name|free
 argument_list|(
 name|bp
 argument_list|,
-name|M_ACPIDEV
+name|M_ACPIBATT
 argument_list|)
 expr_stmt|;
 return|return

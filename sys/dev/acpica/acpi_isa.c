@@ -855,11 +855,11 @@ operator|.
 name|HardwareId
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OBJECTS
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"added ISA PnP info for %s\n"
 operator|,
 name|acpi_name
