@@ -246,21 +246,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|module
+argument|module
 argument_list|,
-name|SI_SUB_KLD
+argument|SI_SUB_KLD
 argument_list|,
-name|SI_ORDER_FIRST
+argument|SI_ORDER_FIRST
 argument_list|,
-name|module_init
+argument|module_init
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 specifier|static
@@ -464,9 +463,6 @@ literal|1
 expr_stmt|;
 name|newmod
 operator|=
-operator|(
-name|module_t
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -486,7 +482,7 @@ if|if
 condition|(
 name|newmod
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOMEM
@@ -697,7 +693,6 @@ name|mod
 operator|->
 name|file
 condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -712,7 +707,6 @@ argument_list|,
 name|flink
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|mod
@@ -737,6 +731,9 @@ block|{
 name|module_t
 name|mod
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|mod
@@ -746,9 +743,8 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
+name|err
+operator|=
 name|strcmp
 argument_list|(
 name|mod
@@ -757,6 +753,12 @@ name|name
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
 condition|)
 return|return
 name|mod
@@ -1276,7 +1278,7 @@ argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
-comment|/*      * Check the version of the user's structure.      */
+comment|/* 	 * Check the version of the user's structure. 	 */
 if|if
 condition|(
 operator|(
@@ -1438,7 +1440,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/*      *>v1 stat includes module data.      */
+comment|/* 	 *>v1 stat includes module data. 	 */
 if|if
 condition|(
 name|version
