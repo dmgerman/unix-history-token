@@ -794,6 +794,7 @@ expr_stmt|;
 name|msgbuftrigger
 operator|=
 literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1024,6 +1025,7 @@ expr_stmt|;
 name|msgbuftrigger
 operator|=
 literal|1
+expr_stmt|;
 name|FREE
 argument_list|(
 name|miov
@@ -1133,6 +1135,7 @@ condition|)
 name|msgbuftrigger
 operator|=
 literal|1
+expr_stmt|;
 name|consintr
 operator|=
 name|savintr
@@ -1221,6 +1224,7 @@ condition|)
 name|msgbuftrigger
 operator|=
 literal|1
+expr_stmt|;
 name|consintr
 operator|=
 name|savintr
