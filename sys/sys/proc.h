@@ -899,7 +899,7 @@ begin_define
 define|#
 directive|define
 name|TDI_SUSPENDED
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -910,7 +910,7 @@ begin_define
 define|#
 directive|define
 name|TDI_SLEEPING
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -921,7 +921,7 @@ begin_define
 define|#
 directive|define
 name|TDI_SWAPPED
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -932,7 +932,7 @@ begin_define
 define|#
 directive|define
 name|TDI_LOCK
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -943,7 +943,7 @@ begin_define
 define|#
 directive|define
 name|TDI_IWAIT
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -954,7 +954,7 @@ begin_define
 define|#
 directive|define
 name|TDI_LOAN
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -965,7 +965,7 @@ begin_define
 define|#
 directive|define
 name|TDI_IDLE
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -976,7 +976,7 @@ begin_define
 define|#
 directive|define
 name|TDI_EXITING
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
@@ -1635,6 +1635,17 @@ end_define
 
 begin_comment
 comment|/* KSE is being killed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_DOUPCALL
+value|0x08000
+end_define
+
+begin_comment
+comment|/* KSE should do upcall now. */
 end_comment
 
 begin_comment
