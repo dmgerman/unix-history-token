@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	6.2	83/09/24	*/
+comment|/*	if_il.c	6.3	84/01/02	*/
 end_comment
 
 begin_include
@@ -2006,6 +2006,8 @@ decl_stmt|,
 name|off
 decl_stmt|,
 name|resid
+decl_stmt|,
+name|s
 decl_stmt|;
 specifier|register
 name|struct
@@ -2374,6 +2376,11 @@ goto|goto
 name|setup
 goto|;
 block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IF_QFULL
@@ -2392,15 +2399,18 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-goto|goto
-name|setup
-goto|;
 block|}
+else|else
 name|IF_ENQUEUE
 argument_list|(
 name|inq
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|setup
