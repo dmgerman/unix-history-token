@@ -735,8 +735,6 @@ name|vpgqueues
 modifier|*
 name|pq
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|pq
 operator|=
 operator|&
@@ -849,8 +847,6 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|#
 directive|if
 name|PQ_L2_SIZE
