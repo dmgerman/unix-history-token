@@ -1491,8 +1491,6 @@ index|[]
 init|=
 block|{
 literal|"UTF-8"
-block|,
-literal|"la_LN."
 block|}
 decl_stmt|;
 end_decl_stmt
