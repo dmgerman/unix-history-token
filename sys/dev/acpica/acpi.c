@@ -1075,6 +1075,52 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Allow override of whether methods execute in parallel or not.  * Default to serial behavior as this fixes some AE_ALREADY_EXISTS errors  * and matches the MS interpreter.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_serialize_methods
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.acpi.serialize_methods"
+argument_list|,
+operator|&
+name|acpi_serialize_methods
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Allow override of whether to support the _OSI method. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_osi_method
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.acpi.osi_method"
+argument_list|,
+operator|&
+name|acpi_osi_method
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * ACPI can only be loaded as a module by the loader; activating it after  * system bootstrap time is not useful, and can be fatal to the system.  * It also cannot be unloaded, since the entire system bus heirarchy hangs  * off it.  */
 end_comment
 
@@ -1225,6 +1271,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*      * Set the globals from our tunables.  This is needed because ACPI-CA      * uses UINT8 for some values and we have no tunable_uint8.      */
+name|AcpiGbl_AllMethodsSerialized
+operator|=
+name|acpi_serialize_methods
+expr_stmt|;
+name|AcpiGbl_CreateOsiMethod
+operator|=
+name|acpi_osi_method
+expr_stmt|;
 comment|/* Start up the ACPI CA subsystem. */
 ifdef|#
 directive|ifdef
