@@ -144,8 +144,11 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|u_int64_t
+name|u_int32_t
 name|pm_rid
+index|[
+literal|5
+index|]
 decl_stmt|;
 comment|/* base RID for pmap */
 name|int
