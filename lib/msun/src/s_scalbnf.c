@@ -31,6 +31,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -289,6 +295,16 @@ name|twom25
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|scalbnf
+argument_list|,
+name|ldexpf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
