@@ -7293,6 +7293,30 @@ operator|)
 return|;
 comment|/* ESS Technology Inc -- vendor 0x125d */
 case|case
+literal|0x0100125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Maestro 1 Audio controller"
+operator|)
+return|;
+case|case
+literal|0x1818125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Solo-1 Audio controller"
+operator|)
+return|;
+case|case
+literal|0x1968125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Maestro 2 Audio controller"
+operator|)
+return|;
+case|case
 literal|0x1969125d
 case|:
 return|return
@@ -7306,6 +7330,38 @@ case|:
 return|return
 operator|(
 literal|"ESS Technology Maestro 2E Audio controller"
+operator|)
+return|;
+case|case
+literal|0x1998125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Maestro 3 Audio controller"
+operator|)
+return|;
+case|case
+literal|0x1999125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Maestro 3 Modem"
+operator|)
+return|;
+case|case
+literal|0x2898125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology ES2898 Modem"
+operator|)
+return|;
+case|case
+literal|0x8888125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Solo-1E Audio controller"
 operator|)
 return|;
 comment|/* Aureal Inc.-- vendor 0x12eb */
