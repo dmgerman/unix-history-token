@@ -57,12 +57,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extern.h"
 end_include
 
@@ -944,11 +938,6 @@ name|userinfo
 modifier|*
 name|ui
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pwd
-decl_stmt|;
 name|double
 name|t
 decl_stmt|;
@@ -999,29 +988,24 @@ name|data
 operator|.
 name|data
 expr_stmt|;
-name|pwd
-operator|=
-name|getpwuid
-argument_list|(
-name|ui
-operator|->
-name|ui_uid
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%-8s %9qu "
 argument_list|,
-name|pwd
+name|user_from_uid
+argument_list|(
+name|ui
 operator|->
-name|pw_name
+name|ui_uid
+argument_list|,
+literal|0
+argument_list|)
 argument_list|,
 name|ui
 operator|->
 name|ui_calls
 argument_list|)
 expr_stmt|;
-comment|/*user_from_uid(ui->ui_uid, 0), ui->ui_calls);*/
 name|t
 operator|=
 call|(
