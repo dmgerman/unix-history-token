@@ -612,11 +612,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|caddr_t
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 goto|goto
 name|slow
