@@ -7384,7 +7384,7 @@ operator|->
 name|ether_type
 argument_list|)
 operator|>
-literal|1518
+name|ETHER_MAX_LEN
 condition|)
 block|{
 name|bcopy
