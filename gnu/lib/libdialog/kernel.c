@@ -51,6 +51,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This "secret" global allows you to change the behavior of an input field */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DialogInputAttrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Do some initialization for dialog  */
 end_comment
 
