@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pat_rep.c	1.1 (Berkeley) %G%"
+literal|"@(#)pat_rep.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2192,6 +2192,7 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* 	 * It is really hard to deal with symlinks here, we cannot be sure 	 * if the name they point was moved (or will be moved). It is best to 	 * leave them alone. 	 */
 if|if
 condition|(
 operator|(
@@ -2208,14 +2209,6 @@ operator|->
 name|type
 operator|!=
 name|PAX_HRG
-operator|)
-operator|&&
-operator|(
-name|arcn
-operator|->
-name|type
-operator|!=
-name|PAX_SLK
 operator|)
 condition|)
 return|return
