@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.13 (Berkeley) 84/12/06"
+literal|"@(#)main.c	4.14 (Berkeley) 85/02/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,13 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|NHOSTS
+value|100
+end_define
 
 begin_comment
 comment|/*  * Remote distribution program.  */
@@ -256,6 +263,19 @@ name|cmdargs
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|dhosts
+index|[
+name|NHOSTS
+index|]
+decl_stmt|,
+modifier|*
+modifier|*
+name|hp
+init|=
+name|dhosts
+decl_stmt|;
 name|pw
 operator|=
 name|getpwuid
@@ -416,6 +436,54 @@ name|stdin
 expr_stmt|;
 break|break;
 case|case
+literal|'m'
+case|:
+if|if
+condition|(
+operator|--
+name|argc
+operator|<=
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|>=
+operator|&
+name|dhosts
+index|[
+name|NHOSTS
+operator|-
+literal|2
+index|]
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rdist: too many destination hosts\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|hp
+operator|++
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+break|break;
+case|case
 literal|'d'
 case|:
 if|if
@@ -556,6 +624,11 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|hp
+operator|=
+name|NULL
+expr_stmt|;
 name|setreuid
 argument_list|(
 literal|0
@@ -639,6 +712,8 @@ literal|0
 condition|)
 name|docmds
 argument_list|(
+name|dhosts
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -664,7 +739,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"Usage: rdist [-nqbhirvwyD] [-f distfile] [-d var=value] [file ...]\n"
+literal|"Usage: rdist [-nqbhirvwyD] [-f distfile] [-d var=value] [-m host] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -865,6 +940,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nerrs
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|dest
 operator|==
 name|NULL
@@ -939,6 +1023,8 @@ argument_list|)
 expr_stmt|;
 name|docmds
 argument_list|(
+name|NULL
+argument_list|,
 literal|0
 argument_list|,
 name|NULL

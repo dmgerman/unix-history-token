@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.22 (Berkeley) 84/12/06"
+literal|"@(#)docmd.c	4.23 (Berkeley) 85/02/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,11 +100,21 @@ end_comment
 begin_macro
 name|docmds
 argument_list|(
+argument|dhosts
+argument_list|,
 argument|argc
 argument_list|,
 argument|argv
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|dhosts
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -191,6 +201,46 @@ operator|->
 name|c_next
 control|)
 block|{
+if|if
+condition|(
+name|dhosts
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|cpp
+operator|=
+name|dhosts
+init|;
+operator|*
+name|cpp
+condition|;
+name|cpp
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|c
+operator|->
+name|c_name
+argument_list|,
+operator|*
+name|cpp
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|fndhost
+goto|;
+continue|continue;
+block|}
+name|fndhost
+label|:
 if|if
 condition|(
 name|argc
