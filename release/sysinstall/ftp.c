@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.7 1995/06/05 02:25:24 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.8 1995/06/05 02:28:58 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -98,6 +98,16 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_comment
+comment|/* Handy global for us to stick the port # */
+end_comment
+
+begin_decl_stmt
+name|int
+name|FtpPort
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -495,9 +505,13 @@ condition|)
 block|{
 name|i
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -521,9 +535,13 @@ condition|)
 continue|continue;
 name|j
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1104,6 +1122,10 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
+name|FtpPort
+condition|?
+name|FtpPort
+else|:
 literal|21
 argument_list|)
 expr_stmt|;
