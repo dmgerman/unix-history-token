@@ -992,6 +992,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|elf_cpu_load_file
+parameter_list|(
+name|linker_file_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|elf_cpu_unload_file
+parameter_list|(
+name|linker_file_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* values for type */
 end_comment

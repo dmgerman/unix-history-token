@@ -966,6 +966,26 @@ name|newfilename
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|error
+decl_stmt|;
+comment|/* Notify MD code that a module is being loaded. */
+name|error
+operator|=
+name|elf_cpu_load_file
+argument_list|(
+name|lf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -4007,6 +4027,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Notify MD code that a module is being unloaded. */
+name|elf_cpu_unload_file
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ef
