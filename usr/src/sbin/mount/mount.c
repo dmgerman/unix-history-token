@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.50 (Berkeley) %G%"
+literal|"@(#)mount.c	5.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,9 @@ end_define
 
 begin_decl_stmt
 name|int
-name|fake
+name|debug
+decl_stmt|,
+name|force
 decl_stmt|,
 name|verbose
 decl_stmt|,
@@ -312,7 +314,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"afrwuvt:o:"
+literal|"adfrwuvt:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -335,9 +337,17 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+name|debug
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
-name|fake
+name|force
 operator|=
 literal|1
 expr_stmt|;
@@ -529,7 +539,7 @@ if|if
 condition|(
 name|verbose
 operator|||
-name|fake
+name|debug
 operator|||
 name|type
 condition|)
@@ -1226,6 +1236,14 @@ operator|&
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|force
+condition|)
+name|flags
+operator||=
+name|MNT_FORCE
+expr_stmt|;
 switch|switch
 condition|(
 name|mnttype
@@ -1473,7 +1491,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|fake
+name|debug
 condition|)
 break|break;
 if|if
@@ -1592,7 +1610,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|fake
+name|debug
 operator|&&
 name|mount
 argument_list|(
