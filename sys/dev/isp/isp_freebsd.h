@@ -535,7 +535,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|ISP_UNLOCK(isp);	\ 	DELAY(x);		\ 	ISP_LOCK(isp)
+value|if (isp->isp_osinfo.intsok)	\ 		ISP_UNLOCK(isp);	\ 	DELAY(x);			\ 	if (isp->isp_osinfo.intsok)	\ 		ISP_LOCK(isp)
 end_define
 
 begin_define
@@ -1522,6 +1522,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|islocked
+condition|)
+block|{
+if|if
+condition|(
 operator|--
 name|isp
 operator|->
@@ -1541,6 +1550,7 @@ operator|.
 name|splsaved
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
