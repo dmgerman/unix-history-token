@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)player.h	2.2 %G%";  */
+comment|/*  * sccsid = "@(#)player.h	2.3 %G%";  */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|TURN_X
-value|7
+value|8
 end_define
 
 begin_define

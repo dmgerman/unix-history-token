@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_7.c	2.1 83/10/31"
+literal|"@(#)pl_7.c	2.2 83/11/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -1312,7 +1312,13 @@ name|wprintw
 argument_list|(
 name|turn_w
 argument_list|,
-literal|"Turn %d"
+literal|"%cTurn %d"
+argument_list|,
+name|dont_adjust
+condition|?
+literal|'*'
+else|:
+literal|'-'
 argument_list|,
 name|turn
 argument_list|)

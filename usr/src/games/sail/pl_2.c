@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	2.1 83/10/31"
+literal|"@(#)pl_2.c	2.2 83/11/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,6 +375,9 @@ name|dont_adjust
 operator|=
 operator|!
 name|dont_adjust
+expr_stmt|;
+name|draw_turn
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
