@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.12 (Berkeley) %G%"
+literal|"@(#)rm.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,9 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'R'
+case|:
+case|case
 literal|'r'
 case|:
 name|rflg
@@ -185,6 +188,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: rm [-rif] file ...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 while|while
 condition|(
@@ -279,7 +302,9 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|BUFSIZ
+name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
