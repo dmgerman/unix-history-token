@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.16 83/06/12"
+literal|"@(#)rlogind.c	4.17 83/06/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,6 +608,11 @@ argument_list|(
 name|SIGCHLD
 argument_list|,
 name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|f
 argument_list|)
 expr_stmt|;
 name|doit
