@@ -51,6 +51,16 @@ directive|include
 file|<svr4/svr4_proto.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|AS
+parameter_list|(
+name|name
+parameter_list|)
+value|(sizeof(struct name) / sizeof(register_t))
+end_define
+
 begin_comment
 comment|/* The casts are bogus but will do for now. */
 end_comment
@@ -74,7 +84,10 @@ block|}
 block|,
 comment|/* 0 = unused */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|exit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -96,7 +109,10 @@ block|}
 block|,
 comment|/* 2 = fork */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|read_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -107,7 +123,10 @@ block|}
 block|,
 comment|/* 3 = read */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|write_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -118,7 +137,10 @@ block|}
 block|,
 comment|/* 4 = write */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_open_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -129,7 +151,10 @@ block|}
 block|,
 comment|/* 5 = svr4_sys_open */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|close_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -140,7 +165,10 @@ block|}
 block|,
 comment|/* 6 = close */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_wait_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -151,7 +179,10 @@ block|}
 block|,
 comment|/* 7 = svr4_sys_wait */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_creat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -162,7 +193,10 @@ block|}
 block|,
 comment|/* 8 = svr4_sys_creat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|link_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -173,7 +207,10 @@ block|}
 block|,
 comment|/* 9 = link */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|unlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -184,7 +221,10 @@ block|}
 block|,
 comment|/* 10 = unlink */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_execv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -195,7 +235,10 @@ block|}
 block|,
 comment|/* 11 = svr4_sys_execv */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|chdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -206,7 +249,10 @@ block|}
 block|,
 comment|/* 12 = chdir */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_time_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -217,7 +263,10 @@ block|}
 block|,
 comment|/* 13 = svr4_sys_time */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_mknod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -228,7 +277,10 @@ block|}
 block|,
 comment|/* 14 = svr4_sys_mknod */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|chmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -239,7 +291,10 @@ block|}
 block|,
 comment|/* 15 = chmod */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|chown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -250,7 +305,10 @@ block|}
 block|,
 comment|/* 16 = chown */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_break_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -261,7 +319,10 @@ block|}
 block|,
 comment|/* 17 = svr4_sys_break */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_stat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -272,7 +333,10 @@ block|}
 block|,
 comment|/* 18 = svr4_sys_stat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|lseek_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -316,7 +380,10 @@ block|}
 block|,
 comment|/* 22 = sysv_umount */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|setuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -360,7 +427,10 @@ block|}
 block|,
 comment|/* 26 = ptrace */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_alarm_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -371,7 +441,10 @@ block|}
 block|,
 comment|/* 27 = svr4_sys_alarm */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_fstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -393,7 +466,10 @@ block|}
 block|,
 comment|/* 29 = svr4_sys_pause */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_utime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -426,7 +502,10 @@ block|}
 block|,
 comment|/* 32 = gtty */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_access_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -437,7 +516,10 @@ block|}
 block|,
 comment|/* 33 = svr4_sys_access */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_nice_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -470,7 +552,10 @@ block|}
 block|,
 comment|/* 36 = sync */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_kill_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -492,7 +577,10 @@ block|}
 block|,
 comment|/* 38 = fstatfs */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_pgrpsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -514,7 +602,10 @@ block|}
 block|,
 comment|/* 40 = xenix */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|dup_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -536,7 +627,10 @@ block|}
 block|,
 comment|/* 42 = pipe */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_times_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -569,7 +663,10 @@ block|}
 block|,
 comment|/* 45 = plock */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|setgid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -591,7 +688,10 @@ block|}
 block|,
 comment|/* 47 = getgid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_signal_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -608,7 +708,10 @@ argument_list|(
 name|NOTYET
 argument_list|)
 block|{
-literal|5
+name|AS
+argument_list|(
+name|svr4_sys_msgsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -634,7 +737,10 @@ comment|/* 49 = msgsys */
 endif|#
 directive|endif
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_sysarch_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -678,7 +784,10 @@ block|}
 block|,
 comment|/* 53 = semsys */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_ioctl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -711,7 +820,10 @@ block|}
 block|,
 comment|/* 56 = exch */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_utssys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -722,7 +834,10 @@ block|}
 block|,
 comment|/* 57 = svr4_sys_utssys */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fsync_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -733,7 +848,10 @@ block|}
 block|,
 comment|/* 58 = fsync */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_execve_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -744,7 +862,10 @@ block|}
 block|,
 comment|/* 59 = svr4_sys_execve */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|umask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -755,7 +876,10 @@ block|}
 block|,
 comment|/* 60 = umask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|chroot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -766,7 +890,10 @@ block|}
 block|,
 comment|/* 61 = chroot */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_fcntl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -777,7 +904,10 @@ block|}
 block|,
 comment|/* 62 = svr4_sys_fcntl */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_ulimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -953,7 +1083,10 @@ block|}
 block|,
 comment|/* 78 = rfsys */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|rmdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -964,7 +1097,10 @@ block|}
 block|,
 comment|/* 79 = rmdir */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|mkdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -975,7 +1111,10 @@ block|}
 block|,
 comment|/* 80 = mkdir */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_getdents_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1019,7 +1158,10 @@ block|}
 block|,
 comment|/* 84 = sysfs */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_getmsg_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1030,7 +1172,10 @@ block|}
 block|,
 comment|/* 85 = svr4_sys_getmsg */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_putmsg_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1041,7 +1186,10 @@ block|}
 block|,
 comment|/* 86 = svr4_sys_putmsg */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_poll_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1052,7 +1200,10 @@ block|}
 block|,
 comment|/* 87 = svr4_sys_poll */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_lstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1063,7 +1214,10 @@ block|}
 block|,
 comment|/* 88 = svr4_sys_lstat */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|symlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1074,7 +1228,10 @@ block|}
 block|,
 comment|/* 89 = symlink */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|readlink_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1085,7 +1242,10 @@ block|}
 block|,
 comment|/* 90 = readlink */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getgroups_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1096,7 +1256,10 @@ block|}
 block|,
 comment|/* 91 = getgroups */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setgroups_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1107,7 +1270,10 @@ block|}
 block|,
 comment|/* 92 = setgroups */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|fchmod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1118,7 +1284,10 @@ block|}
 block|,
 comment|/* 93 = fchmod */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|fchown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1129,7 +1298,10 @@ block|}
 block|,
 comment|/* 94 = fchown */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_sigprocmask_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1140,7 +1312,10 @@ block|}
 block|,
 comment|/* 95 = svr4_sys_sigprocmask */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_sigsuspend_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1151,7 +1326,10 @@ block|}
 block|,
 comment|/* 96 = svr4_sys_sigsuspend */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_sigaltstack_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1162,7 +1340,10 @@ block|}
 block|,
 comment|/* 97 = svr4_sys_sigaltstack */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_sigaction_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1173,7 +1354,10 @@ block|}
 block|,
 comment|/* 98 = svr4_sys_sigaction */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_sigpending_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1184,7 +1368,10 @@ block|}
 block|,
 comment|/* 99 = svr4_sys_sigpending */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_context_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1217,7 +1404,10 @@ block|}
 block|,
 comment|/* 102 = evtrapret */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_statvfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1228,7 +1418,10 @@ block|}
 block|,
 comment|/* 103 = svr4_sys_statvfs */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_fstatvfs_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1261,7 +1454,10 @@ block|}
 block|,
 comment|/* 106 = nfssvc */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_waitsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1283,7 +1479,10 @@ block|}
 block|,
 comment|/* 108 = sigsendsys */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|svr4_sys_hrtsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1327,7 +1526,10 @@ block|}
 block|,
 comment|/* 112 = priocntlsys */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_pathconf_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1349,7 +1551,10 @@ block|}
 block|,
 comment|/* 114 = mincore */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|svr4_sys_mmap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1360,7 +1565,10 @@ block|}
 block|,
 comment|/* 115 = svr4_sys_mmap */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|mprotect_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1371,7 +1579,10 @@ block|}
 block|,
 comment|/* 116 = mprotect */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|munmap_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1382,7 +1593,10 @@ block|}
 block|,
 comment|/* 117 = munmap */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_fpathconf_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1404,7 +1618,10 @@ block|}
 block|,
 comment|/* 119 = vfork */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|fchdir_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1415,7 +1632,10 @@ block|}
 block|,
 comment|/* 120 = fchdir */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|readv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1426,7 +1646,10 @@ block|}
 block|,
 comment|/* 121 = readv */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|writev_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1437,7 +1660,10 @@ block|}
 block|,
 comment|/* 122 = writev */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_xstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1448,7 +1674,10 @@ block|}
 block|,
 comment|/* 123 = svr4_sys_xstat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_lxstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1459,7 +1688,10 @@ block|}
 block|,
 comment|/* 124 = svr4_sys_lxstat */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_fxstat_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1470,7 +1702,10 @@ block|}
 block|,
 comment|/* 125 = svr4_sys_fxstat */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_xmknod_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1492,7 +1727,10 @@ block|}
 block|,
 comment|/* 127 = clocal */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_setrlimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1503,7 +1741,10 @@ block|}
 block|,
 comment|/* 128 = svr4_sys_setrlimit */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_getrlimit_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1514,7 +1755,10 @@ block|}
 block|,
 comment|/* 129 = svr4_sys_getrlimit */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|lchown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1525,7 +1769,10 @@ block|}
 block|,
 comment|/* 130 = lchown */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|svr4_sys_memcntl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1558,7 +1805,10 @@ block|}
 block|,
 comment|/* 133 = putpmsg */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|rename_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1569,7 +1819,10 @@ block|}
 block|,
 comment|/* 134 = rename */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_uname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1580,7 +1833,10 @@ block|}
 block|,
 comment|/* 135 = svr4_sys_uname */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|setegid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1591,7 +1847,10 @@ block|}
 block|,
 comment|/* 136 = setegid */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_sysconfig_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1602,7 +1861,10 @@ block|}
 block|,
 comment|/* 137 = svr4_sys_sysconfig */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|adjtime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1613,7 +1875,10 @@ block|}
 block|,
 comment|/* 138 = adjtime */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_systeminfo_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1635,7 +1900,10 @@ block|}
 block|,
 comment|/* 140 = notused */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|seteuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1767,7 +2035,10 @@ block|}
 block|,
 comment|/* 152 = modctl */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_fchroot_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1778,7 +2049,10 @@ block|}
 block|,
 comment|/* 153 = svr4_sys_fchroot */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_utimes_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1800,7 +2074,10 @@ block|}
 block|,
 comment|/* 155 = svr4_sys_vhangup */
 block|{
-literal|1
+name|AS
+argument_list|(
+name|svr4_sys_gettimeofday_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1811,7 +2088,10 @@ block|}
 block|,
 comment|/* 156 = svr4_sys_gettimeofday */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|getitimer_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -1822,7 +2102,10 @@ block|}
 block|,
 comment|/* 157 = getitimer */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|setitimer_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2009,7 +2292,10 @@ block|}
 block|,
 comment|/* 174 = { */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_llseek_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2119,7 +2405,10 @@ block|}
 block|,
 comment|/* 184 = tsolsys */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_acl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2130,7 +2419,10 @@ block|}
 block|,
 comment|/* 185 = svr4_sys_acl */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|svr4_sys_auditsys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2273,7 +2565,10 @@ block|}
 block|,
 comment|/* 198 = timer_overrun */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|nanosleep_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2284,7 +2579,10 @@ block|}
 block|,
 comment|/* 199 = nanosleep */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_facl_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2306,7 +2604,10 @@ block|}
 block|,
 comment|/* 201 = door */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setreuid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2317,7 +2618,10 @@ block|}
 block|,
 comment|/* 202 = setreuid */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|setregid_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2383,7 +2687,10 @@ block|}
 block|,
 comment|/* 208 = whoknows */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_resolvepath_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2427,7 +2734,10 @@ block|}
 block|,
 comment|/* 212 = lwp_alarm */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_getdents64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2438,7 +2748,10 @@ block|}
 block|,
 comment|/* 213 = svr4_sys_getdents64 */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|svr4_sys_mmap64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2449,7 +2762,10 @@ block|}
 block|,
 comment|/* 214 = svr4_sys_mmap64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_stat64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2460,7 +2776,10 @@ block|}
 block|,
 comment|/* 215 = svr4_sys_stat64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_lstat64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2471,7 +2790,10 @@ block|}
 block|,
 comment|/* 216 = svr4_sys_lstat64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_fstat64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2482,7 +2804,10 @@ block|}
 block|,
 comment|/* 217 = svr4_sys_fstat64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_statvfs64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2493,7 +2818,10 @@ block|}
 block|,
 comment|/* 218 = svr4_sys_statvfs64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_fstatvfs64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2504,7 +2832,10 @@ block|}
 block|,
 comment|/* 219 = svr4_sys_fstatvfs64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_setrlimit64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2515,7 +2846,10 @@ block|}
 block|,
 comment|/* 220 = svr4_sys_setrlimit64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_getrlimit64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2548,7 +2882,10 @@ block|}
 block|,
 comment|/* 223 = pwrite64 */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|svr4_sys_creat64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2559,7 +2896,10 @@ block|}
 block|,
 comment|/* 224 = svr4_sys_creat64 */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_open64_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2614,7 +2954,10 @@ block|}
 block|,
 comment|/* 229 = whoknows */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|svr4_sys_socket_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2625,7 +2968,10 @@ block|}
 block|,
 comment|/* 230 = svr4_sys_socket */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|socketpair_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2636,7 +2982,10 @@ block|}
 block|,
 comment|/* 231 = socketpair */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|bind_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2647,7 +2996,10 @@ block|}
 block|,
 comment|/* 232 = bind */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|listen_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2658,7 +3010,10 @@ block|}
 block|,
 comment|/* 233 = listen */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|accept_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2669,7 +3024,10 @@ block|}
 block|,
 comment|/* 234 = accept */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|connect_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2680,7 +3038,10 @@ block|}
 block|,
 comment|/* 235 = connect */
 block|{
-literal|2
+name|AS
+argument_list|(
+name|shutdown_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2691,7 +3052,10 @@ block|}
 block|,
 comment|/* 236 = shutdown */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_recv_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2702,7 +3066,10 @@ block|}
 block|,
 comment|/* 237 = svr4_sys_recv */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|recvfrom_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2713,7 +3080,10 @@ block|}
 block|,
 comment|/* 238 = recvfrom */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|recvmsg_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2724,7 +3094,10 @@ block|}
 block|,
 comment|/* 239 = recvmsg */
 block|{
-literal|4
+name|AS
+argument_list|(
+name|svr4_sys_send_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2735,7 +3108,10 @@ block|}
 block|,
 comment|/* 240 = svr4_sys_send */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|sendmsg_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2746,7 +3122,10 @@ block|}
 block|,
 comment|/* 241 = sendmsg */
 block|{
-literal|6
+name|AS
+argument_list|(
+name|svr4_sys_sendto_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2757,7 +3136,10 @@ block|}
 block|,
 comment|/* 242 = svr4_sys_sendto */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|getpeername_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2768,7 +3150,10 @@ block|}
 block|,
 comment|/* 243 = getpeername */
 block|{
-literal|3
+name|AS
+argument_list|(
+name|getsockname_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2779,7 +3164,10 @@ block|}
 block|,
 comment|/* 244 = getsockname */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|getsockopt_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2790,7 +3178,10 @@ block|}
 block|,
 comment|/* 245 = getsockopt */
 block|{
-literal|5
+name|AS
+argument_list|(
+name|setsockopt_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
