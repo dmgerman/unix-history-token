@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.3 (Berkeley) %G%"
+literal|"@(#)mount.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2167,6 +2167,16 @@ index|[
 literal|0
 index|]
 operator|==
+literal|'-'
+condition|)
+continue|continue;
+if|if
+condition|(
+name|opt
+index|[
+literal|0
+index|]
+operator|==
 literal|'n'
 operator|&&
 name|opt
@@ -2412,6 +2422,18 @@ name|MNT_UNION
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mount: %s: unknown option\n"
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block
