@@ -1227,9 +1227,13 @@ name|arc4random
 argument_list|()
 operator|/
 operator|(
+operator|(
 name|double
 operator|)
 name|UINT32_MAX
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
