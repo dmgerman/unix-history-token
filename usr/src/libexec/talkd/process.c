@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.3 (Berkeley) %G%"
+literal|"@(#)process.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,7 +888,7 @@ name|statb
 operator|.
 name|st_mode
 operator|&
-literal|02
+literal|020
 operator|)
 condition|)
 continue|continue;

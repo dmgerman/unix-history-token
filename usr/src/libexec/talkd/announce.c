@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	5.2 (Berkeley) %G%"
+literal|"@(#)announce.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,7 +386,7 @@ name|stbuf
 operator|.
 name|st_mode
 operator|&
-literal|02
+literal|020
 operator|)
 operator|==
 literal|0
