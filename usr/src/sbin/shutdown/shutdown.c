@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	8.1 (Berkeley) %G%"
+literal|"@(#)shutdown.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -86,19 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -110,13 +98,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -274,11 +292,6 @@ literal|0
 block|,
 literal|0
 block|, }
-struct|,
-modifier|*
-name|tp
-init|=
-name|tlist
 struct|;
 end_struct
 
@@ -340,7 +353,129 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|badtime
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|die_you_gravy_sucking_pig_dog
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|doitfast
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|finish
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|getoffset
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|loop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nolog
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|timeout
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|timewarn
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -352,8 +487,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -368,6 +503,11 @@ decl_stmt|,
 modifier|*
 name|endp
 decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
 name|int
 name|arglen
 decl_stmt|,
@@ -377,24 +517,6 @@ name|len
 decl_stmt|,
 name|readstdin
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
-name|char
-modifier|*
-name|strcat
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
-decl_stmt|;
-name|uid_t
-name|geteuid
-parameter_list|()
-function_decl|;
 ifndef|#
 directive|ifndef
 name|DEBUG
@@ -890,17 +1012,20 @@ expr_stmt|;
 name|loop
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|loop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
+name|struct
+name|interval
+modifier|*
+name|tp
+decl_stmt|;
 name|u_int
 name|sltime
 decl_stmt|;
@@ -969,7 +1094,7 @@ condition|)
 operator|++
 name|tp
 expr_stmt|;
-comment|/* 		 * warn now, if going to sleep more than a fifth of 		 * the next wait time. 		 */
+comment|/* 		 * Warn now, if going to sleep more than a fifth of 		 * the next wait time. 		 */
 if|if
 condition|(
 name|sltime
@@ -991,8 +1116,10 @@ name|timetowait
 operator|/
 literal|5
 condition|)
-name|warn
-argument_list|()
+name|timewarn
+argument_list|(
+name|offset
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1012,8 +1139,12 @@ operator|++
 name|tp
 control|)
 block|{
-name|warn
-argument_list|()
+name|timewarn
+argument_list|(
+name|tp
+operator|->
+name|timeleft
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1061,7 +1192,7 @@ name|die_you_gravy_sucking_pig_dog
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -1070,12 +1201,15 @@ name|alarmbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|warn
-argument_list|()
-end_macro
-
-begin_block
+begin_function
+name|void
+name|timewarn
+parameter_list|(
+name|timeleft
+parameter_list|)
+name|int
+name|timeleft
+decl_stmt|;
 block|{
 specifier|static
 name|int
@@ -1090,6 +1224,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|FILE
+modifier|*
+name|pf
+decl_stmt|;
 name|char
 name|wcmd
 index|[
@@ -1098,19 +1236,6 @@ operator|+
 literal|4
 index|]
 decl_stmt|;
-name|FILE
-modifier|*
-name|pf
-decl_stmt|;
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-name|void
-name|timeout
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -1134,9 +1259,14 @@ comment|/* undoc -n option to wall suppresses normal wall banner */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|wcmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|wcmd
+argument_list|)
 argument_list|,
 literal|"%s -n"
 argument_list|,
@@ -1178,8 +1308,6 @@ name|pf
 argument_list|,
 literal|"\007*** %sSystem shutdown message from %s@%s ***\007\n"
 argument_list|,
-name|tp
-operator|->
 name|timeleft
 condition|?
 literal|""
@@ -1193,8 +1321,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tp
-operator|->
 name|timeleft
 operator|>
 literal|10
@@ -1222,8 +1348,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|tp
-operator|->
 name|timeleft
 operator|>
 literal|59
@@ -1237,15 +1361,11 @@ name|pf
 argument_list|,
 literal|"System going down in %d minute%s\n\n"
 argument_list|,
-name|tp
-operator|->
 name|timeleft
 operator|/
 literal|60
 argument_list|,
 operator|(
-name|tp
-operator|->
 name|timeleft
 operator|>
 literal|60
@@ -1259,8 +1379,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|tp
-operator|->
 name|timeleft
 condition|)
 operator|(
@@ -1368,12 +1486,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|timeout
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|longjmp
 argument_list|(
@@ -1385,17 +1508,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|die_you_gravy_sucking_pig_dog
-argument_list|()
-end_macro
-
-begin_block
-block|{
+begin_function
 name|void
-name|finish
+name|die_you_gravy_sucking_pig_dog
 parameter_list|()
-function_decl|;
+block|{
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1447,7 +1564,9 @@ literal|"\rbut you'll have to do it yourself\r\n"
 argument_list|)
 expr_stmt|;
 name|finish
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1600,10 +1719,12 @@ comment|/* to single user */
 endif|#
 directive|endif
 name|finish
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1615,19 +1736,17 @@ parameter_list|)
 value|(p[0] - '0') * 10 + (p[1] - '0'); p += 2;
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|getoffset
-argument_list|(
+parameter_list|(
 name|timearg
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|timearg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1642,9 +1761,6 @@ name|p
 decl_stmt|;
 name|time_t
 name|now
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1999,7 +2115,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2008,12 +2124,10 @@ name|FSMSG
 value|"fastboot file for fsck\n"
 end_define
 
-begin_macro
+begin_function
+name|void
 name|doitfast
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|fastfd
@@ -2067,7 +2181,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2076,12 +2190,10 @@ name|NOMSG
 value|"\n\nNO LOGINS: System going down at "
 end_define
 
-begin_macro
+begin_function
+name|void
 name|nolog
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|logfd
@@ -2089,15 +2201,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|ct
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
 decl_stmt|;
-name|void
-name|finish
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -2245,12 +2349,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|finish
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 operator|(
 name|void
@@ -2268,12 +2377,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|badtime
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -2291,14 +2398,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -2313,7 +2418,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
