@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.6 1993/12/19 00:50:05 wollman Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.7 1994/01/29 22:07:16 nate Exp $  */
 end_comment
 
 begin_comment
@@ -579,6 +579,7 @@ expr_stmt|;
 case|case
 literal|0x1e0
 case|:
+comment|/* fchs */
 name|ST
 argument_list|(
 literal|0
@@ -596,6 +597,7 @@ return|;
 case|case
 literal|0x1e1
 case|:
+comment|/* fabs */
 name|ST
 argument_list|(
 literal|0
@@ -626,6 +628,7 @@ expr_stmt|;
 case|case
 literal|0x1e4
 case|:
+comment|/* fxtract */
 name|ftst
 argument_list|(
 name|PST
@@ -634,6 +637,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* ?????? */
 return|return
 operator|(
 literal|0
@@ -642,6 +646,7 @@ return|;
 case|case
 literal|0x1e5
 case|:
+comment|/* fxam */
 name|printf
 argument_list|(
 literal|"fxam not implemented\n\r"
@@ -670,6 +675,7 @@ expr_stmt|;
 case|case
 literal|0x1e8
 case|:
+comment|/* fld1 */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -688,6 +694,7 @@ return|;
 case|case
 literal|0x1e9
 case|:
+comment|/* fld2t */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -706,6 +713,7 @@ return|;
 case|case
 literal|0x1ea
 case|:
+comment|/* fld2e */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -724,6 +732,7 @@ return|;
 case|case
 literal|0x1eb
 case|:
+comment|/* fldpi */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -742,6 +751,7 @@ return|;
 case|case
 literal|0x1ec
 case|:
+comment|/* fldlg2 */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -760,6 +770,7 @@ return|;
 case|case
 literal|0x1ed
 case|:
+comment|/* fldln2 */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -778,6 +789,7 @@ return|;
 case|case
 literal|0x1ee
 case|:
+comment|/* fldz */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -862,8 +874,41 @@ name|SIGILL
 argument_list|)
 expr_stmt|;
 case|case
+literal|0x1fc
+case|:
+comment|/* frndint */
+name|frndint
+argument_list|(
+name|PST
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+name|real_to_real
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+operator|&
+name|ST
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 literal|0x1fd
 case|:
+comment|/* fscale */
 comment|/* incomplete and totally inadequate -wfj */
 name|Fscale
 argument_list|(
@@ -900,39 +945,10 @@ operator|)
 return|;
 comment|/* 19 Sep 92*/
 case|case
-literal|0x1fc
-case|:
-name|frndint
-argument_list|(
-name|PST
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-operator|&
-name|tmp
-argument_list|)
-expr_stmt|;
-name|real_to_real
-argument_list|(
-operator|&
-name|tmp
-argument_list|,
-operator|&
-name|ST
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
 literal|0x2e9
 case|:
+comment|/* ????? */
+comment|/* if this should be a fucomp ST(0),ST(1) , it must be a 0x3e9  ATS */
 name|fucom
 argument_list|(
 name|PST
@@ -963,6 +979,7 @@ case|:
 case|case
 literal|0x3d1
 case|:
+comment|/* fist ?? */
 return|return
 operator|(
 literal|0
@@ -971,6 +988,7 @@ return|;
 case|case
 literal|0x3e2
 case|:
+comment|/* fclex */
 name|I387
 operator|.
 name|swd
@@ -985,6 +1003,7 @@ return|;
 case|case
 literal|0x3e3
 case|:
+comment|/* fninit */
 name|I387
 operator|.
 name|cwd
@@ -1019,6 +1038,7 @@ return|;
 case|case
 literal|0x6d9
 case|:
+comment|/* fcompp */
 name|fcom
 argument_list|(
 name|PST
@@ -1046,6 +1066,7 @@ return|;
 case|case
 literal|0x7e0
 case|:
+comment|/* fstsw ax */
 operator|*
 operator|(
 name|short
@@ -1076,6 +1097,7 @@ block|{
 case|case
 literal|0x18
 case|:
+comment|/* fadd */
 name|fadd
 argument_list|(
 name|PST
@@ -1114,6 +1136,7 @@ return|;
 case|case
 literal|0x19
 case|:
+comment|/* fmul */
 name|fmul
 argument_list|(
 name|PST
@@ -1152,6 +1175,7 @@ return|;
 case|case
 literal|0x1a
 case|:
+comment|/* fcom */
 name|fcom
 argument_list|(
 name|PST
@@ -1175,6 +1199,7 @@ return|;
 case|case
 literal|0x1b
 case|:
+comment|/* fcomp */
 name|fcom
 argument_list|(
 name|PST
@@ -1201,6 +1226,7 @@ return|;
 case|case
 literal|0x1c
 case|:
+comment|/* fsubr */
 name|real_to_real
 argument_list|(
 operator|&
@@ -1255,6 +1281,7 @@ return|;
 case|case
 literal|0x1d
 case|:
+comment|/* fsub */
 name|ST
 argument_list|(
 literal|0
@@ -1302,6 +1329,7 @@ return|;
 case|case
 literal|0x1e
 case|:
+comment|/* fdivr */
 name|fdiv
 argument_list|(
 name|PST
@@ -1340,6 +1368,7 @@ return|;
 case|case
 literal|0x1f
 case|:
+comment|/* fdiv */
 name|fdiv
 argument_list|(
 name|PST
@@ -1378,6 +1407,7 @@ return|;
 case|case
 literal|0x38
 case|:
+comment|/* fld */
 name|fpush
 argument_list|()
 expr_stmt|;
@@ -1397,6 +1427,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* why plus 1 ????? ATS */
 return|return
 operator|(
 literal|0
@@ -1405,6 +1436,7 @@ return|;
 case|case
 literal|0x39
 case|:
+comment|/* fxch */
 name|fxchg
 argument_list|(
 operator|&
@@ -1430,6 +1462,7 @@ return|;
 case|case
 literal|0x3b
 case|:
+comment|/*  ??? ??? wrong ???? ATS */
 name|ST
 argument_list|(
 name|code
@@ -1453,6 +1486,7 @@ return|;
 case|case
 literal|0x98
 case|:
+comment|/* fadd */
 name|fadd
 argument_list|(
 name|PST
@@ -1493,6 +1527,7 @@ return|;
 case|case
 literal|0x99
 case|:
+comment|/* fmul */
 name|fmul
 argument_list|(
 name|PST
@@ -1533,6 +1568,7 @@ return|;
 case|case
 literal|0x9a
 case|:
+comment|/* ???? , my manual don't list a direction bit for fcom , ??? ATS */
 name|fcom
 argument_list|(
 name|PST
@@ -1556,6 +1592,7 @@ return|;
 case|case
 literal|0x9b
 case|:
+comment|/* same as above , ATS */
 name|fcom
 argument_list|(
 name|PST
@@ -1582,6 +1619,7 @@ return|;
 case|case
 literal|0x9c
 case|:
+comment|/* fsubr */
 name|ST
 argument_list|(
 name|code
@@ -1633,6 +1671,7 @@ return|;
 case|case
 literal|0x9d
 case|:
+comment|/* fsub */
 name|real_to_real
 argument_list|(
 operator|&
@@ -1689,6 +1728,7 @@ return|;
 case|case
 literal|0x9e
 case|:
+comment|/* fdivr */
 name|fdiv
 argument_list|(
 name|PST
@@ -1729,6 +1769,7 @@ return|;
 case|case
 literal|0x9f
 case|:
+comment|/* fdiv */
 name|fdiv
 argument_list|(
 name|PST
@@ -1769,6 +1810,7 @@ return|;
 case|case
 literal|0xb8
 case|:
+comment|/* ffree */
 name|printf
 argument_list|(
 literal|"ffree not implemented\n\r"
@@ -1784,6 +1826,7 @@ expr_stmt|;
 case|case
 literal|0xb9
 case|:
+comment|/* fstp ???? where is the pop ? ATS */
 name|fxchg
 argument_list|(
 operator|&
@@ -1809,6 +1852,7 @@ return|;
 case|case
 literal|0xba
 case|:
+comment|/* fst */
 name|ST
 argument_list|(
 name|code
@@ -1829,6 +1873,7 @@ return|;
 case|case
 literal|0xbb
 case|:
+comment|/* ????? encoding of fstp to mem ? ATS */
 name|ST
 argument_list|(
 name|code
@@ -1852,6 +1897,7 @@ return|;
 case|case
 literal|0xbc
 case|:
+comment|/* fucom */
 name|fucom
 argument_list|(
 name|PST
@@ -1875,6 +1921,7 @@ return|;
 case|case
 literal|0xbd
 case|:
+comment|/* fucomp */
 name|fucom
 argument_list|(
 name|PST
@@ -1901,6 +1948,7 @@ return|;
 case|case
 literal|0xd8
 case|:
+comment|/* faddp */
 name|fadd
 argument_list|(
 name|PST
@@ -1944,6 +1992,7 @@ return|;
 case|case
 literal|0xd9
 case|:
+comment|/* fmulp */
 name|fmul
 argument_list|(
 name|PST
@@ -1987,6 +2036,7 @@ return|;
 case|case
 literal|0xda
 case|:
+comment|/* ??? encoding of ficom with 16 bit mem ? ATS */
 name|fcom
 argument_list|(
 name|PST
@@ -2013,6 +2063,7 @@ return|;
 case|case
 literal|0xdc
 case|:
+comment|/* fsubrp */
 name|ST
 argument_list|(
 name|code
@@ -2067,6 +2118,7 @@ return|;
 case|case
 literal|0xdd
 case|:
+comment|/* fsubp */
 name|real_to_real
 argument_list|(
 operator|&
@@ -2126,6 +2178,7 @@ return|;
 case|case
 literal|0xde
 case|:
+comment|/* fdivrp */
 name|fdiv
 argument_list|(
 name|PST
@@ -2169,6 +2222,7 @@ return|;
 case|case
 literal|0xdf
 case|:
+comment|/* fdivp */
 name|fdiv
 argument_list|(
 name|PST
@@ -2212,6 +2266,7 @@ return|;
 case|case
 literal|0xf8
 case|:
+comment|/* fild 16-bit mem ???? ATS */
 name|printf
 argument_list|(
 literal|"ffree not implemented\n\r"
@@ -2235,6 +2290,7 @@ return|;
 case|case
 literal|0xf9
 case|:
+comment|/*  ????? ATS */
 name|fxchg
 argument_list|(
 operator|&
@@ -2260,9 +2316,11 @@ return|;
 case|case
 literal|0xfa
 case|:
+comment|/* fist 16-bit mem ? ATS */
 case|case
 literal|0xfb
 case|:
+comment|/* fistp 16-bit mem ? ATS */
 name|ST
 argument_list|(
 name|code
