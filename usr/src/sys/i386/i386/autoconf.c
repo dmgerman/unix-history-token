@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)autoconf.c	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"dkstat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm.h"
 end_include
 
 begin_include
@@ -174,6 +168,10 @@ specifier|register
 name|int
 name|nblks
 decl_stmt|;
+specifier|extern
+name|int
+name|Maxmem
+decl_stmt|;
 for|for
 control|(
 name|swp
@@ -287,6 +285,7 @@ index|]
 operator|.
 name|d_psize
 condition|)
+comment|/*dumplo = (*bdevsw[major(dumpdev)].d_psize)(dumpdev) - physmem;*/
 name|dumplo
 operator|=
 operator|(
@@ -305,7 +304,11 @@ operator|(
 name|dumpdev
 operator|)
 operator|-
-name|physmem
+name|Maxmem
+operator|*
+name|NBPG
+operator|/
+literal|512
 expr_stmt|;
 if|if
 condition|(
