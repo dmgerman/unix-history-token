@@ -11,6 +11,20 @@ begin_comment
 comment|/*  * Several constants.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPE_EX_10
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPE_EX_10_PLUS
+value|2
+end_define
+
 begin_comment
 comment|/* Length of an ethernet address. */
 end_comment
