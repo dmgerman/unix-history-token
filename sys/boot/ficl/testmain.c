@@ -602,8 +602,6 @@ argument_list|(
 name|pVM
 argument_list|,
 literal|""
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|pVM
@@ -1043,7 +1041,7 @@ block|{
 name|char
 name|in
 index|[
-name|nINBUF
+literal|256
 index|]
 decl_stmt|;
 name|FICL_VM
@@ -1070,9 +1068,6 @@ argument_list|,
 literal|".ver .( "
 name|__DATE__
 literal|" ) cr quit"
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/*     ** load file from cmd line...     */
@@ -1105,9 +1100,6 @@ argument_list|(
 name|pVM
 argument_list|,
 name|in
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1146,9 +1138,6 @@ argument_list|(
 name|pVM
 argument_list|,
 name|in
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
