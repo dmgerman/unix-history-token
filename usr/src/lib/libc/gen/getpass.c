@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpass.c	4.2 (Berkeley) %G% */
+comment|/* @(#)getpass.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -119,12 +119,14 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|gtty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|fi
 argument_list|)
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|ttyb
@@ -143,12 +145,14 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
-name|stty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|fi
 argument_list|)
+argument_list|,
+name|TIOCSETP
 argument_list|,
 operator|&
 name|ttyb
@@ -231,12 +235,14 @@ name|sg_flags
 operator|=
 name|flags
 expr_stmt|;
-name|stty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|fi
 argument_list|)
+argument_list|,
+name|TIOCSETP
 argument_list|,
 operator|&
 name|ttyb
