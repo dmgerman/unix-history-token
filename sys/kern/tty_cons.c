@@ -1625,7 +1625,8 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strncpy
+block|{
+name|strlcpy
 argument_list|(
 name|cnd
 operator|->
@@ -1648,6 +1649,7 @@ name|cnd_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|snprintf
 argument_list|(
 name|path

@@ -4225,7 +4225,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kp
 operator|->
@@ -4241,8 +4241,6 @@ name|kp
 operator|->
 name|ki_wmesg
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4260,7 +4258,7 @@ name|ki_kiflag
 operator||=
 name|KI_LOCKBLOCK
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kp
 operator|->
@@ -4276,8 +4274,6 @@ name|kp
 operator|->
 name|ki_lockname
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4715,7 +4711,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kp
 operator|->
@@ -4731,8 +4727,6 @@ name|kp
 operator|->
 name|ki_login
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4851,7 +4845,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kp
 operator|->
@@ -4867,11 +4861,9 @@ name|kp
 operator|->
 name|ki_comm
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kp
 operator|->
@@ -4887,8 +4879,6 @@ name|kp
 operator|->
 name|ki_ocomm
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

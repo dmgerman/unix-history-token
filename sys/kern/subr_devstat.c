@@ -305,7 +305,7 @@ name|unit_number
 operator|=
 name|unit_number
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|ds
 operator|->
@@ -315,17 +315,6 @@ name|dev_name
 argument_list|,
 name|DEVSTAT_NAME_LEN
 argument_list|)
-expr_stmt|;
-name|ds
-operator|->
-name|device_name
-index|[
-name|DEVSTAT_NAME_LEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|ds
 operator|->

@@ -364,7 +364,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|lp1
 operator|->
@@ -391,7 +391,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|lp1
 operator|->

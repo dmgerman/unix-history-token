@@ -1154,7 +1154,7 @@ operator|->
 name|pr_mtx
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1179,7 +1179,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|strncpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1187,15 +1187,6 @@ name|hostname
 argument_list|,
 name|size
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-name|size
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 block|}
 end_function

@@ -393,7 +393,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|p
 operator|->

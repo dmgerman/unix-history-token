@@ -2011,7 +2011,7 @@ name|tc
 operator|=
 name|timecounter
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|newname
 argument_list|,
@@ -2024,18 +2024,6 @@ argument_list|(
 name|newname
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|newname
-index|[
-sizeof|sizeof
-argument_list|(
-name|newname
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|error
 operator|=

@@ -1728,7 +1728,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|data
 argument_list|,
@@ -1741,15 +1741,6 @@ name|freeenv
 argument_list|(
 name|tmp
 argument_list|)
-expr_stmt|;
-name|data
-index|[
-name|size
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
