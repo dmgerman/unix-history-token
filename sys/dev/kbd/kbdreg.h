@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: kbdreg.h,v 1.1 1999/01/09 02:44:50 yokota Exp $  */
+comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: kbdreg.h,v 1.2 1999/01/19 11:31:14 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -230,6 +230,20 @@ modifier|*
 name|kb_data
 decl_stmt|;
 comment|/* the driver's private data */
+name|int
+name|kb_delay1
+decl_stmt|;
+name|int
+name|kb_delay2
+decl_stmt|;
+define|#
+directive|define
+name|KB_DELAY1
+value|500
+define|#
+directive|define
+name|KB_DELAY2
+value|100
 block|}
 struct|;
 end_struct
@@ -426,11 +440,6 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
-name|keyboard_t
-modifier|*
-modifier|*
-name|kbdp
-parameter_list|,
 name|void
 modifier|*
 name|arg
@@ -446,9 +455,20 @@ typedef|typedef
 name|int
 name|kbd_init_t
 parameter_list|(
+name|int
+name|unit
+parameter_list|,
 name|keyboard_t
 modifier|*
-name|kbd
+modifier|*
+name|kbdp
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_typedef
@@ -473,6 +493,10 @@ parameter_list|(
 name|keyboard_t
 modifier|*
 name|kbd
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_typedef
@@ -672,6 +696,21 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|kbd_poll_mode_t
+parameter_list|(
+name|keyboard_t
+modifier|*
+name|kbd
+parameter_list|,
+name|int
+name|on
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
 name|kbd_diag_t
 parameter_list|(
@@ -758,6 +797,10 @@ name|kbd_get_fkeystr_t
 modifier|*
 name|get_fkeystr
 decl_stmt|;
+name|kbd_poll_mode_t
+modifier|*
+name|poll
+decl_stmt|;
 name|kbd_diag_t
 modifier|*
 name|diag
@@ -817,7 +860,7 @@ parameter_list|,
 name|config
 parameter_list|)
 define|\
-value|static struct keyboard_driver name##_driver = {	\ 		#name,&sw, config			\ 	};						\ 	DATA_SET(kbddriver_set, name##_driver);
+value|static struct keyboard_driver name##_kbd_driver = { \ 		#name,&sw, config			\ 	};						\ 	DATA_SET(kbddriver_set, name##_kbd_driver);
 end_define
 
 begin_comment
