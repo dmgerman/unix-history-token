@@ -4,44 +4,8 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)timed.h	1.1	(Berkeley)	%G%	*/
+comment|/*	@(#)timed.h	1.2	(Berkeley)	%G%	*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NHOSTS
-value|30
-end_define
-
-begin_comment
-comment|/* max number of hosts controlled by timed */
-end_comment
-
-begin_struct
-struct|struct
-name|host
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|char
-modifier|*
-name|addr
-decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-name|long
-name|delta
-decl_stmt|;
-name|u_short
-name|seq
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Time Synchronization Protocol  */
@@ -81,7 +45,7 @@ decl_stmt|;
 name|char
 name|tsp_name
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 block|}
@@ -356,7 +320,7 @@ name|TSPTYPENUMBER
 index|]
 init|=
 block|{
-literal|"#0"
+literal|"ANY"
 block|,
 literal|"ADJTIME"
 block|,
