@@ -29,7 +29,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Terminal driving and line formatting routines.  * Basic motion optimizations are done here as well  * as formatting of lines (printing of control characters,  * line numbering and the like).  *  * %G% (Berkeley) @(#)cr_put.c	1.2  */
+comment|/*  * Terminal driving and line formatting routines.  * Basic motion optimizations are done here as well  * as formatting of lines (printing of control characters,  * line numbering and the like).  *  * %G% (Berkeley) @(#)cr_put.c	1.3  */
 end_comment
 
 begin_comment
