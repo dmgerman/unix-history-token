@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	5.6	82/11/13	*/
+comment|/*	uipc_domain.c	5.7	82/12/30	*/
 end_comment
 
 begin_include
@@ -102,9 +102,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IMP
+include|#
+directive|include
+file|"imp.h"
+if|#
+directive|if
+name|NIMP
+operator|>
+literal|0
 name|ADDDOMAIN
 argument_list|(
 name|imp
