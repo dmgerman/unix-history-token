@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.46 1997/08/26 18:10:31 peter Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.32 1997/08/30 01:25:13 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -5670,11 +5670,27 @@ name|struct
 name|simplelock
 name|intr_lock
 decl_stmt|;
-comment|/* lock the com (tty) data structures */
+ifdef|#
+directive|ifdef
+name|SIMPLE_MPINTRLOCK
+comment|/* critical region around INTR() routines */
 name|struct
 name|simplelock
-name|com_lock
+name|mpintr_lock
 decl_stmt|;
+name|struct
+name|simplelock
+name|clock_lock
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* lock the com (tty) data structures */
+block|struct simplelock	com_lock;
+endif|#
+directive|endif
 specifier|static
 name|void
 name|init_locks
@@ -5690,8 +5706,36 @@ expr_stmt|;
 comment|/* ISR uses its own "giant lock" */
 name|isr_lock
 operator|=
-literal|0x00000000
+name|FREE_LOCK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIMPLE_MPINTRLOCK
+comment|/* lock regions protected in UP kernel via cli/sti */
+name|s_lock_init
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+operator|&
+name|mpintr_lock
+argument_list|)
+expr_stmt|;
+name|s_lock_init
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+operator|&
+name|clock_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* serializes FAST_INTR() accesses */
 name|s_lock_init
 argument_list|(
@@ -5728,7 +5772,7 @@ operator|&
 name|imen_lock
 argument_list|)
 expr_stmt|;
-comment|/* locks cpl accesses */
+comment|/* locks cpl/cml/cim/ipending accesses */
 name|s_lock_init
 argument_list|(
 operator|(
@@ -5740,18 +5784,13 @@ operator|&
 name|cpl_lock
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* locks com (tty) data/hardware accesses: a FASTINTR() */
-name|s_lock_init
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-operator|&
-name|com_lock
-argument_list|)
-expr_stmt|;
+block|s_lock_init((struct simplelock*)&com_lock);
+endif|#
+directive|endif
 block|}
 comment|/*  * start each AP in our list  */
 specifier|static

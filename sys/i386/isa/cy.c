@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.49 1997/08/20 06:16:44 fsmp Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.4 1997/08/30 01:23:40 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -3159,7 +3159,7 @@ directive|if
 literal|0
 block|if (com->hasfifo) {
 comment|/* 			 * (Re)enable and drain fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
-block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		disable_intr(); 		COM_LOCK(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		COM_UNLOCK(); 		enable_intr();
+block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		disable_intr(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		enable_intr();
 else|#
 directive|else
 comment|/* !0 */
@@ -3179,9 +3179,6 @@ name|DMSET
 argument_list|)
 expr_stmt|;
 name|disable_intr
-argument_list|()
-expr_stmt|;
-name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com
@@ -3221,9 +3218,6 @@ name|CD1400_SRER_MDMCH
 operator||
 name|CD1400_SRER_RXDATA
 argument_list|)
-expr_stmt|;
-name|COM_UNLOCK
-argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -3685,9 +3679,6 @@ directive|else
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 name|cd_outb
 argument_list|(
 name|iobase
@@ -3704,9 +3695,6 @@ name|intr_enable
 operator|=
 literal|0
 argument_list|)
-expr_stmt|;
-name|COM_UNLOCK
-argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -4140,6 +4128,10 @@ decl_stmt|;
 name|u_char
 name|status
 decl_stmt|;
+name|MPINTR_LOCK
+argument_list|()
+expr_stmt|;
+comment|/* XXX could this be placed down lower in the loop? */
 name|baseu
 operator|=
 name|unit
@@ -5812,6 +5804,9 @@ expr_stmt|;
 name|schedsofttty
 argument_list|()
 expr_stmt|;
+name|MPINTR_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -6857,9 +6852,6 @@ comment|/* 			 * XXX forget any events related to closed devices 			 * (actually
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 name|incc
 operator|=
 name|com
@@ -6902,9 +6894,6 @@ block|}
 name|com_events
 operator|-=
 name|incc
-expr_stmt|;
-name|COM_UNLOCK
-argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -6961,9 +6950,6 @@ operator|=
 name|ibuf
 expr_stmt|;
 name|disable_intr
-argument_list|()
-expr_stmt|;
-name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|incc
@@ -7096,9 +7082,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -7122,9 +7105,6 @@ name|u_char
 name|delta_modem_status
 decl_stmt|;
 name|disable_intr
-argument_list|()
-expr_stmt|;
-name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|delta_modem_status
@@ -7155,9 +7135,6 @@ name|state
 operator|&=
 operator|~
 name|CS_CHECKMSR
-expr_stmt|;
-name|COM_UNLOCK
-argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -7202,9 +7179,6 @@ block|{
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 name|com_events
 operator|-=
 name|LOTS_OF_EVENTS
@@ -7235,9 +7209,6 @@ name|t_state
 operator|&=
 operator|~
 name|TS_BUSY
-expr_stmt|;
-name|COM_UNLOCK
-argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
@@ -8705,9 +8676,6 @@ comment|/* 	 * XXX should have done this long ago, but there is too much state 	
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 name|com
 operator|->
 name|state
@@ -8932,9 +8900,6 @@ name|CD1400_SRER_TXRDY
 argument_list|)
 expr_stmt|;
 block|}
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -9033,9 +8998,6 @@ expr_stmt|;
 endif|#
 directive|endif
 name|disable_intr
-argument_list|()
-expr_stmt|;
-name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|cd_outb
@@ -9248,9 +9210,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -9372,9 +9331,6 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|com
@@ -9505,9 +9461,6 @@ name|CD1400_SRER_TXRDY
 argument_list|)
 expr_stmt|;
 block|}
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -9597,9 +9550,6 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|com
@@ -9730,9 +9680,6 @@ name|CD1400_SRER_TXRDY
 argument_list|)
 expr_stmt|;
 block|}
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -9761,9 +9708,9 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|disable_intr(); 	COM_LOCK(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
+block|disable_intr(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
 comment|/* fake interrupt to start output */
-block|COM_UNLOCK(); 	enable_intr();
+block|enable_intr();
 endif|#
 directive|endif
 name|ttwwakeup
@@ -9815,9 +9762,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|disable_intr
-argument_list|()
-expr_stmt|;
-name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -9910,9 +9854,6 @@ operator|->
 name|ibuf
 expr_stmt|;
 block|}
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10167,9 +10108,6 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|how
@@ -10297,9 +10235,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|COM_UNLOCK
-argument_list|()
-expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -10495,7 +10430,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Recover from lost output interrupts. 	 * Poll any lines that don't use interrupts. 	 */
-block|for (unit = 0; unit< NSIO; ++unit) { 		com = com_addr(unit); 		if (com != NULL&& (com->state>= (CS_BUSY | CS_TTGO) || com->poll)) { 			disable_intr(); 			COM_LOCK(); 			siointr1(com); 			COM_UNLOCK(); 			enable_intr(); 		} 	}
+block|for (unit = 0; unit< NSIO; ++unit) { 		com = com_addr(unit); 		if (com != NULL&& (com->state>= (CS_BUSY | CS_TTGO) || com->poll)) { 			disable_intr(); 			siointr1(com); 			enable_intr(); 		} 	}
 endif|#
 directive|endif
 comment|/* 	 * Check for and log errors, but not too often. 	 */
@@ -10567,9 +10502,6 @@ decl_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|COM_LOCK
-argument_list|()
-expr_stmt|;
 name|delta
 operator|=
 name|com
@@ -10587,9 +10519,6 @@ name|errnum
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|COM_UNLOCK
-argument_list|()
 expr_stmt|;
 name|enable_intr
 argument_list|()
