@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pl.c,v 1.3 1994/08/28 14:15:23 jkh Exp $"
+literal|"$Id: pl.c,v 1.4 1994/08/29 16:31:38 adam Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,36 +36,6 @@ include|#
 directive|include
 file|"create.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|QUERY_GZIP
-define|\
-value|"File '%s' appears to be gzip'd.\nWould you like to unpack it first"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNZIP
-value|"gzip -d %s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|QUERY_COMPRESS
-define|\
-value|"File '%s' appears to be compressed.\nWould you like to unpack it first"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNCOMPRESS
-value|"compress -d %s"
-end_define
 
 begin_comment
 comment|/* Check a list for files that require preconversion */
@@ -197,72 +167,6 @@ name|where
 argument_list|,
 name|p
 operator|->
-name|name
-argument_list|)
-expr_stmt|;
-comment|/* gzip? */
-if|if
-condition|(
-operator|(
-name|suffix
-argument_list|(
-name|name
-argument_list|,
-literal|"gz"
-argument_list|)
-operator|||
-name|suffix
-argument_list|(
-name|name
-argument_list|,
-literal|"z"
-argument_list|)
-operator|)
-operator|&&
-name|y_or_n
-argument_list|(
-name|TRUE
-argument_list|,
-name|QUERY_GZIP
-argument_list|,
-name|name
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|cmd
-argument_list|,
-name|UNZIP
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-comment|/* Compress? */
-elseif|else
-if|if
-condition|(
-name|suffix
-argument_list|(
-name|name
-argument_list|,
-literal|"Z"
-argument_list|)
-operator|&&
-name|y_or_n
-argument_list|(
-name|TRUE
-argument_list|,
-name|QUERY_COMPRESS
-argument_list|,
-name|name
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|cmd
-argument_list|,
-name|UNCOMPRESS
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
