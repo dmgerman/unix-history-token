@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.31 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -753,7 +753,7 @@ name|ofp
 argument_list|,
 literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d\n"
 argument_list|,
-name|timezone
+name|zone
 argument_list|,
 name|dst
 argument_list|,
