@@ -18281,27 +18281,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* set prefetch, postwrite */
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x41
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x41
-argument_list|,
-literal|1
-argument_list|)
-operator||
-literal|0xf0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* set fifo configuration half'n'half */
 name|pci_write_config
 argument_list|(
