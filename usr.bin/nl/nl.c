@@ -45,6 +45,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -1093,21 +1099,18 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 default|default:
 name|usage
@@ -1158,18 +1161,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"cannot allocate input line buffer"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Allocate a buffer suitable for preformatting line number. */
 name|intbuffersize
 operator|=
@@ -1196,18 +1194,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"cannot allocate preformatting buffer"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Do the work. */
 name|filter
 argument_list|()
@@ -1549,18 +1542,13 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"output error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|nextline
 label|:
 empty_stmt|;
@@ -1572,18 +1560,13 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"input error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
