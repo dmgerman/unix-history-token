@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.32 (Berkeley) %G%"
+literal|"@(#)hash.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,8 +384,6 @@ argument_list|(
 operator|(
 name|HTAB
 operator|*
-operator|,
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
