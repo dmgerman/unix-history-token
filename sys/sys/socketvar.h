@@ -919,13 +919,6 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|int
-name|showallsockets
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|maxsockets
 decl_stmt|;
 end_decl_stmt
