@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.103 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.104 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.103 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.104 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1337,7 +1337,7 @@ name|errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"makeconnection: no socket"
+literal|"makeconnection: cannot create socket"
 argument_list|)
 expr_stmt|;
 goto|goto
