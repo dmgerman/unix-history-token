@@ -2829,9 +2829,6 @@ modifier|*
 name|vp
 decl_stmt|;
 name|int
-name|lockparent
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|struct
@@ -2892,12 +2889,6 @@ operator|=
 name|ap
 operator|->
 name|a_dvp
-expr_stmt|;
-name|lockparent
-operator|=
-name|flags
-operator|&
-name|LOCKPARENT
 expr_stmt|;
 if|if
 condition|(
