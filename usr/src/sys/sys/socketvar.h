@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socketvar.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socketvar.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -392,6 +392,23 @@ parameter_list|)
 value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= MCLBYTES; \ }
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TSLEEP_
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* set lock on sockbuf sb */
 end_comment
@@ -403,7 +420,7 @@ name|sblock
 parameter_list|(
 name|sb
 parameter_list|)
-value|{ \ 	while ((sb)->sb_flags& SB_LOCK) { \ 		(sb)->sb_flags |= SB_WANT; \ 		sleep((caddr_t)&(sb)->sb_flags, PZERO+1); \ 	} \ 	(sb)->sb_flags |= SB_LOCK; \ }
+value|{ \ 	while ((sb)->sb_flags& SB_LOCK) { \ 		(sb)->sb_flags |= SB_WANT; \ 		tsleep((caddr_t)&(sb)->sb_flags, PZERO+1, SLP_SO_SBLOCK, 0); \ 	} \ 	(sb)->sb_flags |= SB_LOCK; \ }
 end_define
 
 begin_comment
