@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.51 82/02/25 */
+comment|/* tcp_usrreq.c 1.52 82/02/27 */
 end_comment
 
 begin_include
@@ -494,18 +494,6 @@ comment|/* 	 * Accept a connection.  Essentially all the work is 	 * done at hig
 case|case
 name|PRU_ACCEPT
 case|:
-name|in_pcbconnaddr
-argument_list|(
-name|inp
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
 break|break;
 comment|/* 	 * Mark the connection as being incapable of further output. 	 */
 case|case

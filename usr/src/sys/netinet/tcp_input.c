@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.54	82/02/25	*/
+comment|/*	tcp_input.c	1.55	82/02/27	*/
 end_comment
 
 begin_include
@@ -717,7 +717,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Locate pcb for segment. 	 */
+comment|/* 	 * Locate pcb for segment.  On match, update the local 	 * address stored in the block to reflect anchoring. 	 */
 name|inp
 operator|=
 name|in_pcblookup
@@ -740,6 +740,8 @@ argument_list|,
 name|ti
 operator|->
 name|ti_dport
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the state is CLOSED (i.e., TCB does not exist) then 	 * all data in the incoming segment is discarded. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.8 82/02/03 */
+comment|/* in.h 4.9 82/02/27 */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPPROTO_GG
+name|IPPROTO_GGP
 value|2
 end_define
 
@@ -211,6 +211,13 @@ name|IPPORT_SUPDUP
 value|95
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPPORT_RESERVED
+value|1024
+end_define
+
 begin_comment
 comment|/*  * Link numbers  */
 end_comment
@@ -304,6 +311,13 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|INADDR_ANY
+value|0x00000000
+end_define
 
 begin_comment
 comment|/*  * Socket address, internet style.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.19	82/01/19	*/
+comment|/*	udp_usrreq.c	4.20	82/02/27	*/
 end_comment
 
 begin_include
@@ -442,7 +442,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * Locate pcb for datagram. 	 */
+comment|/* 	 * Locate pcb for datagram.  On wildcard match, update 	 * control block to anchor network and host address. 	 */
 name|inp
 operator|=
 name|in_pcblookup
@@ -465,6 +465,8 @@ argument_list|,
 name|ui
 operator|->
 name|ui_dport
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1115,11 +1117,22 @@ break|break;
 case|case
 name|PRU_SEND
 case|:
+block|{
+name|struct
+name|in_addr
+name|laddr
+decl_stmt|;
 if|if
 condition|(
 name|addr
 condition|)
 block|{
+name|laddr
+operator|=
+name|inp
+operator|->
+name|inp_laddr
+expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -1186,11 +1199,20 @@ if|if
 condition|(
 name|addr
 condition|)
+block|{
 name|in_pcbdisconnect
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|inp
+operator|->
+name|inp_laddr
+operator|=
+name|laddr
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|PRU_ABORT
