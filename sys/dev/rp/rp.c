@@ -3749,7 +3749,7 @@ begin_define
 define|#
 directive|define
 name|CDEV_MAJOR
-value|20
+value|81
 end_define
 
 begin_decl_stmt
