@@ -674,6 +674,12 @@ name|i
 decl_stmt|,
 name|reg
 decl_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 comment|/* now check for each controller/socket */
 comment|/* 	 * this could be done with a loop, but it would violate the 	 * abstraction 	 */
 name|count
@@ -1805,6 +1811,12 @@ literal|0
 expr_stmt|;
 name|h
 operator|->
+name|sc
+operator|=
+name|sc
+expr_stmt|;
+name|h
+operator|->
 name|dev
 operator|=
 name|device_add_child
@@ -1951,6 +1963,28 @@ literal|"pcic_create_event_thread"
 argument_list|)
 expr_stmt|;
 block|}
+name|config_intrhook_disestablish
+argument_list|(
+name|h
+operator|->
+name|hook
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|h
+operator|->
+name|hook
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|h
+operator|->
+name|hook
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -2448,6 +2482,11 @@ operator|->
 name|ph_parent
 operator|)
 decl_stmt|;
+name|struct
+name|intr_config_hook
+modifier|*
+name|hook
+decl_stmt|;
 comment|/* 	 * queue creation of a kernel thread to handle insert/removal events. 	 */
 ifdef|#
 directive|ifdef
@@ -2467,9 +2506,60 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|pcic_create_event_thread
+name|hook
+operator|=
+operator|(
+expr|struct
+name|intr_config_hook
+operator|*
+operator|)
+name|malloc
 argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|intr_config_hook
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hook
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ini socket failed\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|hook
+operator|->
+name|ich_func
+operator|=
+name|pcic_create_event_thread
+expr_stmt|;
+name|hook
+operator|->
+name|ich_arg
+operator|=
 name|h
+expr_stmt|;
+name|h
+operator|->
+name|hook
+operator|=
+name|hook
+expr_stmt|;
+name|config_intrhook_establish
+argument_list|(
+name|hook
 argument_list|)
 expr_stmt|;
 comment|/* set up the card to interrupt on card detect */
@@ -3122,13 +3212,7 @@ operator|)
 condition|)
 block|{
 comment|/* call the MI attach function */
-name|pccard_card_attach
-argument_list|(
-name|h
-operator|->
-name|pccard
-argument_list|)
-expr_stmt|;
+comment|/* XXX pccard_card_attach(h->pccard); */
 name|h
 operator|->
 name|flags
@@ -3179,15 +3263,7 @@ operator|~
 name|PCIC_FLAG_CARDP
 expr_stmt|;
 comment|/* call the MI detach function */
-name|pccard_card_detach
-argument_list|(
-name|h
-operator|->
-name|pccard
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
+comment|/* XXX pccard_card_detach(h->pccard, flags); */
 block|}
 else|else
 block|{

@@ -88,6 +88,11 @@ name|device_t
 modifier|*
 name|dev
 decl_stmt|;
+name|struct
+name|intr_config_hook
+modifier|*
+name|hook
+decl_stmt|;
 name|bus_space_tag_t
 name|ph_bus_t
 decl_stmt|;
