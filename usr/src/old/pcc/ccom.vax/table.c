@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.22 (Berkeley) %G%"
+literal|"@(#)table.c	1.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2222,7 +2222,7 @@ name|TULONG
 block|,
 name|SCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 name|NAREG
 operator||
@@ -2253,7 +2253,7 @@ name|TULONG
 block|,
 name|SMCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 literal|0
 block|,
@@ -2282,7 +2282,7 @@ name|TULONG
 block|,
 name|SCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 name|NAREG
 operator||
@@ -2398,7 +2398,7 @@ name|TULONG
 block|,
 name|SMCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 name|NAREG
 operator||
@@ -2426,7 +2426,7 @@ name|TULONG
 block|,
 name|SCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 name|NAREG
 operator||
@@ -2438,22 +2438,27 @@ name|RESCC
 block|,
 literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,U1,A1\n"
 block|,
+comment|/* should only see UNSIGNED lhs here if converted from UCHAR/USHORT lhs */
 name|ASG
 name|MOD
 block|,
 name|INAREG
-operator||
-name|INTAREG
 operator||
 name|FOREFF
 operator||
 name|FORCC
 block|,
 name|SAREG
+operator||
+name|AWD
 block|,
 name|TINT
 operator||
 name|TLONG
+operator||
+name|TUNSIGNED
+operator||
+name|TULONG
 block|,
 name|SAREG
 operator||
@@ -2488,7 +2493,7 @@ name|TULONG
 block|,
 name|SMCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 literal|0
 block|,
@@ -2515,7 +2520,7 @@ name|TULONG
 block|,
 name|SCON
 block|,
-name|TANY
+name|ANYUSIGNED
 block|,
 name|NAREG
 operator||
