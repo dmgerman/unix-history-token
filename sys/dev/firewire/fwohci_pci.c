@@ -600,6 +600,16 @@ name|PCIM_CMD_BUSMASTEREN
 operator||
 name|PCIM_CMD_MWRICEN
 expr_stmt|;
+if|#
+directive|if
+literal|1
+name|cmd
+operator|&=
+operator|~
+name|PCIM_CMD_MWRICEN
+expr_stmt|;
+endif|#
+directive|endif
 name|pci_write_config
 argument_list|(
 name|self
@@ -625,8 +635,7 @@ expr_stmt|;
 define|#
 directive|define
 name|DEF_LATENCY
-value|250
-comment|/* Derived from Max Bulk Transfer size 512 Bytes*/
+value|0x20
 if|if
 condition|(
 name|latency
