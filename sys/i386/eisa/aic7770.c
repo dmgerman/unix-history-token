@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.16 1995/09/05 23:39:31 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.17 1995/11/05 04:42:47 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -444,11 +444,6 @@ argument_list|,
 name|intdef
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10000000
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|eisa_add_intr
@@ -469,6 +464,32 @@ operator|&
 name|kdc_aic7770
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|e_dev
+operator|->
+name|id
+operator|==
+name|EISA_DEVICE_ID_ADAPTEC_284xB
+operator|||
+name|e_dev
+operator|->
+name|id
+operator|==
+name|EISA_DEVICE_ID_ADAPTEC_284x
+condition|)
+block|{
+comment|/* Our real parent is the isa bus.  Say so */
+name|e_dev
+operator|->
+name|kdc
+operator|->
+name|kdc_parent
+operator|=
+operator|&
+name|kdc_isa0
+expr_stmt|;
+block|}
 name|count
 operator|++
 expr_stmt|;

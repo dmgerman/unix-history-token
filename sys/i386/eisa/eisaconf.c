@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.3 1995/11/05 04:42:49 gibbs Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.4 1995/11/06 05:20:59 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -48,12 +48,6 @@ end_include
 begin_comment
 comment|/* Hmmm.  Interrupt stuff? */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
 
 begin_include
 include|#
@@ -224,16 +218,6 @@ name|eisa_driver
 modifier|*
 modifier|*
 name|e_drvp
-init|=
-operator|(
-expr|struct
-name|eisa_driver
-operator|*
-operator|*
-operator|)
-name|eisadriver_set
-operator|.
-name|ls_items
 decl_stmt|;
 name|struct
 name|eisa_driver
@@ -248,126 +232,28 @@ decl_stmt|;
 name|int
 name|eisaBase
 init|=
-literal|0xC80
-decl_stmt|;
-name|int
-name|first_slot
-init|=
-literal|0
+literal|0xc80
 decl_stmt|;
 name|eisa_id_t
 name|eisa_id
 decl_stmt|;
-name|outb
-argument_list|(
-name|eisaBase
-argument_list|,
-literal|0xFF
-argument_list|)
-expr_stmt|;
-name|eisa_id
-operator|=
-name|inb
-argument_list|(
-name|eisaBase
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|eisa_id
-operator|&
-literal|0x80
-condition|)
-block|{
-comment|/*  	 * Not an EISA machine.  We still want to find boards like the 	 * Adaptec 284x that respond to EISA probes, so we "fake" the 	 * system board entry which the rest of the code uses as the  	 * sentinal node in the eisa_dev_list. 	 */
-name|first_slot
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Start at slot 1 just to be safe */
-name|eisaBase
-operator|+=
-literal|0x1000
-expr_stmt|;
-name|dev_node
+name|e_drvp
 operator|=
 operator|(
 expr|struct
-name|eisa_device_node
+name|eisa_driver
+operator|*
 operator|*
 operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|dev_node
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dev_node
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"eisa0: cannot malloc eisa_device_node"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|bzero
-argument_list|(
-name|dev_node
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|dev_node
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|e_dev
-operator|=
-operator|&
-operator|(
-name|dev_node
-operator|->
-name|dev
-operator|)
-expr_stmt|;
-name|e_dev
-operator|->
-name|ioconf
+name|eisadriver_set
 operator|.
-name|slot
-operator|=
-literal|0
+name|ls_items
 expr_stmt|;
-operator|*
-name|eisa_dev_list_tail
-operator|=
-name|dev_node
-expr_stmt|;
-name|eisa_dev_list_tail
-operator|=
-operator|&
-name|dev_node
-operator|->
-name|next
-expr_stmt|;
-block|}
 for|for
 control|(
 name|slot
 operator|=
-name|first_slot
+literal|0
 init|;
 name|slot
 operator|<
@@ -416,7 +302,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Some cards require priming */
+comment|/*Some cards require priming*/
 name|eisa_id
 operator||=
 name|inb
@@ -508,7 +394,7 @@ name|id
 operator|=
 name|eisa_id
 expr_stmt|;
-comment|/* 	 * Add an EISA ID based descriptive name incase we don't 	 * have a driver for it.  We do this now instead of after all 	 * probes because in the future, the eisa module will only 	 * be responsible for creating the list of devices in the system 	 * for the configuration manager to use. 	 */
+comment|/* 		 * Add an EISA ID based descriptive name incase we don't 		 * have a driver for it.  We do this now instead of after all 		 * probes because in the future, the eisa module will only 		 * be responsible for creating the list of devices in the system 		 * for the configuration manager to use. 		 */
 name|e_dev
 operator|->
 name|full_name
@@ -625,13 +511,12 @@ name|dev_node
 operator|=
 name|eisa_dev_list
 expr_stmt|;
-comment|/*      * "Attach" the system board      */
-comment|/* The first entry had better be the motherboard */
+comment|/* 	 * "Attach" the system board 	 */
+comment|/* The first will be the motherboard in a true EISA system */
 if|if
 condition|(
-operator|!
 name|dev_node
-operator|||
+operator|&&
 operator|(
 name|dev_node
 operator|->
@@ -640,15 +525,11 @@ operator|.
 name|ioconf
 operator|.
 name|slot
-operator|!=
+operator|==
 literal|0
 operator|)
 condition|)
-name|panic
-argument_list|(
-literal|"EISA system board not in eisa_dev_list"
-argument_list|)
-expr_stmt|;
+block|{
 name|e_dev
 operator|=
 operator|&
@@ -677,14 +558,6 @@ name|unit
 operator|)
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|e_dev
-operator|->
-name|full_name
-condition|)
-block|{
-comment|/* This is a real EISA system */
 name|id_string
 operator|=
 name|e_dev
@@ -772,31 +645,40 @@ name|full_name
 argument_list|)
 expr_stmt|;
 comment|/* Should set the iosize, but I don't have a spec handy */
+name|kdc_eisa0
+operator|.
+name|kdc_parentdata
+operator|=
+name|e_dev
+expr_stmt|;
 name|dev_attach
 argument_list|(
 operator|&
 name|kdc_eisa0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Hmm. Do I need to do this attach always 				 * in case I attach a 284x in an otherwise 				 * non-EISA machine? 				 */
 name|printf
 argument_list|(
 literal|"Probing for devices on the EISA bus\n"
 argument_list|)
+expr_stmt|;
+name|dev_node
+operator|=
+name|dev_node
+operator|->
+name|next
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
 name|eisa_dev_list
-operator|->
-name|next
 condition|)
 block|{
-comment|/* 	 * No devices. 	 * We may be able to remove the sentinal node in the non-EISA 	 * system case here depending on whether we had to do the 	 * dev_attach(&kdc_eisa0) up above. 	 */
+comment|/* 		 * No devices. 		 */
 return|return;
 block|}
-comment|/*      * See what devices we recognize.      */
+comment|/* 	 * See what devices we recognize. 	 */
 while|while
 condition|(
 operator|(
@@ -817,14 +699,9 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*      * Attach the devices we found in slot order      */
+comment|/* 	 * Attach the devices we found in slot order 	 */
 for|for
 control|(
-name|dev_node
-operator|=
-name|eisa_dev_list
-operator|->
-name|next
 init|;
 name|dev_node
 condition|;
@@ -853,7 +730,7 @@ condition|(
 name|e_drv
 condition|)
 block|{
-comment|/* 	     * Determine the proper unit number for this device. 	     * Here we should look in the device table generated 	     * by config to see if this type of device is enabled 	     * either generically or for this particular address 	     * as well as determine if a reserved unit number should 	     * be used.  We should also ensure that the "next availible 	     * unit number" skips over "wired" unit numbers. This will 	     * be done after config is fixed or some other configuration 	     * method is chosen. 	     */
+comment|/* 			 * Determine the proper unit number for this device. 			 * Here we should look in the device table generated 			 * by config to see if this type of device is enabled 			 * either generically or for this particular address 			 * as well as determine if a reserved unit number 			 * should be used.  We should also ensure that the 			 * "next availible unit number" skips over "wired" unit 			 * numbers. This will be done after config is fixed or 			 * some other configuration method is chosen. 			 */
 name|e_dev
 operator|->
 name|unit
@@ -881,7 +758,26 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Clean up after the device?? */
+name|printf
+argument_list|(
+literal|"%s0:%d<%s> attach failed\n"
+argument_list|,
+name|mainboard_drv
+operator|.
+name|name
+argument_list|,
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|slot
+argument_list|,
+name|e_dev
+operator|->
+name|full_name
+argument_list|)
+expr_stmt|;
+continue|continue;
 block|}
 name|e_dev
 operator|->
@@ -899,22 +795,11 @@ block|{
 comment|/* Announce unattached device */
 name|printf
 argument_list|(
-literal|"%s%ld:%d<%s> unknown device\n"
+literal|"%s0:%d<%s> unknown device\n"
 argument_list|,
-name|eisa_dev_list
-operator|->
-name|dev
+name|mainboard_drv
 operator|.
-name|driver
-operator|->
 name|name
-argument_list|,
-comment|/* Mainboard */
-name|eisa_dev_list
-operator|->
-name|dev
-operator|.
-name|unit
 argument_list|,
 name|e_dev
 operator|->
@@ -978,33 +863,33 @@ comment|/* Start our search from the last successful match */
 name|e_node
 operator|=
 operator|(
+operator|(
 expr|struct
 name|eisa_device_node
 operator|*
 operator|)
 name|e_dev
-expr_stmt|;
-block|}
-comment|/*      * The first node in the list is the motherboard, so don't bother      * to look at it.      */
-while|while
-condition|(
-name|e_node
+operator|)
 operator|->
 name|next
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-modifier|*
-name|result
-decl_stmt|;
+expr_stmt|;
+block|}
+for|for
+control|(
+init|;
+name|e_node
+condition|;
 name|e_node
 operator|=
 name|e_node
 operator|->
 name|next
-expr_stmt|;
+control|)
+block|{
+name|char
+modifier|*
+name|result
+decl_stmt|;
 if|if
 condition|(
 name|e_node
@@ -1089,7 +974,7 @@ modifier|*
 name|e_dev
 decl_stmt|;
 block|{
-comment|/*      * Announce the device.      */
+comment|/* 	 * Announce the device. 	 */
 name|printf
 argument_list|(
 literal|"%s%ld:<%s>"
@@ -1128,24 +1013,40 @@ modifier|*
 name|e_dev
 decl_stmt|;
 block|{
+comment|/* 	 * The device should have called eisa_registerdev() 	 * during its probe.  So hopefully we can use the kdc 	 * to weed out ISA/VL devices that use EISA id registers. 	 */
+if|if
+condition|(
+name|e_dev
+operator|->
+name|kdc
+operator|&&
+operator|(
+name|e_dev
+operator|->
+name|kdc
+operator|->
+name|kdc_parent
+operator|==
+operator|&
+name|kdc_isa0
+operator|)
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|" on %s%ld slot %d\n"
+literal|" on isa\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" on %s0 slot %d\n"
 argument_list|,
-name|eisa_dev_list
-operator|->
-name|dev
+name|mainboard_drv
 operator|.
-name|driver
-operator|->
 name|name
-argument_list|,
-comment|/* Mainboard */
-name|eisa_dev_list
-operator|->
-name|dev
-operator|.
-name|unit
 argument_list|,
 name|e_dev
 operator|->
@@ -1154,6 +1055,7 @@ operator|.
 name|slot
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1263,7 +1165,7 @@ decl_stmt|;
 if|#
 directive|if
 name|NOT_YET
-comment|/*       * Punt on conflict detection for the moment.      * I want to develop a generic routine to do      * this for all device types.      */
+comment|/*  	 * Punt on conflict detection for the moment. 	 * I want to develop a generic routine to do 	 * this for all device types. 	 */
 name|int
 name|checkthese
 init|=
@@ -1288,20 +1190,20 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-comment|/*      * This should really go to a routine that can optionally      * handle shared interrupts.      */
+comment|/* 	 * This should really go to a routine that can optionally 	 * handle shared interrupts. 	 */
 name|result
 operator|=
 name|register_intr
 argument_list|(
 name|irq
 argument_list|,
-comment|/* isa irq      */
+comment|/* isa irq	*/
 literal|0
 argument_list|,
-comment|/* deviced??    */
+comment|/* deviced??	*/
 literal|0
 argument_list|,
-comment|/* flags?       */
+comment|/* flags?	*/
 operator|(
 name|inthand2_t
 operator|*
@@ -1311,7 +1213,7 @@ argument_list|,
 comment|/* handler      */
 name|maskptr
 argument_list|,
-comment|/* mask pointer */
+comment|/* mask pointer	*/
 operator|(
 name|int
 operator|)
@@ -1440,7 +1342,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%ld: Attempted to release an interrupt (%d) it doesn't own\n"
+literal|"%s%ld: Attempted to release an interrupt (%d) "
+literal|"it doesn't own\n"
 argument_list|,
 name|e_dev
 operator|->
@@ -1556,7 +1459,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%ld: Attempted to enable an interrupt (%d) it doesn't own\n"
+literal|"%s%ld: Attempted to enable an interrupt (%d) "
+literal|"it doesn't own\n"
 argument_list|,
 name|e_dev
 operator|->
@@ -1625,7 +1529,7 @@ name|int
 name|iosize
 decl_stmt|;
 block|{
-comment|/*      * We should develop a scheme for storing the results of      * multiple calls to this function.      */
+comment|/* 	 * We should develop a scheme for storing the results of 	 * multiple calls to this function. 	 */
 name|e_dev
 operator|->
 name|ioconf
@@ -1670,11 +1574,11 @@ name|int
 name|iosize
 decl_stmt|;
 block|{
-comment|/*      * We should develop a scheme for storing the results of      * multiple calls to this function.      */
+comment|/* 	 * We should develop a scheme for storing the results of 	 * multiple calls to this function. 	 */
 ifdef|#
 directive|ifdef
 name|NOT_YET
-comment|/*       * Punt on conflict detection for the moment.      * I want to develop a generic routine to do      * this for all device types.      */
+comment|/*  	 * Punt on conflict detection for the moment. 	 * I want to develop a generic routine to do 	 * this for all device types. 	 */
 name|int
 name|checkthese
 init|=
@@ -1830,6 +1734,14 @@ name|e_dev
 operator|->
 name|full_name
 expr_stmt|;
+name|e_dev
+operator|->
+name|kdc
+operator|->
+name|kdc_parentdata
+operator|=
+name|e_dev
+expr_stmt|;
 name|dev_attach
 argument_list|(
 name|e_dev
@@ -1853,19 +1765,25 @@ begin_function
 name|int
 name|eisa_externalize
 parameter_list|(
+name|id
+parameter_list|,
+name|userp
+parameter_list|,
+name|maxlen
+parameter_list|)
 name|struct
 name|eisa_device
 modifier|*
 name|id
-parameter_list|,
+decl_stmt|;
 name|void
 modifier|*
 name|userp
-parameter_list|,
+decl_stmt|;
 name|size_t
 modifier|*
 name|maxlen
-parameter_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1913,23 +1831,31 @@ begin_function
 name|int
 name|eisa_generic_externalize
 parameter_list|(
+name|p
+parameter_list|,
+name|kdc
+parameter_list|,
+name|userp
+parameter_list|,
+name|l
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-parameter_list|,
+decl_stmt|;
 name|struct
 name|kern_devconf
 modifier|*
 name|kdc
-parameter_list|,
+decl_stmt|;
 name|void
 modifier|*
 name|userp
-parameter_list|,
+decl_stmt|;
 name|size_t
 name|l
-parameter_list|)
+decl_stmt|;
 block|{
 return|return
 name|eisa_externalize
