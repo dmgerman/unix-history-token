@@ -1049,6 +1049,10 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+literal|'\020'
+case|:
+comment|/* ^P */
+case|case
 name|KEY_UP
 case|:
 if|if
@@ -1079,6 +1083,10 @@ operator|++
 control|)
 empty_stmt|;
 continue|continue;
+case|case
+literal|'\016'
+case|:
+comment|/* ^N */
 case|case
 name|KEY_DOWN
 case|:
@@ -1145,6 +1153,10 @@ name|clear
 argument_list|()
 expr_stmt|;
 continue|continue;
+case|case
+literal|'\033'
+case|:
+comment|/* ESC */
 case|case
 literal|'Q'
 case|:
