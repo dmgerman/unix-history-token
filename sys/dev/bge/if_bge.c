@@ -4853,6 +4853,8 @@ operator||
 name|BGE_MODECTL_NO_RX_CRC
 operator||
 name|BGE_MODECTL_TX_NO_PHDR_CSUM
+operator||
+name|BGE_MODECTL_RX_NO_PHDR_CSUM
 argument_list|)
 expr_stmt|;
 comment|/* Get cache line size. */
@@ -8716,8 +8718,6 @@ operator|.
 name|csum_flags
 operator||=
 name|CSUM_DATA_VALID
-operator||
-name|CSUM_PSEUDO_HDR
 expr_stmt|;
 block|}
 block|}
