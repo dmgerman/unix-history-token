@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_4.c	2.2 83/11/14"
+literal|"@(#)pl_4.c	2.3 84/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,7 +221,7 @@ literal|'"'
 expr_stmt|;
 name|sgetstr
 argument_list|(
-literal|"Mesage? "
+literal|"Message? "
 argument_list|,
 name|p
 argument_list|,
