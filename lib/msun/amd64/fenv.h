@@ -276,7 +276,7 @@ name|__stmxcsr
 parameter_list|(
 name|__csr
 parameter_list|)
-value|__asm("stmxcsr %0" : "=m" (*(__csr)))
+value|__asm __volatile("stmxcsr %0" : "=m" (*(__csr)))
 end_define
 
 begin_function
