@@ -267,6 +267,11 @@ directive|define
 name|TF_LQ_OVERFLOW
 value|0x20000
 comment|/* listen queue overflow */
+define|#
+directive|define
+name|TF_LASTIDLE
+value|0x40000
+comment|/* connection was previously idle */
 name|int
 name|t_force
 decl_stmt|;
