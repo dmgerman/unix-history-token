@@ -165,5 +165,19 @@ name|DIGIIO_IDENT
 value|_IOW('e', 'E', char *)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DIGIIO_SETALTPIN
+value|_IOW('e', 'F', int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIGIIO_GETALTPIN
+value|_IOR('e', 'G', int)
+end_define
+
 end_unit
 
