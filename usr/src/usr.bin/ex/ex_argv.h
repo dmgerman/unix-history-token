@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_argv.h	7.1	%G%  */
+comment|/* sccs id:	@(#)ex_argv.h	7.2	%G%  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * The current implementation of the argument list is poor,  * using 
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 modifier|*
@@ -21,7 +21,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 modifier|*
@@ -30,7 +30,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|args
@@ -38,7 +38,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|args0
@@ -46,21 +46,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|argc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|argc0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|morargc
 decl_stmt|;
@@ -71,7 +71,7 @@ comment|/* Used with "More files to edit..." */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|firstln
 decl_stmt|;
@@ -82,7 +82,7 @@ comment|/* From +lineno */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|firstpat
@@ -135,7 +135,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|struct
 name|glob
 name|frob

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_vis.h	7.1	%G%  */
+comment|/* sccs id:	@(#)ex_vis.h	7.2	%G%  */
 end_comment
 
 begin_comment
@@ -12,14 +12,14 @@ comment|/*  * Ex version 3  * Mark Horton, UCB  * Bill Joy UCB  *  * Open and vi
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|bastate
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|state
 decl_stmt|;
@@ -58,49 +58,49 @@ comment|/*  * The screen in visual and crtopen is of varying size; the basic  * 
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|basWTOP
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|basWLINES
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|WTOP
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|WBOT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|WLINES
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|WCOLS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|WECHO
 decl_stmt|;
@@ -111,7 +111,7 @@ comment|/*  * When we are dealing with the echo area we consider the window  * t
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|splitw
 decl_stmt|;
@@ -144,7 +144,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|struct
 name|vlinfo
 name|vlinfo
@@ -256,14 +256,14 @@ comment|/*  * The current line on the screen is represented by vcline.  * There 
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|vcline
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|vcnt
 decl_stmt|;
@@ -274,7 +274,7 @@ comment|/*  * To allow many optimizations on output, an exact image of the termi
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vtube
@@ -285,7 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vtube0
@@ -297,7 +297,7 @@ comment|/*  * The current cursor position within the current line is kept in  * 
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|cursor
@@ -305,7 +305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|wcursor
@@ -313,7 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|wdot
@@ -367,7 +367,7 @@ value|5
 end_define
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|vundkind
 decl_stmt|;
@@ -378,7 +378,7 @@ comment|/* Which kind of undo - from above */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vutmp
@@ -438,7 +438,7 @@ comment|/* In a macro, at least 2 changes so far */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|vch_mac
 decl_stmt|;
@@ -453,7 +453,7 @@ comment|/*  * For U undo's the line is grabbed by "vmove" after it first appears
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vUNDcurs
@@ -465,7 +465,7 @@ comment|/* Cursor just before 'U' */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|vUNDdot
@@ -477,7 +477,7 @@ comment|/* The line address of line saved in vUNDsav */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 name|vUNDsav
 decl_stmt|;
@@ -500,14 +500,14 @@ comment|/*  * There are a number of cases where special behaviour is needed  * f
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|hold
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|holdupd
 decl_stmt|;
@@ -571,7 +571,7 @@ comment|/*  * Miscellaneous variables  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|CDCNT
 decl_stmt|;
@@ -582,7 +582,7 @@ comment|/* Count of ^D's in insert on this line */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|DEL
 index|[
@@ -596,7 +596,7 @@ comment|/* Last deleted text */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|HADUP
 decl_stmt|;
@@ -607,7 +607,7 @@ comment|/* This insert line started with ^ then ^D */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|HADZERO
 decl_stmt|;
@@ -618,7 +618,7 @@ comment|/* This insert line started with 0 then ^D */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|INS
 index|[
@@ -632,7 +632,7 @@ comment|/* Last inserted text */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|Vlines
 decl_stmt|;
@@ -643,7 +643,7 @@ comment|/* Number of file lines "before" vi command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|Xcnt
 decl_stmt|;
@@ -654,7 +654,7 @@ comment|/* External variable holding last cmd's count */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|Xhadcnt
 decl_stmt|;
@@ -665,14 +665,14 @@ comment|/* Last command had explicit count? */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|ZERO
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|dir
 decl_stmt|;
@@ -683,7 +683,7 @@ comment|/* Direction for search (+1 or -1) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|doomed
 decl_stmt|;
@@ -694,7 +694,7 @@ comment|/* Disply chars right of cursor to be killed */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|gobblebl
 decl_stmt|;
@@ -705,7 +705,7 @@ comment|/* Wrapmargin space generated nl, eat a space */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|hadcnt
 decl_stmt|;
@@ -716,7 +716,7 @@ comment|/* (Almost) internal to vmain() */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|heldech
 decl_stmt|;
@@ -727,7 +727,7 @@ comment|/* We owe a clear of echo area */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|insmode
 decl_stmt|;
@@ -738,7 +738,7 @@ comment|/* Are in character insert mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|lastcmd
 index|[
@@ -752,7 +752,7 @@ comment|/* Chars in last command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|lastcnt
 decl_stmt|;
@@ -763,7 +763,7 @@ comment|/* Count for last command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|lastcp
@@ -775,7 +775,7 @@ comment|/* Save current command here to repeat */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|lasthad
 decl_stmt|;
@@ -786,7 +786,7 @@ comment|/* Last command had a count? */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|lastvgk
 decl_stmt|;
@@ -797,7 +797,7 @@ comment|/* Previous input key, if not from keyboard */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|lastreg
 decl_stmt|;
@@ -808,7 +808,7 @@ comment|/* Register with last command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|ncols
@@ -827,7 +827,7 @@ comment|/* Cursor positions of marks */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|notenam
@@ -839,7 +839,7 @@ comment|/* Name to be noted with change count */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|notesgn
@@ -851,7 +851,7 @@ comment|/* Change count from last command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|op
 decl_stmt|;
@@ -862,7 +862,7 @@ comment|/* Operation of current command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|Peekkey
 decl_stmt|;
@@ -873,7 +873,7 @@ comment|/* Peek ahead key */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|rubble
 decl_stmt|;
@@ -884,7 +884,7 @@ comment|/* Line is filthy (in hardcopy open), redraw! */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|vSCROLL
 decl_stmt|;
@@ -895,7 +895,7 @@ comment|/* Number lines to scroll on ^D/^U */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vglobp
@@ -907,7 +907,7 @@ comment|/* Untyped input (e.g. repeat insert text) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|vmacbuf
 index|[
@@ -921,7 +921,7 @@ comment|/* Text of visual macro, hence nonnestable */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vmacp
@@ -933,7 +933,7 @@ comment|/* Like vglobp but for visual macros */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|vmcurs
@@ -945,7 +945,7 @@ comment|/* Cursor for restore after undo d), e.g. */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|vmovcol
 decl_stmt|;
@@ -956,7 +956,7 @@ comment|/* Column to try to keep on arrow keys */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|vmoving
 decl_stmt|;
@@ -967,7 +967,7 @@ comment|/* Are trying to keep vmovcol */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|vreg
 decl_stmt|;
@@ -982,7 +982,7 @@ comment|/* mjm: was char */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|wdkind
 decl_stmt|;
@@ -993,7 +993,7 @@ comment|/* Liberal/conservative words? */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|workcmd
 index|[

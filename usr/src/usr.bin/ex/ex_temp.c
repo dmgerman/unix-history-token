@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_temp.c	7.1	%G%"
+literal|"@(#)ex_temp.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,9 +79,14 @@ name|havetmp
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* short	tfile = -1;	mjm: in ex_space.c */
-end_comment
+begin_decl_stmt
+name|short
+name|tfile
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|short

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_re.h	7.1	%G%  */
+comment|/* sccs id:	@(#)ex_re.h	7.2	%G%  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ comment|/*  * There are three regular expressions here, the previous (in re),  *
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|struct
 name|regexp
 name|re
@@ -50,7 +50,7 @@ comment|/* Last re */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|struct
 name|regexp
 name|scanre
@@ -62,7 +62,7 @@ comment|/* Last scanning re */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|struct
 name|regexp
 name|subre
@@ -127,7 +127,7 @@ comment|/*  * Definitions for substitute  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|braslist
@@ -142,7 +142,7 @@ comment|/* Starts of \(\)'ed text in lhs */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|braelist
@@ -157,7 +157,7 @@ comment|/* Ends... */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|rhsbuf
 index|[

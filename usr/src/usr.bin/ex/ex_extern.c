@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccs_id
 init|=
-literal|"@(#)ex_extern.c	7.1	%G%"
+literal|"@(#)ex_extern.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -16,7 +16,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|extern
+name|var
 end_define
 
 begin_comment
@@ -70,15 +70,6 @@ include|#
 directive|include
 file|"ex_vis.h"
 end_include
-
-begin_decl_stmt
-name|short
-name|tfile
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

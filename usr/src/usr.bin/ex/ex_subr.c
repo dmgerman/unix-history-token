@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.1	%G%"
+literal|"@(#)ex_subr.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1490,6 +1490,8 @@ expr_stmt|;
 if|if
 condition|(
 name|inopen
+operator|>
+literal|0
 operator|&&
 name|CE
 condition|)

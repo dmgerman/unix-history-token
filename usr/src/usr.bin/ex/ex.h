@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	7.1	%G%  */
+comment|/* sccs id:	@(#)ex.h	7.2	%G%  */
 end_comment
 
 begin_ifdef
@@ -63,6 +63,24 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|var
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|var
+value|var
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	The following little dance copes with the new USG tty handling.  *	This stuff has the advantage of considerable flexibility, and  *	the disadvantage of being incompatible with anything else.  *	The presence of the symbol USG3TTY will indicate the new code:  *	in this case, we define CBREAK (because we can simulate it exactly),  *	but we won't actually use it, so we set it to a value that will  *	probably blow the compilation if we goof up.  */
@@ -277,7 +295,7 @@ file|<stdio.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|FILE
 modifier|*
 name|trace
@@ -285,21 +303,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|trubble
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|techoin
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|tracbuf
 index|[
@@ -439,7 +457,7 @@ comment|/*  * Miscellaneous random variables used in more than one place  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|aiflag
 decl_stmt|;
@@ -450,7 +468,7 @@ comment|/* Append/change/insert with autoindent */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|anymarks
 decl_stmt|;
@@ -461,7 +479,7 @@ comment|/* We have used '[a-z] */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|chng
 decl_stmt|;
@@ -472,7 +490,7 @@ comment|/* Warn "No write" */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|Command
@@ -480,7 +498,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|defwind
 decl_stmt|;
@@ -491,7 +509,7 @@ comment|/* -w# change default window size */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|dirtcnt
 decl_stmt|;
@@ -508,7 +526,7 @@ name|TIOCLGET
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|dosusp
 decl_stmt|;
@@ -524,7 +542,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|edited
 decl_stmt|;
@@ -535,7 +553,7 @@ comment|/* Current file is [Edited] */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|endcore
@@ -564,7 +582,7 @@ name|VMUNIX
 end_ifndef
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|erfile
 decl_stmt|;
@@ -580,7 +598,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|fendcore
@@ -592,7 +610,7 @@ comment|/* First address in line pointer space */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|file
 index|[
@@ -606,7 +624,7 @@ comment|/* Working file name */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|genbuf
 index|[
@@ -620,7 +638,7 @@ comment|/* Working buffer when manipulating linebuf */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|hush
 decl_stmt|;
@@ -631,7 +649,7 @@ comment|/* Command line option - was given, hush up! */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|globp
@@ -643,7 +661,7 @@ comment|/* (Untyped) input string to command mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|holdcm
 decl_stmt|;
@@ -654,7 +672,7 @@ comment|/* Don't cursor address */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|inappend
 decl_stmt|;
@@ -665,7 +683,7 @@ comment|/* in ex command append mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|inglobal
 decl_stmt|;
@@ -676,7 +694,7 @@ comment|/* Inside g//... or v//... */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|initev
@@ -688,7 +706,7 @@ comment|/* Initial : escape for visual */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|inopen
 decl_stmt|;
@@ -699,7 +717,7 @@ comment|/* Inside open or visual */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|input
@@ -711,7 +729,7 @@ comment|/* Current position in cmd line input buffer */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|intty
 decl_stmt|;
@@ -722,7 +740,7 @@ comment|/* Input is a tty */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|io
 decl_stmt|;
@@ -744,7 +762,7 @@ comment|/* Last character ret'd from cmd input */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|laste
 decl_stmt|;
@@ -755,7 +773,7 @@ comment|/* Last command was an "e" (or "rec") */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|lastmac
 decl_stmt|;
@@ -766,7 +784,7 @@ comment|/* Last macro called for ** */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|lasttag
 index|[
@@ -780,7 +798,7 @@ comment|/* Last argument to a tag command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|linebp
@@ -792,7 +810,7 @@ comment|/* Used in substituting in \n */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|linebuf
 index|[
@@ -806,7 +824,7 @@ comment|/* The primary line buffer */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|listf
 decl_stmt|;
@@ -817,7 +835,7 @@ comment|/* Command should run in list mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|loc1
@@ -829,7 +847,7 @@ comment|/* Where re began to match (in linebuf) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|loc2
@@ -841,7 +859,7 @@ comment|/* First char after re match (") */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 name|names
 index|[
@@ -859,7 +877,7 @@ comment|/* Mark registers a-z,' */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|notecnt
 decl_stmt|;
@@ -870,7 +888,7 @@ comment|/* Count for notify (to visual from cmd) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|numberf
 decl_stmt|;
@@ -881,7 +899,7 @@ comment|/* Command should run in number mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|obuf
 index|[
@@ -895,7 +913,7 @@ comment|/* Buffer for tty output */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|oprompt
 decl_stmt|;
@@ -917,7 +935,7 @@ comment|/* Output speed (from gtty) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|otchng
 decl_stmt|;
@@ -928,7 +946,7 @@ comment|/* Backup tchng to find changes in macros */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|peekc
 decl_stmt|;
@@ -939,7 +957,7 @@ comment|/* Peek ahead character (cmd mode input) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|pkill
@@ -954,7 +972,7 @@ comment|/* Trim for put with ragged (LISP) delete */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|pfast
 decl_stmt|;
@@ -965,7 +983,7 @@ comment|/* Have stty -nl'ed to go faster */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|pid
 decl_stmt|;
@@ -976,7 +994,7 @@ comment|/* Process id of child */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|ppid
 decl_stmt|;
@@ -987,7 +1005,7 @@ comment|/* Process id of parent (e.g. main ex proc) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|jmp_buf
 name|resetlab
 decl_stmt|;
@@ -998,7 +1016,7 @@ comment|/* For error throws to top level (cmd mode) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|rpid
 decl_stmt|;
@@ -1009,7 +1027,7 @@ comment|/* Pid returned from wait() */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|ruptible
 decl_stmt|;
@@ -1020,7 +1038,7 @@ comment|/* Interruptible is normal state */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|seenprompt
 decl_stmt|;
@@ -1031,7 +1049,7 @@ comment|/* 1 if have gotten user input */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|shudclob
 decl_stmt|;
@@ -1042,7 +1060,7 @@ comment|/* Have a prompt to clobber (e.g. on ^D) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|status
 decl_stmt|;
@@ -1053,7 +1071,7 @@ comment|/* Status returned from wait() */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|tchng
 decl_stmt|;
@@ -1075,7 +1093,7 @@ comment|/* Temporary file unit */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|vcatch
 decl_stmt|;
@@ -1086,7 +1104,7 @@ comment|/* Want to catch an error (open/visual) */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|jmp_buf
 name|vreslab
 decl_stmt|;
@@ -1097,7 +1115,7 @@ comment|/* For error throws to a visual catch */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|bool
 name|writing
 decl_stmt|;
@@ -1108,7 +1126,7 @@ comment|/* 1 if in middle of a file write */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|xchng
 decl_stmt|;
@@ -1297,7 +1315,7 @@ comment|/*  * Environment like memory  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|altfile
 index|[
@@ -1353,7 +1371,7 @@ comment|/* A long and pretty name */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|uxb
 index|[
@@ -1373,7 +1391,7 @@ comment|/*  * The editor data structure for accessing the current file consists 
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|addr1
@@ -1385,7 +1403,7 @@ comment|/* First addressed line in a command */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|addr2
@@ -1397,7 +1415,7 @@ comment|/* Second addressed line */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|dol
@@ -1409,7 +1427,7 @@ comment|/* Last line in buffer */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|dot
@@ -1421,7 +1439,7 @@ comment|/* Current line */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|one
@@ -1433,7 +1451,7 @@ comment|/* First line */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|truedol
@@ -1445,7 +1463,7 @@ comment|/* End of all lines, including saves */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|unddol
@@ -1457,7 +1475,7 @@ comment|/* End of undo saved lines */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|zero
@@ -1473,14 +1491,14 @@ comment|/*  * Undo information  *  * For most commands we save lines changed by 
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|short
 name|undkind
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|unddel
@@ -1492,7 +1510,7 @@ comment|/* Saved deleted lines go after here */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|undap1
@@ -1504,7 +1522,7 @@ comment|/* Beginning of new lines */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|undap2
@@ -1516,7 +1534,7 @@ comment|/* New lines end before undap2 */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|line
 modifier|*
 name|undadot
@@ -1591,7 +1609,7 @@ value|"Key: "
 end_define
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|xflag
 decl_stmt|;
@@ -1602,7 +1620,7 @@ comment|/* True if we are in encryption mode */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|xtflag
 decl_stmt|;
@@ -1613,7 +1631,7 @@ comment|/* True if the temp file is being encrypted */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|int
 name|kflag
 decl_stmt|;
@@ -1624,7 +1642,7 @@ comment|/* True if the key has been accepted */
 end_comment
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|perm
 index|[
@@ -1634,7 +1652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|tperm
 index|[
@@ -1644,7 +1662,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 modifier|*
 name|key
@@ -1652,7 +1670,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|var
 name|char
 name|crbuf
 index|[
@@ -1726,7 +1744,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|var
 name|int
 function_decl|(
 modifier|*
@@ -2086,7 +2104,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|var
 name|int
 function_decl|(
 modifier|*
