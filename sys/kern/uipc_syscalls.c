@@ -439,14 +439,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|fileops
-name|socketops
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * MPSAFE  */
 end_comment
