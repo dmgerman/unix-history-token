@@ -5481,6 +5481,13 @@ condition|)
 return|return
 name|error
 return|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"detached\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dev
