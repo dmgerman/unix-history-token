@@ -283,6 +283,13 @@ name|arg
 operator|=
 name|arg
 expr_stmt|;
+comment|/* 			 * Write a magic value to the thread structure 			 * to help identify valid ones: 			 */
+name|new_thread
+operator|->
+name|magic
+operator|=
+name|PTHREAD_MAGIC
+expr_stmt|;
 if|if
 condition|(
 name|pattr
