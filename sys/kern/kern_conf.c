@@ -2272,7 +2272,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: Device name truncated! (%s)"
+literal|"WARNING: Device name truncated! (%s)\n"
 argument_list|,
 name|dev
 operator|->
@@ -2558,7 +2558,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: Device name truncated! (%s)"
+literal|"WARNING: Device name truncated! (%s)\n"
 argument_list|,
 name|dev
 operator|->
