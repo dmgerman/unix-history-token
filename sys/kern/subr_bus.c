@@ -12612,7 +12612,7 @@ return|return;
 name|indentprintf
 argument_list|(
 operator|(
-literal|"device %d:<%s> %sparent,%schildren,%s%s%s%s,%sivars,%ssoftc,busy=%d\n"
+literal|"device %d:<%s> %sparent,%schildren,%s%s%s%s%s,%sivars,%ssoftc,busy=%d\n"
 operator|,
 name|dev
 operator|->
