@@ -1166,6 +1166,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|atapi_cam_reinit_bus
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|atapi_reinit
 parameter_list|(
 name|struct
