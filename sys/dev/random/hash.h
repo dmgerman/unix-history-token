@@ -11,7 +11,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* in bytes - 32 bytes == 256 bits */
+comment|/* (in bytes) 32 bytes == 256 bits */
 end_comment
 
 begin_struct
@@ -19,32 +19,9 @@ struct|struct
 name|yarrowhash
 block|{
 comment|/* Big! Make static! */
-name|keyInstance
-name|hashkey
+name|SHA256_CTX
+name|sha
 decl_stmt|;
-comment|/* Data cycles through here */
-name|cipherInstance
-name|cipher
-decl_stmt|;
-comment|/* Rijndael internal */
-name|u_char
-name|hash
-index|[
-name|KEYSIZE
-index|]
-decl_stmt|;
-comment|/* Repeatedly encrypted */
-name|char
-name|accum
-index|[
-name|KEYSIZE
-index|]
-decl_stmt|;
-comment|/* Accumulate partial chunks */
-name|u_int
-name|partial
-decl_stmt|;
-comment|/* Keep track of< KEYSIZE chunks */
 block|}
 struct|;
 end_struct

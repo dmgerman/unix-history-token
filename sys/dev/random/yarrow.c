@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<crypto/sha2/sha2.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/hash.h>
 end_include
 
@@ -1261,7 +1267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Internal function to do return processed entropy from the  * Yarrow PRNG  */
+comment|/* Internal function to return processed entropy from the PRNG */
 end_comment
 
 begin_function
@@ -1739,7 +1745,7 @@ parameter_list|)
 block|{
 name|reseed
 argument_list|(
-name|FAST
+name|SLOW
 argument_list|)
 expr_stmt|;
 block|}
