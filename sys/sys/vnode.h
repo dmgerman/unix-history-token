@@ -1091,6 +1091,13 @@ begin_comment
 comment|/* permission to write/append */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VALLPERM
+value|(VEXEC | VWRITE | VREAD | VADMIN | VSTAT | VAPPEND)
+end_define
+
 begin_comment
 comment|/*  * Token indicating no attribute value yet assigned.  */
 end_comment
