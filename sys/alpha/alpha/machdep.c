@@ -4128,6 +4128,10 @@ name|pcb_hw
 operator|.
 name|apcb_ksp
 expr_stmt|;
+comment|/* 	 * Initialise entropy pool. 	 */
+name|rand_initialize
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
 operator|=
