@@ -731,6 +731,12 @@ directive|undef
 name|warn
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|nsdispatch
+end_undef
+
 begin_endif
 endif|#
 directive|endif

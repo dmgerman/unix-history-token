@@ -36,6 +36,13 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|NSS_MODULE_INTERFACE_VERSION
+value|1
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -54,19 +61,31 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NS_CONTINUE
-value|0
-end_define
+begin_comment
+comment|/* NSS source actions */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|NS_RETURN
+name|NS_ACTION_CONTINUE
+value|0
+end_define
+
+begin_comment
+comment|/* try the next source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_ACTION_RETURN
 value|1
 end_define
+
+begin_comment
+comment|/* look no further */
+end_comment
 
 begin_define
 define|#
@@ -109,7 +128,29 @@ value|(1<<3)
 end_define
 
 begin_comment
-comment|/* source busy, may respond to retrys */
+comment|/* source busy, may respond to retry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_RETURN
+value|(1<<4)
+end_define
+
+begin_comment
+comment|/* stop search, e.g. for ERANGE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_TERMINATE
+value|(NS_SUCCESS|NS_RETURN)
+end_define
+
+begin_comment
+comment|/* flags that end search */
 end_comment
 
 begin_define
@@ -348,40 +389,70 @@ value|"ttys"
 end_define
 
 begin_comment
-comment|/*  * ns_dtab - `nsswitch dispatch table'  * contains an entry for each source and the appropriate function to call  */
+comment|/*  * ns_dtab `method' function signature.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|nss_method
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|_retval
+parameter_list|,
+name|void
+modifier|*
+name|_mdata
+parameter_list|,
+name|va_list
+name|_ap
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Macro for generating method prototypes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSS_METHOD_PROTOTYPE
+parameter_list|(
+name|method
+parameter_list|)
+define|\
+value|int method(void *, void *, va_list)
+end_define
+
+begin_comment
+comment|/*  * ns_dtab - `nsswitch dispatch table'  * Contains an entry for each source and the appropriate function to  * call.  ns_dtabs are used in the nsdispatch() API in order to allow  * the application to override built-in actions.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
+name|_ns_dtab
 block|{
 specifier|const
 name|char
 modifier|*
 name|src
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|callback
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|retval
-parameter_list|,
-name|void
-modifier|*
-name|cb_data
-parameter_list|,
-name|va_list
-name|ap
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|cb_data
+comment|/* Source this entry implements */
+name|nss_method
+name|method
 decl_stmt|;
+comment|/* Method to be called */
+name|void
+modifier|*
+name|mdata
+decl_stmt|;
+comment|/* Data passed to method */
 block|}
 name|ns_dtab
 typedef|;
@@ -500,6 +571,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|_ns_src
 block|{
 specifier|const
 name|char
@@ -527,6 +599,108 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * ns_mtab - NSS method table  * An NSS module provides a mapping from (database name, method name)  * tuples to the nss_method and associated data.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ns_mtab
+block|{
+specifier|const
+name|char
+modifier|*
+name|database
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|nss_method
+name|method
+decl_stmt|;
+name|void
+modifier|*
+name|mdata
+decl_stmt|;
+block|}
+name|ns_mtab
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * NSS module de-registration, called at module unload.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|nss_module_unregister_fn
+function_decl|)
+parameter_list|(
+name|ns_mtab
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * NSS module registration, called at module load.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ns_mtab
+modifier|*
+function_decl|(
+modifier|*
+name|nss_module_register_fn
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|,
+name|nss_module_unregister_fn
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*   * Many NSS interfaces follow the getXXnam, getXXid, getXXent pattern.  * Developers are encouraged to use nss_lookup_type where approriate.  */
+end_comment
+
+begin_enum
+enum|enum
+name|nss_lookup_type
+block|{
+name|nss_lt_name
+init|=
+literal|1
+block|,
+name|nss_lt_id
+init|=
+literal|2
+block|,
+name|nss_lt_all
+init|=
+literal|3
+block|}
+enum|;
+end_enum
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -544,6 +718,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|_ns_dbt
 block|{
 specifier|const
 name|char
@@ -562,6 +737,44 @@ decl_stmt|;
 comment|/* size of srclist */
 block|}
 name|ns_dbt
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * ns_mod - NSS module  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ns_mod
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* module name */
+name|void
+modifier|*
+name|handle
+decl_stmt|;
+comment|/* handle from dlopen */
+name|ns_mtab
+modifier|*
+name|mtab
+decl_stmt|;
+comment|/* method table */
+name|unsigned
+name|int
+name|mtabsize
+decl_stmt|;
+comment|/* count of entries in method table */
+name|nss_module_unregister_fn
+name|unregister
+decl_stmt|;
+comment|/* called to unload module */
+block|}
+name|ns_mod
 typedef|;
 end_typedef
 
@@ -634,32 +847,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|_nsdbtdump
-parameter_list|(
-specifier|const
-name|ns_dbt
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|ns_dbt
-modifier|*
-name|_nsdbtget
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|_nsdbtput
 parameter_list|(
 specifier|const
@@ -691,12 +878,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|_nsyyparse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|_nsyylineno
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_NSS_DEBUG
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|_nsdbtdump
+parameter_list|(
+specifier|const
+name|ns_dbt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
