@@ -8350,6 +8350,22 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
+comment|/* 	 * Make sure that the directory vnode is still valid. 	 * XXX we should lock sp->s_dvp here. 	 */
+if|if
+condition|(
+name|sp
+operator|->
+name|s_dvp
+operator|->
+name|v_type
+operator|==
+name|VBAD
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|nfs_removerpc
