@@ -2238,9 +2238,7 @@ condition|(
 operator|(
 name|mp
 operator|->
-name|mnt_stat
-operator|.
-name|f_flags
+name|mnt_flag
 operator|&
 name|MNT_RDONLY
 operator|)
