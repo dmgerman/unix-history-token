@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_search.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ file|"btree.h"
 end_include
 
 begin_comment
-comment|/*  * __BT_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	key:	key to find  *	exactp:	pointer to exact match flag  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Warnings:  *	The EPG returned is in static memory, and will be overwritten by the  *	next search of any kind in any tree.  */
+comment|/*  * __BT_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	key:	key to find  *	exactp:	pointer to exact match flag  *  * Returns:  *	The EPG for matching record, if any, or the EPG for the location  *	of the key, if it were inserted into the tree, is entered into  *	the bt_cur field of the tree.  A pointer to the field is returned.  */
 end_comment
 
 begin_function
@@ -110,10 +110,6 @@ decl_stmt|;
 name|pgno_t
 name|pg
 decl_stmt|;
-specifier|static
-name|EPG
-name|e
-decl_stmt|;
 name|BT_CLR
 argument_list|(
 name|t
@@ -153,7 +149,9 @@ name|NULL
 operator|)
 return|;
 comment|/* Do a binary search on the current page. */
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|page
 operator|=
@@ -179,7 +177,9 @@ operator|>>=
 literal|1
 control|)
 block|{
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 operator|=
@@ -205,7 +205,9 @@ argument_list|,
 name|key
 argument_list|,
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 argument_list|)
 operator|)
 operator|==
@@ -229,7 +231,9 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|)
 return|;
 block|}
@@ -265,7 +269,9 @@ operator|&
 name|P_BLEAF
 condition|)
 block|{
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 operator|=
@@ -279,7 +285,9 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|)
 return|;
 block|}
