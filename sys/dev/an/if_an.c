@@ -6174,10 +6174,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|an_req
-name|areq
-decl_stmt|;
-name|struct
 name|ifreq
 modifier|*
 name|ifr
@@ -6270,6 +6266,8 @@ name|an_ltv_genconfig
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 expr_stmt|;
 name|key
@@ -6280,6 +6278,8 @@ name|an_ltv_key
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 expr_stmt|;
 name|status
@@ -6290,6 +6290,8 @@ name|an_ltv_status
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 expr_stmt|;
 name|ssids
@@ -6300,6 +6302,8 @@ name|an_ltv_ssidlist
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 expr_stmt|;
 if|if
@@ -6503,10 +6507,14 @@ operator|->
 name|ifr_data
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 argument_list|)
 argument_list|)
@@ -6523,6 +6531,8 @@ directive|ifdef
 name|ANCACHE
 if|if
 condition|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -6545,6 +6555,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -6561,6 +6573,8 @@ name|char
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_val
@@ -6595,6 +6609,8 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -6634,6 +6650,8 @@ operator|->
 name|an_sigitems
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -6672,6 +6690,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -6687,6 +6707,8 @@ operator|=
 name|copyout
 argument_list|(
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 name|ifr
@@ -6695,6 +6717,8 @@ name|ifr_data
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 argument_list|)
 argument_list|)
@@ -6726,10 +6750,14 @@ operator|->
 name|ifr_data
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 argument_list|)
 argument_list|)
@@ -6746,6 +6774,8 @@ argument_list|(
 name|sc
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -6920,12 +6950,16 @@ break|break;
 case|case
 name|SIOCG80211
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
 operator|=
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -6950,6 +6984,8 @@ operator|-
 literal|1
 condition|)
 block|{
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -6968,6 +7004,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7001,6 +7039,8 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7019,6 +7059,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7176,6 +7218,8 @@ break|break;
 case|case
 name|IEEE80211_IOC_WEP
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7194,6 +7238,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7283,6 +7329,8 @@ operator|<
 literal|5
 condition|)
 block|{
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7315,6 +7363,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7351,6 +7401,8 @@ operator|->
 name|klen
 expr_stmt|;
 comment|/* Required to get next entry */
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7409,6 +7461,8 @@ case|case
 name|IEEE80211_IOC_WEPTXKEY
 case|:
 comment|/* 			 * For some strange reason, you have to read all 			 * keys before you can read the txkey. 			 */
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7441,6 +7495,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7461,6 +7517,8 @@ literal|0xffff
 condition|)
 break|break;
 comment|/* Required to get next entry */
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7475,6 +7533,8 @@ operator|!=
 literal|0
 condition|)
 break|break;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7499,6 +7559,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7521,6 +7583,8 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* 			 * Check for home mode.  Map home mode into 			 * 5th key since that is how it is stored on 			 * the card 			 */
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -7531,6 +7595,8 @@ expr|struct
 name|an_ltv_genconfig
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7549,6 +7615,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7577,6 +7645,8 @@ break|break;
 case|case
 name|IEEE80211_IOC_AUTHMODE
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7595,6 +7665,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7676,6 +7748,8 @@ break|break;
 case|case
 name|IEEE80211_IOC_STATIONNAME
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7694,6 +7768,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7756,6 +7832,8 @@ break|break;
 case|case
 name|IEEE80211_IOC_CHANNEL
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7774,6 +7852,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7796,6 +7876,8 @@ break|break;
 case|case
 name|IEEE80211_IOC_POWERSAVE
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7814,6 +7896,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7900,6 +7984,8 @@ break|break;
 case|case
 name|IEEE80211_IOC_POWERSAVESLEEP
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -7918,6 +8004,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -7956,12 +8044,16 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
 operator|=
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -7987,6 +8079,8 @@ operator|!=
 name|IEEE80211_IOC_WEPTXKEY
 condition|)
 block|{
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -8005,6 +8099,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -8026,6 +8122,8 @@ block|{
 case|case
 name|IEEE80211_IOC_SSID
 case|:
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -8044,6 +8142,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -8286,6 +8386,8 @@ break|break;
 name|bzero
 argument_list|(
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 sizeof|sizeof
@@ -8295,6 +8397,8 @@ name|an_ltv_key
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -8333,6 +8437,8 @@ name|i_val
 operator|<
 literal|4
 condition|)
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -8340,6 +8446,8 @@ operator|=
 name|AN_RID_WEP_TEMP
 expr_stmt|;
 else|else
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -8393,6 +8501,8 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -8403,6 +8513,8 @@ expr|struct
 name|an_ltv_genconfig
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -8421,6 +8533,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 condition|)
@@ -8483,12 +8597,16 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 sizeof|sizeof
@@ -8498,6 +8616,8 @@ name|an_ltv_key
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -8508,6 +8628,8 @@ expr|struct
 name|an_ltv_key
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -8766,6 +8888,8 @@ argument_list|(
 name|sc
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -10981,10 +11105,6 @@ name|an_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|an_req
-name|areq
-decl_stmt|;
 switch|switch
 condition|(
 name|l_ioctl
@@ -11104,12 +11224,16 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
 operator|=
 name|AN_MAX_DATALEN
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -11126,6 +11250,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -11133,6 +11259,8 @@ name|l_ioctl
 operator|->
 name|len
 operator|=
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11147,6 +11275,8 @@ name|copyout
 argument_list|(
 operator|&
 operator|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11158,6 +11288,8 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11177,6 +11309,8 @@ name|copyout
 argument_list|(
 operator|&
 operator|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_val
@@ -11229,10 +11363,6 @@ name|struct
 name|an_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|struct
-name|an_req
-name|areq
 decl_stmt|;
 name|int
 name|rid
@@ -11338,12 +11468,16 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
 operator|=
 name|AN_MAX_DATALEN
 expr_stmt|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -11360,6 +11494,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -11367,6 +11503,8 @@ name|l_ioctl
 operator|->
 name|len
 operator|=
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11381,6 +11519,8 @@ name|copyout
 argument_list|(
 operator|&
 operator|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11392,6 +11532,8 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11411,6 +11553,8 @@ name|copyout
 argument_list|(
 operator|&
 operator|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_val
@@ -11488,6 +11632,8 @@ name|len
 operator|>
 sizeof|sizeof
 argument_list|(
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_val
@@ -11499,6 +11645,8 @@ return|return
 operator|-
 name|EINVAL
 return|;
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_len
@@ -11510,6 +11658,8 @@ operator|+
 literal|4
 expr_stmt|;
 comment|/* add type& length */
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_type
@@ -11528,6 +11678,8 @@ operator|+
 literal|2
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 operator|.
 name|an_val
@@ -11556,6 +11708,8 @@ name|an_ltv_gen
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|)
 expr_stmt|;
@@ -12540,21 +12694,17 @@ modifier|*
 name|l_ioctl
 decl_stmt|;
 block|{
-name|struct
-name|an_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
-name|an_req
-name|areq
-decl_stmt|;
 name|int
 name|z
 init|=
 literal|0
 decl_stmt|,
 name|status
+decl_stmt|;
+name|struct
+name|an_softc
+modifier|*
+name|sc
 decl_stmt|;
 name|sc
 operator|=
@@ -12606,6 +12756,8 @@ operator|->
 name|data
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 name|l_ioctl
@@ -12621,6 +12773,8 @@ name|int
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 expr_stmt|;
 if|if
@@ -12660,6 +12814,8 @@ operator|->
 name|data
 argument_list|,
 operator|&
+name|sc
+operator|->
 name|areq
 argument_list|,
 name|l_ioctl
@@ -12675,6 +12831,8 @@ name|int
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|areq
 expr_stmt|;
 if|if
