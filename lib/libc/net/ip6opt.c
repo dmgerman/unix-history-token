@@ -2050,7 +2050,7 @@ name|u_int8_t
 modifier|*
 name|typep
 parameter_list|,
-name|size_t
+name|socklen_t
 modifier|*
 name|lenp
 parameter_list|,
