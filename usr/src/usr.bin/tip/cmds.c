@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.16 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2490,7 +2490,7 @@ name|CONNECT
 end_ifdef
 
 begin_comment
-comment|/*  * Fork a program with:  *  0<-> local tty in  *  1<-> local tty out  *  2<-> local tty out  *  3<-> remote tty in  *  4<-> remote tty out  */
+comment|/*  * Fork a program with:  *  0<-> remote tty in  *  1<-> remote tty out  *  2<-> local tty out  */
 end_comment
 
 begin_macro
@@ -2642,21 +2642,21 @@ name|dup2
 argument_list|(
 name|FD
 argument_list|,
-literal|3
+literal|0
 argument_list|)
 expr_stmt|;
 name|dup2
 argument_list|(
 literal|3
 argument_list|,
-literal|4
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|5
+literal|3
 init|;
 name|i
 operator|<
