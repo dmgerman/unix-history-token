@@ -1563,6 +1563,30 @@ value|do {						\ 	if ((p)->p_stops& (e)) {					\ 		mtx_enter(&Giant, MTX_DEF);	
 end_define
 
 begin_comment
+comment|/* Lock and unlock a process. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_LOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_enter(&(p)->p_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_UNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_exit(&(p)->p_mtx, MTX_DEF)
+end_define
+
+begin_comment
 comment|/* Hold process U-area in memory, normally for ptrace/procfs work. */
 end_comment
 
@@ -1573,7 +1597,7 @@ name|PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0)		\ 		faultin(p);						\ } while(0)
+value|do {							\ 	PROC_LOCK(p);							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0) {	\ 		PROC_UNLOCK(p);						\ 		faultin(p);						\ 	} else								\ 		PROC_UNLOCK(p);						\ } while(0)
 end_define
 
 begin_define
@@ -1583,7 +1607,7 @@ name|PRELE
 parameter_list|(
 name|p
 parameter_list|)
-value|(--(p)->p_lock)
+value|do {							\ 	PROC_LOCK(p);							\ 	(--(p)->p_lock);						\ 	PROC_UNLOCK(p);							\ } while(0)
 end_define
 
 begin_define
