@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xe.c,v 1.16 1999/03/08 16:28:50 root Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xe.c,v 1.17 1999/03/28 20:27:24 scott Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Portions of this software were derived from Werner Koch's xirc2ps 
 end_comment
 
 begin_comment
-comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  * The following cards and media are supported (Ethernet part only on the  * multifunction CEM cards):  *   CE2	10BASE-2, 10BASE-T (I think)  *   CEM28	ditto  *   CEM33	ditto  *   CE3	10BASE-T, 100BASE-TX  *   CEM56	ditto  *   RealPort   ditto  * Some Compaq and Intel cards using the Xircom hardware are also known to  * work.  See the website for full details of supported hardware.  *  *<Acknowledgements to go here>  *  * The web page for the driver is located at:  * http://www.dcs.qmw.ac.uk/~scott/xe_drv/  * Check here first for new releases, bug fixes, etc.  *  * Please send all feedback, bug reports, patches, etc. to  *<scott@dcs.qmw.ac.uk>.  Mail with the tag "[XE]" in the subject line will  * be automatically filed in an appropriate folder where I'm more likely to  * see it and respond promptly.  */
+comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  The  * following cards and media are, or will eventually be, supported (Ethernet  * part only on the multifunction CEM cards):  *   CE2	10BASE-2, 10BASE-T (I think)  *   CEM28	ditto  *   CEM33	ditto  *   CE3	10BASE-T, 100BASE-TX  *   CEM56	ditto  *   RealPort   ditto  * Compaq and Intel cards using the Xircom CE3 hardware are also known to  * work.  See the website for full details of supported hardware.  *  * Thanks to all who assisted with the development and testing of the driver,  * especially: Werner Koch, Duke Kamstra, Duncan Barclay, Ade Lovett, Jason  * George, Dru Nelson, Mike Kephart, Bill Rainey and Douglas Rand.  Apologies  * if I've left out anyone who deserves a mention here.  *  * Driver web page: http://www.freebsd-uk.eu.org/~scott/xe_drv/  *  * Mailing list: http://www.lovett.com/lists/freebsd-xircom/  * or send "subscribe freebsd-xircom" to<majordomo@lovett.com>  *  * Author email:<scott@freebsd-uk.eu.org>  */
 end_comment
 
 begin_define
@@ -1227,6 +1227,16 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|XE_DEBUG
+name|printf
+argument_list|(
+literal|"xe: probe\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 name|sca
@@ -1534,7 +1544,7 @@ name|uio_procp
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Read tuples one at a time into buf.  Sucks, but it only happens once.      * XXX - If the stuff we need isn't in attribute memory, or (worse yet)      * XXX - attribute memory isn't mapped, we're FUBAR.  Maybe need to do an      * XXX - ioctl on the card device and follow links?      */
+comment|/*      * Read tuples one at a time into buf.  Sucks, but it only happens once.      * XXX - If the stuff we need isn't in attribute memory, or (worse yet)      * XXX - attribute memory isn't mapped, we're FUBAR.  Maybe need to do an      * XXX - ioctl on the card device and follow links?      * XXX - Not really the driver's problem, PCCARD should handle all this!      */
 if|if
 condition|(
 operator|(
@@ -3890,7 +3900,7 @@ name|scp
 operator|->
 name|tx_collisions
 expr_stmt|;
-comment|/* 	 * Collision stats are a PITA.  If multiples frames have been sent, we  	 * distribute any outstanding collision count equally amongst them. 	 * However, if we're missing interrupts we're quite likely to also 	 * miss some collisions; thus the total count will be off anyway. 	 * Likewise, if we miss a frame dropped due to excessive collisions 	 * any outstanding collisions count will be held against the next 	 * frame to be successfully sent.  Hopefully it averages out in the 	 * end! 	 * XXX - This will screw up if tx_collisions/sent> 14. 	 */
+comment|/* 	 * Collision stats are a PITA.  If multiples frames have been sent, we  	 * distribute any outstanding collision count equally amongst them. 	 * However, if we're missing interrupts we're quite likely to also 	 * miss some collisions; thus the total count will be off anyway. 	 * Likewise, if we miss a frame dropped due to excessive collisions 	 * any outstanding collisions count will be held against the next 	 * frame to be successfully sent.  Hopefully it averages out in the 	 * end! 	 * XXX - This will screw up if tx_collisions/sent> 14. FIX IT! 	 */
 switch|switch
 condition|(
 name|scp
@@ -4332,7 +4342,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	       * XXX - this i-- seems very wrong, but it's what the Linux guys  	       * XXX - do.  Need someone with an old CE2 to test this for me. 	       */
+comment|/* 	       * XXX - This i-- seems very wrong, but it's what the Linux guys  	       * XXX - do.  Need someone with an old CE2 to test this for me. 	       * XXX - 99/3/28: Changed the first i-- to an i++, maybe that'll 	       * XXX - fix it?  It seems as though the previous version would 	       * XXX - have caused an infinite loop (what, another one?). 	       */
 for|for
 control|(
 name|i
@@ -4344,7 +4354,7 @@ operator|<
 name|len
 condition|;
 name|i
-operator|--
+operator|++
 operator|,
 name|rhs
 operator|++
@@ -4675,7 +4685,7 @@ name|XE_CR_ENABLE_INTR
 argument_list|)
 expr_stmt|;
 comment|/* Re-enable interrupts */
-comment|/* XXX - Maybe force an int here, instead of dropping packets?     */
+comment|/* XXX - Could force an int here, instead of dropping packets?     */
 comment|/* XXX - XE_OUTB(XE_CR, XE_CR_ENABLE_INTR|XE_CE_FORCE_INTR); */
 return|return
 name|result
@@ -4947,8 +4957,6 @@ decl_stmt|,
 name|anar
 decl_stmt|,
 name|lpar
-decl_stmt|,
-name|aner
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5310,6 +5318,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 	   * XXX - Bit of a hack going on in here. 	   * XXX - This is derived from Ken Hughes patch to the Linux driver 	   * XXX - to make it work with 10Mbit _autonegotiated_ links on CE3B 	   * XXX - cards.  What's a CE3B and how's it differ from a plain CE3? 	   * XXX - these are the things we need to find out. 	   */
 name|xe_phy_writereg
 argument_list|(
 name|scp
@@ -5324,6 +5333,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* BEGIN HACK */
 name|XE_OUTB
 argument_list|(
 name|XE_MSR
@@ -5332,18 +5342,40 @@ name|XE_INB
 argument_list|(
 name|XE_MSR
 argument_list|)
-operator|&
-operator|~
+operator||
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/* Disable PHY? */
+name|XE_SELECT_PAGE
+argument_list|(
+literal|0x42
+argument_list|)
+expr_stmt|;
+name|XE_OUTB
+argument_list|(
+name|XE_SWC1
+argument_list|,
+literal|0x80
+argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|media
+operator|=
+name|IFM_ETHER
+operator||
+name|IFM_10_T
+expr_stmt|;
 name|scp
 operator|->
 name|autoneg_status
 operator|=
-name|XE_AUTONEG_FAIL
+name|XE_AUTONEG_NONE
 expr_stmt|;
+comment|/* END HACK */
+comment|/*XE_OUTB(XE_MSR, XE_INB(XE_MSR)& ~0x08);*/
+comment|/* Disable PHY? */
+comment|/*scp->autoneg_status = XE_AUTONEG_FAIL;*/
 block|}
 block|}
 else|else
@@ -6227,6 +6259,24 @@ operator|)
 operator|>>
 literal|4
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XE_DEBUG
+name|printf
+argument_list|(
+literal|"xe%d: silicon revision = %d\n"
+argument_list|,
+name|scp
+operator|->
+name|unit
+argument_list|,
+name|scp
+operator|->
+name|srev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*    * Shut off interrupts.    */
 name|xe_disable_intr
 argument_list|(
@@ -6707,7 +6757,7 @@ name|XE_OUTB
 argument_list|(
 name|XE_SWC1
 argument_list|,
-literal|0
+literal|0x01
 argument_list|)
 expr_stmt|;
 name|XE_SELECT_PAGE
@@ -6722,11 +6772,13 @@ argument_list|,
 name|XE_OCR_OFFLINE
 argument_list|)
 expr_stmt|;
+comment|/*xe_reg_dump(scp);*/
 name|xe_setaddrs
 argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
+comment|/*xe_reg_dump(scp);*/
 name|XE_SELECT_PAGE
 argument_list|(
 literal|0x40
@@ -6767,7 +6819,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up all on-chip addresses (for multicast).  AFAICS, there are 10  * of these things; the first is our MAC address, the other 9 are mcast  * addresses, padded with the MAC address if there aren't enough.  * XXX - I think the Linux code gets this wrong and only writes one byte for  * XXX - each address.  I *think* this code does it right, but it needs more  * XXX - intensive testing to be sure.  */
+comment|/*  * Set up all on-chip addresses (for multicast).  AFAICS, there are 10  * of these things; the first is our MAC address, the other 9 are mcast  * addresses, padded with the MAC address if there aren't enough.  * XXX - This doesn't work right, but I'm not sure why yet.  We seem to be  * XXX - doing much the same as the Linux code, which is weird enough that  * XXX - it's probably right (despite my earlier comments to the contrary).  * XXX - I wonder if this thing has a multicast hash filter like most other  * XXX - Ethernet hardware seems to?  */
 end_comment
 
 begin_function
@@ -6935,6 +6987,42 @@ name|byte
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|XE_DEBUG
+if|if
+condition|(
+name|i
+condition|)
+name|printf
+argument_list|(
+literal|":%x"
+argument_list|,
+name|addr
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"xe%d: individual addresses %d: %x"
+argument_list|,
+name|scp
+operator|->
+name|unit
+argument_list|,
+name|slot
+argument_list|,
+name|addr
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|byte
@@ -6985,6 +7073,16 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|XE_DEBUG
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|XE_SELECT_PAGE
 argument_list|(
@@ -8405,6 +8503,10 @@ directive|ifdef
 name|XE_DEBUG
 end_ifdef
 
+begin_comment
+comment|/*  * A bit of debugging code.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -8419,14 +8521,22 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|unit
-init|=
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xe%d: MII registers: "
+argument_list|,
 name|scp
 operator|->
-name|dev
-operator|->
-name|id_unit
-decl_stmt|;
+name|unit
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -8490,6 +8600,14 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8505,23 +8623,23 @@ name|scp
 parameter_list|)
 block|{
 name|int
-name|unit
-init|=
-name|scp
-operator|->
-name|dev
-operator|->
-name|id_unit
-decl_stmt|;
-name|int
 name|page
 decl_stmt|,
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"xe%d: Common registers: "
 argument_list|,
+name|scp
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -8562,7 +8680,7 @@ operator|=
 literal|0
 init|;
 name|page
-operator|<
+operator|<=
 literal|8
 condition|;
 name|page
@@ -8573,6 +8691,8 @@ name|printf
 argument_list|(
 literal|"xe%d: Register page %2.2x: "
 argument_list|,
+name|scp
+operator|->
 name|unit
 argument_list|,
 name|page
@@ -8618,7 +8738,7 @@ for|for
 control|(
 name|page
 operator|=
-literal|0x40
+literal|0x10
 init|;
 name|page
 operator|<
@@ -8630,14 +8750,26 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|page
+operator|>=
+literal|0x11
+operator|&&
+name|page
+operator|<=
+literal|0x3f
+operator|)
+operator|||
+operator|(
 name|page
 operator|==
-literal|0x43
+literal|0x41
+operator|)
 operator|||
 operator|(
 name|page
 operator|>=
-literal|0x46
+literal|0x43
 operator|&&
 name|page
 operator|<=
@@ -8647,11 +8779,7 @@ operator|||
 operator|(
 name|page
 operator|>=
-literal|0x51
-operator|&&
-name|page
-operator|<=
-literal|0x5e
+literal|0x59
 operator|)
 condition|)
 continue|continue;
@@ -8659,6 +8787,8 @@ name|printf
 argument_list|(
 literal|"xe%d: Register page %2.2x: "
 argument_list|,
+name|scp
+operator|->
 name|unit
 argument_list|,
 name|page
@@ -8700,6 +8830,14 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
