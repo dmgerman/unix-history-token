@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CAM request queue management functions.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_queue.c,v 1.1 1998/09/15 06:33:23 gibbs Exp $  */
+comment|/*  * CAM request queue management functions.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_queue.c,v 1.2 1999/04/07 22:57:48 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -284,6 +284,12 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 		 * Heap algorithms like everything numbered from 1, so 		 * offset our pointer into the heap array by one element. 		 */
+name|camq
+operator|->
+name|queue_array
+operator|--
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -349,6 +355,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * Heap algorithms like everything numbered from 1, so 		 * our pointer into the heap array is offset by one element. 		 */
+name|queue
+operator|->
+name|queue_array
+operator|++
+expr_stmt|;
 name|free
 argument_list|(
 name|queue
@@ -435,6 +447,7 @@ name|CAM_RESRC_UNAVAIL
 operator|)
 return|;
 block|}
+comment|/* 	 * Heap algorithms like everything numbered from 1, so 	 * remember that our pointer into the heap array is offset 	 * by one element. 	 */
 if|if
 condition|(
 name|queue
@@ -444,6 +457,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|queue
+operator|->
+name|queue_array
+operator|++
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|queue
@@ -478,6 +496,8 @@ operator|->
 name|queue_array
 operator|=
 name|new_array
+operator|-
+literal|1
 expr_stmt|;
 name|queue
 operator|->
@@ -494,7 +514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * camq_insert: Given an array of cam_pinfo* elememnts with  * the Heap(0, num_elements) property and array_size - num_elements>= 1,  * output Heap(0, num_elements+1) including new_entry in the array.  */
+comment|/*  * camq_insert: Given an array of cam_pinfo* elememnts with  * the Heap(1, num_elements) property and array_size - num_elements>= 1,  * output Heap(1, num_elements+1) including new_entry in the array.  */
 end_comment
 
 begin_function
@@ -533,6 +553,11 @@ endif|#
 directive|endif
 name|queue
 operator|->
+name|entries
+operator|++
+expr_stmt|;
+name|queue
+operator|->
 name|queue_array
 index|[
 name|queue
@@ -569,16 +594,11 @@ operator|->
 name|entries
 argument_list|)
 expr_stmt|;
-name|queue
-operator|->
-name|entries
-operator|++
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * camq_remove:  Given an array of cam_pinfo* elevements with the  * Heap(0, num_elements) property and an index such that 0<= index<=  * num_elements, remove that entry and restore the Heap(0, num_elements-1)  * property.  */
+comment|/*  * camq_remove:  Given an array of cam_pinfo* elevements with the  * Heap(1, num_elements) property and an index such that 1<= index<=  * num_elements, remove that entry and restore the Heap(1, num_elements-1)  * property.  */
 end_comment
 
 begin_function
@@ -601,15 +621,15 @@ name|removed_entry
 decl_stmt|;
 if|if
 condition|(
-operator|(
+name|index
+operator|==
+literal|0
+operator|||
+name|index
+operator|>
 name|queue
 operator|->
 name|entries
-operator|-
-name|index
-operator|)
-operator|<=
-literal|0
 condition|)
 return|return
 operator|(
@@ -624,11 +644,6 @@ name|queue_array
 index|[
 name|index
 index|]
-expr_stmt|;
-name|queue
-operator|->
-name|entries
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -677,6 +692,8 @@ argument_list|,
 name|queue
 operator|->
 name|entries
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -685,6 +702,11 @@ operator|->
 name|index
 operator|=
 name|CAM_UNQUEUED_INDEX
+expr_stmt|;
+name|queue
+operator|->
+name|entries
+operator|--
 expr_stmt|;
 return|return
 operator|(
@@ -695,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * camq_change_priority:  Given an array of cam_pinfo* elements with the  * Heap(0, num_entries) property, an index such that 0<= index<= num_elements,  * and an new priority for the element at index, change the priority of  * element index and restore the Heap(0, num_elements) property.  */
+comment|/*  * camq_change_priority:  Given an array of cam_pinfo* elements with the  * Heap(1, num_entries) property, an index such that 1<= index<= num_elements,  * and an new priority for the element at index, change the priority of  * element index and restore the Heap(0, num_elements) property.  */
 end_comment
 
 begin_function
@@ -1515,7 +1537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * heap_up:  Given an array of cam_pinfo* elements with the  * Heap(0, new_index-1) property and a new element in location  * new_index, output Heap(0, new_index).  */
+comment|/*  * heap_up:  Given an array of cam_pinfo* elements with the  * Heap(1, new_index-1) property and a new element in location  * new_index, output Heap(1, new_index).  */
 end_comment
 
 begin_function
@@ -1546,16 +1568,12 @@ while|while
 condition|(
 name|child
 operator|!=
-literal|0
+literal|1
 condition|)
 block|{
 name|parent
 operator|=
-operator|(
 name|child
-operator|-
-literal|1
-operator|)
 operator|>>
 literal|1
 expr_stmt|;
@@ -1591,7 +1609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * heap_down:  Given an array of cam_pinfo* elements with the  * Heap(index + 1, num_entries - 1) property with index containing  * an unsorted entry, output Heap(0, num_entries - 1).  */
+comment|/*  * heap_down:  Given an array of cam_pinfo* elements with the  * Heap(index + 1, num_entries) property with index containing  * an unsorted entry, output Heap(index, num_entries).  */
 end_comment
 
 begin_function
@@ -1623,37 +1641,27 @@ name|index
 expr_stmt|;
 name|child
 operator|=
-operator|(
 name|parent
 operator|<<
-literal|1
-operator|)
-operator|+
 literal|1
 expr_stmt|;
 for|for
 control|(
 init|;
 name|child
-operator|<
+operator|<=
 name|num_entries
 condition|;
 name|child
 operator|=
-operator|(
 name|parent
 operator|<<
-literal|1
-operator|)
-operator|+
 literal|1
 control|)
 block|{
 if|if
 condition|(
 name|child
-operator|+
-literal|1
 operator|<
 name|num_entries
 condition|)
