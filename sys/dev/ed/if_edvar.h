@@ -75,6 +75,12 @@ modifier|*
 name|port_res
 decl_stmt|;
 comment|/* resource for port range */
+name|bus_space_tag_t
+name|port_bst
+decl_stmt|;
+name|bus_space_handle_t
+name|port_bsh
+decl_stmt|;
 name|int
 name|mem_rid
 decl_stmt|;
@@ -89,6 +95,12 @@ modifier|*
 name|mem_res
 decl_stmt|;
 comment|/* resource for memory range */
+name|bus_space_tag_t
+name|mem_bst
+decl_stmt|;
+name|bus_space_handle_t
+name|mem_bsh
+decl_stmt|;
 name|int
 name|irq_rid
 decl_stmt|;
@@ -243,7 +255,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->nic_offset + (port))
+value|bus_space_read_1(sc->port_bst, sc->port_bsh, (sc)->nic_offset + (port))
 end_define
 
 begin_define
@@ -258,7 +270,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->nic_offset + (port), \ 		(value))
+value|bus_space_write_1(sc->port_bst, sc->port_bsh, \ 	    (sc)->nic_offset + (port), (value))
 end_define
 
 begin_define
@@ -271,7 +283,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->nic_offset + (port))
+value|bus_space_read_2(sc->port_bst, sc->port_bsh, (sc)->nic_offset + (port))
 end_define
 
 begin_define
@@ -286,7 +298,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->nic_offset + (port), \ 		(value))
+value|bus_space_write_2(sc->port_bst, sc->port_bsh, \ 	    (sc)->nic_offset + (port), (value))
 end_define
 
 begin_define
@@ -303,7 +315,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->nic_offset + (port), (addr), (count))
+value|bus_space_read_multi_1(sc->port_bst,  sc->port_bsh, \ 		(sc)->nic_offset + (port), (addr), (count))
 end_define
 
 begin_define
@@ -320,7 +332,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->nic_offset + (port), (addr), (count))
+value|bus_space_write_multi_1(sc->port_bst, sc->port_bsh, \ 		(sc)->nic_offset + (port), (addr), (count))
 end_define
 
 begin_define
@@ -337,7 +349,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->nic_offset + (port), (uint16_t *)(addr), (count))
+value|bus_space_read_multi_2(sc->port_bst, sc->port_bsh, \ 		(sc)->nic_offset + (port), (uint16_t *)(addr), (count))
 end_define
 
 begin_define
@@ -354,7 +366,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->nic_offset + (port), (uint16_t *)(addr), (count))
+value|bus_space_write_multi_2(sc->port_bst, sc->port_bsh, \ 		(sc)->nic_offset + (port), (uint16_t *)(addr), (count))
 end_define
 
 begin_define
@@ -371,7 +383,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_4(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->nic_offset + (port), (uint32_t *)(addr), (count))
+value|bus_space_read_multi_4(sc->port_bst, sc->port_bsh, \ 		(sc)->nic_offset + (port), (uint32_t *)(addr), (count))
 end_define
 
 begin_define
@@ -388,7 +400,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_4(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->nic_offset + (port), (uint32_t *)(addr), (count))
+value|bus_space_write_multi_4(sc->port_bst, sc->port_bsh, \ 		(sc)->nic_offset + (port), (uint32_t *)(addr), (count))
 end_define
 
 begin_define
@@ -401,7 +413,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->asic_offset + (port))
+value|bus_space_read_1(sc->port_bst, sc->port_bsh, \ 	    (sc)->asic_offset + (port))
 end_define
 
 begin_define
@@ -416,7 +428,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->asic_offset + (port), \ 		(value))
+value|bus_space_write_1(sc->port_bst, sc->port_bsh, \ 	    (sc)->asic_offset + (port), (value))
 end_define
 
 begin_define
@@ -429,7 +441,7 @@ parameter_list|,
 name|port
 parameter_list|)
 define|\
-value|bus_space_read_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->asic_offset + (port))
+value|bus_space_read_2(sc->port_bst, sc->port_bsh, \ 	    (sc)->asic_offset + (port))
 end_define
 
 begin_define
@@ -444,7 +456,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|bus_space_write_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), (sc)->asic_offset + (port), \ 		(value))
+value|bus_space_write_2(sc->port_bst, sc->port_bsh, \ 	    (sc)->asic_offset + (port), (value))
 end_define
 
 begin_define
@@ -461,7 +473,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->asic_offset + (port), (addr), (count))
+value|bus_space_read_multi_1(sc->port_bst, sc->port_bsh, \ 		(sc)->asic_offset + (port), (addr), (count))
 end_define
 
 begin_define
@@ -478,7 +490,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_1(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->asic_offset + (port), (addr), (count))
+value|bus_space_write_multi_1(sc->port_bst, sc->port_bsh, \ 		(sc)->asic_offset + (port), (addr), (count))
 end_define
 
 begin_define
@@ -495,7 +507,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->asic_offset + (port), (uint16_t *)(addr), (count))
+value|bus_space_read_multi_2(sc->port_bst, sc->port_bsh, \ 		(sc)->asic_offset + (port), (uint16_t *)(addr), (count))
 end_define
 
 begin_define
@@ -512,7 +524,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_2(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->asic_offset + (port), (uint16_t *)(addr), (count))
+value|bus_space_write_multi_2(sc->port_bst, sc->port_bsh, \ 		(sc)->asic_offset + (port), (uint16_t *)(addr), (count))
 end_define
 
 begin_define
@@ -529,7 +541,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_4(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->asic_offset + (port), (uint32_t *)(addr), (count))
+value|bus_space_read_multi_4(sc->port_bst, sc->port_bsh, \ 		(sc)->asic_offset + (port), (uint32_t *)(addr), (count))
 end_define
 
 begin_define
@@ -546,7 +558,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_write_multi_4(rman_get_bustag((sc)->port_res), \ 		rman_get_bushandle((sc)->port_res), \ 		(sc)->asic_offset + (port), (uint32_t *)(addr), (count))
+value|bus_space_write_multi_4(sc->port_bst, sc->port_bsh, \ 		(sc)->asic_offset + (port), (uint32_t *)(addr), (count))
 end_define
 
 begin_function_decl
