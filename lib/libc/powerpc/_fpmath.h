@@ -27,11 +27,13 @@ literal|15
 decl_stmt|;
 name|unsigned
 name|long
+name|long
 name|manh
 range|:
 literal|48
 decl_stmt|;
 name|unsigned
+name|long
 name|long
 name|manl
 range|:
@@ -43,10 +45,6 @@ struct|;
 block|}
 union|;
 end_union
-
-begin_comment
-comment|/* XXX does powerpc have a normalization bit? */
-end_comment
 
 begin_define
 define|#
