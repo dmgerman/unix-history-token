@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.3 %G%"
+literal|"@(#)tmps.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +274,10 @@ name|curtmps
 operator|.
 name|om_off
 operator|-=
+name|leven
+argument_list|(
 name|size
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
