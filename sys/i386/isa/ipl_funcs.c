@@ -201,6 +201,46 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANT_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GENSPLASSERT
+parameter_list|(
+name|NAME
+parameter_list|,
+name|MODIFIER
+parameter_list|)
+define|\
+value|int							\ is_##NAME(void)						\ {							\ 	return ((cpl& (MODIFIER)) == (MODIFIER));	\ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GENSPLASSERT
+parameter_list|(
+name|NAME
+parameter_list|,
+name|MODIFIER
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -221,7 +261,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	return (x);					\ }							\ int							\ is_##NAME(void)						\ {							\ 	return ((cpl& (MODIFIER)) == (MODIFIER));	\ }
+value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	return (x);					\ }							\ GENSPLASSERT(NAME, MODIFIER)
 end_define
 
 begin_function
@@ -530,7 +570,7 @@ value|\ 			SPIN_RESET;					\ 			while (cil& y)					\ 				SPIN_SPL				\ 			contin
 comment|/* try again */
 value|\ 		}							\ 		break;							\ 	}								\ 	cpl OP MODIFIER;
 comment|/* make the change */
-value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }									\ int									\ is_##NAME(void)								\ {									\ 	return ((cpl& (MODIFIER)) == (MODIFIER));			\ }
+value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }									\ GENSPLASSERT(NAME, MODIFIER)
 end_define
 
 begin_else
@@ -556,7 +596,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	IFCPL_LOCK();					\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	IFCPL_UNLOCK();					\ 							\ 	return (x);					\ }							\ int							\ is_##NAME(void)						\ {							\ 	return ((cpl& (MODIFIER)) == (MODIFIER));	\ }
+value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	IFCPL_LOCK();					\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	IFCPL_UNLOCK();					\ 							\ 	return (x);					\ }							\ GENSPLASSERT(NAME, MODIFIER)
 end_define
 
 begin_endif
