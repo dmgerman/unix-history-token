@@ -86,6 +86,10 @@ name|int
 name|bpp
 decl_stmt|;
 comment|/* 4 or 6 */
+name|int
+name|exposure
+decl_stmt|;
+comment|/* time to open shutter */
 name|u_char
 name|xferparms
 decl_stmt|;
@@ -372,6 +376,21 @@ end_define
 
 begin_comment
 comment|/* timeout on scan reads */
+end_comment
+
+begin_comment
+comment|/* This value could be OS 						   dependant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QC_DEF_EXPOSURE
+value|200
+end_define
+
+begin_comment
+comment|/* default exposure */
 end_comment
 
 begin_decl_stmt
