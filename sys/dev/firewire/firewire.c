@@ -124,8 +124,33 @@ name|int
 name|firewire_debug
 init|=
 literal|0
+decl_stmt|,
+name|try_bmr
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|firewire_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|firewire_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"FireWire driver debug flag"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -148,20 +173,20 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_hw_firewire
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|firewire_debug
+name|try_bmr
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|firewire_debug
+name|try_bmr
 argument_list|,
 literal|0
 argument_list|,
-literal|"FireWire driver debug flag"
+literal|"Try to be a bus manager"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6687,6 +6712,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|try_bmr
+operator|&&
 operator|(
 name|fc
 operator|->
@@ -6796,22 +6823,12 @@ name|status
 operator|=
 name|FWBUSMGRDONE
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|fc
-operator|->
-name|bdev
-argument_list|,
-literal|"BMR = %x\n"
-argument_list|,
-name|CSRARC
-argument_list|(
-name|fc
-argument_list|,
-name|BUS_MGR_ID
-argument_list|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|device_printf(fc->bdev, "BMR = %x\n", 				CSRARC(fc, BUS_MGR_ID));
+endif|#
+directive|endif
 block|}
 name|free
 argument_list|(
@@ -6820,10 +6837,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX optimize gap_count, if I am BMGR */
+comment|/* Optimize gap_count, if I am BMGR */
 if|if
 condition|(
 name|fc
@@ -6862,11 +6876,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-literal|1
 name|callout_reset
 argument_list|(
 operator|&
@@ -6891,15 +6900,6 @@ operator|)
 name|fc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fw_bus_probe
-argument_list|(
-name|fc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
