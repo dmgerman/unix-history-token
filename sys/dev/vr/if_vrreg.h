@@ -2466,6 +2466,10 @@ name|u_int8_t
 name|vr_revid
 decl_stmt|;
 comment|/* Rhine chip revision */
+name|u_int8_t
+name|vr_flags
+decl_stmt|;
+comment|/* See VR_F_* below */
 name|struct
 name|vr_list_data
 modifier|*
@@ -2486,6 +2490,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|VR_F_RESTART
+value|0x01
+end_define
+
+begin_comment
+comment|/* Restart unit on next tick */
+end_comment
 
 begin_define
 define|#
