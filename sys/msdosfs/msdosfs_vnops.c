@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.60 1998/02/23 16:44:36 ache Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.61 1998/02/24 14:13:16 ache Exp $ */
 end_comment
 
 begin_comment
@@ -6927,12 +6927,6 @@ decl_stmt|;
 name|long
 name|on
 decl_stmt|;
-name|long
-name|lost
-decl_stmt|;
-name|long
-name|count
-decl_stmt|;
 name|u_long
 name|cn
 decl_stmt|;
@@ -7076,23 +7070,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the user buffer is smaller than the size of one dos directory 	 * entry or the file offset is not a multiple of the size of a 	 * directory entry, then we fail the read. 	 */
-name|count
+name|off
 operator|=
-name|uio
-operator|->
-name|uio_resid
-operator|&
-operator|~
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|direntry
-argument_list|)
-operator|-
-literal|1
-operator|)
-expr_stmt|;
 name|offset
 operator|=
 name|uio
@@ -7101,7 +7080,9 @@ name|uio_offset
 expr_stmt|;
 if|if
 condition|(
-name|count
+name|uio
+operator|->
+name|uio_resid
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -7128,20 +7109,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|lost
-operator|=
-name|uio
-operator|->
-name|uio_resid
-operator|-
-name|count
-expr_stmt|;
-name|uio
-operator|->
-name|uio_resid
-operator|=
-name|count
-expr_stmt|;
 if|if
 condition|(
 name|ap
@@ -7400,6 +7367,18 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|offset
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|direntry
+argument_list|)
+expr_stmt|;
+name|off
+operator|=
+name|offset
+expr_stmt|;
 if|if
 condition|(
 name|cookies
@@ -7422,14 +7401,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|offset
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|direntry
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -7997,10 +7968,6 @@ operator|*
 name|cookies
 operator|++
 operator|=
-name|off
-expr_stmt|;
-name|off
-operator|=
 name|offset
 operator|+
 sizeof|sizeof
@@ -8027,6 +7994,16 @@ name|out
 goto|;
 block|}
 block|}
+name|off
+operator|=
+name|offset
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|direntry
+argument_list|)
+expr_stmt|;
 block|}
 name|brelse
 argument_list|(
@@ -8054,13 +8031,7 @@ name|uio
 operator|->
 name|uio_offset
 operator|=
-name|offset
-expr_stmt|;
-name|uio
-operator|->
-name|uio_resid
-operator|+=
-name|lost
+name|off
 expr_stmt|;
 comment|/* 	 * Set the eofflag (NFS uses it) 	 */
 if|if

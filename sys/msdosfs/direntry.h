@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: direntry.h,v 1.10 1998/02/23 16:44:26 ache Exp $ */
+comment|/*	$Id: direntry.h,v 1.11 1998/02/24 14:13:08 ache Exp $ */
 end_comment
 
 begin_comment
@@ -621,6 +621,24 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|winSlotCnt
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+name|un
+operator|,
+name|int
+name|unlen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|winLenFixup
 name|__P
 argument_list|(
 operator|(

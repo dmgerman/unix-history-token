@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.20 1998/02/23 16:44:30 ache Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.21 1998/02/24 14:13:13 ache Exp $ */
 end_comment
 
 begin_comment
@@ -262,6 +262,9 @@ init|=
 name|cnp
 operator|->
 name|cn_proc
+decl_stmt|;
+name|int
+name|unlen
 decl_stmt|;
 name|int
 name|wincnt
@@ -540,6 +543,19 @@ condition|)
 name|wincnt
 operator|=
 literal|1
+expr_stmt|;
+name|unlen
+operator|=
+name|winLenFixup
+argument_list|(
+name|cnp
+operator|->
+name|cn_nameptr
+argument_list|,
+name|cnp
+operator|->
+name|cn_namelen
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
 name|slotcount
@@ -827,9 +843,7 @@ name|cnp
 operator|->
 name|cn_nameptr
 argument_list|,
-name|cnp
-operator|->
-name|cn_namelen
+name|unlen
 argument_list|,
 operator|(
 expr|struct
@@ -941,9 +955,8 @@ name|dp
 operator|->
 name|de_fndcnt
 operator|=
-literal|0
+name|wincnt
 expr_stmt|;
-comment|/* unused anyway */
 goto|goto
 name|found
 goto|;
