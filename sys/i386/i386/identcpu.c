@@ -1974,13 +1974,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|strcpy
-argument_list|(
-name|cpu_model
-argument_list|,
-literal|"IDT "
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|cpu_id
@@ -1991,11 +1984,11 @@ block|{
 case|case
 literal|0x540
 case|:
-name|strcat
+name|strcpy
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"WinChip C6"
+literal|"IDT WinChip C6"
 argument_list|)
 expr_stmt|;
 name|tsc_is_broken
@@ -2006,20 +1999,31 @@ break|break;
 case|case
 literal|0x580
 case|:
-name|strcat
+name|strcpy
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"WinChip 2"
+literal|"IDT WinChip 2"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x670
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"VIA C3 Samuel 2"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|strcat
+name|strcpy
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Unknown"
+literal|"VIA/IDT Unknown"
 argument_list|)
 expr_stmt|;
 block|}
