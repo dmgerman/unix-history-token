@@ -862,6 +862,12 @@ name|PHYS_AVAIL_ARRAY_END
 value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_function_decl
 name|void
 name|osendsig
@@ -881,6 +887,11 @@ name|code
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
