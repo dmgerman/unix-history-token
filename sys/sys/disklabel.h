@@ -1657,12 +1657,6 @@ end_function
 
 begin_struct_decl
 struct_decl|struct
-name|bio
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|buf
 struct_decl|;
 end_struct_decl
@@ -1673,12 +1667,6 @@ name|buf_queue_head
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|bio_queue_head
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|int
 name|bounds_check_with_label
@@ -1686,7 +1674,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|bio
+name|buf
 operator|*
 name|bp
 operator|,
@@ -1709,7 +1697,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|bio
+name|buf
 operator|*
 name|bp
 operator|,
@@ -1788,17 +1776,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|bioqdisksort
+name|bufqdisksort
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|bio_queue_head
+name|buf_queue_head
 operator|*
 name|ap
 operator|,
 expr|struct
-name|bio
+name|buf
 operator|*
 name|bp
 operator|)
