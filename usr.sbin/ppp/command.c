@@ -19850,6 +19850,27 @@ name|OPT_FILTERDECAP
 block|}
 block|,
 block|{
+literal|"force-scripts"
+block|,
+name|NULL
+block|,
+name|OptSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Force execution of the configured chat scripts"
+block|,
+literal|"disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|OPT_FORCE_SCRIPTS
+block|}
+block|,
+block|{
 literal|"idcheck"
 block|,
 name|NULL
@@ -20133,14 +20154,14 @@ name|NOINET6
 define|#
 directive|define
 name|OPT_MAX
-value|13
+value|14
 comment|/* accept/deny allowed below and not above */
 else|#
 directive|else
 define|#
 directive|define
 name|OPT_MAX
-value|11
+value|12
 endif|#
 directive|endif
 block|{

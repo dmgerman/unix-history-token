@@ -6171,6 +6171,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|Enabled
+argument_list|(
+name|dl
+operator|->
+name|bundle
+argument_list|,
+name|OPT_FORCE_SCRIPTS
+argument_list|)
+operator|&&
+operator|(
 name|dl
 operator|->
 name|physical
@@ -6181,6 +6192,7 @@ operator|(
 name|PHYS_DIRECT
 operator||
 name|PHYS_DEDICATED
+operator|)
 operator|)
 condition|)
 comment|/* Ignore scripts */
