@@ -6673,6 +6673,23 @@ operator|(
 literal|"Texas Instruments PCI1451 CardBus controller"
 operator|)
 return|;
+comment|/* NeoMagic -- vendor 0x10c8 */
+case|case
+literal|0x800510c8
+case|:
+return|return
+operator|(
+literal|"NeoMagic MagicMedia 256ZX Audio controller"
+operator|)
+return|;
+case|case
+literal|0x800610c8
+case|:
+return|return
+operator|(
+literal|"NeoMagic MagicMedia 256ZX Audio controller"
+operator|)
+return|;
 comment|/* NEC -- vendor 0x1033 */
 comment|/* PCI to C-bus bridge */
 comment|/* The following chipsets are PCI to PC98 C-bus bridge. 	 * The C-bus is the 16-bits bus on PC98 and it should be probed as 	 * PCI to ISA bridge.  Because class of the C-bus is not defined, 	 * C-bus bridges are recognized as "other bridge."  To make C-bus 	 * bridge be recognized as ISA bridge, this function returns NULL. 	 */
@@ -6961,11 +6978,19 @@ literal|16
 condition|)
 block|{
 case|case
+literal|0x0003
+case|:
+name|chip
+operator|=
+literal|"MagicGraph 128ZV"
+expr_stmt|;
+break|break;
+case|case
 literal|0x0004
 case|:
 name|chip
 operator|=
-literal|"NM2160 laptop"
+literal|"MagicGraph 128XD"
 expr_stmt|;
 break|break;
 case|case
