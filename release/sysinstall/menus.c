@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.4 1995/05/01 21:56:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.5 1995/05/04 03:51:19 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -21,6 +21,13 @@ begin_decl_stmt
 specifier|extern
 name|DMenu
 name|MenuDocumentation
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuLanguage
 decl_stmt|;
 end_decl_stmt
 
@@ -305,13 +312,13 @@ block|,
 literal|"Danish language and character set (ISO-8859-1)"
 block|,
 comment|/* D */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=da_DK.ISO8859-1"
+name|lang_set_Danish
 block|,
 literal|0
 block|}
@@ -322,13 +329,13 @@ block|,
 literal|"Dutch language and character set (ISO-8859-1)"
 block|,
 comment|/* D */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=nl_NL.ISO8859-1"
+name|lang_set_Dutch
 block|,
 literal|0
 block|}
@@ -339,13 +346,13 @@ block|,
 literal|"English language (system default)"
 block|,
 comment|/* E */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=en_US.ISO8859-1"
+name|lang_set_English
 block|,
 literal|0
 block|}
@@ -356,13 +363,13 @@ block|,
 literal|"French language and character set (ISO-8859-1)"
 block|,
 comment|/* F */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=fr_FR.ISO8859-1"
+name|lang_set_French
 block|,
 literal|0
 block|}
@@ -373,13 +380,13 @@ block|,
 literal|"German language and character set (ISO-8859-1)"
 block|,
 comment|/* G */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=de_DE.ISO8859-1"
+name|lang_set_German
 block|,
 literal|0
 block|}
@@ -390,13 +397,13 @@ block|,
 literal|"Italian language and character set (ISO-8859-1)"
 block|,
 comment|/* I */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=it_IT.ISO8859-1"
+name|lang_set_Italian
 block|,
 literal|0
 block|}
@@ -404,16 +411,16 @@ block|,
 block|{
 literal|"Japanese"
 block|,
-literal|"Japanese language and character set (JIS?)"
+literal|"Japanese language and default character set (romaji)"
 block|,
 comment|/* J */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=ja_JP.EUC"
+name|lang_set_Japanese
 block|,
 literal|0
 block|}
@@ -424,13 +431,13 @@ block|,
 literal|"Russian language and character set (cp866-8x14)"
 block|,
 comment|/* R */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=ru_SU.KOI8-R"
+name|lang_set_Russian
 block|,
 literal|0
 block|}
@@ -441,13 +448,13 @@ block|,
 literal|"Spanish language and character set (ISO-8859-1)"
 block|,
 comment|/* S */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=es_ES.ISO8859-1"
+name|lang_set_Spanish
 block|,
 literal|0
 block|}
@@ -458,13 +465,13 @@ block|,
 literal|"Swedish language and character set (ISO-8859-1)"
 block|,
 comment|/* S */
-name|DMENU_SET_VARIABLE
+name|DMENU_CALL
 block|,
 operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=sv_SV.ISO8859-1"
+name|lang_set_Swedish
 block|,
 literal|0
 block|}
@@ -618,7 +625,7 @@ literal|"As a convenience, we provide several `canned' installation types. \ The
 block|,
 literal|"Press F1 for more information on the various distributions"
 block|,
-literal|"install_types.hlp"
+literal|"dist_types.hlp"
 block|,
 block|{
 block|{
@@ -632,7 +639,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|installSetDeveloper
+name|distSetDeveloper
 block|,
 literal|0
 block|}
@@ -648,7 +655,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|installSetXDeveloper
+name|distSetXDeveloper
 block|,
 literal|0
 block|}
@@ -664,7 +671,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|installSetUser
+name|distSetUser
 block|,
 literal|0
 block|}
@@ -680,7 +687,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|installSetXUser
+name|distSetXUser
 block|,
 literal|0
 block|}
@@ -696,7 +703,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|installSetMinimum
+name|distSetMinimum
 block|,
 literal|0
 block|}
@@ -704,7 +711,7 @@ block|,
 block|{
 literal|"Everything"
 block|,
-literal|"The entire kitchen sink, plus bedroom suite."
+literal|"The entire source and binary distribution."
 block|,
 name|DMENU_CALL
 block|,
@@ -712,7 +719,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|installSetEverything
+name|distSetEverything
 block|,
 literal|0
 block|}
@@ -720,7 +727,7 @@ block|,
 block|{
 literal|"Custom"
 block|,
-literal|"I don't want it canned!  I want to drive!"
+literal|"Specify your own distribution set"
 block|,
 name|DMENU_SUBMENU
 block|,

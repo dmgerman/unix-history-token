@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.2 1995/04/29 19:33:06 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.3 1995/05/01 21:56:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -787,6 +787,64 @@ return|return
 name|fname
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|systemChangeFont
+parameter_list|(
+name|char
+modifier|*
+name|font
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|systemChangeLang
+parameter_list|(
+name|char
+modifier|*
+name|lang
+parameter_list|)
+block|{
+name|variable_set2
+argument_list|(
+literal|"LANG"
+argument_list|,
+name|lang
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|systemChangeTerminal
+parameter_list|(
+name|char
+modifier|*
+name|color
+parameter_list|,
+name|char
+modifier|*
+name|mono
+parameter_list|)
+block|{
+comment|/* Do something with setterm */
+block|}
+end_function
+
+begin_function
+name|void
+name|systemChangeScreenmap
+parameter_list|(
+name|char
+modifier|*
+name|newmap
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.1 1995/05/01 21:56:19 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.2 1995/05/04 03:51:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"libdisk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_comment
@@ -409,11 +415,6 @@ argument_list|,
 literal|"Flags"
 argument_list|)
 expr_stmt|;
-name|attrset
-argument_list|(
-name|A_NORMAL
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -569,7 +570,7 @@ literal|19
 argument_list|,
 literal|0
 argument_list|,
-literal|"ESC = Proceed to next screen"
+literal|"W = Write Changes          ESC = Proceed to next screen"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -594,6 +595,15 @@ expr_stmt|;
 name|attrset
 argument_list|(
 name|A_NORMAL
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|22
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use F1 or `?' for help on this screen"
 argument_list|)
 expr_stmt|;
 name|move
@@ -754,8 +764,11 @@ argument_list|()
 expr_stmt|;
 name|key
 operator|=
+name|toupper
+argument_list|(
 name|getch
 argument_list|()
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -845,9 +858,6 @@ break|break;
 case|case
 literal|'B'
 case|:
-case|case
-literal|'b'
-case|:
 if|if
 condition|(
 name|chunk_info
@@ -876,9 +886,6 @@ expr_stmt|;
 break|break;
 case|case
 literal|'C'
-case|:
-case|case
-literal|'c'
 case|:
 if|if
 condition|(
@@ -989,9 +996,6 @@ break|break;
 case|case
 literal|'D'
 case|:
-case|case
-literal|'d'
-case|:
 if|if
 condition|(
 name|chunk_info
@@ -1031,9 +1035,6 @@ break|break;
 case|case
 literal|'U'
 case|:
-case|case
-literal|'u'
-case|:
 name|Free_Disk
 argument_list|(
 name|d
@@ -1052,6 +1053,28 @@ name|disk
 argument_list|,
 name|d
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'W'
+case|:
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Are you sure you want to write this to disk?"
+argument_list|)
+condition|)
+name|Write_Disk
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+else|else
+name|msg
+operator|=
+literal|"Write not confirmed"
 expr_stmt|;
 break|break;
 case|case
