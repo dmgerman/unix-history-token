@@ -79,8 +79,30 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CAMDEBUG
+name|DEBUG
 end_ifdef
+
+begin_decl_stmt
+name|int
+name|isp_debug
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CAMDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+end_elif
 
 begin_decl_stmt
 name|int
@@ -334,7 +356,7 @@ expr_stmt|;
 comment|/* 	 * If we have a second channel, construct SIM entry for that. 	 */
 if|if
 condition|(
-name|IS_12X0
+name|IS_DUALBUS
 argument_list|(
 name|isp
 argument_list|)

@@ -1574,15 +1574,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_1080
-value|0xd
+name|ISP_HA_SCSI_1240
+value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_12X0
-value|0xe
+name|ISP_HA_SCSI_1080
+value|0x9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1280
+value|0xa
 end_define
 
 begin_define
@@ -1619,6 +1626,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_1240
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_1240)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_1080
 parameter_list|(
 name|isp
@@ -1629,11 +1646,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_1280
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_1280)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_12X0
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type == ISP_HA_SCSI_12X0)
+define|\
+value|(isp->isp_type == ISP_HA_SCSI_1240 || isp->isp_type == ISP_HA_SCSI_1280)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DUALBUS
+parameter_list|(
+name|isp
+parameter_list|)
+value|IS_12X0(isp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ULTRA2
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(isp->isp_type == ISP_HA_SCSI_1080 || isp->isp_type == ISP_HA_SCSI_1280)
 end_define
 
 begin_define

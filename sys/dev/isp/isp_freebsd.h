@@ -1039,7 +1039,7 @@ begin_define
 define|#
 directive|define
 name|CFGPRINTF
-value|if (bootverbose || DFLT_DBLEVEL> 0) printf
+value|if (bootverbose || DFLT_DBLEVEL> 1) printf
 end_define
 
 begin_define

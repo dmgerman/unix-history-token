@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|BIU_ID_LO
-value|BIU_BLOCK+0x0
+value|(BIU_BLOCK+0x0)
 end_define
 
 begin_comment
@@ -188,14 +188,14 @@ begin_define
 define|#
 directive|define
 name|BIU2100_FLASH_ADDR
-value|BIU_BLOCK+0x0
+value|(BIU_BLOCK+0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIU_ID_HI
-value|BIU_BLOCK+0x2
+value|(BIU_BLOCK+0x2)
 end_define
 
 begin_comment
@@ -206,14 +206,14 @@ begin_define
 define|#
 directive|define
 name|BIU2100_FLASH_DATA
-value|BIU_BLOCK+0x2
+value|(BIU_BLOCK+0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIU_CONF0
-value|BIU_BLOCK+0x4
+value|(BIU_BLOCK+0x4)
 end_define
 
 begin_comment
@@ -224,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|BIU_CONF1
-value|BIU_BLOCK+0x6
+value|(BIU_BLOCK+0x6)
 end_define
 
 begin_comment
@@ -235,14 +235,14 @@ begin_define
 define|#
 directive|define
 name|BIU2100_CSR
-value|BIU_BLOCK+0x6
+value|(BIU_BLOCK+0x6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIU_ICR
-value|BIU_BLOCK+0x8
+value|(BIU_BLOCK+0x8)
 end_define
 
 begin_comment
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|BIU_ISR
-value|BIU_BLOCK+0xA
+value|(BIU_BLOCK+0xA)
 end_define
 
 begin_comment
@@ -264,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|BIU_SEMA
-value|BIU_BLOCK+0xC
+value|(BIU_BLOCK+0xC)
 end_define
 
 begin_comment
@@ -275,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|BIU_NVRAM
-value|BIU_BLOCK+0xE
+value|(BIU_BLOCK+0xE)
 end_define
 
 begin_comment
@@ -286,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|DFIFO_COMMAND
-value|BIU_BLOCK+0x60
+value|(BIU_BLOCK+0x60)
 end_define
 
 begin_comment
@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|DFIFO_DATA
-value|BIU_BLOCK+0x62
+value|(BIU_BLOCK+0x62)
 end_define
 
 begin_comment
@@ -319,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_CONF
-value|DMA_BLOCK+0x20
+value|(DMA_BLOCK+0x20)
 end_define
 
 begin_comment
@@ -337,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_CONTROL
-value|DMA_BLOCK+0x22
+value|(DMA_BLOCK+0x22)
 end_define
 
 begin_comment
@@ -348,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_STATUS
-value|DMA_BLOCK+0x24
+value|(DMA_BLOCK+0x24)
 end_define
 
 begin_comment
@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_FIFO_STS
-value|DMA_BLOCK+0x26
+value|(DMA_BLOCK+0x26)
 end_define
 
 begin_comment
@@ -370,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_COUNT
-value|DMA_BLOCK+0x28
+value|(DMA_BLOCK+0x28)
 end_define
 
 begin_comment
@@ -381,7 +381,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_ADDR0
-value|DMA_BLOCK+0x2C
+value|(DMA_BLOCK+0x2C)
 end_define
 
 begin_comment
@@ -392,7 +392,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_ADDR1
-value|DMA_BLOCK+0x2E
+value|(DMA_BLOCK+0x2E)
 end_define
 
 begin_comment
@@ -403,7 +403,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_ADDR2
-value|DMA_BLOCK+0x30
+value|(DMA_BLOCK+0x30)
 end_define
 
 begin_comment
@@ -414,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|CDMA_ADDR3
-value|DMA_BLOCK+0x32
+value|(DMA_BLOCK+0x32)
 end_define
 
 begin_comment
@@ -425,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_CONF
-value|DMA_BLOCK+0x40
+value|(DMA_BLOCK+0x40)
 end_define
 
 begin_comment
@@ -443,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_CONTROL
-value|DMA_BLOCK+0x42
+value|(DMA_BLOCK+0x42)
 end_define
 
 begin_comment
@@ -454,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_STATUS
-value|DMA_BLOCK+0x44
+value|(DMA_BLOCK+0x44)
 end_define
 
 begin_comment
@@ -465,7 +465,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_FIFO_STS
-value|DMA_BLOCK+0x46
+value|(DMA_BLOCK+0x46)
 end_define
 
 begin_comment
@@ -476,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_COUNT_LO
-value|DMA_BLOCK+0x48
+value|(DMA_BLOCK+0x48)
 end_define
 
 begin_comment
@@ -487,7 +487,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_COUNT_HI
-value|DMA_BLOCK+0x4A
+value|(DMA_BLOCK+0x4A)
 end_define
 
 begin_comment
@@ -498,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_ADDR0
-value|DMA_BLOCK+0x4C
+value|(DMA_BLOCK+0x4C)
 end_define
 
 begin_comment
@@ -509,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_ADDR1
-value|DMA_BLOCK+0x4E
+value|(DMA_BLOCK+0x4E)
 end_define
 
 begin_comment
@@ -524,7 +524,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_ADDR2
-value|DMA_BLOCK+0x50
+value|(DMA_BLOCK+0x50)
 end_define
 
 begin_comment
@@ -535,7 +535,7 @@ begin_define
 define|#
 directive|define
 name|DDMA_ADDR3
-value|DMA_BLOCK+0x52
+value|(DMA_BLOCK+0x52)
 end_define
 
 begin_comment
@@ -711,12 +711,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BIU_PCI1080_CONF1_SXP
+name|BIU_PCI1080_CONF1_SXP0
 value|0x0100
 end_define
 
 begin_comment
-comment|/* SXP bank select */
+comment|/* SXP bank #1 select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIU_PCI1080_CONF1_SXP1
+value|0x0200
+end_define
+
+begin_comment
+comment|/* SXP bank #2 select */
 end_comment
 
 begin_define
@@ -1725,112 +1736,112 @@ begin_define
 define|#
 directive|define
 name|INMAILBOX0
-value|MBOX_BLOCK+0x0
+value|(MBOX_BLOCK+0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX1
-value|MBOX_BLOCK+0x2
+value|(MBOX_BLOCK+0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX2
-value|MBOX_BLOCK+0x4
+value|(MBOX_BLOCK+0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX3
-value|MBOX_BLOCK+0x6
+value|(MBOX_BLOCK+0x6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX4
-value|MBOX_BLOCK+0x8
+value|(MBOX_BLOCK+0x8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX5
-value|MBOX_BLOCK+0xA
+value|(MBOX_BLOCK+0xA)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX6
-value|MBOX_BLOCK+0xC
+value|(MBOX_BLOCK+0xC)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INMAILBOX7
-value|MBOX_BLOCK+0xE
+value|(MBOX_BLOCK+0xE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX0
-value|MBOX_BLOCK+0x0
+value|(MBOX_BLOCK+0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX1
-value|MBOX_BLOCK+0x2
+value|(MBOX_BLOCK+0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX2
-value|MBOX_BLOCK+0x4
+value|(MBOX_BLOCK+0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX3
-value|MBOX_BLOCK+0x6
+value|(MBOX_BLOCK+0x6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX4
-value|MBOX_BLOCK+0x8
+value|(MBOX_BLOCK+0x8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX5
-value|MBOX_BLOCK+0xA
+value|(MBOX_BLOCK+0xA)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX6
-value|MBOX_BLOCK+0xC
+value|(MBOX_BLOCK+0xC)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUTMAILBOX7
-value|MBOX_BLOCK+0xE
+value|(MBOX_BLOCK+0xE)
 end_define
 
 begin_define
@@ -1862,7 +1873,7 @@ begin_define
 define|#
 directive|define
 name|SXP_PART_ID
-value|SXP_BLOCK+0x0
+value|(SXP_BLOCK+0x0)
 end_define
 
 begin_comment
@@ -1873,7 +1884,7 @@ begin_define
 define|#
 directive|define
 name|SXP_CONFIG1
-value|SXP_BLOCK+0x2
+value|(SXP_BLOCK+0x2)
 end_define
 
 begin_comment
@@ -1884,7 +1895,7 @@ begin_define
 define|#
 directive|define
 name|SXP_CONFIG2
-value|SXP_BLOCK+0x4
+value|(SXP_BLOCK+0x4)
 end_define
 
 begin_comment
@@ -1895,7 +1906,7 @@ begin_define
 define|#
 directive|define
 name|SXP_CONFIG3
-value|SXP_BLOCK+0x6
+value|(SXP_BLOCK+0x6)
 end_define
 
 begin_comment
@@ -1906,7 +1917,7 @@ begin_define
 define|#
 directive|define
 name|SXP_INSTRUCTION
-value|SXP_BLOCK+0xC
+value|(SXP_BLOCK+0xC)
 end_define
 
 begin_comment
@@ -1917,7 +1928,7 @@ begin_define
 define|#
 directive|define
 name|SXP_RETURN_ADDR
-value|SXP_BLOCK+0x10
+value|(SXP_BLOCK+0x10)
 end_define
 
 begin_comment
@@ -1928,7 +1939,7 @@ begin_define
 define|#
 directive|define
 name|SXP_COMMAND
-value|SXP_BLOCK+0x14
+value|(SXP_BLOCK+0x14)
 end_define
 
 begin_comment
@@ -1939,7 +1950,7 @@ begin_define
 define|#
 directive|define
 name|SXP_INTERRUPT
-value|SXP_BLOCK+0x18
+value|(SXP_BLOCK+0x18)
 end_define
 
 begin_comment
@@ -1950,7 +1961,7 @@ begin_define
 define|#
 directive|define
 name|SXP_SEQUENCE
-value|SXP_BLOCK+0x1C
+value|(SXP_BLOCK+0x1C)
 end_define
 
 begin_comment
@@ -1961,7 +1972,7 @@ begin_define
 define|#
 directive|define
 name|SXP_GROSS_ERR
-value|SXP_BLOCK+0x1E
+value|(SXP_BLOCK+0x1E)
 end_define
 
 begin_comment
@@ -1972,7 +1983,7 @@ begin_define
 define|#
 directive|define
 name|SXP_EXCEPTION
-value|SXP_BLOCK+0x20
+value|(SXP_BLOCK+0x20)
 end_define
 
 begin_comment
@@ -1983,7 +1994,7 @@ begin_define
 define|#
 directive|define
 name|SXP_OVERRIDE
-value|SXP_BLOCK+0x24
+value|(SXP_BLOCK+0x24)
 end_define
 
 begin_comment
@@ -1993,8 +2004,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_LITERAL_BASE
-value|SXP_BLOCK+0x28
+name|SXP_LIT_BASE
+value|(SXP_BLOCK+0x28)
 end_define
 
 begin_comment
@@ -2005,7 +2016,7 @@ begin_define
 define|#
 directive|define
 name|SXP_USER_FLAGS
-value|SXP_BLOCK+0x2C
+value|(SXP_BLOCK+0x2C)
 end_define
 
 begin_comment
@@ -2016,7 +2027,7 @@ begin_define
 define|#
 directive|define
 name|SXP_USER_EXCEPT
-value|SXP_BLOCK+0x30
+value|(SXP_BLOCK+0x30)
 end_define
 
 begin_comment
@@ -2027,7 +2038,7 @@ begin_define
 define|#
 directive|define
 name|SXP_BREAKPOINT
-value|SXP_BLOCK+0x34
+value|(SXP_BLOCK+0x34)
 end_define
 
 begin_comment
@@ -2038,7 +2049,7 @@ begin_define
 define|#
 directive|define
 name|SXP_SCSI_ID
-value|SXP_BLOCK+0x40
+value|(SXP_BLOCK+0x40)
 end_define
 
 begin_comment
@@ -2049,7 +2060,7 @@ begin_define
 define|#
 directive|define
 name|SXP_DEV_CONFIG1
-value|SXP_BLOCK+0x42
+value|(SXP_BLOCK+0x42)
 end_define
 
 begin_comment
@@ -2060,7 +2071,7 @@ begin_define
 define|#
 directive|define
 name|SXP_DEV_CONFIG2
-value|SXP_BLOCK+0x44
+value|(SXP_BLOCK+0x44)
 end_define
 
 begin_comment
@@ -2070,8 +2081,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_PHASE_POINTER
-value|SXP_BLOCK+0x48
+name|SXP_PHASE_PTR
+value|(SXP_BLOCK+0x48)
 end_define
 
 begin_comment
@@ -2081,8 +2092,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_BUF_POINTER
-value|SXP_BLOCK+0x4C
+name|SXP_BUF_PTR
+value|(SXP_BLOCK+0x4C)
 end_define
 
 begin_comment
@@ -2092,8 +2103,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_BUF_COUNTER
-value|SXP_BLOCK+0x50
+name|SXP_BUF_CTR
+value|(SXP_BLOCK+0x50)
 end_define
 
 begin_comment
@@ -2104,7 +2115,7 @@ begin_define
 define|#
 directive|define
 name|SXP_BUFFER
-value|SXP_BLOCK+0x52
+value|(SXP_BLOCK+0x52)
 end_define
 
 begin_comment
@@ -2115,7 +2126,7 @@ begin_define
 define|#
 directive|define
 name|SXP_BUF_BYTE
-value|SXP_BLOCK+0x54
+value|(SXP_BLOCK+0x54)
 end_define
 
 begin_comment
@@ -2125,8 +2136,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_BUF_WORD
-value|SXP_BLOCK+0x56
+name|SXP_BUF_WD
+value|(SXP_BLOCK+0x56)
 end_define
 
 begin_comment
@@ -2136,8 +2147,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_BUF_WORD_TRAN
-value|SXP_BLOCK+0x58
+name|SXP_BUF_WD_TRAN
+value|(SXP_BLOCK+0x58)
 end_define
 
 begin_comment
@@ -2148,7 +2159,7 @@ begin_define
 define|#
 directive|define
 name|SXP_FIFO
-value|SXP_BLOCK+0x5A
+value|(SXP_BLOCK+0x5A)
 end_define
 
 begin_comment
@@ -2159,7 +2170,7 @@ begin_define
 define|#
 directive|define
 name|SXP_FIFO_STATUS
-value|SXP_BLOCK+0x5C
+value|(SXP_BLOCK+0x5C)
 end_define
 
 begin_comment
@@ -2170,7 +2181,7 @@ begin_define
 define|#
 directive|define
 name|SXP_FIFO_TOP
-value|SXP_BLOCK+0x5E
+value|(SXP_BLOCK+0x5E)
 end_define
 
 begin_comment
@@ -2181,7 +2192,7 @@ begin_define
 define|#
 directive|define
 name|SXP_FIFO_BOTTOM
-value|SXP_BLOCK+0x60
+value|(SXP_BLOCK+0x60)
 end_define
 
 begin_comment
@@ -2192,7 +2203,7 @@ begin_define
 define|#
 directive|define
 name|SXP_TRAN_REG
-value|SXP_BLOCK+0x64
+value|(SXP_BLOCK+0x64)
 end_define
 
 begin_comment
@@ -2202,8 +2213,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_TRAN_COUNT_LO
-value|SXP_BLOCK+0x68
+name|SXP_TRAN_CNT_LO
+value|(SXP_BLOCK+0x68)
 end_define
 
 begin_comment
@@ -2213,8 +2224,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_TRAN_COUNT_HI
-value|SXP_BLOCK+0x6A
+name|SXP_TRAN_CNT_HI
+value|(SXP_BLOCK+0x6A)
 end_define
 
 begin_comment
@@ -2224,8 +2235,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_TRAN_COUNTER_LO
-value|SXP_BLOCK+0x6C
+name|SXP_TRAN_CTR_LO
+value|(SXP_BLOCK+0x6C)
 end_define
 
 begin_comment
@@ -2235,8 +2246,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_TRAN_COUNTER_HI
-value|SXP_BLOCK+0x6E
+name|SXP_TRAN_CTR_HI
+value|(SXP_BLOCK+0x6E)
 end_define
 
 begin_comment
@@ -2247,7 +2258,7 @@ begin_define
 define|#
 directive|define
 name|SXP_ARB_DATA
-value|SXP_BLOCK+0x70
+value|(SXP_BLOCK+0x70)
 end_define
 
 begin_comment
@@ -2257,8 +2268,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SXP_PINS_CONTROL
-value|SXP_BLOCK+0x72
+name|SXP_PINS_CTRL
+value|(SXP_BLOCK+0x72)
 end_define
 
 begin_comment
@@ -2269,7 +2280,7 @@ begin_define
 define|#
 directive|define
 name|SXP_PINS_DATA
-value|SXP_BLOCK+0x74
+value|(SXP_BLOCK+0x74)
 end_define
 
 begin_comment
@@ -2280,12 +2291,23 @@ begin_define
 define|#
 directive|define
 name|SXP_PINS_DIFF
-value|SXP_BLOCK+0x76
+value|(SXP_BLOCK+0x76)
 end_define
 
 begin_comment
 comment|/* RW*: SCSI Diff Pins */
 end_comment
+
+begin_comment
+comment|/* for 1080/1280/1240 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SXP_BANK1_SELECT
+value|0x100
+end_define
 
 begin_comment
 comment|/* SXP CONF1 REGISTER */
@@ -3319,7 +3341,7 @@ comment|/* Enable SXP initiator mode */
 end_comment
 
 begin_comment
-comment|/* 1080 only */
+comment|/* Ultra2 only */
 end_comment
 
 begin_define
