@@ -23,7 +23,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|pccard_drv
+name|pccard_device
 struct_decl|;
 end_struct_decl
 
@@ -34,7 +34,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pccard_drv
+name|pccard_device
 operator|*
 operator|)
 argument_list|)
@@ -103,9 +103,8 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pccard_drv
+name|pccard_device
 operator|*
-name|dp
 operator|)
 argument_list|)
 decl_stmt|;

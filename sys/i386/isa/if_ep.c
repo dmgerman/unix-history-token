@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.60 1997/09/02 01:18:13 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.61 1997/10/14 06:56:08 itojun Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -561,13 +561,13 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"crd.h"
+file|"card.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -603,57 +603,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|card_intr
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pccard_dev
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ep_unload
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pccard_dev
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ep_suspend
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|pccard_dev
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ep_pccard_init
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pccard_dev
+name|pccard_devinfo
 operator|*
 operator|,
 name|int
@@ -670,7 +625,52 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|pccard_dev
+name|pccard_devinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ep_unload
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pccard_devinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|card_intr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pccard_devinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ep_suspend
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pccard_devinfo
 operator|*
 operator|)
 argument_list|)
@@ -680,19 +680,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|pccard_drv
+name|pccard_device
 name|ep_info
 init|=
 block|{
 literal|"ep"
 block|,
-name|card_intr
+name|ep_pccard_init
 block|,
 name|ep_unload
 block|,
-name|ep_suspend
+name|card_intr
 block|,
-name|ep_pccard_init
+name|ep_suspend
 block|,
 literal|0
 block|,
@@ -704,58 +704,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Resume is done by executing ep_pccard_init(dp, 0). */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ep_suspend
-parameter_list|(
-name|dp
-parameter_list|)
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-decl_stmt|;
-block|{
-name|struct
-name|ep_softc
-modifier|*
-name|sc
-init|=
-name|ep_softc
-index|[
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
-index|]
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"ep%d: suspending\n"
-argument_list|,
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|gone
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *   */
+comment|/*  * Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -763,14 +712,14 @@ specifier|static
 name|int
 name|ep_pccard_init
 parameter_list|(
-name|dp
+name|devi
 parameter_list|,
 name|first
 parameter_list|)
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 decl_stmt|;
 name|int
 name|first
@@ -782,7 +731,7 @@ modifier|*
 name|is
 init|=
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 decl_stmt|;
@@ -893,6 +842,7 @@ argument_list|,
 name|EEPROM_PROD_ID
 argument_list|)
 expr_stmt|;
+comment|/* 3C589's product id? */
 if|if
 condition|(
 name|epb
@@ -902,12 +852,10 @@ operator|!=
 literal|0x9058
 condition|)
 block|{
-comment|/* 3C589's product id */
 if|if
 condition|(
 name|first
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"ep%d: failed to come ready.\n"
@@ -917,9 +865,7 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"ep%d: failed to resume.\n"
@@ -929,7 +875,6 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ENXIO
@@ -960,7 +905,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sc
 operator|->
 name|epb
@@ -979,7 +923,6 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|first
@@ -989,18 +932,16 @@ if|if
 condition|(
 name|ep_pccard_attach
 argument_list|(
-name|dp
+name|devi
 argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|sc
 operator|->
 name|arpcom
@@ -1014,11 +955,7 @@ operator|=
 name|ifqmaxlen
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|first
-condition|)
+else|else
 block|{
 name|sc
 operator|->
@@ -1054,12 +991,12 @@ specifier|static
 name|int
 name|ep_pccard_attach
 parameter_list|(
-name|dp
+name|devi
 parameter_list|)
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 decl_stmt|;
 block|{
 name|struct
@@ -1068,7 +1005,7 @@ modifier|*
 name|is
 init|=
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 decl_stmt|;
@@ -1226,12 +1163,12 @@ specifier|static
 name|void
 name|ep_unload
 parameter_list|(
-name|dp
+name|devi
 parameter_list|)
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 decl_stmt|;
 block|{
 name|struct
@@ -1241,7 +1178,7 @@ name|sc
 init|=
 name|ep_softc
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1259,7 +1196,7 @@ name|printf
 argument_list|(
 literal|"ep%d: already unloaded\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1289,7 +1226,7 @@ name|printf
 argument_list|(
 literal|"ep%d: unload\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1308,17 +1245,17 @@ specifier|static
 name|int
 name|card_intr
 parameter_list|(
-name|dp
+name|devi
 parameter_list|)
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 decl_stmt|;
 block|{
 name|epintr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1333,13 +1270,64 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Resume is done by executing ep_pccard_init(devi, 0). */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ep_suspend
+parameter_list|(
+name|devi
+parameter_list|)
+name|struct
+name|pccard_devinfo
+modifier|*
+name|devi
+decl_stmt|;
+block|{
+name|struct
+name|ep_softc
+modifier|*
+name|sc
+init|=
+name|ep_softc
+index|[
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_unit
+index|]
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"ep%d: suspending\n"
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|gone
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* NCRD> 0 */
+comment|/* NCARD> 0 */
 end_comment
 
 begin_function
@@ -1376,7 +1364,7 @@ condition|;
 name|i
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|i
@@ -2214,7 +2202,7 @@ name|k
 decl_stmt|;
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 name|pccard_add_driver
@@ -2225,7 +2213,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NCRD> 0 */
 if|if
 condition|(
 operator|(

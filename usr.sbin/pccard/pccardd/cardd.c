@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cardd.c,v 1.18 1997/10/06 11:36:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2387,7 +2387,7 @@ name|io_desc
 name|io
 decl_stmt|;
 name|struct
-name|drv_desc
+name|dev_desc
 name|drv
 decl_stmt|;
 name|struct

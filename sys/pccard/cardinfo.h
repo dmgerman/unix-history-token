@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|PIOCSDRV
-value|_IOW('P', 6, struct drv_desc)
+value|_IOW('P', 6, struct dev_desc)
 end_define
 
 begin_comment
@@ -375,7 +375,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|drv_desc
+name|dev_desc
 block|{
 name|char
 name|name

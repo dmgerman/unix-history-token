@@ -80,7 +80,7 @@ name|int
 name|skelintr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -96,7 +96,7 @@ name|void
 name|skelunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -112,7 +112,7 @@ name|void
 name|skelsuspend
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -128,7 +128,7 @@ name|int
 name|skelinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|,
 name|int
@@ -328,7 +328,7 @@ name|void
 name|skelunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 name|dp
 parameter_list|)
@@ -366,7 +366,7 @@ name|void
 name|skelsuspend
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 name|dp
 parameter_list|)
@@ -393,7 +393,7 @@ name|int
 name|skelinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 name|dp
 parameter_list|,
@@ -476,7 +476,7 @@ name|int
 name|skelintr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 name|dp
 parameter_list|)

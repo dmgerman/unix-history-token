@@ -732,7 +732,7 @@ struct|struct
 name|pcic_slot
 block|{
 name|int
-name|slot
+name|slotnum
 decl_stmt|;
 comment|/* My slot number */
 name|int
@@ -758,7 +758,7 @@ comment|/* Device Revision */
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 decl_stmt|;
 comment|/* Back ptr to slot */
 name|u_char
@@ -770,10 +770,8 @@ parameter_list|(
 name|struct
 name|pcic_slot
 modifier|*
-name|sp
 parameter_list|,
 name|int
-name|reg
 parameter_list|)
 function_decl|;
 name|void
@@ -785,13 +783,10 @@ parameter_list|(
 name|struct
 name|pcic_slot
 modifier|*
-name|sp
 parameter_list|,
 name|int
-name|reg
 parameter_list|,
 name|u_char
-name|val
 parameter_list|)
 function_decl|;
 name|u_char
@@ -1357,7 +1352,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|slotp
+name|slt
 condition|)
 name|sp
 operator|->
@@ -1545,7 +1540,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|,
 name|int
 name|win
@@ -1556,7 +1551,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -1566,7 +1561,7 @@ modifier|*
 name|mp
 init|=
 operator|&
-name|slotp
+name|slt
 operator|->
 name|mem
 index|[
@@ -1957,7 +1952,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("Slot number %d, reg 0x%x, offs 0x%x\n", 		sp->slot, reg, sp->offset); 	printf("Map window to sys addr 0x%x for %d bytes, card 0x%x\n", 		mp->start, mp->size, mp->card); 	printf("regs are: 0x%02x%02x 0x%02x%02x 0x%02x%02x flags 0x%x\n", 		sp->getb(sp, reg), sp->getb(sp, reg+1), 		sp->getb(sp, reg+2), sp->getb(sp, reg+3), 		sp->getb(sp, reg+4), sp->getb(sp, reg+5), 		mp->flags);
+block|printf("Slot number %d, reg 0x%x, offs 0x%x\n", 		sp->slotnum, reg, sp->offset); 	printf("Map window to sys addr 0x%x for %d bytes, card 0x%x\n", 		mp->start, mp->size, mp->card); 	printf("regs are: 0x%02x%02x 0x%02x%02x 0x%02x%02x flags 0x%x\n", 		sp->getb(sp, reg), sp->getb(sp, reg+1), 		sp->getb(sp, reg+2), sp->getb(sp, reg+3), 		sp->getb(sp, reg+4), sp->getb(sp, reg+5), 		mp->flags);
 endif|#
 directive|endif
 comment|/* 		 * Enable the memory window. By experiment, we need a delay. 		 */
@@ -2053,7 +2048,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|,
 name|int
 name|win
@@ -2069,7 +2064,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -2079,7 +2074,7 @@ modifier|*
 name|ip
 init|=
 operator|&
-name|slotp
+name|slt
 operator|->
 name|io
 index|[
@@ -2546,7 +2541,7 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|slot
+name|slotnum
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -2560,7 +2555,7 @@ decl_stmt|;
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 decl_stmt|;
 name|struct
 name|pcic_slot
@@ -2680,15 +2675,15 @@ name|pcic_slots
 expr_stmt|;
 for|for
 control|(
-name|slot
+name|slotnum
 operator|=
 literal|0
 init|;
-name|slot
+name|slotnum
 operator|<
 name|PCIC_MAX_SLOTS
 condition|;
-name|slot
+name|slotnum
 operator|++
 operator|,
 name|sp
@@ -2710,7 +2705,7 @@ name|putb1
 expr_stmt|;
 if|if
 condition|(
-name|slot
+name|slotnum
 operator|<
 literal|4
 condition|)
@@ -2731,7 +2726,7 @@ name|sp
 operator|->
 name|offset
 operator|=
-name|slot
+name|slotnum
 operator|*
 name|PCIC_SLOT_SIZE
 expr_stmt|;
@@ -2755,7 +2750,7 @@ operator|->
 name|offset
 operator|=
 operator|(
-name|slot
+name|slotnum
 operator|-
 literal|4
 operator|)
@@ -2766,7 +2761,7 @@ block|}
 comment|/*  		 * XXX - Screwed up slot 1 on the VLSI chips.  According to 		 * the Linux PCMCIA code from David Hinds, working chipsets 		 * return 0x84 from their (correct) ID ports, while the broken 		 * ones would need to be probed at the new offset we set after 		 * we assume it's broken. 		 */
 if|if
 condition|(
-name|slot
+name|slotnum
 operator|==
 literal|1
 operator|&&
@@ -3248,11 +3243,11 @@ operator|++
 expr_stmt|;
 name|sp
 operator|->
-name|slot
+name|slotnum
 operator|=
-name|slot
+name|slotnum
 expr_stmt|;
-name|slotp
+name|slt
 operator|=
 name|pccard_alloc_slot
 argument_list|(
@@ -3262,12 +3257,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|slotp
+name|slt
 operator|==
 literal|0
 condition|)
 continue|continue;
-name|slotp
+name|slt
 operator|->
 name|cdata
 operator|=
@@ -3275,9 +3270,9 @@ name|sp
 expr_stmt|;
 name|sp
 operator|->
-name|slotp
+name|slt
 operator|=
-name|slotp
+name|slt
 expr_stmt|;
 comment|/* 		 *	If we haven't allocated an interrupt for the controller, 		 *	then attempt to get one. 		 */
 if|if
@@ -3386,11 +3381,11 @@ operator|!=
 name|PCIC_CD
 condition|)
 block|{
-name|slotp
+name|slt
 operator|->
 name|laststate
 operator|=
-name|slotp
+name|slt
 operator|->
 name|state
 operator|=
@@ -3399,11 +3394,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|slotp
+name|slt
 operator|->
 name|laststate
 operator|=
-name|slotp
+name|slt
 operator|->
 name|state
 operator|=
@@ -3413,7 +3408,7 @@ name|pccard_event
 argument_list|(
 name|sp
 operator|->
-name|slotp
+name|slt
 argument_list|,
 name|card_inserted
 argument_list|)
@@ -3458,7 +3453,7 @@ name|sp
 operator|=
 name|pcic_slots
 expr_stmt|;
-name|slot
+name|slotnum
 operator|=
 literal|0
 expr_stmt|;
@@ -3514,11 +3509,11 @@ operator|++
 expr_stmt|;
 name|sp
 operator|->
-name|slot
+name|slotnum
 operator|=
-name|slot
+name|slotnum
 expr_stmt|;
-name|slotp
+name|slt
 operator|=
 name|pccard_alloc_slot
 argument_list|(
@@ -3528,21 +3523,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|slotp
+name|slt
 operator|==
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pcic98: slotp == NULL\n"
+literal|"pcic98: slt == NULL\n"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|pcic98_probe_end
 goto|;
 block|}
-name|slotp
+name|slt
 operator|->
 name|cdata
 operator|=
@@ -3550,9 +3545,9 @@ name|sp
 expr_stmt|;
 name|sp
 operator|->
-name|slotp
+name|slt
 operator|=
-name|slotp
+name|slt
 expr_stmt|;
 comment|/* Check for a card in this slot */
 if|if
@@ -3566,11 +3561,11 @@ name|PCIC98_CARDEXIST
 condition|)
 block|{
 comment|/* PCMCIA card exist */
-name|slotp
+name|slt
 operator|->
 name|laststate
 operator|=
-name|slotp
+name|slt
 operator|->
 name|state
 operator|=
@@ -3580,7 +3575,7 @@ name|pccard_event
 argument_list|(
 name|sp
 operator|->
-name|slotp
+name|slt
 argument_list|,
 name|card_inserted
 argument_list|)
@@ -3588,11 +3583,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|slotp
+name|slt
 operator|->
 name|laststate
 operator|=
-name|slotp
+name|slt
 operator|->
 name|state
 operator|=
@@ -3643,7 +3638,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|,
 name|int
 name|cmd
@@ -3657,7 +3652,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -3760,7 +3755,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|)
 block|{
 name|unsigned
@@ -3776,7 +3771,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -3807,7 +3802,7 @@ operator|)
 expr_stmt|;
 switch|switch
 condition|(
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -3861,7 +3856,7 @@ operator|)
 expr_stmt|;
 switch|switch
 condition|(
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -3931,7 +3926,7 @@ name|PCIC_IBM_KING
 case|:
 switch|switch
 condition|(
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -3970,7 +3965,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -4130,7 +4125,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -4177,7 +4172,7 @@ operator|&
 literal|0x40
 operator|)
 operator|&&
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -4186,7 +4181,7 @@ operator|==
 literal|50
 condition|)
 block|{
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -4194,7 +4189,7 @@ name|vcc
 operator|=
 literal|33
 expr_stmt|;
-name|slotp
+name|slt
 operator|->
 name|pwr
 operator|.
@@ -4206,7 +4201,7 @@ return|return
 operator|(
 name|pcic_power
 argument_list|(
-name|slotp
+name|slt
 argument_list|)
 operator|)
 return|;
@@ -4231,7 +4226,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|,
 name|int
 name|irq
@@ -4242,7 +4237,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -4409,7 +4404,7 @@ block|{
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 init|=
 name|chan
 decl_stmt|;
@@ -4418,7 +4413,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -4503,7 +4498,7 @@ expr_stmt|;
 name|selwakeup
 argument_list|(
 operator|&
-name|slotp
+name|slt
 operator|->
 name|selp
 argument_list|)
@@ -4514,7 +4509,7 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|slotp
+name|slt
 operator|->
 name|insert_seq
 condition|)
@@ -4537,7 +4532,7 @@ argument_list|,
 name|PCIC_CARDRESET
 argument_list|)
 expr_stmt|;
-name|slotp
+name|slt
 operator|->
 name|insert_seq
 operator|=
@@ -4551,7 +4546,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|slotp
+name|slt
 argument_list|,
 name|hz
 operator|/
@@ -4574,7 +4569,7 @@ operator||
 name|PCIC_IOCARD
 argument_list|)
 expr_stmt|;
-name|slotp
+name|slt
 operator|->
 name|insert_seq
 operator|=
@@ -4588,7 +4583,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|slotp
+name|slt
 argument_list|,
 name|hz
 operator|/
@@ -4623,7 +4618,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|slotp
+name|slt
 argument_list|,
 name|hz
 operator|/
@@ -4633,7 +4628,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|slotp
+name|slt
 operator|->
 name|insert_seq
 operator|=
@@ -4724,7 +4719,7 @@ block|}
 name|selwakeup
 argument_list|(
 operator|&
-name|slotp
+name|slt
 operator|->
 name|selp
 argument_list|)
@@ -4744,7 +4739,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|)
 block|{
 name|struct
@@ -4752,7 +4747,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
@@ -4897,7 +4892,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|slotp
+name|slt
 operator|->
 name|laststate
 operator|!=
@@ -4908,7 +4903,7 @@ name|pccard_event
 argument_list|(
 name|sp
 operator|->
-name|slotp
+name|slt
 argument_list|,
 name|card_inserted
 argument_list|)
@@ -4921,7 +4916,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|slotp
+name|slt
 operator|->
 name|laststate
 operator|!=
@@ -4932,7 +4927,7 @@ name|pccard_event
 argument_list|(
 name|sp
 operator|->
-name|slotp
+name|slt
 argument_list|,
 name|card_removed
 argument_list|)
@@ -4974,7 +4969,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|slotp
+name|slt
 operator|&&
 operator|(
 name|chg
@@ -5020,7 +5015,7 @@ name|pccard_event
 argument_list|(
 name|sp
 operator|->
-name|slotp
+name|slt
 argument_list|,
 name|card_inserted
 argument_list|)
@@ -5032,7 +5027,7 @@ name|pccard_event
 argument_list|(
 name|sp
 operator|->
-name|slotp
+name|slt
 argument_list|,
 name|card_removed
 argument_list|)
@@ -5059,7 +5054,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|slotp
+name|slt
 parameter_list|)
 block|{
 name|struct
@@ -5067,7 +5062,7 @@ name|pcic_slot
 modifier|*
 name|sp
 init|=
-name|slotp
+name|slt
 operator|->
 name|cdata
 decl_stmt|;
