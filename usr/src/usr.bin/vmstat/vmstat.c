@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.13 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2227,6 +2227,10 @@ name|ncs_badhits
 operator|+
 name|statbuf
 operator|.
+name|ncs_falsehits
+operator|+
+name|statbuf
+operator|.
 name|ncs_miss
 operator|+
 name|statbuf
@@ -2240,6 +2244,13 @@ argument_list|,
 name|nchtotal
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|nz
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) ? (x) : 1)
 name|printf
 argument_list|(
 literal|" (cache hits %d%% system %d%% per-process)\n"
@@ -2250,7 +2261,10 @@ name|ncs_goodhits
 operator|*
 literal|100
 operator|/
+name|nz
+argument_list|(
 name|nchtotal
+argument_list|)
 argument_list|,
 name|statbuf
 operator|.
@@ -2258,7 +2272,29 @@ name|ncs_pass2
 operator|*
 literal|100
 operator|/
+name|nz
+argument_list|(
 name|nchtotal
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9s badhits %d, falsehits %d, toolong %d\n"
+argument_list|,
+literal|""
+argument_list|,
+name|statbuf
+operator|.
+name|ncs_badhits
+argument_list|,
+name|statbuf
+operator|.
+name|ncs_falsehits
+argument_list|,
+name|statbuf
+operator|.
+name|ncs_long
 argument_list|)
 expr_stmt|;
 block|}
