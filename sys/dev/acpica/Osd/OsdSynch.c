@@ -261,13 +261,21 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_debug_acpi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug
+name|_debug_acpi
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|acpi_semaphore_debug
+name|semaphore_debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -276,7 +284,7 @@ name|acpi_semaphore_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable ACPI semaphore debug messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
