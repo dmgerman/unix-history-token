@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.1 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Seek sort for disks.  We depend on the driver  * which calls us using b_resid as the current cylinder number.  *  * The argument dp structure holds a b_actf activity chain pointer  * on which we keep two queues, sorted in ascending cylinder order.  * The first queue holds those requests which are positioned after  * the current cylinder (in the first request); the second holds  * requests which came in after their cylinder number was passed.  * Thus we implement a one way scan, retracting after reaching the  * end of the drive to the first request on the second queue,  * at which time it becomes the first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead  * blocks are allocated.  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,6 +20,16 @@ include|#
 directive|include
 file|"buf.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"disklabel.h"
+end_include
+
+begin_comment
+comment|/*  * Seek sort for disks.  We depend on the driver  * which calls us using b_resid as the current cylinder number.  *  * The argument dp structure holds a b_actf activity chain pointer  * on which we keep two queues, sorted in ascending cylinder order.  * The first queue holds those requests which are positioned after  * the current cylinder (in the first request); the second holds  * requests which came in after their cylinder number was passed.  * Thus we implement a one way scan, retracting after reaching the  * end of the drive to the first request on the second queue,  * at which time it becomes the first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead  * blocks are allocated.  */
+end_comment
 
 begin_define
 define|#
@@ -246,6 +252,83 @@ name|b_actl
 operator|=
 name|bp
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Compute checksum for disk label.  */
+end_comment
+
+begin_expr_stmt
+name|dkcksum
+argument_list|(
+name|lp
+argument_list|)
+specifier|register
+expr|struct
+name|disklabel
+operator|*
+name|lp
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|register
+name|u_short
+modifier|*
+name|start
+decl_stmt|,
+modifier|*
+name|end
+decl_stmt|;
+specifier|register
+name|u_short
+name|sum
+init|=
+literal|0
+decl_stmt|;
+name|start
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|lp
+expr_stmt|;
+name|end
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|&
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|lp
+operator|->
+name|d_npartitions
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|start
+operator|<
+name|end
+condition|)
+name|sum
+operator|^=
+operator|*
+name|start
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|sum
+operator|)
+return|;
 block|}
 end_block
 
