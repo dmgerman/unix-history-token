@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexec.c	4.7 83/08/17"
+literal|"@(#)rexec.c	4.8 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,11 @@ name|s
 argument_list|,
 operator|&
 name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
 argument_list|)
 operator|<
 literal|0
