@@ -9980,7 +9980,7 @@ block|,
 block|{
 literal|"5 IBM 866"
 block|,
-literal|"Russian, IBM encoding (use with screenmap)"
+literal|"Russian, IBM encoding (use with KOI8-R screenmap)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9994,7 +9994,7 @@ block|,
 block|{
 literal|"6 IBM 866u"
 block|,
-literal|"Ukrainian, IBM encoding (use with screenmap)"
+literal|"Ukrainian, IBM encoding (use with KOI8-U screenmap)"
 block|,
 name|dmenuVarCheck
 block|,
