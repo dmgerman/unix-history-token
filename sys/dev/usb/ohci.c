@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.128 2002/09/27 15:37:35 provos Exp $  *	$NetBSD: ohci.c,v 1.129 2002/09/29 20:58:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  */
 end_comment
 
 begin_comment
@@ -3235,6 +3235,11 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3292,6 +3297,11 @@ operator|=
 name|sitd
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 name|s
 operator|=
@@ -6371,11 +6381,24 @@ name|sc
 init|=
 name|v_sc
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhardusb
+argument_list|()
+expr_stmt|;
 name|ohci_rhsc_able
 argument_list|(
 name|sc
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
