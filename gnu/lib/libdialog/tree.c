@@ -3,6 +3,28 @@ begin_comment
 comment|/*  * tree.c -- implements the 'tree' interface element for libdialog  *  * Author: Anatoly A. Orehovsky (tolik@mpeks.tomsk.su)  *  * Copyright (c) 1997, Anatoly A. Orehovsky  * 09/28/98 - patched by Anatoly A. Orehovsky (smart_tree())  *  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -2116,7 +2138,7 @@ case|case
 name|KEY_NPAGE
 case|:
 case|case
-literal|' '
+literal|'f'
 case|:
 if|if
 condition|(
@@ -2342,6 +2364,9 @@ name|dialog
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|' '
+case|:
 case|case
 literal|'\r'
 case|:
