@@ -902,7 +902,7 @@ specifier|register
 name|int
 name|pagesize
 decl_stmt|;
-name|int
+name|size_t
 name|modelen
 decl_stmt|;
 name|struct
