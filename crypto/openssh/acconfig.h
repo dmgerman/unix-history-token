@@ -3,6 +3,10 @@ begin_comment
 comment|/* $Id: acconfig.h,v 1.138 2002/06/12 16:57:15 mouring Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -325,6 +329,10 @@ comment|/* Define if you want S/Key support */
 undef|#
 directive|undef
 name|SKEY
+comment|/* Define if you want OPIE support */
+undef|#
+directive|undef
+name|OPIE
 comment|/* Define if you want TCP Wrappers support */
 undef|#
 directive|undef

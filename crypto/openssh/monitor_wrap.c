@@ -4060,6 +4060,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SKEY
+end_ifdef
+
 begin_function
 name|int
 name|mm_skey_query
@@ -4396,6 +4402,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
