@@ -11023,27 +11023,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Nothing in the DMA unit interrupted */
-if|if
-condition|(
-operator|(
-name|dmacsr
-operator|&
-name|sc
-operator|->
-name|sc_dmaier
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|hifnstats
-operator|.
-name|hst_noirq
-operator|++
-expr_stmt|;
-return|return;
-block|}
 name|WRITE_REG_1
 argument_list|(
 name|sc
