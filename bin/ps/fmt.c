@@ -260,7 +260,7 @@ condition|(
 operator|*
 name|argv
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|buf
@@ -268,7 +268,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -294,7 +294,7 @@ name|p
 operator|++
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|;
 control|)
 block|{
@@ -303,7 +303,7 @@ condition|(
 operator|*
 name|src
 operator|==
-literal|0
+literal|'\0'
 condition|)
 continue|continue;
 name|len
@@ -351,6 +351,8 @@ while|while
 condition|(
 operator|*
 name|dst
+operator|!=
+literal|'\0'
 condition|)
 name|dst
 operator|++
