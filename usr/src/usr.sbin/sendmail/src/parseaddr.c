@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.24	%G%"
+literal|"@(#)parseaddr.c	3.25	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -960,6 +960,28 @@ operator|>
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|avp
+operator|>=
+operator|&
+name|av
+index|[
+name|MAXATOM
+index|]
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"prescan: too many tokens"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 operator|*
 name|avp
 operator|++
@@ -1840,6 +1862,24 @@ name|firsttok
 expr_stmt|;
 do|do
 block|{
+if|if
+condition|(
+name|avp
+operator|>=
+operator|&
+name|npvp
+index|[
+name|MAXATOM
+index|]
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"rewrite: expansion too long"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 operator|*
 name|avp
 operator|++
@@ -1861,12 +1901,32 @@ do|;
 block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|avp
+operator|>=
+operator|&
+name|npvp
+index|[
+name|MAXATOM
+index|]
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"rewrite: expansion too long"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 operator|*
 name|avp
 operator|++
 operator|=
 name|rp
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|avp
