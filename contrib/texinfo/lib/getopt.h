@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989,90,91,92,93,94,96,97,98 Free Software Foundation, Inc.    NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.    This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989-1994, 1996-1999, 2001 Free Software Foundation, Inc.    This file is part of the GNU C Library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -21,6 +21,29 @@ directive|define
 name|_GETOPT_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If __GNU_LIBRARY__ is not already defined, either we are being used    standalone, or this is the first header included in the source file.    If we are being used with glibc, we need to include<features.h>, but    that does not exist if we are standalone.  So: if __GNU_LIBRARY__ is    not defined, include<ctype.h>, which will pull in<features.h> for us    if it's from glibc.  (Why ctype.h?  It's guaranteed to exist and it    doesn't flood the namespace with stuff the way some other headers do.)  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|__GNU_LIBRARY__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_endif
 endif|#
@@ -69,10 +92,15 @@ name|option
 block|{
 if|#
 directive|if
+operator|(
 name|defined
 name|__STDC__
 operator|&&
 name|__STDC__
+operator|)
+operator|||
+name|defined
+name|__cplusplus
 specifier|const
 name|char
 modifier|*
@@ -118,10 +146,15 @@ comment|/* need getopt */
 comment|/* Get definitions and prototypes for functions to process the    arguments in ARGV (ARGC of them, minus the program name) for    options given in OPTS.     Return the option character from OPTS just read.  Return -1 when    there are no more options.  For unrecognized options, or options    missing arguments, `optopt' is set to the option letter, and '?' is    returned.     The OPTS string is a list of characters which are recognized option    letters, optionally followed by colons, specifying that that letter    takes an argument, to be placed in `optarg'.     If a letter in OPTS is followed by two colons, its argument is    optional.  This behavior is specific to the GNU `getopt'.     The argument `--' causes premature termination of argument    scanning, explicitly telling `getopt' that there are no more    options.     If OPTS begins with `--', then non-option arguments are treated as    arguments to the option '\0'.  This behavior is specific to the GNU    `getopt'.  */
 if|#
 directive|if
+operator|(
 name|defined
 name|__STDC__
 operator|&&
 name|__STDC__
+operator|)
+operator|||
+name|defined
+name|__cplusplus
 ifdef|#
 directive|ifdef
 name|__GNU_LIBRARY__
@@ -131,13 +164,13 @@ name|int
 name|getopt
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char
@@ -164,13 +197,13 @@ name|int
 name|getopt_long
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char
@@ -193,13 +226,13 @@ name|int
 name|getopt_long_only
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char
@@ -223,13 +256,13 @@ name|int
 name|_getopt_internal
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char

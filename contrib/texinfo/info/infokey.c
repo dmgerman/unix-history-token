@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infokey.c -- compile ~/.infokey to ~/.info.    $Id: infokey.c,v 1.10 2002/03/19 14:36:49 karl Exp $     Copyright (C) 1999, 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Andrew Bettison<andrewb@zip.com.au>. */
+comment|/* infokey.c -- compile ~/.infokey to ~/.info.    $Id: infokey.c,v 1.3 2003/01/19 18:46:27 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Andrew Bettison<andrewb@zip.com.au>. */
 end_comment
 
 begin_include
@@ -462,7 +462,7 @@ argument_list|(
 literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
 argument_list|,
-literal|"1999"
+literal|"2003"
 argument_list|)
 expr_stmt|;
 name|xexit

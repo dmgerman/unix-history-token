@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Process TeX index dribble output into an actual index.    $Id: texindex.c,v 1.41 2002/03/11 19:55:46 karl Exp $     Copyright (C) 1987, 91, 92, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
+comment|/* texindex -- sort TeX index dribble output into an actual index.    $Id: texindex.c,v 1.7 2003/01/19 18:47:15 karl Exp $     Copyright (C) 1987, 1991, 1992, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
 end_comment
 
 begin_include
@@ -337,17 +337,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Start of filename to use for temporary files.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tempbase
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Number of last temporary file.  */
 end_comment
 
@@ -375,6 +364,26 @@ begin_decl_stmt
 name|char
 modifier|*
 name|text_base
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Initially 0; changed to 1 if we want initials in this index.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|need_initials
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Remembers the first initial letter seen in this index, so we can    determine whether we need initials in the sorted form.  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|first_initial
 decl_stmt|;
 end_decl_stmt
 
@@ -619,6 +628,8 @@ argument_list|(
 name|PACKAGE
 argument_list|)
 expr_stmt|;
+comment|/* In case we write to a redirected stdout that fails.  */
+comment|/* not ready atexit (close_stdout); */
 comment|/* Describe the kind of sorting to do. */
 comment|/* The first keyfield uses the first braced field and folds case. */
 name|keyfields
@@ -733,20 +744,6 @@ argument_list|(
 name|argc
 argument_list|,
 name|argv
-argument_list|)
-expr_stmt|;
-name|tempbase
-operator|=
-name|mktemp
-argument_list|(
-name|concat
-argument_list|(
-literal|"txiXXXXXX"
-argument_list|,
-literal|""
-argument_list|,
-literal|""
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Process input files completely, one by one.  */
@@ -917,6 +914,14 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+name|need_initials
+operator|=
+literal|0
+expr_stmt|;
+name|first_initial
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|ptr
@@ -931,6 +936,9 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ptr
 argument_list|,
 name|outfile
@@ -1549,7 +1557,7 @@ argument_list|(
 literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
 argument_list|,
-literal|"2002"
+literal|"2003"
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -1751,7 +1759,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return a name for a temporary file. */
+comment|/* Return a name for temporary file COUNT. */
 end_comment
 
 begin_function
@@ -1766,12 +1774,75 @@ name|int
 name|count
 decl_stmt|;
 block|{
+specifier|static
+name|char
+modifier|*
+name|tempbase
+init|=
+name|NULL
+decl_stmt|;
 name|char
 name|tempsuffix
 index|[
 literal|10
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tempbase
+condition|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|tmpdir
+init|=
+name|getenv
+argument_list|(
+literal|"TEMPDIR"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tmpdir
+condition|)
+name|tmpdir
+operator|=
+literal|"/tmp"
+expr_stmt|;
+name|tempbase
+operator|=
+name|concat
+argument_list|(
+name|tmpdir
+argument_list|,
+literal|"/txidxXXXXXX"
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|mkstemp
+argument_list|(
+name|tempbase
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+name|pfatal_with_name
+argument_list|(
+name|tempbase
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|tempsuffix
@@ -3726,8 +3797,6 @@ name|sort_offline
 parameter_list|(
 name|infile
 parameter_list|,
-name|nfiles
-parameter_list|,
 name|total
 parameter_list|,
 name|outfile
@@ -3735,9 +3804,6 @@ parameter_list|)
 name|char
 modifier|*
 name|infile
-decl_stmt|;
-name|int
-name|nfiles
 decl_stmt|;
 name|off_t
 name|total
@@ -4069,7 +4135,6 @@ argument_list|)
 decl_stmt|;
 name|sort_in_core
 argument_list|(
-operator|&
 name|tempfiles
 index|[
 name|i
@@ -4140,7 +4205,7 @@ name|char
 modifier|*
 name|infile
 decl_stmt|;
-name|off_t
+name|int
 name|total
 decl_stmt|;
 name|char
@@ -4720,6 +4785,61 @@ name|line
 operator|=
 name|p
 expr_stmt|;
+comment|/* Find the first letter of the first field of this line.  If it          is different from the first letter of the first field of the          first line, we need initial headers in the output index.  */
+while|while
+condition|(
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'{'
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|end
+condition|)
+return|return
+literal|0
+return|;
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|first_initial
+condition|)
+block|{
+if|if
+condition|(
+name|first_initial
+operator|!=
+name|toupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|need_initials
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|first_initial
+operator|=
+name|toupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -5091,8 +5211,11 @@ index|[
 literal|0
 index|]
 operator|=
+name|toupper
+argument_list|(
 operator|*
 name|p
+argument_list|)
 expr_stmt|;
 name|initial1
 index|[
@@ -5104,29 +5227,6 @@ expr_stmt|;
 name|initiallength
 operator|=
 literal|1
-expr_stmt|;
-if|if
-condition|(
-name|initial1
-index|[
-literal|0
-index|]
-operator|>=
-literal|'a'
-operator|&&
-name|initial1
-index|[
-literal|0
-index|]
-operator|<=
-literal|'z'
-condition|)
-name|initial1
-index|[
-literal|0
-index|]
-operator|-=
-literal|040
 expr_stmt|;
 block|}
 name|pagenumber
@@ -5256,6 +5356,9 @@ block|}
 comment|/* If this primary has a different initial, include an entry for          the initial. */
 if|if
 condition|(
+name|need_initials
+operator|&&
+operator|(
 name|initiallength
 operator|!=
 name|lastinitiallength
@@ -5268,6 +5371,7 @@ name|lastinitial
 argument_list|,
 name|initiallength
 argument_list|)
+operator|)
 condition|)
 block|{
 name|fprintf

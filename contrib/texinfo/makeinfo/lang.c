@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lang.c -- language-dependent support.    $Id: lang.c,v 1.14 2001/09/11 18:04:35 karl Exp $     Copyright (C) 1999, 2000, 01 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* lang.c -- language-dependent support.    $Id: lang.c,v 1.5 2002/11/12 18:48:52 feloy Exp $     Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_include
@@ -56,6 +56,27 @@ init|=
 name|en
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|iso_map_type
+name|us_ascii_map
+index|[]
+init|=
+block|{
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ASCII map is trivial */
+end_comment
 
 begin_comment
 comment|/* Translation table between HTML and ISO Codes.  The last item is    hopefully the Unicode. It might be possible that those Unicodes are    not correct, cause I didn't check them. kama */
@@ -843,20 +864,17 @@ literal|0xFF
 block|,
 literal|0x00FF
 block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* This might be put into structure below and NOT coded via define,    because some translation tables could contain different numbers of    characters, but for now it suffices.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISO_MAP_SIZE
-value|(sizeof (iso8859_1_map) / sizeof (iso8859_1_map[0]))
-end_define
 
 begin_decl_stmt
 name|encoding_type
@@ -870,6 +888,14 @@ block|,
 literal|"(no encoding)"
 block|,
 name|NULL
+block|}
+block|,
+block|{
+name|US_ASCII
+block|,
+literal|"US-ASCII"
+block|,
+name|us_ascii_map
 block|}
 block|,
 block|{
@@ -2281,9 +2307,12 @@ name|i
 operator|=
 literal|0
 init|;
+name|iso
+index|[
 name|i
-operator|<
-name|ISO_MAP_SIZE
+index|]
+operator|.
+name|html
 condition|;
 name|i
 operator|++
@@ -2345,7 +2374,9 @@ for|for
 control|(
 name|enc
 operator|=
-name|ISO_8859_1
+name|no_encoding
+operator|+
+literal|1
 init|;
 name|enc
 operator|!=
@@ -2450,13 +2481,21 @@ block|{
 if|if
 condition|(
 name|html
-operator|||
-name|xml
 condition|)
 name|add_word_args
 argument_list|(
 literal|"&%s;"
 argument_list|,
+name|html_str
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_insert_entity
+argument_list|(
 name|html_str
 argument_list|)
 expr_stmt|;
@@ -2599,6 +2638,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* Yes; start with an ampersand.  The character itself              will be added later in read_command (makeinfo.c).  */
+name|int
+name|saved_escape_html
+init|=
+name|escape_html
+decl_stmt|;
+name|escape_html
+operator|=
+literal|0
+expr_stmt|;
 name|valid_html_accent
 operator|=
 literal|1
@@ -2607,6 +2655,10 @@ name|add_char
 argument_list|(
 literal|'&'
 argument_list|)
+expr_stmt|;
+name|escape_html
+operator|=
+name|saved_escape_html
 expr_stmt|;
 block|}
 else|else
@@ -2621,6 +2673,16 @@ name|html_solo_standalone
 condition|)
 block|{
 comment|/* No special HTML support, so produce standalone char.  */
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_insert_entity
+argument_list|(
+name|html_solo
+argument_list|)
+expr_stmt|;
+else|else
 name|add_word_args
 argument_list|(
 literal|"&%s;"
