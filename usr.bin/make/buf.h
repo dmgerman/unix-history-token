@@ -80,7 +80,7 @@ parameter_list|,
 name|byte
 parameter_list|)
 define|\
-value|(void)(--(bp)->left<= 0 ? Buf_OvAddByte(bp, byte), 1 : \ 		(*(bp)->inPtr++ = (byte), *(bp)->inPtr = 0), 1)
+value|(void)(--(bp)->left<= 0 ? Buf_OvAddByte((bp), (byte)), 1 : \ 		(*(bp)->inPtr++ = (byte), *(bp)->inPtr = 0), 1)
 end_define
 
 begin_define
