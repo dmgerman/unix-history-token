@@ -17858,7 +17858,7 @@ literal|1
 expr_stmt|;
 name|warning
 argument_list|(
-literal|"\n***\n***\t-O%d converted to \"-O1\" due to optimizer bugs on this platform\n***\n"
+literal|"\n***\n***\t-O%d converted to \"-O1\" due to optimizer bugs on this platform\n***"
 argument_list|,
 name|optimize_val
 argument_list|)
@@ -17867,7 +17867,7 @@ else|#
 directive|else
 name|warning
 argument_list|(
-literal|"\n***\n***\tThe -O%d flag TRIGGERS KNOWN OPTIMIZER BUGS ON THIS PLATFORM\n***\n"
+literal|"\n***\n***\tThe -O%d flag TRIGGERS KNOWN OPTIMIZER BUGS ON THIS PLATFORM\n***"
 argument_list|,
 name|optimize_val
 argument_list|)
