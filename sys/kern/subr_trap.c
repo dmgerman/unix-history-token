@@ -693,7 +693,7 @@ operator|&
 name|PCB_NPXTRAP
 condition|)
 block|{
-name|atomic_clear_char
+name|atomic_clear_int
 argument_list|(
 operator|&
 name|PCPU_GET

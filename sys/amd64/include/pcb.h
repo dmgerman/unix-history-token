@@ -72,7 +72,7 @@ name|union
 name|savefpu
 name|pcb_save
 decl_stmt|;
-name|u_char
+name|u_int
 name|pcb_flags
 decl_stmt|;
 define|#
