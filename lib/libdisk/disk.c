@@ -308,6 +308,14 @@ operator|(
 literal|"efi"
 operator|)
 return|;
+case|case
+name|apple
+case|:
+return|return
+operator|(
+literal|"apple"
+operator|)
+return|;
 default|default:
 return|return
 operator|(
