@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.1 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1365,6 +1365,30 @@ argument_list|,
 name|o
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * This is a stub for the "brk" system call, which we want to  * catch and ignore, so that it will not deallocate our data  * space. (of which the program is not aware)  */
+end_comment
+
+begin_macro
+name|brk
+argument_list|(
+argument|addr
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+empty_stmt|;
 block|}
 end_block
 
