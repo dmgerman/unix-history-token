@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -109,6 +115,12 @@ directive|include
 file|<net/if_media.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -120,6 +132,11 @@ include|#
 directive|include
 file|<dev/mii/miivar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -252,6 +269,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -265,6 +288,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -6623,6 +6651,9 @@ name|n
 init|=
 literal|5000
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 name|untimeout
 argument_list|(
 name|ed_tick
@@ -6642,6 +6673,8 @@ operator|->
 name|tick_ch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -6753,6 +6786,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -6846,6 +6885,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize device.  */
@@ -7256,6 +7300,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 if|if
 condition|(
 name|sc
@@ -7285,6 +7332,8 @@ name|mii
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Set 'running' flag, and clear output active flag. 	 */
 name|ifp
 operator|->
@@ -7305,6 +7354,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 name|untimeout
 argument_list|(
 name|ed_tick
@@ -7329,6 +7381,8 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -9162,6 +9216,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 name|struct
 name|ifreq
 modifier|*
@@ -9179,6 +9236,8 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|s
 decl_stmt|,
@@ -9375,6 +9434,9 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 case|case
 name|SIOCGIFMEDIA
 case|:
@@ -9422,6 +9484,8 @@ name|command
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|error
 operator|=
@@ -11907,6 +11971,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_comment
 comment|/*  * MII bus support routines.  */
 end_comment
@@ -12465,6 +12535,11 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

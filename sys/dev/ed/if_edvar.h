@@ -802,6 +802,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|ed_miibus_readreg
@@ -881,6 +887,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|driver_intr_t

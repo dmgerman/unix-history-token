@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ed.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -123,6 +129,12 @@ directive|include
 file|<dev/pccard/pccarddevs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -135,11 +147,22 @@ directive|include
 file|<dev/mii/miivar.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"card_if.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
 
 begin_comment
 comment|/* "device miibus" required.  See GENERIC if you get errors here. */
@@ -166,6 +189,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *      PC-Card (PCMCIA) specific code.  */
@@ -262,6 +290,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -309,6 +343,11 @@ name|nbits
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *      ed_pccard_detach - unload the driver and clear the table.  *      XXX TODO:  *      This is usually called when the card is ejected, but  *      can be caused by a modunload of a controller driver.  *      The idea is to reset the driver's view of the device  *      and ensure that any driver entry points such as  *      read and write do not hang.  */
@@ -1996,6 +2035,9 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 if|if
 condition|(
 name|error
@@ -2042,6 +2084,8 @@ name|ed_ifmedia_sts
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -2797,6 +2841,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_comment
 comment|/* MII bit-twiddling routines for cards using Dlink chipset */
 end_comment
@@ -3108,6 +3158,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -3137,6 +3192,9 @@ argument_list|,
 name|ed_pccard_detach
 argument_list|)
 block|,
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
@@ -3160,6 +3218,8 @@ argument_list|,
 name|ed_miibus_writereg
 argument_list|)
 block|,
+endif|#
+directive|endif
 comment|/* Card interface */
 name|DEVMETHOD
 argument_list|(
@@ -3228,6 +3288,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -3245,6 +3311,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
