@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.22 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,7 +307,7 @@ literal|0
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"554 too many hops %d (%d max): from %s, to %s"
+literal|"554 too many hops %d (%d max): from %s via %s, to %s"
 argument_list|,
 name|e
 operator|->
@@ -320,6 +320,8 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|,
+name|RealHostName
 argument_list|,
 name|e
 operator|->
