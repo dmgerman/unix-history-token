@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.26 1997/06/22 17:54:27 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.27 1997/07/01 18:39:38 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -1857,10 +1857,6 @@ sizeof|sizeof
 expr|*
 name|page_dir
 expr_stmt|;
-comment|/* Been here, done that */
-name|malloc_started
-operator|++
-expr_stmt|;
 comment|/* Recalculate the cache size in bytes, and make sure it's nonzero */
 if|if
 condition|(
@@ -1888,6 +1884,10 @@ sizeof|sizeof
 expr|*
 name|px
 argument_list|)
+expr_stmt|;
+comment|/* Been here, done that */
+name|malloc_started
+operator|++
 expr_stmt|;
 block|}
 end_function
@@ -2865,14 +2865,6 @@ name|result
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|malloc_started
-condition|)
-name|malloc_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|suicide
 condition|)
 name|abort
@@ -2991,21 +2983,6 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|malloc_started
-condition|)
-block|{
-name|wrtwarning
-argument_list|(
-literal|"malloc() has never been called.\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|index
 operator|=
 name|ptr2index
@@ -4418,6 +4395,14 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|malloc_started
+condition|)
+name|malloc_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|malloc_sysv
 operator|&&
 operator|!
@@ -4571,6 +4556,32 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ptr
+operator|&&
+operator|!
+name|malloc_started
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"malloc() has never been called.\n"
+argument_list|)
+expr_stmt|;
+name|ptr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|malloc_started
+condition|)
+name|malloc_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|malloc_sysv
