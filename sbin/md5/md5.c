@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: md5.c,v 1.13 1998/07/06 07:04:50 charnier Exp $"
+literal|"$Id: md5.c,v 1.14 1999/05/01 14:54:21 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -344,8 +350,7 @@ modifier|*
 name|string
 decl_stmt|;
 block|{
-name|unsigned
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
