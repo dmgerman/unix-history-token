@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.11	81/12/16	*/
+comment|/*	tip.c	4.12	82/07/29	*/
 end_comment
 
 begin_comment
@@ -340,6 +340,15 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|system
+operator|==
+name|NOSTR
+condition|)
+goto|goto
+name|notnumber
+goto|;
 for|for
 control|(
 name|p
@@ -1445,6 +1454,10 @@ end_expr_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|p
+condition|)
 while|while
 condition|(
 operator|*
