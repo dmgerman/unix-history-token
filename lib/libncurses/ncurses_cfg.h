@@ -552,6 +552,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NCURSES_PATHSEP
+value|':'
+end_define
+
+begin_define
+define|#
+directive|define
 name|NDEBUG
 value|1
 end_define
