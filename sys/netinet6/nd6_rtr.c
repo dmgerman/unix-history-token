@@ -7106,6 +7106,9 @@ modifier|*
 name|ia0
 decl_stmt|;
 comment|/* corresponding public address */
+name|int
+name|forcegen
+decl_stmt|;
 block|{
 name|struct
 name|ifnet
@@ -7601,6 +7604,10 @@ name|ia6_ndpr
 operator|->
 name|ndpr_refcnt
 operator|++
+expr_stmt|;
+comment|/* 	 * A newly added address might affect the status of other addresses. 	 * XXX: when the temporary address is generated with a new public 	 * address, the onlink check is redundant.  However, it would be safe 	 * to do the check explicitly everywhere a new address is generated, 	 * and, in fact, we surely need the check when we create a new 	 * temporary address due to deprecation of an old temporary address. 	 */
+name|pfxlist_onlink_check
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
