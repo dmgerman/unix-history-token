@@ -131,15 +131,15 @@ argument_list|)
 name|so_list
 expr_stmt|;
 comment|/* (e) list of unaccepted connections */
-name|short
+name|u_short
 name|so_qlen
 decl_stmt|;
 comment|/* (e) number of unaccepted connections */
-name|short
+name|u_short
 name|so_incqlen
 decl_stmt|;
 comment|/* (e) number of unaccepted incomplete 					   connections */
-name|short
+name|u_short
 name|so_qlimit
 decl_stmt|;
 comment|/* (e) max number queued connections */
@@ -764,13 +764,13 @@ decl_stmt|;
 name|int
 name|xso_family
 decl_stmt|;
-name|short
+name|u_short
 name|so_qlen
 decl_stmt|;
-name|short
+name|u_short
 name|so_incqlen
 decl_stmt|;
-name|short
+name|u_short
 name|so_qlimit
 decl_stmt|;
 name|short
