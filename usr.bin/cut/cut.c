@@ -1047,6 +1047,7 @@ specifier|const
 name|char
 modifier|*
 name|fname
+name|__unused
 parameter_list|)
 block|{
 name|int
