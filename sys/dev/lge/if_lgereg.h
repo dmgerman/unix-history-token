@@ -2782,7 +2782,7 @@ begin_define
 define|#
 directive|define
 name|LGE_JRAWLEN
-value|(LGE_JUMBO_FRAMELEN + ETHER_ALIGN)
+value|(LGE_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
 end_define
 
 begin_define
@@ -2790,6 +2790,13 @@ define|#
 directive|define
 name|LGE_JLEN
 value|(LGE_JRAWLEN + (sizeof(u_int64_t) - \ 	(LGE_JRAWLEN % sizeof(u_int64_t))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LGE_MCLBYTES
+value|(LGE_JLEN - sizeof(u_int64_t))
 end_define
 
 begin_define
@@ -2812,6 +2819,20 @@ directive|define
 name|LGE_JMEM
 value|((LGE_JLEN * LGE_JSLOTS) + LGE_RESID)
 end_define
+
+begin_struct
+struct|struct
+name|lge_jslot
+block|{
+name|caddr_t
+name|lge_buf
+decl_stmt|;
+name|int
+name|lge_inuse
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -2847,7 +2868,8 @@ name|int
 name|lge_tx_cons
 decl_stmt|;
 comment|/* Stick the jumbo mem management stuff here too. */
-name|caddr_t
+name|struct
+name|lge_jslot
 name|lge_jslots
 index|[
 name|LGE_JSLOTS

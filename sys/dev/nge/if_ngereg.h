@@ -3224,7 +3224,7 @@ begin_define
 define|#
 directive|define
 name|NGE_JRAWLEN
-value|(NGE_JUMBO_FRAMELEN + ETHER_ALIGN)
+value|(NGE_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
 end_define
 
 begin_define
@@ -3232,6 +3232,13 @@ define|#
 directive|define
 name|NGE_JLEN
 value|(NGE_JRAWLEN + (sizeof(u_int64_t) - \ 	(NGE_JRAWLEN % sizeof(u_int64_t))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NGE_MCLBYTES
+value|(NGE_JLEN - sizeof(u_int64_t))
 end_define
 
 begin_define
@@ -3254,6 +3261,20 @@ directive|define
 name|NGE_JMEM
 value|((NGE_JLEN * NGE_JSLOTS) + NGE_RESID)
 end_define
+
+begin_struct
+struct|struct
+name|nge_jslot
+block|{
+name|caddr_t
+name|nge_buf
+decl_stmt|;
+name|int
+name|nge_inuse
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -3289,7 +3310,8 @@ name|int
 name|nge_tx_cnt
 decl_stmt|;
 comment|/* Stick the jumbo mem management stuff here too. */
-name|caddr_t
+name|struct
+name|nge_jslot
 name|nge_jslots
 index|[
 name|NGE_JSLOTS
@@ -3387,10 +3409,6 @@ argument|nge_jpool_entry
 argument_list|)
 name|nge_jinuse_listhead
 expr_stmt|;
-name|struct
-name|mtx
-name|nge_mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
