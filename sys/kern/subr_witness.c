@@ -2292,20 +2292,6 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* 	 * We have to hold a spinlock to keep lock_list valid across the check 	 * in the LC_SLEEPLOCK case.  In the LC_SPINLOCK case, it is already 	 * protected by the spinlock we are currently performing the witness 	 * checks on, so it is ok to release the lock after performing this 	 * check.  All we have to protect is the LC_SLEEPLOCK case when no 	 * spinlocks are held as we may get preempted during this check and 	 * lock_list could end up pointing to some other CPU's spinlock list. 	 */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|w_mtx
-argument_list|)
-expr_stmt|;
-name|lock_list
-operator|=
-name|PCPU_PTR
-argument_list|(
-name|spinlocks
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|class
@@ -2317,10 +2303,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|*
-name|lock_list
+name|td
+operator|->
+name|td_critnest
 operator|!=
-name|NULL
+literal|0
 operator|&&
 operator|(
 name|flags
@@ -2330,13 +2317,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|w_mtx
-argument_list|)
-expr_stmt|;
 name|panic
 argument_list|(
 literal|"blockable sleep lock (%s) %s @ %s:%d"
@@ -2354,7 +2334,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-block|}
 name|lock_list
 operator|=
 operator|&
@@ -2363,10 +2342,12 @@ operator|->
 name|td_sleeplocks
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+else|else
+name|lock_list
+operator|=
+name|PCPU_PTR
 argument_list|(
-operator|&
-name|w_mtx
+name|spinlocks
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Try locks do not block if they fail to acquire the lock, thus 	 * there is no danger of deadlocks or of switching while holding a 	 * spin lock if we acquire a lock via a try operation. 	 */
