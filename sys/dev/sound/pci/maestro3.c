@@ -7088,11 +7088,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|m3_codec_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Restore the ASSP state */
 for|for
 control|(
