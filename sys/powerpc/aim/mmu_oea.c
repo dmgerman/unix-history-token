@@ -359,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|PVO_BOOTSTRAP
-value|0x0004
+value|0x0080
 end_define
 
 begin_comment
