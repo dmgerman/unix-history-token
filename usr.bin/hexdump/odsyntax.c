@@ -1737,7 +1737,7 @@ argument_list|(
 operator|&
 name|hdfmt
 argument_list|,
-literal|"%lu/%lu \"%%%s%d%c \" \"\\n\""
+literal|"%lu/%lu \"%*s%%%s%d%c\" \"\\n\""
 argument_list|,
 literal|16UL
 operator|/
@@ -1750,6 +1750,19 @@ operator|(
 name|u_long
 operator|)
 name|isize
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+literal|4
+operator|*
+name|isize
+operator|-
+name|digits
+argument_list|)
+argument_list|,
+literal|""
 argument_list|,
 operator|(
 name|fchar
