@@ -9,11 +9,14 @@ directive|include
 file|"sysinstall.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -25,14 +28,29 @@ parameter_list|)
 value|str "alpha/"
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|_AS
+parameter_list|(
+name|str
+parameter_list|)
+value|str "pc98/"
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* i386 */
-end_comment
 
 begin_define
 define|#

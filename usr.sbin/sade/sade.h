@@ -4278,6 +4278,15 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
+name|termcap_cons25w
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
 name|termcap_cons25
 index|[]
 decl_stmt|;
