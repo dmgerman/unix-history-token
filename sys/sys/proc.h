@@ -1023,15 +1023,15 @@ comment|/* (n) For core dump/debugger XXX. */
 name|u_int
 name|p_stops
 decl_stmt|;
-comment|/* (c) Procfs event bitmask. */
+comment|/* (c) Stop event bitmask. */
 name|u_int
 name|p_stype
 decl_stmt|;
-comment|/* (c) Procfs stop event type. */
+comment|/* (c) Stop event type. */
 name|char
 name|p_step
 decl_stmt|;
-comment|/* (c) Procfs stop *once* flag. */
+comment|/* (c) Process is stopped. */
 name|u_char
 name|p_pfsflags
 decl_stmt|;
