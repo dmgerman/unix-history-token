@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/**  * \file drm_os_freebsd.h  * OS-specific #defines for FreeBSD  *   * \author Eric Anholt<anholt@FreeBSD.org>  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright 2003 Eric Anholt  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -157,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -660,6 +670,33 @@ name|DRM_IRQ_ARGS
 value|void *arg
 end_define
 
+begin_typedef
+typedef|typedef
+name|void
+name|irqreturn_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IRQ_HANDLED
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRQ_NONE
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -687,16 +724,6 @@ parameter_list|,
 name|size
 parameter_list|)
 value|free( pt, DRM(M_DRM) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_VTOPHYS
-parameter_list|(
-name|addr
-parameter_list|)
-value|vtophys(addr)
 end_define
 
 begin_comment
@@ -981,27 +1008,80 @@ define|\
 value|((val) = fuword(uaddr), 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DRM_WRITEMEMORYBARRIER
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|bus_space_barrier((map)->iot, (map)->ioh, 0, (map)->size, 0);
-end_define
+begin_comment
+comment|/* DRM_READMEMORYBARRIER() prevents reordering of reads.  * DRM_WRITEMEMORYBARRIER() prevents reordering of writes.  * DRM_MEMORYBARRIER() prevents reordering of reads and writes.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|DRM_READMEMORYBARRIER
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|bus_space_barrier((map)->iot, (map)->ioh, 0, (map)->size, BUS_SPACE_BARRIER_READ);
+parameter_list|()
+value|__asm __volatile( \ 					"lock; addl $0,0(%%esp)" : : : "memory");
 end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_WRITEMEMORYBARRIER
+parameter_list|()
+value|__asm __volatile("" : : : "memory");
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MEMORYBARRIER
+parameter_list|()
+value|__asm __volatile( \ 					"lock; addl $0,0(%%esp)" : : : "memory");
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DRM_READMEMORYBARRIER
+parameter_list|()
+value|alpha_mb();
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_WRITEMEMORYBARRIER
+parameter_list|()
+value|alpha_wmb();
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MEMORYBARRIER
+parameter_list|()
+value|alpha_mb();
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1090,12 +1170,18 @@ name|cpu_to_le32
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
+value|htole32(x)
 end_define
 
-begin_comment
-comment|/* FIXME */
-end_comment
+begin_define
+define|#
+directive|define
+name|le32_to_cpu
+parameter_list|(
+name|x
+parameter_list|)
+value|le32toh(x)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -1824,23 +1910,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|snprintf(buf, sizeof(buf), fmt, ##arg);	\   error = SYSCTL_OUT(req, buf, strlen(buf));	\   if (error) return error;
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_SYSCTL_PRINT_RET
-parameter_list|(
-name|ret
-parameter_list|,
-name|fmt
-parameter_list|,
-name|arg
-modifier|...
-parameter_list|)
-define|\
-value|snprintf(buf, sizeof(buf), fmt, ##arg);	\   error = SYSCTL_OUT(req, buf, strlen(buf));	\   if (error) { ret; return error; }
+value|do {						\   snprintf(buf, sizeof(buf), fmt, ##arg);	\   error = SYSCTL_OUT(req, buf, strlen(buf));	\   if (error) return error;			\ } while (0)
 end_define
 
 begin_define
@@ -2007,8 +2077,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Memory info sysctl (drm_memory.h) */
+comment|/* Memory info sysctl (drm_memory_debug.h) */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMORY
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -2020,6 +2096,11 @@ argument_list|)
 name|DRM_SYSCTL_HANDLER_ARGS
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -492,6 +492,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|tex_age
 index|[
@@ -501,6 +502,14 @@ decl_stmt|;
 name|int
 name|ctx_owner
 decl_stmt|;
+name|int
+name|pfAllowPageFlip
+decl_stmt|;
+comment|/* number of 3d windows (0,1,2 or more) */
+name|int
+name|pfCurrentPage
+decl_stmt|;
+comment|/* which buffer is being displayed? */
 block|}
 name|drm_r128_sarea_t
 typedef|;
@@ -631,6 +640,13 @@ define|#
 directive|define
 name|DRM_IOCTL_R128_GETPARAM
 value|DRM_IOW( 0x52, drm_r128_getparam_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_R128_FLIP
+value|DRM_IO(  0x53)
 end_define
 
 begin_typedef

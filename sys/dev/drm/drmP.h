@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drmP.h -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by faith@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  * $FreeBSD$  */
+comment|/* drmP.h -- Private header for Direct Rendering Manager -*- linux-c -*-  * Created: Mon Jan  4 10:05:05 1999 by faith@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -391,6 +391,8 @@ directive|define
 name|DRM_IOREMAP
 parameter_list|(
 name|map
+parameter_list|,
+name|dev
 parameter_list|)
 define|\
 value|(map)->handle = DRM(ioremap)( dev, map )
@@ -402,6 +404,8 @@ directive|define
 name|DRM_IOREMAP_NOCACHE
 parameter_list|(
 name|map
+parameter_list|,
+name|dev
 parameter_list|)
 define|\
 value|(map)->handle = DRM(ioremap_nocache)( dev, map )
@@ -413,6 +417,8 @@ directive|define
 name|DRM_IOREMAPFREE
 parameter_list|(
 name|map
+parameter_list|,
+name|dev
 parameter_list|)
 define|\
 value|do {								\ 		if ( (map)->handle&& (map)->size )			\ 			DRM(ioremapfree)( map );			\ 	} while (0)
@@ -771,10 +777,13 @@ decl_stmt|;
 name|int
 name|page_order
 decl_stmt|;
-name|unsigned
-name|long
+name|vm_offset_t
 modifier|*
 name|seglist
+decl_stmt|;
+name|dma_addr_t
+modifier|*
+name|seglist_bus
 decl_stmt|;
 name|drm_freelist_t
 name|freelist
@@ -1582,44 +1591,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
-name|DRM
-function_decl|(
-name|strdup
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|,
-name|int
-name|area
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|DRM
-function_decl|(
-name|strfree
-function_decl|)
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|,
-name|int
-name|area
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|DRM
 function_decl|(
@@ -1646,26 +1617,6 @@ modifier|*
 name|DRM
 function_decl|(
 name|ioremap
-function_decl|)
-parameter_list|(
-name|drm_device_t
-modifier|*
-name|dev
-parameter_list|,
-name|drm_local_map_t
-modifier|*
-name|map
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|DRM
-function_decl|(
-name|ioremap_nocache
 function_decl|)
 parameter_list|(
 name|drm_device_t
@@ -2100,7 +2051,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|irqreturn_t
 name|DRM
 function_decl|(
 name|dma_service
@@ -3158,6 +3109,64 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* consistent PCI memory functions (drm_pci.h) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|DRM
+function_decl|(
+name|pci_alloc
+function_decl|)
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|size_t
+name|align
+parameter_list|,
+name|dma_addr_t
+name|maxaddr
+parameter_list|,
+name|dma_addr_t
+modifier|*
+name|busaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|DRM
+function_decl|(
+name|pci_free
+function_decl|)
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|void
+modifier|*
+name|vaddr
+parameter_list|,
+name|dma_addr_t
+name|busaddr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

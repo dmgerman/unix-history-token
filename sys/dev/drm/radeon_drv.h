@@ -435,6 +435,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|radeon_cp_resume
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|radeon_engine_reset
 parameter_list|(
 name|DRM_IOCTL_ARGS
@@ -3157,6 +3167,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_TXFORMAT_Y8
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|RADEON_TXFORMAT_VYUY422
 value|10
 end_define
@@ -3731,6 +3748,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|RADEON_PP_TEX_SIZE_0
+value|0x1d04
+end_define
+
+begin_comment
+comment|/* NPOT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_PP_TEX_SIZE_1
+value|0x1d0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PP_TEX_SIZE_2
+value|0x1d14
+end_define
+
+begin_define
+define|#
+directive|define
 name|SE_VAP_CNTL__TCL_ENA_MASK
 value|0x00000001
 end_define
@@ -4180,7 +4222,7 @@ name|COMMIT_RING
 parameter_list|()
 value|do {						\
 comment|/* Flush writes to ring */
-value|\ 	DRM_READMEMORYBARRIER( dev_priv->mmio );			\ 	GET_RING_HEAD( dev_priv );					\ 	RADEON_WRITE( RADEON_CP_RB_WPTR, dev_priv->ring.tail );		\
+value|\ 	DRM_MEMORYBARRIER();						\ 	GET_RING_HEAD( dev_priv );					\ 	RADEON_WRITE( RADEON_CP_RB_WPTR, dev_priv->ring.tail );		\
 comment|/* read from PCI bus to ensure correct posting */
 value|\ 	RADEON_READ( RADEON_CP_RB_RPTR );				\ } while (0)
 end_define

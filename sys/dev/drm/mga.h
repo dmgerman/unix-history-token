@@ -155,7 +155,7 @@ define|#
 directive|define
 name|DRIVER_PRETAKEDOWN
 parameter_list|()
-value|do {					\ 	if ( dev->dev_private ) mga_do_cleanup_dma( dev );		\ } while (0)
+value|do {					\ 	mga_do_cleanup_dma( dev );					\ } while (0)
 end_define
 
 begin_comment

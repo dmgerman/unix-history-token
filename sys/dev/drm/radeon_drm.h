@@ -945,8 +945,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_MAX_STATE_PACKETS
+name|RADEON_EMIT_PP_TEX_SIZE_0
 value|73
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_TEX_SIZE_1
+value|74
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_EMIT_PP_TEX_SIZE_2
+value|75
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MAX_STATE_PACKETS
+value|76
 end_define
 
 begin_comment
@@ -1640,28 +1661,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|unsigned
-name|char
-name|next
-decl_stmt|,
-name|prev
-decl_stmt|;
-name|unsigned
-name|char
-name|in_use
-decl_stmt|;
-name|int
-name|age
-decl_stmt|;
-block|}
-name|drm_radeon_tex_region_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
 comment|/* The channel for communication of state information to the 	 * kernel on firing a vertex buffer with either of the 	 * obsoleted vertex/index ioctls. 	 */
 name|drm_radeon_context_regs_t
 name|context_state
@@ -1708,7 +1707,7 @@ name|unsigned
 name|int
 name|last_clear
 decl_stmt|;
-name|drm_radeon_tex_region_t
+name|drm_tex_region_t
 name|tex_list
 index|[
 name|RADEON_NR_TEX_HEAPS
@@ -1719,6 +1718,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|tex_age
 index|[
@@ -1912,6 +1912,17 @@ define|#
 directive|define
 name|DRM_IOCTL_RADEON_IRQ_WAIT
 value|DRM_IOW( 0x57, drm_radeon_irq_wait_t)
+end_define
+
+begin_comment
+comment|/* added by Charl P. Botha - see radeon_cp.c for details */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_CP_RESUME
+value|DRM_IO(0x58)
 end_define
 
 begin_typedef
@@ -2386,6 +2397,10 @@ name|RADEON_PARAM_LAST_CLEAR
 value|4
 end_define
 
+begin_comment
+comment|/* Added with DRM version 1.6. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2402,6 +2417,10 @@ end_define
 
 begin_comment
 comment|/* card offset of agp base */
+end_comment
+
+begin_comment
+comment|/* Added with DRM version 1.8. */
 end_comment
 
 begin_define

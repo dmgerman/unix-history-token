@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* drm_agpsupport.h -- DRM support for AGP/GART backend -*- linux-c -*-  * Created: Mon Dec 13 09:56:45 1999 by faith@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Author:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  * $FreeBSD$  */
+comment|/* drm_agpsupport.h -- DRM support for AGP/GART backend -*- linux-c -*-  * Created: Mon Dec 13 09:56:45 1999 by faith@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Author:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1263,13 +1263,6 @@ name|memory
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* bogus */
-block|switch (head->agp_info.chipset) { 		case INTEL_GENERIC:  head->chipset = "Intel";          break; 		case INTEL_LX:       head->chipset = "Intel 440LX";    break; 		case INTEL_BX:       head->chipset = "Intel 440BX";    break; 		case INTEL_GX:       head->chipset = "Intel 440GX";    break; 		case INTEL_I810:     head->chipset = "Intel i810";     break; 		case VIA_GENERIC:    head->chipset = "VIA";            break; 		case VIA_VP3:        head->chipset = "VIA VP3";        break; 		case VIA_MVP3:       head->chipset = "VIA MVP3";       break; 		case VIA_APOLLO_PRO: head->chipset = "VIA Apollo Pro"; break; 		case SIS_GENERIC:    head->chipset = "SiS";            break; 		case AMD_GENERIC:    head->chipset = "AMD";            break; 		case AMD_IRONGATE:   head->chipset = "AMD Irongate";   break; 		case ALI_GENERIC:    head->chipset = "ALi";            break; 		case ALI_M1541:      head->chipset = "ALi M1541";      break; 		default: 		}
-endif|#
-directive|endif
 name|DRM_INFO
 argument_list|(
 literal|"AGP at 0x%08lx %dMB\n"

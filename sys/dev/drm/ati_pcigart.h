@@ -335,6 +335,9 @@ name|ATI_PCIGART_PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
+name|DRM_MEMORYBARRIER
+argument_list|()
+expr_stmt|;
 name|ret
 operator|=
 literal|1

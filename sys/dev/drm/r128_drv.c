@@ -315,6 +315,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm_pci.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/drm_sysctl.h"
 end_include
 

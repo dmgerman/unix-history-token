@@ -34,7 +34,7 @@ file|"dev/drm/r128_drv.h"
 end_include
 
 begin_function
-name|void
+name|irqreturn_t
 name|r128_dma_service
 parameter_list|(
 name|DRM_IRQ_ARGS
@@ -111,7 +111,13 @@ parameter_list|(
 name|dev
 parameter_list|)
 function_decl|;
+return|return
+name|IRQ_HANDLED
+return|;
 block|}
+return|return
+name|IRQ_NONE
+return|;
 block|}
 end_function
 
@@ -286,9 +292,10 @@ name|dev_private
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_priv
 condition|)
-block|{
+return|return;
 comment|/* Disable *all* interrupts */
 name|R128_WRITE
 argument_list|(
@@ -297,7 +304,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

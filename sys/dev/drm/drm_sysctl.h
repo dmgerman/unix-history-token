@@ -97,6 +97,9 @@ argument|name_info
 argument_list|)
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMORY
 block|{
 literal|"mem"
 block|,
@@ -106,6 +109,8 @@ argument|mem_info
 argument_list|)
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"vm"
 block|,
@@ -527,7 +532,7 @@ condition|)
 block|{
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%s 0x%x %s\n"
+literal|"%s 0x%x %s"
 argument_list|,
 name|dev
 operator|->
@@ -550,7 +555,7 @@ else|else
 block|{
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%s 0x%x\n"
+literal|"%s 0x%x"
 argument_list|,
 name|dev
 operator|->
@@ -615,6 +620,10 @@ block|,
 literal|"REG"
 block|,
 literal|"SHM"
+block|,
+literal|"AGP"
+block|,
+literal|"SG"
 block|}
 decl_stmt|;
 specifier|const
@@ -638,31 +647,10 @@ name|error
 decl_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"slot	 offset	      size type flags	 "
-literal|"address mtrr\n\n"
+literal|"\nslot	 offset	      size type flags	 "
+literal|"address mtrr\n"
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-name|buf
-argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 if|if
 condition|(
 name|dev
@@ -699,7 +687,7 @@ name|map
 operator|->
 name|type
 operator|>
-literal|2
+literal|4
 condition|)
 name|type
 operator|=
@@ -755,7 +743,7 @@ condition|)
 block|{
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"none\n"
+literal|"no\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -763,11 +751,7 @@ else|else
 block|{
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%4d\n"
-argument_list|,
-name|map
-operator|->
-name|mtrr
+literal|"yes\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -884,7 +868,7 @@ literal|0
 return|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|" o     size count  free	 segs pages    kB\n\n"
+literal|"\n o     size count  free	 segs pages    kB\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1158,7 +1142,7 @@ name|error
 decl_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"a dev	pid    uid	magic	  ioctls\n\n"
+literal|"\na dev	pid    uid	magic	  ioctls\n"
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH

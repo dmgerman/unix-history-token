@@ -38,7 +38,7 @@ comment|/* Interrupts - Used for device synchronization and flushing in the  * f
 end_comment
 
 begin_function
-name|void
+name|irqreturn_t
 name|DRM
 function|(
 name|dma_service
@@ -91,7 +91,9 @@ condition|(
 operator|!
 name|stat
 condition|)
-return|return;
+return|return
+name|IRQ_NONE
+return|;
 comment|/* SW interrupt */
 if|if
 condition|(
@@ -150,6 +152,9 @@ argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
+return|return
+name|IRQ_HANDLED
+return|;
 block|}
 end_function
 
@@ -801,9 +806,10 @@ name|dev_private
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|dev_priv
 condition|)
-block|{
+return|return;
 comment|/* Disable *all* interrupts */
 name|RADEON_WRITE
 argument_list|(
@@ -812,7 +818,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

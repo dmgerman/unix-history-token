@@ -3363,7 +3363,7 @@ name|MDF_WRITECOMBINE
 expr_stmt|;
 name|act
 operator|=
-name|MEMRANGE_SET_UPDATE
+name|MEMRANGE_SET_REMOVE
 expr_stmt|;
 name|bcopy
 argument_list|(

@@ -2316,6 +2316,8 @@ argument_list|(
 name|dev_priv
 operator|->
 name|warp
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 name|DRM_IOREMAP
@@ -2323,6 +2325,8 @@ argument_list|(
 name|dev_priv
 operator|->
 name|primary
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 name|DRM_IOREMAP
@@ -2330,6 +2334,8 @@ argument_list|(
 name|dev_priv
 operator|->
 name|buffers
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2737,6 +2743,26 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_HAVE_DMA_IRQ
+comment|/* Make sure interrupts are disabled here because the uninstall ioctl 	 * may not have been called from userspace and after dev_private 	 * is freed, it's too late. 	 */
+if|if
+condition|(
+name|dev
+operator|->
+name|irq
+condition|)
+name|DRM
+function_decl|(
+name|irq_uninstall
+function_decl|)
+parameter_list|(
+name|dev
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dev
@@ -2765,6 +2791,8 @@ argument_list|(
 name|dev_priv
 operator|->
 name|warp
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2780,6 +2808,8 @@ argument_list|(
 name|dev_priv
 operator|->
 name|primary
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2795,6 +2825,8 @@ argument_list|(
 name|dev_priv
 operator|->
 name|buffers
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2854,6 +2886,13 @@ expr_stmt|;
 name|drm_mga_init_t
 name|init
 decl_stmt|;
+name|LOCK_TEST_WITH_RETURN
+argument_list|(
+name|dev
+argument_list|,
+name|filp
+argument_list|)
+expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|init
