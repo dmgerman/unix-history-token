@@ -29,17 +29,25 @@ begin_struct
 struct|struct
 name|pcb
 block|{
-name|u_int32_t
+name|register_t
 name|pcb_context
 index|[
 literal|18
 index|]
 decl_stmt|;
 comment|/* non-volatile r14-r31 */
-name|u_int32_t
+name|register_t
 name|pcb_cr
 decl_stmt|;
 comment|/* Condition register */
+name|register_t
+name|pcb_sp
+decl_stmt|;
+comment|/* stack pointer */
+name|register_t
+name|pcb_lr
+decl_stmt|;
+comment|/* link register */
 name|struct
 name|pmap
 modifier|*
@@ -52,19 +60,11 @@ modifier|*
 name|pcb_pmreal
 decl_stmt|;
 comment|/* real address of above */
-name|register_t
-name|pcb_sp
-decl_stmt|;
-comment|/* saved SP */
-name|int
-name|pcb_spl
-decl_stmt|;
-comment|/* saved SPL */
 name|faultbuf
 modifier|*
 name|pcb_onfault
 decl_stmt|;
-comment|/* For use during copyin/copyout */
+comment|/* For use during 						    copyin/copyout */
 name|int
 name|pcb_flags
 decl_stmt|;
