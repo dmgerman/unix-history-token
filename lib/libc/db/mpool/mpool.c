@@ -1089,7 +1089,16 @@ decl_stmt|;
 comment|/* Free up any space allocated to the lru pages. */
 while|while
 condition|(
-operator|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|lqh
+argument_list|)
+condition|)
+block|{
 name|bp
 operator|=
 name|TAILQ_FIRST
@@ -1099,18 +1108,7 @@ name|mp
 operator|->
 name|lqh
 argument_list|)
-operator|)
-operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|mp
-operator|->
-name|lqh
-condition|)
-block|{
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
