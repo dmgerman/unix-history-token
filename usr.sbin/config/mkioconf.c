@@ -4836,22 +4836,20 @@ condition|)
 block|{
 continue|continue;
 block|}
-name|mp
-operator|=
-name|mp
-operator|->
-name|d_conn
-expr_stmt|;
 if|if
 condition|(
 name|mp
+operator|->
+name|d_conn
 operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s%s: devices not attached to a SCSI  controller\n"
+name|stderr
+argument_list|,
+literal|"%s%s: Warning, can't tell what is attached to scbus%s.\n"
 argument_list|,
 name|dp
 operator|->
@@ -4863,9 +4861,15 @@ name|dp
 operator|->
 name|d_unit
 argument_list|)
+argument_list|,
+name|wnum
+argument_list|(
+name|mp
+operator|->
+name|d_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
 name|fprintf
 argument_list|(
