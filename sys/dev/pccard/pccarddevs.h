@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.6 2000/11/25 03:42:06 peter Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.7 2001/01/20 01:41:25 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.97 2000/07/26 07:24:15 onoe Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.107 2000/12/20 06:05:13; haya Exp $ */
 end_comment
 
 begin_comment
@@ -341,6 +341,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_TELECOMDEVICE
+value|0x021b
+end_define
+
+begin_comment
+comment|/* Telecom Device */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_NOKIA
 value|0x023d
 end_define
@@ -418,6 +429,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_MACNICA
+value|0xc00b
+end_define
+
+begin_comment
+comment|/* MACNICA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COREGA
 value|0xc00f
 end_define
@@ -457,6 +479,17 @@ end_define
 
 begin_comment
 comment|/* RATOC System Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_ELSA
+value|0xd601
+end_define
+
+begin_comment
+comment|/* Elsa */
 end_comment
 
 begin_comment
@@ -849,6 +882,52 @@ value|"Digital Mobile Media CD-ROM"
 end_define
 
 begin_comment
+comment|/* ELSA Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ELSA_MC2_IEEE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ELSA_MC2_IEEE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ELSA_MC2_IEEE
+value|"AirLancer MC-2 IEEE"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ELSA_XI300_IEEE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ELSA_XI300_IEEE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ELSA_XI300_IEEE
+value|"XI300 Wireless LAN"
+end_define
+
+begin_comment
 comment|/* Fujutsu Products */
 end_comment
 
@@ -993,6 +1072,27 @@ end_define
 begin_comment
 comment|/* IBM Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IBM_MICRODRIVE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IBM_MICRODRIVE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IBM_MICRODRIVE
+value|"IBM Microdrive"
+end_define
 
 begin_define
 define|#
@@ -1244,21 +1344,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LEXARMEDIA_COMPATFLASH
+name|PCCARD_CIS_LEXARMEDIA_COMPACTFLASH
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LEXARMEDIA_COMPATFLASH
+name|PCCARD_PRODUCT_LEXARMEDIA_COMPACTFLASH
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LEXARMEDIA_COMPATFLASH
+name|PCCARD_STR_LEXARMEDIA_COMPACTFLASH
 value|"Lexar Media CompactFlash"
 end_define
 
@@ -1729,22 +1829,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SOCEKT_LP_ETHER_CF
+name|PCCARD_CIS_SOCKET_LP_ETHER_CF
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SOCEKT_LP_ETHER_CF
+name|PCCARD_PRODUCT_SOCKET_LP_ETHER_CF
 value|0x0075
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SOCEKT_LP_ETHER_CF
-value|"Socket Communications Low Power Ethernet CF"
+name|PCCARD_STR_SOCKET_LP_ETHER_CF
+value|"Socket Communications LP-E CF"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SOCKET_LP_ETHER
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SOCKET_LP_ETHER
+value|0x000d
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SOCKET_LP_ETHER
+value|"Socket Communications LP-E"
 end_define
 
 begin_comment
@@ -2406,6 +2527,56 @@ define|#
 directive|define
 name|PCCARD_STR_SAMSUNG_SWL_2000N
 value|"Samsung MagicLAN SWL-2000N"
+end_define
+
+begin_comment
+comment|/* Telecom Device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_TELECOMDEVICE_TCD_HPC100
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_TELECOMDEVICE_TCD_HPC100
+value|0x0202
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_TELECOMDEVICE_TCD_HPC100
+value|"Telecom Device TCD-HPC100"
+end_define
+
+begin_comment
+comment|/* MACNICA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_MACNICA_ME1_JEIDA
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_MACNICA_ME1_JEIDA
+value|0x3300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_MACNICA_ME1_JEIDA
+value|"MACNICA ME1 for JEIDA"
 end_define
 
 begin_comment
@@ -3125,6 +3296,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCCARD_CIS_IODATA_CBIDE2
+value|{ "IO DATA", "CBIDE2      ", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IODATA_CBIDE2
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IODATA_CBIDE2
+value|"IO-DATA CBIDE2/16-bit mode"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_EPSON_EEN10B
 value|{ "Seiko Epson Corp.", "Ethernet", "P/N: EEN10B Rev. 00", NULL }
 end_define
@@ -3273,7 +3465,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_CIS_INTERSIL_PRISM2
-value|{ "INTERSIL", "HFA384x/IEEE", "Version 01.02", NULL}
+value|{ "INTERSIL", "HFA384x/IEEE", "Version 01.02", NULL }
 end_define
 
 begin_define
@@ -3288,6 +3480,48 @@ define|#
 directive|define
 name|PCCARD_STR_INTERSIL_PRISM2
 value|"Intersil Prism II"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_MELCO_LPC2_TX
+value|{ "MELCO", "LPC2-TX", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_MELCO_LPC2_TX
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_MELCO_LPC2_TX
+value|"Melco LPC2-TX"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SMC_2632W
+value|{ "SMC", "SMC2632W", "Version 01.02", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SMC_2632W
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SMC_2632W
+value|"SMC 2632 EZ Connect Wireless PC Card"
 end_define
 
 end_unit
