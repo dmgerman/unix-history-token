@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.12 %G%"
+literal|"@(#)df.c	4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,9 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|sync
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Filesystem    kbytes    used   avail capacity"
