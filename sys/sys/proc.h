@@ -1251,6 +1251,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PS_TIMOFAIL
+value|0x01000
+end_define
+
+begin_comment
+comment|/* Timeout from sleep after we were awake. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_MAGIC
 value|0xbeefface
 end_define
