@@ -65,9 +65,14 @@ name|sc
 decl_stmt|;
 name|sc
 operator|=
-name|device_get_softc
+name|devclass_get_softc
 argument_list|(
-name|dev
+name|devclass_find
+argument_list|(
+literal|"acpi"
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|acpi_install_wakeup_handler
