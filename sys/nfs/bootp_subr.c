@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.14 1998/08/18 00:32:47 bde Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.15 1998/08/23 03:07:16 wollman Exp $	*/
 end_comment
 
 begin_comment
@@ -1719,9 +1719,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bootpc_call: sosend: %d\n"
+literal|"bootpc_call: sosend: %d state %08x\n"
 argument_list|,
 name|error
+argument_list|,
+operator|(
+name|int
+operator|)
+name|so
+operator|->
+name|so_state
 argument_list|)
 expr_stmt|;
 goto|goto
