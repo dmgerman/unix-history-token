@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.11 (Berkeley) %G%"
+literal|"@(#)startup.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,7 +364,29 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* already known to us? */
+comment|/* 		 * already known to us? 		 * This allows multiple point-to-point links 		 * to share a source address (possibly with one 		 * other link), but assumes that there will not be 		 * multiple links with the same destination address. 		 */
+if|if
+condition|(
+name|ifs
+operator|.
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+condition|)
+block|{
+if|if
+condition|(
+name|if_ifwithdstaddr
+argument_list|(
+operator|&
+name|ifs
+operator|.
+name|int_dstaddr
+argument_list|)
+condition|)
+continue|continue;
+block|}
+elseif|else
 if|if
 condition|(
 name|if_ifwithaddr
@@ -397,6 +419,12 @@ operator|&
 name|IFF_LOOPBACK
 condition|)
 block|{
+name|ifs
+operator|.
+name|int_flags
+operator||=
+name|IFF_PASSIVE
+expr_stmt|;
 name|foundloopback
 operator|=
 literal|1
@@ -560,6 +588,12 @@ operator|=
 name|ifreq
 operator|.
 name|ifr_metric
+expr_stmt|;
+comment|/* 		 * Use a minimum metric of one; 		 * treat the interface metric (default 0) 		 * as an increment to the hop count of one. 		 */
+name|ifs
+operator|.
+name|int_metric
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -1257,8 +1291,6 @@ condition|)
 name|state
 operator||=
 name|RTS_EXTERNAL
-operator||
-name|RTS_PASSIVE
 expr_stmt|;
 name|rtadd
 argument_list|(
