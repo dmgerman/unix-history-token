@@ -578,7 +578,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ugvq"
+literal|"gquv"
 argument_list|)
 operator|)
 operator|!=
@@ -599,6 +599,13 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'q'
+case|:
+name|qflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|uflag
@@ -609,13 +616,6 @@ case|case
 literal|'v'
 case|:
 name|vflag
-operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'q'
-case|:
-name|qflag
 operator|++
 expr_stmt|;
 break|break;
@@ -861,11 +861,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: quota [-guqv]"
+literal|"usage: quota [-gu] [-v | -q]"
 argument_list|,
-literal|"       quota [-qv] -u username ..."
+literal|"       quota [-u] [-v | -q] user ..."
 argument_list|,
-literal|"       quota [-qv] -g groupname ..."
+literal|"       quota -g [-v | -q] group ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1877,6 +1877,9 @@ name|printf
 argument_list|(
 literal|"%8lu%c%7lu%8lu%8s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -1897,12 +1900,18 @@ literal|' '
 else|:
 literal|'*'
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|qup
 operator|->
 name|dqblk
 operator|.
 name|dqb_isoftlimit
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2133,6 +2142,9 @@ argument_list|,
 literal|"%lddays"
 argument_list|,
 operator|(
+operator|(
+name|long
+operator|)
 name|hours
 operator|+
 literal|12
@@ -2160,10 +2172,16 @@ name|buf
 argument_list|,
 literal|"%2ld:%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minutes
 operator|/
 literal|60
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minutes
 operator|%
 literal|60
@@ -2181,6 +2199,9 @@ name|buf
 argument_list|,
 literal|"%2ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|minutes
 argument_list|)
 expr_stmt|;
@@ -2217,6 +2238,8 @@ name|qup
 decl_stmt|,
 modifier|*
 name|quptail
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|fstab
@@ -3141,6 +3164,9 @@ name|RQUOTAVERS
 argument_list|,
 name|RQUOTAPROC_GETQUOTA
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_getquota_args
 argument_list|,
 operator|(
@@ -3150,6 +3176,9 @@ operator|)
 operator|&
 name|gq_args
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_getquota_rslt
 argument_list|,
 operator|(
