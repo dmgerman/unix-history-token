@@ -173,60 +173,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_pam_log
-parameter_list|(
-name|struct
-name|options
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_pam_log_retval
-parameter_list|(
-name|struct
-name|options
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|_pam_verbose_error
 parameter_list|(
 name|pam_handle_t
 modifier|*
 parameter_list|,
-name|struct
-name|options
-modifier|*
+name|int
 parameter_list|,
 specifier|const
 name|char
@@ -258,7 +210,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|_pam_log(&options, __FILE__, __FUNCTION__, ##args)
+value|openpam_log(PAM_LOG_DEBUG, ##args)
 end_define
 
 begin_define
@@ -269,7 +221,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|do {								\ 		_pam_log_retval(&options, __FILE__, __FUNCTION__, arg);	\ 		return arg;						\ 	} while (0)
+value|return (arg)
 end_define
 
 begin_define
@@ -281,7 +233,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|_pam_verbose_error(pamh,&options, __FILE__, __FUNCTION__, ##args)
+value|_pam_verbose_error(pamh, flags, __FILE__, __FUNCTION__, ##args)
 end_define
 
 begin_endif

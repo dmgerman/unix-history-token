@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1998 Juniper Networks, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright 1998 Juniper Networks, Inc.  * All rights reserved.  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -71,33 +71,11 @@ directive|include
 file|<security/pam_mod_misc.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|PASSWORD_PROMPT
-value|"Password:"
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|klogin
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"klogin.h"
+end_include
 
 begin_comment
 comment|/* Globals used by klogin.c */
@@ -140,18 +118,16 @@ name|flags
 parameter_list|,
 name|int
 name|argc
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
+name|__unused
 parameter_list|)
 block|{
-name|struct
-name|options
-name|options
-decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -186,23 +162,6 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
-name|pam_std_option
-argument_list|(
-operator|&
-name|options
-argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
-argument_list|)
-expr_stmt|;
 name|retval
 operator|=
 name|pam_get_user
@@ -221,11 +180,11 @@ name|retval
 operator|!=
 name|PAM_SUCCESS
 condition|)
-name|PAM_RETURN
-argument_list|(
+return|return
+operator|(
 name|retval
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
@@ -235,17 +194,16 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
+argument_list|,
+name|PAM_AUTHTOK
 argument_list|,
 operator|&
 name|password
 argument_list|,
-name|PASSWORD_PROMPT
-argument_list|,
-operator|&
-name|options
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -254,11 +212,11 @@ name|retval
 operator|!=
 name|PAM_SUCCESS
 condition|)
-name|PAM_RETURN
-argument_list|(
+return|return
+operator|(
 name|retval
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|PAM_LOG
 argument_list|(
 literal|"Got password"
@@ -279,11 +237,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|PAM_RETURN
-argument_list|(
+return|return
+operator|(
 name|PAM_SYSTEM_ERR
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|PAM_LOG
 argument_list|(
 literal|"Got localhost: %s"
@@ -304,11 +262,11 @@ name|principal
 operator|==
 name|NULL
 condition|)
-name|PAM_RETURN
-argument_list|(
+return|return
+operator|(
 name|PAM_BUF_ERR
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|instance
 operator|=
 name|strchr
@@ -333,7 +291,12 @@ expr_stmt|;
 else|else
 name|instance
 operator|=
-literal|""
+name|strchr
+argument_list|(
+name|principal
+argument_list|,
+literal|'\0'
+argument_list|)
 expr_stmt|;
 name|PAM_LOG
 argument_list|(
@@ -372,10 +335,6 @@ name|instance
 argument_list|,
 name|localhost
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|password
 argument_list|)
 operator|==
@@ -384,27 +343,14 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|PAM_SILENT
-operator|)
-operator|&&
 name|notickets
 operator|&&
 operator|!
 name|noticketsdontcomplain
 condition|)
-name|pam_prompt
+name|PAM_VERBOSE_ERROR
 argument_list|(
-name|pamh
-argument_list|,
-name|PAM_ERROR_MSG
-argument_list|,
 literal|"Warning: no Kerberos tickets issued"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 			 * XXX - I think the ticket file isn't supposed to 			 * be created until pam_sm_setcred() is called. 			 */
@@ -451,11 +397,11 @@ argument_list|(
 literal|"Kerberos IV refuses you"
 argument_list|)
 expr_stmt|;
-name|PAM_RETURN
-argument_list|(
+return|return
+operator|(
 name|retval
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -467,46 +413,29 @@ parameter_list|(
 name|pam_handle_t
 modifier|*
 name|pamh
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|int
 name|argc
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
+name|__unused
 parameter_list|)
 block|{
-name|struct
-name|options
-name|options
-decl_stmt|;
-name|pam_std_option
-argument_list|(
-operator|&
-name|options
-argument_list|,
-name|NULL
-argument_list|,
-name|argc
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Options processed"
-argument_list|)
-expr_stmt|;
-name|PAM_RETURN
-argument_list|(
+return|return
+operator|(
 name|PAM_SUCCESS
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

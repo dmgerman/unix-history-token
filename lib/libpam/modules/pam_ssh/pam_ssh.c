@@ -86,19 +86,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PAM_SM_ACCOUNT
-end_define
-
-begin_define
-define|#
-directive|define
 name|PAM_SM_SESSION
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAM_SM_PASSWORD
 end_define
 
 begin_include
@@ -111,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<security/pam_modules.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<security/pam_mod_misc.h>
 end_include
 
 begin_include
@@ -356,13 +338,13 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 comment|/* Try to decrypt the private key with the passphrase provided.  If 	   success, the user is authenticated. */
@@ -386,7 +368,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 name|key
 operator|=
@@ -434,7 +418,9 @@ name|comment
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_AUTH_ERR
+operator|)
 return|;
 block|}
 comment|/* save the key and comment to pass to ssh-agent in the session 	   phase */
@@ -456,9 +442,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 name|free
@@ -467,7 +451,9 @@ name|comment
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 name|retval
@@ -506,7 +492,9 @@ name|comment
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 if|if
@@ -527,9 +515,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 name|free
@@ -538,7 +524,9 @@ name|comment
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 name|retval
@@ -572,14 +560,18 @@ name|comment
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 operator|++
 name|key_idx
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -673,9 +665,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -727,15 +717,13 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %s: %m"
-argument_list|,
-name|MODULE_NAME
-argument_list|,
-name|socket
+literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 block|}
 comment|/* hand off each private key to the agent */
@@ -772,9 +760,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 name|ssh_close_authentication_connection
@@ -783,7 +769,9 @@ name|ac
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 name|retval
@@ -834,9 +822,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 name|ssh_close_authentication_connection
@@ -845,7 +831,9 @@ name|ac
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 name|retval
@@ -905,11 +893,13 @@ name|ac
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|final
 condition|?
 name|PAM_SUCCESS
 else|:
 name|PAM_SESSION_ERR
+operator|)
 return|;
 block|}
 end_function
@@ -929,12 +919,14 @@ name|__unused
 parameter_list|,
 name|int
 name|argc
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -951,15 +943,16 @@ modifier|*
 name|file
 decl_stmt|;
 comment|/* current key file */
+specifier|const
+name|char
+modifier|*
+name|kfspec
+decl_stmt|;
+comment|/* list of key files to add */
 name|char
 modifier|*
 name|keyfiles
 decl_stmt|;
-comment|/* list of key files to add */
-name|int
-name|options
-decl_stmt|;
-comment|/* options for pam_get_pass() */
 specifier|const
 name|char
 modifier|*
@@ -993,93 +986,62 @@ name|keyfiles
 operator|=
 name|NULL
 expr_stmt|;
-name|options
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-init|;
-name|argc
-condition|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-control|)
 if|if
 condition|(
-name|strncmp
+operator|(
+name|kfspec
+operator|=
+name|openpam_get_option
 argument_list|(
-operator|*
-name|argv
+name|pamh
 argument_list|,
-name|OPT_KEYFILES
-literal|"="
-argument_list|,
-sizeof|sizeof
 name|OPT_KEYFILES
 argument_list|)
-operator|==
-literal|0
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|keyfiles
+name|kfspec
 operator|=
 name|strchr
 argument_list|(
-operator|*
-name|argv
+name|kfspec
 argument_list|,
 literal|'='
 argument_list|)
-operator|+
-literal|1
 operator|)
+operator|==
+name|NULL
 condition|)
+block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_ERROR
+argument_list|,
+literal|"invalid keyfile list"
+argument_list|)
+expr_stmt|;
 return|return
-name|PAM_AUTH_ERR
+operator|(
+name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-name|OPT_TRY_FIRST_PASS
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|options
-operator||=
-name|PAM_OPT_TRY_FIRST_PASS
+operator|++
+name|kfspec
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-name|OPT_USE_FIRST_PASS
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|options
-operator||=
-name|PAM_OPT_USE_FIRST_PASS
+block|}
+else|else
+block|{
+name|kfspec
+operator|=
+name|DEF_KEYFILES
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1099,12 +1061,16 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 if|if
 condition|(
-operator|!
-operator|(
+name|user
+operator|==
+name|NULL
+operator|||
 operator|(
 name|pwent
 operator|=
@@ -1113,14 +1079,28 @@ argument_list|(
 name|user
 argument_list|)
 operator|)
-operator|&&
+operator|==
+name|NULL
+operator|||
 name|pwent
 operator|->
 name|pw_dir
-operator|)
+operator|==
+name|NULL
+operator|||
+name|pwent
+operator|->
+name|pw_dir
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 return|return
+operator|(
 name|PAM_AUTH_ERR
+operator|)
 return|;
 comment|/* pass prompt message to application and receive passphrase */
 name|retval
@@ -1144,7 +1124,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 name|OpenSSL_add_all_algorithms
 argument_list|()
@@ -1173,13 +1155,13 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 name|authenticated
@@ -1190,11 +1172,7 @@ name|keyfiles
 operator|=
 name|strdup
 argument_list|(
-name|keyfiles
-condition|?
-name|keyfiles
-else|:
-name|DEF_KEYFILES
+name|kfspec
 argument_list|)
 expr_stmt|;
 for|for
@@ -1241,12 +1219,12 @@ operator|++
 expr_stmt|;
 name|free
 argument_list|(
-name|dotdir
+name|keyfiles
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|keyfiles
+name|dotdir
 argument_list|)
 expr_stmt|;
 if|if
@@ -1255,7 +1233,9 @@ operator|!
 name|authenticated
 condition|)
 return|return
+operator|(
 name|PAM_AUTH_ERR
+operator|)
 return|;
 comment|/* copy the passwd entry (in case successive calls are made) and 	   save it for the session phase */
 if|if
@@ -1281,7 +1261,9 @@ literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 operator|(
@@ -1324,11 +1306,15 @@ name|pwent_keep
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -1354,13 +1340,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 name|__unused
 parameter_list|)
 block|{
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -1385,8 +1373,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 name|__unused
 parameter_list|)
 block|{
@@ -1494,7 +1482,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 comment|/* 	 * Use reference counts to limit agents to one per user per host. 	 * 	 * Technique: Create an environment file containing 	 * information about the agent.  Only one file is created, but 	 * it may be given many names.  One name is given for the 	 * agent itself, agent-<host>.  Another name is given for each 	 * session, agent-<host>-<display> or agent-<host>-<tty>.  We 	 * delete the per-session filename on session close, and when 	 * the link count goes to unity on the per-agent file, we 	 * delete the file and kill the agent. 	 */
 comment|/* the per-agent file contains just the hostname */
@@ -1533,13 +1523,13 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 comment|/* save the per-agent filename in case we want to delete it on 	   session close */
@@ -1569,7 +1559,9 @@ name|per_agent
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 comment|/* take on the user's privileges for writing files and starting the 	   agent */
@@ -1589,7 +1581,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 comment|/* Try to create the per-agent file or open it for reading if it 	   exists.  If we can't do either, we won't try to link a 	   per-session filename later.  Start the agent if we can't open 	   the file for reading. */
 name|env_write
@@ -1684,9 +1678,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%s: %m"
 argument_list|,
 name|SSH_AGENT
 argument_list|)
@@ -1706,7 +1698,9 @@ name|env_write
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 block|}
 block|}
@@ -1847,7 +1841,9 @@ name|agent_socket
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 operator|*
@@ -1895,9 +1891,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1945,7 +1939,9 @@ name|agent_socket
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 elseif|else
@@ -2057,7 +2053,9 @@ name|agent_pid
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 block|}
@@ -2098,9 +2096,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%s: %m"
 argument_list|,
 name|SSH_AGENT
 argument_list|)
@@ -2115,7 +2111,9 @@ name|agent_socket
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 case|case
 literal|0
@@ -2128,9 +2126,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: cannot execute %s"
-argument_list|,
-name|MODULE_NAME
+literal|"cannot execute %s"
 argument_list|,
 name|SSH_AGENT
 argument_list|)
@@ -2145,16 +2141,16 @@ name|agent_socket
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 default|default:
 name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %s exited %s %d"
-argument_list|,
-name|MODULE_NAME
+literal|"%s exited %s %d"
 argument_list|,
 name|SSH_AGENT
 argument_list|,
@@ -2193,7 +2189,9 @@ name|agent_socket
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 block|}
 block|}
@@ -2212,7 +2210,9 @@ operator|!
 name|agent_socket
 condition|)
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 if|if
 condition|(
@@ -2230,7 +2230,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 name|free
 argument_list|(
@@ -2243,7 +2245,9 @@ condition|(
 name|no_link
 condition|)
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 comment|/* the per-session file contains the display name or tty name as 	   well as the hostname */
 if|if
@@ -2271,7 +2275,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 if|if
 condition|(
@@ -2299,13 +2305,13 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%m"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SERVICE_ERR
+operator|)
 return|;
 block|}
 comment|/* save the per-session filename so we can delete it on session 	   close */
@@ -2335,7 +2341,9 @@ name|per_session
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 operator|(
@@ -2358,7 +2366,9 @@ name|per_session
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 block|}
 end_function
@@ -2383,8 +2393,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 name|__unused
 parameter_list|)
 block|{
@@ -2494,7 +2504,9 @@ operator|>
 literal|1
 condition|)
 return|return
+operator|(
 name|PAM_SUCCESS
+operator|)
 return|;
 operator|(
 name|void
@@ -2531,7 +2543,9 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 comment|/* Kill the agent.  SSH's ssh-agent does not have a -k option, so 	   just call kill(). */
 name|pid
@@ -2548,7 +2562,9 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|PAM_SESSION_ERR
+operator|)
 return|;
 if|if
 condition|(
@@ -2566,86 +2582,20 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_ERROR
 argument_list|,
-literal|"%s: %s: %m"
-argument_list|,
-name|MODULE_NAME
+literal|"%s: %m"
 argument_list|,
 name|ssh_agent_pid
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_SESSION_ERR
-return|;
-block|}
-return|return
-name|PAM_SUCCESS
-return|;
-block|}
-end_function
-
-begin_function
-name|PAM_EXTERN
-name|int
-name|pam_sm_acct_mgmt
-parameter_list|(
-name|pam_handle_t
-modifier|*
-name|pamh
-name|__unused
-parameter_list|,
-name|int
-name|flags
-name|__unused
-parameter_list|,
-name|int
-name|argc
-name|__unused
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|argv
-name|__unused
-parameter_list|)
-block|{
-return|return
 operator|(
-name|PAM_IGNORE
+name|PAM_SESSION_ERR
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
-name|PAM_EXTERN
-name|int
-name|pam_sm_chauthtok
-parameter_list|(
-name|pam_handle_t
-modifier|*
-name|pamh
-name|__unused
-parameter_list|,
-name|int
-name|flags
-name|__unused
-parameter_list|,
-name|int
-name|argc
-name|__unused
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|argv
-name|__unused
-parameter_list|)
-block|{
 return|return
 operator|(
-name|PAM_IGNORE
+name|PAM_SUCCESS
 operator|)
 return|;
 block|}
