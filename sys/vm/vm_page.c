@@ -4588,7 +4588,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set valid, clear dirty bits.  If validating the entire 	 * page we can safely clear the pmap modify bit.  We also 	 * use this opportunity to clear the PG_NOSYNC flag.  If a process 	 * takes a write fault on a MAP_NOSYNC memory area the flag will 	 * be set again. 	 */
+comment|/* 	 * Set valid, clear dirty bits.  If validating the entire 	 * page we can safely clear the pmap modify bit.  We also 	 * use this opportunity to clear the PG_NOSYNC flag.  If a process 	 * takes a write fault on a MAP_NOSYNC memory area the flag will 	 * be set again. 	 * 	 * We set valid bits inclusive of any overlap, but we can only 	 * clear dirty bits for DEV_BSIZE chunks that are fully within 	 * the range. 	 */
 name|pagebits
 operator|=
 name|vm_page_bits
@@ -4604,6 +4604,13 @@ name|valid
 operator||=
 name|pagebits
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* NOT YET */
+block|if ((frag = base& (DEV_BSIZE - 1)) != 0) { 		frag = DEV_BSIZE - frag; 		base += frag; 		size -= frag; 		if (size< 0) 			size = 0; 	} 	pagebits = vm_page_bits(base, size& (DEV_BSIZE - 1));
+endif|#
+directive|endif
 name|m
 operator|->
 name|dirty
