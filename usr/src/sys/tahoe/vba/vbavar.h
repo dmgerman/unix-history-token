@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbavar.h	1.5	87/03/10	*/
+comment|/*	vbavar.h	1.6	87/04/01	*/
 end_comment
 
 begin_comment
@@ -283,6 +283,10 @@ name|vb_physbuf
 decl_stmt|;
 comment|/* phys addr of intermediate buffer */
 name|u_long
+name|vb_bufsize
+decl_stmt|;
+comment|/* intermediate buffer size */
+name|u_long
 name|vb_maxphys
 decl_stmt|;
 comment|/* physical address limit */
@@ -393,37 +397,29 @@ struct|struct
 name|vbastat
 block|{
 name|u_long
-name|kw_raw
+name|k_raw
 decl_stmt|;
-comment|/* wrote from kernel DMA buffer */
+comment|/* to/from contiguous kernel DMA buffer */
 name|u_long
-name|uw_raw
+name|u_raw
 decl_stmt|;
-comment|/* wrote from user DMA buffer */
+comment|/* to/from contiguous user DMA buffer */
 name|u_long
-name|kw_copy
+name|k_copy
 decl_stmt|;
-comment|/* write copied from kernel */
+comment|/* copied to/from kernel */
 name|u_long
-name|uw_copy
+name|u_copy
 decl_stmt|;
-comment|/* write copied from user */
+comment|/* copied to/from user */
 name|u_long
-name|kr_raw
+name|k_sg
 decl_stmt|;
-comment|/* read, purged kernel DMA buffer */
+comment|/* scatter-gather to/from kernel */
 name|u_long
-name|ur_raw
+name|u_sg
 decl_stmt|;
-comment|/* invalidated key on user DMA buffer */
-name|u_long
-name|kr_copy
-decl_stmt|;
-comment|/* read copied to kernel */
-name|u_long
-name|ur_copy
-decl_stmt|;
-comment|/* read copied to user& inval'd key */
+comment|/* scatter-gather to/from user */
 block|}
 struct|;
 end_struct
