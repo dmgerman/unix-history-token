@@ -536,6 +536,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|mtx_lock_giant
+parameter_list|(
+name|int
+name|sysctlvar
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mtx_unlock_giant
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
 end_comment
@@ -999,6 +1019,24 @@ specifier|extern
 name|struct
 name|mtx
 name|Giant
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Giant lock sysctl variables used by other modules  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kern_giant_proc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kern_giant_file
 decl_stmt|;
 end_decl_stmt
 
