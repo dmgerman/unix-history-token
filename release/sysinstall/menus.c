@@ -2480,9 +2480,9 @@ literal|"=kde"
 block|}
 block|,
 block|{
-literal|"GNOME"
+literal|"GNOME + Afterstep"
 block|,
-literal|"The GNOME desktop environment."
+literal|"GNOME + Afterstep window manager."
 block|,
 name|NULL
 block|,
@@ -2495,9 +2495,24 @@ literal|"=gnome"
 block|}
 block|,
 block|{
+literal|"GNOME + Enlightenment"
+block|,
+literal|"GNOME + The E window manager"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=enlightenment"
+block|}
+block|,
+block|{
 literal|"Afterstep"
 block|,
-literal|"The Afterstep Window manager"
+literal|"The Afterstep window manager"
 block|,
 name|NULL
 block|,
@@ -2512,7 +2527,7 @@ block|,
 block|{
 literal|"Windowmaker"
 block|,
-literal|"The Windowmaker Window manager"
+literal|"The Windowmaker window manager"
 block|,
 name|NULL
 block|,
@@ -2525,24 +2540,9 @@ literal|"=windowmaker"
 block|}
 block|,
 block|{
-literal|"Enlightenment"
+literal|"fvwm2"
 block|,
-literal|"The E Window manager (24 bit recommended)"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=enlightenment"
-block|}
-block|,
-block|{
-literal|"fvwm"
-block|,
-literal|"The fvwm Window manager"
+literal|"The fvwm2 window manager"
 block|,
 name|NULL
 block|,
