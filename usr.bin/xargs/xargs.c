@@ -2365,7 +2365,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: xargs [-0pt] [-E eofstr] [-I replstr [-R replacements]] [-J replstr]\n"
-literal|"             [-L number] [-n number [-x] [-P maxprocs] [-s size]\n"
+literal|"             [-L number] [-n number [-x]] [-P maxprocs] [-s size]\n"
 literal|"             [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
