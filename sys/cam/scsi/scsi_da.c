@@ -469,6 +469,42 @@ index|[]
 init|=
 block|{
 block|{
+comment|/* 		 * Fujitsu M2513A MO drives. 		 * Tested devices: M2513A2 firmware versions 1200& 1300. 		 * (dip switch selects whether T_DIRECT or T_OPTICAL device) 		 * Reported by: W.Scholten<whs@xs4all.nl> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FUJITSU"
+block|,
+literal|"M2513A"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* See above. */
+block|{
+name|T_OPTICAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FUJITSU"
+block|,
+literal|"M2513A"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * This particular Fujitsu drive doesn't like the 		 * synchronize cache command. 		 * Reported by: Tom Jackson<toj@gorilla.net> 		 */
 block|{
 name|T_DIRECT
