@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	2.5 %G%"
+literal|"@(#)cmdtab.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,6 +517,20 @@ block|,
 name|MMNORM
 block|,
 literal|"file"
+block|,
+name|file
+block|,
+name|T
+operator||
+name|M
+operator||
+name|RAWLIST
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|"folder"
 block|,
 name|file
 block|,
