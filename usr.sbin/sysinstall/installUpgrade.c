@@ -1397,7 +1397,7 @@ name|void
 operator|)
 name|vsystem
 argument_list|(
-literal|"chflags -R noschg /bin /sbin /usr/sbin /usr/bin /usr/lib /kernel*"
+literal|"chflags -R noschg /bin /sbin /usr/sbin /usr/bin /usr/lib /usr/libexec /kernel*"
 argument_list|)
 expr_stmt|;
 if|if
