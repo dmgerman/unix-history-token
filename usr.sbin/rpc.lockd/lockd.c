@@ -904,6 +904,18 @@ decl_stmt|;
 name|sm_stat
 name|stat
 decl_stmt|;
+name|char
+name|name
+index|[]
+init|=
+literal|"NFS NLM"
+decl_stmt|;
+name|char
+name|localhost
+index|[]
+init|=
+literal|"localhost"
+decl_stmt|;
 comment|/* 	 * !!! 	 * The my_id structure isn't used by the SM_UNMON_ALL call, as far 	 * as I know.  Leave it empty for now. 	 */
 name|memset
 argument_list|(
@@ -922,7 +934,7 @@ name|id
 operator|.
 name|my_name
 operator|=
-literal|"NFS NLM"
+name|name
 expr_stmt|;
 comment|/* 	 * !!! 	 * The statd program must already be registered when lockd runs. 	 */
 do|do
@@ -1020,7 +1032,7 @@ name|my_id
 operator|.
 name|my_name
 operator|=
-literal|"localhost"
+name|localhost
 expr_stmt|;
 name|mon_host
 operator|.
