@@ -120,7 +120,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|private
+name|ng_UI_private
 block|{
 name|hook_p
 name|downlink
@@ -135,7 +135,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|private
+name|ng_UI_private
 modifier|*
 name|priv_p
 typedef|;

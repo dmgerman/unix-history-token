@@ -445,7 +445,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|private
+name|ng_iface_private
 block|{
 name|struct
 name|ifnet
@@ -477,7 +477,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|private
+name|ng_iface_private
 modifier|*
 name|priv_p
 typedef|;
