@@ -193,24 +193,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|fe_pccard_mem_ether
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|bus_addr_t
-name|cardoff
-parameter_list|,
-name|u_char
-modifier|*
-name|enaddr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 specifier|static
 specifier|const
