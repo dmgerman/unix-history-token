@@ -1057,27 +1057,7 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-comment|/* No error on unfound file. */
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
 continue|continue;
-name|free
-argument_list|(
-name|record
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|2
-operator|)
-return|;
-block|}
 name|myfd
 operator|=
 literal|1
