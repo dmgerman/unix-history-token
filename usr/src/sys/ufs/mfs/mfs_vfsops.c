@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vfsops.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vfsops.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -717,6 +717,15 @@ specifier|register
 name|caddr_t
 name|base
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -778,6 +787,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * If a non-ignored signal is received, try to unmount. 		 * If that fails, clear the signal (it has been "processed"), 		 * otherwise we will loop here, as tsleep will always return 		 * EINTR/ERESTART. 		 */
 if|if
 condition|(
 name|error
@@ -796,28 +806,27 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-comment|/* 			 * Give other processes a chance to run. 			 */
-name|sleep
-argument_list|(
-operator|&
-name|lbolt
-argument_list|,
-name|PVFS
-argument_list|)
-expr_stmt|;
-comment|/* 			 * We have received a signal, so try to unmount. 			 */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|dounmount
 argument_list|(
 name|mp
 argument_list|,
 name|MNT_NOFORCE
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|CLRSIG
+argument_list|(
+name|p
+argument_list|,
+name|CURSIG
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
