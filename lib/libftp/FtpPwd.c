@@ -21,7 +21,9 @@ parameter_list|)
 block|{
 name|String
 name|tmp
-decl_stmt|,
+decl_stmt|;
+specifier|static
+name|String
 name|tmp1
 decl_stmt|;
 name|int
