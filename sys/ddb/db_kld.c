@@ -8,17 +8,8 @@ comment|/*  *	Author: David B. Golub, Carnegie Mellon University  *	Date:	7/90  
 end_comment
 
 begin_comment
-comment|/*  * Symbol table routines for a.out format files.  */
+comment|/*  * Symbol table routines for kld maintained kernels.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ELF__
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -357,11 +348,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
