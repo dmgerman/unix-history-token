@@ -7791,9 +7791,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|logging
+operator|&&
+operator|(
 name|guest
 operator|||
 name|dochroot
+operator|)
 condition|)
 name|syslog
 argument_list|(
