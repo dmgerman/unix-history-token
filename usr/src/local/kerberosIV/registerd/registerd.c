@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)registerd.c	5.1 (Berkeley) %G%"
+literal|"@(#)registerd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,13 +158,6 @@ value|0x01
 end_define
 
 begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|sin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|progname
@@ -221,6 +214,10 @@ decl_stmt|,
 name|retval
 decl_stmt|,
 name|sval
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|sin
 decl_stmt|;
 name|char
 name|keyfile
@@ -547,7 +544,10 @@ case|:
 name|retval
 operator|=
 name|do_append
-argument_list|()
+argument_list|(
+operator|&
+name|sin
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -705,7 +705,14 @@ end_decl_stmt
 begin_function
 name|int
 name|do_append
-parameter_list|()
+parameter_list|(
+name|sinp
+parameter_list|)
+name|struct
+name|sockaddr_in
+modifier|*
+name|sinp
+decl_stmt|;
 block|{
 name|Principal
 name|default_princ
@@ -1105,8 +1112,8 @@ name|instance
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|sin
-operator|.
+name|sinp
+operator|->
 name|sin_addr
 argument_list|)
 argument_list|)
