@@ -112,6 +112,7 @@ specifier|extern
 name|int
 name|get_hex_atm_addr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -129,6 +130,7 @@ name|char
 modifier|*
 name|format_atm_addr
 parameter_list|(
+specifier|const
 name|Atm_addr
 modifier|*
 parameter_list|)
@@ -144,9 +146,11 @@ specifier|extern
 name|void
 name|scsp_cache_key
 parameter_list|(
+specifier|const
 name|Atm_addr
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
@@ -165,23 +169,24 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|do_info_ioctl
 parameter_list|(
 name|struct
 name|atminfreq
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|get_vcc_info
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -198,6 +203,7 @@ specifier|extern
 name|int
 name|get_subnet_mask
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -213,6 +219,7 @@ specifier|extern
 name|int
 name|get_mtu
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -224,6 +231,7 @@ specifier|extern
 name|int
 name|verify_nif_name
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -232,9 +240,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|get_cfg_info
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -248,9 +257,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|get_intf_info
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -264,9 +274,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|get_netif_info
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -289,6 +300,7 @@ name|sockaddr_in
 modifier|*
 name|get_ip_addr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -302,6 +314,7 @@ name|char
 modifier|*
 name|format_ip_addr
 parameter_list|(
+specifier|const
 name|struct
 name|in_addr
 modifier|*
@@ -318,6 +331,7 @@ specifier|extern
 name|short
 name|ip_checksum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

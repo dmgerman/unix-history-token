@@ -101,17 +101,14 @@ begin_function
 name|short
 name|ip_checksum
 parameter_list|(
-name|addr
-parameter_list|,
-name|count
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Compute Internet Checksum for "count" bytes 	 * beginning at location "addr". 	 */
 name|long
@@ -133,11 +130,13 @@ name|ntohs
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|unsigned
 name|short
 operator|*
 operator|)
 operator|(
+specifier|const
 name|void
 operator|*
 operator|)
@@ -172,6 +171,7 @@ name|sum
 operator|+=
 operator|*
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
