@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.1 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Safe; we know the pathname exists in the dump. */
 name|ep
 operator|=
 name|addentry
@@ -1474,15 +1475,32 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+name|struct
+name|direct
+modifier|*
+name|dp
+decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
 name|ino
 operator|=
+operator|(
+operator|(
+name|dp
+operator|=
 name|pathsearch
 argument_list|(
 name|name
 argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|0
+else|:
+name|dp
 operator|->
 name|d_ino
 expr_stmt|;
@@ -1505,7 +1523,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s is not on tape\n"
+literal|"%s is not on the tape\n"
 argument_list|,
 name|name
 argument_list|)
