@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1034,11 +1040,25 @@ operator|->
 name|f_vnode
 expr_stmt|;
 comment|/* 		 * Ensure that file and memory protections are 		 * compatible.  Note that we only worry about 		 * writability if mapping is shared; in this case, 		 * current and max prot are dictated by the open file. 		 * XXX use the vnode instead?  Problem is: what 		 * credentials do we use for determination? What if 		 * proc does a setuid? 		 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_NOEXEC
+condition|)
+name|maxprot
+operator|=
+name|VM_PROT_NONE
+expr_stmt|;
+else|else
 name|maxprot
 operator|=
 name|VM_PROT_EXECUTE
 expr_stmt|;
-comment|/* ??? */
 if|if
 condition|(
 name|fp
