@@ -2089,7 +2089,7 @@ name|snp
 operator|->
 name|snp_target
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -2224,7 +2224,7 @@ name|snp
 operator|->
 name|snp_target
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|detach_notty
 label|:
@@ -2499,12 +2499,12 @@ name|SNPSTTY
 case|:
 name|tdev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
 operator|*
 operator|(
 operator|(
-name|udev_t
+name|dev_t
 operator|*
 operator|)
 name|data
@@ -2515,7 +2515,7 @@ if|if
 condition|(
 name|tdev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2566,7 +2566,7 @@ name|snp
 operator|->
 name|snp_target
 operator|==
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|tpo
@@ -2656,7 +2656,7 @@ comment|/* 		 * We keep snp_target field specially to make 		 * SNPGTTY happy, e
 operator|*
 operator|(
 operator|(
-name|udev_t
+name|dev_t
 operator|*
 operator|)
 name|data
@@ -2939,7 +2939,7 @@ condition|(
 operator|*
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 return|return;
 if|if

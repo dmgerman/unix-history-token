@@ -603,7 +603,7 @@ literal|0xff
 condition|)
 return|return
 operator|(
-name|NODEV
+name|NULL
 operator|)
 return|;
 name|devc
@@ -4053,7 +4053,7 @@ condition|(
 operator|*
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 return|return;
 if|if

@@ -13929,7 +13929,7 @@ name|i
 argument_list|)
 operator|)
 operator|==
-name|NODEV
+name|NULL
 condition|)
 continue|continue;
 if|if

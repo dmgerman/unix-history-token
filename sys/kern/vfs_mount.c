@@ -460,7 +460,7 @@ name|cdev
 modifier|*
 name|rootdev
 init|=
-name|NODEV
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -497,7 +497,7 @@ if|if
 condition|(
 name|rootdev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 name|error
 operator|=
@@ -6242,7 +6242,7 @@ if|if
 condition|(
 name|rootdev
 operator|!=
-name|NODEV
+name|NULL
 operator|&&
 name|devsw
 argument_list|(
@@ -6727,7 +6727,7 @@ literal|5
 expr_stmt|;
 name|dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -6782,7 +6782,7 @@ if|if
 condition|(
 name|diskdev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|rootdev
@@ -6857,7 +6857,7 @@ if|if
 condition|(
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 name|db_printf
 argument_list|(

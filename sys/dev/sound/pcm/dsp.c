@@ -5214,7 +5214,7 @@ condition|(
 operator|*
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 return|return;
 if|if

@@ -478,7 +478,7 @@ block|{
 operator|*
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
 name|outp
 operator|->

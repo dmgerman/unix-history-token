@@ -514,12 +514,6 @@ directive|ifndef
 name|_DEV_T_DECLARED
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
 begin_typedef
 typedef|typedef
 name|__dev_t
@@ -530,11 +524,6 @@ end_typedef
 begin_comment
 comment|/* device number or struct cdev */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1074,17 +1063,6 @@ name|u_register_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|__udev_t
-name|udev_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* device number */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1316,6 +1294,15 @@ begin_comment
 comment|/* minor number */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1330,15 +1317,6 @@ end_define
 
 begin_comment
 comment|/* create dev_t */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
 end_comment
 
 begin_comment

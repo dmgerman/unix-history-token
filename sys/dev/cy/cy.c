@@ -611,7 +611,7 @@ value|(CALLOUT_MASK | CONTROL_MASK)
 end_define
 
 begin_comment
-comment|/*  * Not all of the magic is parametrized in the following macros.  16 and  * 0xff are related to the bitfields in a udev_t.  CY_MAX_PORTS must be  * ((0xff& ~MINOR_MAGIC_MASK) + 1) for things to work.  */
+comment|/*  * Not all of the magic is parametrized in the following macros.  16 and  * 0xff are related to the bitfields in a dev_t.  CY_MAX_PORTS must be  * ((0xff& ~MINOR_MAGIC_MASK) + 1) for things to work.  */
 end_comment
 
 begin_define

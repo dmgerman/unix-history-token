@@ -2906,7 +2906,7 @@ else|#
 directive|else
 name|gdbdev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif

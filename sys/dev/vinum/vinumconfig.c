@@ -2340,7 +2340,7 @@ name|drive
 operator|->
 name|dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -2878,7 +2878,7 @@ name|drive
 operator|->
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 name|dev_rel
 argument_list|(

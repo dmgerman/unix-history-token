@@ -304,7 +304,7 @@ operator|&
 name|FA4V_RDEV
 operator|)
 condition|?
-name|makeudev
+name|makedev
 argument_list|(
 name|fap
 operator|->

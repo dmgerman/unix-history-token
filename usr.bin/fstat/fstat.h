@@ -117,7 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|udev_t
+name|dev_t
 name|dev2udev
 parameter_list|(
 name|struct

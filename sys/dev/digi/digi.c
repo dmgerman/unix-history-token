@@ -6053,7 +6053,7 @@ name|ENOENT
 operator|&&
 name|rootdev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 name|printf
 argument_list|(

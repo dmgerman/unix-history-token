@@ -426,7 +426,7 @@ name|short
 name|ki_jobc
 decl_stmt|;
 comment|/* job control counter */
-name|udev_t
+name|dev_t
 name|ki_tdev
 decl_stmt|;
 comment|/* controlling tty dev */

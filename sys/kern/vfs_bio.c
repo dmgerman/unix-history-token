@@ -2243,7 +2243,7 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|bp
 operator|->
@@ -5488,7 +5488,7 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 comment|/* buffers with junk contents */
 block|}
@@ -5569,7 +5569,7 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 comment|/* remaining buffers */
 block|}
@@ -7306,7 +7306,7 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|bp
 operator|->

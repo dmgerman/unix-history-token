@@ -108,7 +108,7 @@ name|drive
 operator|->
 name|dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 comment|/* didn't find anything */
 return|return

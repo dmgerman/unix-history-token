@@ -375,8 +375,8 @@ decl_stmt|;
 name|int
 name|sw_used
 decl_stmt|;
-name|udev_t
-name|sw_udev
+name|dev_t
+name|sw_dev
 decl_stmt|;
 name|struct
 name|vnode
@@ -6567,8 +6567,8 @@ name|sw_close_t
 modifier|*
 name|close
 parameter_list|,
-name|udev_t
-name|udev
+name|dev_t
+name|dev
 parameter_list|)
 block|{
 name|struct
@@ -6660,9 +6660,9 @@ name|id
 expr_stmt|;
 name|sp
 operator|->
-name|sw_udev
+name|sw_dev
 operator|=
-name|udev
+name|dev
 expr_stmt|;
 name|sp
 operator|->
@@ -7427,7 +7427,7 @@ name|xsw_dev
 operator|=
 name|sp
 operator|->
-name|sw_udev
+name|sw_dev
 expr_stmt|;
 name|xs
 operator|.
@@ -8444,7 +8444,7 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|bp
 operator|->
@@ -8808,7 +8808,7 @@ name|swapdev_strategy
 argument_list|,
 name|swapdev_close
 argument_list|,
-name|NOUDEV
+name|NODEV
 argument_list|)
 expr_stmt|;
 return|return

@@ -549,7 +549,7 @@ name|sc
 operator|->
 name|sc_bulk_out_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|sc
 operator|->
@@ -953,7 +953,7 @@ name|sc
 operator|->
 name|sc_bulk_out_dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|destroy_dev
@@ -967,7 +967,7 @@ name|sc
 operator|->
 name|sc_bulk_out_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -976,7 +976,7 @@ name|sc
 operator|->
 name|sc_intr_in_dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|destroy_dev
@@ -990,7 +990,7 @@ name|sc
 operator|->
 name|sc_intr_in_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -999,7 +999,7 @@ name|sc
 operator|->
 name|sc_ctrl_dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|destroy_dev
@@ -1013,7 +1013,7 @@ name|sc
 operator|->
 name|sc_ctrl_dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Close pipes */

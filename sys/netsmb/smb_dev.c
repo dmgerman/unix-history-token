@@ -371,7 +371,7 @@ condition|(
 operator|*
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 return|return;
 if|if
@@ -1958,7 +1958,7 @@ if|if
 condition|(
 name|dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|fdrop

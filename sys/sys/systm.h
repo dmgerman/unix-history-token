@@ -2644,7 +2644,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|udev_t
+name|dev_t
 name|dev2udev
 parameter_list|(
 name|struct
@@ -2659,9 +2659,9 @@ begin_function_decl
 name|struct
 name|cdev
 modifier|*
-name|udev2dev
+name|findcdev
 parameter_list|(
-name|udev_t
+name|dev_t
 name|x
 parameter_list|)
 function_decl|;
@@ -2671,7 +2671,7 @@ begin_function_decl
 name|int
 name|uminor
 parameter_list|(
-name|udev_t
+name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -2681,21 +2681,8 @@ begin_function_decl
 name|int
 name|umajor
 parameter_list|(
-name|udev_t
+name|dev_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|udev_t
-name|makeudev
-parameter_list|(
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
 parameter_list|)
 function_decl|;
 end_function_decl

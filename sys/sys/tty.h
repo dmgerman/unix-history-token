@@ -130,7 +130,7 @@ modifier|*
 name|t_kdev
 decl_stmt|;
 comment|/* Device. */
-name|udev_t
+name|dev_t
 name|t_udev
 decl_stmt|;
 comment|/* Userland (sysctl) instance. */
@@ -419,7 +419,7 @@ name|int
 name|xt_line
 decl_stmt|;
 comment|/* Interface to device drivers. */
-name|udev_t
+name|dev_t
 name|xt_dev
 decl_stmt|;
 comment|/* Userland (sysctl) instance. */

@@ -422,7 +422,7 @@ decl_stmt|;
 comment|/* Line number doing locking */
 endif|#
 directive|endif
-name|udev_t
+name|dev_t
 name|v_cachedfs
 decl_stmt|;
 comment|/* cached fs id */
@@ -532,13 +532,13 @@ modifier|*
 name|xvu_fifo
 decl_stmt|;
 comment|/* fifo, if VFIFO */
-name|udev_t
+name|dev_t
 name|xvu_rdev
 decl_stmt|;
 comment|/* maj/min, if VBLK/VCHR */
 struct|struct
 block|{
-name|udev_t
+name|dev_t
 name|xvu_dev
 decl_stmt|;
 comment|/* device, if VDIR/VREG/VLNK */
@@ -885,7 +885,7 @@ name|gid_t
 name|va_gid
 decl_stmt|;
 comment|/* owner group id */
-name|udev_t
+name|dev_t
 name|va_fsid
 decl_stmt|;
 comment|/* filesystem id */
@@ -929,7 +929,7 @@ name|u_long
 name|va_flags
 decl_stmt|;
 comment|/* flags defined for file */
-name|udev_t
+name|dev_t
 name|va_rdev
 decl_stmt|;
 comment|/* device the special file represents */
@@ -2670,7 +2670,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|udev_t
+name|dev_t
 name|nvp_rdev
 parameter_list|)
 function_decl|;

@@ -76,7 +76,7 @@ name|comp_t
 name|ac_io
 decl_stmt|;
 comment|/* count of IO blocks */
-name|__udev_t
+name|__dev_t
 name|ac_tty
 decl_stmt|;
 comment|/* controlling tty */

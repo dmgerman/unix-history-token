@@ -824,7 +824,7 @@ if|if
 condition|(
 name|dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
 operator|(

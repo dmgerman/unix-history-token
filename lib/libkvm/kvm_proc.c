@@ -1280,6 +1280,7 @@ name|tty
 operator|.
 name|t_dev
 expr_stmt|;
+comment|/* XXX: wrong */
 if|if
 condition|(
 name|tty

@@ -3938,7 +3938,7 @@ name|kp
 operator|->
 name|ki_tdev
 operator|=
-name|NOUDEV
+name|NODEV
 expr_stmt|;
 if|if
 condition|(
@@ -4955,7 +4955,7 @@ name|t_dev
 argument_list|)
 operator|!=
 operator|(
-name|udev_t
+name|dev_t
 operator|)
 name|name
 index|[

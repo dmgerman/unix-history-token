@@ -1832,7 +1832,7 @@ name|inode
 operator|.
 name|iso_rdev
 operator|=
-name|makeudev
+name|makedev
 argument_list|(
 name|umajor
 argument_list|(
@@ -1854,7 +1854,7 @@ name|inode
 operator|.
 name|iso_rdev
 operator|=
-name|makeudev
+name|makedev
 argument_list|(
 name|high
 argument_list|,

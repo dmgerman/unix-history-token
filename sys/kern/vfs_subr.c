@@ -1602,7 +1602,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|makeudev
+name|makedev
 argument_list|(
 literal|255
 argument_list|,
@@ -7664,7 +7664,7 @@ if|if
 condition|(
 name|dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 block|{
 operator|*
@@ -7835,7 +7835,7 @@ name|vnode
 modifier|*
 name|nvp
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|nvp_rdev
 decl_stmt|;
 block|{
@@ -7882,7 +7882,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
 name|nvp_rdev
 argument_list|)
@@ -7891,7 +7891,7 @@ if|if
 condition|(
 name|dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
 operator|(
@@ -8074,7 +8074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is a local helper function that do the same as addaliasu, but for a  * struct cdev *instead of an udev_t. */
+comment|/* This is a local helper function that do the same as addaliasu, but for a  * struct cdev *instead of an dev_t. */
 end_comment
 
 begin_function
@@ -10777,7 +10777,7 @@ name|vp
 operator|->
 name|v_rdev
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|mtx_lock
@@ -14363,7 +14363,7 @@ name|VCHR
 condition|)
 return|return
 operator|(
-name|NODEV
+name|NULL
 operator|)
 return|;
 return|return

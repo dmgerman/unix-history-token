@@ -130,7 +130,7 @@ name|struct
 name|timespec
 name|si_mtime
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|si_udev
 decl_stmt|;
 name|int

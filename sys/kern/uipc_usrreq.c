@@ -2096,7 +2096,7 @@ name|sb
 operator|->
 name|st_dev
 operator|=
-name|NOUDEV
+name|NODEV
 expr_stmt|;
 if|if
 condition|(

@@ -142,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This is the number of hash-buckets.  Experiements with 'real-life'  * udev_t's show that a prime halfway between two powers of two works  * best.  */
+comment|/*  * This is the number of hash-buckets.  Experiements with 'real-life'  * dev_t's show that a prime halfway between two powers of two works  * best.  */
 end_comment
 
 begin_define
@@ -244,6 +244,22 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|cdev
+modifier|*
+name|newdev
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -461,22 +477,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|struct
-name|cdev
-modifier|*
-name|makedev
-parameter_list|(
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int
@@ -919,10 +919,10 @@ if|if
 condition|(
 name|x
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
-name|NOUDEV
+name|NODEV
 return|;
 return|return
 operator|(
@@ -954,10 +954,10 @@ if|if
 condition|(
 name|x
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
-name|NOUDEV
+name|NODEV
 return|;
 return|return
 operator|(
@@ -988,10 +988,10 @@ if|if
 condition|(
 name|x
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
-name|NOUDEV
+name|NODEV
 return|;
 name|i
 operator|=
@@ -1209,7 +1209,7 @@ specifier|static
 name|struct
 name|cdev
 modifier|*
-name|makedev
+name|newdev
 parameter_list|(
 name|int
 name|x
@@ -1223,7 +1223,7 @@ name|cdev
 modifier|*
 name|si
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|udev
 decl_stmt|;
 name|int
@@ -1235,19 +1235,19 @@ name|x
 operator|==
 name|umajor
 argument_list|(
-name|NOUDEV
+name|NODEV
 argument_list|)
 operator|&&
 name|y
 operator|==
 name|uminor
 argument_list|(
-name|NOUDEV
+name|NODEV
 argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"makedev of NOUDEV"
+literal|"newdev of NODEV"
 argument_list|)
 expr_stmt|;
 name|udev
@@ -1383,7 +1383,7 @@ block|}
 end_function
 
 begin_function
-name|udev_t
+name|dev_t
 name|dev2udev
 parameter_list|(
 name|struct
@@ -1396,11 +1396,11 @@ if|if
 condition|(
 name|x
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
 operator|(
-name|NOUDEV
+name|NODEV
 operator|)
 return|;
 return|return
@@ -1417,9 +1417,9 @@ begin_function
 name|struct
 name|cdev
 modifier|*
-name|udev2dev
+name|findcdev
 parameter_list|(
-name|udev_t
+name|dev_t
 name|udev
 parameter_list|)
 block|{
@@ -1435,11 +1435,11 @@ if|if
 condition|(
 name|udev
 operator|==
-name|NOUDEV
+name|NODEV
 condition|)
 return|return
 operator|(
-name|NODEV
+name|NULL
 operator|)
 return|;
 name|hash
@@ -1473,7 +1473,7 @@ return|;
 block|}
 return|return
 operator|(
-name|NODEV
+name|NULL
 operator|)
 return|;
 block|}
@@ -1483,7 +1483,7 @@ begin_function
 name|int
 name|uminor
 parameter_list|(
-name|udev_t
+name|dev_t
 name|dev
 parameter_list|)
 block|{
@@ -1501,7 +1501,7 @@ begin_function
 name|int
 name|umajor
 parameter_list|(
-name|udev_t
+name|dev_t
 name|dev
 parameter_list|)
 block|{
@@ -1514,31 +1514,6 @@ literal|0xff00
 operator|)
 operator|>>
 literal|8
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|udev_t
-name|makeudev
-parameter_list|(
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|x
-operator|<<
-literal|8
-operator|)
-operator||
-name|y
 operator|)
 return|;
 block|}
@@ -2198,7 +2173,7 @@ argument_list|)
 expr_stmt|;
 name|dev
 operator|=
-name|makedev
+name|newdev
 argument_list|(
 name|devsw
 operator|->
@@ -3512,7 +3487,7 @@ name|CLONE_UNITMASK
 expr_stmt|;
 name|dev
 operator|=
-name|makedev
+name|newdev
 argument_list|(
 name|csw
 operator|->
@@ -3711,7 +3686,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|ud
 decl_stmt|;
 name|struct
@@ -3747,7 +3722,7 @@ if|if
 condition|(
 name|ud
 operator|==
-name|NOUDEV
+name|NODEV
 condition|)
 return|return
 operator|(
@@ -3756,7 +3731,7 @@ operator|)
 return|;
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
 name|ud
 argument_list|)
@@ -3765,7 +3740,7 @@ if|if
 condition|(
 name|dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 name|error
 operator|=

@@ -83,7 +83,7 @@ name|struct
 name|file
 modifier|*
 parameter_list|,
-name|udev_t
+name|dev_t
 parameter_list|,
 name|ino_t
 parameter_list|)
@@ -144,7 +144,7 @@ name|sockaddr_un
 name|sock
 decl_stmt|;
 comment|/* Pathname for the socket		*/
-name|udev_t
+name|dev_t
 name|dev
 decl_stmt|;
 comment|/* Device where the socket lives on	*/

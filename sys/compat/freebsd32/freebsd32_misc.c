@@ -6579,7 +6579,7 @@ begin_struct
 struct|struct
 name|stat32
 block|{
-name|udev_t
+name|dev_t
 name|st_dev
 decl_stmt|;
 name|ino_t
@@ -6597,7 +6597,7 @@ decl_stmt|;
 name|gid_t
 name|st_gid
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|st_rdev
 decl_stmt|;
 name|struct

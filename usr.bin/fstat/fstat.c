@@ -2844,7 +2844,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * The st_dev from stat(2) is a udev_t. These kernel structures 	 * contain dev_t structures. We need to convert to udev to make 	 * comparisons 	 */
+comment|/* 	 * The st_dev from stat(2) is a dev_t. These kernel structures 	 * contain cdev pointers. We need to convert to dev_t to make 	 * comparisons 	 */
 name|fsp
 operator|->
 name|fsid
@@ -4322,11 +4322,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the cdev structure in the kernel (as pointed to by a dev_t)  * in order to work out the associated udev_t  */
+comment|/*  * Read the cdev structure in the kernel in order to work out the  * associated dev_t  */
 end_comment
 
 begin_function
-name|udev_t
+name|dev_t
 name|dev2udev
 parameter_list|(
 name|dev
@@ -4367,7 +4367,7 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't convert dev_t %x to a udev_t\n"
+literal|"can't convert cdev *%x to a dev_t\n"
 argument_list|,
 name|dev
 argument_list|)

@@ -1143,7 +1143,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NODEV
+name|NULL
 operator|)
 return|;
 name|sbuf_cpy
@@ -1180,7 +1180,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NODEV
+name|NULL
 operator|)
 return|;
 block|}

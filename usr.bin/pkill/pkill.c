@@ -1793,7 +1793,7 @@ operator|->
 name|ki_tdev
 operator|==
 operator|(
-name|udev_t
+name|dev_t
 operator|)
 name|li
 operator|->

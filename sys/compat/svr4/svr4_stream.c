@@ -8826,7 +8826,7 @@ block|}
 else|else
 block|{
 comment|/* Maybe we've been given a device/inode pair */
-name|udev_t
+name|dev_t
 modifier|*
 name|dev
 init|=

@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|502116
+value|502117
 end_define
 
 begin_comment
@@ -709,50 +709,6 @@ begin_comment
 comment|/* default file mask: S_IWGRP|S_IWOTH */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NOUDEV
-value|(udev_t)(-1)
-end_define
-
-begin_comment
-comment|/* non-existent device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOMAJ
-value|256
-end_define
-
-begin_comment
-comment|/* non-existent device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NODEV
-value|NULL
-end_define
-
-begin_comment
-comment|/* non-existent device */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -763,11 +719,6 @@ end_define
 begin_comment
 comment|/* non-existent device */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -290,7 +290,7 @@ operator|&&
 operator|(
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
 name|buf
 operator|->
@@ -298,7 +298,7 @@ name|st_rdev
 argument_list|)
 operator|)
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|cdevsw
@@ -1911,9 +1911,9 @@ expr_stmt|;
 comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our struct cdev *is 32-bits whereas Linux only has a 16-bits 	 * struct cdev *. The struct cdev *that is used now may as well be a truncated 	 * struct cdev *returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 */
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
-name|makeudev
+name|makedev
 argument_list|(
 name|args
 operator|->
@@ -1933,7 +1933,7 @@ if|if
 condition|(
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 operator|&&
 name|vfinddev
 argument_list|(
@@ -2235,7 +2235,7 @@ operator|&&
 operator|(
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
 name|buf
 operator|->
@@ -2243,7 +2243,7 @@ name|st_rdev
 argument_list|)
 operator|)
 operator|!=
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|cdevsw

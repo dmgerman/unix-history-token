@@ -153,7 +153,7 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|dev
 decl_stmt|;
 name|ino_t

@@ -1156,7 +1156,7 @@ name|acct
 operator|.
 name|ac_tty
 operator|=
-name|NOUDEV
+name|NODEV
 expr_stmt|;
 name|SESS_UNLOCK
 argument_list|(

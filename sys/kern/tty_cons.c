@@ -331,7 +331,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|udev_t
+name|dev_t
 name|cn_udev_t
 decl_stmt|;
 end_decl_stmt
@@ -1586,7 +1586,7 @@ name|error
 operator|=
 name|cnopen
 argument_list|(
-name|NODEV
+name|NULL
 argument_list|,
 name|openflag
 argument_list|,
@@ -1610,7 +1610,7 @@ name|error
 operator|=
 name|cnclose
 argument_list|(
-name|NODEV
+name|NULL
 argument_list|,
 name|openflag
 argument_list|,

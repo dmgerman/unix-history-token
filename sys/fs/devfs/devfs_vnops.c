@@ -673,7 +673,7 @@ else|else
 block|{
 name|dev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 block|}
 name|error
@@ -1929,7 +1929,7 @@ name|notfound
 goto|;
 name|cdev
 operator|=
-name|NODEV
+name|NULL
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -1950,7 +1950,7 @@ if|if
 condition|(
 name|cdev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 goto|goto
 name|notfound
@@ -3259,7 +3259,7 @@ name|vp
 operator|->
 name|v_rdev
 operator|!=
-name|NODEV
+name|NULL
 operator|&&
 name|vp
 operator|->

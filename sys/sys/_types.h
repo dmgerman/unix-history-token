@@ -208,17 +208,6 @@ end_comment
 begin_typedef
 typedef|typedef
 name|__uint32_t
-name|__udev_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* device number */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
 name|__uid_t
 typedef|;
 end_typedef
@@ -287,15 +276,9 @@ begin_comment
 comment|/* wint_t (see above) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
 begin_typedef
 typedef|typedef
-name|__udev_t
+name|__uint32_t
 name|__dev_t
 typedef|;
 end_typedef
@@ -303,11 +286,6 @@ end_typedef
 begin_comment
 comment|/* device number */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef

@@ -49,7 +49,7 @@ name|short
 name|iso_links
 decl_stmt|;
 comment|/* links of file */
-name|udev_t
+name|dev_t
 name|iso_rdev
 decl_stmt|;
 comment|/* Major/Minor number for special */

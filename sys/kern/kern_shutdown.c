@@ -1346,7 +1346,7 @@ name|bp
 operator|->
 name|b_dev
 operator|==
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE

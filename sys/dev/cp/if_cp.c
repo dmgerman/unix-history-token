@@ -15268,9 +15268,9 @@ operator|>=
 literal|502103
 name|dev
 operator|=
-name|udev2dev
+name|findcdev
 argument_list|(
-name|makeudev
+name|makedev
 argument_list|(
 name|CDEV_MAJOR
 argument_list|,
@@ -15303,7 +15303,7 @@ if|if
 condition|(
 name|dev
 operator|!=
-name|NODEV
+name|NULL
 operator|&&
 operator|(
 name|cdsw

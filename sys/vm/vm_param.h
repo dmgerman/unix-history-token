@@ -197,7 +197,7 @@ block|{
 name|u_int
 name|xsw_version
 decl_stmt|;
-name|udev_t
+name|dev_t
 name|xsw_dev
 decl_stmt|;
 name|int

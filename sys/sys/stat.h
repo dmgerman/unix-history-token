@@ -37,23 +37,12 @@ directive|ifndef
 name|_DEV_T_DECLARED
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
 begin_typedef
 typedef|typedef
 name|__dev_t
 name|dev_t
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -393,7 +382,7 @@ begin_struct
 struct|struct
 name|stat
 block|{
-name|__udev_t
+name|__dev_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
@@ -417,7 +406,7 @@ name|gid_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|__udev_t
+name|__dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */
@@ -613,7 +602,7 @@ begin_struct
 struct|struct
 name|nstat
 block|{
-name|__udev_t
+name|__dev_t
 name|st_dev
 decl_stmt|;
 comment|/* inode's device */
@@ -637,7 +626,7 @@ name|gid_t
 name|st_gid
 decl_stmt|;
 comment|/* group ID of the file's group */
-name|__udev_t
+name|__dev_t
 name|st_rdev
 decl_stmt|;
 comment|/* device type */

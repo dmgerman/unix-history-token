@@ -10725,7 +10725,7 @@ name|vap
 operator|->
 name|va_rdev
 operator|=
-name|makeudev
+name|makedev
 argument_list|(
 name|major
 argument_list|,

@@ -2302,7 +2302,7 @@ argument_list|)
 expr_stmt|;
 name|rdev
 operator|=
-name|makeudev
+name|makedev
 argument_list|(
 name|fxdr_unsigned
 argument_list|(

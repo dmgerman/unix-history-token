@@ -46,14 +46,14 @@ begin_define
 define|#
 directive|define
 name|SNPSTTY
-value|_IOW('T', 90, udev_t)
+value|_IOW('T', 90, dev_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNPGTTY
-value|_IOR('T', 89, udev_t)
+value|_IOR('T', 89, dev_t)
 end_define
 
 begin_comment

@@ -305,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|cdev_t
-value|udev_t
+value|dev_t
 end_define
 
 begin_endif
