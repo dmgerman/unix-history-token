@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_unix.c	7.11 (Berkeley) %G%"
+literal|"@(#)ex_unix.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1525,12 +1525,6 @@ name|pstat
 decl_stmt|;
 name|int
 name|wpid
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_siglist
-index|[]
 decl_stmt|;
 name|pstat
 operator|.
