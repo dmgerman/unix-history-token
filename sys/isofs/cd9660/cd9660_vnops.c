@@ -506,7 +506,7 @@ name|vp
 operator|->
 name|v_type
 operator|==
-name|VREG
+name|VCHR
 operator|||
 name|vp
 operator|->
@@ -1001,7 +1001,7 @@ name|vp
 operator|->
 name|v_type
 operator|==
-name|VREG
+name|VCHR
 operator|||
 name|vp
 operator|->
@@ -1139,7 +1139,7 @@ name|vp
 operator|->
 name|v_type
 operator|==
-name|VREG
+name|VCHR
 operator|||
 name|vp
 operator|->
