@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: util.c,v 1.16 2003/06/28 01:04:57 deraadt Exp $ */
+comment|/*	$OpenBSD: util.c,v 1.18 2004/01/22 16:10:30 beck Exp $ */
 end_comment
 
 begin_comment
@@ -145,6 +145,14 @@ name|Use_Rdns
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|in_addr_t
+name|Bind_Addr
+init|=
+name|INADDR_NONE
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|debuglog
@@ -232,9 +240,10 @@ name|struct
 name|pfioc_natlook
 name|natlook
 decl_stmt|;
-name|int
+name|socklen_t
 name|slen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|fd
 decl_stmt|;
 name|slen
@@ -1064,6 +1073,12 @@ name|AF_INET
 expr_stmt|;
 if|if
 condition|(
+name|Bind_Addr
+operator|==
+name|INADDR_NONE
+condition|)
+if|if
+condition|(
 name|sap
 operator|==
 name|NULL
@@ -1088,6 +1103,15 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
+expr_stmt|;
+else|else
+name|sa
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|Bind_Addr
 expr_stmt|;
 comment|/* 		 * Indicate that we want to reuse a port if it happens that the 		 * port in question was a listen port recently. 		 */
 name|one

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ftp-proxy.c,v 1.33 2003/08/22 21:50:34 david Exp $ */
+comment|/*	$OpenBSD: ftp-proxy.c,v 1.35 2004/03/14 21:51:44 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -367,6 +367,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|in_addr_t
+name|Bind_Addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|__progname
@@ -503,13 +510,10 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"usage: %s [-AnrVw] [-D debuglevel] [-g group] %s %s"
+literal|"usage: %s [-AnrVw] [-a address] [-D debuglevel [-g group]"
+literal|" [-M maxport] [-m minport] [-t timeout] [-u user]"
 argument_list|,
 name|__progname
-argument_list|,
-literal|"[-m minport] [-M maxport] [-t timeout]"
-argument_list|,
-literal|"[-u user]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4694,7 +4698,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:g:m:M:t:u:AnVwr"
+literal|"a:D:g:m:M:t:u:AnVwr"
 argument_list|)
 operator|)
 operator|!=
@@ -4711,6 +4715,46 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+if|if
+condition|(
+operator|!
+operator|*
+name|optarg
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Bind_Addr
+operator|=
+name|inet_addr
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|==
+name|INADDR_NONE
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: invalid address"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
 case|case
 literal|'A'
 case|:

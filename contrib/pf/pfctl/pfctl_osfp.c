@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_osfp.c,v 1.4 2003/08/27 17:42:00 frantzen Exp $ */
+comment|/*	$OpenBSD: pfctl_osfp.c,v 1.8 2004/02/27 10:42:00 henning Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"pfctl_parser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pfctl.h"
 end_include
 
 begin_ifndef
@@ -1625,19 +1631,47 @@ name|int
 name|opts
 parameter_list|)
 block|{
-name|printf
+if|if
+condition|(
+name|LIST_FIRST
 argument_list|(
-literal|"Passive OS Fingerprints:\n"
+operator|&
+name|classes
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|opts
+operator|&
+name|PF_OPT_SHOWALL
+condition|)
+block|{
+name|pfctl_print_title
+argument_list|(
+literal|"OS FINGERPRINTS:"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tClass\tVersion\tSubtype(subversion)\n"
+literal|"%u fingerprints loaded\n"
+argument_list|,
+name|fingerprint_count
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Class\tVersion\tSubtype(subversion)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t-----\t-------\t-------------------\n"
+literal|"-----\t-------\t-------------------\n"
 argument_list|)
 expr_stmt|;
 name|sort_name_list
@@ -1655,9 +1689,11 @@ argument_list|,
 operator|&
 name|classes
 argument_list|,
-literal|"\t"
+literal|""
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 

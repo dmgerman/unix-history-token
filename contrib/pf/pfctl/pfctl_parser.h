@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_parser.h,v 1.67 2003/08/21 19:12:09 frantzen Exp $ */
+comment|/*	$OpenBSD: pfctl_parser.h,v 1.74 2004/02/10 22:26:56 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -99,6 +99,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_OPT_SHOWALL
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_TH_ALL
 value|0xFF
 end_define
@@ -153,14 +160,6 @@ name|pfioc_pooladdr
 name|paddr
 decl_stmt|;
 name|struct
-name|pfioc_rule
-modifier|*
-name|prule
-index|[
-name|PF_RULESET_MAX
-index|]
-decl_stmt|;
-name|struct
 name|pfioc_altq
 modifier|*
 name|paltq
@@ -169,6 +168,11 @@ name|struct
 name|pfioc_queue
 modifier|*
 name|pqueue
+decl_stmt|;
+name|struct
+name|pfr_buffer
+modifier|*
+name|trans
 decl_stmt|;
 specifier|const
 name|char
@@ -183,19 +187,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_enum
-enum|enum
-name|pfctl_iflookup_mode
-block|{
-name|PFCTL_IFLOOKUP_HOST
-block|,
-name|PFCTL_IFLOOKUP_NET
-block|,
-name|PFCTL_IFLOOKUP_BCAST
-block|}
-enum|;
-end_enum
 
 begin_struct
 struct|struct
@@ -239,6 +230,10 @@ name|struct
 name|pf_addr
 name|bcast
 decl_stmt|;
+name|struct
+name|pf_addr
+name|peer
+decl_stmt|;
 name|sa_family_t
 name|af
 decl_stmt|;
@@ -269,6 +264,31 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* special flags used by ifa_exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_IFA_FLAG_GROUP
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_IFA_FLAG_DYNAMIC
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_IFA_FLAG_CLONABLE
+value|0x40000
+end_define
 
 begin_struct
 struct|struct
@@ -445,6 +465,10 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|struct
+name|pfr_buffer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -575,6 +599,33 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pfctl_set_hostid
+parameter_list|(
+name|struct
+name|pfctl
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pfctl_set_debug
+parameter_list|(
+name|struct
+name|pfctl
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|parse_rules
 parameter_list|(
 name|FILE
@@ -604,6 +655,10 @@ parameter_list|(
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|struct
+name|pfr_buffer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -621,6 +676,19 @@ parameter_list|,
 name|u_int16_t
 parameter_list|,
 name|sa_family_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_src_node
+parameter_list|(
+name|struct
+name|pf_src_node
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -666,6 +734,8 @@ parameter_list|(
 name|struct
 name|pf_status
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1064,6 +1134,8 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1078,8 +1150,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|enum
-name|pfctl_iflookup_mode
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

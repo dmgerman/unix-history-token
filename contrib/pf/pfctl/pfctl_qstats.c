@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_qstats.c,v 1.24 2003/07/31 09:46:08 kjc Exp $ */
+comment|/*	$OpenBSD: pfctl_qstats.c,v 1.29 2004/03/15 15:25:44 dhartmei Exp $ */
 end_comment
 
 begin_comment
@@ -347,6 +347,11 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|iface
+parameter_list|,
 name|int
 name|opts
 parameter_list|,
@@ -364,8 +369,22 @@ decl_stmt|,
 modifier|*
 name|node
 decl_stmt|;
+name|int
+name|nodes
+decl_stmt|,
+name|dotitle
+init|=
+operator|(
+name|opts
+operator|&
+name|PF_OPT_SHOWALL
+operator|)
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|nodes
+operator|=
 name|pfctl_update_qstats
 argument_list|(
 name|dev
@@ -373,6 +392,9 @@ argument_list|,
 operator|&
 name|root
 argument_list|)
+operator|)
+operator|<
+literal|0
 condition|)
 return|return
 operator|(
@@ -396,6 +418,40 @@ name|node
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|iface
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|node
+operator|->
+name|altq
+operator|.
+name|ifname
+argument_list|,
+name|iface
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|dotitle
+condition|)
+block|{
+name|pfctl_print_title
+argument_list|(
+literal|"ALTQ:"
+argument_list|)
+expr_stmt|;
+name|dotitle
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|pfctl_print_altq_node
 argument_list|(
 name|dev
@@ -407,6 +463,7 @@ argument_list|,
 name|opts
 argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|verbose2
@@ -436,6 +493,9 @@ argument_list|,
 operator|&
 name|root
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -459,6 +519,25 @@ name|node
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|iface
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|node
+operator|->
+name|altq
+operator|.
+name|ifname
+argument_list|,
+name|iface
+argument_list|)
+condition|)
+continue|continue;
 name|pfctl_print_altq_node
 argument_list|(
 name|dev
@@ -470,6 +549,7 @@ argument_list|,
 name|opts
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|pfctl_free_altq_node
 argument_list|(
@@ -815,7 +895,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|mnr
 operator|)
 return|;
 block|}
@@ -1472,6 +1552,11 @@ argument_list|(
 literal|"  [ pkts: %10llu  bytes: %10llu  "
 literal|"dropped pkts: %6llu bytes: %6llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1482,6 +1567,11 @@ name|xmit_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1492,6 +1582,11 @@ name|xmit_cnt
 operator|.
 name|bytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1502,6 +1597,11 @@ name|drop_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1600,6 +1700,11 @@ argument_list|(
 literal|"  [ pkts: %10llu  bytes: %10llu  "
 literal|"dropped pkts: %6llu bytes: %6llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1610,6 +1715,11 @@ name|xmitcnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1620,6 +1730,11 @@ name|xmitcnt
 operator|.
 name|bytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1630,6 +1745,11 @@ name|dropcnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1712,6 +1832,11 @@ argument_list|(
 literal|"  [ pkts: %10llu  bytes: %10llu  "
 literal|"dropped pkts: %6llu bytes: %6llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1722,6 +1847,11 @@ name|xmit_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1732,6 +1862,11 @@ name|xmit_cnt
 operator|.
 name|bytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1742,6 +1877,11 @@ name|drop_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
