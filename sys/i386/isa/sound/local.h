@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|DSP_BUFFSIZE
-value|32768
+value|65536
 end_define
 
 begin_define

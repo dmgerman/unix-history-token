@@ -1359,21 +1359,32 @@ index|]
 operator|=
 literal|65536
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (sound_dsp_dmachan[dev]> 3&& sound_buffsizes[dev]> 65536) 	    dma_pagesize = 131072;
-comment|/* 128k */
-block|else 	    dma_pagesize = 65536;
-else|#
-directive|else
+if|if
+condition|(
+name|sound_dsp_dmachan
+index|[
+name|dev
+index|]
+operator|>
+literal|3
+operator|&&
+name|sound_buffsizes
+index|[
+name|dev
+index|]
+operator|>
+literal|65536
+condition|)
 name|dma_pagesize
 operator|=
-literal|4096
+literal|131072
 expr_stmt|;
-comment|/* use bounce buffer */
-endif|#
-directive|endif
+comment|/* 128k */
+else|else
+name|dma_pagesize
+operator|=
+literal|65536
+expr_stmt|;
 comment|/* More sanity checks */
 if|if
 condition|(
@@ -1471,10 +1482,8 @@ name|char
 modifier|*
 name|tmpbuf
 init|=
-name|malloc
+name|contigmalloc
 argument_list|(
-literal|2
-operator|*
 name|sound_buffsizes
 index|[
 name|dev
@@ -1483,13 +1492,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+literal|0xFFFFFFul
+argument_list|,
+literal|0ul
+argument_list|,
+literal|0xFFFFul
 argument_list|)
-decl_stmt|;
-name|unsigned
-name|long
-name|addr
-decl_stmt|,
-name|rounded
 decl_stmt|;
 if|if
 condition|(
@@ -1502,8 +1511,6 @@ name|printk
 argument_list|(
 literal|"snd: Unable to allocate %d bytes of buffer\n"
 argument_list|,
-literal|2
-operator|*
 name|sound_buffsizes
 index|[
 name|dev
@@ -1512,29 +1519,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|addr
-operator|=
-name|kvtop
-argument_list|(
-name|tmpbuf
-argument_list|)
-expr_stmt|;
-comment|/* 	       * Align the start address 	       */
-name|rounded
-operator|=
-operator|(
-name|addr
-operator|&
-operator|~
-operator|(
-name|dma_pagesize
-operator|-
-literal|1
-operator|)
-operator|)
-operator|+
-name|dma_pagesize
-expr_stmt|;
 name|snd_raw_buf
 index|[
 name|dev
@@ -1546,15 +1530,8 @@ name|dev
 index|]
 index|]
 operator|=
-operator|&
 name|tmpbuf
-index|[
-name|rounded
-operator|-
-name|addr
-index|]
 expr_stmt|;
-comment|/* Compute offset */
 comment|/* 	       * Use virtual address as the physical address, since 	       * isa_dmastart performs the phys address computation. 	       */
 name|snd_raw_buf_phys
 index|[
