@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -197,7 +197,7 @@ value|(NPROC + NTEXT + 100)
 end_define
 
 begin_decl_stmt
-name|long
+name|int
 name|desiredvnodes
 init|=
 name|NVNODE
