@@ -3389,6 +3389,27 @@ begin_comment
 comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type 0x0D (13), it's  * an SES device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SAFTE_START
+value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAFTE_END
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAFTE_LEN
+value|SAFTE_END-SAFTE_START
+end_define
+
 begin_function
 specifier|static
 name|enctyp
@@ -3413,7 +3434,9 @@ if|if
 condition|(
 name|buflen
 operator|<
-literal|32
+literal|8
+operator|+
+name|SEN_ID_LEN
 condition|)
 return|return
 operator|(
@@ -3528,11 +3551,14 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * The comparison is short for a reason- 	 * some vendors were chopping it short. 	 */
 if|if
 condition|(
 name|buflen
 operator|<
-literal|47
+name|SAFTE_END
+operator|-
+literal|2
 condition|)
 block|{
 return|return
@@ -3541,7 +3567,6 @@ name|SES_NONE
 operator|)
 return|;
 block|}
-comment|/* 	 * The comparison is short for a reason- some vendors were chopping 	 * it short. 	 */
 if|if
 condition|(
 name|STRNCMP
@@ -3553,12 +3578,14 @@ operator|)
 operator|&
 name|iqd
 index|[
-literal|44
+name|SAFTE_START
 index|]
 argument_list|,
 literal|"SAF-TE"
 argument_list|,
-literal|4
+name|SAFTE_LEN
+operator|-
+literal|2
 argument_list|)
 operator|==
 literal|0
@@ -5178,7 +5205,7 @@ name|SES_LOG
 argument_list|(
 name|ssc
 argument_list|,
-literal|"Unable to parse SES Config Header"
+literal|"Unable to parse SES Config Header\n"
 argument_list|)
 expr_stmt|;
 name|SES_FREE
@@ -5205,7 +5232,7 @@ name|SES_LOG
 argument_list|(
 name|ssc
 argument_list|,
-literal|"runt enclosure length (%d)"
+literal|"runt enclosure length (%d)\n"
 argument_list|,
 name|amt
 argument_list|)
@@ -5308,7 +5335,7 @@ name|SES_LOG
 argument_list|(
 name|ssc
 argument_list|,
-literal|"Cannot Extract Enclosure Header %d"
+literal|"Cannot Extract Enclosure Header %d\n"
 argument_list|,
 name|i
 argument_list|)
