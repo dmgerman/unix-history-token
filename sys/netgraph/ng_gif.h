@@ -83,7 +83,6 @@ literal|1
 block|,
 comment|/* get the interface name */
 name|NGM_GIF_GET_IFINDEX
-block|,
 comment|/* get the interface global index # */
 block|}
 enum|;
