@@ -113,6 +113,77 @@ begin_comment
 comment|/* socket used for communications */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_SET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFDBITS
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_SETSIZE
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_SET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[(n)/NFDBITS] |= (1<< ((n) % NFDBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_CLR
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[(n)/NFDBITS]&= ~(1<< ((n) % NFDBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ISSET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[(n)/NFDBITS]& (1<< ((n) % NFDBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|bzero((char *)(p), sizeof(*(p)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
