@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.31 (Berkeley) %G%"
+literal|"@(#)stty.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,8 +133,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|struct
@@ -164,6 +164,10 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+name|optind
+operator|<
+name|argc
+operator|&&
 name|strspn
 argument_list|(
 name|argv
