@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.23 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1227,11 +1227,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|sep
-operator|->
-name|se_wait
-operator|&&
 name|sep
 operator|->
 name|se_socktype
@@ -1292,7 +1287,11 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"accept: %m"
+literal|"accept (for %s): %m"
+argument_list|,
+name|sep
+operator|->
+name|se_service
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1515,11 +1514,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|sep
-operator|->
-name|se_wait
-operator|&&
 name|sep
 operator|->
 name|se_socktype
@@ -1910,11 +1904,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|sep
-operator|->
-name|se_wait
-operator|&&
 name|sep
 operator|->
 name|se_socktype
