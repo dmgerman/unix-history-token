@@ -3624,6 +3624,21 @@ break|break;
 block|}
 default|default:
 comment|/* Send an ICMP unreachable using code */
+if|if
+condition|(
+name|oif
+condition|)
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|oif
+expr_stmt|;
 name|icmp6_error
 argument_list|(
 operator|*
