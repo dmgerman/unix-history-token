@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xmalloc.c -- malloc with out of memory checking    Copyright (C) 1990-1999, 2000 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* xmalloc.c -- malloc with out of memory checking    Copyright (C) 1990-1999, 2000, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -173,17 +173,17 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HAVE_DONE_WORKING_MALLOC_CHECK
+name|HAVE_MALLOC
 end_ifndef
 
 begin_expr_stmt
-literal|"you must run the autoconf test for a properly working malloc -- see malloc.m4"
+literal|"you must run the autoconf test for a properly working malloc"
 endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|HAVE_DONE_WORKING_REALLOC_CHECK
-literal|"you must run the autoconf test for a properly working realloc --see realloc.m4"
+name|HAVE_REALLOC
+literal|"you must run the autoconf test for a properly working realloc"
 endif|#
 directive|endif
 comment|/* Exit value when the requested amount of memory is not available.    The caller may set it to some other value.  */

@@ -171,9 +171,6 @@ end_define
 begin_if
 if|#
 directive|if
-name|defined
-name|ENABLE_NLS
-operator|&&
 name|HAVE_LANGINFO_H
 end_if
 
@@ -359,11 +356,11 @@ name|NUMERIC_ZERO
 value|'0'
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_NLS
-end_ifdef
+begin_if
+if|#
+directive|if
+name|HAVE_SETLOCALE
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -718,54 +715,17 @@ name|MONTHS_PER_YEAR
 value|12
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-name|ENABLE_NLS
-operator|&&
-name|HAVE_NL_LANGINFO
-end_if
-
-begin_define
-define|#
-directive|define
-name|MONTHTAB_CONST
-end_define
-
-begin_comment
-comment|/* empty */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MONTHTAB_CONST
-value|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Table mapping month names to integers.    Alphabetic order allows binary search. */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|MONTHTAB_CONST
-expr|struct
+name|struct
 name|month
 name|monthtab
 index|[]
-operator|=
+init|=
 block|{
 block|{
 literal|"APR"
@@ -839,8 +799,8 @@ block|,
 literal|9
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* During the merge phase, the number of files to merge at once. */
@@ -1174,12 +1134,14 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-name|puts
+name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\nReport bugs to<bug-textutils@gnu.org>."
+literal|"\nReport bugs to<%s>.\n"
 argument_list|)
+argument_list|,
+name|PACKAGE_BUGREPORT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2123,9 +2085,6 @@ end_function
 begin_if
 if|#
 directive|if
-name|defined
-name|ENABLE_NLS
-operator|&&
 name|HAVE_NL_LANGINFO
 end_if
 
@@ -2288,9 +2247,6 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|defined
-name|ENABLE_NLS
-operator|&&
 name|HAVE_NL_LANGINFO
 comment|/* If we're not in the "C" locale, read different names for months.  */
 if|if
@@ -2436,7 +2392,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NLS */
 block|}
 end_function
 
@@ -3501,7 +3456,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|POSIX_UNSPECIFIED
-comment|/* The following block of code makes GNU sort incompatible with      standard Unix sort, so it's ifdef'd out for now.      The POSIX spec isn't clear on how to interpret this.      FIXME: request clarification.       From: kwzh@gnu.ai.mit.edu (Karl Heuer)      Date: Thu, 30 May 96 12:20:41 -0400       [...]I believe I've found another bug in `sort'.       $ cat /tmp/sort.in      a b c 2 d      pq rs 1 t      $ textutils-1.15/src/sort +0.6 -0.7</tmp/sort.in      a b c 2 d      pq rs 1 t      $ /bin/sort +0.6 -0.7</tmp/sort.in      pq rs 1 t      a b c 2 d       Unix sort produced the answer I expected: sort on the single character      in column 6.  GNU sort produced different results, because it disagrees      on the interpretation of the key-end spec "-M.N".  Unix sort reads this      as "skip M fields, then N characters"; but GNU sort wants it to mean      "skip M fields, then either N characters or the rest of the current      field, whichever comes first".  This extra clause applies only to      key-ends, not key-starts.      */
+comment|/* The following block of code makes GNU sort incompatible with      standard Unix sort, so it's ifdef'd out for now.      The POSIX spec isn't clear on how to interpret this.      FIXME: request clarification.       From: kwzh@gnu.ai.mit.edu (Karl Heuer)      Date: Thu, 30 May 96 12:20:41 -0400      [Translated to POSIX 1003.1-2001 terminology by Paul Eggert.]       [...]I believe I've found another bug in `sort'.       $ cat /tmp/sort.in      a b c 2 d      pq rs 1 t      $ textutils-1.15/src/sort -k1.7,1.7</tmp/sort.in      a b c 2 d      pq rs 1 t      $ /bin/sort -k1.7,1.7</tmp/sort.in      pq rs 1 t      a b c 2 d       Unix sort produced the answer I expected: sort on the single character      in column 7.  GNU sort produced different results, because it disagrees      on the interpretation of the key-end spec "M.N".  Unix sort reads this      as "skip M-1 fields, then N-1 characters"; but GNU sort wants it to mean      "skip M-1 fields, then either N-1 characters or the rest of the current      field, whichever comes first".  This extra clause applies only to      key-ends, not key-starts.      */
 comment|/* Make LIM point to the end of (one byte past) the current field.  */
 if|if
 condition|(
@@ -5758,13 +5713,12 @@ argument_list|,
 name|lenb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ENABLE_NLS
 comment|/* Sorting like this may become slow, so in a simple locale the user          can select a faster sort that is similar to ascii sort  */
 elseif|else
 if|if
 condition|(
+name|HAVE_SETLOCALE
+operator|&&
 name|hard_LC_COLLATE
 condition|)
 block|{
@@ -5996,8 +5950,6 @@ name|lenb
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -6472,12 +6424,11 @@ argument_list|(
 name|alen
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ENABLE_NLS
 elseif|else
 if|if
 condition|(
+name|HAVE_SETLOCALE
+operator|&&
 name|hard_LC_COLLATE
 condition|)
 name|diff
@@ -6497,8 +6448,6 @@ argument_list|,
 name|blen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -9874,9 +9823,6 @@ argument_list|(
 name|cleanup
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ENABLE_NLS
 name|hard_LC_COLLATE
 operator|=
 name|hard_locale
@@ -9896,6 +9842,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|HAVE_SETLOCALE
 comment|/* Let's get locale's representation of the decimal point */
 block|{
 name|struct
@@ -9959,7 +9908,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NLS */
 name|have_read_stdin
 operator|=
 literal|0
