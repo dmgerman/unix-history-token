@@ -363,6 +363,13 @@ name|AXE_CONFIG_NO
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|AXE_IFACE_IDX
+value|0
+end_define
+
 begin_comment
 comment|/*  * The interrupt endpoint is currently unused  * by the ASIX part.  */
 end_comment
