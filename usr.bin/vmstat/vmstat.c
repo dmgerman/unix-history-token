@@ -880,7 +880,7 @@ literal|'p'
 case|:
 if|if
 condition|(
-name|buildmatch
+name|devstat_buildmatch
 argument_list|(
 name|optarg
 argument_list|,
@@ -1159,8 +1159,10 @@ decl_stmt|;
 comment|/* 		 * Make sure that the userland devstat version matches the 		 * kernel devstat version.  If not, exit and print a 		 * message informing the user of his mistake. 		 */
 if|if
 condition|(
-name|checkversion
-argument_list|()
+name|devstat_checkversion
+argument_list|(
+name|NULL
+argument_list|)
 operator|<
 literal|0
 condition|)
@@ -1384,8 +1386,10 @@ condition|(
 operator|(
 name|num_devices
 operator|=
-name|getnumdevs
-argument_list|()
+name|devstat_getnumdevs
+argument_list|(
+name|NULL
+argument_list|)
 operator|)
 operator|<
 literal|0
@@ -1463,8 +1467,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getdevs
+name|devstat_getdevs
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|cur
 argument_list|)
@@ -1606,7 +1612,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|buildmatch
+name|devstat_buildmatch
 argument_list|(
 name|da
 argument_list|,
@@ -1641,7 +1647,7 @@ expr_stmt|;
 comment|/* 	 * At this point, selectdevs will almost surely indicate that the 	 * device list has changed, so we don't look for return values of 0 	 * or 1.  If we get back -1, though, there is an error. 	 */
 if|if
 condition|(
-name|selectdevs
+name|devstat_selectdevs
 argument_list|(
 operator|&
 name|dev_select
@@ -1971,8 +1977,10 @@ expr_stmt|;
 comment|/* 		 * Here what we want to do is refresh our device stats. 		 * getdevs() returns 1 when the device list has changed. 		 * If the device list has changed, we want to go through 		 * the selection process again, in case a device that we 		 * were previously displaying has gone away. 		 */
 switch|switch
 condition|(
-name|getdevs
+name|devstat_getdevs
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|cur
 argument_list|)
@@ -2017,7 +2025,7 @@ name|generation
 expr_stmt|;
 name|retval
 operator|=
-name|selectdevs
+name|devstat_selectdevs
 argument_list|(
 operator|&
 name|dev_select
@@ -3686,7 +3694,7 @@ expr_stmt|;
 block|}
 name|busy_seconds
 operator|=
-name|compute_etime
+name|devstat_compute_etime
 argument_list|(
 name|cur
 operator|.
