@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_timer.c,v 5.2 88/11/18 17:29:07 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.c,v $  *	@(#)tp_timer.c	7.3 (Berkeley) %G% *  *  * Contains all the timer code.    * There are two sources of calls to these routines:  * the clock, and tp.trans. (ok, and tp_pcb.c calls it at init time)  *  * Timers come in two flavors - those that generally get  * cancelled (tp_ctimeout, tp_cuntimeout)  * and those that either usually expire (tp_etimeout,   * tp_euntimeout, tp_slowtimo) or may require more than one instance  * of the timer active at a time.  *  * The C timers are stored in the tp_ref structure. Their "going off"  * is manifested by a driver event of the TM_xxx form.  *  * The E timers are handled like the generic kernel callouts.  * Their "going off" is manifested by a function call w/ 3 arguments.  */
+comment|/*   * ARGO TP  *  * $Header: tp_timer.c,v 5.2 88/11/18 17:29:07 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.c,v $  *	@(#)tp_timer.c	7.4 (Berkeley) %G% *  *  * Contains all the timer code.    * There are two sources of calls to these routines:  * the clock, and tp.trans. (ok, and tp_pcb.c calls it at init time)  *  * Timers come in two flavors - those that generally get  * cancelled (tp_ctimeout, tp_cuntimeout)  * and those that either usually expire (tp_etimeout,   * tp_euntimeout, tp_slowtimo) or may require more than one instance  * of the timer active at a time.  *  * The C timers are stored in the tp_ref structure. Their "going off"  * is manifested by a driver event of the TM_xxx form.  *  * The E timers are handled like the generic kernel callouts.  * Their "going off" is manifested by a function call w/ 3 arguments.  */
 end_comment
 
 begin_ifndef
@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tp_param.h"
 end_include
 
@@ -106,7 +112,6 @@ file|"tp_seq.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|Ecallout
 modifier|*
@@ -115,15 +120,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|Ecallout
+modifier|*
 name|TP_callout
-index|[
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tp_ref
+modifier|*
+name|tp_ref
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|N_TPREF
-operator|*
-literal|2
-index|]
+init|=
+literal|100
 decl_stmt|;
 end_decl_stmt
 
@@ -148,59 +164,87 @@ name|tp_timerinit
 parameter_list|()
 block|{
 specifier|register
-name|int
-name|i
+name|struct
+name|Ecallout
+modifier|*
+name|e
 decl_stmt|;
-comment|/* 	 * Initialize callouts 	 */
+specifier|register
+name|int
+name|s
+decl_stmt|;
+define|#
+directive|define
+name|GETME
+parameter_list|(
+name|x
+parameter_list|,
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|{s = (n)*sizeof(*x); x = (t) malloc(s, M_PCB, M_NOWAIT);\ if (x == 0) panic("tp_timerinit"); bzero((caddr_t)x, s);}
+comment|/* 	 * Initialize storage 	 */
+name|GETME
+argument_list|(
+name|TP_callout
+argument_list|,
+expr|struct
+name|Ecallout
+operator|*
+argument_list|,
+literal|2
+operator|*
+name|N_TPREF
+argument_list|)
+expr_stmt|;
+name|GETME
+argument_list|(
+name|tp_ref
+argument_list|,
+expr|struct
+name|tp_ref
+operator|*
+argument_list|,
+literal|1
+operator|+
+name|N_TPREF
+argument_list|)
+expr_stmt|;
 name|TP_callfree
 operator|=
 name|TP_callout
+operator|+
+operator|(
+operator|(
+literal|2
+operator|*
+name|N_TPREF
+operator|)
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|e
 operator|=
-literal|1
+name|TP_callfree
 init|;
-name|i
-operator|<
-name|N_TPREF
-operator|*
-literal|2
-condition|;
-name|i
-operator|++
-control|)
+name|e
+operator|>
 name|TP_callout
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|.
+condition|;
+name|e
+operator|--
+control|)
+name|e
+operator|->
 name|c_next
 operator|=
-operator|&
-name|TP_callout
-index|[
-name|i
-index|]
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|tp_ref
-argument_list|,
-name|N_TPREF
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tp_ref
-argument_list|)
-argument_list|)
+name|e
+operator|-
+literal|1
 expr_stmt|;
 comment|/* hate to do this but we really don't want zero to be a legit ref */
 name|tp_maxrefopen
@@ -217,6 +261,9 @@ operator|=
 name|REF_FROZEN
 expr_stmt|;
 comment|/* white lie -- no ref timer, don't 		* want this one to be allocated- ever 		* unless, of course, you make refs and address instead of an 		* index - then 0 can be allocated 		*/
+undef|#
+directive|undef
+name|GETME
 block|}
 end_function
 
