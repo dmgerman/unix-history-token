@@ -178,7 +178,9 @@ operator|.
 name|tv_sec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -199,8 +201,10 @@ operator|.
 name|tv_sec
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -221,7 +225,9 @@ operator|.
 name|tv_nsec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -242,8 +248,10 @@ operator|.
 name|tv_nsec
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
@@ -324,7 +332,9 @@ operator|.
 name|tv_sec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -345,8 +355,10 @@ operator|.
 name|tv_sec
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -367,7 +379,9 @@ operator|.
 name|tv_nsec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -388,8 +402,10 @@ operator|.
 name|tv_nsec
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
@@ -470,7 +486,9 @@ operator|.
 name|tv_sec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -491,8 +509,10 @@ operator|.
 name|tv_sec
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -513,7 +533,9 @@ operator|.
 name|tv_nsec
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -534,8 +556,10 @@ operator|.
 name|tv_nsec
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
 operator|(
