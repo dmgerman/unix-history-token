@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -123,7 +123,8 @@ name|p
 parameter_list|,
 name|type
 parameter_list|)
-value|((p)->p_traceflag& (1<<(type)))
+define|\
+value|(((p)->p_traceflag& ((1<<(type))|KTRFAC_ACTIVE)) == (1<<(type)))
 end_define
 
 begin_comment
@@ -263,6 +264,33 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * KTR_CSW - trace context switches  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_CSW
+value|6
+end_define
+
+begin_struct
+struct|struct
+name|ktr_csw
+block|{
+name|int
+name|out
+decl_stmt|;
+comment|/* 1 if switch out, 0 if switch in */
+name|int
+name|user
+decl_stmt|;
+comment|/* 1 if usermode (ivcsw), 0 if kernel (vcsw) */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * kernel trace points (in p_traceflag)  */
 end_comment
 
@@ -308,6 +336,13 @@ name|KTRFAC_PSIG
 value|(1<<KTR_PSIG)
 end_define
 
+begin_define
+define|#
+directive|define
+name|KTRFAC_CSW
+value|(1<<KTR_CSW)
+end_define
+
 begin_comment
 comment|/*  * trace flags (also in p_traceflags)  */
 end_comment
@@ -332,6 +367,17 @@ end_define
 
 begin_comment
 comment|/* pass trace flags to children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_ACTIVE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* ktrace logging in progress, ignore */
 end_comment
 
 begin_ifndef
