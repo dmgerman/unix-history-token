@@ -1270,6 +1270,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APIC_IO
+name|acpi_SetIntrModel
+argument_list|(
+name|ACPI_INTR_APIC
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
