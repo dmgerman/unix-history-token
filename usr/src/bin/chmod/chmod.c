@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.8 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,13 @@ file|<strings.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|retval
 decl_stmt|;
@@ -106,8 +113,6 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
-name|errno
-decl_stmt|,
 name|optind
 decl_stmt|;
 specifier|register
@@ -142,10 +147,6 @@ name|fflag
 decl_stmt|,
 name|rflag
 decl_stmt|;
-name|mode_t
-name|setmode
-parameter_list|()
-function_decl|;
 name|fflag
 operator|=
 name|rflag
@@ -283,15 +284,8 @@ condition|(
 name|setmode
 argument_list|(
 name|mode
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 operator|==
-operator|(
-name|mode_t
-operator|)
 operator|-
 literal|1
 condition|)
@@ -429,25 +423,18 @@ name|oct
 condition|?
 name|omode
 else|:
-operator|(
-name|int
-operator|)
-name|setmode
+name|getmode
 argument_list|(
-name|mode
-argument_list|,
 name|p
 operator|->
 name|statb
 operator|.
 name|st_mode
-argument_list|,
-literal|0
-argument_list|)
 argument_list|)
 operator|&&
 operator|!
 name|fflag
+argument_list|)
 condition|)
 name|error
 argument_list|(
@@ -518,18 +505,11 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-operator|(
-name|int
-operator|)
-name|setmode
+name|getmode
 argument_list|(
-name|mode
-argument_list|,
 name|sb
 operator|.
 name|st_mode
-argument_list|,
-literal|0
 argument_list|)
 argument_list|)
 operator|)
