@@ -4,7 +4,7 @@ comment|/* crypto/des/speed.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@mincom.oz.au).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@mincom.oz.au)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@mincom.oz.au)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -15,23 +15,6 @@ begin_comment
 comment|/* 06-Apr-92 Luke Brennan    Support for VMS and add extra signal calls */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<config.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -41,11 +24,18 @@ argument_list|(
 name|MSDOS
 argument_list|)
 operator|&&
+operator|(
 operator|!
 name|defined
 argument_list|(
-name|WIN32
+name|VMS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DECC
+argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -65,127 +55,90 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UNISTD_H
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+include|OPENSSL_UNISTD_IO
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
+begin_decl_stmt
+name|OPENSSL_DECLARE_EXIT
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_TIME_H
-end_ifdef
-
-begin_include
+ifndef|#
+directive|ifndef
+name|_IRIX
 include|#
 directive|include
 file|<time.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SYS_TYPES_H
-end_ifdef
-
-begin_include
+name|TIMES
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIMES_H
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<sys/times.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+comment|/* Depending on the VMS version, the tms structure is perhaps defined.    The __TMS macro will show if it was.  If it wasn't defined, we should    undefine TIMES, since that tells the rest of the program how things    should be handled.				-- Richard Levitte */
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VMS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<types.h>
-end_include
-
-begin_struct
-struct|struct
-name|tms
-block|{
-name|time_t
-name|tms_utime
-decl_stmt|;
-name|time_t
-name|tms_stime
-decl_stmt|;
-name|time_t
-name|tms_uchild
-decl_stmt|;
-comment|/* I dunno...  */
-name|time_t
-name|tms_uchildsys
-decl_stmt|;
-comment|/* so these names are a guess :-) */
-block|}
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__DECC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__TMS
+argument_list|)
+undef|#
+directive|undef
+name|TIMES
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIMEB_H
+ifndef|#
+directive|ifndef
+name|TIMES
 include|#
 directive|include
 file|<sys/timeb.h>
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ultrix
+argument_list|)
+define|#
+directive|define
+name|_POSIX_SOURCE
 include|#
 directive|include
 file|<limits.h>
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_PARAM_H
 include|#
 directive|include
 file|<sys/param.h>
@@ -193,7 +146,7 @@ endif|#
 directive|endif
 include|#
 directive|include
-file|"des.h"
+file|<openssl/des.h>
 comment|/* The following if from times(3) man page.  It may need to be changed */
 ifndef|#
 directive|ifndef
@@ -203,18 +156,19 @@ directive|ifndef
 name|CLK_TCK
 ifndef|#
 directive|ifndef
-name|VMS
+name|_BSD_CLK_TCK_
+comment|/* FreeBSD fix */
 define|#
 directive|define
 name|HZ
 value|100.0
 else|#
 directive|else
-comment|/* VMS */
+comment|/* _BSD_CLK_TCK_ */
 define|#
 directive|define
 name|HZ
-value|100.0
+value|((double)_BSD_CLK_TCK_)
 endif|#
 directive|endif
 else|#
@@ -236,14 +190,8 @@ name|long
 name|run
 init|=
 literal|0
-struct|;
-end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOPROTO
-end_ifndef
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -254,23 +202,6 @@ name|s
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|double
-name|Time_F
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -289,6 +220,11 @@ operator|||
 name|defined
 argument_list|(
 name|sgi
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX
 argument_list|)
 end_if
 
@@ -316,12 +252,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOPROTO
-end_ifndef
-
 begin_function_decl
 name|SIGRETTYPE
 name|sig_done
@@ -331,33 +261,14 @@ name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|SIGRETTYPE
-name|sig_done
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|SIGRETTYPE
 name|sig_done
 parameter_list|(
-name|sig
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 name|signal
 argument_list|(
@@ -405,11 +316,9 @@ begin_function
 name|double
 name|Time_F
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|double
 name|ret
@@ -564,7 +473,7 @@ operator|)
 name|i
 operator|)
 operator|/
-literal|1000.0
+literal|1e3
 expr_stmt|;
 return|return
 operator|(
@@ -589,18 +498,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|count
@@ -730,10 +635,7 @@ endif|#
 directive|endif
 name|des_set_key
 argument_list|(
-operator|(
-name|C_Block
-operator|*
-operator|)
+operator|&
 name|key2
 argument_list|,
 name|sch2
@@ -741,10 +643,7 @@ argument_list|)
 expr_stmt|;
 name|des_set_key
 argument_list|(
-operator|(
-name|C_Block
-operator|*
-operator|)
+operator|&
 name|key3
 argument_list|,
 name|sch3
@@ -760,10 +659,7 @@ argument_list|)
 expr_stmt|;
 name|des_set_key
 argument_list|(
-operator|(
-name|C_Block
-operator|*
-operator|)
+operator|&
 name|key
 argument_list|,
 name|sch
@@ -955,10 +851,7 @@ operator|++
 control|)
 name|des_set_key
 argument_list|(
-operator|(
-name|C_Block
-operator|*
-operator|)
+operator|&
 name|key
 argument_list|,
 name|sch
@@ -1149,16 +1042,8 @@ operator|++
 control|)
 name|des_ncbc_encrypt
 argument_list|(
-operator|(
-name|C_Block
-operator|*
-operator|)
 name|buf
 argument_list|,
-operator|(
-name|C_Block
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|BUFSIZE
@@ -1171,17 +1056,8 @@ literal|0
 index|]
 operator|)
 argument_list|,
-operator|(
-name|C_Block
-operator|*
-operator|)
 operator|&
-operator|(
 name|key
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 name|DES_ENCRYPT
 argument_list|)
@@ -1273,16 +1149,8 @@ operator|++
 control|)
 name|des_ede3_cbc_encrypt
 argument_list|(
-operator|(
-name|C_Block
-operator|*
-operator|)
 name|buf
 argument_list|,
-operator|(
-name|C_Block
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|BUFSIZE
@@ -1311,17 +1179,8 @@ literal|0
 index|]
 operator|)
 argument_list|,
-operator|(
-name|C_Block
-operator|*
-operator|)
 operator|&
-operator|(
 name|key
-index|[
-literal|0
-index|]
-operator|)
 argument_list|,
 name|DES_ENCRYPT
 argument_list|)
@@ -1446,7 +1305,7 @@ name|e
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"set_key            per sec = %12.2f (%5.1fuS)\n"
+literal|"set_key            per sec = %12.2f (%9.3fuS)\n"
 argument_list|,
 name|a
 argument_list|,
@@ -1457,7 +1316,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DES raw ecb bytes  per sec = %12.2f (%5.1fuS)\n"
+literal|"DES raw ecb bytes  per sec = %12.2f (%9.3fuS)\n"
 argument_list|,
 name|b
 argument_list|,
@@ -1468,7 +1327,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DES cbc bytes      per sec = %12.2f (%5.1fuS)\n"
+literal|"DES cbc bytes      per sec = %12.2f (%9.3fuS)\n"
 argument_list|,
 name|c
 argument_list|,
@@ -1479,7 +1338,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DES ede cbc bytes  per sec = %12.2f (%5.1fuS)\n"
+literal|"DES ede cbc bytes  per sec = %12.2f (%9.3fuS)\n"
 argument_list|,
 name|d
 argument_list|,
@@ -1490,7 +1349,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"crypt              per sec = %12.2f (%5.1fuS)\n"
+literal|"crypt              per sec = %12.2f (%9.3fuS)\n"
 argument_list|,
 name|e
 argument_list|,

@@ -4,7 +4,7 @@ comment|/* crypto/des/set_key.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1997 Eric Young (eay@mincom.oz.au)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@mincom.oz.au).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@mincom.oz.au).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@mincom.oz.au)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@mincom.oz.au)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -29,45 +29,20 @@ directive|include
 file|"sk.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOPROTO
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|check_parity
-argument_list|(
-name|des_cblock
-argument_list|(
-operator|*
-name|key
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|static
 name|int
 name|check_parity
-parameter_list|()
+parameter_list|(
+name|const_des_cblock
+modifier|*
+name|key
+parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
+name|OPENSSL_GLOBAL
 name|int
 name|des_check_key
 init|=
@@ -75,23 +50,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_function
 name|void
 name|des_set_odd_parity
 parameter_list|(
+name|des_cblock
+modifier|*
 name|key
 parameter_list|)
-function_decl|des_cblock
-parameter_list|(
-function_decl|*key
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -129,26 +95,17 @@ index|]
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|int
 name|check_parity
 parameter_list|(
+name|const_des_cblock
+modifier|*
 name|key
 parameter_list|)
-function_decl|des_cblock
-parameter_list|(
-function_decl|*key
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -200,7 +157,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Weak and semi week keys as take from  * %A D.W. Davies  * %A W.L. Price  * %T Security for Computer Networks  * %I John Wiley& Sons  * %D 1984  * Many thanks to smb@ulysses.att.com (Steven Bellovin) for the reference  * (and actual cblock values).  */
@@ -268,13 +225,13 @@ literal|0x1F
 block|,
 literal|0x1F
 block|,
-literal|0x1F
+literal|0x0E
 block|,
-literal|0x1F
+literal|0x0E
 block|,
-literal|0x1F
+literal|0x0E
 block|,
-literal|0x1F
+literal|0x0E
 block|}
 block|,
 block|{
@@ -286,13 +243,13 @@ literal|0xE0
 block|,
 literal|0xE0
 block|,
-literal|0xE0
+literal|0xF1
 block|,
-literal|0xE0
+literal|0xF1
 block|,
-literal|0xE0
+literal|0xF1
 block|,
-literal|0xE0
+literal|0xF1
 block|}
 block|,
 comment|/* semi-weak keys */
@@ -515,23 +472,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_function
 name|int
 name|des_is_weak_key
 parameter_list|(
+name|const_des_cblock
+modifier|*
 name|key
 parameter_list|)
-function_decl|des_cblock
-parameter_list|(
-function_decl|*key
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -549,7 +497,7 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* Added == 0 to comparision, I obviously don't run 		 * this section very often :-(, thanks to 		 * engineering@MorningStar.Com for the fix 		 * eay 93/06/29 */
+comment|/* Added == 0 to comparision, I obviously don't run 		 * this section very often :-(, thanks to 		 * engineering@MorningStar.Com for the fix 		 * eay 93/06/29 		 * Another problem, I was comparing only the first 4 		 * bytes, 97/03/18 */
 if|if
 condition|(
 name|memcmp
@@ -563,7 +511,7 @@ name|key
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|key
+name|des_cblock
 argument_list|)
 argument_list|)
 operator|==
@@ -580,7 +528,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* NOW DEFINED IN des_local.h  * See ecb_encrypt.c for a pseudo description of these macros.   * #define PERM_OP(a,b,t,n,m) ((t)=((((a)>>(n))^(b))&(m)),\  * 	(b)^=(t),\  * 	(a)=((a)^((t)<<(n))))  */
@@ -606,31 +554,17 @@ begin_comment
 comment|/* return 0 if key parity is odd (correct),  * return -1 if key parity error,  * return -2 if illegal weak key.  */
 end_comment
 
-begin_function_decl
+begin_function
 name|int
 name|des_set_key
 parameter_list|(
+name|const_des_cblock
+modifier|*
 name|key
 parameter_list|,
-name|schedule
-parameter_list|)
-function_decl|des_cblock
-parameter_list|(
-function_decl|*key
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|des_key_schedule
 name|schedule
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -686,6 +620,7 @@ decl_stmt|,
 name|t2
 decl_stmt|;
 specifier|register
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -735,20 +670,26 @@ return|;
 block|}
 name|k
 operator|=
-operator|(
-name|DES_LONG
-operator|*
-operator|)
+operator|&
 name|schedule
+operator|->
+name|ks
+operator|.
+name|deslong
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|in
 operator|=
+operator|&
 operator|(
-name|unsigned
-name|char
 operator|*
-operator|)
 name|key
+operator|)
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|c2l
 argument_list|(
@@ -1240,33 +1181,19 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_function_decl
+begin_function
 name|int
 name|des_key_sched
 parameter_list|(
+name|const_des_cblock
+modifier|*
 name|key
 parameter_list|,
-name|schedule
-parameter_list|)
-function_decl|des_cblock
-parameter_list|(
-function_decl|*key
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|des_key_schedule
 name|schedule
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1279,7 +1206,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
