@@ -49,5 +49,32 @@ return|;
 block|}
 end_function
 
+begin_function
+name|double
+name|z_abs
+parameter_list|(
+name|z
+parameter_list|)
+name|struct
+name|complex
+modifier|*
+name|z
+decl_stmt|;
+block|{
+return|return
+name|hypot
+argument_list|(
+name|z
+operator|->
+name|x
+argument_list|,
+name|z
+operator|->
+name|y
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 
