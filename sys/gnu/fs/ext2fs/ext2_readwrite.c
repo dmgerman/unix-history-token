@@ -872,6 +872,15 @@ name|uio
 operator|->
 name|uio_procp
 expr_stmt|;
+comment|/* For p_rlimit. */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
