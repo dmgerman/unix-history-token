@@ -28,66 +28,6 @@ file|<i386/isa/icu.h>
 end_include
 
 begin_comment
-comment|/* number of busses */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NBUS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NBUS
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NBUS */
-end_comment
-
-begin_comment
-comment|/* total number of APIC INTs, including SHARED INTs */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NINTR
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NINTR
-value|48
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NINTR */
-end_comment
-
-begin_comment
 comment|/*  * Size of APIC ID list.  * Also used a MAX size of various other arrays.  */
 end_comment
 

@@ -127,7 +127,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NCPUS
+name|MAXCPU
 value|1
 end_define
 

@@ -51,76 +51,6 @@ begin_comment
 comment|/* SMP&& !APIC_IO */
 end_comment
 
-begin_comment
-comment|/* Number of CPUs. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NCPU
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NCPU
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP&& NCPU */
-end_comment
-
-begin_comment
-comment|/* Number of IO APICs. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|APIC_IO
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NAPIC
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NAPIC
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP&& NAPIC */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -534,8 +464,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
+modifier|*
 name|io_apic_versions
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,8 +1029,8 @@ specifier|extern
 specifier|volatile
 name|ioapic_t
 modifier|*
+modifier|*
 name|ioapic
-index|[]
 decl_stmt|;
 end_decl_stmt
 

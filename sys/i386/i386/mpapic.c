@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_smp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -102,10 +96,8 @@ begin_decl_stmt
 specifier|volatile
 name|ioapic_t
 modifier|*
+modifier|*
 name|ioapic
-index|[
-name|NAPIC
-index|]
 decl_stmt|;
 end_decl_stmt
 

@@ -2185,7 +2185,7 @@ name|SIMPLELOCK_DEBUG
 argument_list|)
 operator|&&
 operator|(
-name|NCPUS
+name|MAXCPU
 operator|==
 literal|1
 operator|||
@@ -2628,7 +2628,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SIMPLELOCK_DEBUG&& NCPUS == 1 */
+comment|/* SIMPLELOCK_DEBUG&& MAXCPU == 1 */
 end_comment
 
 end_unit
