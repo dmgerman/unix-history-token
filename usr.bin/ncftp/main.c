@@ -1423,7 +1423,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:V:INRHaicmup:rd:g:"
+literal|"D:V:INPRHaicmup:rd:g:"
 argument_list|)
 operator|)
 operator|>=
