@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	7.2	86/01/21	*/
+comment|/*	vd.c	7.3	86/07/16	*/
 end_comment
 
 begin_comment
-comment|/* ** Stand alone driver for the VDDC controller  **	TAHOE Version, Oct 1983. ** */
+comment|/*  * Stand alone driver for the VDDC controller   *	TAHOE Version, Oct 1983.  */
 end_comment
 
 begin_include
@@ -76,20 +76,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|VDUNIT
 parameter_list|(
 name|x
@@ -107,19 +93,11 @@ parameter_list|)
 value|(minor(x)>> 2)
 end_define
 
-begin_comment
-comment|/* **	MDCB */
-end_comment
-
 begin_decl_stmt
 name|fmt_mdcb
 name|mdcb
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* **	DCB */
-end_comment
 
 begin_decl_stmt
 name|fmt_dcb
@@ -128,11 +106,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ** Unit specific information. */
+comment|/*  * Drive specific information.  */
 end_comment
 
 begin_struct
 struct|struct
+name|dkinfo
 block|{
 name|char
 name|configured
@@ -141,7 +120,7 @@ name|fs_tab
 name|info
 decl_stmt|;
 block|}
-name|unit_info
+name|dkinfo
 index|[
 name|NVD
 index|]
@@ -152,30 +131,36 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ** Controller specific information. */
+comment|/*  * Controller specific information.  */
 end_comment
 
 begin_struct
 struct|struct
+name|vdinfo
 block|{
-name|unsigned
-name|char
-name|ctlr_type
+name|u_short
+name|vd_flags
 decl_stmt|;
+define|#
+directive|define
+name|VDF_INIT
+value|0x1
+comment|/* controller initialized */
+define|#
+directive|define
+name|VDF_BUSY
+value|0x2
+comment|/* controller running */
+name|u_short
+name|vd_type
+decl_stmt|;
+comment|/* smd or smde */
 name|char
 modifier|*
-name|ctlr_name
-decl_stmt|;
-name|unsigned
-name|char
-name|initialized
-decl_stmt|;
-name|unsigned
-name|char
-name|ctlr_started
+name|vd_name
 decl_stmt|;
 block|}
-name|ctlr_info
+name|vdinfo
 index|[
 name|NVD
 index|]
@@ -202,10 +187,6 @@ parameter_list|)
 value|((cdr *)(vddcaddr[(ctlr)]+VBIOBASE))
 end_define
 
-begin_comment
-comment|/* ** */
-end_comment
-
 begin_expr_stmt
 name|vdopen
 argument_list|(
@@ -231,9 +212,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|unit
 init|=
 name|VDUNIT
@@ -242,6 +221,11 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
+decl_stmt|;
+name|struct
+name|vdinfo
+modifier|*
+name|vd
 decl_stmt|;
 specifier|register
 name|int
@@ -259,19 +243,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vd%d: Unit number can't be greater than %x!\n"
+literal|"dk%d: invalid controller (only configured for %d vd's)\n"
 argument_list|,
 name|io
 operator|->
 name|i_unit
 argument_list|,
-operator|(
 name|NVD
-operator|*
-literal|4
-operator|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|_stop
@@ -284,25 +262,18 @@ comment|/* check file system for validity */
 if|if
 condition|(
 operator|(
-name|io
-operator|->
-name|i_boff
-operator|<
-literal|0
+name|unsigned
 operator|)
-operator|||
-operator|(
 name|io
 operator|->
 name|i_boff
 operator|>
 literal|5
-operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vd%d: File system #%d, should be less than #6.\n"
+literal|"dk%d: invalid partition number (%d)\n"
 argument_list|,
 name|io
 operator|->
@@ -319,15 +290,25 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|ctlr_info
+name|vd
+operator|=
+operator|&
+name|vdinfo
 index|[
 name|ctlr
 index|]
-operator|.
-name|initialized
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vd
+operator|->
+name|vd_flags
+operator|&
+name|VDF_INIT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|vdinit
@@ -336,28 +317,12 @@ name|io
 argument_list|)
 expr_stmt|;
 comment|/* initialize controller/drive */
-name|ctlr_info
-index|[
-name|ctlr
-index|]
-operator|.
-name|initialized
-operator|=
-name|TRUE
+name|vd
+operator|->
+name|vd_flags
+operator||=
+name|VDF_INIT
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NVD
-condition|;
-name|i
-operator|++
-control|)
 for|for
 control|(
 name|j
@@ -371,9 +336,9 @@ condition|;
 name|j
 operator|++
 control|)
-name|unit_info
+name|dkinfo
 index|[
-name|i
+name|ctlr
 index|]
 index|[
 name|j
@@ -381,13 +346,13 @@ index|]
 operator|.
 name|configured
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -403,7 +368,7 @@ argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -413,14 +378,14 @@ index|]
 operator|.
 name|configured
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 block|}
 name|io
 operator|->
 name|i_boff
 operator|=
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -441,10 +406,6 @@ name|par_start
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* ** */
-end_comment
 
 begin_expr_stmt
 name|vdinit
@@ -471,9 +432,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|unit
 init|=
 name|VDUNIT
@@ -494,9 +453,16 @@ name|ctlr
 argument_list|)
 decl_stmt|;
 specifier|register
-name|char
+name|struct
+name|vdinfo
 modifier|*
-name|ctlr_type
+name|vd
+init|=
+operator|&
+name|vdinfo
+index|[
+name|ctlr
+index|]
 decl_stmt|;
 comment|/* Check to see if controller is really there */
 if|if
@@ -511,7 +477,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vd%d: Controller %d is non-existant!\n"
+literal|"dk%d: vd%d csr doesn't respond\n"
 argument_list|,
 name|io
 operator|->
@@ -538,7 +504,6 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-comment|/* Probe further to find what kind of controller it is */
 if|if
 condition|(
 name|ctlr_addr
@@ -548,23 +513,17 @@ operator|!=
 literal|0xffffffff
 condition|)
 block|{
-name|ctlr_info
-index|[
-name|ctlr
-index|]
-operator|.
-name|ctlr_type
+name|vd
+operator|->
+name|vd_type
 operator|=
 name|SMDCTLR
 expr_stmt|;
-name|ctlr_info
-index|[
-name|ctlr
-index|]
-operator|.
-name|ctlr_name
+name|vd
+operator|->
+name|vd_name
 operator|=
-literal|"SMD"
+literal|"smd"
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -574,23 +533,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ctlr_info
-index|[
-name|ctlr
-index|]
-operator|.
-name|ctlr_type
+name|vd
+operator|->
+name|vd_type
 operator|=
 name|SMD_ECTLR
 expr_stmt|;
-name|ctlr_info
-index|[
-name|ctlr
-index|]
-operator|.
-name|ctlr_name
+name|vd
+operator|->
+name|vd_name
 operator|=
-literal|"SMD/E"
+literal|"smde"
 expr_stmt|;
 name|ctlr_addr
 operator|->
@@ -606,12 +559,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ctlr_info
-index|[
-name|ctlr
-index|]
-operator|.
-name|ctlr_type
+name|vd
+operator|->
+name|vd_type
 operator|==
 name|SMD_ECTLR
 condition|)
@@ -686,7 +636,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|,
-literal|"Initialization error"
+literal|"init error"
 argument_list|,
 name|dcb
 operator|.
@@ -723,7 +673,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|,
-literal|"Diagnostic error"
+literal|"diagnostic error"
 argument_list|,
 name|dcb
 operator|.
@@ -742,10 +692,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/* ** */
-end_comment
 
 begin_expr_stmt
 name|vdconfigure_drive
@@ -772,9 +718,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|unit
 init|=
 name|VDUNIT
@@ -788,6 +732,21 @@ specifier|register
 name|fs_tab
 modifier|*
 name|file_sys
+decl_stmt|;
+specifier|register
+name|struct
+name|dkinfo
+modifier|*
+name|dk
+init|=
+operator|&
+name|dkinfo
+index|[
+name|ctlr
+index|]
+index|[
+name|unit
+index|]
 decl_stmt|;
 name|dskadr
 name|daddr
@@ -810,14 +769,8 @@ name|i
 operator|++
 control|)
 block|{
-name|unit_info
-index|[
-name|ctlr
-index|]
-index|[
-name|unit
-index|]
-operator|.
+name|dk
+operator|->
 name|info
 operator|=
 name|vdst
@@ -827,25 +780,19 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 operator|==
 name|SMDCTLR
 condition|)
 if|if
 condition|(
-name|unit_info
-index|[
-name|ctlr
-index|]
-index|[
-name|unit
-index|]
-operator|.
+name|dk
+operator|->
 name|info
 operator|.
 name|nsec
@@ -864,14 +811,8 @@ name|daddr
 operator|.
 name|cylinder
 operator|=
-name|unit_info
-index|[
-name|ctlr
-index|]
-index|[
-name|unit
-index|]
-operator|.
+name|dk
+operator|->
 name|info
 operator|.
 name|ncyl
@@ -882,14 +823,8 @@ name|daddr
 operator|.
 name|track
 operator|=
-name|unit_info
-index|[
-name|ctlr
-index|]
-index|[
-name|unit
-index|]
-operator|.
+name|dk
+operator|->
 name|info
 operator|.
 name|ntrak
@@ -900,14 +835,8 @@ name|daddr
 operator|.
 name|sector
 operator|=
-name|unit_info
-index|[
-name|ctlr
-index|]
-index|[
-name|unit
-index|]
-operator|.
+name|dk
+operator|->
 name|info
 operator|.
 name|nsec
@@ -924,21 +853,14 @@ name|io
 operator|->
 name|i_cc
 operator|=
-name|unit_info
-index|[
-name|ctlr
-index|]
-index|[
-name|unit
-index|]
-operator|.
+name|dk
+operator|->
 name|info
 operator|.
 name|secsize
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|vdaccess
 argument_list|(
@@ -952,20 +874,18 @@ argument_list|)
 operator|&
 name|HRDERR
 operator|)
+operator|==
+literal|0
 condition|)
 return|return;
 block|}
 name|printf
 argument_list|(
-literal|"vd%d: Unrecognizable drive; controller %d, unit %d!\n"
+literal|"dk%d: unknown drive type\n"
 argument_list|,
 name|io
 operator|->
 name|i_unit
-argument_list|,
-name|ctlr
-argument_list|,
-name|unit
 argument_list|)
 expr_stmt|;
 name|_stop
@@ -975,10 +895,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* ** */
-end_comment
 
 begin_expr_stmt
 name|vdstart_drive
@@ -1005,9 +921,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|unit
 init|=
 name|VDUNIT
@@ -1017,9 +931,8 @@ operator|->
 name|i_unit
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
-name|io_unit_save
+name|ounit
 init|=
 name|io
 operator|->
@@ -1027,12 +940,14 @@ name|i_unit
 decl_stmt|;
 if|if
 condition|(
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_started
+name|vd_flags
+operator|&
+name|VDF_BUSY
 condition|)
 block|{
 name|DELAY
@@ -1040,9 +955,7 @@ argument_list|(
 literal|5500000
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
+return|return;
 block|}
 name|io
 operator|->
@@ -1079,7 +992,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|,
-literal|"Start error"
+literal|"start error"
 argument_list|,
 name|dcb
 operator|.
@@ -1096,20 +1009,20 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_started
-operator|=
-name|TRUE
+name|vd_flags
+operator||=
+name|VDF_BUSY
 expr_stmt|;
 name|io
 operator|->
 name|i_unit
 operator|=
-name|io_unit_save
+name|ounit
 expr_stmt|;
 name|DELAY
 argument_list|(
@@ -1122,14 +1035,11 @@ operator|+
 literal|62000000
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 end_block
 
 begin_comment
-comment|/* **  This routine actually configures a particular drive. ** **  If the controller is an SMD/E controller then the number of sectors per **  track is loaded into the appropriate register, otherwise it is left  **  alone because the old SMD controller requires a constant 32 sectors **  per track for it's drives. (an error would be returned if the value is **  loaded.) ** **  In the stand-alone spirit of things the system is halted if an error **  occurs during this operation. */
+comment|/*  * This routine actually configures a particular drive.  *  * If the controller is an SMD/E controller then the number of sectors per  * track is loaded into the appropriate register, otherwise it is left   * alone because the old SMD controller requires a constant 32 sectors  * per track for it's drives. (an error would be returned if the value is  * loaded.)  */
 end_comment
 
 begin_expr_stmt
@@ -1165,9 +1075,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|unit
 init|=
 name|VDUNIT
@@ -1234,7 +1142,7 @@ name|rstrail
 operator|.
 name|ncyl
 operator|=
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -1254,7 +1162,7 @@ name|rstrail
 operator|.
 name|nsurfaces
 operator|=
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -1268,12 +1176,12 @@ name|ntrak
 expr_stmt|;
 if|if
 condition|(
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 operator|==
 name|SMD_ECTLR
 condition|)
@@ -1295,7 +1203,7 @@ name|rstrail
 operator|.
 name|nsectors
 operator|=
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -1315,7 +1223,7 @@ name|rstrail
 operator|.
 name|slip_sec
 operator|=
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -1358,12 +1266,12 @@ argument_list|,
 operator|&
 name|mdcb
 argument_list|,
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -1376,14 +1284,14 @@ argument_list|,
 operator|&
 name|dcb
 argument_list|,
-literal|5
+literal|10
 argument_list|,
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 argument_list|)
 condition|)
 name|_stop
@@ -1393,6 +1301,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|dcb
 operator|.
 name|operrsta
@@ -1402,9 +1311,8 @@ name|NOTCYLERR
 operator||
 name|DRVNRDY
 operator|)
-condition|)
-if|if
-condition|(
+operator|)
+operator|&&
 operator|!
 name|pass
 condition|)
@@ -1437,7 +1345,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|,
-literal|"Configuration error"
+literal|"configuration error"
 argument_list|,
 name|dcb
 operator|.
@@ -1458,7 +1366,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* **  Strategy is called to the actual I/O to the disk drives. ** **  Some simple checks are made to make sure we don't do anything rediculus, **  If everything is sane then the request is issued. ** **  If no errors occured then the original byte count is returned, **  otherwise -1 is returned to indicate an error occured. */
+comment|/*  * Strategy is called to do the actual I/O to the disk drives.  *  * Some simple checks are made to make sure we don't do anything rediculus,  * If everything is sane then the request is issued.  *  * If no errors occured then the original byte count is returned,  * otherwise -1 is returned to indicate an error occured.  */
 end_comment
 
 begin_expr_stmt
@@ -1498,9 +1406,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|unit
 init|=
 name|VDUNIT
@@ -1516,7 +1422,7 @@ modifier|*
 name|u_info
 init|=
 operator|&
-name|unit_info
+name|dkinfo
 index|[
 name|ctlr
 index|]
@@ -1551,25 +1457,33 @@ operator|->
 name|i_cc
 operator|==
 literal|0
-condition|)
-name|_stop
-argument_list|(
-literal|"vd: Can't transfer zero length records!\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|io
 operator|->
 name|i_cc
 operator|>
-literal|0xffff
+literal|65535
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"vd: Can't transfer greater than 2 to the 16th bytes!\n"
+literal|"dk%d: invalid transfer size %d\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
+argument_list|,
+name|io
+operator|->
+name|i_cc
 argument_list|)
 expr_stmt|;
+name|_stop
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 name|blk
 operator|=
 name|io
@@ -1645,7 +1559,7 @@ name|io
 operator|->
 name|i_unit
 argument_list|,
-literal|"I/O error"
+literal|"i/o error"
 argument_list|,
 name|dcb
 operator|.
@@ -1680,9 +1594,104 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* ** */
-end_comment
+begin_struct
+struct|struct
+name|vdstatus
+block|{
+name|int
+name|bit
+decl_stmt|;
+name|char
+modifier|*
+name|meaning
+decl_stmt|;
+block|}
+name|vdstatus
+index|[]
+init|=
+block|{
+block|{
+name|DRVNRDY
+block|,
+literal|"drive not ready"
+block|}
+block|,
+block|{
+name|INVDADR
+block|,
+literal|"invalid disk address"
+block|}
+block|,
+block|{
+name|DNEMEM
+block|,
+literal|"non-existent memory"
+block|}
+block|,
+block|{
+name|PARERR
+block|,
+literal|"parity error"
+block|}
+block|,
+block|{
+name|OPABRT
+block|,
+literal|"operation aborted"
+block|}
+block|,
+block|{
+name|WPTERR
+block|,
+literal|"drive write protect"
+block|}
+block|,
+block|{
+name|DSEEKERR
+block|,
+literal|"seek error"
+block|}
+block|,
+block|{
+name|UCDATERR
+block|,
+literal|"uncorrectable data error"
+block|}
+block|,
+block|{
+name|CTLRERR
+block|,
+literal|"controller error"
+block|}
+block|,
+block|{
+name|NOTCYLERR
+block|,
+literal|"not on cylinder"
+block|}
+block|,
+block|{
+name|INVCMD
+block|,
+literal|"invalid controller command"
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+literal|"controller error"
+block|}
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NVDSTATUS
+value|(sizeof (vdstatus) / sizeof (vdstatus[0]))
+end_define
 
 begin_macro
 name|vdprint_error
@@ -1711,181 +1720,80 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|u_long
 name|status
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|u_long
 name|smde_status
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|vdstatus
+modifier|*
+name|sp
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"vd%d: %s; "
+literal|"dk%d: %s; "
 argument_list|,
 name|unit
 argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|sp
+operator|=
+name|vdstatus
+init|;
+name|sp
+operator|<
+operator|&
+name|vdstatus
+index|[
+name|NVDSTATUS
+index|]
+condition|;
+name|sp
+operator|++
+control|)
 if|if
 condition|(
 name|status
 operator|&
-name|DRVNRDY
+name|sp
+operator|->
+name|bit
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"Drive is not ready"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|INVDADR
-condition|)
-name|printf
-argument_list|(
-literal|"Invalid disk address issued"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DNEMEM
-condition|)
-name|printf
-argument_list|(
-literal|"Non-existent memory error"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|PARERR
-condition|)
-name|printf
-argument_list|(
-literal|"Main memory parity error"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|OPABRT
-condition|)
-name|printf
-argument_list|(
-literal|"Program aborted operation"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|WPTERR
-condition|)
-name|printf
-argument_list|(
-literal|"Drive is write protected"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|DSEEKERR
-condition|)
-name|printf
-argument_list|(
-literal|"Disk seek error"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|UCDATERR
-condition|)
-name|printf
-argument_list|(
-literal|"Uncorrectable data error"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|CTLRERR
-condition|)
-name|printf
-argument_list|(
-literal|"Controller faulted"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|NOTCYLERR
-condition|)
-name|printf
-argument_list|(
-literal|"Not on cylinder error"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|status
-operator|&
-name|INVCMD
-condition|)
-name|printf
-argument_list|(
-literal|"Invalid command issued to controller"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Controller error"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"!  Status = 0x%x"
+literal|"%s. status %x"
+argument_list|,
+name|sp
+operator|->
+name|meaning
 argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|smde_status
 condition|)
 name|printf
 argument_list|(
-literal|"  Error code = %x"
+literal|", code %x"
 argument_list|,
 name|smde_status
 argument_list|)
@@ -1897,10 +1805,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* ** */
-end_comment
 
 begin_expr_stmt
 name|vdaccess_with_no_trailer
@@ -2024,12 +1928,12 @@ argument_list|,
 operator|&
 name|mdcb
 argument_list|,
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -2044,12 +1948,12 @@ name|dcb
 argument_list|,
 name|time
 argument_list|,
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 argument_list|)
 condition|)
 name|_stop
@@ -2064,10 +1968,6 @@ name|operrsta
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* ** */
-end_comment
 
 begin_expr_stmt
 name|vdaccess
@@ -2282,12 +2182,12 @@ argument_list|,
 operator|&
 name|mdcb
 argument_list|,
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -2302,29 +2202,31 @@ name|dcb
 argument_list|,
 literal|60
 argument_list|,
-name|ctlr_info
+name|vdinfo
 index|[
 name|ctlr
 index|]
 operator|.
-name|ctlr_type
+name|vd_type
 argument_list|)
 condition|)
 name|_stop
 argument_list|(
-literal|" during I/O operation.\n"
+literal|" during i/o operation.\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|dcb
 operator|.
 name|operrsta
+operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/* **	Print_dcb() dumps the MDCB and DCB for diagnostic purposes.  This ** routine is called whenever a fatal error is encountered. */
+comment|/*  * Dump the MDCB and DCB for diagnostic purposes.  This  * routine is called whenever a fatal error is encountered.  */
 end_comment
 
 begin_expr_stmt
@@ -2344,39 +2246,32 @@ block|{
 specifier|register
 name|long
 name|i
-decl_stmt|;
-specifier|register
-name|long
+decl_stmt|,
 name|trailer_count
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Dump of MDCB: "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"  %lx"
+literal|"mdcb: %lx %lx %lx %lx\n"
 argument_list|,
-operator|*
-operator|(
 name|ptr
-operator|+
-name|i
-operator|)
+index|[
+literal|0
+index|]
+argument_list|,
+name|ptr
+index|[
+literal|1
+index|]
+argument_list|,
+name|ptr
+index|[
+literal|2
+index|]
+argument_list|,
+name|ptr
+index|[
+literal|3
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -2393,17 +2288,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" and DCB:"
+literal|"dcb:"
 argument_list|)
 expr_stmt|;
 name|trailer_count
 operator|=
-operator|*
-operator|(
 name|ptr
-operator|+
+index|[
 literal|3
-operator|)
+index|]
 operator|&
 literal|0xff
 expr_stmt|;
@@ -2425,21 +2318,21 @@ control|)
 block|{
 name|uncache
 argument_list|(
+operator|&
 name|ptr
-operator|+
+index|[
 name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"  %lx"
 argument_list|,
-operator|*
-operator|(
 name|ptr
-operator|+
+index|[
 name|i
-operator|)
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -2449,20 +2342,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
+name|DELAY
+argument_list|(
 literal|5000000
-condition|;
-name|i
-operator|++
-control|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
