@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: eval.c,v 1.15 1998/05/18 06:43:34 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3290,12 +3290,16 @@ operator|==
 name|CMDNORMAL
 operator|&&
 operator|(
+operator|(
 name|flags
 operator|&
 name|EV_EXIT
 operator|)
 operator|==
 literal|0
+operator|||
+name|Tflag
+operator|)
 operator|)
 operator|||
 operator|(
