@@ -389,7 +389,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|dp
 operator|->
