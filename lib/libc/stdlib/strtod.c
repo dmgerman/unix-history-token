@@ -121,6 +121,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6448,6 +6454,17 @@ block|,
 operator|*
 name|delta
 block|;
+name|char
+name|decimal_point
+operator|=
+name|localeconv
+argument_list|()
+operator|->
+name|decimal_point
+index|[
+literal|0
+index|]
+block|;
 name|sign
 operator|=
 name|nz0
@@ -6652,9 +6669,12 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+operator|(
+name|char
+operator|)
 name|c
 operator|==
-literal|'.'
+name|decimal_point
 condition|)
 block|{
 name|c
