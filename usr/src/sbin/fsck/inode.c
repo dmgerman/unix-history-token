@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.24 (Berkeley) %G%"
+literal|"@(#)inode.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2436,7 +2436,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|devname
+name|cdevname
 argument_list|)
 expr_stmt|;
 name|printf

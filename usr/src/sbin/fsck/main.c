@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.33 (Berkeley) %G%"
+literal|"@(#)main.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -695,7 +695,7 @@ argument_list|,
 name|voidquit
 argument_list|)
 expr_stmt|;
-name|devname
+name|cdevname
 operator|=
 name|filesys
 expr_stmt|;

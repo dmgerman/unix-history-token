@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.42 (Berkeley) %G%"
+literal|"@(#)setup.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2316,7 +2316,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|devname
+name|cdevname
 argument_list|)
 expr_stmt|;
 name|pfatal

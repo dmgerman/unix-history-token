@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.36 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2749,7 +2749,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|devname
+name|cdevname
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2772,7 +2772,7 @@ name|printf
 argument_list|(
 literal|"%s: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.\n"
 argument_list|,
-name|devname
+name|cdevname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2839,7 +2839,7 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|devname
+name|cdevname
 argument_list|)
 expr_stmt|;
 name|printf
