@@ -372,28 +372,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cp
 condition|)
 block|{
-name|msgConfirm
-argument_list|(
-literal|"The %s device is not configured.  You will need to do so\n"
-literal|"in the Networking configuration menu before proceeding."
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-elseif|else
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|cp
@@ -401,9 +384,7 @@ argument_list|,
 literal|"DHCP"
 argument_list|)
 condition|)
-goto|goto
-name|bail
-goto|;
+block|{
 name|msgDebug
 argument_list|(
 literal|"ifconfig %s %s"
@@ -489,8 +470,42 @@ name|rp
 argument_list|)
 expr_stmt|;
 block|}
-name|bail
-label|:
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_IPV6ADDR
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"The %s device is not configured.  You will need to do so\n"
+literal|"in the Networking configuration menu before proceeding."
+argument_list|,
+name|dev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 if|if
 condition|(
 name|isDebug

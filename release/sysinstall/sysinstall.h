@@ -513,6 +513,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_IPV6_ENABLE
+value|"ipv6_enable"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_IPV6ADDR
+value|"ipv6addr"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_KEYMAP
 value|"keymap"
 end_define
@@ -816,6 +830,13 @@ define|#
 directive|define
 name|VAR_TRY_DHCP
 value|"tryDHCP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_TRY_RTSOL
+value|"tryRTSOL"
 end_define
 
 begin_define
@@ -1571,6 +1592,9 @@ typedef|typedef
 struct|struct
 name|_devPriv
 block|{
+name|int
+name|use_rtsol
+decl_stmt|;
 name|int
 name|use_dhcp
 decl_stmt|;
