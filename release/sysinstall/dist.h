@@ -144,7 +144,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20 | DIST_COMPAT21)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
 end_define
 
 begin_define
