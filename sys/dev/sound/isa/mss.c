@@ -5695,6 +5695,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|id
+operator|==
+literal|0x0000a865
+condition|)
+name|s
+operator|=
+literal|"Yamaha YMF719 OPL-SA3"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|vend_id
 operator|==
 literal|0x8140d315
@@ -5841,6 +5852,10 @@ if|if
 condition|(
 name|vend_id
 operator|==
+literal|0x0008a865
+operator|||
+name|vend_id
+operator|==
 literal|0x2000a865
 operator|||
 name|vend_id
@@ -5978,6 +5993,10 @@ case|case
 literal|0x3000a865
 case|:
 comment|/* Yamaha SA3 */
+case|case
+literal|0x0000a865
+case|:
+comment|/* Yamaha YMF719 */
 name|dev
 operator|->
 name|id_iobase
