@@ -77,11 +77,24 @@ directive|include
 file|<sys/callout.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|502113
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/kdb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -7113,11 +7126,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|502113
+name|Debugger
+argument_list|(
+literal|"ntoskrnl_debugger(): breakpoint"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|kdb_enter
 argument_list|(
 literal|"ntoskrnl_debugger(): breakpoint"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
