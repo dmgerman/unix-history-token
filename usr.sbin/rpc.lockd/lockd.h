@@ -37,5 +37,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|pid_t
+name|client_request
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsm_state
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|pid_t
+name|client_pid
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

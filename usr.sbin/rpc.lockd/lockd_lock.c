@@ -669,7 +669,7 @@ operator|&
 name|LOCK_V4
 operator|)
 condition|?
-name|nlm4_denied_nolock
+name|nlm4_denied_nolocks
 else|:
 name|nlm_denied_nolocks
 return|;
@@ -831,7 +831,7 @@ operator|&
 name|LOCK_V4
 operator|)
 condition|?
-name|nlm4_denied_nolock
+name|nlm4_denied_nolocks
 else|:
 name|nlm_denied_nolocks
 return|;
@@ -976,7 +976,7 @@ operator|&
 name|LOCK_V4
 operator|)
 condition|?
-name|nlm4_denied_nolock
+name|nlm4_denied_nolocks
 else|:
 name|nlm_denied_nolocks
 return|;
@@ -2260,7 +2260,7 @@ operator|&
 name|LOCK_V4
 operator|)
 condition|?
-name|nlm4_denied_nolock
+name|nlm4_denied_nolocks
 else|:
 name|nlm_denied_nolocks
 return|;

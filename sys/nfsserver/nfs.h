@@ -1272,6 +1272,13 @@ name|NFSSVC_MNTD
 value|0x100
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSSVC_LOCKDANS
+value|0x200
+end_define
+
 begin_comment
 comment|/*  * fs.nfs sysctl(3) identifiers  */
 end_comment

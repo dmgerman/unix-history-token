@@ -27,6 +27,14 @@ name|vop_advlock_args
 struct_decl|;
 end_struct_decl
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_LOCKF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The lockf structure is a kernel structure which contains the information  * associated with a byte range lock.  The lockf structures are linked into  * the inode structure. Locks are sorted by the starting byte of the lock for  * efficiency.  */
 end_comment

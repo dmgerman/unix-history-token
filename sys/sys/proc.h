@@ -318,6 +318,12 @@ name|ithd
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|nlminfo
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|proc
@@ -676,6 +682,12 @@ argument_list|)
 name|p_contested
 expr_stmt|;
 comment|/* (j) Contested locks. */
+name|struct
+name|nlminfo
+modifier|*
+name|p_nlminfo
+decl_stmt|;
+comment|/* (?) only used by/for lockd */
 name|void
 modifier|*
 name|p_aioinfo
