@@ -2655,6 +2655,7 @@ operator|*
 operator|)
 name|sin6
 argument_list|,
+operator|&
 name|thread0
 argument_list|)
 condition|)
@@ -2864,6 +2865,7 @@ operator|*
 operator|)
 name|sin
 argument_list|,
+operator|&
 name|thread0
 argument_list|)
 condition|)

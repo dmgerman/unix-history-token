@@ -2235,12 +2235,13 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* aiocbe is going away, we need to destroy any knotes */
+comment|/* XXXKSE Note the thread here is used to eventually find the  	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maybe the running thread?) 	 * There is a semantic problem here...  	 */
 name|knote_remove
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|,
 operator|&
 name|aiocbe
@@ -2249,7 +2250,6 @@ name|klist
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-comment|/* XXXKSE Note the thread here is used to eventually find the  	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maby the running thread?) 	 * There is a semantic problem here...  	 */
 if|if
 condition|(
 operator|(
@@ -4103,10 +4103,10 @@ expr_stmt|;
 comment|/* Activate the new mapping. */
 name|pmap_activate
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|mycp
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 				 * If the old address space wasn't the daemons 				 * own address space, then we need to remove the 				 * daemon's reference from the other process 				 * that it was acting on behalf of. 				 */
@@ -4488,10 +4488,10 @@ expr_stmt|;
 comment|/* Activate the daemon's address space. */
 name|pmap_activate
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|mycp
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#

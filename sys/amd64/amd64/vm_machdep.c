@@ -363,6 +363,8 @@ name|td1
 parameter_list|,
 name|p2
 parameter_list|,
+name|td2
+parameter_list|,
 name|flags
 parameter_list|)
 specifier|register
@@ -377,6 +379,11 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td2
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -386,11 +393,6 @@ name|struct
 name|proc
 modifier|*
 name|p1
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td2
 decl_stmt|;
 name|struct
 name|pcb
@@ -415,13 +417,6 @@ operator|=
 name|td1
 operator|->
 name|td_proc
-expr_stmt|;
-name|td2
-operator|=
-operator|&
-name|p2
-operator|->
-name|p_thread
 expr_stmt|;
 if|if
 condition|(

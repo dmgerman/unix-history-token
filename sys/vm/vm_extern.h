@@ -618,6 +618,10 @@ expr|struct
 name|proc
 operator|*
 operator|,
+expr|struct
+name|thread
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)

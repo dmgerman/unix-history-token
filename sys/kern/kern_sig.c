@@ -6094,10 +6094,10 @@ comment|/* 	 * bring the priority of a process up if we want it to get  	 * kill
 comment|/* XXXKSE 	 * For now there is one thread per proc. 	 * Effectively select one sucker thread.. 	 */
 name|td
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
@@ -6568,10 +6568,8 @@ else|else
 block|{
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_thread
-operator|.
 name|td_wchan
 operator|==
 name|NULL

@@ -3566,6 +3566,19 @@ name|proc_linkup
 argument_list|(
 operator|&
 name|proc0
+argument_list|,
+operator|&
+name|proc0
+operator|.
+name|p_ksegrp
+argument_list|,
+operator|&
+name|proc0
+operator|.
+name|p_kse
+argument_list|,
+operator|&
+name|thread0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Init mapping for u page(s) for proc 0 	 */
@@ -3599,20 +3612,13 @@ operator|=
 name|proc0uarea
 expr_stmt|;
 name|thread0
-operator|=
-operator|&
-name|proc0
 operator|.
-name|p_thread
-expr_stmt|;
-name|thread0
-operator|->
 name|td_kstack
 operator|=
 name|proc0kstack
 expr_stmt|;
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|=
 operator|(
@@ -3622,7 +3628,7 @@ operator|*
 operator|)
 operator|(
 name|thread0
-operator|->
+operator|.
 name|td_kstack
 operator|+
 name|KSTACK_PAGES
@@ -3687,7 +3693,7 @@ ifdef|#
 directive|ifdef
 name|SMP
 name|thread0
-operator|->
+operator|.
 name|td_md
 operator|.
 name|md_kernnest
@@ -3728,7 +3734,7 @@ argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the rest of proc 0's PCB, and cache its physical 	 * address. 	 */
 name|thread0
-operator|->
+operator|.
 name|td_md
 operator|.
 name|md_pcbpaddr
@@ -3744,13 +3750,13 @@ operator|(
 name|vm_offset_t
 operator|)
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the kernel sp, reserving space for an (empty) trapframe, 	 * and make proc0's trapframe pointer point to it for sanity. 	 */
 name|thread0
-operator|->
+operator|.
 name|td_frame
 operator|=
 operator|(
@@ -3759,13 +3765,13 @@ name|trapframe
 operator|*
 operator|)
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|-
 literal|1
 expr_stmt|;
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_hw
@@ -3776,7 +3782,7 @@ operator|(
 name|u_int64_t
 operator|)
 name|thread0
-operator|->
+operator|.
 name|td_frame
 expr_stmt|;
 comment|/* Setup curthread so that mutexes work */
@@ -3784,6 +3790,7 @@ name|PCPU_SET
 argument_list|(
 name|curthread
 argument_list|,
+operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
@@ -3791,7 +3798,7 @@ name|LIST_INIT
 argument_list|(
 operator|&
 name|thread0
-operator|->
+operator|.
 name|td_contested
 argument_list|)
 expr_stmt|;
@@ -9654,7 +9661,7 @@ operator|.
 name|apcb_ptbr
 operator|=
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_hw

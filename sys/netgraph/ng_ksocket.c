@@ -2454,6 +2454,7 @@ name|curthread
 condition|?
 name|curthread
 else|:
+operator|&
 name|thread0
 decl_stmt|;
 comment|/* XXX broken */
@@ -2886,6 +2887,7 @@ name|curthread
 condition|?
 name|curthread
 else|:
+operator|&
 name|thread0
 decl_stmt|;
 comment|/* XXX broken */
@@ -3924,6 +3926,7 @@ name|curthread
 condition|?
 name|curthread
 else|:
+operator|&
 name|thread0
 decl_stmt|;
 comment|/* XXX broken */

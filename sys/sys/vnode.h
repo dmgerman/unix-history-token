@@ -2324,7 +2324,7 @@ parameter_list|,
 name|rfb
 parameter_list|)
 define|\
-value|vn_fullpath(&(p)->p_thread, (p)->p_textvp, rb, rfb)
+value|vn_fullpath(FIRST_THREAD_IN_PROC(p), (p)->p_textvp, rb, rfb)
 end_define
 
 begin_decl_stmt

@@ -1794,6 +1794,19 @@ name|proc_linkup
 argument_list|(
 operator|&
 name|proc0
+argument_list|,
+operator|&
+name|proc0
+operator|.
+name|p_ksegrp
+argument_list|,
+operator|&
+name|proc0
+operator|.
+name|p_kse
+argument_list|,
+operator|&
+name|thread0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1838,17 +1851,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|thread0
-operator|=
-operator|&
-name|proc0
 operator|.
-name|p_thread
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|thread0
-operator|->
 name|td_kstack
 operator|=
 name|proc0kstack
@@ -1857,7 +1860,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|=
 operator|(
@@ -1867,7 +1870,7 @@ operator|*
 operator|)
 operator|(
 name|thread0
-operator|->
+operator|.
 name|td_kstack
 operator|+
 name|KSTACK_PAGES
@@ -1947,6 +1950,7 @@ name|PCPU_SET
 argument_list|(
 name|curthread
 argument_list|,
+operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
@@ -1957,7 +1961,7 @@ name|LIST_INIT
 argument_list|(
 operator|&
 name|thread0
-operator|->
+operator|.
 name|td_contested
 argument_list|)
 expr_stmt|;
@@ -2547,7 +2551,7 @@ end_comment
 
 begin_expr_stmt
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_flags
@@ -2562,7 +2566,7 @@ end_comment
 
 begin_expr_stmt
 name|thread0
-operator|->
+operator|.
 name|td_frame
 operator|=
 operator|&

@@ -339,7 +339,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|mtx_lock_spin(&sched_lock); 		p->p_step = 0; 		if (p->p_stat == SSTOP) { 			p->p_xstat = sig; 			setrunnable(&p->p_thread); 			mtx_unlock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			if (sig) 				psignal(p, sig); 		}
+block|mtx_lock_spin(&sched_lock); 		p->p_step = 0; 		if (p->p_stat == SSTOP) { 			p->p_xstat = sig; 			setrunnable(FIRST_THREAD_IN_PROC(p)); 			mtx_unlock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			if (sig) 				psignal(p, sig); 		}
 else|#
 directive|else
 if|if

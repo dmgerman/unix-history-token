@@ -675,10 +675,10 @@ name|FIX_SSTEP
 comment|/* 	 * do single-step fixup if needed 	 */
 name|FIX_SSTEP
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -845,7 +845,7 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX for CTL_WAIT below ? */
 break|break;
-comment|/* 	 * Step.  Let the target process execute a single instruction. 	 */
+comment|/* 	 * Step.  Let the target process execute a single instruction. 	 * What does it mean to single step a threaded program?  	 */
 case|case
 name|PROCFS_CTL_STEP
 case|:
@@ -858,10 +858,10 @@ name|error
 operator|=
 name|proc_sstep
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -1098,10 +1098,10 @@ name|SSTOP
 condition|)
 name|setrunnable
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -1319,6 +1319,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* This is very broken XXXKSE */
 if|if
 condition|(
 name|TRACE_WAIT_P
@@ -1344,10 +1345,10 @@ directive|ifdef
 name|FIX_SSTEP
 name|FIX_SSTEP
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -1355,10 +1356,10 @@ endif|#
 directive|endif
 name|setrunnable
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */

@@ -219,15 +219,15 @@ name|proc
 modifier|*
 name|p2
 parameter_list|,
-name|int
-name|flags
-parameter_list|)
-block|{
 name|struct
 name|thread
 modifier|*
 name|td2
-decl_stmt|;
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
 name|struct
 name|md_utrap
 modifier|*
@@ -256,6 +256,7 @@ name|curthread
 operator|||
 name|td1
 operator|==
+operator|&
 name|thread0
 argument_list|,
 operator|(
@@ -302,13 +303,6 @@ operator|.
 name|md_utrap
 operator|=
 name|ut
-expr_stmt|;
-name|td2
-operator|=
-operator|&
-name|p2
-operator|->
-name|p_thread
 expr_stmt|;
 comment|/* The pcb must be aligned on a 64-byte boundary. */
 name|pcb

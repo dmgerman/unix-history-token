@@ -933,6 +933,7 @@ argument_list|)
 expr_stmt|;
 name|sync
 argument_list|(
+operator|&
 name|thread0
 argument_list|,
 name|NULL
@@ -1054,6 +1055,7 @@ name|nbusy
 expr_stmt|;
 name|sync
 argument_list|(
+operator|&
 name|thread0
 argument_list|,
 name|NULL
@@ -1089,11 +1091,6 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-name|setrunqueue
-argument_list|(
-name|curthread
 argument_list|)
 expr_stmt|;
 name|curthread

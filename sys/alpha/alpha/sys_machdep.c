@@ -713,12 +713,13 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE which threads? */
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
 operator|->
 name|p_pptr
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_md
 operator|.
 name|md_flags
@@ -726,12 +727,13 @@ operator|&=
 operator|~
 name|MDP_UAC_MASK
 expr_stmt|;
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
 operator|->
 name|p_pptr
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_md
 operator|.
 name|md_flags
@@ -818,12 +820,13 @@ expr_stmt|;
 comment|/* XXXKSE which threads? */
 name|uac
 operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
 operator|->
 name|p_pptr
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_md
 operator|.
 name|md_flags

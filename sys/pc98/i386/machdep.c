@@ -7536,6 +7536,19 @@ name|proc_linkup
 argument_list|(
 operator|&
 name|proc0
+argument_list|,
+operator|&
+name|proc0
+operator|.
+name|p_ksegrp
+argument_list|,
+operator|&
+name|proc0
+operator|.
+name|p_kse
+argument_list|,
+operator|&
+name|thread0
 argument_list|)
 expr_stmt|;
 name|proc0
@@ -7545,20 +7558,13 @@ operator|=
 name|proc0uarea
 expr_stmt|;
 name|thread0
-operator|=
-operator|&
-name|proc0
 operator|.
-name|p_thread
-expr_stmt|;
-name|thread0
-operator|->
 name|td_kstack
 operator|=
 name|proc0kstack
 expr_stmt|;
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|=
 operator|(
@@ -7568,7 +7574,7 @@ operator|*
 operator|)
 operator|(
 name|thread0
-operator|->
+operator|.
 name|td_kstack
 operator|+
 name|KSTACK_PAGES
@@ -7878,6 +7884,7 @@ name|PCPU_SET
 argument_list|(
 name|curthread
 argument_list|,
+operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
@@ -7885,7 +7892,7 @@ name|LIST_INIT
 argument_list|(
 operator|&
 name|thread0
-operator|->
+operator|.
 name|td_contested
 argument_list|)
 expr_stmt|;
@@ -8663,7 +8670,7 @@ operator|.
 name|tss_esp0
 argument_list|,
 name|thread0
-operator|->
+operator|.
 name|td_kstack
 operator|+
 name|KSTACK_PAGES
@@ -9045,7 +9052,7 @@ argument_list|)
 expr_stmt|;
 comment|/* setup proc 0's pcb */
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_flags
@@ -9054,7 +9061,7 @@ literal|0
 expr_stmt|;
 comment|/* XXXKSE */
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_cr3
@@ -9065,7 +9072,7 @@ operator|)
 name|IdlePTD
 expr_stmt|;
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_ext
@@ -9073,7 +9080,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|thread0
-operator|->
+operator|.
 name|td_frame
 operator|=
 operator|&

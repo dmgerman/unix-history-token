@@ -2873,11 +2873,12 @@ name|thread
 modifier|*
 name|td
 init|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 decl_stmt|;
+comment|/* XXXKSE Only one? */
 name|char
 modifier|*
 name|nbuf

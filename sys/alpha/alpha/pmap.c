@@ -1790,7 +1790,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up proc0's PCB such that the ptbr points to the right place 	 * and has the kernel pmap's. 	 */
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_hw
@@ -1808,7 +1808,7 @@ operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_hw

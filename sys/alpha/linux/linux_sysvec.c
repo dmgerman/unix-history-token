@@ -734,12 +734,12 @@ name|NULL
 decl_stmt|;
 name|linux_emul_find
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|imgp
 operator|->
 name|proc
-operator|->
-name|p_thread
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,

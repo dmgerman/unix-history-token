@@ -11659,6 +11659,11 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 if|if
 condition|(
 name|ttycheckoutq
@@ -11804,6 +11809,13 @@ name|pick
 operator|=
 name|p
 expr_stmt|;
+name|td
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|pick
+argument_list|)
+expr_stmt|;
 name|stmp
 operator|=
 name|pick
@@ -11815,16 +11827,12 @@ condition|?
 literal|"running"
 else|:
 comment|/* XXXKSE */
-name|pick
+name|td
 operator|->
-name|p_thread
-operator|.
 name|td_wmesg
 condition|?
-name|pick
+name|td
 operator|->
-name|p_thread
-operator|.
 name|td_wmesg
 else|:
 literal|"iowait"

@@ -402,10 +402,10 @@ goto|;
 block|}
 name|targettd
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|targetp
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 block|}
@@ -570,10 +570,10 @@ goto|;
 block|}
 name|targettd
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|targetp
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 block|}
@@ -780,10 +780,10 @@ goto|;
 block|}
 name|targettd
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|targetp
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 block|}
@@ -948,10 +948,10 @@ goto|;
 block|}
 name|targettd
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|targetp
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 block|}
@@ -1280,10 +1280,10 @@ goto|;
 block|}
 name|targettd
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|targetp
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 block|}

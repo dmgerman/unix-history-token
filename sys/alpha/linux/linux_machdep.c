@@ -675,10 +675,11 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p2
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_pcb
 operator|->
 name|pcb_hw
@@ -741,10 +742,10 @@ name|SRUN
 expr_stmt|;
 name|setrunqueue
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p2
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

@@ -226,7 +226,6 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|thread
-modifier|*
 name|thread0
 decl_stmt|;
 end_decl_stmt
@@ -1017,9 +1016,18 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
+name|struct
+name|kse
+modifier|*
+name|ke
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
-comment|/* 	 * This assumes the proc0 struct has already been linked 	 * using proc_linkup() in the machine specific initialisation 	 * e.g. i386_init() 	 */
 name|p
 operator|=
 operator|&
@@ -1027,6 +1035,7 @@ name|proc0
 expr_stmt|;
 name|td
 operator|=
+operator|&
 name|thread0
 expr_stmt|;
 comment|/* 	 * Initialize magic number. 	 */
@@ -1036,7 +1045,7 @@ name|p_magic
 operator|=
 name|P_MAGIC
 expr_stmt|;
-comment|/* 	 * Initialize process and pgrp structures. 	 */
+comment|/* 	 * Initialize thread, process and pgrp structures. 	 */
 name|procinit
 argument_list|()
 expr_stmt|;
@@ -1151,6 +1160,22 @@ name|aout_sysvec
 expr_stmt|;
 endif|#
 directive|endif
+name|ke
+operator|=
+operator|&
+name|proc0
+operator|.
+name|p_kse
+expr_stmt|;
+comment|/* XXXKSE */
+name|kg
+operator|=
+operator|&
+name|proc0
+operator|.
+name|p_ksegrp
+expr_stmt|;
+comment|/* XXXKSE */
 name|p
 operator|->
 name|p_flag
@@ -2667,6 +2692,7 @@ name|error
 operator|=
 name|fork1
 argument_list|(
+operator|&
 name|thread0
 argument_list|,
 name|RFFDG
@@ -2726,10 +2752,10 @@ argument_list|)
 expr_stmt|;
 name|cpu_set_fork_handler
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|initproc
-operator|->
-name|p_thread
+argument_list|)
 argument_list|,
 name|start_init
 argument_list|,
@@ -2770,6 +2796,18 @@ name|udata
 name|__unused
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|td
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|initproc
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2784,10 +2822,10 @@ name|SRUN
 expr_stmt|;
 name|setrunqueue
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|initproc
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */

@@ -1141,7 +1141,7 @@ name|bcopy
 argument_list|(
 operator|&
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_hw
@@ -1152,7 +1152,7 @@ name|pcs_hwpcb
 argument_list|,
 sizeof|sizeof
 name|thread0
-operator|->
+operator|.
 name|td_pcb
 operator|->
 name|pcb_hw

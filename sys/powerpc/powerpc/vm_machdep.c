@@ -237,6 +237,11 @@ name|proc
 modifier|*
 name|p2
 parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td2
+parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -245,11 +250,6 @@ name|struct
 name|proc
 modifier|*
 name|p1
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td2
 decl_stmt|;
 name|struct
 name|trapframe
@@ -311,13 +311,6 @@ operator|=
 name|td1
 operator|->
 name|td_proc
-expr_stmt|;
-name|td2
-operator|=
-operator|&
-name|p2
-operator|->
-name|p_thread
 expr_stmt|;
 comment|/* Point the pcb to the top of the stack */
 name|pcb2

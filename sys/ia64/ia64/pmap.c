@@ -2008,7 +2008,7 @@ literal|0
 end_if
 
 begin_endif
-unit|thread0->td_pcb->pcb_hw.apcb_asn = 0;
+unit|thread0.td_pcb->pcb_hw.apcb_asn = 0;
 endif|#
 directive|endif
 end_endif

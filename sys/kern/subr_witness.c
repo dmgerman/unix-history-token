@@ -7691,14 +7691,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
+block|{
+name|witness_list
+argument_list|(
 name|td
-operator|=
-operator|&
-name|p
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
+block|}
 block|}
 else|else
 block|{
@@ -7706,12 +7711,12 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-block|}
 name|witness_list
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

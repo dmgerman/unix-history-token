@@ -621,6 +621,8 @@ name|td
 parameter_list|,
 name|p2
 parameter_list|,
+name|td2
+parameter_list|,
 name|flags
 parameter_list|)
 name|struct
@@ -632,6 +634,11 @@ name|struct
 name|proc
 modifier|*
 name|p2
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td2
 decl_stmt|;
 name|int
 name|flags
@@ -699,6 +706,8 @@ argument_list|(
 name|td
 argument_list|,
 name|p2
+argument_list|,
+name|td2
 argument_list|,
 name|flags
 argument_list|)
@@ -792,10 +801,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_new_thread
 argument_list|(
-operator|&
-name|p2
-operator|->
-name|p_thread
+name|td2
 argument_list|)
 expr_stmt|;
 comment|/* Initial thread */
@@ -943,6 +949,8 @@ argument_list|(
 name|td
 argument_list|,
 name|p2
+argument_list|,
+name|td2
 argument_list|,
 name|flags
 argument_list|)

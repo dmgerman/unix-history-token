@@ -2672,10 +2672,10 @@ name|thread
 modifier|*
 name|td
 init|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 decl_stmt|;
 comment|/* XXXKSE */
 name|mtx_lock
@@ -5423,10 +5423,10 @@ name|thread
 modifier|*
 name|td
 init|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|updateproc
-operator|->
-name|p_thread
+argument_list|)
 decl_stmt|;
 comment|/* XXXKSE */
 name|mtx_lock
@@ -5705,10 +5705,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|updateproc
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_wchan
 operator|==
 operator|&
@@ -5717,10 +5718,10 @@ condition|)
 comment|/* XXXKSE */
 name|setrunnable
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|updateproc
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -10746,14 +10747,14 @@ operator|=
 name|curthread
 expr_stmt|;
 else|else
+comment|/* XXX XXX should this be proc0? */
 name|td
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|initproc
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
-comment|/* XXX XXX should this be proc0? */
 comment|/* 	 * Since this only runs when rebooting, it is not interlocked. 	 */
 while|while
 condition|(

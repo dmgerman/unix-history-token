@@ -159,10 +159,10 @@ name|error
 operator|=
 name|proc_read_dbregs
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|,
 operator|&
 name|r
@@ -216,10 +216,10 @@ name|error
 operator|=
 name|proc_write_dbregs
 argument_list|(
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|,
 operator|&
 name|r

@@ -2689,12 +2689,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|imgp
 operator|->
 name|proc
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_md
 operator|.
 name|md_bspstore

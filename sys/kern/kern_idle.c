@@ -213,10 +213,10 @@ name|pc
 operator|->
 name|pc_idlethread
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -268,10 +268,10 @@ name|PCPU_SET
 argument_list|(
 name|idlethread
 argument_list|,
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

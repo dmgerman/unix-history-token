@@ -383,10 +383,10 @@ else|else
 block|{
 name|td
 operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
-operator|->
-name|p_thread
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -1191,6 +1191,7 @@ operator|*
 operator|)
 name|sipx
 argument_list|,
+operator|&
 name|thread0
 argument_list|)
 condition|)

@@ -1789,10 +1789,11 @@ return|return;
 block|}
 name|pcb
 operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p
+argument_list|)
 operator|->
-name|p_thread
-operator|.
 name|td_pcb
 expr_stmt|;
 comment|/* XXXKSE */

@@ -611,6 +611,7 @@ name|thread
 modifier|*
 name|td
 init|=
+operator|&
 name|thread0
 decl_stmt|;
 comment|/* only used for socreate and sobind */
@@ -4839,6 +4840,7 @@ name|thread
 modifier|*
 name|td
 init|=
+operator|&
 name|thread0
 decl_stmt|;
 comment|/* XXX for credentials, will break if sleep */
