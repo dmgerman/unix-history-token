@@ -825,6 +825,9 @@ name|error
 decl_stmt|,
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 name|so
 operator|=
 name|fp

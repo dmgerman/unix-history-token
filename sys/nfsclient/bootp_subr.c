@@ -2765,6 +2765,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 name|error
 operator|=
@@ -4446,6 +4449,9 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 name|error
 operator|=
 name|socreate

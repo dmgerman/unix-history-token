@@ -2225,6 +2225,9 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 if|#
 directive|if
 name|defined

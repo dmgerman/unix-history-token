@@ -1828,6 +1828,9 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking is done */
 name|auio
 operator|.
 name|uio_td
@@ -3324,6 +3327,9 @@ name|soflags
 decl_stmt|,
 name|flags
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking is done */
 name|soflags
 operator|=
 name|so

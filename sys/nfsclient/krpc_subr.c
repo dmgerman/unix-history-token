@@ -685,6 +685,9 @@ name|from
 operator|=
 name|NULL
 expr_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 if|if
 condition|(

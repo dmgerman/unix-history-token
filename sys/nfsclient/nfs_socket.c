@@ -616,6 +616,9 @@ operator|&
 name|thread0
 decl_stmt|;
 comment|/* only used for socreate and sobind */
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 name|nmp
 operator|->
 name|nm_so
@@ -1695,6 +1698,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 if|if
 condition|(
 name|nmp
@@ -1822,6 +1828,9 @@ name|soflags
 decl_stmt|,
 name|flags
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 name|KASSERT
 argument_list|(
 name|rep
@@ -2140,6 +2149,9 @@ init|=
 name|curthread
 decl_stmt|;
 comment|/* XXX */
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* XXX until socket locking done */
 comment|/* 	 * Set up arguments for soreceive() 	 */
 operator|*
 name|mp
