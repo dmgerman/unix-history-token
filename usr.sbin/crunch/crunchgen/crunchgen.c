@@ -286,6 +286,12 @@ name|reading_cache
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|list_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* general library routines */
 end_comment
@@ -451,7 +457,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"m:c:e:fq"
+literal|"lm:c:e:fq"
 argument_list|)
 operator|)
 operator|!=
@@ -511,6 +517,17 @@ name|execfname
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|list_mode
+operator|++
+expr_stmt|;
+name|verbose
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -697,6 +714,15 @@ expr_stmt|;
 block|}
 name|parse_conf_file
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|list_mode
+condition|)
+name|exit
+argument_list|(
+name|goterror
+argument_list|)
 expr_stmt|;
 name|gen_outputs
 argument_list|()
@@ -1632,6 +1658,17 @@ name|goterror
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|list_mode
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1705,6 +1742,21 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|list_mode
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|add_string
 argument_list|(
 operator|&
@@ -1718,6 +1770,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
