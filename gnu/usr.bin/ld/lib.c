@@ -1,6 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.16 1995/09/28 19:43:22 bde Exp $	- library routines  */
+comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  *  * Modified 1993 by Paul Kranenburg, Erasmus University  */
+end_comment
+
+begin_comment
+comment|/* Derived from ld.c: "@(#)ld.c 6.10 (Berkeley) 5/22/91"; */
+end_comment
+
+begin_comment
+comment|/* Linker `ld' for GNU    Copyright (C) 1988 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, indirect, and warning symbol features added by Randy Smith. */
+end_comment
+
+begin_comment
+comment|/*  * $Id: lib.c,v 1.17 1996/07/12 19:08:23 jkh Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -109,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|"ld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dynamic.h"
 end_include
 
 begin_decl_stmt
@@ -1981,7 +2003,18 @@ return|return
 literal|1
 return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|sp
+operator|->
+name|defined
+operator|&&
+name|sp
+operator|->
+name|sorefs
+condition|)
 block|{
 comment|/* 			 * Check for undefined symbols or commons 			 * in shared objects. 			 */
 name|struct
@@ -1989,69 +2022,6 @@ name|localsymbol
 modifier|*
 name|lsp
 decl_stmt|;
-name|int
-name|wascommon
-init|=
-name|sp
-operator|->
-name|defined
-operator|&&
-name|sp
-operator|->
-name|common_size
-decl_stmt|;
-name|int
-name|iscommon
-init|=
-name|type
-operator|==
-operator|(
-name|N_UNDF
-operator||
-name|N_EXT
-operator|)
-operator|&&
-name|p
-operator|->
-name|n_value
-decl_stmt|;
-if|if
-condition|(
-name|wascommon
-condition|)
-block|{
-comment|/* 				 * sp was defined as common by shared object. 				 */
-if|if
-condition|(
-name|iscommon
-operator|&&
-name|p
-operator|->
-name|n_value
-operator|<
-name|sp
-operator|->
-name|common_size
-condition|)
-name|sp
-operator|->
-name|common_size
-operator|=
-name|p
-operator|->
-name|n_value
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|sp
-operator|->
-name|sorefs
-operator|==
-name|NULL
-condition|)
-continue|continue;
 for|for
 control|(
 name|lsp
@@ -2113,33 +2083,22 @@ name|lsp
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* There's a real definition */
-if|if
-condition|(
-name|iscommon
-condition|)
-comment|/* 					 * But this member wants it to be 					 * a common; ignore it. 					 */
+comment|/* 				 * We have a worthy definition in a shared 				 * object that was specified ahead of the 				 * archive we're examining now. So, punt. 				 */
 continue|continue;
+comment|/* 			 * At this point, we have an undefined shared 			 * object reference. Again, if the archive member 			 * defines a common we just note the its size. 			 * Otherwise, the member gets included. 			 */
 if|if
 condition|(
-name|N_ISWEAK
-argument_list|(
-operator|&
-name|lsp
+name|type
+operator|==
+operator|(
+name|N_UNDF
+operator||
+name|N_EXT
+operator|)
+operator|&&
+name|p
 operator|->
-name|nzlist
-operator|.
-name|nlist
-argument_list|)
-condition|)
-comment|/* Weak symbols don't pull archive members */
-continue|continue;
-block|}
-comment|/* 			 * At this point, either the new symbol is a common 			 * and the shared object reference is undefined -- 			 * in which case we note the common -- or the shared 			 * object reference has a definition -- in which case 			 * the library member takes precedence. 			 */
-if|if
-condition|(
-name|iscommon
+name|n_value
 condition|)
 block|{
 comment|/* 				 * New symbol is common, just takes its 				 * size, but don't load. 				 */

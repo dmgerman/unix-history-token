@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: shlib.c,v 1.14 1996/01/13 00:14:53 jdp Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: shlib.c,v 1.15 1996/04/20 18:27:56 jdp Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -48,19 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<a.out.h>
 end_include
 
 begin_include
@@ -78,33 +54,50 @@ end_include
 begin_include
 include|#
 directive|include
-file|<a.out.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ld.h"
+file|<fcntl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUNOS4
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|strsep
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<link.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"shlib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"support.h"
+end_include
 
 begin_comment
 comment|/*  * Standard directories to search for files specified by -l.  */
@@ -129,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Actual vector of library search directories,  * including `-L'ed and LD_LIBARAY_PATH spec'd ones.  */
+comment|/*  * Actual vector of library search directories,  * including `-L'ed and LD_LIBRARY_PATH spec'd ones.  */
 end_comment
 
 begin_decl_stmt
@@ -169,6 +162,37 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+name|int
+name|n
+decl_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|n_search_dirs
+condition|;
+name|n
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|search_dirs
+index|[
+name|n
+index|]
+argument_list|,
+name|name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|n_search_dirs
 operator|++
 expr_stmt|;
@@ -186,10 +210,10 @@ argument_list|,
 name|n_search_dirs
 operator|*
 sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
+name|search_dirs
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|search_dirs
@@ -222,6 +246,9 @@ specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|dup
 decl_stmt|;
 if|if
 condition|(
@@ -230,7 +257,16 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* Add search directories from `paths' */
+comment|/* Add search directories from `path' */
+name|path
+operator|=
+name|dup
+operator|=
+name|strdup
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -247,26 +283,16 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|add_search_dir
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|path
-condition|)
-operator|*
-operator|(
-name|path
-operator|-
-literal|1
-operator|)
-operator|=
-literal|':'
+name|free
+argument_list|(
+name|dup
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

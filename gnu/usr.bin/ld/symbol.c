@@ -1,6 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: symbol.c,v 1.5 1994/06/15 22:39:56 rich Exp $		- symbol table routines  */
+comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  *  * Modified 1993 by Paul Kranenburg, Erasmus University  */
+end_comment
+
+begin_comment
+comment|/* Derived from ld.c: "@(#)ld.c 6.10 (Berkeley) 5/22/91"; */
+end_comment
+
+begin_comment
+comment|/* Linker `ld' for GNU    Copyright (C) 1988 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, indirect, and warning symbol features added by Randy Smith. */
+end_comment
+
+begin_comment
+comment|/*  * symbol table routines  * $Id: symbol.c,v 1.6 1994/12/23 22:30:54 nate Exp $  */
 end_comment
 
 begin_comment
@@ -59,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"ld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dynamic.h"
 end_include
 
 begin_decl_stmt

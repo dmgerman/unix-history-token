@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.34 1996/06/08 04:52:57 wpaul Exp $  */
+comment|/*  *	$Id: ld.c,v 1.35 1996/07/12 19:08:20 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -144,6 +150,12 @@ begin_include
 include|#
 directive|include
 file|"ld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dynamic.h"
 end_include
 
 begin_comment
@@ -456,6 +468,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Current link mode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pic_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PIC type */
 end_comment
 
 begin_comment
@@ -1782,6 +1804,9 @@ literal|'O'
 case|:
 case|case
 literal|'o'
+case|:
+case|case
+literal|'R'
 case|:
 case|case
 literal|'u'
@@ -3122,6 +3147,32 @@ expr_stmt|;
 name|text_start
 operator|=
 literal|0
+expr_stmt|;
+return|return;
+case|case
+literal|'R'
+case|:
+name|rrs_search_paths
+operator|=
+operator|(
+name|rrs_search_paths
+operator|==
+name|NULL
+operator|)
+condition|?
+name|strdup
+argument_list|(
+name|arg
+argument_list|)
+else|:
+name|concat
+argument_list|(
+name|rrs_search_paths
+argument_list|,
+literal|":"
+argument_list|,
+name|arg
+argument_list|)
 expr_stmt|;
 return|return;
 case|case
@@ -7885,11 +7936,24 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 		 * If this symbol has acquired final definition, we're done. 		 * Commons must be allowed to bind to shared object data 		 * definitions. 		 */
 if|if
 condition|(
 name|sp
 operator|->
 name|defined
+operator|&&
+operator|(
+name|sp
+operator|->
+name|common_size
+operator|==
+literal|0
+operator|||
+name|relocatable_output
+operator|||
+name|building_shared_object
+operator|)
 condition|)
 block|{
 if|if
@@ -7962,6 +8026,7 @@ name|spsave
 operator|=
 name|sp
 expr_stmt|;
+comment|/*XXX*/
 name|again
 label|:
 for|for
@@ -8028,6 +8093,59 @@ name|N_FN
 condition|)
 block|{
 comment|/* non-common definition */
+if|if
+condition|(
+name|sp
+operator|->
+name|common_size
+condition|)
+block|{
+comment|/* 					 * This common has an so defn; switch 					 * to it iff defn is: data, first-class 					 * and not weak. 					 */
+if|if
+condition|(
+name|N_AUX
+argument_list|(
+name|p
+argument_list|)
+operator|!=
+name|AUX_OBJECT
+operator|||
+name|N_ISWEAK
+argument_list|(
+name|p
+argument_list|)
+operator|||
+operator|(
+name|lsp
+operator|->
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SECONDCLASS
+operator|)
+condition|)
+continue|continue;
+comment|/* 					 * Change common to so ref. First, 					 * downgrade common to undefined. 					 */
+name|sp
+operator|->
+name|common_size
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|defined
+operator|=
+literal|0
+expr_stmt|;
+name|common_defined_global_count
+operator|--
+expr_stmt|;
+name|undefined_global_sym_count
+operator|++
+expr_stmt|;
+block|}
 name|sp
 operator|->
 name|def_lsp
@@ -8133,9 +8251,11 @@ name|flags
 operator|&
 name|GS_REFERENCED
 condition|)
+block|{
 name|undefined_global_sym_count
 operator|--
 expr_stmt|;
+block|}
 else|else
 name|sp
 operator|->
@@ -8192,10 +8312,55 @@ name|again
 goto|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|defined
+condition|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|common_size
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"internal error: digest_pass1,3: "
+literal|"%s: not a common: %x"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|,
+name|sp
+operator|->
+name|defined
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Common not bound to shared object data; treat 			 * it now like other defined symbols were above. 			 */
+if|if
+condition|(
+operator|!
+name|sp
+operator|->
+name|alias
+condition|)
+name|defined_global_sym_count
+operator|++
+expr_stmt|;
+block|}
 name|sp
 operator|=
 name|spsave
 expr_stmt|;
+comment|/*XXX*/
 block|}
 name|END_EACH_SYMBOL
 expr_stmt|;
@@ -8482,6 +8647,38 @@ argument_list|,
 name|reloc
 argument_list|,
 name|lsp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pic_type
+operator|!=
+name|PIC_TYPE_NONE
+operator|&&
+name|RELOC_PIC_TYPE
+argument_list|(
+name|reloc
+argument_list|)
+operator|!=
+name|pic_type
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: illegal reloc type mix"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pic_type
+operator|=
+name|RELOC_PIC_TYPE
+argument_list|(
+name|reloc
 argument_list|)
 expr_stmt|;
 block|}
@@ -8993,11 +9190,14 @@ name|bss_size
 expr_stmt|;
 name|bss_size
 operator|+=
+name|MALIGN
+argument_list|(
 name|entry
 operator|->
 name|header
 operator|.
 name|a_bss
+argument_list|)
 expr_stmt|;
 name|text_reloc_size
 operator|+=
@@ -10396,13 +10596,13 @@ argument_list|(
 operator|&
 name|outheader
 argument_list|,
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|exec
 argument_list|)
-argument_list|,
-literal|1
 argument_list|,
 name|outstream
 argument_list|)
@@ -10661,13 +10861,13 @@ name|mywrite
 argument_list|(
 name|bytes
 argument_list|,
-literal|1
-argument_list|,
 name|entry
 operator|->
 name|header
 operator|.
 name|a_text
+argument_list|,
+literal|1
 argument_list|,
 name|outstream
 argument_list|)
@@ -10973,13 +11173,13 @@ name|mywrite
 argument_list|(
 name|bytes
 argument_list|,
-literal|1
-argument_list|,
 name|entry
 operator|->
 name|header
 operator|.
 name|a_data
+argument_list|,
+literal|1
 argument_list|,
 name|outstream
 argument_list|)
@@ -10989,10 +11189,6 @@ end_function
 
 begin_comment
 comment|/*  * Relocate ENTRY's text or data section contents. DATA is the address of the  * contents, in core. DATA_SIZE is the length of the contents. PC_RELOCATION  * is the difference between the address of the contents in the output file  * and its address in the input file. RELOC is the address of the  * relocation info, in core. NRELOC says how many there are.  */
-end_comment
-
-begin_comment
-comment|/* HACK: md.c may need access to this */
 end_comment
 
 begin_decl_stmt
@@ -12448,35 +12644,6 @@ name|sp
 operator|->
 name|symbolnum
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RELOC_ADD_EXTRA
-comment|/* 			 * If we aren't going to be adding in the 			 * value in memory on the next pass of the 			 * loader, then we need to add it in from the 			 * relocation entry, unless the symbol remains 			 * external in our output. Otherwise the work we 			 * did in this pass is lost. 			 */
-if|if
-condition|(
-operator|!
-name|RELOC_MEMORY_ADD_P
-argument_list|(
-name|r
-argument_list|)
-operator|&&
-operator|!
-name|RELOC_EXTERN_P
-argument_list|(
-name|r
-argument_list|)
-condition|)
-name|RELOC_ADD_EXTRA
-argument_list|(
-name|r
-argument_list|)
-operator|+=
-name|sp
-operator|->
-name|value
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 comment|/* 			 * Global symbols come first. 			 */
@@ -13042,12 +13209,12 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|1
-argument_list|,
 name|strtab_lens
 index|[
 name|i
 index|]
+argument_list|,
+literal|1
 argument_list|,
 name|outstream
 argument_list|)
