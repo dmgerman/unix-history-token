@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fatal.h	1.1	88/12/22	*/
+comment|/*	fatal.h	1.2	88/12/22	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -38,11 +44,8 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|jmp_buf
 name|Fjmp
-index|[
-literal|10
-index|]
 decl_stmt|;
 end_decl_stmt
 
