@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.10	82/03/19	*/
+comment|/*	if_acc.c	4.11	82/03/19	*/
 end_comment
 
 begin_include
@@ -757,7 +757,7 @@ name|int
 operator|)
 name|btoc
 argument_list|(
-name|IMP_MTU
+name|IMPMTU
 argument_list|)
 argument_list|)
 operator|==
@@ -928,7 +928,7 @@ goto|goto
 name|down
 goto|;
 block|}
-comment|/* 	 * Put up a read.  We can't restart any outstanding writes 	 * until we're back in synch with the IMP (i.e. we've flushed 	 * the NOOPs it throws at us). 	 * Note: IMP_MTU includes the leader. 	 */
+comment|/* 	 * Put up a read.  We can't restart any outstanding writes 	 * until we're back in synch with the IMP (i.e. we've flushed 	 * the NOOPs it throws at us). 	 * Note: IMPMTU includes the leader. 	 */
 name|x
 operator|=
 name|spl5
@@ -959,7 +959,7 @@ name|iwc
 operator|=
 operator|-
 operator|(
-name|IMP_MTU
+name|IMPMTU
 operator|>>
 literal|1
 operator|)
@@ -1580,7 +1580,7 @@ goto|;
 block|}
 name|len
 operator|=
-name|IMP_MTU
+name|IMPMTU
 operator|+
 operator|(
 name|addr
@@ -1598,7 +1598,7 @@ literal|0
 operator|||
 name|len
 operator|>
-name|IMP_MTU
+name|IMPMTU
 condition|)
 block|{
 name|printf
@@ -1746,7 +1746,7 @@ name|iwc
 operator|=
 operator|-
 operator|(
-name|IMP_MTU
+name|IMPMTU
 operator|>>
 literal|1
 operator|)

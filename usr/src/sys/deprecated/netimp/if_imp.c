@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.18	82/03/19	*/
+comment|/*	if_imp.c	4.19	82/03/19	*/
 end_comment
 
 begin_include
@@ -274,7 +274,7 @@ name|ifp
 operator|->
 name|if_mtu
 operator|=
-name|IMP_MTU
+name|IMPMTU
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -964,7 +964,7 @@ operator|>
 literal|0
 condition|)
 goto|goto
-name|rawlinkin
+name|drop
 goto|;
 name|sc
 operator|->
@@ -1045,7 +1045,7 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 goto|goto
-name|rawlinkin
+name|drop
 goto|;
 block|}
 comment|/* 	 * RFNM or INCOMPLETE message, record in 	 * host table and prime output routine. 	 * 	 * SHOULD NOTIFY PROTOCOL ABOUT INCOMPLETES. 	 */
@@ -1086,7 +1086,7 @@ name|next
 argument_list|)
 expr_stmt|;
 goto|goto
-name|rawlinkin
+name|drop
 goto|;
 comment|/* 	 * Host or IMP can't be reached.  Flush any packets 	 * awaiting transmission and release the host structure. 	 * 	 * TODO: NOTIFY THE PROTOCOL 	 */
 case|case

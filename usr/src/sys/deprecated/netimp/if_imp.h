@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.h	4.5	82/03/16	*/
+comment|/*	if_imp.h	4.6	82/03/19	*/
 end_comment
 
 begin_comment
@@ -115,14 +115,14 @@ comment|/* # of noops from imp to ignore */
 end_comment
 
 begin_comment
-comment|/* don't use 1019 here, 'cuz odd numbers and word counts are confusing */
+comment|/* insure things are even... */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IMP_MTU
-value|(sizeof (struct imp_leader) + 1018)
+name|IMPMTU
+value|((8159 / NBBY)& ~01)
 end_define
 
 begin_comment
