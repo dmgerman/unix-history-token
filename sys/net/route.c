@@ -5142,11 +5142,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|RT_UNLOCK
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
+comment|/* XXX what about if change? */
 block|}
 else|else
 name|senderr
