@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	1.5 (Berkeley) %G%"
+literal|"@(#)genassym.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tMAXPHYS %d\n"
+argument_list|,
+name|MAXPHYS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tSYSPTSIZE %d\n"
 argument_list|,
 name|SYSPTSIZE
@@ -485,20 +492,6 @@ argument_list|(
 literal|"#define\tVBIOSIZE %d\n"
 argument_list|,
 name|VBIOSIZE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tVBMEMSIZE %d\n"
-argument_list|,
-name|VBMEMSIZE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tVBPTSIZE %d\n"
-argument_list|,
-name|VBPTSIZE
 argument_list|)
 expr_stmt|;
 name|printf
