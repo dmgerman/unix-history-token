@@ -1531,5 +1531,12 @@ name|WX_MAX_PKT_SIZE
 value|1514
 end_define
 
+begin_define
+define|#
+directive|define
+name|WX_MAX_PKT_SIZE_JUMBO
+value|9014
+end_define
+
 end_unit
 
