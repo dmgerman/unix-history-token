@@ -834,7 +834,8 @@ name|encap_attach_func
 argument_list|(
 name|AF_INET
 argument_list|,
-name|IPPROTO_IPV4
+operator|-
+literal|1
 argument_list|,
 name|gif_encapcheck
 argument_list|,
@@ -898,7 +899,8 @@ name|encap_attach_func
 argument_list|(
 name|AF_INET6
 argument_list|,
-name|IPPROTO_IPV6
+operator|-
+literal|1
 argument_list|,
 name|gif_encapcheck
 argument_list|,
