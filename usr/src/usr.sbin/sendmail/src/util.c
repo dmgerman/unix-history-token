@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.38 (Berkeley) %G%"
+literal|"@(#)util.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5246,7 +5246,10 @@ name|st
 operator|.
 name|st_size
 operator|>
-literal|4
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 condition|)
 name|fmtstr
 operator|=
