@@ -9,7 +9,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wx.c	7.2 (Berkeley) 5/9/91  *	$Id: wx.c,v 1.11 1993/10/16 13:46:31 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wx.c	7.2 (Berkeley) 5/9/91  *	$Id: wx.c,v 1.1 1993/10/26 22:26:38 nate Exp $  */
 end_comment
 
 begin_comment
@@ -4280,6 +4280,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|MFM
 comment|/* Old drives don't support WDCC_READP.  Try a seek to 0. */
 if|if
 condition|(
@@ -4318,6 +4321,65 @@ operator|(
 literal|1
 operator|)
 return|;
+else|#
+directive|else
+comment|/* IDE */
+comment|/* 		 * Some IDE drives return trash if there is not a unit 1 		 * out there, need to make sure that it is READY and not BUSY 		 * before you assume it is there ! 		 */
+name|outb
+argument_list|(
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_sdh
+argument_list|,
+name|WDSD_IBM
+operator||
+operator|(
+name|du
+operator|->
+name|dk_unit
+operator|<<
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|inb
+argument_list|(
+name|du
+operator|->
+name|dk_port
+operator|+
+name|wd_status
+argument_list|)
+operator|&
+operator|(
+name|WDCS_READY
+operator||
+name|WDCS_BUSY
+operator|)
+operator|)
+operator|!=
+name|WDCS_READY
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* MFM */
 comment|/* Fake minimal drive geometry for reading the MBR or label. */
 name|du
 operator|->
