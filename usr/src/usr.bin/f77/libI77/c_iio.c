@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_c_iio[] = "@(#)c_iio.c	1.2";  *  * internal (character array) i/o: common portions  */
+comment|/* char id_c_iio[] = "@(#)c_iio.c	1.3";  *  * internal (character array) i/o: common portions  */
 end_comment
 
 begin_include
@@ -817,32 +817,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_function
-name|ftnint
-name|iiorec_
-parameter_list|()
-block|{
-return|return
-operator|(
-name|recnum
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|ftnint
-name|iiopos_
-parameter_list|()
-block|{
-return|return
-operator|(
-name|recpos
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 
