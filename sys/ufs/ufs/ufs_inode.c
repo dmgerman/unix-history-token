@@ -163,6 +163,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prtactive
@@ -177,6 +182,11 @@ name|vprint
 argument_list|(
 literal|"ufs_inactive: pushing active"
 argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
@@ -520,6 +530,11 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prtactive
@@ -534,6 +549,11 @@ name|vprint
 argument_list|(
 literal|"ufs_reclaim: pushing active"
 argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
