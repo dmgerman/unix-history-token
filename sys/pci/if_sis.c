@@ -3661,7 +3661,7 @@ name|tmp
 index|[
 literal|2
 index|]
-operator|>>
+operator|<<
 literal|15
 expr_stmt|;
 name|tmp
@@ -3685,7 +3685,7 @@ name|tmp
 index|[
 literal|1
 index|]
-operator|>>
+operator|<<
 literal|15
 expr_stmt|;
 name|tmp
@@ -3709,7 +3709,7 @@ name|tmp
 index|[
 literal|0
 index|]
-operator|>>
+operator|<<
 literal|15
 expr_stmt|;
 comment|/* Now reverse all the bits. */
