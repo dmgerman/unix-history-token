@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.8 %G%"
+literal|"@(#)eval.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1874,17 +1874,16 @@ name|long
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * A bit of a kludge here.  If an array element is a record, 	 * the dot operation will be converted into an addition with 	 * the record operand having a type whose size may be larger 	 * than a word.  Now actually this is a pointer, but the subscript 	 * operation isn't aware of this, so it's just hacked here. 	 * 	 * The right thing to do is to make dot directly evaluated 	 * instead of changing it into addition. 	 */
 default|default:
-name|panic
+name|r
+operator|=
+name|pop
 argument_list|(
-literal|"popsmall: size is %d"
-argument_list|,
-name|size
-argument_list|(
-name|t
-argument_list|)
+name|ADDRESS
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 return|return
 name|r
