@@ -3850,6 +3850,21 @@ name|um_devvp
 operator|=
 name|devvp
 expr_stmt|;
+name|ump
+operator|->
+name|um_bo
+operator|=
+operator|&
+name|devvp
+operator|->
+name|v_bufobj
+expr_stmt|;
+name|ump
+operator|->
+name|um_cp
+operator|=
+name|cp
+expr_stmt|;
 comment|/* setting those two parameters allowed us to use 	   ufs_bmap w/o changse ! 	*/
 name|ump
 operator|->
