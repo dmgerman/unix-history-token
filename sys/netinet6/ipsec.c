@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec.c,v 1.204 2003/09/19 10:53:38 jinmei Exp $	*/
+comment|/*	$KAME: ipsec.c,v 1.207 2004/01/13 03:30:42 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -2628,7 +2628,7 @@ argument_list|(
 literal|"ipsec4_getpolicybysock: currsp is NULL."
 argument_list|)
 expr_stmt|;
-comment|/* when privilieged socket */
+comment|/* when privileged socket */
 if|if
 condition|(
 name|pcbsp
@@ -2819,7 +2819,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-comment|/* when non-privilieged socket */
+comment|/* when non-privileged socket */
 comment|/* look for a policy in SPD */
 if|if
 condition|(
@@ -2905,7 +2905,7 @@ operator|(
 name|LOG_ERR
 operator|,
 literal|"ipsec4_getpolicybysock: "
-literal|"Illegal policy for non-priviliged defined %d\n"
+literal|"Illegal policy for non-privileged defined %d\n"
 operator|,
 name|currsp
 operator|->
@@ -3401,7 +3401,7 @@ argument_list|(
 literal|"ipsec6_getpolicybysock: currsp is NULL."
 argument_list|)
 expr_stmt|;
-comment|/* when privilieged socket */
+comment|/* when privileged socket */
 if|if
 condition|(
 name|pcbsp
@@ -3592,7 +3592,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-comment|/* when non-privilieged socket */
+comment|/* when non-privileged socket */
 comment|/* look for a policy in SPD */
 if|if
 condition|(
@@ -3678,7 +3678,7 @@ operator|(
 name|LOG_ERR
 operator|,
 literal|"ipsec6_getpolicybysock: "
-literal|"Illegal policy for non-priviliged defined %d\n"
+literal|"Illegal policy for non-privileged defined %d\n"
 operator|,
 name|currsp
 operator|->
