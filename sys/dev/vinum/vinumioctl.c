@@ -136,6 +136,16 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|struct
+name|plex
+modifier|*
+name|plex
+decl_stmt|;
+name|struct
 name|volume
 modifier|*
 name|vol
@@ -1186,6 +1196,9 @@ return|;
 default|default:
 comment|/* FALLTHROUGH */
 block|}
+case|case
+name|VINUM_DRIVE_TYPE
+case|:
 default|default:
 name|log
 argument_list|(
@@ -1208,17 +1221,10 @@ return|return
 name|EINVAL
 return|;
 case|case
-name|VINUM_DRIVE_TYPE
-case|:
-case|case
-name|VINUM_PLEX_TYPE
-case|:
-return|return
-name|EAGAIN
-return|;
-comment|/* try again next week */
-case|case
 name|VINUM_SD_TYPE
+case|:
+case|case
+name|VINUM_RAWSD_TYPE
 case|:
 name|objno
 operator|=
@@ -1226,6 +1232,14 @@ name|Sdno
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|objno
+index|]
 expr_stmt|;
 switch|switch
 condition|(
@@ -1242,12 +1256,128 @@ argument_list|(
 name|objno
 argument_list|)
 return|;
+case|case
+name|DIOCGDINFO
+case|:
+comment|/* get disk label */
+name|get_volume_label
+argument_list|(
+name|sd
+operator|->
+name|name
+argument_list|,
+literal|1
+argument_list|,
+name|sd
+operator|->
+name|sectors
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	     * We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. 	     */
+case|case
+name|DIOCWDINFO
+case|:
+comment|/* write partition info */
+case|case
+name|DIOCSDINFO
+case|:
+comment|/* set partition info */
+return|return
+literal|0
+return|;
+comment|/* not a titty */
 default|default:
 return|return
-name|EINVAL
+name|ENOTTY
 return|;
+comment|/* not my kind of ioctl */
 block|}
+return|return
+literal|0
+return|;
+comment|/* pretend we did it */
+case|case
+name|VINUM_RAWPLEX_TYPE
+case|:
+case|case
+name|VINUM_PLEX_TYPE
+case|:
+name|objno
+operator|=
+name|Plexno
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|plex
+operator|=
+operator|&
+name|PLEX
+index|[
+name|objno
+index|]
+expr_stmt|;
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+name|DIOCGDINFO
+case|:
+comment|/* get disk label */
+name|get_volume_label
+argument_list|(
+name|plex
+operator|->
+name|name
+argument_list|,
+literal|1
+argument_list|,
+name|plex
+operator|->
+name|length
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
 break|break;
+comment|/* 	     * We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. 	     */
+case|case
+name|DIOCWDINFO
+case|:
+comment|/* write partition info */
+case|case
+name|DIOCSDINFO
+case|:
+comment|/* set partition info */
+return|return
+literal|0
+return|;
+comment|/* not a titty */
+default|default:
+return|return
+name|ENOTTY
+return|;
+comment|/* not my kind of ioctl */
+block|}
+return|return
+literal|0
+return|;
+comment|/* pretend we did it */
 case|case
 name|VINUM_VOLUME_TYPE
 case|:
@@ -1309,6 +1439,16 @@ comment|/* get disk label */
 name|get_volume_label
 argument_list|(
 name|vol
+operator|->
+name|name
+argument_list|,
+name|vol
+operator|->
+name|plexes
+argument_list|,
+name|vol
+operator|->
+name|size
 argument_list|,
 operator|(
 expr|struct
@@ -1319,7 +1459,7 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it. 	     */
+comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap 	     * as well.  And yes, we need it. 	     */
 case|case
 name|DIOCGPART
 case|:
@@ -1327,6 +1467,16 @@ comment|/* get partition information */
 name|get_volume_label
 argument_list|(
 name|vol
+operator|->
+name|name
+argument_list|,
+name|vol
+operator|->
+name|plexes
+argument_list|,
+name|vol
+operator|->
+name|size
 argument_list|,
 operator|&
 name|vol
@@ -3201,6 +3351,13 @@ operator|->
 name|plexes
 operator|--
 expr_stmt|;
+name|vol
+operator|->
+name|last_plex_read
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't go beyond the end */
 if|if
 condition|(
 operator|!
@@ -3884,6 +4041,18 @@ expr_stmt|;
 comment|/*      save_config (); */
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
