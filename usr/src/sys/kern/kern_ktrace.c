@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_ktrace.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_ktrace.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -681,6 +681,9 @@ name|iov_base
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cnt
 argument_list|)
 condition|)
@@ -1507,10 +1510,6 @@ name|p
 decl_stmt|;
 specifier|register
 name|int
-name|ndx
-decl_stmt|;
-specifier|register
-name|int
 name|ret
 init|=
 literal|0
@@ -1655,6 +1654,11 @@ name|aiov
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|error
@@ -1808,6 +1812,65 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+return|return;
+comment|/* 	 * If error encountered, give up tracing on this vnode. 	 */
+name|uprintf
+argument_list|(
+literal|"\ntrace write failed with errno %d, tracing stopped\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|allproc
+init|;
+name|p
+operator|!=
+name|NULL
+condition|;
+name|p
+operator|=
+name|p
+operator|->
+name|p_nxt
+control|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_tracep
+operator|==
+name|vp
+condition|)
+block|{
+name|p
+operator|->
+name|p_tracep
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|p_traceflag
+operator|=
+literal|0
+expr_stmt|;
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_block
 
