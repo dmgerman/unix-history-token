@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)context.c	3.1 83/11/22"
+literal|"@(#)context.c	3.2 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|"value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"string.h"
 end_include
 
 begin_include
@@ -81,8 +87,6 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-literal|1
-argument_list|,
 operator|(
 name|unsigned
 operator|)
@@ -152,28 +156,37 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|context
+modifier|*
+name|xp
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|xp
+operator|=
 name|cx
 operator|.
 name|x_link
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-name|free
-argument_list|(
-name|cx
-operator|.
-name|x_link
-argument_list|)
-expr_stmt|;
 name|cx
 operator|=
 operator|*
-name|cx
-operator|.
-name|x_link
+name|xp
+expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|xp
+argument_list|)
 expr_stmt|;
 block|}
 else|else
