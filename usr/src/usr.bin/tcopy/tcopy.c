@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.9 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,7 +947,6 @@ block|}
 end_function
 
 begin_expr_stmt
-specifier|static
 name|verify
 argument_list|(
 name|inp
@@ -974,6 +973,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 specifier|register
 name|int
 name|eot
@@ -1221,10 +1224,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|intr
 argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1264,9 +1269,6 @@ argument_list|,
 name|record
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"total length: %ld bytes\n"
@@ -1276,18 +1278,15 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_function
-unit|}  static
 name|char
 modifier|*
 name|getspace
@@ -1344,20 +1343,22 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|writeop
 argument_list|(
 argument|fd
 argument_list|,
 argument|type
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|fd
-operator|,
+decl_stmt|,
 name|type
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1413,10 +1414,12 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|fputs
 argument_list|(
@@ -1424,13 +1427,14 @@ literal|"usage: tcopy [-cv] [-s maxblk] src [dest]\n"
 argument_list|,
 name|stderr
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

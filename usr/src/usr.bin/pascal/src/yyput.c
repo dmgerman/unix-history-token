@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyput.c	5.1 (Berkeley) %G%"
+literal|"@(#)yyput.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,7 +546,7 @@ expr_stmt|;
 if|if
 condition|(
 name|yygetunit
-operator|<
+operator|==
 literal|0
 condition|)
 name|oops
