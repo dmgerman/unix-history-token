@@ -1,6 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -490,6 +507,14 @@ block|{
 name|int
 name|len
 decl_stmt|;
+name|int
+name|maxtries
+decl_stmt|;
+comment|/* XXX - kludge till I understand whats *supposed* to happen */
+name|int
+name|startlen
+decl_stmt|;
+comment|/* XXX - kludge till I understand whats *supposed* to happen */
 name|u_char
 name|junk
 decl_stmt|;
@@ -578,9 +603,13 @@ expr_stmt|;
 comment|/* for that many bus cycles, try to send an abort msg */
 for|for
 control|(
+name|startlen
+operator|=
+operator|(
 name|len
 operator|+=
 literal|1024
+operator|)
 init|;
 operator|(
 name|hd
@@ -602,6 +631,10 @@ operator|->
 name|scsi_scmd
 operator|=
 name|SCMD_SET_ATN
+expr_stmt|;
+name|maxtries
+operator|=
+literal|1000
 expr_stmt|;
 while|while
 condition|(
@@ -635,7 +668,30 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|--
+name|maxtries
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"-- scsiabort gave up after 1000 tries (startlen = %d len = %d)\n"
+argument_list|,
+name|startlen
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out2
+goto|;
 block|}
+block|}
+name|out2
+label|:
 if|if
 condition|(
 operator|(
@@ -3277,6 +3333,12 @@ operator|->
 name|scsi_hconf
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * The following delay is definitely needed when trying to 	 * write on a write protected disk (in the optical jukebox anyways), 	 * but we shall see if other unexplained machine freezeups 	 * also stop occuring...  A value of 5 seems to work but 	 * 10 seems safer considering the potential consequences. 	 */
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
 expr_stmt|;
 name|hs
 operator|->
