@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)engine.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)engine.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3038,7 +3038,7 @@ operator|->
 name|beginp
 operator|&&
 operator|!
-name|isalnum
+name|ISWORD
 argument_list|(
 operator|*
 operator|(
@@ -3057,7 +3057,7 @@ name|m
 operator|->
 name|endp
 operator|&&
-name|isalnum
+name|ISWORD
 argument_list|(
 operator|*
 name|sp
@@ -3128,7 +3128,7 @@ operator|->
 name|endp
 operator|&&
 operator|!
-name|isalnum
+name|ISWORD
 argument_list|(
 operator|*
 name|sp
@@ -3143,7 +3143,7 @@ name|m
 operator|->
 name|beginp
 operator|&&
-name|isalnum
+name|ISWORD
 argument_list|(
 operator|*
 operator|(
@@ -4422,7 +4422,7 @@ operator|!=
 name|OUT
 operator|&&
 operator|!
-name|isalnum
+name|ISWORD
 argument_list|(
 name|lastc
 argument_list|)
@@ -4434,7 +4434,7 @@ name|c
 operator|!=
 name|OUT
 operator|&&
-name|isalnum
+name|ISWORD
 argument_list|(
 name|c
 argument_list|)
@@ -4453,7 +4453,7 @@ name|lastc
 operator|!=
 name|OUT
 operator|&&
-name|isalnum
+name|ISWORD
 argument_list|(
 name|lastc
 argument_list|)
@@ -4470,7 +4470,7 @@ operator|!=
 name|OUT
 operator|&&
 operator|!
-name|isalnum
+name|ISWORD
 argument_list|(
 name|c
 argument_list|)
@@ -5020,7 +5020,7 @@ operator|!=
 name|OUT
 operator|&&
 operator|!
-name|isalnum
+name|ISWORD
 argument_list|(
 name|lastc
 argument_list|)
@@ -5032,7 +5032,7 @@ name|c
 operator|!=
 name|OUT
 operator|&&
-name|isalnum
+name|ISWORD
 argument_list|(
 name|c
 argument_list|)
@@ -5051,7 +5051,7 @@ name|lastc
 operator|!=
 name|OUT
 operator|&&
-name|isalnum
+name|ISWORD
 argument_list|(
 name|lastc
 argument_list|)
@@ -5068,7 +5068,7 @@ operator|!=
 name|OUT
 operator|&&
 operator|!
-name|isalnum
+name|ISWORD
 argument_list|(
 name|c
 argument_list|)
