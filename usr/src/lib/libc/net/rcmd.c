@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.6 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,6 +1449,8 @@ name|char
 name|ldomain
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|static
