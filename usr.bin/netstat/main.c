@@ -43,7 +43,7 @@ name|char
 name|main_c_rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.2 1993/11/17 20:19:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1004,7 +1004,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aadf:hI:iM:mN:np:rstuw"
+literal|"Aadf:hI:iM:mN:np:rstuw:"
 argument_list|)
 operator|)
 operator|!=
