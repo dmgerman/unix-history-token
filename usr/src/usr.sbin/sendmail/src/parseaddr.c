@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.30 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +466,10 @@ name|delimptr
 operator|=
 literal|'\0'
 expr_stmt|;
+name|e
+operator|->
+name|e_to
+operator|=
 name|addr
 operator|=
 name|newstr
