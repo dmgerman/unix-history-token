@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4955,11 +4955,13 @@ operator|!
 name|srcrt
 condition|)
 block|{
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-decl_stmt|;
+define|#
+directive|define
+name|RTA
+parameter_list|(
+name|rt
+parameter_list|)
+value|((struct in_ifaddr *)(rt->rt_ifa))
 name|u_long
 name|src
 init|=
@@ -4986,28 +4988,26 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|ia
-operator|=
-name|ifptoia
+name|RTA
 argument_list|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
+name|rt
 argument_list|)
-operator|)
 operator|&&
 operator|(
 name|src
 operator|&
-name|ia
+name|RTA
+argument_list|(
+name|rt
+argument_list|)
 operator|->
 name|ia_subnetmask
 operator|)
 operator|==
-name|ia
+name|RTA
+argument_list|(
+name|rt
+argument_list|)
 operator|->
 name|ia_subnet
 condition|)
@@ -5039,13 +5039,6 @@ operator|->
 name|ip_dst
 expr_stmt|;
 comment|/* 		     * If the destination is reached by a route to host, 		     * is on a subnet of a local net, or is directly 		     * on the attached net (!), use host redirect. 		     * (We may be the correct first hop for other subnets.) 		     */
-define|#
-directive|define
-name|RTA
-parameter_list|(
-name|rt
-parameter_list|)
-value|((struct in_ifaddr *)(rt->rt_ifa))
 name|type
 operator|=
 name|ICMP_REDIRECT
