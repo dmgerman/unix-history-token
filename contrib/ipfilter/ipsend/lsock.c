@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: lsock.c,v 2.1.4.2 2002/02/22 15:32:58 darrenr Exp $"
+literal|"@(#)$Id: lsock.c,v 2.1.4.3 2002/12/06 11:40:36 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,11 +40,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#

@@ -7,11 +7,20 @@ begin_comment
 comment|/*  * kmemcpy() - copies n bytes from kernel memory into user buffer.  * returns 0 on success, -1 on error.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -225,7 +234,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: kmem.c,v 2.2.2.15 2002/07/27 15:59:37 darrenr Exp $"
+literal|"@(#)$Id: kmem.c,v 2.2.2.16 2002/12/06 11:40:27 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

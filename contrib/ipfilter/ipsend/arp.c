@@ -3,11 +3,20 @@ begin_comment
 comment|/*  * arp.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -176,7 +185,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: arp.c,v 2.1.4.3 2002/02/22 15:32:57 darrenr Exp $"
+literal|"@(#)$Id: arp.c,v 2.1.4.4 2002/12/06 11:40:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

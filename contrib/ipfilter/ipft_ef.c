@@ -7,11 +7,20 @@ begin_comment
 comment|/*                                             icmp type  lnth proto         source     destination   src port   dst port  etherfind -n     60  tcp   128.250.20.20  128.250.133.13       2419     telnet  etherfind -n -t   0.32    91   04    131.170.1.10  128.250.133.13  0.33   566  udp  128.250.37.155   128.250.133.3        901        901 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -234,7 +243,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_ef.c,v 2.2.2.3 2002/06/27 14:29:17 darrenr Exp $"
+literal|"@(#)$Id: ipft_ef.c,v 2.2.2.4 2002/12/06 11:40:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
