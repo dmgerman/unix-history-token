@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	5.1 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,7 +644,7 @@ name|bool
 name|sameword
 parameter_list|()
 function_decl|;
-comment|/* test for sender == "*-REQUEST@*" */
+comment|/* test for inhuman sender */
 name|p
 operator|=
 name|rindex
@@ -659,14 +659,6 @@ condition|(
 name|p
 operator|!=
 name|NULL
-operator|&&
-name|p
-operator|>
-operator|&
-name|from
-index|[
-literal|8
-index|]
 condition|)
 block|{
 operator|*
@@ -686,6 +678,30 @@ literal|8
 index|]
 argument_list|,
 literal|"-REQUEST"
+argument_list|)
+operator|||
+name|sameword
+argument_list|(
+operator|&
+name|p
+index|[
+operator|-
+literal|10
+index|]
+argument_list|,
+literal|"Postmaster"
+argument_list|)
+operator|||
+name|sameword
+argument_list|(
+operator|&
+name|p
+index|[
+operator|-
+literal|13
+index|]
+argument_list|,
+literal|"MAILER-DAEMON"
 argument_list|)
 condition|)
 block|{
