@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.14	87/02/18	*/
+comment|/*	vd.c	1.15	87/02/28	*/
 end_comment
 
 begin_include
@@ -377,10 +377,6 @@ name|dk_openpart
 decl_stmt|;
 comment|/* units open on this drive */
 name|u_short
-name|dk_bshift
-decl_stmt|;
-comment|/* shift for * (DEV_BSIZE / sectorsize) XXX */
-name|u_short
 name|dk_curdaddr
 decl_stmt|;
 comment|/* last selected track& sector */
@@ -592,6 +588,9 @@ name|struct
 name|vdsoftc
 modifier|*
 name|vd
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -815,6 +814,11 @@ operator|=
 name|reg
 expr_stmt|;
 comment|/* XXX */
+name|s
+operator|=
+name|spl7
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -859,12 +863,22 @@ else|:
 literal|"diag"
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate page tables and i/o buffer. 	 */
 name|vbmapalloc
 argument_list|(
@@ -1107,29 +1121,6 @@ name|disklabel
 modifier|*
 name|lp
 decl_stmt|;
-if|if
-condition|(
-name|vdwstart
-operator|==
-literal|0
-condition|)
-block|{
-name|timeout
-argument_list|(
-name|vdwatch
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-name|vdwstart
-operator|++
-expr_stmt|;
-block|}
 comment|/* 	 * Try to initialize device and read pack label. 	 */
 if|if
 condition|(
@@ -1300,7 +1291,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
-name|addwap
+name|addswap
 argument_list|(
 name|makedev
 argument_list|(
@@ -1314,11 +1305,7 @@ literal|0
 argument_list|)
 argument_list|)
 argument_list|,
-operator|&
-name|dklabel
-index|[
-name|unit
-index|]
+name|lp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1517,6 +1504,29 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|vdwstart
+operator|==
+literal|0
+condition|)
+block|{
+name|timeout
+argument_list|(
+name|vdwatch
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+name|vdwstart
+operator|++
+expr_stmt|;
+block|}
 comment|/* 	 * Warn if a partion is opened 	 * that overlaps another partition which is open 	 * unless one is the "raw" partition (whole disk). 	 */
 define|#
 directive|define
@@ -1753,9 +1763,6 @@ name|dev
 argument_list|)
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* 	 * Should wait for i/o to complete on this partition 	 * even if others are open, but wait for work on blkflush(). 	 */
 if|if
 condition|(
@@ -1766,30 +1773,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|vba_device
-modifier|*
-name|vi
+name|int
+name|s
 init|=
-name|vddinfo
+name|spl7
+argument_list|()
+decl_stmt|;
+while|while
+condition|(
+name|dkutab
 index|[
 name|unit
 index|]
-decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|spl7
-argument_list|()
-expr_stmt|;
-comment|/* can't sleep on b_actf, it might be async. */
-while|while
-condition|(
-name|vi
-operator|->
-name|ui_tab
 operator|.
 name|b_actf
 condition|)
@@ -1798,12 +1793,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
-name|vi
-operator|->
-name|ui_tab
-operator|.
-name|b_actf
+name|dk
 argument_list|,
 name|PZERO
 operator|-
@@ -1822,8 +1812,6 @@ operator|=
 name|CLOSED
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -1922,13 +1910,6 @@ name|done
 goto|;
 block|}
 comment|/* 	 * Initialize portion of the label 	 * not set up in the slave routine. 	 */
-name|dk
-operator|->
-name|dk_bshift
-operator|=
-literal|1
-expr_stmt|;
-comment|/* DEV_BSIZE / 512 */
 name|dk
 operator|->
 name|dk_state
@@ -2206,53 +2187,6 @@ directive|endif
 block|}
 name|done
 label|:
-comment|/* 	 * If open, calculate scaling shift for 	 * mapping DEV_BSIZE blocks to drive sectors. 	 */
-if|if
-condition|(
-name|dk
-operator|->
-name|dk_state
-operator|==
-name|OPEN
-operator|||
-name|dk
-operator|->
-name|dk_state
-operator|==
-name|OPENRAW
-condition|)
-block|{
-name|int
-name|mul
-init|=
-name|DEV_BSIZE
-operator|/
-name|lp
-operator|->
-name|d_secsize
-decl_stmt|;
-name|dk
-operator|->
-name|dk_bshift
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|mul
-operator|>>=
-literal|1
-operator|)
-operator|>
-literal|0
-condition|)
-name|dk
-operator|->
-name|dk_bshift
-operator|++
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|bp
@@ -2348,6 +2282,10 @@ specifier|register
 name|int
 name|unit
 decl_stmt|;
+specifier|register
+name|daddr_t
+name|sn
+decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -2355,8 +2293,6 @@ name|dp
 decl_stmt|;
 name|daddr_t
 name|sz
-decl_stmt|,
-name|sn
 decl_stmt|,
 name|maxsz
 decl_stmt|;
@@ -2518,10 +2454,6 @@ operator|=
 name|bp
 operator|->
 name|b_blkno
-operator|<<
-name|dk
-operator|->
-name|dk_bshift
 expr_stmt|;
 if|if
 condition|(
@@ -2555,6 +2487,21 @@ goto|goto
 name|done
 goto|;
 block|}
+name|sz
+operator|=
+name|maxsz
+operator|-
+name|bp
+operator|->
+name|b_blkno
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|<=
+literal|0
+condition|)
+block|{
 name|bp
 operator|->
 name|b_error
@@ -2564,6 +2511,17 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
+name|bp
+operator|->
+name|b_bcount
+operator|=
+name|sz
+operator|*
+name|lp
+operator|->
+name|d_secsize
+expr_stmt|;
 block|}
 name|bp
 operator|->
@@ -2635,24 +2593,15 @@ argument_list|(
 name|vi
 argument_list|)
 expr_stmt|;
-name|bp
-operator|=
-operator|&
+if|if
+condition|(
+operator|!
 name|vi
 operator|->
 name|ui_mi
 operator|->
 name|um_tab
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_actf
-operator|&&
-operator|!
-name|bp
-operator|->
+operator|.
 name|b_active
 condition|)
 name|vdstart
@@ -2743,17 +2692,6 @@ name|disklabel
 modifier|*
 name|lp
 decl_stmt|;
-name|dk_busy
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|vi
-operator|->
-name|ui_dk
-operator|)
-expr_stmt|;
 name|dp
 operator|=
 operator|&
@@ -2812,17 +2750,6 @@ operator|&
 name|VD_DOSEEKS
 condition|)
 block|{
-name|int
-name|sn
-init|=
-name|bp
-operator|->
-name|b_blkno
-operator|<<
-name|dk
-operator|->
-name|dk_bshift
-decl_stmt|;
 name|lp
 operator|=
 operator|&
@@ -2836,7 +2763,9 @@ operator|->
 name|b_daddr
 operator|=
 operator|(
-name|sn
+name|bp
+operator|->
+name|b_blkno
 operator|%
 name|lp
 operator|->
@@ -2868,15 +2797,7 @@ operator|->
 name|ui_slave
 expr_stmt|;
 block|}
-comment|/* 	 * If controller is not busy, place request on the 	 * controller's ready queue (unless its already there). 	 */
-if|if
-condition|(
-operator|!
-name|dp
-operator|->
-name|b_active
-condition|)
-block|{
+comment|/* 	 * If controller is not busy, place request on the 	 * controller's ready queue). 	 */
 name|dp
 operator|->
 name|b_forw
@@ -2931,7 +2852,6 @@ operator|->
 name|b_active
 operator|++
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -3090,10 +3010,6 @@ operator|=
 name|bp
 operator|->
 name|b_blkno
-operator|<<
-name|dk
-operator|->
-name|dk_bshift
 expr_stmt|;
 name|lp
 operator|=
@@ -3734,6 +3650,11 @@ decl_stmt|;
 specifier|register
 name|status
 expr_stmt|;
+name|struct
+name|dksoftc
+modifier|*
+name|dk
+decl_stmt|;
 name|vd
 operator|->
 name|vd_wticks
@@ -3835,12 +3756,9 @@ name|printf
 argument_list|(
 literal|"dk%d: write locked\n"
 argument_list|,
-name|vdunit
-argument_list|(
-name|bp
+name|vi
 operator|->
-name|b_dev
-argument_list|)
+name|ui_unit
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3855,7 +3773,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|VDERR_SOFT
+name|VDERR_RETRY
 condition|)
 block|{
 if|if
@@ -4106,6 +4024,33 @@ condition|)
 name|vdustart
 argument_list|(
 name|vi
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|dk
+operator|=
+operator|&
+name|dksoftc
+index|[
+name|vi
+operator|->
+name|ui_unit
+index|]
+operator|)
+operator|->
+name|dk_openpart
+operator|==
+literal|0
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|dk
 argument_list|)
 expr_stmt|;
 block|}
@@ -4492,18 +4437,42 @@ name|lp
 expr_stmt|;
 break|break;
 case|case
-name|DIOCGDINFOP
+name|DIOCGPART
 case|:
-operator|*
+operator|(
 operator|(
 expr|struct
-name|disklabel
-operator|*
+name|partinfo
 operator|*
 operator|)
 name|data
+operator|)
+operator|->
+name|disklab
 operator|=
 name|lp
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|partinfo
+operator|*
+operator|)
+name|data
+operator|)
+operator|->
+name|part
+operator|=
+operator|&
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|vdpart
+argument_list|(
+name|dev
+argument_list|)
+index|]
 expr_stmt|;
 break|break;
 case|case
@@ -5093,7 +5062,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Dumplo and maxfree are in pages; 	 * dumplo will change soon (XXX). 	 */
+comment|/* 	 * Dumplo and maxfree are in pages. 	 */
 name|num
 operator|=
 name|maxfree
@@ -5114,7 +5083,6 @@ name|lp
 operator|->
 name|d_secsize
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|dumplo
@@ -5575,10 +5543,6 @@ argument_list|)
 index|]
 operator|.
 name|p_size
-operator|>>
-name|dk
-operator|->
-name|dk_bshift
 operator|)
 return|;
 block|}
@@ -6629,7 +6593,7 @@ comment|/* partition size in sectors */
 block|}
 name|parts
 index|[
-literal|3
+literal|8
 index|]
 struct|;
 block|}
@@ -6649,20 +6613,58 @@ block|,
 block|{
 literal|0
 block|,
-literal|61056
+literal|30528
 block|}
 block|,
+comment|/* a cyl   0 - 52 */
+block|{
+literal|30528
+block|,
+literal|30528
+block|}
+block|,
+comment|/* b cyl  53 - 105 */
 block|{
 literal|61056
 block|,
-literal|61056
+literal|345600
 block|}
 block|,
+comment|/* c cyl 106 - 705 */
 block|{
-literal|122112
+literal|118656
 block|,
-literal|691200
+literal|288000
 block|}
+block|,
+comment|/* d cyl 206 - 705 */
+block|{
+literal|176256
+block|,
+literal|230400
+block|}
+block|,
+comment|/* e cyl 306 - 705 */
+block|{
+literal|233856
+block|,
+literal|172800
+block|}
+block|,
+comment|/* f cyl 406 - 705 */
+block|{
+literal|291456
+block|,
+literal|115200
+block|}
+block|,
+comment|/* g cyl 506 - 705 */
+block|{
+literal|349056
+block|,
+literal|57600
+block|}
+comment|/* h cyl 606 - 705 */
 block|}
 block|,
 block|{
@@ -6677,20 +6679,58 @@ block|,
 block|{
 literal|0
 block|,
-literal|52800
+literal|26400
 block|}
 block|,
+comment|/* egl0a cyl   0 - 59 */
 block|{
-literal|52800
+literal|26400
 block|,
-literal|66000
+literal|33000
 block|}
 block|,
+comment|/* egl0b cyl  60 - 134 */
 block|{
-literal|118800
+literal|59400
 block|,
-literal|617760
+literal|308880
 block|}
+block|,
+comment|/* egl0c cyl 135 - 836 */
+block|{
+literal|368280
+block|,
+literal|2640
+block|}
+block|,
+comment|/* egl0d cyl 837 - 842 */
+block|{
+literal|0
+block|,
+literal|368280
+block|}
+block|,
+comment|/* egl0e cyl 0 - 836 */
+block|{
+literal|0
+block|,
+literal|370920
+block|}
+block|,
+comment|/* egl0f cyl 0 - 842 */
+block|{
+literal|59400
+block|,
+literal|155320
+block|}
+block|,
+comment|/* egl0g cyl 135 - 487 */
+block|{
+literal|214720
+block|,
+literal|153560
+block|}
+comment|/* egl0h cyl 488 - 836 */
 block|}
 block|,
 block|{
@@ -6705,20 +6745,58 @@ block|,
 block|{
 literal|0
 block|,
-literal|38400
+literal|19200
 block|}
 block|,
+comment|/* fuj0a cyl   0 - 59 */
 block|{
-literal|38400
+literal|19200
 block|,
-literal|48000
+literal|24000
 block|}
 block|,
+comment|/* fuj0b cyl  60 - 134 */
 block|{
-literal|86400
+literal|43200
 block|,
-literal|437120
+literal|218560
 block|}
+block|,
+comment|/* fuj0c cyl 135 - 817 */
+block|{
+literal|79680
+block|,
+literal|182080
+block|}
+block|,
+comment|/* fuj0d cyl 249 - 817 */
+block|{
+literal|116160
+block|,
+literal|145600
+block|}
+block|,
+comment|/* fuj0e cyl 363 - 817 */
+block|{
+literal|152640
+block|,
+literal|109120
+block|}
+block|,
+comment|/* fuj0f cyl 477 - 817 */
+block|{
+literal|189120
+block|,
+literal|72640
+block|}
+block|,
+comment|/* fuj0g cyl 591 - 817 */
+block|{
+literal|225600
+block|,
+literal|36160
+block|}
+comment|/* fug0h cyl 705 - 817 */
 block|}
 block|,
 block|{
@@ -6733,20 +6811,58 @@ block|,
 block|{
 literal|0
 block|,
-literal|40704
+literal|20352
 block|}
 block|,
+comment|/* a cyl   0 - 52 */
+block|{
+literal|20352
+block|,
+literal|20352
+block|}
+block|,
+comment|/* b cyl  53 - 105 */
 block|{
 literal|40704
 block|,
+literal|230400
+block|}
+block|,
+comment|/* c cyl 106 - 705 */
+block|{
+literal|0
+block|,
 literal|40704
 block|}
 block|,
+comment|/* d cyl 709 - 710 (a& b) */
 block|{
-literal|81408
+literal|0
 block|,
-literal|460800
+literal|271104
 block|}
+block|,
+comment|/* e cyl   0 - 705 */
+block|{
+literal|20352
+block|,
+literal|250752
+block|}
+block|,
+comment|/* f cyl  53 - 705 (b& c) */
+block|{
+literal|40704
+block|,
+literal|115200
+block|}
+block|,
+comment|/* g cyl 106 - 405 (1/2 of c) */
+block|{
+literal|155904
+block|,
+literal|115200
+block|}
+comment|/* h cyl 406 - 705 (1/2 of c) */
 block|}
 block|,
 block|{
@@ -6761,20 +6877,58 @@ block|,
 block|{
 literal|0
 block|,
-literal|40128
+literal|20064
 block|}
 block|,
+comment|/* a cyl   0-65 */
 block|{
-literal|40128
+literal|20064
 block|,
-literal|27360
+literal|13680
 block|}
 block|,
+comment|/* b cyl  66-110 */
 block|{
-literal|67488
+literal|33744
 block|,
-literal|429856
+literal|214928
 block|}
+block|,
+comment|/* c cyl 111-817 */
+block|{
+literal|69616
+block|,
+literal|179056
+block|}
+block|,
+comment|/* d cyl 229 - 817 */
+block|{
+literal|105488
+block|,
+literal|143184
+block|}
+block|,
+comment|/* e cyl 347 - 817 */
+block|{
+literal|141360
+block|,
+literal|107312
+block|}
+block|,
+comment|/* f cyl 465 - 817 */
+block|{
+literal|177232
+block|,
+literal|71440
+block|}
+block|,
+comment|/* g cyl 583 - 817 */
+block|{
+literal|213104
+block|,
+literal|35568
+block|}
+comment|/* h cyl 701 - 817 */
 block|}
 block|,
 block|{
@@ -6789,20 +6943,58 @@ block|,
 block|{
 literal|0
 block|,
-literal|19200
+literal|9600
 block|}
 block|,
+comment|/* a cyl   0 -  59 */
 block|{
-literal|19200
+literal|9600
 block|,
-literal|24000
+literal|12000
 block|}
 block|,
+comment|/* b cyl  60 - 134 */
 block|{
-literal|43200
+literal|21600
 block|,
-literal|218560
+literal|109280
 block|}
+block|,
+comment|/* c cyl 135 - 817 */
+block|{
+literal|39840
+block|,
+literal|91040
+block|}
+block|,
+comment|/* d cyl 249 - 817 */
+block|{
+literal|58080
+block|,
+literal|72800
+block|}
+block|,
+comment|/* e cyl 363 - 817 */
+block|{
+literal|76320
+block|,
+literal|54560
+block|}
+block|,
+comment|/* f cyl 477 - 817 */
+block|{
+literal|94560
+block|,
+literal|36320
+block|}
+block|,
+comment|/* g cyl 591 - 817 */
+block|{
+literal|112800
+block|,
+literal|18080
+block|}
+comment|/* h cyl 705 - 817 */
 block|}
 block|}
 struct|;
@@ -7221,7 +7413,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|3
+literal|8
 condition|;
 name|i
 operator|++
@@ -7268,7 +7460,7 @@ name|lp
 operator|->
 name|d_npartitions
 operator|=
-literal|3
+literal|8
 expr_stmt|;
 name|lp
 operator|->
