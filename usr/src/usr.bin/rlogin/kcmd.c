@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Source: /mit/kerberos/src/appl/bsd/RCS/kcmd.c,v $  *	$Header: kcmd.c,v 4.16 89/05/17 10:54:31 jtkohl Exp $  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -12,43 +12,12 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
-name|rcsid_kcmd_c
+name|Xsccsid
+index|[]
 init|=
-literal|"$Header: kcmd.c,v 4.16 89/05/17 10:54:31 jtkohl Exp $"
+literal|"derived from @(#)rcmd.c 5.17 (Berkeley) 6/27/88"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|lint
-end_endif
-
-begin_define
-define|#
-directive|define
-name|LIBC_SCCS
-end_define
-
-begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -56,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"derived from @(#)rcmd.c	5.17 (Berkeley) 6/27/88"
+literal|"@(#)kcmd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +35,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIBC_SCCS and not lint */
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  *	$Source: /mit/kerberos/src/appl/bsd/RCS/kcmd.c,v $  *	$Header: kcmd.c,v 4.16 89/05/17 10:54:31 jtkohl Exp $  *  * static char *rcsid_kcmd_c =  * "$Header: kcmd.c,v 4.16 89/05/17 10:54:31 jtkohl Exp $";  */
 end_comment
 
 begin_include

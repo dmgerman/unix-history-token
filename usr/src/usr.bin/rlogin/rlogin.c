@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.27 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Source: mit/rlogin/RCS/rlogin.c,v $  * $Header: mit/rlogin/RCS/rlogin.c,v 5.2 89/07/26 12:11:21 kfall Exp Locker: kfall $  */
+comment|/*  * $Source: mit/rlogin/RCS/rlogin.c,v $  * $Header: mit/rlogin/RCS/rlogin.c,v 5.2 89/07/26 12:11:21 kfall  *	Exp Locker: kfall $  */
 end_comment
 
 begin_comment
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include

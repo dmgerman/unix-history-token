@@ -1,37 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Source: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v $  *	$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1 89/07/25 15:38:44 kfall Exp Locker: kfall $  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rcsid_kcmd_c
-init|=
-literal|"$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1 89/07/25 15:38:44 kfall Exp Locker: kfall $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|lint
-end_endif
-
-begin_define
-define|#
-directive|define
-name|LIBC_SCCS
-end_define
-
-begin_comment
 comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
@@ -47,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krcmd.c	1.3 (Berkeley) 2/10/89"
+literal|"@(#)krcmd.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +26,10 @@ end_endif
 
 begin_comment
 comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  *	$Source: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v $  *	$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1  *		89/07/25 15:38:44 kfall Exp Locker: kfall $  * static char *rcsid_kcmd_c =  * "$Header: /mit/kerberos/ucb/mit/kcmd/RCS/krcmd.c,v 5.1 89/07/25 15:38:44  *	kfall Exp Locker: kfall $";  */
 end_comment
 
 begin_include
