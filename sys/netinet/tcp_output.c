@@ -1184,12 +1184,21 @@ goto|goto
 name|send
 goto|;
 block|}
-comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments, or at least 50% of the maximum possible 	 * window, then want to send a window update to peer. 	 */
+comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments, or at least 50% of the maximum possible 	 * window, then want to send a window update to peer. 	 * Skip this if the connection is in T/TCP half-open state. 	 */
 if|if
 condition|(
 name|win
 operator|>
 literal|0
+operator|&&
+operator|!
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_NEEDSYN
+operator|)
 condition|)
 block|{
 comment|/* 		 * "adv" is the amount we can increase the window, 		 * taking into account that we are limited by 		 * TCP_MAXWIN<< tp->rcv_scale. 		 */
@@ -3818,11 +3827,20 @@ operator|->
 name|t_flags
 operator|&=
 operator|~
+operator|(
 name|TF_ACKNOW
+operator||
+name|TF_DELACK
+operator|)
 expr_stmt|;
 if|if
 condition|(
-name|tcp_delack_enabled
+name|callout_active
+argument_list|(
+name|tp
+operator|->
+name|tt_delack
+argument_list|)
 condition|)
 name|callout_stop
 argument_list|(
