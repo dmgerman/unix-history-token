@@ -8,7 +8,7 @@ comment|/*  * Aironet 4500/4800 802.11 PCMCIA/ISA/PCI driver for FreeBSD.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * The Aironet 4500/4800 series cards some in PCMCIA, ISA and PCI form.  * This driver supports all three device types (PCI devices are supported  * through an extra PCI shim: /sys/pci/if_an_p.c). ISA devices can be  * supported either using hard-coded IO port/IRQ settings or via Plug  * and Play. The 4500 series devices support 1Mbps and 2Mbps data rates.  * The 4800 devices support 1, 2, 5.5 and 11Mbps rates.  *  * Like the WaveLAN/IEEE cards, the Aironet NICs are all essentially  * PCMCIA devices. The ISA and PCI cards are a combination of a PCMCIA  * device and a PCMCIA to ISA or PCMCIA to PCI adapter card. There are  * a couple of important differences though:  *  * - Lucent doesn't currently offer a PCI card, however Aironet does  * - Lucent ISA card looks to the host like a PCMCIA controller with  *   a PCMCIA WaveLAN card inserted. This means that even desktop  *   machines need to be configured with PCMCIA support in order to  *   use WaveLAN/IEEE ISA cards. The Aironet cards on the other hand  *   actually look like normal ISA and PCI devices to the host, so  *   no PCMCIA controller support is needed  *  * The latter point results in a small gotcha. The Aironet PCMCIA  * cards can be configured for one of two operating modes depending  * on how the Vpp1 and Vpp2 programming voltages are set when the  * card is activated. In order to put the card in proper PCMCIA  * operation (where the CIS table is visible and the interface is  * programmed for PCMCIA operation), both Vpp1 and Vpp2 have to be  * set to 5 volts. FreeBSD by default doesn't set the Vpp voltages,  * which leaves the card in ISA/PCI mode, which prevents it from  * being activated as an PCMCIA device. Consequently, /sys/pccard/pccard.c  * has to be patched slightly in order to enable the Vpp voltages in  * order to make the Aironet PCMCIA cards work.  *  * Note that some PCMCIA controller software packages for Windows NT  * fail to set the voltages as well.  *   * The Aironet devices can operate in both station mode and access point  * mode. Typically, when programmed for station mode, the card can be set  * to automatically perform encapsulation/decapsulation of Ethernet II  * and 802.3 frames within 802.11 frames so that the host doesn't have  * to do it itself. This driver doesn't program the card that way: the  * driver handles all of the encapsulation/decapsulation itself.  */
+comment|/*  * The Aironet 4500/4800 series cards some in PCMCIA, ISA and PCI form.  * This driver supports all three device types (PCI devices are supported  * through an extra PCI shim: /sys/pci/if_an_p.c). ISA devices can be  * supported either using hard-coded IO port/IRQ settings or via Plug  * and Play. The 4500 series devices support 1Mbps and 2Mbps data rates.  * The 4800 devices support 1, 2, 5.5 and 11Mbps rates.  *  * Like the WaveLAN/IEEE cards, the Aironet NICs are all essentially  * PCMCIA devices. The ISA and PCI cards are a combination of a PCMCIA  * device and a PCMCIA to ISA or PCMCIA to PCI adapter card. There are  * a couple of important differences though:  *  * - Lucent doesn't currently offer a PCI card, however Aironet does  * - Lucent ISA card looks to the host like a PCMCIA controller with  *   a PCMCIA WaveLAN card inserted. This means that even desktop  *   machines need to be configured with PCMCIA support in order to  *   use WaveLAN/IEEE ISA cards. The Aironet cards on the other hand  *   actually look like normal ISA and PCI devices to the host, so  *   no PCMCIA controller support is needed  *  * The latter point results in a small gotcha. The Aironet PCMCIA  * cards can be configured for one of two operating modes depending  * on how the Vpp1 and Vpp2 programming voltages are set when the  * card is activated. In order to put the card in proper PCMCIA  * operation (where the CIS table is visible and the interface is  * programmed for PCMCIA operation), both Vpp1 and Vpp2 have to be  * set to 5 volts. FreeBSD by default doesn't set the Vpp voltages,  * which leaves the card in ISA/PCI mode, which prevents it from  * being activated as an PCMCIA device. Consequently, /sys/pccard/pccard.c  * has to be patched slightly in order to enable the Vpp voltages in  * order to make the Aironet PCMCIA cards work.  *  * Note that some PCMCIA controller software packages for Windows NT  * fail to set the voltages as well.  *  * The Aironet devices can operate in both station mode and access point  * mode. Typically, when programmed for station mode, the card can be set  * to automatically perform encapsulation/decapsulation of Ethernet II  * and 802.3 frames within 802.11 frames so that the host doesn't have  * to do it itself. This driver doesn't program the card that way: the  * driver handles all of the encapsulation/decapsulation itself.  */
 end_comment
 
 begin_include
@@ -1025,7 +1025,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * We probe for an Aironet 4500/4800 card by attempting to  * read the default SSID list. On reset, the first entry in  * the SSID list will contain the name "tsunami." If we don't  * find this, then there's no card present.  */
+comment|/*  * We probe for an Aironet 4500/4800 card by attempting to  * read the default SSID list. On reset, the first entry in  * the SSID list will contain the name "tsunami." If we don't  * find this, then there's no card present.  */
 end_comment
 
 begin_function
@@ -2553,7 +2553,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/*  		 * skip beacon by default since this increases the  		 * system load a lot 		 */
+comment|/* 		 * skip beacon by default since this increases the 		 * system load a lot 		 */
 if|if
 condition|(
 operator|!
@@ -9545,7 +9545,7 @@ name|ANCACHE
 end_ifdef
 
 begin_comment
-comment|/* Aironet signal strength cache code.  * store signal/noise/quality on per MAC src basis in  * a small fixed cache.  The cache wraps if> MAX slots  * used.  The cache may be zeroed out to start over.  * Two simple filters exist to reduce computation:  * 1. ip only (literally 0x800) which may be used  * to ignore some packets.  It defaults to ip only.  * it could be used to focus on broadcast, non-IP 802.11 beacons.  * 2. multicast/broadcast only.  This may be used to  * ignore unicast packets and only cache signal strength  * for multicast/broadcast packets (beacons); e.g., Mobile-IP  * beacons and not unicast traffic.  *  * The cache stores (MAC src(index), IP src (major clue), signal,  *	quality, noise)  *  * No apologies for storing IP src here.  It's easy and saves much  * trouble elsewhere.  The cache is assumed to be INET dependent,   * although it need not be.  *  * Note: the Aironet only has a single byte of signal strength value  * in the rx frame header, and it's not scaled to anything sensible.  * This is kind of lame, but it's all we've got.  */
+comment|/* Aironet signal strength cache code.  * store signal/noise/quality on per MAC src basis in  * a small fixed cache.  The cache wraps if> MAX slots  * used.  The cache may be zeroed out to start over.  * Two simple filters exist to reduce computation:  * 1. ip only (literally 0x800) which may be used  * to ignore some packets.  It defaults to ip only.  * it could be used to focus on broadcast, non-IP 802.11 beacons.  * 2. multicast/broadcast only.  This may be used to  * ignore unicast packets and only cache signal strength  * for multicast/broadcast packets (beacons); e.g., Mobile-IP  * beacons and not unicast traffic.  *  * The cache stores (MAC src(index), IP src (major clue), signal,  *	quality, noise)  *  * No apologies for storing IP src here.  It's easy and saves much  * trouble elsewhere.  The cache is assumed to be INET dependent,  * although it need not be.  *  * Note: the Aironet only has a single byte of signal strength value  * in the rx frame header, and it's not scaled to anything sensible.  * This is kind of lame, but it's all we've got.  */
 end_comment
 
 begin_ifdef
@@ -9598,7 +9598,7 @@ comment|/* control variables for cache filtering.  Basic idea is  * to reduce co
 end_comment
 
 begin_comment
-comment|/* set true if you want to limit cache items to broadcast/mcast   * only packets (not unicast).  Useful for mobile-ip beacons which  * are broadcast/multicast at network layer.  Default is all packets  * so ping/unicast anll work say anth pt. to pt. antennae setup.  */
+comment|/* set true if you want to limit cache items to broadcast/mcast  * only packets (not unicast).  Useful for mobile-ip beacons which  * are broadcast/multicast at network layer.  Default is all packets  * so ping/unicast anll work say anth pt. to pt. antennae setup.  */
 end_comment
 
 begin_decl_stmt
@@ -9751,7 +9751,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* filter for ip packets only  	*/
+comment|/* filter for ip packets only 	*/
 if|if
 condition|(
 name|an_cache_iponly
@@ -9807,7 +9807,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* find the ip header.  we want to store the ip_src 	 * address.   	 */
+comment|/* find the ip header.  we want to store the ip_src 	 * address. 	 */
 if|if
 condition|(
 name|saanp
@@ -9825,7 +9825,7 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* do a linear search for a matching MAC address  	 * in the cache table 	 * . MAC address is 6 bytes, 	 * . var w_nextitem holds total number of entries already cached 	 */
+comment|/* do a linear search for a matching MAC address 	 * in the cache table 	 * . MAC address is 6 bytes, 	 * . var w_nextitem holds total number of entries already cached 	 */
 for|for
 control|(
 name|i
@@ -9886,7 +9886,7 @@ block|}
 comment|/* else, have a new address entry,so 	 * add this new entry, 	 * if table full, then we need to replace LRU entry 	 */
 else|else
 block|{
-comment|/* check for space in cache table  		 * note: an_nextitem also holds number of entries 		 * added in the cache table  		 */
+comment|/* check for space in cache table 		 * note: an_nextitem also holds number of entries 		 * added in the cache table 		 */
 if|if
 condition|(
 name|sc

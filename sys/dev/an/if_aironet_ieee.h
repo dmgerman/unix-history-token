@@ -360,7 +360,7 @@ comment|/* deauthentication */
 end_comment
 
 begin_comment
-comment|/*   * Aironet IEEE signal strength cache  *  * driver keeps cache of last  * MAXANCACHE packets to arrive including signal strength info.  * daemons may read this via ioctl  *  * Each entry in the wi_sigcache has a unique macsrc.  */
+comment|/*  * Aironet IEEE signal strength cache  *  * driver keeps cache of last  * MAXANCACHE packets to arrive including signal strength info.  * daemons may read this via ioctl  *  * Each entry in the wi_sigcache has a unique macsrc.  */
 end_comment
 
 begin_ifdef
