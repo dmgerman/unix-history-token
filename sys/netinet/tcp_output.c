@@ -786,6 +786,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If snd_nxt == snd_max and we have transmitted a FIN, the  	 * offset will be> 0 even if so_snd.sb_cc is 0, resulting in 	 * a negative length.  This can also occur when tcp opens up 	 * its congestion window while receiving additional duplicate 	 * acks after fast-retransmit because TCP will reset snd_nxt 	 * to snd_max after the fast-retransmit. 	 * 	 * In the normal retransmit-FIN-only case, however, snd_nxt will 	 * be set to snd_una, the offset will be 0, and the length may 	 * wind up 0. 	 */
 name|len
 operator|=
 operator|(
@@ -957,7 +958,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be -1.  Otherwise, window shrank 		 * after we sent into it.  If window shrank to 0, 		 * cancel pending retransmit, pull snd_nxt back 		 * to (closed) window, and set the persist timer 		 * if it isn't already going.  If the window didn't 		 * close completely, just wait for an ACK. 		 */
+comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be< 0.  Otherwise, window shrank 		 * after we sent into it.  If window shrank to 0, 		 * cancel pending retransmit, pull snd_nxt back 		 * to (closed) window, and set the persist timer 		 * if it isn't already going.  If the window didn't 		 * close completely, just wait for an ACK. 		 */
 name|len
 operator|=
 literal|0
@@ -1007,6 +1008,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * len will be>= 0 after this point.  Truncate to the maximum 	 * segment length and ensure that FIN is removed if the length 	 * no longer contains the last data byte. 	 */
 if|if
 condition|(
 name|len
@@ -1250,7 +1252,7 @@ goto|goto
 name|send
 goto|;
 block|}
-comment|/* 	 * Send if we owe peer an ACK. 	 */
+comment|/* 	 * Send if we owe the peer an ACK, RST, SYN, or urgent data.  ACKNOW 	 * is also a catch-all for the retransmit timer timeout case. 	 */
 if|if
 condition|(
 name|tp
@@ -1307,7 +1309,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * If our state indicates that FIN should be sent 	 * and we have not yet done so, or we're retransmitting the FIN, 	 * then we need to send. 	 */
+comment|/* 	 * If our state indicates that FIN should be sent 	 * and we have not yet done so, then we need to send. 	 */
 if|if
 condition|(
 name|flags
@@ -3202,7 +3204,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing an ack or a keep-alive probe. 		 * Initial value for retransmit timer is smoothed 		 * round-trip time + 2 * round-trip time variance. 		 * Initialize shift counter which is used for backoff 		 * of retransmit time. 		 */
+comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing a pure ack or a keep-alive probe. 		 * Initial value for retransmit timer is smoothed 		 * round-trip time + 2 * round-trip time variance. 		 * Initialize shift counter which is used for backoff 		 * of retransmit time. 		 */
 if|if
 condition|(
 operator|!
@@ -3263,7 +3265,40 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
+else|else
+block|{
+comment|/* 		 * Persist case, update snd_max but since we are in 		 * persist mode (no window) we do not update snd_nxt. 		 */
+name|int
+name|xlen
+init|=
+name|len
+decl_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|TH_SYN
+condition|)
+operator|++
+name|xlen
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|TH_FIN
+condition|)
+block|{
+operator|++
+name|xlen
+expr_stmt|;
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_SENTFIN
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SEQ_GT
@@ -3289,6 +3324,7 @@ name|snd_nxt
 operator|+
 name|len
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
