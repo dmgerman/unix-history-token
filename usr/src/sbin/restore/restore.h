@@ -673,7 +673,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|ino_t
-name|psearch
+name|pathsearch
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -851,59 +851,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MWORD
+name|TSTINO
 parameter_list|(
-name|m
+name|ino
 parameter_list|,
-name|i
+name|map
 parameter_list|)
-value|(m[(unsigned)(i-1)/NBBY])
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBIT
-parameter_list|(
-name|i
-parameter_list|)
-value|(1<<((unsigned)(i-1)%NBBY))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIS
-parameter_list|(
-name|i
-parameter_list|,
-name|w
-parameter_list|)
-value|(MWORD(w,i) |=  MBIT(i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIC
-parameter_list|(
-name|i
-parameter_list|,
-name|w
-parameter_list|)
-value|(MWORD(w,i)&= ~MBIT(i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT
-parameter_list|(
-name|i
-parameter_list|,
-name|w
-parameter_list|)
-value|(MWORD(w,i)& MBIT(i))
+define|\
+value|(map[(u_int)((ino) - 1) / NBBY]&  (1<< ((u_int)((ino) - 1) % NBBY)))
 end_define
 
 begin_define
