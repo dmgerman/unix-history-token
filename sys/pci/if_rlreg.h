@@ -3569,6 +3569,9 @@ name|rxcycles
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|u_int32_t
 name|saved_maps
 index|[
@@ -3588,6 +3591,8 @@ decl_stmt|;
 name|u_int8_t
 name|saved_lattimer
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

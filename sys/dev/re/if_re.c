@@ -9929,10 +9929,15 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 specifier|register
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|rl_softc
 modifier|*
@@ -9950,6 +9955,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 for|for
 control|(
 name|i
@@ -10035,6 +10043,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|suspended
@@ -10064,10 +10074,15 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 specifier|register
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|rl_softc
 modifier|*
@@ -10094,6 +10109,9 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 comment|/* better way to do this? */
 for|for
 control|(
@@ -10193,6 +10211,8 @@ argument_list|,
 name|RL_RES
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* reinitialize interface if necessary */
 if|if
 condition|(
