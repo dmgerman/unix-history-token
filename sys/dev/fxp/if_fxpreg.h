@@ -1686,6 +1686,7 @@ literal|8
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
