@@ -62,6 +62,26 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern total_malloced;
+end_extern
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|malloccount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mc
+name|malloced
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -191,25 +211,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* pointer to temporary buffer */
-name|struct
-name|_ioctl_reply
-modifier|*
-name|ioctl_reply
-decl_stmt|;
-comment|/* struct to return */
-name|struct
-name|uio
-name|uio
-decl_stmt|;
-name|struct
-name|iovec
-name|iovec
-decl_stmt|;
 comment|/* modload should prevent multiple loads, so this is worth a panic */
 if|if
 condition|(
@@ -269,90 +270,6 @@ directive|error
 error|DEVFS not finished yet
 endif|#
 directive|endif
-name|uio
-operator|.
-name|uio_iov
-operator|=
-operator|&
-name|iovec
-expr_stmt|;
-name|uio
-operator|.
-name|uio_iovcnt
-operator|=
-literal|1
-expr_stmt|;
-comment|/* just one buffer */
-name|uio
-operator|.
-name|uio_offset
-operator|=
-literal|0
-expr_stmt|;
-comment|/* start at the beginning */
-name|uio
-operator|.
-name|uio_resid
-operator|=
-literal|512
-expr_stmt|;
-comment|/* one sector */
-name|uio
-operator|.
-name|uio_segflg
-operator|=
-name|UIO_SYSSPACE
-expr_stmt|;
-comment|/* we're in system space */
-name|uio
-operator|.
-name|uio_rw
-operator|=
-name|UIO_READ
-expr_stmt|;
-comment|/* do we need this? */
-name|uio
-operator|.
-name|uio_procp
-operator|=
-name|curproc
-expr_stmt|;
-comment|/* do it for our own process */
-name|iovec
-operator|.
-name|iov_len
-operator|=
-literal|512
-expr_stmt|;
-name|buf
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|Malloc
-argument_list|(
-name|iovec
-operator|.
-name|iov_len
-argument_list|)
-expr_stmt|;
-comment|/* get a buffer */
-name|CHECKALLOC
-argument_list|(
-name|buf
-argument_list|,
-literal|"vinum: no memory\n"
-argument_list|)
-expr_stmt|;
-comment|/* can't get 512 bytes? */
-name|iovec
-operator|.
-name|iov_base
-operator|=
-name|buf
-expr_stmt|;
-comment|/* read into buf */
 comment|/* allocate space: drives... */
 name|DRIVE
 operator|=
@@ -565,11 +482,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* and number in use */
-name|ioctl_reply
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* no reply on longjmp */
 block|}
 end_function
 
@@ -782,17 +694,6 @@ operator|)
 condition|)
 block|{
 comment|/* at least one daemon open, we're stopping */
-name|int
-name|timeout
-init|=
-literal|1
-decl_stmt|;
-while|while
-condition|(
-name|timeout
-condition|)
-block|{
-comment|/* until the daemon sees sense */
 name|queue_daemon_request
 argument_list|(
 name|daemonrq_return
@@ -805,8 +706,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* stop the daemon */
-name|timeout
-operator|=
 name|tsleep
 argument_list|(
 operator|&
@@ -820,7 +719,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* and wait for it */
-block|}
 block|}
 if|if
 condition|(
@@ -1004,6 +902,61 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* clean up */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+if|if
+condition|(
+name|total_malloced
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|malloccount
+condition|;
+name|i
+operator|++
+control|)
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum: exiting with %d bytes malloced from %s:%d\n"
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|size
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|file
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|cdevsw
 index|[
 name|CDEV_MAJOR
@@ -1342,7 +1295,7 @@ index|]
 operator|.
 name|state
 operator|<
-name|sd_obsolete
+name|sd_init
 operator|)
 condition|)
 comment|/* or SD is not real */
