@@ -4,11 +4,11 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)opinfo.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)opinfo.h 1.3 %G%"; */
 end_comment
 
 begin_comment
-comment|/*  * tree operator definitions  */
+comment|/*  * Tree operator definitions.  */
 end_comment
 
 begin_struct
@@ -549,8 +549,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|O_GRIPE
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
 name|O_LASTOP
-value|62
+value|63
 end_define
 
 begin_comment

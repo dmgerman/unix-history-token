@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opinfo.c 1.1 %G%"
+literal|"@(#)opinfo.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * operator information structure  */
+comment|/*  * Operator information structure.  */
 end_comment
 
 begin_include
@@ -399,6 +399,11 @@ name|NIL
 block|,
 comment|/* O_ALIAS */
 name|LEAF
+block|,
+name|NIL
+block|,
+comment|/* O_GRIPE */
+literal|0
 block|,
 name|NIL
 block|, }

@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.1 %G%"
+literal|"@(#)eval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * parse tree evaluation  */
+comment|/*  * Parse tree evaluation.  */
 end_comment
 
 begin_include
@@ -74,6 +74,22 @@ end_include
 begin_comment
 comment|/*  * Evaluate a parse tree using a stack; value is left at top.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STACKSIZE
+value|2000
+end_define
+
+begin_decl_stmt
+name|STACK
+name|stack
+index|[
+name|STACKSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|STACK
@@ -491,19 +507,23 @@ operator|->
 name|nodetype
 argument_list|)
 expr_stmt|;
-name|dread
+if|if
+condition|(
+operator|!
+name|rpush
 argument_list|(
-name|sp
-argument_list|,
 name|addr
 argument_list|,
 name|len
 argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"expression too large to evaluate"
+argument_list|)
 expr_stmt|;
-name|sp
-operator|+=
-name|len
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|len
@@ -1430,6 +1450,13 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|O_GRIPE
+case|:
+name|gripe
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|O_HELP
 case|:
 name|help
@@ -1576,6 +1603,72 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * Push "len" bytes onto the expression stack from address "addr"  * in the process.  Normally TRUE is returned, however if there  * isn't enough room on the stack, rpush returns FALSE.  *   */
+end_comment
+
+begin_function
+name|BOOLEAN
+name|rpush
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|)
+name|ADDRESS
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+name|BOOLEAN
+name|success
+decl_stmt|;
+if|if
+condition|(
+name|sp
+operator|+
+name|len
+operator|>=
+operator|&
+name|stack
+index|[
+name|STACKSIZE
+index|]
+condition|)
+block|{
+name|success
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dread
+argument_list|(
+name|sp
+argument_list|,
+name|addr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|sp
+operator|+=
+name|len
+expr_stmt|;
+name|success
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+return|return
+name|success
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * evaluate a conditional expression  */
