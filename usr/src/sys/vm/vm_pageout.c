@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pageout.c	7.9 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pageout.c	7.10 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -161,6 +161,15 @@ block|{
 name|vm_page_t
 name|next
 decl_stmt|;
+name|vm_object_t
+name|object
+decl_stmt|;
+name|vm_pager_t
+name|pager
+decl_stmt|;
+name|int
+name|pageout_status
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -198,6 +207,48 @@ operator|.
 name|v_free_target
 condition|)
 break|break;
+comment|/* 		 * If the page has been referenced, move it back to the 		 * active queue. 		 */
+if|if
+condition|(
+name|pmap_is_referenced
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|next
+operator|=
+operator|(
+name|vm_page_t
+operator|)
+name|queue_next
+argument_list|(
+operator|&
+name|m
+operator|->
+name|pageq
+argument_list|)
+expr_stmt|;
+name|vm_page_activate
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|.
+name|v_reactivated
+operator|++
+expr_stmt|;
+name|m
+operator|=
+name|next
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * If the page is clean, free it up. 		 */
 if|if
 condition|(
 name|m
@@ -220,34 +271,6 @@ operator|->
 name|pageq
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmap_is_referenced
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|vm_page_activate
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|cnt
-operator|.
-name|v_reactivated
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-specifier|register
-name|vm_object_t
-name|object
-decl_stmt|;
 name|object
 operator|=
 name|m
@@ -256,20 +279,12 @@ name|object
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|vm_object_lock_try
 argument_list|(
 name|object
 argument_list|)
 condition|)
 block|{
-comment|/* 					 *	Can't lock object - 					 *	skip page. 					 */
-name|m
-operator|=
-name|next
-expr_stmt|;
-continue|continue;
-block|}
 name|pmap_page_protect
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -285,7 +300,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* will dequeue */
 name|pages_freed
 operator|++
 expr_stmt|;
@@ -299,31 +313,38 @@ name|m
 operator|=
 name|next
 expr_stmt|;
+continue|continue;
 block|}
-else|else
-block|{
-comment|/* 			 *	If a page is dirty, then it is either 			 *	being washed (but not yet cleaned) 			 *	or it is still in the laundry.  If it is 			 *	still in the laundry, then we start the 			 *	cleaning operation. 			 */
+comment|/* 		 * If the page is dirty but already being washed, skip it. 		 */
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_LAUNDRY
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 				 *	Clean the page and remove it from the 				 *	laundry. 				 * 				 *	We set the busy bit to cause 				 *	potential page faults on this page to 				 *	block. 				 * 				 *	And we set pageout-in-progress to keep 				 *	the object from disappearing during 				 *	pageout.  This guarantees that the 				 *	page won't move from the inactive 				 *	queue.  (However, any other page on 				 *	the inactive queue may move!) 				 */
-specifier|register
-name|vm_object_t
-name|object
-decl_stmt|;
-specifier|register
-name|vm_pager_t
-name|pager
-decl_stmt|;
-name|int
-name|pageout_status
-decl_stmt|;
+name|m
+operator|=
+operator|(
+name|vm_page_t
+operator|)
+name|queue_next
+argument_list|(
+operator|&
+name|m
+operator|->
+name|pageq
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Otherwise the page is dirty and still in the laundry, 		 * so we start the cleaning operation and remove it from 		 * the laundry. 		 * 		 * We set the busy bit to cause potential page faults on 		 * this page to block. 		 * 		 * We also set pageout-in-progress to keep the object from 		 * disappearing during pageout.  This guarantees that the 		 * page won't move from the inactive queue.  (However, any 		 * other page on the inactive queue may move!) 		 */
 name|object
 operator|=
 name|m
@@ -339,7 +360,6 @@ name|object
 argument_list|)
 condition|)
 block|{
-comment|/* 					 *	Skip page if we can't lock 					 *	its object 					 */
 name|m
 operator|=
 operator|(
@@ -376,7 +396,7 @@ operator|.
 name|v_pageouts
 operator|++
 expr_stmt|;
-comment|/* 				 *	Try to collapse the object before 				 *	making a pager for it.  We must 				 *	unlock the page queues first. 				 */
+comment|/* 		 * Try to collapse the object before making a pager for it. 		 * We must unlock the page queues first. 		 */
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -395,7 +415,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 				 *	Do a wakeup here in case the following 				 *	operations block. 				 */
+comment|/* 		 * Do a wakeup here in case the following operations block. 		 */
 name|thread_wakeup
 argument_list|(
 operator|(
@@ -407,7 +427,7 @@ operator|.
 name|v_free_count
 argument_list|)
 expr_stmt|;
-comment|/* 				 *	If there is no pager for the page, 				 *	use the default pager.  If there's 				 *	no place to put the page at the 				 *	moment, leave it in the laundry and 				 *	hope that there will be paging space 				 *	later. 				 */
+comment|/* 		 * If there is no pager for the page, use the default pager. 		 * If there is no place to put the page at the moment, 		 * leave it in the laundry and hope that there will be 		 * paging space later. 		 */
 if|if
 condition|(
 operator|(
@@ -445,7 +465,6 @@ name|pager
 operator|!=
 name|NULL
 condition|)
-block|{
 name|vm_object_setpager
 argument_list|(
 name|object
@@ -457,7 +476,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|pageout_status
 operator|=
@@ -517,7 +535,7 @@ break|break;
 case|case
 name|VM_PAGER_BAD
 case|:
-comment|/* 					 * Page outside of range of object. 					 * Right now we essentially lose the 					 * changes by pretending it worked. 					 * XXX dubious, what should we do? 					 */
+comment|/* 			 * Page outside of range of object.  Right now we 			 * essentially lose the changes by pretending it 			 * worked. 			 * 			 * XXX dubious, what should we do? 			 */
 name|m
 operator|->
 name|flags
@@ -546,7 +564,7 @@ case|:
 case|case
 name|VM_PAGER_ERROR
 case|:
-comment|/* 					 * If page couldn't be paged out, then 					 * reactivate the page so it doesn't 					 * clog the inactive list.  (We will 					 * try paging out it again later). 					 */
+comment|/* 			 * If page couldn't be paged out, then reactivate 			 * the page so it doesn't clog the inactive list. 			 * (We will try paging out it again later). 			 */
 name|vm_page_activate
 argument_list|(
 name|m
@@ -562,7 +580,7 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If the operation is still going, leave 				 * the page busy to block all other accesses. 				 * Also, leave the paging in progress 				 * indicator set so that we don't attempt an 				 * object collapse. 				 */
+comment|/* 		 * If the operation is still going, leave the page busy 		 * to block all other accesses.  Also, leave the paging 		 * in progress indicator set so that we don't attempt an 		 * object collapse. 		 */
 if|if
 condition|(
 name|pageout_status
@@ -606,22 +624,6 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-else|else
-name|m
-operator|=
-operator|(
-name|vm_page_t
-operator|)
-name|queue_next
-argument_list|(
-operator|&
-name|m
-operator|->
-name|pageq
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* 	 *	Compute the page shortage.  If we are still very low on memory 	 *	be sure that we will move a minimal amount of pages from active 	 *	to inactive. 	 */
 name|page_shortage
 operator|=
@@ -633,25 +635,15 @@ name|cnt
 operator|.
 name|v_inactive_count
 expr_stmt|;
-name|page_shortage
-operator|-=
-name|cnt
-operator|.
-name|v_free_count
-expr_stmt|;
 if|if
 condition|(
-operator|(
 name|page_shortage
 operator|<=
 literal|0
-operator|)
 operator|&&
-operator|(
 name|pages_freed
 operator|==
 literal|0
-operator|)
 condition|)
 name|page_shortage
 operator|=
@@ -792,24 +784,6 @@ if|if
 condition|(
 name|cnt
 operator|.
-name|v_inactive_target
-operator|==
-literal|0
-condition|)
-name|cnt
-operator|.
-name|v_inactive_target
-operator|=
-name|cnt
-operator|.
-name|v_free_min
-operator|*
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|cnt
-operator|.
 name|v_free_target
 operator|<=
 name|cnt
@@ -823,26 +797,6 @@ operator|=
 name|cnt
 operator|.
 name|v_free_min
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|cnt
-operator|.
-name|v_inactive_target
-operator|<=
-name|cnt
-operator|.
-name|v_free_target
-condition|)
-name|cnt
-operator|.
-name|v_inactive_target
-operator|=
-name|cnt
-operator|.
-name|v_free_target
 operator|+
 literal|1
 expr_stmt|;
@@ -871,6 +825,43 @@ name|vm_pages_needed_lock
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Compute the inactive target for this scan. 		 * We need to keep a reasonable amount of memory in the 		 * inactive list to better simulate LRU behavior. 		 */
+name|cnt
+operator|.
+name|v_inactive_target
+operator|=
+operator|(
+name|cnt
+operator|.
+name|v_active_count
+operator|+
+name|cnt
+operator|.
+name|v_inactive_count
+operator|)
+operator|/
+literal|3
+expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|.
+name|v_inactive_target
+operator|<=
+name|cnt
+operator|.
+name|v_free_target
+condition|)
+name|cnt
+operator|.
+name|v_inactive_target
+operator|=
+name|cnt
+operator|.
+name|v_free_target
+operator|+
+literal|1
 expr_stmt|;
 name|vm_pageout_scan
 argument_list|()
