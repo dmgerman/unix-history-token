@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.18 1996/09/06 23:07:34 phk Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.19 1996/09/08 10:44:11 phk Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -568,10 +568,6 @@ name|u_char
 name|txb_sched
 decl_stmt|;
 comment|/* number of scheduled packets  */
-name|u_char
-name|txb_padding
-decl_stmt|;
-comment|/* number of delayed padding bytes  */
 comment|/* Multicast address filter management.  */
 name|u_char
 name|filter_change
@@ -8971,7 +8967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write an mbuf chain to the transmission buffer memory using 16 bit PIO.  * Returns number of bytes actually written, including length word.  *  * If an mbuf chain is too long for an Ethernet frame, it is not sent.  * Packets shorter than Ethernet minimum are legal, and we pad them  * before sending out.  An exception is "partial" packets which are  * shorter than mandatory Ethernet header.  *  * I wrote a code for an experimental "delayed padding" technique.  * When employed, it postpones the padding process for short packets.  * If xmit() occurred at the moment, the padding process is omitted, and  * garbage is sent as pad data.  If next packet is stored in the  * transmission buffer before xmit(), write_mbuf() pads the previous  * packet before transmitting new packet.  This *may* gain the  * system performance (slightly).  */
+comment|/*  * Write an mbuf chain to the transmission buffer memory using 16 bit PIO.  * Returns number of bytes actually written, including length word.  *  * If an mbuf chain is too long for an Ethernet frame, it is not sent.  * Packets shorter than Ethernet minimum are legal, and we pad them  * before sending out.  An exception is "partial" packets which are  * shorter than mandatory Ethernet header.  */
 end_comment
 
 begin_function
@@ -9022,6 +9018,17 @@ define|#
 directive|define
 name|NO_PENDING_BYTE
 value|0xFFFF
+specifier|static
+name|u_char
+name|padding
+index|[
+name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
+operator|-
+name|ETHER_HDR_LEN
+index|]
+decl_stmt|;
 if|#
 directive|if
 name|FE_DEBUG
@@ -9109,6 +9116,7 @@ literal|1
 comment|/* 	 * Should never send big packets.  If such a packet is passed, 	 * it should be a bug of upper layer.  We just ignore it. 	 * ... Partial (too short) packets, neither. 	 */
 if|if
 condition|(
+operator|!
 name|ETHER_IS_VALID_LEN
 argument_list|(
 name|length
@@ -9121,7 +9129,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fe%d: got a out-of-spes packet (%u bytes) to send\n"
+literal|"fe%d: got an out-of-spec packet (%u bytes) to send\n"
 argument_list|,
 name|sc
 operator|->
@@ -9326,6 +9334,34 @@ argument_list|(
 name|addr_bmpr8
 argument_list|,
 name|savebyte
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Pad to the Ethernet minimum length, if the packet is too short.  */
+if|if
+condition|(
+name|length
+operator|<
+name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
+condition|)
+block|{
+name|outsw
+argument_list|(
+name|addr_bmpr8
+argument_list|,
+name|padding
+argument_list|,
+operator|(
+name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
+operator|-
+name|length
+operator|)
+operator|>>
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
