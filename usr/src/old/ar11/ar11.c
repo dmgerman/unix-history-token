@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ar11.c	4.4 (Berkeley) %G%"
+literal|"@(#)ar11.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,6 +1316,13 @@ end_macro
 
 begin_block
 block|{
+specifier|static
+name|char
+name|name2
+index|[]
+init|=
+literal|"/tmp/v2XXXXX"
+decl_stmt|;
 name|init
 argument_list|()
 expr_stmt|;
@@ -1331,7 +1338,7 @@ name|tf2nam
 operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/v2XXXXX"
+name|name2
 argument_list|)
 expr_stmt|;
 name|close
@@ -1513,6 +1520,13 @@ end_macro
 begin_block
 block|{
 specifier|static
+name|char
+name|name0
+index|[]
+init|=
+literal|"/tmp/vXXXXX"
+decl_stmt|;
+specifier|static
 name|short
 name|mbuf
 init|=
@@ -1525,7 +1539,7 @@ name|tfnam
 operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/vXXXXX"
+name|name0
 argument_list|)
 expr_stmt|;
 name|close
@@ -2737,6 +2751,13 @@ end_macro
 
 begin_block
 block|{
+specifier|static
+name|char
+name|name1
+index|[]
+init|=
+literal|"/tmp/v1XXXXX"
+decl_stmt|;
 specifier|register
 name|f
 expr_stmt|;
@@ -2785,7 +2806,7 @@ name|tf1nam
 operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/v1XXXXX"
+name|name1
 argument_list|)
 expr_stmt|;
 name|close
