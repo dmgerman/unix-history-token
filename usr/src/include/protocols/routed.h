@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	routed.h	82/05/24	4.2	*/
+comment|/*	routed.h	82/05/26	4.3	*/
 end_comment
 
 begin_comment
-comment|/*  * Routing Information Protocol  */
+comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
 end_comment
 
 begin_struct
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|MAXPACKETSIZE
-value|1024
+value|512
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ comment|/* max broadcast size */
 end_comment
 
 begin_comment
-comment|/*  * Timer values used in managing the routing table "cache".  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  If there's a reason to look for network  * interface transitions do so every CHECK_INTERVAL seconds.  */
+comment|/*  * Timer values used in managing the routing table.  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  If there's a reason to look for network  * interface transitions do so every CHECK_INTERVAL seconds.  */
 end_comment
 
 begin_define
