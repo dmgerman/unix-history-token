@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4142,21 +4142,32 @@ name|bpp
 operator|)
 operator|==
 literal|1
-operator|&&
-operator|!
-operator|(
+condition|)
+block|{
+name|brelvp
+argument_list|(
+operator|*
 name|sp
 operator|->
-name|seg_flags
-operator|&
-name|SEGM_CKP
-operator|)
-condition|)
+name|cbpp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|*
+name|sp
+operator|->
+name|cbpp
+argument_list|,
+name|M_SEGMENT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|ssp
 operator|=
 operator|(
