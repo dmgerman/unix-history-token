@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.54 2001/11/16 01:57:47 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.55 2001/11/16 02:21:54 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1956,7 +1956,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uhub_explore: port=%d reset failed\n"
+literal|"%s: port %d reset failed\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 argument_list|,
 name|port
 argument_list|)
