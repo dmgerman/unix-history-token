@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.13 (Berkeley) %G%"
+literal|"@(#)dir.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3645,28 +3645,20 @@ name|long
 name|size
 decl_stmt|;
 block|{
-specifier|static
-name|struct
-name|bufarea
-modifier|*
-name|pbp
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
-name|pbp
+name|pdirbp
 operator|!=
 literal|0
 condition|)
-name|pbp
+name|pdirbp
 operator|->
 name|b_flags
 operator|&=
 operator|~
 name|B_INUSE
 expr_stmt|;
-name|pbp
+name|pdirbp
 operator|=
 name|getdatablk
 argument_list|(
@@ -3677,7 +3669,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|pbp
+name|pdirbp
 operator|)
 return|;
 block|}
