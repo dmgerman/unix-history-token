@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	7.1	89/05/01	*/
+comment|/*	boot.c	7.2	89/05/24	*/
 end_comment
 
 begin_include
@@ -64,6 +64,10 @@ end_define
 
 begin_comment
 comment|/* vd/dk */
+end_comment
+
+begin_comment
+comment|/*#define	DEV_DFLT	2		/* hd */
 end_comment
 
 begin_decl_stmt
