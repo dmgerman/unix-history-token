@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.28	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.29	%G% */
 end_comment
 
 begin_include
@@ -376,12 +376,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_NOHOST
+name|M_LOCAL
 value|000040
 end_define
 
 begin_comment
-comment|/* ignore host in comparisons */
+comment|/* delivery is to this host */
 end_comment
 
 begin_define
@@ -442,17 +442,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FINAL
-value|004000
-end_define
-
-begin_comment
-comment|/* mailing will effect final delivery */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_USR_UPPER
 value|010000
 end_define
@@ -506,7 +495,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LOCAL
+name|MN_LOCAL
 value|0
 end_define
 
@@ -517,7 +506,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROG
+name|MN_PROG
 value|1
 end_define
 
