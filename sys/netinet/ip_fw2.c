@@ -287,6 +287,17 @@ begin_comment
 comment|/* XXX for in_cksum */
 end_comment
 
+begin_comment
+comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set 31 is reserved for the default rule  * and CANNOT be disabled.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|set_disable
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -5881,6 +5892,19 @@ decl_stmt|;
 comment|/* skip rest of OR block */
 name|again
 label|:
+if|if
+condition|(
+name|set_disable
+operator|&
+operator|(
+literal|1
+operator|<<
+name|f
+operator|->
+name|set
+operator|)
+condition|)
+continue|continue;
 name|skip_or
 operator|=
 literal|0
@@ -7812,6 +7836,16 @@ empty_stmt|;
 comment|/* try next rule		*/
 block|}
 comment|/* end of outer for, scan rules */
+name|printf
+argument_list|(
+literal|"+++ ipfw: ouch!, skip past end of rules, denying packet\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|IP_FW_PORT_DENY_FLAG
+operator|)
+return|;
 name|done
 label|:
 comment|/* Update statistics */
@@ -8489,7 +8523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Remove all rules with given number.  */
+comment|/**  * Remove all rules with given number, and also do set manipulation.  *  * The argument is an int. The low 16 bit are the  * rule or set number, the upper 16 bits are the  * function, namely:  *   *      0       DEL_SINGLE_RULE  *      1       DELETE_RULESET  *      2       DISABLE_SET  *      3       ENABLE_SET  */
 end_comment
 
 begin_function
@@ -8503,8 +8537,8 @@ modifier|*
 modifier|*
 name|chain
 parameter_list|,
-name|u_short
-name|rulenum
+name|u_int32_t
+name|arg
 parameter_list|)
 block|{
 name|struct
@@ -8518,8 +8552,42 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|u_int16_t
+name|rulenum
+decl_stmt|,
+name|cmd
+decl_stmt|;
+name|rulenum
+operator|=
+name|arg
+operator|&
+literal|0xffff
+expr_stmt|;
+name|cmd
+operator|=
+operator|(
+name|arg
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
+expr_stmt|;
 if|if
 condition|(
+name|cmd
+operator|>
+literal|3
+condition|)
+return|return
+name|EINVAL
+return|;
+if|if
+condition|(
+name|cmd
+operator|==
+literal|0
+operator|&&
 name|rulenum
 operator|==
 name|IPFW_DEFAULT_RULE
@@ -8527,7 +8595,38 @@ condition|)
 return|return
 name|EINVAL
 return|;
-comment|/* 	 * locate first rule to delete 	 */
+if|if
+condition|(
+name|cmd
+operator|!=
+literal|0
+operator|&&
+name|rulenum
+operator|>
+literal|30
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ipfw: del_entry: invalid set number %d\n"
+argument_list|,
+name|rulenum
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* DEL_SINGLE_RULE */
+comment|/* 		 * locate first rule to delete 		 */
 for|for
 control|(
 name|prev
@@ -8579,7 +8678,7 @@ name|flush_rule_ptrs
 argument_list|()
 expr_stmt|;
 comment|/* more efficient to do outside the loop */
-comment|/* 	 * prev remains the same throughout the cycle 	 */
+comment|/* 		 * prev remains the same throughout the cycle 		 */
 while|while
 condition|(
 name|rule
@@ -8606,6 +8705,119 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+comment|/* DELETE_RULESET */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+comment|/* no access to rules while removing */
+name|flush_rule_ptrs
+argument_list|()
+expr_stmt|;
+comment|/* more efficient to do outside the loop */
+for|for
+control|(
+name|prev
+operator|=
+name|NULL
+operator|,
+name|rule
+operator|=
+operator|*
+name|chain
+init|;
+name|rule
+condition|;
+control|)
+if|if
+condition|(
+name|rule
+operator|->
+name|set
+operator|==
+name|rulenum
+condition|)
+name|rule
+operator|=
+name|delete_rule
+argument_list|(
+name|chain
+argument_list|,
+name|prev
+argument_list|,
+name|rule
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|prev
+operator|=
+name|rule
+expr_stmt|;
+name|rule
+operator|=
+name|rule
+operator|->
+name|next
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+comment|/* DISABLE SET */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|set_disable
+operator||=
+literal|1
+operator|<<
+name|rulenum
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+comment|/* ENABLE SET */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|set_disable
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|rulenum
+operator|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 return|return
 literal|0
 return|;
@@ -9764,6 +9976,25 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 			 * abuse 'next_rule' to store the set_disable word 			 */
+call|(
+name|u_int32_t
+call|)
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|ip_fw
+operator|*
+operator|)
+name|bp
+operator|)
+operator|->
+name|next_rule
+argument_list|)
+operator|=
+name|set_disable
+expr_stmt|;
 name|bp
 operator|=
 operator|(
@@ -10064,6 +10295,7 @@ case|case
 name|IP_FW_DEL
 case|:
 comment|/* argument is an int, the rule number */
+comment|/* 		 * IP_FW_DEL is used for deleting single rules, 		 * set of rules, and manipulating set_disable. 		 * 		 * Everything is managed in del_entry(); 		 */
 name|error
 operator|=
 name|sooptcopyin
@@ -10477,6 +10709,12 @@ operator|.
 name|cmd_len
 operator|=
 literal|1
+expr_stmt|;
+name|default_rule
+operator|.
+name|set
+operator|=
+literal|31
 expr_stmt|;
 name|default_rule
 operator|.
