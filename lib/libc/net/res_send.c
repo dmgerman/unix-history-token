@@ -3736,6 +3736,10 @@ argument_list|,
 operator|(
 name|stdout
 operator|,
+literal|"%.*s"
+operator|,
+literal|0
+operator|,
 literal|""
 operator|)
 argument_list|,
