@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	8.1 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,6 +916,11 @@ condition|)
 name|pack
 argument_list|(
 name|cp
+argument_list|,
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
