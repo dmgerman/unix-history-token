@@ -539,6 +539,8 @@ condition|)
 block|{
 name|net
 operator|=
+name|ntohs
+argument_list|(
 name|satosat
 argument_list|(
 name|ro
@@ -551,6 +553,7 @@ operator|->
 name|sat_addr
 operator|.
 name|s_net
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -585,10 +588,7 @@ name|ifp
 operator|)
 operator|)
 operator|&&
-name|ntohs
-argument_list|(
 name|net
-argument_list|)
 operator|>=
 name|ntohs
 argument_list|(
@@ -597,10 +597,7 @@ operator|->
 name|aa_firstnet
 argument_list|)
 operator|&&
-name|ntohs
-argument_list|(
 name|net
-argument_list|)
 operator|<=
 name|ntohs
 argument_list|(

@@ -183,7 +183,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ifaddr
+name|at_ifaddr
 modifier|*
 name|at_ifawithnet
 name|__P
@@ -191,10 +191,6 @@ argument_list|(
 operator|(
 expr|struct
 name|sockaddr_at
-operator|*
-operator|,
-expr|struct
-name|ifaddrhead
 operator|*
 operator|)
 argument_list|)
