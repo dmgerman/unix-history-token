@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_key.h"
 end_include
 
@@ -141,26 +135,11 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ipsec6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_include
 include|#
@@ -179,27 +158,6 @@ include|#
 directive|include
 file|<netkey/key_debug.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netkey/key_debug6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_else
 else|#

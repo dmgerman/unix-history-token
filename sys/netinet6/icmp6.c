@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_key.h"
 end_include
 
@@ -181,26 +175,11 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ipsec6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_include
 include|#
@@ -219,27 +198,6 @@ include|#
 directive|include
 file|<netkey/key_debug.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netkey/key_debug6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_else
 else|#
@@ -299,9 +257,11 @@ begin_comment
 comment|/* IPSEC */
 end_comment
 
-begin_comment
-comment|/* #include "faith.h" */
-end_comment
+begin_include
+include|#
+directive|include
+file|"faith.h"
+end_include
 
 begin_include
 include|#
@@ -4144,26 +4104,14 @@ name|addrsofif
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|ifa
-operator|=
-name|ifp
-operator|->
-name|if_addrlist
-operator|.
-name|tqh_first
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_list
-operator|.
-name|tqe_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&ifp->if_addrlist
+argument_list|,
+argument|ifa_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -4460,26 +4408,14 @@ name|if_list
 argument_list|)
 control|)
 block|{
-for|for
-control|(
-name|ifa
-operator|=
-name|ifp
-operator|->
-name|if_addrlist
-operator|.
-name|tqh_first
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_list
-operator|.
-name|tqe_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&ifp->if_addrlist
+argument_list|,
+argument|ifa_list
+argument_list|)
 block|{
 name|docopy
 operator|=

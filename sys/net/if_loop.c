@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ipx.h"
 end_include
 
@@ -262,7 +268,6 @@ endif|NETATALK
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|int
 name|loioctl
 name|__P
@@ -326,7 +331,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|looutput
 name|__P
@@ -529,7 +533,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|looutput
 parameter_list|(
@@ -1394,7 +1397,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|loioctl
 parameter_list|(

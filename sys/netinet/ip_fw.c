@@ -3668,6 +3668,8 @@ operator|->
 name|th_sport
 argument_list|,
 literal|0
+argument_list|,
+name|oif
 argument_list|)
 expr_stmt|;
 else|else
@@ -3695,6 +3697,8 @@ operator|->
 name|th_dport
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3829,6 +3833,8 @@ operator|->
 name|uh_sport
 argument_list|,
 literal|1
+argument_list|,
+name|oif
 argument_list|)
 expr_stmt|;
 else|else
@@ -3856,6 +3862,8 @@ operator|->
 name|uh_dport
 argument_list|,
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

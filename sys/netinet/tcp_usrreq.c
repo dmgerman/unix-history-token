@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_tcpdebug.h"
 end_include
 
@@ -2055,6 +2061,8 @@ operator|->
 name|inp_lport
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2891,6 +2899,17 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|inp
+operator|->
+name|inp_vflag
+operator||=
+name|INP_IPV4
+expr_stmt|;
+endif|#
+directive|endif
 name|tp
 operator|=
 name|tcp_newtcpcb

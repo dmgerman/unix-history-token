@@ -1344,7 +1344,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in6_ifaddr *ia; */
 define|\
-value|do {									\ 	struct ifaddr *ifa;						\ 	for (ifa = (ifp)->if_addrlist.tqh_first; ifa; ifa = ifa->ifa_list.tqe_next) {	\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (0)
+value|do {									\ 	struct ifaddr *ifa;						\ 	TAILQ_FOREACH(ifa,&(ifp)->if_addrlist, ifa_list) {		\ 		if (!ifa->ifa_addr)					\ 			continue;					\ 		if (ifa->ifa_addr->sa_family == AF_INET6)		\ 			break;						\ 	}								\ 	(ia) = (struct in6_ifaddr *)ifa;				\ } while (0)
 end_define
 
 begin_endif
@@ -1431,6 +1431,25 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_ip6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_extern
 extern|extern LIST_HEAD(in6_multihead
 operator|,
@@ -1508,7 +1527,7 @@ comment|/* struct in6_multistep step; */
 define|\
 comment|/* struct in6_multi *in6m; */
 define|\
-value|do { \ 	if (((in6m) = (step).i_in6m) != NULL) \ 		(step).i_in6m = (step).i_in6m->in6m_entry.le_next; \ } while(0)
+value|do { \ 	if (((in6m) = (step).i_in6m) != NULL) \ 		(step).i_in6m = LIST_NEXT((step).i_in6m, in6m_entry); \ } while(0)
 end_define
 
 begin_define
@@ -1525,7 +1544,7 @@ comment|/* struct in6_multistep step; */
 define|\
 comment|/* struct in6_multi *in6m */
 define|\
-value|do { \ 	(step).i_in6m = in6_multihead.lh_first; \ 		IN6_NEXT_MULTI((step), (in6m)); \ } while(0)
+value|do { \ 	(step).i_in6m = LIST_FIRST(&in6_multihead); \ 		IN6_NEXT_MULTI((step), (in6m)); \ } while(0)
 end_define
 
 begin_decl_stmt

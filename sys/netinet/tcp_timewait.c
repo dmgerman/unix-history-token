@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
+file|"opt_inet6.h"
 end_include
 
 begin_include
@@ -3094,6 +3094,8 @@ operator|.
 name|sin_port
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -1153,6 +1153,10 @@ operator|,
 name|u_int
 operator|,
 name|int
+operator|,
+expr|struct
+name|ifnet
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

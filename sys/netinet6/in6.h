@@ -50,6 +50,13 @@ directive|define
 name|__KAME__
 end_define
 
+begin_define
+define|#
+directive|define
+name|__KAME_VERSION
+value|"SNAP 19991101"
+end_define
+
 begin_comment
 comment|/*  * Local port number conventions:  *  * Ports< IPPORT_RESERVED are reserved for privileged processes (e.g. root),  * unless a kernel is compiled with IPNOPRIVPORTS defined.  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  *  * The default range is IPPORT_ANONMIX to IPPORT_ANONMAX, although  * that is settable by sysctl(3); net.inet.ip.anonportmin and  * net.inet.ip.anonportmax respectively.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH is the same as IP_PORTRANGE_DEFAULT,  * and exists only for FreeBSD compatibility purposes.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  * This convention is based on "vouchsafe" principles only.  * It is only secure if you trust the remote host to restrict these ports.  * The range is IPPORT_RESERVEDMIN to IPPORT_RESERVEDMAX.  */
 end_comment
@@ -1011,35 +1018,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Wildcard Socket  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*pre-RFC2553*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_IS_ADDR_ANY
-parameter_list|(
-name|a
-parameter_list|)
-value|IN6_IS_ADDR_UNSPECIFIED(a)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * KAME Scope  */
 end_comment
 
@@ -1818,6 +1796,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPV6CTL_KAME_VERSION
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPV6CTL_USE_DEPRECATED
 value|21
 end_define
@@ -1853,20 +1838,6 @@ define|#
 directive|define
 name|IPV6CTL_MAXID
 value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "hlim", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "forwsrcrt", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "mrtproto", CTLTYPE_INT }, \ 	{ "maxfragpackets", CTLTYPE_INT }, \ 	{ "sourcecheck", CTLTYPE_INT }, \ 	{ "sourcecheck_logint", CTLTYPE_INT }, \ 	{ "accept_rtadv", CTLTYPE_INT }, \ 	{ "keepfaith", CTLTYPE_INT }, \ 	{ "log_interval", CTLTYPE_INT }, \ 	{ "hdrnestlimit", CTLTYPE_INT }, \ 	{ "dad_count", CTLTYPE_INT }, \ 	{ "auto_flowlabel", CTLTYPE_INT }, \ 	{ "defmcasthlim", CTLTYPE_INT }, \ 	{ "gifhlim", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "use_deprecated", CTLTYPE_INT }, \ 	{ "rr_prune", CTLTYPE_INT }, \ 	{ "mapped_addr", CTLTYPE_INT }, \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_VARS
-value|{ \ 	0, \&ip6_forwarding, \&ip6_sendredirects, \&ip6_defhlim, \ 	0, \&ip6_forward_srcrt, \ 	0, \ 	0, \ 	0, \&ip6_maxfragpackets, \&ip6_sourcecheck, \&ip6_sourcecheck_interval, \&ip6_accept_rtadv, \&ip6_keepfaith, \&ip6_log_interval, \&ip6_hdrnestlimit, \&ip6_dad_count, \&ip6_auto_flowlabel, \&ip6_defmcasthlim, \&ip6_gif_hlim, \ 	0, \&ip6_use_deprecated, \&ip6_rr_prune, \&ip6_mapped_addr_on, \ }
 end_define
 
 begin_endif
@@ -2362,22 +2333,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* not implemented yet */
-end_comment
-
-begin_endif
-unit|extern int	 inet6_rthdr_reverse __P((const struct cmsghdr *, struct cmsghdr *));
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern

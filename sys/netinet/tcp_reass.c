@@ -1688,6 +1688,12 @@ operator|->
 name|ti_dport
 argument_list|,
 literal|0
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
 expr_stmt|;
 if|if
@@ -1729,6 +1735,12 @@ operator|->
 name|ti_dport
 argument_list|,
 literal|1
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
 expr_stmt|;
 block|}
@@ -1761,6 +1773,12 @@ name|sin_port
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
 expr_stmt|;
 block|}
@@ -1798,6 +1816,12 @@ operator|->
 name|ti_dport
 argument_list|,
 literal|1
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the state is CLOSED (i.e., TCB does not exist) then 	 * all data in the incoming segment is discarded. 	 * If the TCB exists but is in CLOSED state, it is embryonic, 	 * but should either do a listen or a connect soon. 	 */

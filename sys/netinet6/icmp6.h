@@ -2134,6 +2134,25 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_icmp6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
 end_ifdef
 

@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
+file|"opt_inet6.h"
 end_include
 
 begin_include

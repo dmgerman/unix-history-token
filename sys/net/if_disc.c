@@ -73,6 +73,12 @@ directive|include
 file|"opt_inet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -666,6 +672,15 @@ directive|ifdef
 name|INET
 case|case
 name|AF_INET
+case|:
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
 case|:
 break|break;
 endif|#

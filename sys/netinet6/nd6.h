@@ -443,10 +443,6 @@ argument|nd_defrouter
 argument_list|)
 name|dr_entry
 expr_stmt|;
-define|#
-directive|define
-name|dr_next
-value|dr_entry.le_next
 name|struct
 name|in6_addr
 name|rtaddr
@@ -546,13 +542,6 @@ struct|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|ndpr_next
-value|ndpr_entry.le_next
-end_define
 
 begin_define
 define|#
@@ -717,10 +706,6 @@ argument|nd_pfxrouter
 argument_list|)
 name|pfr_entry
 expr_stmt|;
-define|#
-directive|define
-name|pfr_next
-value|pfr_entry.le_next
 name|struct
 name|nd_defrouter
 modifier|*

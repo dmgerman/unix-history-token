@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -205,26 +199,11 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ipsec6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_include
 include|#
@@ -270,9 +249,11 @@ directive|include
 file|<netinet6/ip6protosw.h>
 end_include
 
-begin_comment
-comment|/* #include "gif.h" */
-end_comment
+begin_include
+include|#
+directive|include
+file|"gif.h"
+end_include
 
 begin_if
 if|#
@@ -368,6 +349,40 @@ name|frag6_drain
 block|,
 operator|&
 name|nousrreqs
+block|, }
+block|,
+block|{
+name|SOCK_DGRAM
+block|,
+operator|&
+name|inet6domain
+block|,
+name|IPPROTO_UDP
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|udp6_input
+block|,
+literal|0
+block|,
+name|udp6_ctlinput
+block|,
+name|ip6_ctloutput
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|&
+name|udp6_usrreqs
 block|, }
 block|,
 block|{
@@ -692,9 +707,6 @@ operator|&
 name|nousrreqs
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|INET6
 block|{
 name|SOCK_RAW
 block|,
@@ -729,9 +741,6 @@ operator|&
 name|nousrreqs
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* INET6 */
 endif|#
 directive|endif
 comment|/* GIF */
@@ -1550,9 +1559,11 @@ for|for
 control|(
 name|pr
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|nd_prefix
-operator|.
-name|lh_first
+argument_list|)
 init|;
 name|pr
 condition|;
@@ -1563,9 +1574,12 @@ control|)
 block|{
 name|next
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|pr
-operator|->
-name|ndpr_next
+argument_list|,
+name|ndpr_entry
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1903,6 +1917,26 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ip6_gif_hlim
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_KAME_VERSION
+argument_list|,
+name|kame_version
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|__KAME_VERSION
 argument_list|,
 literal|0
 argument_list|,

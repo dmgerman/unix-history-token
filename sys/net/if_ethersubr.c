@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ipx.h"
 end_include
 
